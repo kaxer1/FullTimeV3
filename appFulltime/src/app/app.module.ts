@@ -13,6 +13,8 @@ import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
+import { HomeComponent } from './componentes/home/home.component';
+import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 
 // conexion Rest Postgresql
 import { RolesService } from './servicios/roles/roles.service';
@@ -26,7 +28,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { HomeComponent } from './componentes/home/home.component';
+import {ImageUploadModule} from 'angular2-image-upload';
 
 @NgModule({
   declarations: [
@@ -36,7 +38,8 @@ import { HomeComponent } from './componentes/home/home.component';
     RegistroComponent,
     MainNavComponent,
     ListaEmpleadosComponent,
-    HomeComponent
+    HomeComponent,
+    VerEmpleadoComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +52,8 @@ import { HomeComponent } from './componentes/home/home.component';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    ImageUploadModule.forRoot()
   ],
   providers: [
     LoginService,
