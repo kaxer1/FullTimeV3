@@ -29,6 +29,7 @@ export class ListaEmpleadosComponent implements OnInit {
   verEmpleado(id: any){
     this.rest.getOneEmpleadoRest(id).subscribe(data => {
       console.log(data);
+      
     })
   }
 

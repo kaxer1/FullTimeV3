@@ -1,3 +1,4 @@
+<br>
 <div class="container">
 
     <nav class="navbar navbar-dark bg-primary">
@@ -21,7 +22,7 @@
                             <label class="col-sm-5 col-form-label">Código</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label" *ngFor="let e of empleado">{{e.empl_id}}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -105,7 +106,7 @@
                     <!-- <form> -->
                     <div class="row">
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">Subir Foto</label>
+                            <label class="col-sm-5 col-form-label">Horarios</label>
                         </div>
                         <div class="col">
                             <label class="col-sm-5 col-form-label">-</label>
@@ -118,8 +119,4 @@
         <div class="container" style="padding-bottom: 15px;">
         </div>
     </div>
-
-    <!-- Botones -->
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Aceptar</button>
-    <!--</form>-->
 </div>
