@@ -1,0 +1,37 @@
+
+
+.sidenav-container {
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+
+}
+
+.sidenav {
+  width: 200px;
+  background-color: rgb(26, 115, 199);
+}
+.texcol{
+  color: aliceblue;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: rgb(118, 188, 245);
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.nav {
+  background-color: rgb(37, 146, 235);
+}
+

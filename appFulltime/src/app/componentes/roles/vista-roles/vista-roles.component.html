@@ -1,0 +1,18 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let rol of roles">
+            <th scope="row">{{rol.id}}</th>
+            <td>{{rol.descripcion}}</td>
+            <td>{{rol.usuarios}}</td>
+        </tr>
+
+    </tbody>
+</table>
