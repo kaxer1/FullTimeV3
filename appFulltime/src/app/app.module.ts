@@ -7,16 +7,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+// vistas
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
-
-
+import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
 
 // conexion Rest Postgresql
 import { RolesService } from './servicios/roles/roles.service';
-import { VisualizarEmpleadosComponent } from './componentes/empleado/visualizar-empleados/visualizar-empleados.component';
+import { LoginService } from './servicios/login/login.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { HomeComponent } from './componentes/home/home.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +34,9 @@ import { MatListModule } from '@angular/material/list';
     VistaRolesComponent,
     LoginComponent,
     RegistroComponent,
-    VisualizarEmpleadosComponent,
-    MainNavComponent
+    MainNavComponent,
+    ListaEmpleadosComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +52,7 @@ import { MatListModule } from '@angular/material/list';
     MatListModule
   ],
   providers: [
+    LoginService,
     RolesService
   ],
   bootstrap: [AppComponent]

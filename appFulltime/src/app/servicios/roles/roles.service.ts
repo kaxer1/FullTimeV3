@@ -40,6 +40,10 @@ export class RolesService {
     return this.http.get(`${this.API_URI}/empleado`);
   }
   
+  getOneEmpleadoRest(id: number){
+    return this.http.get(`${this.API_URI}/empleado/${id}`);
+  }
+
   postEmpleadoRest(data: any){
     console.log(data);
     return this.http.post(`${this.API_URI}/empleado`, data);

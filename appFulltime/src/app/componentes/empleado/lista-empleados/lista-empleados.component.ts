@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RolesService } from 'src/app/servicios/roles/roles.service';
 
 @Component({
-  selector: 'app-visualizar-empleados',
-  templateUrl: './visualizar-empleados.component.html',
-  styleUrls: ['./visualizar-empleados.component.css']
+  selector: 'app-lista-empleados',
+  templateUrl: './lista-empleados.component.html',
+  styleUrls: ['./lista-empleados.component.css']
 })
-export class VisualizarEmpleadosComponent implements OnInit {
+export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   
@@ -26,5 +26,10 @@ export class VisualizarEmpleadosComponent implements OnInit {
     })
   }
 
+  verEmpleado(id: any){
+    this.rest.getOneEmpleadoRest(id).subscribe(data => {
+      console.log(data);
+    })
+  }
 
 }

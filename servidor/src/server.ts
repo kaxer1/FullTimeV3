@@ -1,12 +1,14 @@
 import express, {Application} from 'express';
+import cors from 'cors';
+import morgan from 'morgan';
 
+// rutas importadas
 import indexRutas from './rutas/indexRutas';
 import index from './rutas/pruebaRutas';
 import empleado from './rutas/empleadoRutas';
+import loginRuta from './rutas/login/loginRuta';
 
-import cors from 'cors';
 
-import morgan from 'morgan';
 
 class Server {
 
@@ -31,6 +33,8 @@ class Server {
         this.app.use('/', indexRutas);
         this.app.use('/api', index);
         this.app.use('/empleado', empleado);
+        this.app.use('/login', loginRuta);
+
     }
 
     start(): void{

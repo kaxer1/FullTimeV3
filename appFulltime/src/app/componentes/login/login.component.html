@@ -1,1 +1,44 @@
-<p>login works!</p>
+<div class="container">
+    <!-- Formulario Completo -->
+    <h1 style="text-align: center">SISTEMA DE CONTROL</h1>
+    <h4 style="text-align: center">Acceso al Sistema</h4>
+    <br>
+    <form [formGroup]="validarCredencialesF" (ngSubmit)="validarUsuario(validarCredencialesF.value)">
+        <div class="container border border-primary">
+            <!-- contenedor de registro de datos -->
+            <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
+
+                <div class="container" style="text-align: center">
+                    <!-- <form> -->
+                    <div class="form-group row">
+                        <label class="col-sm-5 col-form-label">Usuario</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" formControlName="usuarioF">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-5 col-form-label">Clave</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control" formControlName="passwordF">
+                        </div>
+                    </div>
+                    <!-- </form> -->
+                    <!-- Botones -->
+                    <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;"
+                        [disabled]="!validarCredencialesF.valid" value="INGRESAR">
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<br>
+<div style="text-align: center">
+    <!-- Footer -->
+    <footer>
+        Desarollado por
+        <a href="https://casapazmino.com.ec/" target="_blank" rel="noopener"> Casa Pazmiño S.A</a>
+        <br>
+        <img width="80" alt="Logo Casa Pazmiño" src="../../../assets/imagenes/logo/logo-casa-pazmino.png" />
+    </footer>
+</div>

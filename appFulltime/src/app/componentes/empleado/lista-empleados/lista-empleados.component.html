@@ -5,9 +5,9 @@
             <th scope="col">Nombre</th>
             <th scope="col">Apellido</th>
             <th scope="col">Cedula</th>
-            <th scope="col">Fecha Nacimiento</th>
             <th scope="col">Estado</th>
             <th scope="col">correo</th>
+            <th scope="col">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -16,9 +16,11 @@
             <td>{{e.nombre}}</td>
             <td>{{e.apellido}}</td>
             <td>{{e.cedula}}</td>
-            <td>{{e.fecha_nacimiento}}</td>
             <td>{{e.estado}}</td>
             <td>{{e.correo}}</td>
+            <td>
+                <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary">Ver</button>
+            </td>
         </tr>
 
     </tbody>
