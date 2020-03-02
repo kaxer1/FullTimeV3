@@ -7,6 +7,8 @@ import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
+import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
+import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: 'titulos', component: TitulosComponent},
   { path: 'discapacidad', component: DiscapacidadComponent},
+  { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
+  { path: 'registrarRol', component: RegistroRolComponent},
 ];
 
 @NgModule({

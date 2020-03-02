@@ -10,16 +10,23 @@ export class VistaRolesComponent implements OnInit {
 
   roles: any = [];
 
-  constructor(private rolesServicio: RolesService) { }
+  constructor(private rest: RolesService) { }
 
   ngOnInit() {
-    this.rolesServicio.getRoles().subscribe(
+    this.rest.getRoles().subscribe(
       //res => console.log(res),
       res => {
         this.roles = res;
       },
       err => console.error(err)
     );
+  }
+
+  verRoles(id: any){
+    this.rest.getOneRol(id).subscribe(data => {
+      console.log(data);
+      
+    })
   }
 
 }

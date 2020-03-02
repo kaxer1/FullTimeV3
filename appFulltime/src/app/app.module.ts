@@ -14,13 +14,15 @@ import { RegistroComponent } from './componentes/empleado/registro/registro.comp
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
-import { HomeComponent } from './componentes/home/home.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
+import { HomeComponent } from './componentes/home/home.component';
+import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 
-// conexion Rest Postgresql
+// conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
 import { TituloService } from './servicios/catalogos/titulo.service';
+import { EmpleadoService } from './servicios/empleado/empleado.service'
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -30,6 +32,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { ImageUploadModule } from 'angular2-image-upload';
+import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,9 @@ import { MatListModule } from '@angular/material/list';
     ListaEmpleadosComponent,
     HomeComponent,
     TitulosComponent,
-    DiscapacidadComponent
+    DiscapacidadComponent,
+    VerEmpleadoComponent,
+    RegistroRolComponent
   ],
   imports: [
     BrowserModule,
@@ -54,12 +60,14 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatSidenavModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    ImageUploadModule.forRoot()
   ],
   providers: [
     LoginService,
     RolesService,
-    TituloService
+    TituloService,
+    EmpleadoService
   ],
   bootstrap: [AppComponent]
 })

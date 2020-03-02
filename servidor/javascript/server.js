@@ -28,7 +28,7 @@ class Server {
     }
     rutas() {
         this.app.use('/', indexRutas_1.default);
-        this.app.use('/api', pruebaRutas_1.default);
+        this.app.use('/rol', pruebaRutas_1.default);
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/login', loginRuta_1.default);
         this.app.use('/titulo', tituloRutas_1.default);

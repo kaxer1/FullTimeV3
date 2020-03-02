@@ -1,27 +1,88 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id empleado</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Cedula</th>
-            <th scope="col">Estado</th>
-            <th scope="col">correo</th>
-            <th scope="col">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let e of empleado">
-            <th scope="row">{{e.empl_id}}</th>
-            <td>{{e.nombre}}</td>
-            <td>{{e.apellido}}</td>
-            <td>{{e.cedula}}</td>
-            <td>{{e.estado}}</td>
-            <td>{{e.correo}}</td>
-            <td>
-                <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary">Ver</button>
-            </td>
-        </tr>
+<br>
+<div class="container">
 
-    </tbody>
-</table>
+    <nav class="navbar navbar-dark bg-primary">
+        <h5 class="navbar-text text-light">Empleados - Criterios de Búsqueda</h5>
+    </nav>
+    <!-- Formulario Completo -->
+    <!--<form>-->
+
+    <div class="container border border-primary">
+
+        <!-- contenedor de registro de datos -->
+        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
+
+
+            <div class="container" style="text-align: center">
+                <!-- <form> -->
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Codigo</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Cédula</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Nombre</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Apellido</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Crear</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
+    <!--</form>-->
+</div>
+
+<br>
+<div class="container">
+    <nav class="navbar navbar-dark bg-primary">
+        <h5 class="navbar-text text-light">Resultados de Búsqueda</h5>
+    </nav>
+    <div class="container border border-primary">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id empleado</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Cedula</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">correo</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let e of empleado">
+                    <th scope="row">{{e.empl_id}}</th>
+                    <td>{{e.nombre}}</td>
+                    <td>{{e.apellido}}</td>
+                    <td>{{e.cedula}}</td>
+                    <td>{{e.estado}}</td>
+                    <td>{{e.correo}}</td>
+                    <td>
+                        <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
+                            [routerLink]="['/verEmpleado/', e.empl_id]">Ver</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

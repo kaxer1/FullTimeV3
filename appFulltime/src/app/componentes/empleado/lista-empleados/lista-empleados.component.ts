@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RolesService } from 'src/app/servicios/roles/roles.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -11,7 +11,7 @@ export class ListaEmpleadosComponent implements OnInit {
   empleado: any = [];
   
   constructor(
-    public rest: RolesService
+    public rest: EmpleadoService
   ) { }
 
   ngOnInit(): void {
@@ -29,6 +29,7 @@ export class ListaEmpleadosComponent implements OnInit {
   verEmpleado(id: any){
     this.rest.getOneEmpleadoRest(id).subscribe(data => {
       console.log(data);
+      
     })
   }
 

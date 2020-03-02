@@ -1,18 +1,61 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
+<br>
+<div class="container">
 
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let rol of roles">
-            <th scope="row">{{rol.id}}</th>
-            <td>{{rol.descripcion}}</td>
-            <td>{{rol.usuarios}}</td>
-        </tr>
+    <nav class="navbar navbar-dark bg-primary">
+        <h5 class="navbar-text text-light">Roles - Criterios de Búsqueda</h5>
+    </nav>
+    <!-- Formulario Completo -->
+    <!--<form>-->
 
-    </tbody>
-</table>
+    <div class="container border border-primary">
+
+        <!-- contenedor de registro de datos -->
+        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
+
+
+            <div class="container" style="text-align: center">
+                <!-- <form> -->
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Descripción</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;"
+        [routerLink]="['/registrarRol/']">Crear</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
+    <!--</form>-->
+</div>
+
+<br>
+<div class="container">
+    <nav class="navbar navbar-dark bg-primary">
+        <h5 class="navbar-text text-light">Resultados de Búsqueda</h5>
+    </nav>
+    <div class="container border border-primary">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rol of roles">
+                    <td>{{rol.descripcion}}</td>
+                    <td>
+                        <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary"
+                            [routerLink]="['/verRoles/', rol.id]">Ver</button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
