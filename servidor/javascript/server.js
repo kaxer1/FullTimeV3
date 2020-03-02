@@ -11,6 +11,8 @@ const indexRutas_1 = __importDefault(require("./rutas/indexRutas"));
 const pruebaRutas_1 = __importDefault(require("./rutas/pruebaRutas"));
 const empleadoRutas_1 = __importDefault(require("./rutas/empleadoRutas"));
 const loginRuta_1 = __importDefault(require("./rutas/login/loginRuta"));
+const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas"));
+const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -29,6 +31,8 @@ class Server {
         this.app.use('/api', pruebaRutas_1.default);
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/login', loginRuta_1.default);
+        this.app.use('/titulo', tituloRutas_1.default);
+        this.app.use('/discapacidad', discapacidadRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

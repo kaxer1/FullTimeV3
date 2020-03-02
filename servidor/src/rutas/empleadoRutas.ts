@@ -13,6 +13,7 @@ class EmpleadoRutas {
     configuracion(): void {
         this.router.get('/', empleadoControlador.list);
         this.router.get('/:id', empleadoControlador.getOne);
+        this.router.post('/', empleadoControlador.create);
     }
 }
 

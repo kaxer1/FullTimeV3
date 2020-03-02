@@ -7,6 +7,8 @@ import indexRutas from './rutas/indexRutas';
 import index from './rutas/pruebaRutas';
 import empleado from './rutas/empleadoRutas';
 import loginRuta from './rutas/login/loginRuta';
+import discapacidadRuta from './rutas/discapacidadRutas';
+import tituloRuta from './rutas/Catalogos/tituloRutas';
 
 
 
@@ -34,6 +36,8 @@ class Server {
         this.app.use('/api', index);
         this.app.use('/empleado', empleado);
         this.app.use('/login', loginRuta);
+        this.app.use('/titulo', tituloRuta);
+        this.app.use('/discapacidad', discapacidadRuta);
 
     }
 

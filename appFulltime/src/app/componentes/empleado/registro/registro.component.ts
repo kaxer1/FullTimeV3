@@ -10,7 +10,6 @@ import { RolesService } from 'src/app/servicios/roles/roles.service';
 export class RegistroComponent implements OnInit {
 
   public nuevoEmpleadoForm = new FormGroup({
-    // idForm: new FormControl('', Validators.required),
     nombreForm: new FormControl('', Validators.required),
     apellidoForm: new FormControl('', Validators.required),
     cedulaForm: new FormControl('', Validators.required),
@@ -25,9 +24,14 @@ export class RegistroComponent implements OnInit {
   });
   constructor(
     public rest: RolesService
-  ) { 
+  ) { }
+
+  ngOnInit(): void {
+    this.limpliarCampos();
+  }
+
+  limpliarCampos(){
     this.nuevoEmpleadoForm.setValue({
-      // idForm: '',
       nombreForm: '',
       apellidoForm: '',
       cedulaForm: '',
@@ -42,12 +46,8 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-
   insertarEmpleado(form){
     let dataEmpleado = {
-      // id: form.idForm,
       cedula: form.cedulaForm,
       apellido: form.apellidoForm,
       nombre: form.nombreForm,
@@ -61,14 +61,17 @@ export class RegistroComponent implements OnInit {
       telefono: form.telefonoForm,
     };
 
-    // this.rest.postEmpleadoRest(dataEmpleado)
-    // .subscribe(
-    //   response => {
-    //     console.log(response);
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   });
+    this.rest.postEmpleadoRest(dataEmpleado)
+    .subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      });
+
+    this.limpliarCampos();
+
   }
 
 }

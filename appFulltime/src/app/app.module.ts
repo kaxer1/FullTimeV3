@@ -13,10 +13,14 @@ import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
+import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
+import { HomeComponent } from './componentes/home/home.component';
+import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 
 // conexion Rest Postgresql
 import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
+import { TituloService } from './servicios/catalogos/titulo.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,7 +30,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { HomeComponent } from './componentes/home/home.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { HomeComponent } from './componentes/home/home.component';
     RegistroComponent,
     MainNavComponent,
     ListaEmpleadosComponent,
-    HomeComponent
+    HomeComponent,
+    TitulosComponent,
+    DiscapacidadComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +58,8 @@ import { HomeComponent } from './componentes/home/home.component';
   ],
   providers: [
     LoginService,
-    RolesService
+    RolesService,
+    TituloService
   ],
   bootstrap: [AppComponent]
 })
