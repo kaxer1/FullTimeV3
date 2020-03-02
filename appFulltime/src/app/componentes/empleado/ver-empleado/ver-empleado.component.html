@@ -14,7 +14,7 @@
 
             <div class="col-md">
 
-                <div class="container">
+                <div class="container" *ngFor="let e of empleadoUno">
                     <!-- formulario datos personales -->
                     <!-- <form> -->
                     <div class="row">
@@ -22,7 +22,7 @@
                             <label class="col-sm-5 col-form-label">Código</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label" *ngFor="let e of empleado">{{e.empl_id}}</label>
+                            <label class="col-sm-5 col-form-label">{{e.id}}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -30,13 +30,13 @@
                             <label class="col-sm-5 col-form-label">Apellidos</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.apellido}}</label>
                         </div>
                         <div class="col">
                             <label class="col-sm-5 col-form-label">Nombres</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.nombre}}</label>
                         </div>
                     </div>
 
@@ -45,7 +45,7 @@
                             <label class="col-sm-5 col-form-label">Fecha de Nacimiento</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.fecha_nacimiento}}</label>
                         </div>
                     </div>
 

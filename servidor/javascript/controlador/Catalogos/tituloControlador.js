@@ -12,32 +12,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const database_1 = __importDefault(require("../database"));
-class EmpleadoControlador {
+const database_1 = __importDefault(require("../../database"));
+class TituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const empleado = yield database_1.default.query('SELECT * FROM empleado');
-            res.json(empleado.rows);
+            const titulo = yield database_1.default.query('SELECT * FROM cg_titulo');
+            res.json(titulo.rows);
         });
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unEmpleado = yield database_1.default.query('SELECT * FROM empleado WHERE id = $1', [id]);
-            if (unEmpleado.rowCount > 0) {
-                return res.json(unEmpleado.rows);
+            const unTitulo = yield database_1.default.query('SELECT * FROM cg_titulo WHERE id = $1', [id]);
+            if (unTitulo.rowCount > 0) {
+                return res.json(unTitulo.rows);
             }
             res.status(404).json({ text: 'El empleado no ha sido encontrado' });
         });
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { cedula, apellido, nombre, estado_civil, genero, correo, fecha_nacimiento, estado, correo_alternativo, domicilio, telefono } = req.body;
-            yield database_1.default.query('INSERT INTO empleado ( cedula, apellido, nombre, estado_civil, genero, correo, fecha_nacimiento, estado, correo_alternativo, domicilio, telefono) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [cedula, apellido, nombre, estado_civil, genero, correo, fecha_nacimiento, estado, correo_alternativo, domicilio, telefono]);
+            const { nombre, nivel } = req.body;
+            yield database_1.default.query('INSERT INTO cg_titulo ( nombre, nivel ) VALUES ($1, $2)', [nombre, nivel]);
             console.log(req.body);
-            res.json({ message: 'Empleado guardado' });
+            res.json({ message: 'Titulo guardado' });
         });
     }
 }
-exports.empleadoControlador = new EmpleadoControlador();
-exports.default = exports.empleadoControlador;
+exports.tituloControlador = new TituloControlador();
+exports.default = exports.tituloControlador;

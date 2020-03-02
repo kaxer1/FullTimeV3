@@ -27,7 +27,7 @@ class PruebaControlador {
             const rol = yield database_1.default.query('SELECT * FROM roles WHERE id = $1', [id]);
             // console.log(rol);
             if (rol.rowCount > 0) {
-                return res.json(rol.rows[0]);
+                return res.json(rol.rows);
             }
             //res.json({message: 'Rol encontrado'});
             //res.json({text: 'Esta es una prueba ' + req.params.id});
