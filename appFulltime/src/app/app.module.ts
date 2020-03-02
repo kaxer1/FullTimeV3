@@ -31,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import {ImageUploadModule} from 'angular2-image-upload';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
+import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-
     ListaEmpleadosComponent,
     HomeComponent,
     VerEmpleadoComponent,
-    RegistroRolComponent
+    RegistroRolComponent,
+    SeleccionarRolPermisoComponent
   ],
   imports: [
     BrowserModule,

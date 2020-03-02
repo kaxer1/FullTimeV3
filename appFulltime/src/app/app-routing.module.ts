@@ -7,6 +7,7 @@ import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import {RegistroRolComponent} from './componentes/roles/registro-rol/registro-rol.component'
+import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
   { path: 'registrarRol', component: RegistroRolComponent},
+  { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
 ];
 
 @NgModule({

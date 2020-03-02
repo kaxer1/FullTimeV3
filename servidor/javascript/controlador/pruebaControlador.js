@@ -36,8 +36,8 @@ class PruebaControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, descripcion, usuarios } = req.body;
-            yield database_1.default.query('INSERT INTO roles (id, descripcion, usuarios) VALUES ($1, $2, $3)', [id, descripcion, usuarios]);
+            const { descripcion } = req.body;
+            yield database_1.default.query('INSERT INTO roles (descripcion) VALUES ($1)', [descripcion]);
             //console.log(req.body);
             res.json({ message: 'Rol guardado' });
         });
