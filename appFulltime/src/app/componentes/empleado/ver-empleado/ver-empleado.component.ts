@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-ver-empleado',
   templateUrl: './ver-empleado.component.html',
@@ -7,23 +8,31 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 })
 export class VerEmpleadoComponent implements OnInit {
 
-  empleado: any = [];
-  
-  constructor(public rest: EmpleadoService) { }
+  empleadoUno: any = [];
+  idEmpleado: string;
+
+  constructor(
+    public rest: EmpleadoService,
+    public router: Router
+    ) { 
+    var cadena = this.router.url;
+    var aux = cadena.split("/",);
+    this.idEmpleado = aux[2];
+    console.log(this.idEmpleado);
+  }
 
   ngOnInit(): void {
-    this.verEmpleado(17000009);
+    this.verEmpleado(this.idEmpleado);
   }
 
   onUploadFinish(event) {
     console.log(event);
   }
 
-  verEmpleado(id: any) {
-    this.empleado = [];
-    this.rest.getOneEmpleadoRest(id).subscribe(data => {
-      console.log(data);
-      this.empleado = data;
+  verEmpleado(idemploy: any) {
+    this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleadoUno = data;
+      console.log(this.empleadoUno);
     })
   }
 

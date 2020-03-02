@@ -11,7 +11,7 @@ class DiscapacidadControlador {
     const { id } = req.params;
     const unaDiscapacidad = await pool.query('SELECT * FROM discapacidad WHERE id = $1', [id]);
     if (unaDiscapacidad.rowCount > 0) {
-      return res.json(unaDiscapacidad.rows[0])
+      return res.json(unaDiscapacidad.rows)
     }
     res.status(404).json({ text: 'Discapacidad no encontrada' });
   }

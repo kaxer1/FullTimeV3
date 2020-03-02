@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
-import { RolesService } from 'src/app/servicios/roles/roles.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 
 @Component({
   selector: 'app-registro',
@@ -23,7 +23,7 @@ export class RegistroComponent implements OnInit {
     correoAlternativoForm: new FormControl('', Validators.required),
   });
   constructor(
-    public rest: RolesService
+    public rest: EmpleadoService
   ) { }
 
   ngOnInit(): void {

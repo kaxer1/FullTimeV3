@@ -11,7 +11,7 @@ class EmpleadoControlador {
     const { id } = req.params;
     const unEmpleado = await pool.query('SELECT * FROM empleado WHERE id = $1', [id]);
     if (unEmpleado.rowCount > 0) {
-      return res.json(unEmpleado.rows[0])
+      return res.json(unEmpleado.rows)
     }
     res.status(404).json({ text: 'El empleado no ha sido encontrado' });
   }

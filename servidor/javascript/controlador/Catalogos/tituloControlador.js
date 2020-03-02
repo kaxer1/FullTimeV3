@@ -25,7 +25,7 @@ class TituloControlador {
             const { id } = req.params;
             const unTitulo = yield database_1.default.query('SELECT * FROM cg_titulo WHERE id = $1', [id]);
             if (unTitulo.rowCount > 0) {
-                return res.json(unTitulo.rows[0]);
+                return res.json(unTitulo.rows);
             }
             res.status(404).json({ text: 'El empleado no ha sido encontrado' });
         });
