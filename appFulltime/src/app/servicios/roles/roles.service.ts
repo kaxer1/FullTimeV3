@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {Rol} from '../../modelos/roles/roles'
-import { Observable } from 'rxjs';
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,38 +12,20 @@ export class RolesService {
   // Roles
 
   getRoles(){
-    return this.http.get(`${this.API_URI}/api`);
+    return this.http.get(`${this.API_URI}/rol`);
   }
 
-  getRol(id: number){
-    return this.http.get(`${this.API_URI}/api/${id}`);
+  getOneRol(id: number){
+    return this.http.get(`${this.API_URI}/rol/${id}`);
   }
 
   eliminarRol(id: number){
-    return this.http.get(`${this.API_URI}/api/${id}`);
-  }
-  
-  guardarRol(rol: Rol){
-    return this.http.post(`${this.API_URI}/api`, rol);
-  }
-  
-  actualizarRol(id: number, actualizaRol: Rol): Observable<Rol>{
-    return this.http.put(`${this.API_URI}/api/${id}`, actualizaRol);
-  }
-  
-  // Empleados
-  
-  getEmpleadosRest(){
-    return this.http.get(`${this.API_URI}/empleado`);
-  }
-  
-  getOneEmpleadoRest(id: number){
-    return this.http.get(`${this.API_URI}/empleado/${id}`);
+    return this.http.get(`${this.API_URI}/rol/${id}`);
   }
 
-  postEmpleadoRest(data: any){
+  postRoles(data: any){
     console.log(data);
-    return this.http.post(`${this.API_URI}/empleado`, data);
+    return this.http.post(`${this.API_URI}/rol`, data);
   }
   
 }

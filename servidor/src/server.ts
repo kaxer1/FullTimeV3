@@ -4,7 +4,7 @@ import morgan from 'morgan';
 
 // rutas importadas
 import indexRutas from './rutas/indexRutas';
-import index from './rutas/pruebaRutas';
+import roles from './rutas/pruebaRutas';
 import empleado from './rutas/empleadoRutas';
 import loginRuta from './rutas/login/loginRuta';
 
@@ -31,7 +31,7 @@ class Server {
     rutas(): void{
 
         this.app.use('/', indexRutas);
-        this.app.use('/api', index);
+        this.app.use('/rol', roles);
         this.app.use('/empleado', empleado);
         this.app.use('/login', loginRuta);
 

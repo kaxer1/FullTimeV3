@@ -16,9 +16,10 @@ import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/
 import { HomeComponent } from './componentes/home/home.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 
-// conexion Rest Postgresql
+// conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
+import {EmpleadoService} from './servicios/empleado/empleado.service'
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +30,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import {ImageUploadModule} from 'angular2-image-upload';
+import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import {ImageUploadModule} from 'angular2-image-upload';
     MainNavComponent,
     ListaEmpleadosComponent,
     HomeComponent,
-    VerEmpleadoComponent
+    VerEmpleadoComponent,
+    RegistroRolComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,8 @@ import {ImageUploadModule} from 'angular2-image-upload';
   ],
   providers: [
     LoginService,
-    RolesService
+    RolesService,
+    EmpleadoService
   ],
   bootstrap: [AppComponent]
 })

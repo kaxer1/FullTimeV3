@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RolesService } from 'src/app/servicios/roles/roles.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 @Component({
   selector: 'app-ver-empleado',
   templateUrl: './ver-empleado.component.html',
@@ -9,7 +9,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   empleado: any = [];
   
-  constructor(public rest: RolesService) { }
+  constructor(public rest: EmpleadoService) { }
 
   ngOnInit(): void {
     this.verEmpleado(17000009);
