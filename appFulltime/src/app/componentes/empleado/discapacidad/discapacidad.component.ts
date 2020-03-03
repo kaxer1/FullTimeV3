@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
 
 @Component({
   selector: 'app-discapacidad',
@@ -14,7 +15,9 @@ export class DiscapacidadComponent implements OnInit {
     tipoForm: new FormControl('', Validators.required),
   });
   
-  constructor() { }
+  constructor(
+    private rest: DiscapacidadService
+  ) { }
 
   ngOnInit(): void {
     this.nuevoCarnetForm.setValue({
@@ -26,11 +29,19 @@ export class DiscapacidadComponent implements OnInit {
 
   insertarCarnet(form){
     let dataCarnet = {
-      id_empleado: '',
+      id_empleado: 3,
       carnet_conadis: form.carnetForm,
       porcentaje: form.porcentajeForm,
       tipo: form.tipoForm,
     }
+
+    this.rest.postDiscapacidadRest(dataCarnet)
+    .subscribe(response => {
+      console.log(response);
+    },
+    error => {
+      console.log(error);
+    });
   }
 
 }

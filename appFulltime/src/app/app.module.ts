@@ -25,6 +25,7 @@ import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
 import { TituloService } from './servicios/catalogos/titulo.service';
 import { EmpleadoService } from './servicios/empleado/empleado.service'
+import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -71,7 +72,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     LoginService,
     RolesService,
     TituloService,
-    EmpleadoService
+    EmpleadoService,
+    DiscapacidadService
   ],
   bootstrap: [AppComponent]
 })
