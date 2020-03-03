@@ -39,7 +39,7 @@ export class RegistroRolComponent implements OnInit {
   insertarRol(form){
     let dataRol= {
       // id: form.idForm,
-      descripcion: form.descripcionForm,
+      nombre: form.descripcionForm,
     };
     this.rest.postRoles(dataRol).subscribe(response => {
       console.log(response);  

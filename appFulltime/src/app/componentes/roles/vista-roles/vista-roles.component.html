@@ -48,7 +48,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let rol of roles">
-                    <td>{{rol.descripcion}}</td>
+                    <td>{{rol.nombre}}</td>
                     <td>
                         <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary"
                             [routerLink]="['/verRoles/', rol.id]">Ver</button>
