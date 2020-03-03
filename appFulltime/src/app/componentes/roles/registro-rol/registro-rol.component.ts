@@ -28,6 +28,12 @@ export class RegistroRolComponent implements OnInit {
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.router.url);
+    this.limpliarCampos();
+  }
+  limpliarCampos(){
+    this.nuevoRolForm.setValue({
+      descripcionForm: '',
+    });
   }
 
   insertarRol(form){
@@ -37,6 +43,9 @@ export class RegistroRolComponent implements OnInit {
     };
     this.rest.postRoles(dataRol).subscribe(response => {
       console.log(response);  
+      alert("Rol guardado")
+      this.limpliarCampos();
+      this.router.navigate(['/','roles']);
     },
       error => {
         console.log(error);
