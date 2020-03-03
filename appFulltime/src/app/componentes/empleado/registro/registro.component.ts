@@ -10,17 +10,17 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 export class RegistroComponent implements OnInit {
 
   public nuevoEmpleadoForm = new FormGroup({
-    nombreForm: new FormControl('', Validators.required),
-    apellidoForm: new FormControl('', Validators.required),
-    cedulaForm: new FormControl('', Validators.required),
-    emailForm: new FormControl('', Validators.required),
+    nombreForm: new FormControl('', [Validators.required,Validators.pattern('[a-zA-z]+')]),
+    apellidoForm: new FormControl('', [Validators.required, Validators.pattern('[a-zA-z]+')]),
+    cedulaForm: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]') ]),
+    emailForm: new FormControl('', [Validators.required, Validators.email]),
     telefonoForm: new FormControl('', Validators.required),
     domicilioForm: new FormControl('', Validators.required),
     fechaForm: new FormControl('', Validators.required),
     estadoCivilForm: new FormControl('', Validators.required),
     generoForm: new FormControl('', Validators.required),
     estadoForm: new FormControl('', Validators.required),
-    correoAlternativoForm: new FormControl('', Validators.required),
+    correoAlternativoForm: new FormControl('', [Validators.email,Validators.required]),
   });
   constructor(
     public rest: EmpleadoService
@@ -51,12 +51,12 @@ export class RegistroComponent implements OnInit {
       cedula: form.cedulaForm,
       apellido: form.apellidoForm,
       nombre: form.nombreForm,
-      estado_civil: form.estadoCivilForm,
+      esta_civil: form.estadoCivilForm,
       genero: form.generoForm,
       correo: form.emailForm,
-      fecha_nacimiento: form.fechaForm,
+      fec_nacimiento: form.fechaForm,
       estado: form.estadoForm,
-      correo_alernativo: form.correoAlternativoForm,
+      mail_alernativo: form.correoAlternativoForm,
       domicilio: form.domicilioForm,
       telefono: form.telefonoForm,
     };
