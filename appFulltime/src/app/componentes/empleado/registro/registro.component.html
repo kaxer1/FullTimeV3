@@ -30,61 +30,61 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label" for="Cedula">Cédula</label>
                             <div class="col-sm">
-                                <input type="number" class="form-control" 
-                                formControlName="cedulaForm" placeholder="Ingrese cedula de identidad">
+                                <input type="number" class="form-control" formControlName="cedulaForm"
+                                    placeholder="Ingrese cedula de identidad" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" (keypress)="soloNumeros($event)" >
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Nombre</label>
                             <div class="col-sm">
-                                <input type="text" class="form-control"
-                                formControlName="nombreForm" placeholder="Ingrese nombres">
+                                <input type="text" class="form-control" formControlName="nombreForm"
+                                    placeholder="Ingrese nombres">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Apellido</label>
                             <div class="col-sm">
-                                <input type="text" class="form-control"
-                                formControlName="apellidoForm" placeholder="Ingrese apellidos">
+                                <input type="text" class="form-control" formControlName="apellidoForm"
+                                    placeholder="Ingrese apellidos">
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Correo Electrónico</label>
-                            <input type="text" class="form-control"
-                            formControlName="emailForm" placeholder="ejemplo@mail.com">
+                            <input type="text" class="form-control" formControlName="emailForm"
+                                placeholder="ejemplo@mail.com">
                         </div>
                         <div class="form-group">
                             <label>Correo Electrónico Alternativo</label>
-                            <input type="text" class="form-control"
-                            formControlName="correoAlternativoForm" placeholder="ejemplo2@mail.com">
+                            <input type="text" class="form-control" formControlName="correoAlternativoForm"
+                                placeholder="ejemplo2@mail.com">
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Domicilio</label>
                             <div class="col-sm">
-                                <input type="text" class="form-control"
-                                formControlName="domicilioForm" placeholder="Ingrese dirección de domicilio">
+                                <input type="text" class="form-control" formControlName="domicilioForm"
+                                    placeholder="Ingrese dirección de domicilio">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Teléfono</label>
                             <div class="col-sm">
-                                <input type="number" class="form-control"
-                                formControlName="telefonoForm" placeholder="Ingrese número telefónico">
+                                <input type="number" class="form-control" formControlName="telefonoForm"
+                                    placeholder="Ingrese número telefónico">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Fecha Nacimiento</label>
                             <div class="col-sm">
-                                <input type="date" class="form-control"
-                                formControlName="fechaForm">
+                                <input type="date" class="form-control" formControlName="fechaForm">
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Estado Civil</label>
                             <div class="col-sm">
-                                <select class="form-control"  formControlName="estadoCivilForm">
+                                <select class="form-control" formControlName="estadoCivilForm">
                                     <option [ngValue]="null" disabled>Seleccione Estado Civil...</option>
-                                    <option [ngValue]="1" >Soltero/a</option>
+                                    <option [ngValue]="1">Soltero/a</option>
                                     <option [ngValue]="2">Unión de Hecho</option>
                                     <option [ngValue]="3">Casado/a</option>
                                     <option [ngValue]="4">Divorciado/a</option>
@@ -117,10 +117,10 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Estado</label>
                             <div class="col-sm">
-                                <select class="form-control col-sm"  formControlName="estadoForm">
-                                    <option [ngValue]="null" disabled>Activo</option>
-                                    <option [ngValue]="1">1</option>
-                                    <option [ngValue]="2">2</option>
+                                <select class="form-control col-sm" formControlName="estadoForm">
+                                    <option [ngValue]="null" disabled>Seleccionar Estado</option>
+                                    <option [ngValue]="1">Activo</option>
+                                    <option [ngValue]="2">Inactivo</option>
                                 </select>
                             </div>
                         </div>
@@ -128,9 +128,9 @@
 
                     </div>
                 </div>
-        <!-- Seccion Datos laborales -->
-        <!-- formulario datos laborales -->
-        <!-- <form> -->
+                <!-- Seccion Datos laborales -->
+                <!-- formulario datos laborales -->
+                <!-- <form> -->
                 <!-- <div class="col-md ">
 
                     <nav class="navbar navbar-dark bg-primary">
@@ -260,9 +260,11 @@
             </div>
 
         </div>
-        
+
         <!-- Botones -->
-        <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [disabled]="!nuevoEmpleadoForm.valid" value="Grabar">
-        <input type="submit" class="btn btn-danger" style="margin-left: 15px; margin-top: 15px;" [disabled]="!nuevoEmpleadoForm.valid" value="Cancelar">
+        <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;"
+            [disabled]="!nuevoEmpleadoForm.valid" value="Grabar">
+        <input type="submit" class="btn btn-danger" style="margin-left: 15px; margin-top: 15px;"
+            [disabled]="!nuevoEmpleadoForm.valid" value="Cancelar">
     </form>
 </div>
