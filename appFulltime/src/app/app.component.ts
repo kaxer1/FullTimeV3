@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,29 @@ import { Router } from '@angular/router';
 export class AppComponent {
   title = 'appFulltime';
 
-  @Input() recibeUrl: string;
-
   constructor(
-    public router: Router
+    public router: Router,
+    public location: Location
   ){ }
+
+  removerMenu(){
+    var tituloPestania = this.location.prepareExternalUrl(this.location.path());
+    tituloPestania = tituloPestania.slice(1);
+    if (tituloPestania === 'login'){
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  removerLogin(){
+    var tituloPestania = this.location.prepareExternalUrl(this.location.path());
+    tituloPestania = tituloPestania.slice(1);
+    if (tituloPestania != 'login'){
+      return false;
+    } else {
+      return true;
+    }
+  }
 
 }

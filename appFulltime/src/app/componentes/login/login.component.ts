@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
+  title = 'login';
+  
   url: string;
   public validarCredencialesF = new FormGroup({
     usuarioF: new FormControl('', Validators.required),
