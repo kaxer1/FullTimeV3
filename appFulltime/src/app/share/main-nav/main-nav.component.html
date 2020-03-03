@@ -3,6 +3,7 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar color="succeed" class="texcol">Menu</mat-toolbar>
     <mat-nav-list>
+      <!-- <i class="fas fa-user-cog"></i> -->
       <a mat-list-item [routerLink]="['/home']" class="texcol">Administración</a>
       <a mat-list-item [routerLink]="['/registrarEmpleado']" class="texcol">Registrar Empleados</a>
       <a mat-list-item [routerLink]="['/empleado']" class="texcol">Empleado</a>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { ToastrService} from 'ngx-toastr'
 
 @Component({
   selector: 'app-registro',
@@ -23,11 +24,13 @@ export class RegistroComponent implements OnInit {
     correoAlternativoForm: new FormControl('', [Validators.email,Validators.required]),
   });
   constructor(
-    public rest: EmpleadoService
+    private rest: EmpleadoService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.limpliarCampos();
+
   }
 
   limpliarCampos(){
@@ -64,6 +67,7 @@ export class RegistroComponent implements OnInit {
     this.rest.postEmpleadoRest(dataEmpleado)
     .subscribe(
       response => {
+        this.toastr.success('Operacion Exitosa', 'Empleado guardado');
         console.log(response);
       },
       error => {

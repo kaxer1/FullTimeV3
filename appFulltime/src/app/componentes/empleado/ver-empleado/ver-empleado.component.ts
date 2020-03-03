@@ -33,13 +33,12 @@ export class VerEmpleadoComponent implements OnInit {
   verEmpleado(idemploy: any) {
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
+      // sacar la fecha del JSON 
       var cadena1 = data[0]['fec_nacimiento'];
-      var aux1 = cadena1.split("T");
-      // console.log(aux1[0]);
-      
+      var aux1 = cadena1.split("T");      
       this.fecha = aux1[0];
-      console.log(this.fecha);
-      console.log(this.empleadoUno);
+      // console.log(this.fecha);
+      // console.log(this.empleadoUno);
     })
   }
 

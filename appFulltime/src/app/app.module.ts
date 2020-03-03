@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+
 // vistas
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -28,6 +29,7 @@ import { DiscapacidadService } from './servicios/discapacidad/discapacidad.servi
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -56,6 +58,7 @@ import { ImageUploadModule } from 'angular2-image-upload';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
