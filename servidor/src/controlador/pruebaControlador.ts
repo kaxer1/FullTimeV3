@@ -26,6 +26,7 @@ class PruebaControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
+
     const { nombre } = req.body;
     await pool.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
     //console.log(req.body);

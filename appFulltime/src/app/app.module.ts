@@ -17,8 +17,9 @@ import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { HomeComponent } from './componentes/home/home.component';
-import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
+import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
+import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -37,6 +38,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ImageUploadModule } from 'angular2-image-upload';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -50,7 +52,8 @@ import { ImageUploadModule } from 'angular2-image-upload';
     TitulosComponent,
     DiscapacidadComponent,
     VerEmpleadoComponent,
-    RegistroRolComponent
+    RegistroRolComponent,
+    SeleccionarRolPermisoComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +68,8 @@ import { ImageUploadModule } from 'angular2-image-upload';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
-    ImageUploadModule.forRoot()
+    ImageUploadModule.forRoot(),
+    FontAwesomeModule
   ],
   providers: [
     LoginService,

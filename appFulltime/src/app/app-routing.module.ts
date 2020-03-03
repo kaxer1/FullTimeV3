@@ -8,6 +8,7 @@ import { HomeComponent } from './componentes/home/home.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
+import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 
 const routes: Routes = [
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'discapacidad', component: DiscapacidadComponent},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
   { path: 'registrarRol', component: RegistroRolComponent},
+  { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
 ];
 
 @NgModule({
