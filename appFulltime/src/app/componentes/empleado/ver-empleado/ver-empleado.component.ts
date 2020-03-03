@@ -10,6 +10,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   empleadoUno: any = [];
   idEmpleado: string;
+  fecha: any = [];
 
   constructor(
     public rest: EmpleadoService,
@@ -32,6 +33,12 @@ export class VerEmpleadoComponent implements OnInit {
   verEmpleado(idemploy: any) {
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
+      var cadena1 = data[0]['fec_nacimiento'];
+      var aux1 = cadena1.split("T");
+      // console.log(aux1[0]);
+      
+      this.fecha = aux1[0];
+      console.log(this.fecha);
       console.log(this.empleadoUno);
     })
   }

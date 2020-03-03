@@ -14,8 +14,8 @@ class PruebasRutas {
         this.router.get('/', pruebaControlador_1.default.list);
         this.router.get('/:id', pruebaControlador_1.default.getOne);
         this.router.post('/', pruebaControlador_1.default.create);
-        this.router.put('/:id', pruebaControlador_1.default.update);
-        this.router.delete('/:id', pruebaControlador_1.default.delete);
+        // this.router.put('/:id', pruebaControlador.update);
+        // this.router.delete('/:id', pruebaControlador.delete);
     }
 }
 const pruebasRutas = new PruebasRutas();

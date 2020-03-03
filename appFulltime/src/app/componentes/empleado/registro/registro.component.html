@@ -68,7 +68,7 @@
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label">Teléfono</label>
                             <div class="col-sm">
-                                <input type="text" class="form-control"
+                                <input type="number" class="form-control"
                                 formControlName="telefonoForm" placeholder="Ingrese número telefónico">
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                             <label class="col-sm-5 col-form-label">Estado Civil</label>
                             <div class="col-sm">
                                 <select class="form-control"  formControlName="estadoCivilForm">
-                                    <option disabled>Seleccione Estado Civil...</option>
+                                    <option [ngValue]="null" disabled>Seleccione Estado Civil...</option>
                                     <option [ngValue]="1" >Soltero/a</option>
                                     <option [ngValue]="2">Unión de Hecho</option>
                                     <option [ngValue]="3">Casado/a</option>
