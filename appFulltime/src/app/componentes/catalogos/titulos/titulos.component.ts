@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { RolesService } from 'src/app/servicios/roles/roles.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
+import { ToastrService } from 'ngx-toastr';
+
+// ayuda para crear los niveles
+interface Nivel {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-titulos',
@@ -9,23 +15,41 @@ import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
   styleUrls: ['./titulos.component.css']
 })
 export class TitulosComponent implements OnInit {
+  
+  // Control de los campos del formulario
+  nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
+  nivel = new FormControl('', Validators.required)
 
+  // asignar los campos en un formulario en grupo
   public nuevoTituloForm = new FormGroup({
-    // idForm: new FormControl('', Validators.required),
-    tituloNombreForm: new FormControl('', Validators.required),
-    tituloNivelForm: new FormControl('', Validators.required),
+    tituloNombreForm: this.nombre,
+    tituloNivelForm: this.nivel,
   });
 
+  // Arreglo de niveles existentes
+  niveles: Nivel[] = [
+    {value: '1', viewValue: 'Primaria'},
+    {value: '2', viewValue: 'Secundaria'},
+    {value: '3', viewValue: 'Bachillerato'},
+    {value: '4', viewValue: 'Universidad'},
+    {value: '5', viewValue: 'MBS'}
+  ];
+
   constructor(
-    public rest: TituloService
+    private rest: TituloService,
+    private toastr: ToastrService,
   ) { 
-    this.nuevoTituloForm.setValue({
-      tituloNombreForm: '',
-      tituloNivelForm: '',
-    });
+    this.limpiarCampos();
   }
 
   ngOnInit(): void {
+  }
+
+  obtenerMensajeErrorNombre() {
+    if (this.nombre.hasError('required')) {
+      return 'Debe ingresar algun nombre';
+    }
+    return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
   }
 
   insertarTitulo(form){
@@ -35,13 +59,19 @@ export class TitulosComponent implements OnInit {
     };
 
     this.rest.postTituloRest(dataTitulo)
-    .subscribe(
-      response => {
-        console.log(response);
-      },
-      error => {
+    .subscribe(response => {
+        this.toastr.success('Operacion Exitosa', 'Titulo guardado');
+        this.limpiarCampos();
+      }, error => {
         console.log(error);
       });;
+  }
+
+  limpiarCampos(){
+    this.nuevoTituloForm.setValue({
+      tituloNombreForm: '',
+      tituloNivelForm: '',
+    });
   }
 
 }

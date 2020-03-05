@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
+  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
   
   constructor(
     public rest: EmpleadoService,

@@ -16,14 +16,14 @@ const database_1 = __importDefault(require("../../database"));
 class TituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const titulo = yield database_1.default.query('SELECT * FROM cg_titulo');
+            const titulo = yield database_1.default.query('SELECT * FROM cg_titulos');
             res.json(titulo.rows);
         });
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unTitulo = yield database_1.default.query('SELECT * FROM cg_titulo WHERE id = $1', [id]);
+            const unTitulo = yield database_1.default.query('SELECT * FROM cg_titulos WHERE id = $1', [id]);
             if (unTitulo.rowCount > 0) {
                 return res.json(unTitulo.rows);
             }
@@ -33,7 +33,7 @@ class TituloControlador {
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, nivel } = req.body;
-            yield database_1.default.query('INSERT INTO cg_titulo ( nombre, nivel ) VALUES ($1, $2)', [nombre, nivel]);
+            yield database_1.default.query('INSERT INTO cg_titulos ( nombre, nivel ) VALUES ($1, $2)', [nombre, nivel]);
             console.log(req.body);
             res.json({ message: 'Titulo guardado' });
         });
