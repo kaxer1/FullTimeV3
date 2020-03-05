@@ -13,6 +13,8 @@ const empleadoRutas_1 = __importDefault(require("./rutas/empleadoRutas"));
 const loginRuta_1 = __importDefault(require("./rutas/login/loginRuta"));
 const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas"));
 const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
+const catRegimenRuta_1 = __importDefault(require("./rutas/Catalogos/catRegimenRuta"));
+const catFeriadosRuta_1 = __importDefault(require("./rutas/Catalogos/catFeriadosRuta"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -31,8 +33,11 @@ class Server {
         this.app.use('/rol', pruebaRutas_1.default);
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/login', loginRuta_1.default);
+        //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', tituloRutas_1.default);
         this.app.use('/discapacidad', discapacidadRutas_1.default);
+        this.app.use('/regimen', catRegimenRuta_1.default);
+        this.app.use('/feriados', catFeriadosRuta_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {
@@ -40,5 +45,5 @@ class Server {
         });
     }
 }
-const servidor = new Server();
-servidor.start();
+const SERVIDOR = new Server();
+SERVIDOR.start();

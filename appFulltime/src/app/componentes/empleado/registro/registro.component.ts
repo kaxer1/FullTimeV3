@@ -11,8 +11,8 @@ export class RegistroComponent implements OnInit {
 
   public nuevoEmpleadoForm = new FormGroup({
 
-    nombreForm: new FormControl('', [Validators.required, Validators.pattern('[a-zA-z]+')]),
-    apellidoForm: new FormControl('', [Validators.required, Validators.pattern('[a-zA-z]+')]),
+    nombreForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]),
+    apellidoForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")]),
     cedulaForm: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'), Validators.maxLength(10)]),
     emailForm: new FormControl('', [Validators.required, Validators.email]),
     telefonoForm: new FormControl('', Validators.required),
@@ -32,21 +32,9 @@ export class RegistroComponent implements OnInit {
   }
 
   soloNumeros(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toLowerCase();
-    let numeros = "0123456789";
-    let especiales = [8, 37, 39, 46];
 
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-
-    if (numeros.indexOf(tecla) == -1 && !tecla_especial)
-      return false;
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8))
   }
 
   limpliarCampos() {
@@ -66,7 +54,7 @@ export class RegistroComponent implements OnInit {
     });
   }
 
- 
+
 
   insertarEmpleado(form) {
     let dataEmpleado = {
@@ -97,3 +85,5 @@ export class RegistroComponent implements OnInit {
   }
 
 }
+
+
