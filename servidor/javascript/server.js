@@ -36,7 +36,7 @@ class Server {
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', tituloRutas_1.default);
         this.app.use('/discapacidad', discapacidadRutas_1.default);
-        this.app.use('/regimen', catRegimenRuta_1.default);
+        this.app.use('/regimenLaboral', catRegimenRuta_1.default);
         this.app.use('/feriados', catFeriadosRuta_1.default);
     }
     start() {

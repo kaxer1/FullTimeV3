@@ -40,7 +40,7 @@ class Server {
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', tituloRuta);
         this.app.use('/discapacidad', discapacidadRuta);
-        this.app.use('/regimen', REGIMEN_RUTA);
+        this.app.use('/regimenLaboral', REGIMEN_RUTA);
         this.app.use('/feriados', FERIADOS_RUTA);
     }
 

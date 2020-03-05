@@ -45,6 +45,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
+import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { MatSliderModule } from '@angular/material/slider';
     DiscapacidadComponent,
     VerEmpleadoComponent,
     RegistroRolComponent,
-    SeleccionarRolPermisoComponent
+    SeleccionarRolPermisoComponent,
+    RegimenComponent
   ],
   imports: [
     BrowserModule,

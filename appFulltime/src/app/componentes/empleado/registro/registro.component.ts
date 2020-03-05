@@ -35,7 +35,6 @@ export class RegistroComponent implements OnInit {
   }
 
   soloNumeros(e) {
-
     var key = window.Event ? e.which : e.keyCode
     return ((key >= 48 && key <= 57) || (key === 8))
   }
@@ -75,15 +74,6 @@ export class RegistroComponent implements OnInit {
     };
 
     this.rest.postEmpleadoRest(dataEmpleado)
-<<<<<<< HEAD
-      .subscribe(
-        response => {
-          console.log(response);
-        },
-        error => {
-          console.log(error);
-        });
-=======
     .subscribe(
       response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
@@ -92,7 +82,6 @@ export class RegistroComponent implements OnInit {
       error => {
         console.log(error);
       });
->>>>>>> 03000ec565326c394aeeacdecc3b37214f44cb16
 
     this.limpliarCampos();
 
