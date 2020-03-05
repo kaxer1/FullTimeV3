@@ -3,13 +3,13 @@ import pool from '../database';
 
 class DiscapacidadControlador {
   public async list(req: Request, res: Response) {
-    const discapacidad = await pool.query('SELECT * FROM discapacidad');
+    const discapacidad = await pool.query('SELECT * FROM cg_discapacidades');
     res.json(discapacidad.rows);
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const unaDiscapacidad = await pool.query('SELECT * FROM discapacidad WHERE id = $1', [id]);
+    const unaDiscapacidad = await pool.query('SELECT * FROM cg_discapacidades WHERE id = $1', [id]);
     if (unaDiscapacidad.rowCount > 0) {
       return res.json(unaDiscapacidad.rows)
     }
@@ -17,8 +17,8 @@ class DiscapacidadControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const { id_empleado, carnet_conadis, porcentaje, tipo } = req.body;
-    await pool.query('INSERT INTO discapacidad ( id_empleado, carnet_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carnet_conadis, porcentaje, tipo]);
+    const { id_empleado, carn_conadis, porcentaje, tipo } = req.body;
+    await pool.query('INSERT INTO cg_discapacidades ( id_empleado, carn_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carn_conadis, porcentaje, tipo]);
     console.log(req.body);
     res.json({ message: 'Discapacidad guardada' });
   }

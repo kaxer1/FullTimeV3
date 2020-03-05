@@ -16,14 +16,14 @@ const database_1 = __importDefault(require("../database"));
 class DiscapacidadControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const discapacidad = yield database_1.default.query('SELECT * FROM discapacidad');
+            const discapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades');
             res.json(discapacidad.rows);
         });
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM discapacidad WHERE id = $1', [id]);
+            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades WHERE id = $1', [id]);
             if (unaDiscapacidad.rowCount > 0) {
                 return res.json(unaDiscapacidad.rows);
             }
@@ -32,8 +32,8 @@ class DiscapacidadControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empleado, carnet_conadis, porcentaje, tipo } = req.body;
-            yield database_1.default.query('INSERT INTO discapacidad ( id_empleado, carnet_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carnet_conadis, porcentaje, tipo]);
+            const { id_empleado, carn_conadis, porcentaje, tipo } = req.body;
+            yield database_1.default.query('INSERT INTO cg_discapacidades ( id_empleado, carn_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carn_conadis, porcentaje, tipo]);
             console.log(req.body);
             res.json({ message: 'Discapacidad guardada' });
         });

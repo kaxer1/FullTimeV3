@@ -1,38 +1,36 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
 
-
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Añadir Titulo</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <form [formGroup]="nuevoTituloForm" (ngSubmit)="insertarTitulo(nuevoTituloForm.value)">
-
-
-        <div class="container border border-primary" style="padding-top: 15px; padding-bottom: 2px;">
-            <div class="form-group row">
-                <label class="col-sm-5 col-form-label">Nombre</label>
-                <div class="col-sm">
-                    <input type="text" class="form-control" formControlName="tituloNombreForm">
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-card-header>
+            <mat-card-title>Añadir Título</mat-card-title>
+        </mat-card-header>
+        <!-- Formulario Completo -->
+        <form [formGroup]="nuevoTituloForm" (ngSubmit)="insertarTitulo(nuevoTituloForm.value)">
+            <mat-card-content>
+                <div class="container">
+                    <mat-form-field>
+                        <mat-label>Ingresar Nombre de Título</mat-label>
+                        <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre" required>
+                        <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccione Nivel</mat-label>
+                        <mat-select [formControl]="nivel">
+                            <mat-option *ngFor="let n of niveles" [value]="n.value">
+                                {{n.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-5 col-form-label">Nivel</label>
-                <div class="col-sm">
-                    <select class="form-control" formControlName="tituloNivelForm">
-                        <option [ngValue]="null" disabled>Seleccione Nivel</option>
-                        <option [ngValue]="1">Primaria</option>
-                        <option [ngValue]="2">Secundaria</option>
-                        <option [ngValue]="3">Bachillerato</option>
-                        <option [ngValue]="4">Universidad</option>
-                        <option [ngValue]="5">MBS</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [disabled]="!nuevoTituloForm.valid" value="Grabar">
-        <input type="submit" class="btn btn-danger" style="margin-left: 15px; margin-top: 15px;" [disabled]="!nuevoTituloForm.valid" value="Cancelar">
-
-    </form>
+            </mat-card-content>
+            <mat-card-actions>
+                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                    [disabled]="!nuevoTituloForm.valid" value="Grabar">
+                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
+                    [disabled]="!nuevoTituloForm.valid" value="Cancelar">
+            </mat-card-actions>
+        </form>
+    </mat-card>
 
 </div>

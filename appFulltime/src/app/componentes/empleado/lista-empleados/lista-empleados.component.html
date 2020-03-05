@@ -52,37 +52,34 @@
 </div>
 
 <br>
-<div class="container">
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Resultados de Búsqueda</h5>
-    </nav>
-    <div class="container border border-primary">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Id empleado</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Cedula</th>
-                    <th scope="col">Estado</th>
-                    <th scope="col">correo</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let e of empleado">
-                    <th scope="row">{{e.empl_id}}</th>
-                    <td>{{e.nombre}}</td>
-                    <td>{{e.apellido}}</td>
-                    <td>{{e.cedula}}</td>
-                    <td>{{e.estado}}</td>
-                    <td>{{e.correo}}</td>
-                    <td>
-                        <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
-                            [routerLink]="['/verEmpleado/', e.id]">Ver</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <p class="display-4">Resultado de búsqueda</p>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Id </th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Cédula</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let e of empleado">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{e.id}}</th>
+                <td style="padding-top: 10px;">{{e.nombre}}</td>
+                <td style="padding-top: 10px;">{{e.apellido}}</td>
+                <td style="padding-top: 10px;">{{e.cedula}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{e.estado}}</td>
+                <td style="padding-top: 10px;">{{e.correo}}</td>
+                <td>
+                    <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
+                        [routerLink]="['/verEmpleado/', e.id]">Ver</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
