@@ -7,8 +7,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-
-
 // vistas
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
