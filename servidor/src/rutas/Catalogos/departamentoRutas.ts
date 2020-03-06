@@ -14,6 +14,7 @@ class DepartamentoRutas {
         this.router.get('/', DEPARTAMENTO_CONTROLADOR.list);
         this.router.get('/:id',  DEPARTAMENTO_CONTROLADOR.getOne);
         this.router.post('/', DEPARTAMENTO_CONTROLADOR.create);
+        this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.getIdByNombre);
     }
 }
 

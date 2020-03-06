@@ -17,11 +17,21 @@ class DepartamentoControlador {
     }
   
     public async create(req: Request, res: Response): Promise<void> {
-      const { nombre} = req.body;
-      await pool.query('INSERT INTO cg_departamentos (nombre) VALUES ($1)', [nombre]);
+      const { nombre,depa_padre,nivel} = req.body;
+      await pool.query('INSERT INTO cg_departamentos (nombre) VALUES ($1, $2,$3)', [nombre,depa_padre,nivel]);
       console.log(req.body);
       res.json({ message: 'El departamento ha sido guardado en éxito' });
     }
+
+    public async getIdByNombre(req: Request, res: Response): Promise<any>{
+      const  {nombre} = req.params;
+      const unIdProceso = await pool.query('SELECT id FROM cg_departamentos WHERE nombre = $1', [nombre]);
+      if (unIdProceso.rowCount > 0) {
+        return res.json(unIdProceso.rows);
+      }
+      res.status(404).json({ text: 'El departamento no ha sido encontrado' });
+    }
+  
   
   }
   
