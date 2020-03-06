@@ -10,6 +10,9 @@ import { DiscapacidadComponent } from './componentes/empleado/discapacidad/disca
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
+import {RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
+import {TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import {RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
@@ -17,6 +20,9 @@ import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia
 import { DepartamentosComponent } from './componentes/catalogos/cg_departamento/departamentos/departamentos.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
+import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -30,13 +36,19 @@ const routes: Routes = [
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
   { path: 'registrarRol', component: RegistroRolComponent},
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
+  { path: 'regimenLaboral', component: RegimenComponent},
+  { path: 'tipoComidas', component: TipoComidasComponent},
+  { path: 'relojes', component: RelojesComponent},
   { path: 'proceso', component: PrincipalProcesoComponent},
   { path: 'registrarProceso', component: RegistroProcesoComponent },
   { path: 'provincia', component: PrincipalProvinciaComponent},
   { path: 'registrarProvincia', component:RegistroProvinciaComponent},
   { path: 'departamento', component: DepartamentosComponent},
   { path: 'horario', component: PrincipalHorarioComponent},
-  { path: 'registrarHorario', component:RegistroHorarioComponent}
+  { path: 'registrarHorario', component:RegistroHorarioComponent},
+  { path: 'horasExtras', component: HorasExtrasComponent},
+  { path: 'notificaciones', component: NotificacionesComponent},
+
 ];
 
 @NgModule({

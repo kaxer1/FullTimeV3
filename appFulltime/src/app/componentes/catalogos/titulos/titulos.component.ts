@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
 import { ToastrService } from 'ngx-toastr';
 
-// ayuda para crear los niveles
+// Interface para creación de selección de niveles
 interface Nivel {
   value: string;
   viewValue: string;

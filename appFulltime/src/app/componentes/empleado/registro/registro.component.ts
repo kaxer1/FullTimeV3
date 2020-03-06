@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { ToastrService} from 'ngx-toastr'
 
@@ -11,9 +11,10 @@ import { ToastrService} from 'ngx-toastr'
 export class RegistroComponent implements OnInit {
 
   public nuevoEmpleadoForm = new FormGroup({
-    nombreForm: new FormControl('', [Validators.required,Validators.pattern('[a-zA-z]+')]),
-    apellidoForm: new FormControl('', [Validators.required, Validators.pattern('[a-zA-z]+')]),
-    cedulaForm: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]') ]),
+
+    nombreForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]),
+    apellidoForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")]),
+    cedulaForm: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'), Validators.maxLength(10)]),
     emailForm: new FormControl('', [Validators.required, Validators.email]),
     telefonoForm: new FormControl('', Validators.required),
     domicilioForm: new FormControl('', Validators.required),
@@ -21,7 +22,7 @@ export class RegistroComponent implements OnInit {
     estadoCivilForm: new FormControl('', Validators.required),
     generoForm: new FormControl('', Validators.required),
     estadoForm: new FormControl('', Validators.required),
-    correoAlternativoForm: new FormControl('', [Validators.email,Validators.required]),
+    correoAlternativoForm: new FormControl('', [Validators.email, Validators.required]),
   });
   constructor(
     private rest: EmpleadoService,
@@ -33,7 +34,13 @@ export class RegistroComponent implements OnInit {
 
   }
 
-  limpliarCampos(){
+  soloNumeros(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8))
+  }
+
+  limpliarCampos() {
+
     this.nuevoEmpleadoForm.setValue({
       nombreForm: '',
       apellidoForm: '',
@@ -49,7 +56,9 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  insertarEmpleado(form){
+
+
+  insertarEmpleado(form) {
     let dataEmpleado = {
       cedula: form.cedulaForm,
       apellido: form.apellidoForm,
@@ -79,3 +88,5 @@ export class RegistroComponent implements OnInit {
   }
 
 }
+
+

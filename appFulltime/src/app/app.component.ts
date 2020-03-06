@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -34,5 +34,8 @@ export class AppComponent {
       return true;
     }
   }
+ 
 
 }
+
+

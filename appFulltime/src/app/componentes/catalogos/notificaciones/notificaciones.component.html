@@ -1,0 +1,46 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-card-header>
+            <mat-card-title>Añadir Notificación</mat-card-title>
+        </mat-card-header>
+        <!-- Formulario Completo -->
+        <form [formGroup]="nuevaNotificacionForm" (ngSubmit)="insertarNotificacion(nuevaNotificacionForm.value)">
+            <mat-card-content>
+                <div class="container">
+                    <mat-form-field>
+                        <mat-label>Tipo</mat-label>
+                        <input matInput placeholder="Ej: " [formControl]="tipo" required>
+                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Nivel</mat-label>
+                        <input matInput placeholder="Ej: " [formControl]="nivel" required>
+                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Departamento</mat-label>
+                        <input matInput placeholder="Ej: " [formControl]="idDepartamento" required>
+                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Tipo Permiso</mat-label>
+                        <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" required>
+                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                    </mat-form-field>
+                    <br>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                    [disabled]="!nuevaNotificacionForm.valid" value="Grabar">
+                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
+                    [disabled]="!nuevaNotificacionForm.valid" value="Cancelar">
+            </mat-card-actions>
+        </form>
+    </mat-card>
+
+</div>

@@ -1,33 +1,42 @@
+.sidenav-container { height: 100%; background-color: rgb(255, 255, 255);}
 
+.sidenav { width: 200px; background-color: rgb(26, 115, 199);}
 
-.sidenav-container {
-  height: 100%;
-  background-color: rgb(255, 255, 255);
+.texcol{ color: aliceblue;}
 
-}
+.sidenav .mat-toolbar { background: inherit;}
 
-.sidenav {
-  width: 200px;
-  background-color: rgb(26, 115, 199);
-}
-.texcol{
-  color: aliceblue;
-}
-
-.sidenav .mat-toolbar {
-  background: inherit;
-}
-
-.mat-toolbar.mat-primary {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background-color: rgb(118, 188, 245);
-}
-
+.mat-toolbar.mat-primary { position: sticky; top: 0; z-index: 1; background-color: rgb(118, 188, 245);}
 
 .nav {
-  background-color: rgb(37, 146, 235);
+  background: rgb(232,232,232);
+  background: radial-gradient(circle, rgba(232,232,232,0.8883928571428571) 0%, rgba(249,249,249,1) 100%);
 }
 
+.degradado{
+  background: rgb(232,232,232);
+  background: radial-gradient(circle, rgba(232,232,232,0.8883928571428571) 0%, rgba(249,249,249,1) 100%);
+}
 
+.full-width { width: 100%;}
+
+.menu-button { transition: 300ms ease-in-out; transform: rotate(0deg);}
+
+.menu-button.rotated { transform: rotate(180deg);}
+
+.submenu {
+  overflow-y: hidden;
+  transition: transform 300ms ease;
+  transform: scaleY(0);
+  transform-origin: top;
+  padding-left: 30px;
+}
+.submenu.expanded { transform: scaleY(1);}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.verUser{
+  margin-top: 45px;
+}

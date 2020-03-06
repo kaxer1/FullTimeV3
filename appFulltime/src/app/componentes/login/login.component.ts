@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class LoginComponent implements OnInit {
 
   title = 'login';
-  
+
   url: string;
   public validarCredencialesF = new FormGroup({
     usuarioF: new FormControl('', Validators.required),
@@ -21,14 +21,14 @@ export class LoginComponent implements OnInit {
   constructor(
     public rest: LoginService,
     private router: Router
-    ) {
+  ) {
     this.validarCredencialesF.setValue({
       usuarioF: '',
       passwordF: ''
     });
-    
+
   }
-  
+
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.router.url);
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
     };
     this.rest.postCredenciales(dataUsuario).subscribe(response => {
       console.log(response);
-      
+
       let dato = String(Object.values(response));
       console.log(dato);
       this.irHome(dato);
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
       })
   }
 
-  irHome(dato: any){
+  irHome(dato: any) {
     if (dato === '0') {
       console.log('Contraseña Incorrecta');
       alert('Contraseña incorrrecta')
@@ -61,9 +61,10 @@ export class LoginComponent implements OnInit {
       console.log('Usuario no registrado')
       alert('Usuario no registrado');
 
-    } else {
+    }
+    else {
       console.log('Usuario y contraseña válidos');
-      this.router.navigate(['/','home']);
+      this.router.navigate(['/', 'home']);
       // window.location.href = 'http://localhost:4200/roles'
       // alert('Bienvenido ' + dataUsuario.nombre_usuario)
     }
