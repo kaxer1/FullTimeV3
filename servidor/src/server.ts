@@ -13,6 +13,10 @@ import REGIMEN_RUTA from './rutas/Catalogos/catRegimenRuta';
 import FERIADOS_RUTA from './rutas/Catalogos/catFeriadosRuta';
 import TIPO_COMIDAS_RUTA from './rutas/Catalogos/catTipoComidasRuta';
 import RELOJES_RUTA from './rutas/Catalogos/catRelojesRuta';
+import PROVINCIA_RUTA from './rutas/Catalogos/provinciaRutas';
+import DEPARTAMENTO_RUTA from './rutas/Catalogos/departamentoRutas';
+import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
+import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
 
 class Server {
 
@@ -46,6 +50,11 @@ class Server {
         this.app.use('/feriados', FERIADOS_RUTA);
         this.app.use('/tipoComidas', TIPO_COMIDAS_RUTA);
         this.app.use('/relojes', RELOJES_RUTA);
+        this.app.use('/provincia',PROVINCIA_RUTA);
+        this.app.use('/departamento',DEPARTAMENTO_RUTA);
+        this.app.use('/proceso', PROCESO_RUTA);
+        this.app.use('/horario', HORARIO_RUTA);
+
     }
 
     start(): void {

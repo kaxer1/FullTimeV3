@@ -17,6 +17,10 @@ const catRegimenRuta_1 = __importDefault(require("./rutas/Catalogos/catRegimenRu
 const catFeriadosRuta_1 = __importDefault(require("./rutas/Catalogos/catFeriadosRuta"));
 const catTipoComidasRuta_1 = __importDefault(require("./rutas/Catalogos/catTipoComidasRuta"));
 const catRelojesRuta_1 = __importDefault(require("./rutas/Catalogos/catRelojesRuta"));
+const provinciaRutas_1 = __importDefault(require("./rutas/Catalogos/provinciaRutas"));
+const departamentoRutas_1 = __importDefault(require("./rutas/Catalogos/departamentoRutas"));
+const procesoRutas_1 = __importDefault(require("./rutas/Catalogos/procesoRutas"));
+const horarioRutas_1 = __importDefault(require("./rutas/Catalogos/horarioRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -42,6 +46,10 @@ class Server {
         this.app.use('/feriados', catFeriadosRuta_1.default);
         this.app.use('/tipoComidas', catTipoComidasRuta_1.default);
         this.app.use('/relojes', catRelojesRuta_1.default);
+        this.app.use('/provincia', provinciaRutas_1.default);
+        this.app.use('/departamento', departamentoRutas_1.default);
+        this.app.use('/proceso', procesoRutas_1.default);
+        this.app.use('/horario', horarioRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

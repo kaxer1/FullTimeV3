@@ -133,5 +133,8 @@
       }
     }
   },
-  "defaultProject": "appFulltime"
+  "defaultProject": "appFulltime",
+  "cli": {
+    "analytics": "5dd88edc-8f7c-49e8-bf0c-3440daff0a58"
+  }
 }
