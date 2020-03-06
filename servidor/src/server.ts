@@ -9,6 +9,8 @@ import empleado from './rutas/empleadoRutas';
 import loginRuta from './rutas/login/loginRuta';
 import discapacidadRuta from './rutas/discapacidadRutas';
 import tituloRuta from './rutas/Catalogos/tituloRutas';
+import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';
+import notificacionesRutas from './rutas/Catalogos/notificacionesRutas';
 
 
 
@@ -38,6 +40,8 @@ class Server {
         this.app.use('/login', loginRuta);
         this.app.use('/titulo', tituloRuta);
         this.app.use('/discapacidad', discapacidadRuta);
+        this.app.use('/horasExtras', horasExtrasRutas);
+        this.app.use('/notificaciones', notificacionesRutas);
 
     }
 

@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
@@ -21,6 +21,7 @@ import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
+import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -28,6 +29,7 @@ import { LoginService } from './servicios/login/login.service';
 import { TituloService } from './servicios/catalogos/titulo.service';
 import { EmpleadoService } from './servicios/empleado/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
+import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -45,6 +47,14 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
+import { FooterComponent } from './share/footer/footer.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatRadioModule } from '@angular/material/radio';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
@@ -59,7 +69,10 @@ import { MatSliderModule } from '@angular/material/slider';
     DiscapacidadComponent,
     VerEmpleadoComponent,
     RegistroRolComponent,
-    SeleccionarRolPermisoComponent
+    SeleccionarRolPermisoComponent,
+    FooterComponent,
+    HorasExtrasComponent,
+    NotificacionesComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +94,12 @@ import { MatSliderModule } from '@angular/material/slider';
     MatInputModule,
     MatSelectModule,
     MatCardModule,
-    MatSliderModule
+    MatSliderModule,
+    MatBadgeModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatGridListModule
   ],
   providers: [
     LoginService,
@@ -89,6 +107,8 @@ import { MatSliderModule } from '@angular/material/slider';
     TituloService,
     EmpleadoService,
     DiscapacidadService,
+    HorasExtrasService,
+    NotificacionesService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ],
   bootstrap: [AppComponent],

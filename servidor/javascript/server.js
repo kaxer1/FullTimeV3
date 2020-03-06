@@ -13,6 +13,8 @@ const empleadoRutas_1 = __importDefault(require("./rutas/empleadoRutas"));
 const loginRuta_1 = __importDefault(require("./rutas/login/loginRuta"));
 const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas"));
 const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
+const horasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
+const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -33,6 +35,8 @@ class Server {
         this.app.use('/login', loginRuta_1.default);
         this.app.use('/titulo', tituloRutas_1.default);
         this.app.use('/discapacidad', discapacidadRutas_1.default);
+        this.app.use('/horasExtras', horasExtrasRutas_1.default);
+        this.app.use('/notificaciones', notificacionesRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

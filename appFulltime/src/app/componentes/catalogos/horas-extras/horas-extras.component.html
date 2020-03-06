@@ -1,0 +1,98 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-toolbar style="background: white;">
+            <span>Añadir Hora Extra</span>
+        </mat-toolbar>
+        <mat-card-content>
+            <form [formGroup]="nuevaHoraExtraForm">
+                <div class="container" >
+                    <div class="row">
+                        <div class="col-sm">
+                            <mat-form-field>
+                                <mat-label>Ingresar Descripción</mat-label>
+                                <textarea matInput placeholder="Ej: " [formControl]="descripcion" required></textarea>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Seleccione Tipo Descuento</mat-label>
+                                <mat-select [formControl]="tipoDescuento">
+                                    <mat-option *ngFor="let d of descuentos" [value]="d.value">
+                                        {{d.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <br>
+                            <mat-label>Porcentaje de recargo</mat-label>
+                            <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="1" max="100"
+                                [formControl]="recaPorcentaje" required>
+                            </mat-slider>
+                            <br>
+                            <section class="example-section">
+                                <mat-radio-group aria-label="Select an option" [formControl]="inclAlmuerzo" required>
+                                    <label>Incluye Almuerzo</label>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <mat-radio-button value="true">Si</mat-radio-button>
+                                                <mat-radio-button value="false">No</mat-radio-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </section>
+                        </div>
+                        <div class="col-sm">
+                            <br>
+                            <mat-form-field>
+                                <input matInput type="date" placeholder="Selecciona Dia de hora extra"
+                                    [formControl]="diaHoraExtra" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <input matInput type="time" placeholder="Hora Inicio" [formControl]="horaInicio"
+                                    required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <input matInput type="time" placeholder="Hora Final" [formControl]="horaFinal" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Tipo Función</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="tipoFuncion" required>
+                                <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm">
+                            <mat-form-field>
+                                <mat-label>Hora Jornada</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="horaJornada" required>
+                                <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Tipo Dia</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="tipoDia" required>
+                                <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Código</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="codigo" required>
+                                <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card-content>
+        <mat-card-actions>
+            <input type="submit" class="btn btn-primary" (click)="insertarHoraExtra(nuevaHoraExtraForm.value)"
+                style="margin-left: 15px;" [disabled]="!nuevaHoraExtraForm.valid" value="Grabar">
+            <input type="submit" class="btn btn-danger" (click)="limpiarCampos()" style="margin-left: 15px;"
+                value="Cancelar">
+        </mat-card-actions>
+    </mat-card>
+
+</div>
