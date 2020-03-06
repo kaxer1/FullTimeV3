@@ -20,6 +20,9 @@ import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia
 import { DepartamentosComponent } from './componentes/catalogos/cg_departamento/departamentos/departamentos.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
+import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -42,7 +45,10 @@ const routes: Routes = [
   { path: 'registrarProvincia', component:RegistroProvinciaComponent},
   { path: 'departamento', component: DepartamentosComponent},
   { path: 'horario', component: PrincipalHorarioComponent},
-  { path: 'registrarHorario', component:RegistroHorarioComponent}
+  { path: 'registrarHorario', component:RegistroHorarioComponent},
+  { path: 'horasExtras', component: HorasExtrasComponent},
+  { path: 'notificaciones', component: NotificacionesComponent},
+
 ];
 
 @NgModule({

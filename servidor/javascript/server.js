@@ -21,6 +21,8 @@ const provinciaRutas_1 = __importDefault(require("./rutas/Catalogos/provinciaRut
 const departamentoRutas_1 = __importDefault(require("./rutas/Catalogos/departamentoRutas"));
 const procesoRutas_1 = __importDefault(require("./rutas/Catalogos/procesoRutas"));
 const horarioRutas_1 = __importDefault(require("./rutas/Catalogos/horarioRutas"));
+const horasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
+const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -50,6 +52,8 @@ class Server {
         this.app.use('/departamento', departamentoRutas_1.default);
         this.app.use('/proceso', procesoRutas_1.default);
         this.app.use('/horario', horarioRutas_1.default);
+        this.app.use('/horasExtras', horasExtrasRutas_1.default);
+        this.app.use('/notificaciones', notificacionesRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

@@ -17,6 +17,8 @@ import PROVINCIA_RUTA from './rutas/Catalogos/provinciaRutas';
 import DEPARTAMENTO_RUTA from './rutas/Catalogos/departamentoRutas';
 import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
 import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
+import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';
+import notificacionesRutas from './rutas/Catalogos/notificacionesRutas';
 
 class Server {
 
@@ -54,6 +56,9 @@ class Server {
         this.app.use('/departamento',DEPARTAMENTO_RUTA);
         this.app.use('/proceso', PROCESO_RUTA);
         this.app.use('/horario', HORARIO_RUTA);
+        this.app.use('/horasExtras', horasExtrasRutas);
+        this.app.use('/notificaciones', notificacionesRutas);
+
 
     }
 

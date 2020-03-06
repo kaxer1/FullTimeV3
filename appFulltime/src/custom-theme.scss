@@ -13,7 +13,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $appFulltime-primary: mat-palette($mat-indigo);
-$appFulltime-accent: mat-palette($mat-pink, A200, A100, A400);
+$appFulltime-accent: mat-palette($mat-blue);
 
 // The warn palette is optional (defaults to red).
 $appFulltime-warn: mat-palette($mat-red);
@@ -41,7 +41,7 @@ $appFulltime-theme: mat-light-theme($appFulltime-primary, $appFulltime-accent, $
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $appFulltime-primary: mat-palette($mat-indigo);
-$appFulltime-accent: mat-palette($mat-pink, A200, A100, A400);
+$appFulltime-accent: mat-palette($mat-blue);
 
 // The warn palette is optional (defaults to red).
 $appFulltime-warn: mat-palette($mat-red);
@@ -69,7 +69,7 @@ $appFulltime-theme: mat-light-theme($appFulltime-primary, $appFulltime-accent, $
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $appFulltime-primary: mat-palette($mat-indigo);
-$appFulltime-accent: mat-palette($mat-pink, A200, A100, A400);
+$appFulltime-accent: mat-palette($mat-blue);
 
 // The warn palette is optional (defaults to red).
 $appFulltime-warn: mat-palette($mat-red);
@@ -82,3 +82,22 @@ $appFulltime-theme: mat-light-theme($appFulltime-primary, $appFulltime-accent, $
 // that you are using.
 @include angular-material-theme($appFulltime-theme);
 
+@import '~@angular/material/theming';
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+  $font-family: 'Nunito, sans-serif',
+  $headline: mat-typography-level(32px, 48px, 700),
+  $body-1: mat-typography-level(16px, 24px, 500)
+);
+// Override typography CSS classes (e.g., mat-h1, mat-display-1, mat-typography, etc.).
+@include mat-base-typography($custom-typography);
+
+// Override typography for a specific Angular Material components.
+@include mat-checkbox-typography($custom-typography);
+
+// Override typography for all Angular Material, including mat-base-typography and all components.
+@include angular-material-typography($custom-typography);
+// Override the typography in the core CSS.
+@include mat-core($custom-typography);

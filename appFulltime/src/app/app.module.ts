@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule} from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
@@ -27,6 +27,8 @@ import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provinci
 import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
+import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
+
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
@@ -35,6 +37,8 @@ import { EmpleadoService } from './servicios/empleado/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
 import { ProvinciaService } from './servicios/catalogos/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
+import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
+
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -57,6 +61,13 @@ import { RelojesComponent } from './componentes/catalogos/relojes/relojes.compon
 import { FeriadosComponent } from './componentes/catalogos/feriados/feriados.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
+import { FooterComponent } from './share/footer/footer.component';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
+import { MatGridListModule } from '@angular/material/grid-list';
+
 
 @NgModule({
   declarations: [
@@ -81,8 +92,10 @@ import {MatRadioModule} from '@angular/material/radio';
     PrincipalProcesoComponent,
     RegistroProcesoComponent,
     PrincipalHorarioComponent,
-    RegistroHorarioComponent
-
+    RegistroHorarioComponent,
+    FooterComponent,
+    HorasExtrasComponent,
+    NotificacionesComponent
   ],
   imports: [
     BrowserModule,
@@ -106,9 +119,13 @@ import {MatRadioModule} from '@angular/material/radio';
     MatCardModule,
     MatSliderModule,
     MatCheckboxModule,
-    MatRadioModule 
-    
-    
+    MatRadioModule,
+    MatBadgeModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    MatGridListModule
+
   ],
   providers: [
     LoginService,
@@ -119,7 +136,9 @@ import {MatRadioModule} from '@angular/material/radio';
     ProvinciaService,
     HorarioService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
-    
+    HorasExtrasService,
+    NotificacionesService,
+
   ],
   bootstrap: [AppComponent],
 })
