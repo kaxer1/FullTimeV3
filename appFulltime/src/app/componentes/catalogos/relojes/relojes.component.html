@@ -1,0 +1,75 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z9">
+        <mat-card-header>
+            <mat-card-title>Añadir Reloj</mat-card-title>
+        </mat-card-header>
+        <!-- Formulario Completo -->
+        <form [formGroup]="RelojesForm">
+            <mat-card-content>
+                <div class="container" style="text-align: center">
+                    <mat-form-field>
+                        <mat-label>Nuevo Reloj</mat-label>
+                        <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
+                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>IP</mat-label>
+                        <input matInput placeholder="Ingresar IP del reloj" [formControl]="ipF"
+                        (keypress)="IngresarIp($event)">
+                        <mat-error *ngIf="ipF.invalid">{{ObtenerMensajeErrorIp()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Puerto</mat-label>
+                        <input matInput placeholder="Ingresar puerto" [formControl]="puertoF" (keypress)="IngresarSoloNumeros($event)">
+                        <mat-error *ngIf="puertoF.invalid">{{ObtenerMensajeErrorPuerto()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Contraseña</mat-label>
+                        <input matInput placeholder="Ingresar contraseña" [formControl]="contraseniaF">
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Marca</mat-label>
+                        <input matInput placeholder="Ingresar marca" [formControl]="marcaF">
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Modelo</mat-label>
+                        <input matInput placeholder="Ingresar modelo" [formControl]="modeloF">
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Serie</mat-label>
+                        <input matInput placeholder="Ingresar serie" [formControl]="serieF" (keypress)="IngresarSoloNumeros($event)">
+                        <mat-error *ngIf="serieF.invalid">{{ObtenerMensajeErrorSerie()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>ID de fabricación</mat-label>
+                        <input matInput placeholder="Ingresar id fabricación" [formControl]="idFabricacionF">
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fabricante</mat-label>
+                        <input matInput placeholder="Ingresar fabricante" [formControl]="fabricanteF">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Dirección Física MAC</mat-label>
+                        <input matInput placeholder="Ingresar dirección MAC" [formControl]="macF">
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </form>
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                    [disabled]="!RelojesForm.valid" (click)="InsertarReloj(RelojesForm.value)" value="Guardar">
+            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="LimpiarCampos()"
+                value="Cancelar">
+        </mat-card-actions>
+    </mat-card>
+
+</div>

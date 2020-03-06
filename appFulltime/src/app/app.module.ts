@@ -46,6 +46,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
 import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
+import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
+import { FeriadosComponent } from './componentes/catalogos/feriados/feriados.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +64,10 @@ import { RegimenComponent } from './componentes/catalogos/regimen/regimen.compon
     VerEmpleadoComponent,
     RegistroRolComponent,
     SeleccionarRolPermisoComponent,
-    RegimenComponent
+    RegimenComponent,
+    TipoComidasComponent,
+    RelojesComponent,
+    FeriadosComponent
   ],
   imports: [
     BrowserModule,

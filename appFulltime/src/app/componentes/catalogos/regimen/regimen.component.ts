@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RegimenService } from 'src/app/servicios/catalogos/regimen/regimen.service';
 import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-regimen',
   templateUrl: './regimen.component.html',
   styleUrls: ['./regimen.component.css']
 })
+
 export class RegimenComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
@@ -109,28 +111,20 @@ export class RegimenComponent implements OnInit {
     }
   }
 
-  ObtenerMensajeErrorCamposLetras() {
+  ObtenerMensajeErrorNombreRequerido() {
     if (this.descripcionF.hasError('required')) {
       return 'Debe ingresar un nombre';
     }
   }
 
-  ObtenerMensajeErrorCamposNumericos() {
+  ObtenerMensajeErrorCamposNumericosRequeridos() {
     if (this.diaMesVacacionF.hasError('required') || this.diaLibreAnioVacaccionF.hasError('required')) {
       return 'Debe ingresar un valor';
     }
   }
 
   LimpiarCampos() {
-    this.RegimenForm.setValue({
-      descripcionForm: '',
-      diaAnioVacacionForm: '',
-      diaIncrAntiguedadForm: '',
-      anioAntiguedadForm: '',
-      diaMesVacacionForm: '',
-      maxDiasAcumulacionForm: '',
-      diaLibreAnioVacaccionForm: ''
-    });
+    this.RegimenForm.reset();
   }
 
 }

@@ -5,66 +5,62 @@
             <mat-card-title>Añadir Régimen Laboral</mat-card-title>
         </mat-card-header>
         <!-- Formulario Completo -->
-        <form [formGroup]="RegimenForm" (ngSubmit)="InsertarRegimen(RegimenForm.value)">
+        <form [formGroup]="RegimenForm">
             <mat-card-content>
                 <div class="container" style="text-align: center">
                     <mat-form-field>
                         <mat-label>Nuevo Régimen Laboral</mat-label>
                         <input matInput placeholder="Nombre Régime Laboral" [formControl]="descripcionF"
                             (keypress)="IngresarSoloLetras($event)" required>
-                        <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorCamposLetras()}}</mat-error>
+                        <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Año Vacación</mat-label>
                         <input matInput placeholder="Ingresar año de vacación" [formControl]="diaAnioVacacionF"
                             (keypress)="IngresarSoloNumeros($event)">
-                        <mat-error *ngIf="diaAnioVacacionF.invalid">{{ObtenerMensajeErrorCamposLetras()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Días Incremento Antiguedad</mat-label>
                         <input matInput placeholder="Ingresar incremento" [formControl]="diaIncrAntiguedadF"
                             (keypress)="IngresarSoloNumeros($event)">
-                        <mat-error *ngIf="diaIncrAntiguedadF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Años de Antiguedad</mat-label>
                         <input matInput placeholder="Ingresar años de antiguedad" [formControl]="anioAntiguedadF"
                             (keypress)="IngresarSoloNumeros($event)">
-                        <mat-error *ngIf="anioAntiguedadF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Mes de Vacación</mat-label>
                         <input matInput placeholder="Ingresar mes de vaccación" [formControl]="diaMesVacacionF"
                             (keypress)="IngresarSoloNumeros($event)" required>
-                        <mat-error *ngIf="diaMesVacacionF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
+                        <mat-error *ngIf="diaMesVacacionF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}
+                        </mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Máximo Días Acumulados</mat-label>
                         <input matInput placeholder="Ingresar días acumulación" [formControl]="maxDiasAcumulacionF"
                             (keypress)="IngresarSoloNumeros($event)">
-                        <mat-error *ngIf="maxDiasAcumulacionF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Días Libres Vacación</mat-label>
                         <input matInput placeholder="Ingresar día libre" [formControl]="diaLibreAnioVacaccionF"
                             (keypress)="IngresarSoloNumeros($event)" required>
-                        <mat-error *ngIf="diaLibreAnioVacaccionF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
                     </mat-form-field>
                 </div>
             </mat-card-content>
-            <mat-card-actions style="text-align: center">
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;" [disabled]="!RegimenForm.valid"
-                    value="Guardar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;" [disabled]="!RegimenForm.valid"
-                    value="Cancelar">
-            </mat-card-actions>
         </form>
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-primary" style="margin-left: 15px;" [disabled]="!RegimenForm.valid"
+                (click)="InsertarRegimen(RegimenForm.value)" value="Guardar">
+            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="LimpiarCampos()"
+                value="Cancelar">
+        </mat-card-actions>
     </mat-card>
 
 </div>

@@ -10,7 +10,9 @@ import { DiscapacidadComponent } from './componentes/empleado/discapacidad/disca
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
-import {RegimenComponent} from './componentes/catalogos/regimen/regimen.component'
+import {RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
+import {TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import {RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'registrarRol', component: RegistroRolComponent},
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
   { path: 'regimenLaboral', component: RegimenComponent},
+  { path: 'tipoComidas', component: TipoComidasComponent},
+  { path: 'relojes', component: RelojesComponent},
 ];
 
 @NgModule({

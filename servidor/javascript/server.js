@@ -15,6 +15,8 @@ const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas")
 const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
 const catRegimenRuta_1 = __importDefault(require("./rutas/Catalogos/catRegimenRuta"));
 const catFeriadosRuta_1 = __importDefault(require("./rutas/Catalogos/catFeriadosRuta"));
+const catTipoComidasRuta_1 = __importDefault(require("./rutas/Catalogos/catTipoComidasRuta"));
+const catRelojesRuta_1 = __importDefault(require("./rutas/Catalogos/catRelojesRuta"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -38,6 +40,8 @@ class Server {
         this.app.use('/discapacidad', discapacidadRutas_1.default);
         this.app.use('/regimenLaboral', catRegimenRuta_1.default);
         this.app.use('/feriados', catFeriadosRuta_1.default);
+        this.app.use('/tipoComidas', catTipoComidasRuta_1.default);
+        this.app.use('/relojes', catRelojesRuta_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

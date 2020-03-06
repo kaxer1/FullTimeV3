@@ -11,6 +11,8 @@ import discapacidadRuta from './rutas/discapacidadRutas';
 import tituloRuta from './rutas/Catalogos/tituloRutas';
 import REGIMEN_RUTA from './rutas/Catalogos/catRegimenRuta';
 import FERIADOS_RUTA from './rutas/Catalogos/catFeriadosRuta';
+import TIPO_COMIDAS_RUTA from './rutas/Catalogos/catTipoComidasRuta';
+import RELOJES_RUTA from './rutas/Catalogos/catRelojesRuta';
 
 class Server {
 
@@ -42,6 +44,8 @@ class Server {
         this.app.use('/discapacidad', discapacidadRuta);
         this.app.use('/regimenLaboral', REGIMEN_RUTA);
         this.app.use('/feriados', FERIADOS_RUTA);
+        this.app.use('/tipoComidas', TIPO_COMIDAS_RUTA);
+        this.app.use('/relojes', RELOJES_RUTA);
     }
 
     start(): void {
