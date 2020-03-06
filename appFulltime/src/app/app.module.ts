@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 
+
 // vistas
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -21,14 +22,20 @@ import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
-
+import {PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
+import {RegistroHorarioComponent} from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
+import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
+import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
+import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
+import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
 import { LoginService } from './servicios/login/login.service';
 import { TituloService } from './servicios/catalogos/titulo.service';
 import { EmpleadoService } from './servicios/empleado/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
-
+import { ProvinciaService } from './servicios/catalogos/provincia.service';
+import { HorarioService } from './servicios/catalogos/horario.service';
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -45,6 +52,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+
 
 @NgModule({
   declarations: [
@@ -59,7 +69,13 @@ import { MatSliderModule } from '@angular/material/slider';
     DiscapacidadComponent,
     VerEmpleadoComponent,
     RegistroRolComponent,
-    SeleccionarRolPermisoComponent
+    SeleccionarRolPermisoComponent,
+    PrincipalProvinciaComponent,
+    RegistroProvinciaComponent,
+    PrincipalProcesoComponent,
+    RegistroProcesoComponent,
+    PrincipalHorarioComponent,
+    RegistroHorarioComponent
   ],
   imports: [
     BrowserModule,
@@ -81,7 +97,11 @@ import { MatSliderModule } from '@angular/material/slider';
     MatInputModule,
     MatSelectModule,
     MatCardModule,
-    MatSliderModule
+    MatSliderModule,
+    MatCheckboxModule,
+    MatRadioModule 
+    
+    
   ],
   providers: [
     LoginService,
@@ -89,7 +109,10 @@ import { MatSliderModule } from '@angular/material/slider';
     TituloService,
     EmpleadoService,
     DiscapacidadService,
-    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+    ProvinciaService,
+    HorarioService,
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
+    
   ],
   bootstrap: [AppComponent],
 })

@@ -1,0 +1,109 @@
+<br>
+<div class="container">
+
+    <nav class="navbar navbar-dark bg-primary">
+        <h5 class="navbar-text text-light">horario - Criterios de Búsqueda</h5>
+    </nav>
+    <!-- Formulario Completo -->
+    <!--<form>-->
+
+    <div class="container border border-primary">
+
+        <!-- contenedor de registro de datos -->
+        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
+
+
+            <div class="container" style="text-align: center">
+                <!-- <form> -->
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Codigo</label>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Nombre</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Min_almuerzo</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Hora de trabajo</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+                
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Flexible</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-5 col-form-label">Por Horas</label>
+                    <div class="col-sm-5">
+                        <input type="password" class="form-control">
+                    </div>
+                </div>
+
+                
+
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones -->
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [routerLink]="['/registrarHorario/']">Crear</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
+    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
+    <!--</form>-->
+</div>
+
+<br>
+
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <p class="display-4">Resultado de búsqueda</p>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Id </th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Minutos de almuerzo</th>
+                <th scope="col">Hora de trabajo</th>
+                <th scope="col">Flexible</th>
+                <th scope="col">Por horas</th>
+                <th scope="col">Borrar</th>
+                <th scope="col">Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let horario of horarios">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{horario.id}}</th>
+                <td style="padding-top: 10px;">{{horario.nombre}}</td>
+                <td style="padding-top: 10px;">{{horario.min_almuerzo}}</td>
+                <td style="padding-top: 10px;">{{horario.hora_trabajo}}</td>
+                <td style="padding-top: 10px;">{{horario.flexible}}</td>
+                <td style="padding-top: 10px;">{{horario.por_horas}}</td>
+                <td>
+                    <button class="btn btn-danger" >
+                        <i class="far fa-trash-alt"></i> Borrar
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-warning" >
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

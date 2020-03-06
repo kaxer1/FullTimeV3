@@ -9,6 +9,11 @@ import empleado from './rutas/empleadoRutas';
 import loginRuta from './rutas/login/loginRuta';
 import discapacidadRuta from './rutas/discapacidadRutas';
 import tituloRuta from './rutas/Catalogos/tituloRutas';
+import PROVINCIA_RUTA from './rutas/Catalogos/provinciaRutas';
+import DEPARTAMENTO_RUTA from './rutas/Catalogos/departamentoRutas';
+import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
+import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
+
 
 
 
@@ -38,6 +43,10 @@ class Server {
         this.app.use('/login', loginRuta);
         this.app.use('/titulo', tituloRuta);
         this.app.use('/discapacidad', discapacidadRuta);
+        this.app.use('/provincia',PROVINCIA_RUTA);
+        this.app.use('/departamento',DEPARTAMENTO_RUTA);
+        this.app.use('/proceso', PROCESO_RUTA);
+        this.app.use('/horario', HORARIO_RUTA);
 
     }
 

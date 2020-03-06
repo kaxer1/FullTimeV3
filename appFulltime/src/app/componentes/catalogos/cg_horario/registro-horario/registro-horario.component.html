@@ -1,0 +1,59 @@
+<div class="container" style="padding-top: 25px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-card-header>
+            <mat-card-title aria-colspan="4">Añadir Horario</mat-card-title>
+        </mat-card-header>
+        <!-- Formulario Completo -->
+        <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
+
+            <mat-card-content>
+                <div class="container">
+                    <section>
+                        <label for="nombre">Nombre Horario</label>
+                        <input matInput placeholder="Ej: Horario 1 " [formControl]="nombre" required>
+                    </section>
+                    <br>
+                    <section>
+                        <label for="nombre">Minutos de almuerzo</label>
+                        <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required>
+                      
+                    </section>
+                    <br>
+                    <section>
+                        <label for="nombre">Horas de Trabajo</label>
+                        <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required>
+                        
+                    </section>
+
+                    <br>
+                    <section>
+                        <label>Flexible</label>
+                        <mat-radio-group  aria-label="select an option" [formControl]="flexible" required  [value]="flexible.value">
+                            <mat-radio-button class="example-match"value="true">Si </mat-radio-button> 
+                            <mat-radio-button class="example-match" value="false">No </mat-radio-button> 
+                        </mat-radio-group>
+                        
+                    </section>
+                        
+                    <section>
+                        <label>Por Horas</label>
+                        <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value" >
+                            <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
+                            <mat-radio-button class="example-match" value="false">No</mat-radio-button>
+                          </mat-radio-group>
+                    </section>
+                    
+                    
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                [disabled]="!nuevoHorarioForm.valid" value="Grabar">
+                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
+                    (click)="cancelarRegistroHorario()" value="Cancelar">
+            </mat-card-actions>
+        </form>
+    </mat-card>
+
+</div>
