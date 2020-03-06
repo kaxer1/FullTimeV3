@@ -3,6 +3,7 @@ import { HorarioService } from 'src/app/servicios/catalogos/horario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ValueConverter } from '@angular/compiler/src/render3/view/template';
 
 @Component({
   selector: 'app-registro-horario',
@@ -37,7 +38,9 @@ porHoras = new FormControl('', Validators.required);
   ) { }
 
   ngOnInit(): void {
+  this.limpiarCampos
   }
+
 
 
 
@@ -70,6 +73,35 @@ porHoras = new FormControl('', Validators.required);
   cancelarRegistroHorario() {
     this.router.navigate(['/', 'horario']);
   }
+
+  soloNumeros(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8)|| (key==46))
+  }
+
+  soloEnteros(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8))
+  }
+
+  limpiarCampos(){
+    this.nuevoHorarioForm.setValue({
+      horarioNombreForm: "",
+      horarioMinAlmuerzoForm:"",
+      horarioHoraTrabajoForm:""
+    })
+      
+    
+  }
+
+
+  obtenerMensajeErrorNombre() {
+    if (this.nombre.hasError('required')) {
+      return 'Debe ingresar algun nombre';
+    }
+    return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
+  }
+
 
 
 }

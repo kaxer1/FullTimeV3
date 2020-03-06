@@ -3,14 +3,14 @@
 
     <mat-card class="example-card mat-elevation-z8">
         <mat-card-header>
-            <mat-card-title>Añadir Provincia</mat-card-title>
+            <mat-card-title class="contened">Añadir Provincia</mat-card-title>
         </mat-card-header>
         <!-- Formulario Completo -->
         <form [formGroup]="nuevaProvinciaForm" (ngSubmit)="insertarProvincia(nuevaProvinciaForm.value)">
             <mat-card-content>
                 <div class="container">
-                    <mat-label>Nombre de la Provincia</mat-label>
-                    <input matInput placeholder="Ej: Pichincha" formControlName="nombreForm" required>
+                    <mat-label class="label-theme">Nombre de la Provincia</mat-label>
+                    <input matInput placeholder="Ej: Pichincha" (keypress)="soloLetras($event)" formControlName="nombreForm" required>
                     
                 </div>
                 
@@ -20,8 +20,8 @@
             <mat-card-actions>
                 <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
                     [disabled]="!nuevaProvinciaForm.valid" value="Grabar">
-                <input type="cancel" class="btn btn-danger" style="margin-left: 15px;"
-                value="Cancelar">
+                <input type="submit" class="btn btn-danger" style="margin-left: 15px" (click)="cancelarRegistroProvincia()"
+                value="Cancelar" >
             </mat-card-actions>
         </form>
     </mat-card>

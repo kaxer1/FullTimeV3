@@ -57,7 +57,12 @@ export class RegistroProvinciaComponent implements OnInit {
   }
 
 
-  cancelarProvincia(){
+  cancelarRegistroProvincia(){
     this.router.navigate(['/','provincia']);
+  }
+
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!((key >= 48 && key <= 63)|| key==8 || key==46))
   }
 }

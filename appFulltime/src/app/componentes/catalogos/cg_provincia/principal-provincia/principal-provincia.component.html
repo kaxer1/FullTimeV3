@@ -49,12 +49,14 @@
             <tr style="text-align: center;">
                 <th scope="col">Id </th>
                 <th scope="col">Nombre</th>
+                <th scope="col">Borrar</th>
+                <th scope="col">Editar</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let provincia of provincias">
                 <th style="padding-top: 10px; text-align: center;" scope="row">{{provincia.id}}</th>
-                <td style="padding-top: 10px;">{{provincia.nombre}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{provincia.nombre}}</td>
                 <td>
                     <button class="btn btn-danger" >
                         <i class="far fa-trash-alt"></i> Borrar

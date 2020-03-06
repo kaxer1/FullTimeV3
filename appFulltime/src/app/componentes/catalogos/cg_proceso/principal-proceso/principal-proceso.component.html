@@ -63,14 +63,16 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Nivel</th>
                 <th scope="col">Proceso Padre</th>
+                <th scope="col">Borrar</th>
+                <th scope="col">Editar</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let proceso of procesos">
                 <th style="padding-top: 10px; text-align: center;" scope="row">{{proceso.id}}</th>
-                <td style="padding-top: 10px;">{{proceso.nombre}}</td>
-                <td style="padding-top: 10px;">{{proceso.nivel}}</td>
-                <td style="padding-top: 10px;">{{proceso.proc_padre}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{proceso.nombre}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{proceso.nivel}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{proceso.proc_padre}}</td>
                 <td>
                     <button class="btn btn-danger" >
                         <i class="far fa-trash-alt"></i> Borrar

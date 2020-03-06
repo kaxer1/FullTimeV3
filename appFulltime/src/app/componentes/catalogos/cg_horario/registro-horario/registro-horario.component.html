@@ -10,25 +10,27 @@
             <mat-card-content>
                 <div class="container">
                     <section>
-                        <label for="nombre">Nombre Horario</label>
+                        <label class="label-theme" for="nombre">Nombre Horario</label>
                         <input matInput placeholder="Ej: Horario 1 " [formControl]="nombre" required>
+                        <label class="label-error" >{{obtenerMensajeErrorNombre()}}</label>
+                        
                     </section>
                     <br>
                     <section>
-                        <label for="nombre">Minutos de almuerzo</label>
-                        <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required>
+                        <label class="label-theme" for="nombre">Minutos de almuerzo</label>
+                        <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required  (keypress)="soloEnteros($event)">
                       
                     </section>
                     <br>
                     <section>
-                        <label for="nombre">Horas de Trabajo</label>
-                        <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required>
+                        <label class="label-theme" for="nombre">Horas de Trabajo</label>
+                        <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required  (keypress)="soloNumeros($event)">
                         
                     </section>
 
                     <br>
                     <section>
-                        <label>Flexible</label>
+                        <label class="label-theme" >Flexible</label>
                         <mat-radio-group  aria-label="select an option" [formControl]="flexible" required  [value]="flexible.value">
                             <mat-radio-button class="example-match"value="true">Si </mat-radio-button> 
                             <mat-radio-button class="example-match" value="false">No </mat-radio-button> 
@@ -37,7 +39,7 @@
                     </section>
                         
                     <section>
-                        <label>Por Horas</label>
+                        <label class="label-theme" >Por Horas</label>
                         <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value" >
                             <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
                             <mat-radio-button class="example-match" value="false">No</mat-radio-button>

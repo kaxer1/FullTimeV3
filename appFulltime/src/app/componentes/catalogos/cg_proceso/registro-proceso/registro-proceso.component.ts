@@ -58,7 +58,7 @@ export class RegistroProcesoComponent implements OnInit {
 
  obtenerMensajeErrorNombre() {
    if (this.nombre.hasError('required')) {
-     return 'Debe ingresar algun nombre';
+     return 'Campo obligatorio';
    }
    return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
  }
@@ -117,5 +117,8 @@ export class RegistroProcesoComponent implements OnInit {
  cancelarRegistroProceso() {
        this.router.navigate(['/','proceso']);
  }
+
+ 
+ 
 
 }

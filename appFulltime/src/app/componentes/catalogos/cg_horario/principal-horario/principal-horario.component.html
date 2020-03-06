@@ -2,7 +2,7 @@
 <div class="container">
 
     <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">horario - Criterios de Búsqueda</h5>
+        <h5 class="navbar-text text-light">Horario - Criterios de Búsqueda</h5>
     </nav>
     <!-- Formulario Completo -->
     <!--<form>-->
@@ -88,11 +88,11 @@
         <tbody>
             <tr *ngFor="let horario of horarios">
                 <th style="padding-top: 10px; text-align: center;" scope="row">{{horario.id}}</th>
-                <td style="padding-top: 10px;">{{horario.nombre}}</td>
-                <td style="padding-top: 10px;">{{horario.min_almuerzo}}</td>
-                <td style="padding-top: 10px;">{{horario.hora_trabajo}}</td>
-                <td style="padding-top: 10px;">{{horario.flexible}}</td>
-                <td style="padding-top: 10px;">{{horario.por_horas}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{horario.nombre}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{horario.min_almuerzo}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{horario.hora_trabajo}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{horario.flexible}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{horario.por_horas}}</td>
                 <td>
                     <button class="btn btn-danger" >
                         <i class="far fa-trash-alt"></i> Borrar

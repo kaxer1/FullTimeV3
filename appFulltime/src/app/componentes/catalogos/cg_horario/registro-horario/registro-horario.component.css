@@ -5,3 +5,11 @@ mat-slider {width: 175px;}
 .example-match{
     margin: 0 10px
 }
+
+.label-theme{
+    color: blue
+}
+
+.label-error{
+    color:red
+}
