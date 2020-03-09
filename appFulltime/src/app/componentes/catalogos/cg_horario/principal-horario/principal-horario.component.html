@@ -72,7 +72,7 @@
 
 <div class="container  table-responsive" style="padding-bottom: 50px;">
     <p class="display-4">Resultado de búsqueda</p>
-    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+    <table mat-table class=" mat-elevation-z8 table table-hover table-sm ">
         <thead class="thead-light">
             <tr style="text-align: center;">
                 <th scope="col">Id </th>
@@ -94,14 +94,14 @@
                 <td style="padding-top: 10px; text-align: center;">{{horario.flexible}}</td>
                 <td style="padding-top: 10px; text-align: center;">{{horario.por_horas}}</td>
                 <td>
-                    <button class="btn btn-danger" >
-                        <i class="far fa-trash-alt"></i> Borrar
-                    </button>
+                    
+                        <i class="far fa-trash-alt" (click)="foo()" style="color:red"></i> 
+                    
                 </td>
                 <td>
-                    <button class="btn btn-warning" >
-                        <i class="fas fa-edit"></i> Editar
-                    </button>
+                    
+                        <i class="fas fa-edit" style="color:green"></i> 
+                    
                 </td>
             </tr>
         </tbody>

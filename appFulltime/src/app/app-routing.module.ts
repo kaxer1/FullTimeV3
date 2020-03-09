@@ -17,13 +17,15 @@ import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/pr
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
-import { DepartamentosComponent } from './componentes/catalogos/cg_departamento/departamentos/departamentos.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { FeriadosComponent } from './componentes/catalogos/catFeriados/registrarFeriado/feriados.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -44,14 +46,15 @@ const routes: Routes = [
   { path: 'registrarProceso', component: RegistroProcesoComponent },
   { path: 'provincia', component: PrincipalProvinciaComponent},
   { path: 'registrarProvincia', component:RegistroProvinciaComponent},
-  { path: 'departamento', component: DepartamentosComponent},
+  { path: 'departamento', component: PrincipalDepartamentoComponent},
+  { path: 'registrarDepartamento', component: RegistroDepartamentoComponent},
   { path: 'horario', component: PrincipalHorarioComponent},
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
   { path: 'feriados', component: FeriadosComponent},
   { path: 'listarFeriados', component: ListarFeriadosComponent},
-
+  { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent}
 ];
 
 @NgModule({

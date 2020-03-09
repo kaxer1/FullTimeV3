@@ -15,7 +15,7 @@ export class ProcesoService {
   // catalogo de Procesos
 
   getProcesosRest(){
-    console.log(this.http.get(`${this.API_URL}/proceso`));
+   
     return this.http.get(`${this.API_URL}/proceso`);
     
   }
@@ -25,7 +25,7 @@ export class ProcesoService {
   }
   
   postProcesoRest(data: any){
-    console.log(data);
+   
     return this.http.post(`${this.API_URL}/proceso`, data);
   }
 

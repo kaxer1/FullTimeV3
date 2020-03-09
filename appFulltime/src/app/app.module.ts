@@ -67,7 +67,9 @@ import { NotificacionesService } from './servicios/catalogos/notificaciones.serv
 import { MatGridListModule } from '@angular/material/grid-list';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
-
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { DepartamentoService } from './servicios/catalogos/departamento.service';
 
 @NgModule({
   declarations: [
@@ -96,7 +98,9 @@ import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/lis
     FooterComponent,
     HorasExtrasComponent,
     NotificacionesComponent,
-    ListarFeriadosComponent
+    ListarFeriadosComponent,
+    PrincipalDepartamentoComponent,
+    RegistroDepartamentoComponent
   ],
   imports: [
     BrowserModule,
@@ -137,6 +141,7 @@ import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/lis
     DiscapacidadService,
     ProvinciaService,
     HorarioService,
+    DepartamentoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
