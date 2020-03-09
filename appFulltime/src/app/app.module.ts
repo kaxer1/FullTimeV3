@@ -68,6 +68,8 @@ import { NotificacionesComponent } from './componentes/catalogos/notificaciones/
 import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 
+import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -124,8 +126,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSlideToggleModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatGridListModule
-
+    MatGridListModule,
+    NgMaterialMultilevelMenuModule,
+    MatExpansionModule
   ],
   providers: [
     LoginService,

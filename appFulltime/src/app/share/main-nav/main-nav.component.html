@@ -2,105 +2,104 @@
 
   <mat-sidenav #drawer class="sidenav mat-elevation-z15" fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'" [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false" 
-    (mouseenter)="mouseenter()" (mouseleave)="mouseleave()">
+    [opened]="(isHandset$ | async) === false" (mouseenter)="mouseenter()" (mouseleave)="mouseleave()">
 
-    <mat-toolbar class="texcol">
-      <mat-card-header class="verUser">
-        <img mat-card-avatar src="https://material.angular.io/assets/img/examples/shiba1.jpg" style="background-size:cover">
-        <mat-card-title>UserName</mat-card-title>
-        <mat-card-subtitle class="texcol">ej@mail.com</mat-card-subtitle>
-      </mat-card-header>
+    <mat-toolbar class="texcol" style="margin-bottom: 50px;">
+      <img mat-card-avatar src="https://material.angular.io/assets/img/examples/shiba1.jpg">
+      <div class="card border-0" style="background-color: transparent; margin-top: auto;">
+        <div class="card-body">
+          <h3 class="card-title">UserName</h3>
+          <p class="card-text" style="font-size: 13px;">ej@mail.com</p>
+        </div>
+      </div>
     </mat-toolbar>
 
     <!-- lista de opcines del menu -->
-    <mat-nav-list>
-      <!-- Administracion -->
-      <mat-list-item (click)="AdminSubmenu = !AdminSubmenu" class=" texcol">
-        <span class="full-width" *ngIf="isExpanded || isShowing">Administración</span>
-        <mat-icon mat-list-icon>dashboard</mat-icon>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : AdminSubmenu}" *ngIf="isExpanded || isShowing">expand_more
-        </mat-icon>
-      </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : AdminSubmenu}">
-        <a mat-list-item [routerLink]="['/home']" class="texcol">
-          <span matLine>Home</span>
-        </a>
-        <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
-          <span matLine>Horas Extras</span>
-        </a>
-        <a mat-list-item [routerLink]="['/notificaciones']" class="texcol">
-          <span matLine>Notificaciones</span>
-        </a>
-      </div>
-      <mat-divider></mat-divider>
-      <!-- Empleado -->
-      <mat-list-item (click)="EmpleadoSubmenu = !EmpleadoSubmenu" class=" texcol">
-        <span class="full-width" *ngIf="isExpanded || isShowing">Empleado</span>
-        <mat-icon mat-list-icon>account_circle</mat-icon>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : EmpleadoSubmenu}" *ngIf="isExpanded || isShowing">
-          expand_more</mat-icon>
-      </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : EmpleadoSubmenu}" *ngIf="isShowing || isExpanded">
-        <a mat-list-item [routerLink]="['/registrarEmpleado']" class="texcol">
-          <span matLine>Registrar Empleados</span>
-        </a>
-        <a mat-list-item [routerLink]="['/empleado']" class="texcol">
-          <span matLine>Empleado</span>
-        </a>
-        <a mat-list-item [routerLink]="['/roles']" class="texcol">
-          <h5 matLine>Roles</h5>
-        </a>
-        <a mat-list-item [routerLink]="['/titulos']" class="texcol">
-          <h5 matLine>Títulos</h5>
-        </a>
-        <a mat-list-item [routerLink]="['/discapacidad']" class="texcol">
-          <h5 matLine>Discapacidad</h5>
-        </a>
-      </div>
-      <mat-divider></mat-divider>
 
-      <!-- Almuerzos -->
-      <mat-list-item (click)="AlmuerzoSubmenu = !AlmuerzoSubmenu" class=" texcol">
-        <span class="full-width" *ngIf="isExpanded || isShowing">Almuerzos</span>
-        <mat-icon mat-list-icon>local_dining</mat-icon>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : AlmuerzoSubmenu}">
-          expand_more</mat-icon>
-      </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : AlmuerzoSubmenu}" *ngIf="!isShowing">
-        <a mat-list-item class="texcol">
-          <span matLine>.....</span>
-        </a>
-      </div>
-      <mat-divider></mat-divider>
+    <mat-accordion>
+      <!-- administración -->
+      <mat-expansion-panel class="menus acordeon">
+        <mat-expansion-panel-header class="selec3">
+          <mat-panel-title>
+            <mat-icon mat-list-icon>dashboard</mat-icon>
+            <span>Administración</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/home']" class="texcol">
+            <span matLine>Home</span>
+          </a>
+          <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
+            <span matLine>Horas Extras</span>
+          </a>
+          <a mat-list-item [routerLink]="['/notificaciones']" class="texcol">
+            <span matLine>Notificaciones</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Empleado -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec4">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon>account_circle</mat-icon>
+            <span>Empleado</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/registrarEmpleado']" class="texcol">
+            <span matLine>Registrar Empleados</span>
+          </a>
+          <a mat-list-item [routerLink]="['/empleado']" class="texcol">
+            <span matLine>Empleado</span>
+          </a>
+          <a mat-list-item [routerLink]="['/roles']" class="texcol">
+            <h5 matLine>Roles</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/titulos']" class="texcol">
+            <h5 matLine>Títulos</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/discapacidad']" class="texcol">
+            <h5 matLine>Discapacidad</h5>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Almuerzo -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec1">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon>local_dining</mat-icon>
+            <span>Almuerzo</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/provincia']" class="texcol">Provincia</a>
+
+          <a mat-list-item [routerLink]="['/proceso']" class="texcol">Proceso</a>
+
+          <a mat-list-item [routerLink]="['/horario']" class="texcol">Horario</a>
+
+          <a mat-list-item [routerLink]="['/departamento']" class="texcol">Departamento</a>
+        </mat-nav-list>
+      </mat-expansion-panel>
 
       <!-- Descarga -->
-      <mat-list-item (click)="DescargaSubmenu = !DescargaSubmenu" class=" texcol">
-        <span class="full-width" *ngIf="isExpanded || isShowing">Descarga</span>
-        <mat-icon mat-list-icon>cloud_download</mat-icon>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : DescargaSubmenu}" *ngIf="isExpanded || isShowing">
-          expand_more</mat-icon>
-      </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : DescargaSubmenu}" *ngIf="isShowing || isExpanded">
-        <a mat-list-item class="texcol">
-          <span matLine>.....</span>
-        </a>
-      </div>
-      <mat-divider></mat-divider>
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec2">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon>cloud_download</mat-icon>
+            <span>Descarga</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/home']" class="texcol">
+            <span matLine>.....</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
 
-      <a mat-list-item [routerLink]="['/provincia']" class="texcol">Provincia</a>
-      <mat-divider></mat-divider>
-
-      <a mat-list-item [routerLink]="['/proceso']" class="texcol">Proceso</a>
-      <mat-divider></mat-divider>
-
-      <a mat-list-item [routerLink]="['/horario']" class="texcol">Horario</a>
-      <mat-divider></mat-divider>
-
-      <a mat-list-item [routerLink]="['/departamento']" class="texcol">Departamento</a>
-      <mat-divider></mat-divider>
-
-    </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content class="degradado">
@@ -109,14 +108,23 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
+
       <span class="example-spacer">{{pestania}}</span>
-      <mat-icon>notifications</mat-icon>
-      <mat-icon>notifications_active</mat-icon>
-      <mat-icon>notifications_none</mat-icon>
-      <mat-icon>notifications_off</mat-icon>
-      <mat-icon>notifications_paused</mat-icon>
-      <mat-icon aria-hidden="false"  matBadge="15" matBadgeColor="warn">person</mat-icon>
-      
+      <!-- <mat-icon>notifications</mat-icon>
+            <mat-icon>notifications_active</mat-icon>
+            <mat-icon>notifications_none</mat-icon>
+            <mat-icon>notifications_off</mat-icon>
+            <mat-icon>notifications_paused</mat-icon> -->
+      <button mat-mini-fab>
+        <mat-icon aria-hidden="false" matBadge="15" matBadgeColor="warn" style="margin-left: 8px;">person
+        </mat-icon>
+      </button>
+
+      <button mat-mini-fab color="primary" style="margin-left: 10px;" (click)="salir()">
+        <mat-icon class="fas fa-sign-out-alt" style="margin-left: 10px;"></mat-icon>
+      </button>
+
+
     </mat-toolbar>
 
     <div class="container">
