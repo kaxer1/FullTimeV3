@@ -67,6 +67,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { DepartamentoService } from './servicios/catalogos/departamento.service';
 
 
 @NgModule({
@@ -95,7 +98,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
     RegistroHorarioComponent,
     FooterComponent,
     HorasExtrasComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    PrincipalDepartamentoComponent,
+    RegistroDepartamentoComponent
   ],
   imports: [
     BrowserModule,
@@ -135,6 +140,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     DiscapacidadService,
     ProvinciaService,
     HorarioService,
+    DepartamentoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,

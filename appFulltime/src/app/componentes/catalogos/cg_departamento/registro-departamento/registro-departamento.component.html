@@ -1,0 +1,50 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-card-header>
+            <mat-card-title>Añadir Departamento</mat-card-title>
+        </mat-card-header>
+
+        <form [formGroup]="nuevoDepartamentoForm" (ngSubmit)="edit? modificarDepartamento(nuevoDepartamentoForm.value) : insertarDepartamento(nuevoDepartamentoForm.value)">
+            <mat-card-content>
+                <div class="container">
+                    <mat-form-field>
+                        <mat-label>Nombre de departamento</mat-label>
+                        <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
+                        <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                        <br>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+
+                        <mat-label>Nivel</mat-label>
+                        <mat-select [formControl]="nivel" [(ngModel)]="seleccionada">
+                            <mat-option *ngFor="let n of niveles" [value]="n.nombre">
+                                {{n.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label >Departamento Padre</mat-label>
+                        <mat-select [formControl]="departamentoPadre">
+                            <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
+                                {{departamento.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                    [disabled]="!nuevoDepartamentoForm.valid" value="Grabar">
+                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
+                    (click)="cancelarRegistroDepartamento()" value="Cancelar">
+            </mat-card-actions>
+        </form>
+
+    </mat-card>
+
+</div>
