@@ -70,6 +70,9 @@ import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/lis
 import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 @NgModule({
   declarations: [
@@ -130,8 +133,9 @@ import { DepartamentoService } from './servicios/catalogos/departamento.service'
     MatCheckboxModule,
     MatRadioModule,
     MatGridListModule,
-    MatDialogModule
-
+    MatDialogModule,
+    NgMaterialMultilevelMenuModule,
+    MatExpansionModule
   ],
   providers: [
     LoginService,

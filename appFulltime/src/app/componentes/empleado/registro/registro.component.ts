@@ -10,19 +10,31 @@ import { ToastrService} from 'ngx-toastr'
 })
 export class RegistroComponent implements OnInit {
 
+    nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
+    apellido = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")]);
+    cedula = new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'), Validators.maxLength(10)]);
+    email = new FormControl('', [Validators.required, Validators.email]);
+    telefono = new FormControl('', Validators.required);
+    domicilio = new FormControl('', Validators.required);
+    fecha = new FormControl('', Validators.required);
+    estadoCivil = new FormControl('', Validators.required);
+    genero = new FormControl('', Validators.required);
+    estado = new FormControl('', Validators.required);
+    correoAlternativo = new FormControl('', [Validators.email, Validators.required]);
+
   public nuevoEmpleadoForm = new FormGroup({
 
-    nombreForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]),
-    apellidoForm: new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")]),
-    cedulaForm: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'), Validators.maxLength(10)]),
-    emailForm: new FormControl('', [Validators.required, Validators.email]),
-    telefonoForm: new FormControl('', Validators.required),
-    domicilioForm: new FormControl('', Validators.required),
-    fechaForm: new FormControl('', Validators.required),
-    estadoCivilForm: new FormControl('', Validators.required),
-    generoForm: new FormControl('', Validators.required),
-    estadoForm: new FormControl('', Validators.required),
-    correoAlternativoForm: new FormControl('', [Validators.email, Validators.required]),
+    nombreForm: this.nombre,
+    apellidoForm: this.apellido,
+    cedulaForm: this.cedula,
+    emailForm: this.email,
+    telefonoForm: this.telefono,
+    domicilioForm: this.domicilio,
+    fechaForm: this.fecha,
+    estadoCivilForm: this.estadoCivil,
+    generoForm: this.genero,
+    estadoForm: this.estado,
+    correoAlternativoForm: this.correoAlternativo,
   });
   constructor(
     private rest: EmpleadoService,

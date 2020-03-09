@@ -1,273 +1,134 @@
-<div class="container">
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
 
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Añadir Empleado</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <form [formGroup]="nuevoEmpleadoForm" (ngSubmit)="insertarEmpleado(nuevoEmpleadoForm.value)">
-
-        <div class="container border border-primary">
-
-            <!-- contenedor de registro de datos -->
-            <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-                <div class="col-md">
-
-                    <nav class="navbar navbar-dark bg-primary">
-                        <h5 class="navbar-text text-light">Datos Personales</h5>
-                    </nav>
-
-                    <div class="container">
-                        <!-- formulario datos personales -->
-                        <!-- <form> -->
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Código Reloj</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control" placeholder="Ingrese Codigo">
-                                <!-- formControlName="idForm"> -->
-                            </div>
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-toolbar style="background: white;">
+            <span>Añadir Empleado</span>
+        </mat-toolbar>
+        <mat-card-content>
+            <form [formGroup]="nuevoEmpleadoForm">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <mat-form-field>
+                                <mat-label>Cédula</mat-label>
+                                <input matInput placeholder="Ingrese cedula de identidad" maxlength="10"
+                                    [formControl]="cedula" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Nombre</mat-label>
+                                <input matInput placeholder="Ej: " type="text" [formControl]="nombre" required>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Apellido</mat-label>
+                                <input matInput placeholder="Ej: " type="text" [formControl]="apellido" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Domicilio</mat-label>
+                                <input matInput placeholder="Ingrese dirección de domicilio" type="text"
+                                    [formControl]="domicilio" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Telefono</mat-label>
+                                <input matInput placeholder="Ingrese número telefónico" type="number"
+                                    [formControl]="telefono" maxlength="10" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Correo Electrónico</mat-label>
+                                <input matInput type="text" placeholder="ejemplo@mail.com" [formControl]="email" required>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Correo Electrónico Alternativo</mat-label>
+                                <input matInput type="text" placeholder="ejemplo2@mail.com"
+                                    [formControl]="correoAlternativo" required>
+                            </mat-form-field>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label" for="Cedula">Cédula</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control" formControlName="cedulaForm"
-                                    placeholder="Ingrese cedula de identidad" maxlength="10"
-                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (keypress)="soloNumeros($event)">
-                            </div>
+    
+                        <div class="col-sm">
+                            <mat-form-field>
+                                <input matInput type="date" placeholder="Selecciona fecha" [formControl]="fecha" required>
+                            </mat-form-field>
+    
+                            <mat-form-field>
+                                <mat-label>Estado Civil</mat-label>
+                                <mat-select [formControl]="estadoCivil">
+                                    <mat-option [value]="1">Soltero/a</mat-option>
+                                    <mat-option [value]="2">Unión de Hecho</mat-option>
+                                    <mat-option [value]="3">Casado/a</mat-option>
+                                    <mat-option [value]="4">Divorciado/a</mat-option>
+                                    <mat-option [value]="5">Viudo/a</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+    
+                            <mat-form-field>
+                                <mat-label>Genero</mat-label>
+                                <mat-select [formControl]="genero">
+                                    <mat-option [value]="1">Masculino</mat-option>
+                                    <mat-option [value]="2">Femenino</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+    
+                            <mat-form-field>
+                                <mat-label>Estado</mat-label>
+                                <mat-select [formControl]="genero">
+                                    <mat-option [value]="1">Activo</mat-option>
+                                    <mat-option [value]="2">Inactivo</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+    
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Nombre</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control" formControlName="nombreForm"
-                                    placeholder="Ingrese nombres">
-                            </div>
+    
+                        <div class="col-sm">
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Seleccione Rol...</mat-label>
+                                <mat-select [formControl]="">
+                                    <mat-option [value]="1">
+                                        1
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Usuario</mat-label>
+                                <input matInput placeholder="Ej: " type="text" required>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Password</mat-label>
+                                <input matInput placeholder="Ej: " type="password" required>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <input matInput type="date" placeholder="Fecha Vencimiento" required>
+                            </mat-form-field>
+                            <section class="example-section">
+                                <mat-radio-group aria-label="Select an option" required>
+                                    <label>Estado</label>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-sm">
+                                                <mat-radio-button value="true">Activo</mat-radio-button>
+                                                <mat-radio-button value="false">No</mat-radio-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </section>
                         </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Apellido</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control" formControlName="apellidoForm"
-                                    placeholder="Ingrese apellidos">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Correo Electrónico</label>
-                            <input type="text" class="form-control" formControlName="emailForm"
-                                placeholder="ejemplo@mail.com">
-                        </div>
-                        <div class="form-group">
-                            <label>Correo Electrónico Alternativo</label>
-                            <input type="text" class="form-control" formControlName="correoAlternativoForm"
-                                placeholder="ejemplo2@mail.com">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Domicilio</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control" formControlName="domicilioForm"
-                                    placeholder="Ingrese dirección de domicilio">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Teléfono</label>
-                            <div class="col-sm">
-                                <input type="number" class="form-control" formControlName="telefonoForm"
-                                    placeholder="Ingrese número telefónico" maxlength="10"
-                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (keypress)="soloNumeros($event)">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Fecha Nacimiento</label>
-                            <div class="col-sm">
-                                <input type="date" class="form-control" formControlName="fechaForm">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Estado Civil</label>
-                            <div class="col-sm">
-                                <select class="form-control" formControlName="estadoCivilForm">
-                                    <option [ngValue]="null" disabled>Seleccione Estado Civil...</option>
-                                    <option [ngValue]="1">Soltero/a</option>
-                                    <option [ngValue]="2">Unión de Hecho</option>
-                                    <option [ngValue]="3">Casado/a</option>
-                                    <option [ngValue]="4">Divorciado/a</option>
-                                    <option [ngValue]="5">Viudo/a</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Género</label>
-                            <div class="col-sm">
-                                <select class="form-control" formControlName="generoForm">
-                                    <option [ngValue]="null" disabled>Seleccione Género...</option>
-                                    <option [ngValue]="1">Masculino</option>
-                                    <option [ngValue]="2">Femenino</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Ciudad</label>
-                            <div class="col-sm">
-                                <select class="form-control" formControlName="ciudadForm">
-                                    <option [ngValue]="null" disabled>Seleccione Ciudad...</option>
-                                    <option [ngValue]="1">Quito</option>
-                                    <option [ngValue]="2">Ambato</option>
-                                    <option [ngValue]="3">Cuenca</option>
-                                    <option [ngValue]="4">Guayaquil</option>
-                                </select>
-                            </div>
-                        </div> -->
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Estado</label>
-                            <div class="col-sm">
-                                <select class="form-control col-sm" formControlName="estadoForm">
-                                    <option [ngValue]="null" disabled>Seleccionar Estado</option>
-                                    <option [ngValue]="1">Activo</option>
-                                    <option [ngValue]="2">Inactivo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!-- </form> -->
-
                     </div>
                 </div>
-                <!-- Seccion Datos laborales -->
-                <!-- formulario datos laborales -->
-                <!-- <form> -->
-                <!-- <div class="col-md ">
+            </form>
+        </mat-card-content>
 
-                    <nav class="navbar navbar-dark bg-primary">
-                        <h5 class="navbar-text text-light">Datos Laborales</h5>
-                    </nav>
+        <mat-card-actions>
+            <input type="submit" class="btn btn-primary" (click)="insertarEmpleado(nuevoEmpleadoForm.value)"
+                style="margin-left: 15px;" value="Grabar">
+            <input type="submit" class="btn btn-danger" (click)="limpliarCampos()" style="margin-left: 15px;"
+                value="Cancelar">
+        </mat-card-actions>
+    </mat-card>
 
-                    <div class="container">
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Foto</label>
-                            <img src="assets/foto/userFoto.jpg" width="100px" class="rounded-circle" style="margin: auto;">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Unidad Administrativa</label>
-                            <div class="col-sm">
-                                <select class="form-control col-sm">
-                                    <option selected>Selecione Departamento...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Cargo</label>
-                            <div class="col-sm">
-                                <select class="form-control col-sm">
-                                    <option selected>Selecione Cargo...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Regimen Laboral</label>
-                            <div class="col-sm">
-                                <select class="form-control col-sm">
-                                    <option selected>Selecione Grupo Contratado...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Horas trabaja</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Sueldo</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="from-group row">
-                            <label class="col-sm-6 col-form-label">Controla Vacaciones</label>
-                            <div class="col-sm" style="padding-top: 7px; padding-bottom: 15px;">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio">
-                                    <label class="form-check-label">Si</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio">
-                                    <label class="form-check-label">No</label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div> -->
-                <!-- </form> -->
-
-            </div>
-
-
-            <!-- seccion Seguridad -->
-            <nav class="navbar navbar-dark bg-primary">
-                <h5 class="navbar-text text-light">Seguridad</h5>
-            </nav>
-
-            <div class="container" style="padding-bottom: 15px;">
-                <div class="row">
-                    <div class="col-sm">
-                        <!-- <form> -->
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Rol</label>
-                            <div class="col-sm">
-                                <select class="form-control">
-                                    <option selected>Seleccione Rol...</option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Usuario</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Clave</label>
-                            <div class="col-sm">
-                                <input type="text" class="form-control">
-                            </div>
-                        </div>
-                        <!-- </form> -->
-                    </div>
-                    <div class="col-sm">
-                        <!-- <form> -->
-                        <div class="form-group row">
-                            <label class="col-sm-5 col-form-label">Fecha Vencimiento</label>
-                            <div class="col-sm">
-                                <input type="date" class="form-control">
-                            </div>
-                        </div>
-                        <div class="from-group row">
-                            <label class="col-sm-6 col-form-label">Estado</label>
-                            <div class="col-sm" style="padding-top: 7px; padding-bottom: 15px;">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- </form> -->
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Botones -->
-        <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;"
-            [disabled]="!nuevoEmpleadoForm.valid" value="Grabar">
-        <input type="submit" class="btn btn-danger" style="margin-left: 15px; margin-top: 15px;"
-            [disabled]="!nuevoEmpleadoForm.valid" value="Cancelar">
-    </form>
+    
 </div>
