@@ -1,6 +1,7 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
 
     <mat-card class="example-card mat-elevation-z9">
+        <div mat-dialog-content>
         <mat-card-header>
             <mat-card-title>Añadir Reloj</mat-card-title>
         </mat-card-header>
@@ -64,6 +65,7 @@
                 </div>
             </mat-card-content>
         </form>
+    </div>
         <mat-card-actions style="text-align: center">
             <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
                     [disabled]="!RelojesForm.valid" (click)="InsertarReloj(RelojesForm.value)" value="Guardar">

@@ -56,7 +56,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
-import { FeriadosComponent } from './componentes/catalogos/feriados/feriados.component';
+import { FeriadosComponent } from './componentes/catalogos/catFeriados/registrarFeriado/feriados.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { FooterComponent } from './share/footer/footer.component';
@@ -65,6 +65,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 
 
 @NgModule({
@@ -93,7 +95,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     RegistroHorarioComponent,
     FooterComponent,
     HorasExtrasComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    ListarFeriadosComponent
   ],
   imports: [
     BrowserModule,
@@ -122,7 +125,8 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatSlideToggleModule,
     MatCheckboxModule,
     MatRadioModule,
-    MatGridListModule
+    MatGridListModule,
+    MatDialogModule
 
   ],
   providers: [

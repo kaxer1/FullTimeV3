@@ -1,0 +1,76 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-sm-6" style="text-align: center">
+
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <mat-card-header>
+                    <mat-card-title>Críterios de Búsqueda</mat-card-title>
+                </mat-card-header>
+
+                <!--</form>-->
+                <mat-card-content>
+                    <div class="container" style="text-align: center">
+                        <mat-form-field>
+                            <mat-label>Descripción</mat-label>
+                            <input matInput placeholder="Nombre feriado" required>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha</mat-label>
+                            <input matInput type="date" placeholder="Seleccionar fecha" required>
+                        </mat-form-field>
+                    </div>
+                </mat-card-content>
+                <!--<form>-->
+                <mat-card-actions style="text-align: center">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Registrar">
+                </mat-card-actions>
+            </mat-card>
+        </div>
+
+
+
+        <div class="col-sm-6">
+
+        </div>
+    </div>
+</div>
+
+    <br>
+    <div>
+    <mat-card class="example-card mat-elevation-z9" id="carta2">
+        <mat-card-header>
+            <mat-card-title>Resultados de Búsqueda</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="container table-responsive" style="padding-bottom: 50px;">
+
+                <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+                    <thead class="thead-light">
+                        <tr style="text-align: center;">
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Fecha Recuperación</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th style="padding-top: 10px; text-align: center;" scope="row"></th>
+                            <td style="padding-top: 10px;"></td>
+                            <td style="padding-top: 10px;"></td>
+                            <td style="padding-top: 10px;"></td>
+                            <td style="padding-top: 10px; text-align: center;"></td>
+                            <td style="padding-top: 10px;"></td>
+                            <td>
+                                <button type="submit" class="btn btn-primary">Ver</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

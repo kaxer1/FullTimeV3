@@ -22,7 +22,8 @@ import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/pr
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
-
+import { FeriadosComponent } from './componentes/catalogos/catFeriados/registrarFeriado/feriados.component';
+import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -48,6 +49,8 @@ const routes: Routes = [
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
+  { path: 'feriados', component: FeriadosComponent},
+  { path: 'listarFeriados', component: ListarFeriadosComponent},
 
 ];
 
