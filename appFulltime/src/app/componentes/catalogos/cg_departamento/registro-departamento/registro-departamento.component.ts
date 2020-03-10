@@ -27,6 +27,8 @@ export class RegistroDepartamentoComponent implements OnInit {
   departamentoModificar: any = []
 
   edit: boolean = false;
+  selectPadre;
+
   //departamentoPadreId;
 
   // asignar los campos en un formulario en grupo
@@ -45,7 +47,7 @@ export class RegistroDepartamentoComponent implements OnInit {
     { valor: '4', nombre: '4' },
     { valor: '5', nombre: '5' }
   ];
- seleccionada:string =this.niveles[0].valor;
+  selectNivel: string = this.niveles[0].valor;
 
 
 
@@ -60,6 +62,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.departamentos = this.getDepartamentos();
+
     const params = this.activeRoute.snapshot.params;
     if (params.id) {
       this.rest.getOneDepartamentoRest(params.id).subscribe(
@@ -73,10 +76,11 @@ export class RegistroDepartamentoComponent implements OnInit {
             departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
           })
 
-          this.seleccionada = this.niveles[this.departamentoModificar.nivel].valor
-          console.log(this.seleccionada);
 
 
+          this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
+
+          this.obtenerNombre(this.departamentoModificar.depa_padre);
 
 
         }, err => {
@@ -99,9 +103,33 @@ export class RegistroDepartamentoComponent implements OnInit {
     var departamentoPadreId
 
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-    console.log(form.departamentoDepartamentoPadreForm);
 
-    if (departamentoPadreNombre != '') {
+    if (departamentoPadreNombre == ' ' || departamentoPadreNombre == "Ninguna") {
+      let datadepartamento = {
+        nombre: form.departamentoNombreForm,
+        nivel: form.departamentoNivelForm,
+        depa_padre: null
+      };
+
+
+
+      this.rest.postDepartamentoRest(datadepartamento)
+        .subscribe(response => {
+          this.toastr.success('Operacion Exitosa', 'departamento guardado');
+
+          this.router.navigate(['/', 'departamento']);
+        }, error => {
+          console.log(error);
+        });
+
+
+
+
+
+    } else {
+
+
+
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
 
         departamentoPadreId = data[0].id;
@@ -124,25 +152,6 @@ export class RegistroDepartamentoComponent implements OnInit {
           });;
 
       })
-    } else {
-      let datadepartamento = {
-        nombre: form.departamentoNombreForm,
-        nivel: form.departamentoNivelForm,
-        depa_padre: null
-      };
-
-
-
-      this.rest.postDepartamentoRest(datadepartamento)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'departamento guardado');
-
-          this.router.navigate(['/', 'departamento']);
-        }, error => {
-          console.log(error);
-        });
-
-
 
     }
 
@@ -155,7 +164,11 @@ export class RegistroDepartamentoComponent implements OnInit {
   getDepartamentos() {
     this.departamentos = [];
     this.rest.getDepartamentosRest().subscribe(data => {
-      this.departamentos = data
+      this.departamentos = data;
+      this.departamentos[this.departamentos.length] = { nombre: "Ninguna" };
+      this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
+
+
     })
   }
 
@@ -172,7 +185,30 @@ export class RegistroDepartamentoComponent implements OnInit {
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     console.log(form.departamentoDepartamentoPadreForm);
 
-    if (departamentoPadreNombre != ' ') {
+    if (departamentoPadreNombre == 'Ninguna' || departamentoPadreNombre == null) {
+
+
+      let datadepartamento = {
+        nombre: form.departamentoNombreForm,
+        nivel: form.departamentoNivelForm,
+        depa_padre: null
+      };
+
+
+
+      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
+        .subscribe(response => {
+          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+
+          this.router.navigate(['/', 'departamento']);
+        }, error => {
+          console.log(error);
+        });
+
+
+        
+    } else {
+      
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
 
         departamentoPadreId = data[0].id;
@@ -192,32 +228,26 @@ export class RegistroDepartamentoComponent implements OnInit {
             this.router.navigate(['/', 'departamento']);
           }, error => {
             console.log(error);
-          });;
+          });
 
       })
-    } else {
-      let datadepartamento = {
-        nombre: form.departamentoNombreForm,
-        nivel: form.departamentoNivelForm,
-        depa_padre: null
-      };
-
-
-
-      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-
-          this.router.navigate(['/', 'departamento']);
-        }, error => {
-          console.log(error);
-        });
 
 
 
     }
 
 
+  }
+
+
+  obtenerNombre(id: number){
+    this.selectPadre
+    this.rest.getOneDepartamentoRest(id).subscribe(data=>{
+      console.log(data[0].nombre);
+      this.selectPadre=data[0].nombre
+    },error=>{
+
+    });
   }
 
 

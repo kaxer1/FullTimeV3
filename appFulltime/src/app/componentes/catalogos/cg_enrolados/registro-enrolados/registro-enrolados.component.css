@@ -6,3 +6,8 @@ mat-slider {width: 300px;}
     margin: 0 10px;
     color: black
 }
+
+.label-theme{
+    color: #140F6E;
+    font-family: "Constantia", serif;
+}
