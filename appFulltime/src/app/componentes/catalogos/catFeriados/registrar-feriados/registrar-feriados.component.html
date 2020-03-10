@@ -1,4 +1,4 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
 
     <mat-card class="example-card mat-elevation-z9">
         <mat-card-header>
@@ -31,9 +31,9 @@
         <mat-card-actions style="text-align: center">
             <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
                     [disabled]="!FeriadosForm.valid" (click)="InsertarFeriado(FeriadosForm.value)" value="Guardar">
-            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="abrirVentana()"
-                value="Cancelar">
+            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="CerrarVentanaRegistroFeriado()"
+                value="Salir">
         </mat-card-actions>
     </mat-card>
 
-</div>
+

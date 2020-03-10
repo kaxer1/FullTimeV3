@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RelojesService } from 'src/app/servicios/catalogos/relojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
-import {MatDialogRef} from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-relojes',
@@ -38,10 +38,8 @@ export class RelojesComponent implements OnInit {
   });
 
   constructor(
-    public dialogRef: MatDialogRef<RelojesComponent>,
     private rest: RelojesService,
     private toastr: ToastrService
-    
   ) { }
 
   ngOnInit(): void {

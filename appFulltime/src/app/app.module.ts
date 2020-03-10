@@ -56,7 +56,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
-import { FeriadosComponent } from './componentes/catalogos/catFeriados/registrarFeriado/feriados.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { FooterComponent } from './share/footer/footer.component';
@@ -72,6 +71,7 @@ import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_depart
 import { DepartamentoService } from './servicios/catalogos/departamento.service';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 
 
 @NgModule({
@@ -91,7 +91,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     RegimenComponent,
     TipoComidasComponent,
     RelojesComponent,
-    FeriadosComponent,
     PrincipalProvinciaComponent,
     RegistroProvinciaComponent,
     PrincipalProcesoComponent,
@@ -103,7 +102,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     NotificacionesComponent,
     ListarFeriadosComponent,
     PrincipalDepartamentoComponent,
-    RegistroDepartamentoComponent
+    RegistroDepartamentoComponent,
+    RegistrarFeriadosComponent
   ],
   imports: [
     BrowserModule,

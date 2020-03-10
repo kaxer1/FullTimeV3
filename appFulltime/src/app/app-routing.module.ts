@@ -8,11 +8,11 @@ import { HomeComponent } from './componentes/home/home.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
-import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
+import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
-import {RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
-import {TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
-import {RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
+import { RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
+import { TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
@@ -22,7 +22,7 @@ import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/pr
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
-import { FeriadosComponent } from './componentes/catalogos/catFeriados/registrarFeriado/feriados.component';
+import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 
@@ -52,7 +52,7 @@ const routes: Routes = [
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
-  { path: 'feriados', component: FeriadosComponent},
+  { path: 'feriados', component: RegistrarFeriadosComponent},
   { path: 'listarFeriados', component: ListarFeriadosComponent},
   { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent}
 ];

@@ -1,32 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import {MatDialog} from '@angular/material/dialog';
-import {FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
-import { RelojesComponent } from 'src/app/componentes/catalogos/relojes/relojes.component';
+import { Router } from '@angular/router';
+import { FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
 
 @Component({
-  selector: 'app-feriados',
-  templateUrl: './feriados.component.html',
-  styleUrls: ['./feriados.component.css']
+  selector: 'app-registrar-feriados',
+  templateUrl: './registrar-feriados.component.html',
+  styleUrls: ['./registrar-feriados.component.css']
 })
-export class FeriadosComponent implements OnInit {
 
-    // Control de campos y validaciones del formulario
-    fechaF = new FormControl('', Validators.required);
-    descripcionF = new FormControl('', [Validators.required]);
-    fechaRecuperacionF = new FormControl('');
-  
-    // Asignación de validaciones a inputs del formulario
-    public FeriadosForm = new FormGroup({
-      fechaForm: this.fechaF,
-      descripcionForm: this.descripcionF,
-      fechaRecuperacionForm: this.fechaRecuperacionF
-    });
+export class RegistrarFeriadosComponent implements OnInit {
+
+  // Control de campos y validaciones del formulario
+  fechaF = new FormControl('', Validators.required);
+  descripcionF = new FormControl('', [Validators.required]);
+  fechaRecuperacionF = new FormControl('');
+
+  // Asignación de validaciones a inputs del formulario
+  public FeriadosForm = new FormGroup({
+    fechaForm: this.fechaF,
+    descripcionForm: this.descripcionF,
+    fechaRecuperacionForm: this.fechaRecuperacionF
+  });
+
   constructor(
     private rest: FeriadosService,
     private toastr: ToastrService,
-    public ventana: MatDialog
+    public dialogRef: MatDialogRef<RegistrarFeriadosComponent>,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -38,13 +41,11 @@ export class FeriadosComponent implements OnInit {
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
     };
-
     this.rest.CrearNuevoFeriado(datosFeriado).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Feriado registrado')
       this.LimpiarCampos();
     }, error => {
       this.toastr.error('Operación Fallida', 'Feriado no se pudo registrar')
-
     });
   }
 
@@ -64,8 +65,10 @@ export class FeriadosComponent implements OnInit {
     this.FeriadosForm.reset();
   }
 
-  abrirVentana(): void {
-this.ventana.open(RelojesComponent, {width:'300px'})
+  CerrarVentanaRegistroFeriado() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }
