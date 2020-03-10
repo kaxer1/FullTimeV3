@@ -14,7 +14,7 @@ export class RegistroProvinciaComponent implements OnInit {
 
   public nuevaProvinciaForm = new FormGroup({
     // idForm: new FormControl('', Validators.required),
-    nombreForm: new FormControl('',[ Validators.required, Validators.pattern('[a-zA-Z ]*')]),
+    nombreForm: new FormControl('',[ Validators.required, Validators.pattern('[a-zA-ZñÑ ]*')]),
   });
   
   constructor(

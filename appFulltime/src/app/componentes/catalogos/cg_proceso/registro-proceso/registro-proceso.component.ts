@@ -43,6 +43,7 @@ export class RegistroProcesoComponent implements OnInit {
     { valor: '4', nombre: '4' },
     { valor: '5', nombre: '5' }
   ];
+  
 
   constructor(
     private rest: ProcesoService,
