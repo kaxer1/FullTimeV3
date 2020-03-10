@@ -48,7 +48,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ImageUploadModule } from 'angular2-image-upload';
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
@@ -75,6 +75,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
+import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 
 
 @NgModule({
@@ -109,6 +112,7 @@ import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados
     RegistrarFeriadosComponent,
     PrincipalEnroladosComponent,
     RegistroEnroladosComponent,
+    TipoPermisosComponent
 
   ],
   imports: [
@@ -141,7 +145,9 @@ import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados
     MatGridListModule,
     MatDialogModule,
     NgMaterialMultilevelMenuModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     LoginService,
@@ -156,7 +162,7 @@ import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
-
+    RolPermisosService
   ],
   bootstrap: [AppComponent],
 })

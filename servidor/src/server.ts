@@ -7,8 +7,8 @@ import indexRutas from './rutas/indexRutas';
 import roles from './rutas/pruebaRutas';
 import empleado from './rutas/empleadoRutas';
 import loginRuta from './rutas/login/loginRuta';
-import discapacidadRuta from './rutas/discapacidadRutas';
-import tituloRuta from './rutas/Catalogos/tituloRutas';
+import DISCAPACIDAD_RUTAS from './rutas/discapacidadRutas';
+import TITULO_RUTA from './rutas/Catalogos/tituloRutas';
 import REGIMEN_RUTA from './rutas/Catalogos/catRegimenRuta';
 import FERIADOS_RUTA from './rutas/Catalogos/catFeriadosRuta';
 import TIPO_COMIDAS_RUTA from './rutas/Catalogos/catTipoComidasRuta';
@@ -21,6 +21,10 @@ import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';
 import notificacionesRutas from './rutas/Catalogos/notificacionesRutas';
 import ENROLADO_RUTA from './rutas/Catalogos/enroladoRutas';
 import USUARIO_RUTA from'./rutas//Catalogos/usuarioRutas';
+import HORAS_EXTRAS_RUTAS from './rutas/Catalogos/horasExtrasRutas';
+import NOTIFICACIONES_RUTAS from './rutas/Catalogos/notificacionesRutas';
+import ROL_PERMISOS_RUTAS from './rutas/Catalogos/rolPermisosRutas';
+import TIPO_PERMISOS_RUTAS from './rutas/Catalogos/tipoPermisosRutas';
 
 class Server {
 
@@ -48,8 +52,8 @@ class Server {
         this.app.use('/login', loginRuta);
 
         //Redireccionamiento a páginas que contienen catálogos
-        this.app.use('/titulo', tituloRuta);
-        this.app.use('/discapacidad', discapacidadRuta);
+        this.app.use('/titulo', TITULO_RUTA);
+        this.app.use('/discapacidad', DISCAPACIDAD_RUTAS);
         this.app.use('/regimenLaboral', REGIMEN_RUTA);
         this.app.use('/feriados', FERIADOS_RUTA);
         this.app.use('/tipoComidas', TIPO_COMIDAS_RUTA);
@@ -62,6 +66,10 @@ class Server {
         this.app.use('/notificaciones', notificacionesRutas);
         this.app.use('/enrolados', ENROLADO_RUTA);
         this.app.use ('/usuarios', USUARIO_RUTA);
+        this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS);
+        this.app.use('/notificaciones', NOTIFICACIONES_RUTAS);
+        this.app.use('/rolPermisos', ROL_PERMISOS_RUTAS);
+        this.app.use('/tipoPermisos', TIPO_PERMISOS_RUTAS);
 
 
     }

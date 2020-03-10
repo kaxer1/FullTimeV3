@@ -25,6 +25,10 @@ const horasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/horasExtra
 const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
 const enroladoRutas_1 = __importDefault(require("./rutas/Catalogos/enroladoRutas"));
 const usuarioRutas_1 = __importDefault(require("./rutas//Catalogos/usuarioRutas"));
+const horasExtrasRutas_2 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
+const notificacionesRutas_2 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
+const rolPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/rolPermisosRutas"));
+const tipoPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/tipoPermisosRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -58,6 +62,10 @@ class Server {
         this.app.use('/notificaciones', notificacionesRutas_1.default);
         this.app.use('/enrolados', enroladoRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
+        this.app.use('/horasExtras', horasExtrasRutas_2.default);
+        this.app.use('/notificaciones', notificacionesRutas_2.default);
+        this.app.use('/rolPermisos', rolPermisosRutas_1.default);
+        this.app.use('/tipoPermisos', tipoPermisosRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

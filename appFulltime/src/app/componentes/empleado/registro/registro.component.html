@@ -31,7 +31,7 @@
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Telefono</mat-label>
+                                <mat-label>Teléfono</mat-label>
                                 <input matInput placeholder="Ingrese número telefónico" type="number"
                                     [formControl]="telefono" maxlength="10" required>
                             </mat-form-field>
@@ -43,16 +43,19 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Correo Electrónico Alternativo</mat-label>
-                                <input matInput type="text" placeholder="ejemplo2@mail.com"
-                                    [formControl]="correoAlternativo" required>
+                                <input matInput type="text" placeholder="ejemplo2@mail.com" [formControl]="correoAlternativo" required>
                             </mat-form-field>
                         </div>
     
                         <div class="col-sm">
-                            <mat-form-field>
-                                <input matInput type="date" placeholder="Selecciona fecha" [formControl]="fecha" required>
-                            </mat-form-field>
-    
+
+                            <mat-form-field class="example-full-width">
+                                <mat-label>Selecciona fecha de nacimiento</mat-label>
+                                <input matInput [matDatepicker]="picker" [formControl]="fecha" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker></mat-datepicker>
+                              </mat-form-field>
+
                             <mat-form-field>
                                 <mat-label>Estado Civil</mat-label>
                                 <mat-select [formControl]="estadoCivil">
@@ -74,22 +77,29 @@
     
                             <mat-form-field>
                                 <mat-label>Estado</mat-label>
-                                <mat-select [formControl]="genero">
+                                <mat-select [formControl]="estado">
                                     <mat-option [value]="1">Activo</mat-option>
                                     <mat-option [value]="2">Inactivo</mat-option>
                                 </mat-select>
                             </mat-form-field>
-    
+
+                            <mat-form-field>
+                                <mat-label>Nacionalidad</mat-label>
+                                <mat-select [formControl]="nacionalidad">
+                                    <mat-option [value]="1">Ecuatoriana</mat-option>
+                                    <mat-option [value]="2">Venezolana</mat-option>
+                                    <mat-option [value]="3">Peruana</mat-option>
+                                    <mat-option [value]="4">Colombiana</mat-option>
+                                </mat-select>
+                            </mat-form-field>
                         </div>
     
                         <div class="col-sm">
                             <br>
                             <mat-form-field>
                                 <mat-label>Seleccione Rol...</mat-label>
-                                <mat-select [formControl]="">
-                                    <mat-option [value]="1">
-                                        1
-                                    </mat-option>
+                                <mat-select>
+                                    <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <mat-form-field>
