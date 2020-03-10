@@ -18,7 +18,7 @@
                     <mat-form-field>
 
                         <mat-label>Nivel</mat-label>
-                        <mat-select [formControl]="nivel" [(ngModel)]="seleccionada">
+                        <mat-select [formControl]="nivel" [(ngModel)]="selectNivel" >
                             <mat-option *ngFor="let n of niveles" [value]="n.nombre">
                                 {{n.valor}}
                             </mat-option>
@@ -27,7 +27,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label >Departamento Padre</mat-label>
-                        <mat-select [formControl]="departamentoPadre">
+                        <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre"   >
                             <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
                                 {{departamento.nombre}}
                             </mat-option>

@@ -36,6 +36,7 @@ import { DiscapacidadService } from './servicios/discapacidad/discapacidad.servi
 import { ProvinciaService } from './servicios/catalogos/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
+import { EnroladoService } from './servicios/catalogos/enrolado.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -72,6 +73,8 @@ import { DepartamentoService } from './servicios/catalogos/departamento.service'
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
 
 
 @NgModule({
@@ -103,7 +106,10 @@ import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/
     ListarFeriadosComponent,
     PrincipalDepartamentoComponent,
     RegistroDepartamentoComponent,
-    RegistrarFeriadosComponent
+    RegistrarFeriadosComponent,
+    PrincipalEnroladosComponent,
+    RegistroEnroladosComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -146,6 +152,7 @@ import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/
     ProvinciaService,
     HorarioService,
     DepartamentoService,
+    EnroladoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
