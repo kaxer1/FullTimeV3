@@ -49,7 +49,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ImageUploadModule } from 'angular2-image-upload';
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
@@ -70,6 +70,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
+import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 
 @NgModule({
   declarations: [
@@ -97,7 +100,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     RegistroHorarioComponent,
     FooterComponent,
     HorasExtrasComponent,
-    NotificacionesComponent
+    NotificacionesComponent,
+    TipoPermisosComponent
   ],
   imports: [
     BrowserModule,
@@ -128,7 +132,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatRadioModule,
     MatGridListModule,
     NgMaterialMultilevelMenuModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     LoginService,
@@ -141,7 +147,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
-
+    RolPermisosService
   ],
   bootstrap: [AppComponent],
 })
