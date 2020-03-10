@@ -19,6 +19,8 @@ import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
 import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
 import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';
 import notificacionesRutas from './rutas/Catalogos/notificacionesRutas';
+import ENROLADO_RUTA from './rutas/Catalogos/enroladoRutas';
+import USUARIO_RUTA from'./rutas//Catalogos/usuarioRutas';
 
 class Server {
 
@@ -58,6 +60,8 @@ class Server {
         this.app.use('/horario', HORARIO_RUTA);
         this.app.use('/horasExtras', horasExtrasRutas);
         this.app.use('/notificaciones', notificacionesRutas);
+        this.app.use('/enrolados', ENROLADO_RUTA);
+        this.app.use ('/usuarios', USUARIO_RUTA);
 
 
     }

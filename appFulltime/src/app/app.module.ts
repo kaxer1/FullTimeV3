@@ -38,6 +38,7 @@ import { DiscapacidadService } from './servicios/discapacidad/discapacidad.servi
 import { ProvinciaService } from './servicios/catalogos/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
+import { EnroladoService } from './servicios/catalogos/enrolado.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -70,6 +71,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+
+
 
 
 @NgModule({
@@ -100,7 +105,10 @@ import { DepartamentoService } from './servicios/catalogos/departamento.service'
     HorasExtrasComponent,
     NotificacionesComponent,
     PrincipalDepartamentoComponent,
-    RegistroDepartamentoComponent
+    RegistroDepartamentoComponent,
+    PrincipalEnroladosComponent,
+    RegistroEnroladosComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -141,6 +149,7 @@ import { DepartamentoService } from './servicios/catalogos/departamento.service'
     ProvinciaService,
     HorarioService,
     DepartamentoService,
+    EnroladoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,

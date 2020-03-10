@@ -1,0 +1,8 @@
+.example-card { max-width: 300px;}
+
+mat-slider {width: 300px;}
+
+.example-match{
+    margin: 0 10px;
+    color: black
+}

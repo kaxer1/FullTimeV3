@@ -23,6 +23,8 @@ import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/reg
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
 
 
 const routes: Routes = [
@@ -50,7 +52,9 @@ const routes: Routes = [
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
-  { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent}
+  { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
+  { path: 'enrolados', component:PrincipalEnroladosComponent},
+  { path: 'registrarEnrolados', component:RegistroEnroladosComponent}
 
 
 ];

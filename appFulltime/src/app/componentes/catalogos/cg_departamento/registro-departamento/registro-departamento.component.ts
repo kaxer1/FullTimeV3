@@ -45,7 +45,9 @@ export class RegistroDepartamentoComponent implements OnInit {
     { valor: '4', nombre: '4' },
     { valor: '5', nombre: '5' }
   ];
-  seleccionada: string
+ seleccionada:string =this.niveles[0].valor;
+
+
 
   constructor(
     private rest: DepartamentoService,
@@ -63,7 +65,7 @@ export class RegistroDepartamentoComponent implements OnInit {
       this.rest.getOneDepartamentoRest(params.id).subscribe(
         res => {
           this.departamentoModificar = res[0];
-          this.edit=true;
+          this.edit = true;
           console.log(this.departamentoModificar)
           this.nuevoDepartamentoForm.setValue({
             departamentoNombreForm: this.departamentoModificar.nombre,
@@ -71,7 +73,8 @@ export class RegistroDepartamentoComponent implements OnInit {
             departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
           })
 
-          var seleccionada = this.niveles[this.departamentoModificar.nivel - 1].valor
+          this.seleccionada = this.niveles[this.departamentoModificar.nivel].valor
+          console.log(this.seleccionada);
 
 
 
@@ -182,7 +185,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
 
 
-        this.rest.updateDepartamento(this.activeRoute.snapshot.params.id,datadepartamento)
+        this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
           .subscribe(response => {
             this.toastr.success('Operacion Exitosa', 'Departamento modificado');
 
@@ -201,7 +204,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
 
 
-      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id,datadepartamento)
+      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
         .subscribe(response => {
           this.toastr.success('Operacion Exitosa', 'Departamento modificado');
 
