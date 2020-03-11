@@ -21,7 +21,7 @@ import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
 import { PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
-import { RegistroHorarioComponent} from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
+import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
@@ -52,6 +52,7 @@ import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { EnroladoService } from './servicios/catalogos/enrolado.service';
 import { DepartamentoService } from './servicios/catalogos/departamento.service';
 import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
+import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -70,7 +71,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -80,6 +81,7 @@ import { MatDialogModule} from '@angular/material/dialog';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -150,7 +152,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatExpansionModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    FormsModule
+    FormsModule,
+    MatStepperModule
   ],
   providers: [
     LoginService,
@@ -165,7 +168,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
-    RolPermisosService
+    RolPermisosService, 
+    TipoPermisosService
   ],
   bootstrap: [AppComponent],
 })

@@ -1,17 +1,8 @@
-.example-section {
-    display: flex;
-    align-content: center;
-    align-items: center;
-    height: 60px;
-  }
+.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
   
-  .example-margin {
-    margin: 0 10px;
-  }
+.example-margin { margin: 0 10px; }
 
-  .mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
-  }
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 
 .disenioTitulo{
   position: absolute; 

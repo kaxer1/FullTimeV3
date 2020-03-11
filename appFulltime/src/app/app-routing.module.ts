@@ -27,6 +27,7 @@ import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/lis
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 
 
 const routes: Routes = [
@@ -58,7 +59,7 @@ const routes: Routes = [
   { path: 'listarFeriados', component: ListarFeriadosComponent},
   { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
   { path: 'enrolados', component:PrincipalEnroladosComponent},
-  { path: 'registrarEnrolados', component:RegistroEnroladosComponent}
+  { path: 'tipoPermisos', component: TipoPermisosComponent},
 
 ];
 
