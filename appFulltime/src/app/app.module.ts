@@ -6,6 +6,7 @@ import { ChartsModule } from 'ng2-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
 
 // vistas
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
@@ -19,13 +20,25 @@ import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
-import {PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
-import {RegistroHorarioComponent} from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
+import { PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
+import { RegistroHorarioComponent} from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
+import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
+import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
+import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -37,6 +50,8 @@ import { ProvinciaService } from './servicios/catalogos/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { EnroladoService } from './servicios/catalogos/enrolado.service';
+import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,31 +69,17 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
-import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
-import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
-import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatDialogModule} from '@angular/material/dialog';
-import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
-import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
-import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
-import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { MatDialogModule} from '@angular/material/dialog';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
-import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
-import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
-import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
-
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tip
     RegistrarFeriadosComponent,
     PrincipalEnroladosComponent,
     RegistroEnroladosComponent,
-    TipoPermisosComponent
+    TipoPermisosComponent,
+    EditarFeriadosComponent
 
   ],
   imports: [
@@ -147,7 +149,8 @@ import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tip
     NgMaterialMultilevelMenuModule,
     MatExpansionModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    FormsModule
   ],
   providers: [
     LoginService,

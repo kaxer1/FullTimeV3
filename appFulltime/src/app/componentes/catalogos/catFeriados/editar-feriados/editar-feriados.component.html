@@ -1,20 +1,21 @@
+<div mat-dialog-content>
 <mat-card class="example-card mat-elevation-z9">
     <mat-card-header>
-        <mat-card-title>Añadir Feriado</mat-card-title>
+        <mat-card-title>{{data.idFeriado}}</mat-card-title>
     </mat-card-header>
     <!-- Formulario Completo -->
-    <form [formGroup]="FeriadosForm">
+    <form [formGroup]="EditarFeriadosForm">
         <mat-card-content>
             <div class="container" style="text-align: center">
                 <mat-form-field>
                     <mat-label>Descripción</mat-label>
-                    <input matInput placeholder="Descripción feriado" [formControl]="descripcionF" required>
+                    <input matInput placeholder="Descripción feriado" [(ngModel)]="data.idFeriado" [ngModelOptions]="{standalone: true}" required>
                     <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
                     <mat-label>Fecha</mat-label>
-                    <input matInput type="date" placeholder="Seleccionar fecha" [formControl]="fechaF" required>
+                    <input matInput type="date" placeholder="Seleccionar fecha"  required>
                     <mat-error *ngIf="fechaF.invalid">{{ObtenerMensajeErrorFechaRequerida()}}</mat-error>
                 </mat-form-field>
                 <br>
@@ -26,8 +27,9 @@
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!FeriadosForm.valid"
-            (click)="InsertarFeriado(FeriadosForm.value)" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroFeriado()" value="Salir">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!EditarFeriadosForm.valid"
+            (click)="ActualizarFeriados(EditarFeriadosForm.value)" value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaEditarFeriado()" value="Salir">
     </mat-card-actions>
 </mat-card>
+</div>

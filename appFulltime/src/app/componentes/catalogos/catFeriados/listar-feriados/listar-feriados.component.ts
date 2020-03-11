@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
+import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -67,9 +68,17 @@ export class ListarFeriadosComponent implements OnInit {
     let fechaB = String(datosBusqueda.fecha);
     if (descripcionB === '' && fechaB === '') {
       this.ObtenerFeriados();
-
-    } else if (descripcionB != '' && fechaB === '') {
+      this.toastr.info('No ha ingresado un criterio de búsqueda')
+    }
+    else if (descripcionB != '' && fechaB === '') {
       this.ObtenerFeriadoDescripcion(descripcionB);
+      this.BuscarFeriadosForm.setValue({
+        descripcionForm: '',
+        fechaForm: ''
+      });
+    }
+    else if (fechaB != '' && descripcionB === '') {
+      this.ObtenerFeriadoFecha(fechaB);
       this.BuscarFeriadosForm.setValue({
         descripcionForm: '',
         fechaForm: ''
@@ -80,23 +89,45 @@ export class ListarFeriadosComponent implements OnInit {
   ObtenerFeriadoDescripcion(datoDescripcion: any) {
     this.rest.BuscarFeriadoDescripcion(datoDescripcion).subscribe(datos => {
       this.feriados = datos;
-        for (let i = this.feriados.length - 1; i >= 0; i--) {
-          var cadena1 = this.feriados[i]['fecha'];
-          var aux1 = cadena1.split("T");
-          this.feriados[i]['fecha'] = aux1[0];
-          var cadena2 = this.feriados[i]['fec_recuperacion'];
-          var aux2 = cadena2.split("T");
-          this.feriados[i]['fec_recuperacion'] = aux2[0];
-        }
-      
-    },  (error) => {     
-      this.toastr.info('Dato ingresado no concide con los registros')
-      
+      for (let i = this.feriados.length - 1; i >= 0; i--) {
+        var cadena1 = this.feriados[i]['fecha'];
+        var aux1 = cadena1.split("T");
+        this.feriados[i]['fecha'] = aux1[0];
+        var cadena2 = this.feriados[i]['fec_recuperacion'];
+        var aux2 = cadena2.split("T");
+        this.feriados[i]['fec_recuperacion'] = aux2[0];
+      }
+
+    }, (error) => {
+      this.toastr.info('Describción ingresada no concide con los registros')
+
+    })
+  }
+
+  ObtenerFeriadoFecha(datoFecha: any) {
+    this.rest.BuscarFeriadoFecha(datoFecha).subscribe(datos => {
+      this.feriados = datos;
+      for (let i = this.feriados.length - 1; i >= 0; i--) {
+        var cadena1 = this.feriados[i]['fecha'];
+        var aux1 = cadena1.split("T");
+        this.feriados[i]['fecha'] = aux1[0];
+        var cadena2 = this.feriados[i]['fec_recuperacion'];
+        var aux2 = cadena2.split("T");
+        this.feriados[i]['fec_recuperacion'] = aux2[0];
+      }
+
+    }, (error) => {
+      this.toastr.info('Fecha ingresada no concide con los registros')
     })
   }
 
   AbrirVentanaRegistrarFeriado(): void {
     this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '300px' })
+  }
+  AbrirVentanaRegistrarFeriado1(id: any, datosSeleccionados: any): void {
+    console.log(id, datosSeleccionados);
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: {idSelec: id } })
+    console.log(id, datosSeleccionados.fecha);
   }
 
   LimpiarCampos() {

@@ -24,4 +24,12 @@ export class FeriadosService {
   BuscarFeriadoDescripcion(descripcion: string){
     return this.http.get(`${this.API_URL}/feriados/buscarDescripcion/${descripcion}`);
   }
+
+  BuscarFeriadoFecha(fecha: string){
+    return this.http.get(`${this.API_URL}/feriados/buscarFecha/${fecha}`);
+  }
+
+  ActualizarUnFeriado(id: number, datos:any){
+    return this.http.put(`${this.API_URL}/feriados/${id}`, datos);
+  }
 }
