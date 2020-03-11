@@ -1,7 +1,7 @@
 .example-card { 
     max-width: 275px;
     justify-content:center;
-    color:#3399FF;
+  
     
     
     
@@ -15,7 +15,7 @@ mat-slider {width: 175px;}
 }
 
 .label-theme{
-    color: #140F6E
+    color: black
 }
 
 .label-error{
