@@ -8,21 +8,26 @@ import { HomeComponent } from './componentes/home/home.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
-import {SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
+import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
-import {RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
-import {TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
-import {RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
+import { RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
+import { TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
-import { DepartamentosComponent } from './componentes/catalogos/cg_departamento/departamentos/departamentos.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
+import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
+import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
 
 
 const routes: Routes = [
@@ -44,12 +49,18 @@ const routes: Routes = [
   { path: 'registrarProceso', component: RegistroProcesoComponent },
   { path: 'provincia', component: PrincipalProvinciaComponent},
   { path: 'registrarProvincia', component:RegistroProvinciaComponent},
-  { path: 'departamento', component: DepartamentosComponent},
+  { path: 'departamento', component: PrincipalDepartamentoComponent},
+  { path: 'registrarDepartamento', component: RegistroDepartamentoComponent},
   { path: 'horario', component: PrincipalHorarioComponent},
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
   { path: 'tipoPermisos', component: TipoPermisosComponent},
+  { path: 'feriados', component: RegistrarFeriadosComponent},
+  { path: 'listarFeriados', component: ListarFeriadosComponent},
+  { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
+  { path: 'enrolados', component:PrincipalEnroladosComponent},
+  { path: 'registrarEnrolados', component:RegistroEnroladosComponent}
 
 ];
 

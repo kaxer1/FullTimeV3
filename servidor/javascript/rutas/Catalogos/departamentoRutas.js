@@ -15,6 +15,7 @@ class DepartamentoRutas {
         this.router.get('/:id', departamentoControlador_1.default.getOne);
         this.router.post('/', departamentoControlador_1.default.create);
         this.router.get('/busqueda/:nombre', departamentoControlador_1.default.getIdByNombre);
+        this.router.put('/:id', departamentoControlador_1.default.updateDepartamento);
     }
 }
 const DEPARTAMENTO_RUTAS = new DepartamentoRutas();

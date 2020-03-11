@@ -16,4 +16,12 @@ export class FeriadosService {
   CrearNuevoFeriado(datos: any) {
     return this.http.post(`${this.API_URL}/feriados`, datos);
   }
+
+  ConsultarFeriado(){
+    return this.http.get(`${this.API_URL}/feriados`);
+  }
+
+  BuscarFeriadoDescripcion(descripcion: string){
+    return this.http.get(`${this.API_URL}/feriados/buscarDescripcion/${descripcion}`);
+  }
 }

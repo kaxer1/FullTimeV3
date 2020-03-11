@@ -30,7 +30,14 @@ import { RegimenComponent } from './componentes/catalogos/regimen/regimen.compon
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
-import { FeriadosComponent } from './componentes/catalogos/feriados/feriados.component';
+import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+import { FooterComponent } from './share/footer/footer.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -43,6 +50,9 @@ import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
+import { EnroladoService } from './servicios/catalogos/enrolado.service';
+import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
+import { DepartamentoService } from './servicios/catalogos/departamento.service';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -62,16 +72,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
-import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
-import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
+
 
 @NgModule({
   declarations: [
@@ -90,7 +99,6 @@ import { MatStepperModule } from '@angular/material/stepper';
     RegimenComponent,
     TipoComidasComponent,
     RelojesComponent,
-    FeriadosComponent,
     PrincipalProvinciaComponent,
     RegistroProvinciaComponent,
     PrincipalProcesoComponent,
@@ -100,6 +108,12 @@ import { MatStepperModule } from '@angular/material/stepper';
     FooterComponent,
     HorasExtrasComponent,
     NotificacionesComponent,
+    ListarFeriadosComponent,
+    PrincipalDepartamentoComponent,
+    RegistroDepartamentoComponent,
+    RegistrarFeriadosComponent,
+    PrincipalEnroladosComponent,
+    RegistroEnroladosComponent,
     TipoPermisosComponent
   ],
   imports: [
@@ -130,6 +144,7 @@ import { MatStepperModule } from '@angular/material/stepper';
     MatCheckboxModule,
     MatRadioModule,
     MatGridListModule,
+    MatDialogModule,
     NgMaterialMultilevelMenuModule,
     MatExpansionModule,
     MatDatepickerModule,
@@ -144,6 +159,8 @@ import { MatStepperModule } from '@angular/material/stepper';
     DiscapacidadService,
     ProvinciaService,
     HorarioService,
+    DepartamentoService,
+    EnroladoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,

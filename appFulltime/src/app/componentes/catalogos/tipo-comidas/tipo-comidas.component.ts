@@ -63,13 +63,13 @@ export class TipoComidasComponent implements OnInit {
     }
   }
 
-  ObtenerMensajeErrorCamposLetras() {
+  ObtenerMensajeErrorNombreRequerido() {
     if (this.nombreF.hasError('required')) {
       return 'Debe ingresar un nombre';
     }
   }
 
-  ObtenerMensajeErrorCamposNumericos() {
+  ObtenerMensajeErrorCamposNumericosRequeridos() {
     if (this.valorF.hasError('required')) {
       
       return 'Debe ingresar un valor';

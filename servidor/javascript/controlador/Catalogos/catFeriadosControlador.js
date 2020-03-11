@@ -37,6 +37,18 @@ class FeriadosControlador {
             }
         });
     }
+    ListarFeriadoDescripcion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { descripcion } = req.params;
+            const FERIADOS = yield database_1.default.query('SELECT * FROM cg_feriados WHERE descripcion = $1', [descripcion]);
+            if (FERIADOS.rowCount > 0) {
+                return res.json(FERIADOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearFeriados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { fecha, descripcion, fec_recuperacion } = req.body;

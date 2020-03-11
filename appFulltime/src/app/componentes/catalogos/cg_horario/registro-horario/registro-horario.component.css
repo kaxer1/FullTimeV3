@@ -1,13 +1,21 @@
-.example-card { max-width: 300px;}
+.example-card { 
+    max-width: 275px;
+    justify-content:center;
+    color:#3399FF;
+    
+    
+    
+}
 
 mat-slider {width: 175px;}
 
 .example-match{
-    margin: 0 10px
+    margin: 0 10px;
+    color: black
 }
 
 .label-theme{
-    color: blue
+    color: #140F6E
 }
 
 .label-error{

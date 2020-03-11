@@ -1,0 +1,39 @@
+
+
+    <mat-card class="example-card mat-elevation-z9">
+        <mat-card-header>
+            <mat-card-title>Añadir Feriado</mat-card-title>
+        </mat-card-header>
+        <!-- Formulario Completo -->
+        <form [formGroup]="FeriadosForm">
+            <mat-card-content>
+                <div class="container" style="text-align: center">
+                    <mat-form-field>
+                        <mat-label>Descripción</mat-label>
+                        <input matInput placeholder="Descripción feriado" [formControl]="descripcionF" required>
+                        <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha</mat-label>
+                        <input matInput type="date" placeholder="Seleccionar fecha" [formControl]="fechaF"
+                        required>
+                        <mat-error *ngIf="fechaF.invalid">{{ObtenerMensajeErrorFechaRequerida()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha Recuperación</mat-label>
+                        <input matInput type="date" placeholder="Selecionar fecha" [formControl]="fechaRecuperacionF">
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </form>
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                    [disabled]="!FeriadosForm.valid" (click)="InsertarFeriado(FeriadosForm.value)" value="Guardar">
+            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="CerrarVentanaRegistroFeriado()"
+                value="Salir">
+        </mat-card-actions>
+    </mat-card>
+
+

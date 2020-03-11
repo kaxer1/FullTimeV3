@@ -1,20 +1,24 @@
 <div class="container" style="padding-top: 25px; padding-bottom: 25px;">
 
     <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title aria-colspan="4">Añadir Horario</mat-card-title>
+        <mat-card-header justify-content:center>
+            <mat-card-title aria-colspan="4" justify-content:center><b>Añadir Horario</b></mat-card-title>
         </mat-card-header>
         <!-- Formulario Completo -->
         <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
 
             <mat-card-content>
                 <div class="container">
-                    <section>
-                        <label class="label-theme" for="nombre">Nombre Horario</label>
-                        <input matInput placeholder="Ej: Horario 1 " [formControl]="nombre" required>
-                        <label class="label-error" >{{obtenerMensajeErrorNombre()}}</label>
-                        
-                    </section>
+                   
+                       
+                        <mat-form-field>
+                            <mat-label>Nombre de Horario</mat-label>
+                            <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
+                            <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                            <br>
+                        </mat-form-field>
+                   
+                    
                     <br>
                     <section>
                         <label class="label-theme" for="nombre">Minutos de almuerzo</label>

@@ -27,6 +27,19 @@ class FeriadosControlador {
         }
     }
 
+    public async ListarFeriadoDescripcion(req: Request, res: Response): Promise<any> {
+
+        const { descripcion } = req.params;
+        const FERIADOS = await pool.query('SELECT * FROM cg_feriados WHERE descripcion = $1', [descripcion]);
+        if (FERIADOS.rowCount > 0) {
+            return res.json(FERIADOS.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+            
+        }
+    }
+
     public async CrearFeriados(req: Request, res: Response): Promise<void> {
 
         const { fecha, descripcion, fec_recuperacion } = req.body;

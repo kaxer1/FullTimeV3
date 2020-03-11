@@ -13,6 +13,7 @@ class FeriadosRuta {
     configuracion() {
         this.router.get('/', catFeriadosControlador_1.default.ListarFeriados);
         this.router.get('/:id', catFeriadosControlador_1.default.ListarUnFeriado);
+        this.router.get('/buscarDescripcion/:descripcion', catFeriadosControlador_1.default.ListarFeriadoDescripcion);
         this.router.post('/', catFeriadosControlador_1.default.CrearFeriados);
     }
 }

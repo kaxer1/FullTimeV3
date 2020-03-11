@@ -33,6 +33,11 @@ export class PrincipalHorarioComponent implements OnInit {
     
   }
 
+  foo(){
+    console.log("hola ")
+    //alert("Prueba")
+  }
+
  
 
   

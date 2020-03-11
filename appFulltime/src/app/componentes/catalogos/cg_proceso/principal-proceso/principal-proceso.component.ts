@@ -26,7 +26,7 @@ export class PrincipalProcesoComponent implements OnInit {
     this.procesos = [];
 
     this.rest.getProcesosRest().subscribe(data => {
-      console.log(data);
+    
       this.procesos = data
     })
       

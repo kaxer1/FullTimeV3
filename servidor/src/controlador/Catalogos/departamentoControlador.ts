@@ -18,7 +18,7 @@ class DepartamentoControlador {
   
     public async create(req: Request, res: Response): Promise<void> {
       const { nombre,depa_padre,nivel} = req.body;
-      await pool.query('INSERT INTO cg_departamentos (nombre) VALUES ($1, $2,$3)', [nombre,depa_padre,nivel]);
+      await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre,nivel) VALUES ($1, $2,$3)', [nombre,depa_padre,nivel]);
       console.log(req.body);
       res.json({ message: 'El departamento ha sido guardado en éxito' });
     }
@@ -30,6 +30,14 @@ class DepartamentoControlador {
         return res.json(unIdProceso.rows);
       }
       res.status(404).json({ text: 'El departamento no ha sido encontrado' });
+    }
+
+    public async updateDepartamento(req: Request, res: Response): Promise<any>{
+      const  {nombre, nivel, depa_padre} = req.body;
+      const { id } = req.params;
+      await pool.query('UPDATE cg_departamentos set NOMBRE= $1, DEPA_PADRE =$2, NIVEL=$3 WHERE id= $4', [nombre,depa_padre,nivel,id]);
+      console.log(pool.query);
+      res.json({ message: 'El departamento ha sido modificado con éxito' });
     }
   
   

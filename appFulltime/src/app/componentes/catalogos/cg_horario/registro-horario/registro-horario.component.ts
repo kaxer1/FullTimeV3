@@ -14,7 +14,7 @@ export class RegistroHorarioComponent implements OnInit {
 
 
 nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
-minAlmuerzo = new FormControl('', [Validators.required, Validators.pattern('[1-9]*')]);
+minAlmuerzo = new FormControl('', [Validators.required, Validators.pattern('[0-9]*')]);
 horaTrabajo = new FormControl('', [Validators.required]);
 flexible = new FormControl('', Validators.required);
 porHoras = new FormControl('', Validators.required);

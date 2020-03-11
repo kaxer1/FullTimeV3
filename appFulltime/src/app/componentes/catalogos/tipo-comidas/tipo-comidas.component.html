@@ -11,14 +11,14 @@
                     <mat-form-field>
                         <mat-label>Nuevo Tipo de Comida</mat-label>
                         <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
-                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorCamposLetras()}}</mat-error>
+                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Valor</mat-label>
                         <input matInput placeholder="Ingresar valor del plato" [formControl]="valorF"
                         (keypress)="IngresarNumeroDecimal($event)" required>
-                        <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericos()}}</mat-error>
+                        <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>

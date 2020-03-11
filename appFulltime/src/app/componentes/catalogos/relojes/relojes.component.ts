@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RelojesService } from 'src/app/servicios/catalogos/relojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
 
+
 @Component({
   selector: 'app-relojes',
   templateUrl: './relojes.component.html',
@@ -90,7 +91,6 @@ export class RelojesComponent implements OnInit {
       return 'No ingresar letras';
     }
   }
-
 
   IngresarIp(evt) {
     if (window.event) {

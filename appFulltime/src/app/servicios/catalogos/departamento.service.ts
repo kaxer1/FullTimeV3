@@ -14,23 +14,27 @@ export class DepartamentoService {
 
   // catalogo de departamentos
 
-  getdepartamentosRest(){
-    console.log(this.http.get(`${this.API_URL}/departamento`));
+  getDepartamentosRest(){
+  
     return this.http.get(`${this.API_URL}/departamento`);
     
   }
 
-  getOnedepartamentoRest(id:number){
+  getOneDepartamentoRest(id:number){
     return this.http.get(`${this.API_URL}/departamento/${id}`);
   }
   
-  postdepartamentoRest(data: any){
-    console.log(data);
+  postDepartamentoRest(data: any){
+  
     return this.http.post(`${this.API_URL}/departamento`, data);
   }
 
-  getIddepartamentoPadre(departamentoPadre: string){
+  getIdDepartamentoPadre(departamentoPadre: string){
     return this.http.get(`${this.API_URL}/departamento/busqueda/${departamentoPadre}`);
+  }
+
+  updateDepartamento(idDepartamento: number, data:any){
+    return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data)
   }
   
 }
