@@ -22,6 +22,7 @@ import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/pr
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 
 
 const routes: Routes = [
@@ -48,6 +49,7 @@ const routes: Routes = [
   { path: 'registrarHorario', component:RegistroHorarioComponent},
   { path: 'horasExtras', component: HorasExtrasComponent},
   { path: 'notificaciones', component: NotificacionesComponent},
+  { path: 'tipoPermisos', component: TipoPermisosComponent},
 
 ];
 
