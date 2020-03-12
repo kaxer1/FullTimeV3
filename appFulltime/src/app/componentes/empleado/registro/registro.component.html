@@ -158,11 +158,11 @@
                         <input type="submit" class="btn btn-primary"
                             (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
                             [disabled]="!terceroFormGroup.valid" value="Grabar" style="margin: 0px;">
-                        <button mat-button (click)="stepper.reset()" class="btn btn-danger"style="margin-left: 15px;">Cancelar</button>
+                        <button mat-button (click)="stepper.reset()" class="btn btn-danger"
+                            style="margin-left: 15px;">Cancelar</button>
                     </div>
                 </form>
             </mat-step>
         </mat-horizontal-stepper>
     </mat-card>
-
 </div>
