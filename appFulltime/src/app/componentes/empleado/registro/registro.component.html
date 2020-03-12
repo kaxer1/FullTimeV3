@@ -1,144 +1,168 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
+<div class="container" style="padding-top: 15px;">
     <mat-card class="example-card mat-elevation-z8">
         <mat-toolbar style="background: white;">
             <span>Añadir Empleado</span>
         </mat-toolbar>
-        <mat-card-content>
-            <form [formGroup]="nuevoEmpleadoForm">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm">
-                            <mat-form-field>
-                                <mat-label>Cédula</mat-label>
-                                <input matInput placeholder="Ingrese cedula de identidad" maxlength="10"
-                                    [formControl]="cedula" required>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Nombre</mat-label>
-                                <input matInput placeholder="Ej: " type="text" [formControl]="nombre" required>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Apellido</mat-label>
-                                <input matInput placeholder="Ej: " type="text" [formControl]="apellido" required>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Domicilio</mat-label>
-                                <input matInput placeholder="Ingrese dirección de domicilio" type="text"
-                                    [formControl]="domicilio" required>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Teléfono</mat-label>
-                                <input matInput placeholder="Ingrese número telefónico" type="number"
-                                    [formControl]="telefono" maxlength="10" required>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Correo Electrónico</mat-label>
-                                <input matInput type="text" placeholder="ejemplo@mail.com" [formControl]="email" required>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Correo Electrónico Alternativo</mat-label>
-                                <input matInput type="text" placeholder="ejemplo2@mail.com" [formControl]="correoAlternativo" required>
-                            </mat-form-field>
-                        </div>
-    
-                        <div class="col-sm">
-
-                            <mat-form-field class="example-full-width">
-                                <mat-label>Selecciona fecha de nacimiento</mat-label>
-                                <input matInput [matDatepicker]="picker" [formControl]="fecha" required>
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #picker></mat-datepicker>
-                              </mat-form-field>
-
-                            <mat-form-field>
-                                <mat-label>Estado Civil</mat-label>
-                                <mat-select [formControl]="estadoCivil">
-                                    <mat-option [value]="1">Soltero/a</mat-option>
-                                    <mat-option [value]="2">Unión de Hecho</mat-option>
-                                    <mat-option [value]="3">Casado/a</mat-option>
-                                    <mat-option [value]="4">Divorciado/a</mat-option>
-                                    <mat-option [value]="5">Viudo/a</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-    
-                            <mat-form-field>
-                                <mat-label>Genero</mat-label>
-                                <mat-select [formControl]="genero">
-                                    <mat-option [value]="1">Masculino</mat-option>
-                                    <mat-option [value]="2">Femenino</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-    
-                            <mat-form-field>
-                                <mat-label>Estado</mat-label>
-                                <mat-select [formControl]="estado">
-                                    <mat-option [value]="1">Activo</mat-option>
-                                    <mat-option [value]="2">Inactivo</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-
-                            <mat-form-field>
-                                <mat-label>Nacionalidad</mat-label>
-                                <mat-select [formControl]="nacionalidad">
-                                    <mat-option [value]="1">Ecuatoriana</mat-option>
-                                    <mat-option [value]="2">Venezolana</mat-option>
-                                    <mat-option [value]="3">Peruana</mat-option>
-                                    <mat-option [value]="4">Colombiana</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-    
-                        <div class="col-sm">
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Seleccione Rol...</mat-label>
-                                <mat-select>
-                                    <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Usuario</mat-label>
-                                <input matInput placeholder="Ej: " type="text" required>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Password</mat-label>
-                                <input matInput placeholder="Ej: " type="password" required>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <input matInput type="date" placeholder="Fecha Vencimiento" required>
-                            </mat-form-field>
-                            <section class="example-section">
-                                <mat-radio-group aria-label="Select an option" required>
-                                    <label>Estado</label>
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <mat-radio-button value="true">Activo</mat-radio-button>
-                                                <mat-radio-button value="false">No</mat-radio-button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </mat-radio-group>
-                            </section>
+        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+            <mat-step [stepControl]="primeroFormGroup">
+                <ng-template matStepLabel>Sección 1 </ng-template>
+                <form [formGroup]="primeroFormGroup">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Nombre</mat-label>
+                                    <input matInput placeholder="Ej: " type="text" formControlName="nombreForm"
+                                        required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Apellido</mat-label>
+                                    <input matInput placeholder="Ej: " type="text" formControlName="apellidoForm"
+                                        required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Cédula</mat-label>
+                                    <input matInput type="number" placeholder="Ingrese cedula de identidad"
+                                        maxlength="10" formControlName="cedulaForm"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        (keypress)="soloNumeros($event)" required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field class="example-full-width">
+                                    <mat-label>Selecciona fecha de nacimiento</mat-label>
+                                    <input matInput [matDatepicker]="picker" formControlName="fechaForm" required>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker touchUi #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Correo Electrónico</mat-label>
+                                    <input matInput type="text" placeholder="ejemplo@mail.com"
+                                        formControlName="emailForm" required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Correo Electrónico Alternativo</mat-label>
+                                    <input matInput type="text" placeholder="ejemplo2@mail.com"
+                                        formControlName="correoAlternativoForm" required>
+                                </mat-form-field>
+                            </div>
                         </div>
                     </div>
+                </form>
+                <div>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                 </div>
-            </form>
-        </mat-card-content>
-
-        <mat-card-actions>
-            <input type="submit" class="btn btn-primary" (click)="insertarEmpleado(nuevoEmpleadoForm.value)"
-                style="margin-left: 15px;" value="Grabar">
-            <input type="submit" class="btn btn-danger" (click)="limpliarCampos()" style="margin-left: 15px;"
-                value="Cancelar">
-        </mat-card-actions>
+            </mat-step>
+            <mat-step [stepControl]="segundoFormGroup">
+                <form [formGroup]="segundoFormGroup">
+                    <ng-template matStepLabel>Sección 2</ng-template>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Domicilio</mat-label>
+                                    <input matInput placeholder="Ingrese dirección de domicilio" type="text"
+                                        formControlName="domicilioForm" required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Teléfono</mat-label>
+                                    <input matInput placeholder="Ingrese número telefónico" type="number" maxlength="10"
+                                        formControlName="telefonoForm"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        (keypress)="soloNumeros($event)" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Estado Civil</mat-label>
+                                    <mat-select formControlName="estadoCivilForm">
+                                        <mat-option [value]="1">Soltero/a</mat-option>
+                                        <mat-option [value]="2">Unión de Hecho</mat-option>
+                                        <mat-option [value]="3">Casado/a</mat-option>
+                                        <mat-option [value]="4">Divorciado/a</mat-option>
+                                        <mat-option [value]="5">Viudo/a</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Género</mat-label>
+                                    <mat-select formControlName="generoForm">
+                                        <mat-option [value]="1">Masculino</mat-option>
+                                        <mat-option [value]="2">Femenino</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Estado</mat-label>
+                                    <mat-select formControlName="estadoForm">
+                                        <mat-option [value]="1">Activo</mat-option>
+                                        <mat-option [value]="2">Inactivo</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Nacionalidad</mat-label>
+                                    <mat-select formControlName="nacionalidadForm">
+                                        <mat-option [value]="1">Ecuatoriana</mat-option>
+                                        <mat-option [value]="2">Venezolana</mat-option>
+                                        <mat-option [value]="3">Peruana</mat-option>
+                                        <mat-option [value]="4">Colombiana</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="terceroFormGroup">
+                <form [formGroup]="terceroFormGroup">
+                    <ng-template matStepLabel>Sección 3</ng-template>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Seleccione Rol...</mat-label>
+                                    <mat-select formControlName="rolForm">
+                                        <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Usuario</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="userForm" type="text" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="passForm" type="password"
+                                        required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
+                        <input type="submit" class="btn btn-primary"
+                            (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
+                            [disabled]="!terceroFormGroup.valid" value="Grabar" style="margin: 0px;">
+                        <button mat-button (click)="stepper.reset()" class="btn btn-danger"style="margin-left: 15px;">Cancelar</button>
+                    </div>
+                </form>
+            </mat-step>
+        </mat-horizontal-stepper>
     </mat-card>
 
-    
 </div>

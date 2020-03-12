@@ -11,7 +11,7 @@
                 <div class="container">
                     <mat-form-field>
                         <mat-label>Ingresar Carnet Conadis</mat-label>
-                        <input matInput placeholder="Ej: " [formControl]="carnet" required>
+                        <input matInput type="number" placeholder="Ej: " [formControl]="carnet" required>
                         <mat-error *ngIf="carnet.invalid">{{obtenerMensajeErrorCarnet()}}</mat-error>
                     </mat-form-field>
                     <br>

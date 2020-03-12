@@ -1,46 +1,51 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title>Añadir Notificación</mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="nuevaNotificacionForm" (ngSubmit)="insertarNotificacion(nuevaNotificacionForm.value)">
-            <mat-card-content>
-                <div class="container">
-                    <mat-form-field>
-                        <mat-label>Tipo</mat-label>
-                        <input matInput placeholder="Ej: " [formControl]="tipo" required>
-                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Nivel</mat-label>
-                        <input matInput placeholder="Ej: " [formControl]="nivel" required>
-                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Departamento</mat-label>
-                        <input matInput placeholder="Ej: " [formControl]="idDepartamento" required>
-                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Tipo Permiso</mat-label>
-                        <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" required>
-                        <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
-                    </mat-form-field>
-                    <br>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Añadir Notificación</h5>
                 </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
-                    [disabled]="!nuevaNotificacionForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
-                    [disabled]="!nuevaNotificacionForm.valid" value="Cancelar">
-            </mat-card-actions>
-        </form>
-    </mat-card>
-
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="nuevaNotificacionForm">
+                            <mat-form-field>
+                                <mat-label>Tipo</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="tipo" required>
+                                <mat-error *ngIf="tipo.invalid">{{ObtenerMensajeErrorTipoRequerido()}}</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Nivel</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="nivel" required>
+                                <mat-error *ngIf="nivel.invalid">{{ObtenerMensajeErrorNivelRequerido()}}</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Departamento</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="idDepartamento" required>
+                                <mat-error *ngIf="idDepartamento.invalid">{{ObtenerMensajeErrorDepartamentoRequerido()}}</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Tipo Permiso</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" required>
+                                <mat-error *ngIf="idTipoPermiso.invalid">{{ObtenerMensajeErrorPermisoRequerido()}}</mat-error>
+                            </mat-form-field>
+                            <br>
+                        </form>
+                    </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-primary"
+                        (click)="insertarNotificacion(nuevaNotificacionForm.value)"
+                        [disabled]="!nuevaNotificacionForm.valid" value="Grabar">
+                    <input type="submit" (click)="limpiarCampos()" class="btn btn-danger" value="Cancelar"
+                        style="margin-left: 15px;">
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-4"></div>
+    </div>
 </div>

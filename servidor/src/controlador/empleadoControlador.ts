@@ -21,8 +21,8 @@ class EmpleadoControlador {
     await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad]);
     console.log(req.body);
     const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
-
-    res.json({ message: 'Empleado guardado', text: oneEmpley.rows });
+    const idEmployGuardado = oneEmpley.rows[0].id;
+    res.json({ message: 'Empleado guardado', id: idEmployGuardado});
   }
 
 }
