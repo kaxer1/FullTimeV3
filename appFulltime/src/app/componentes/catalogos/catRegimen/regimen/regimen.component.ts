@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RegimenService } from 'src/app/servicios/catalogos/regimen/regimen.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-regimen',
@@ -33,7 +34,8 @@ export class RegimenComponent implements OnInit {
 
   constructor(
     private rest: RegimenService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialogRef: MatDialogRef<RegimenComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +127,12 @@ export class RegimenComponent implements OnInit {
 
   LimpiarCampos() {
     this.RegimenForm.reset();
+  }
+
+  CerrarVentanaRegistroRegimen() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

@@ -9,9 +9,9 @@ import { TitulosComponent } from './componentes/catalogos/titulos/titulos.compon
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
-import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
-import { RegimenComponent} from './componentes/catalogos/regimen/regimen.component';
-import { TipoComidasComponent} from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
+import { RegimenComponent} from './componentes/catalogos/catRegimen/regimen/regimen.component';
+import { TipoComidasComponent} from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
@@ -27,6 +27,7 @@ import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_depart
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
+import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 
 
 const routes: Routes = [
@@ -57,7 +58,8 @@ const routes: Routes = [
   { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
   { path: 'enrolados', component:PrincipalEnroladosComponent},
   { path: 'tipoPermisos', component: TipoPermisosComponent},
-
+  { path: 'listarRegimen', component: ListarRegimenComponent},
+  { path: 'listarTipoComidas', component: ListarTipoComidasComponent},
 ];
 
 @NgModule({

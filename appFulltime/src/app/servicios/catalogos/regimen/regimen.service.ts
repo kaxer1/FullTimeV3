@@ -16,4 +16,8 @@ export class RegimenService {
   CrearNuevoRegimen(datos: any) {
     return this.http.post(`${this.API_URL}/regimenLaboral`, datos);
   }
+
+  ConsultarRegimen(){
+    return this.http.get(`${this.API_URL}/regimenLaboral`);
+  }
 }

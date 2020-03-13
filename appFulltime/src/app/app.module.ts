@@ -27,8 +27,8 @@ import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
-import { RegimenComponent } from './componentes/catalogos/regimen/regimen.component';
-import { TipoComidasComponent } from './componentes/catalogos/tipo-comidas/tipo-comidas.component';
+import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
+import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
@@ -82,6 +82,8 @@ import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
+import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
+import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +118,9 @@ import { MatStepperModule } from '@angular/material/stepper';
     PrincipalEnroladosComponent,
     RegistroEnroladosComponent,
     TipoPermisosComponent,
-    EditarFeriadosComponent
+    EditarFeriadosComponent,
+    ListarRegimenComponent,
+    ListarTipoComidasComponent
 
   ],
   imports: [

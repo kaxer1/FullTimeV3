@@ -16,4 +16,8 @@ export class TipoComidasService {
   CrearNuevoTipoComida(datos: any) {
     return this.http.post(`${this.API_URL}/tipoComidas`, datos);
   }
+
+  ConsultarTipoComida(){
+    return this.http.get(`${this.API_URL}/tipoComidas`);
+  }
 }
