@@ -39,7 +39,6 @@ export class TitulosComponent implements OnInit {
     private rest: TituloService,
     private toastr: ToastrService,
   ) { 
-    this.limpiarCampos();
   }
 
   ngOnInit(): void {
@@ -68,10 +67,7 @@ export class TitulosComponent implements OnInit {
   }
 
   limpiarCampos(){
-    this.nuevoTituloForm.setValue({
-      tituloNombreForm: '',
-      tituloNivelForm: '',
-    });
+    this.nuevoTituloForm.reset();
   }
 
 }

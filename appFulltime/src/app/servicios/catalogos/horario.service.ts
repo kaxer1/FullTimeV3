@@ -15,9 +15,7 @@ export class HorarioService {
   // catalogo de Horarios
 
   getHorariosRest(){
-    console.log(this.http.get(`${this.API_URL}/horario`));
     return this.http.get(`${this.API_URL}/horario`);
-    
   }
 
   getOneHorarioRest(id:number){

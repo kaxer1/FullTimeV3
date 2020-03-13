@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {ProvinciaService} from '../../../../servicios/catalogos/provincia.service'
-import { Router } from '@angular/router';
+import { ProvinciaService } from '../../../../servicios/catalogos/provincia.service'
+import { MatDialog } from '@angular/material/dialog';
+import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
+
 @Component({
   selector: 'app-principal-provincia',
   templateUrl: './principal-provincia.component.html',
@@ -11,7 +13,7 @@ export class PrincipalProvinciaComponent implements OnInit {
   provincias: any = [];
   constructor(
     public rest: ProvinciaService,
-    public router: Router
+    public vistaRegistrarProvincia: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -20,41 +22,31 @@ export class PrincipalProvinciaComponent implements OnInit {
 
   getProvincias() {
     this.provincias = [];
-
     this.rest.getProvinciasRest().subscribe(data => {
-      console.log(data);
       this.provincias = data
     })
-      
-    
   }
 
-  getOneProvincia(id:number) {
+  getOneProvincia(id: number) {
     this.rest.getOneProvinciaRest(id).subscribe(data => {
       this.provincias = data;
-
-     })
-    
+    })
   }
 
-
   postProvincia(form) {
-    let dataProvincia= {
+    let dataProvincia = {
       nombre: form.nombre
     };
 
-    this.rest.postProvinciaRest(dataProvincia).subscribe(
-        response => {
-          
-          console.log(response);
-          console.log("GUARDADO CON ÈXITO");
-        },
-        error => {
-          console.log(error);
-          
-        });
-
-    
-
+    this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
+      console.log(response);
+    }, error => {
+      console.log(error);
+    });
   }
+
+  AbrirVentanaRegistrarProvincia() {
+    this.vistaRegistrarProvincia.open(RegistroProvinciaComponent, { width: '300px' })
+  }
+
 }

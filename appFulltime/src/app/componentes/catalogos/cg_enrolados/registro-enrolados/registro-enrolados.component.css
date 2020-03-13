@@ -1,13 +1,5 @@
-.example-card { max-width: 300px;}
+.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
 
-mat-slider {width: 300px;}
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 
-.example-match{
-    margin: 0 10px;
-    color: black
-}
-
-.label-theme{
-    color: black;
-   
-}
+.btn { border-radius: 25px; margin-right: 15px; margin-top: 15px;}

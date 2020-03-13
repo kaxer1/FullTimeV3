@@ -1,32 +1,25 @@
-<br>
-<div class="container">
-
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Añadir Rol</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <form [formGroup]="nuevoRolForm" (ngSubmit)="insertarRol(nuevoRolForm.value)">
-
-        <div class="container border border-primary">
-
-            <!-- contenedor registro rol -->
-            <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-                <div class="container" style="text-align: center">
-                    <!-- <form> -->
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Descripción</label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" formControlName="descripcionForm">
-                        </div>
-                    </div>
-                    <!-- </form> -->
-                </div>
-                <br>
-            </div>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <mat-card class="example-card mat-elevation-z8">
+        <div style="text-align: center;">
+            <h5>Añadir Rol</h5>
         </div>
-        <!-- Botones -->
-        <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [disabled]="!nuevoRolForm.valid" value="Guardar">
-        <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
-    </form>
+        <form [formGroup]="nuevoRolForm">
+
+            <mat-card-content>
+                <div class="container">
+                    <mat-form-field>
+                        <mat-label>Descripción</mat-label>
+                        <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
+                            (keypress)="soloLetras($event)" required>
+                        <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </form>
+        <div style="text-align: center;">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarRol(nuevoRolForm.value)"
+                [disabled]="!nuevoRolForm.valid" value="Grabar">
+            <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
+        </div>
+    </mat-card>
 </div>

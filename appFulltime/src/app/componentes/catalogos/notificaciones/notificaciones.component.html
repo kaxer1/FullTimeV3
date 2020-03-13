@@ -38,10 +38,10 @@
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-primary"
+                    <input type="submit" class="btn btn-primary btn-sm"
                         (click)="insertarNotificacion(nuevaNotificacionForm.value)"
                         [disabled]="!nuevaNotificacionForm.valid" value="Grabar">
-                    <input type="submit" (click)="limpiarCampos()" class="btn btn-danger" value="Cancelar"
+                    <input type="submit" (click)="limpiarCampos()" class="btn btn-danger btn-sm" value="Cancelar"
                         style="margin-left: 15px;">
                 </div>
             </mat-card>

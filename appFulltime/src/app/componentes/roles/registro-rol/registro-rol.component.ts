@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { RolesService } from 'src/app/servicios/roles/roles.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registro-rol',
@@ -10,45 +11,53 @@ import { Router } from '@angular/router';
 })
 export class RegistroRolComponent implements OnInit {
 
-  url: string;
+  descripcion = new FormControl('', Validators.required);
+
   public nuevoRolForm = new FormGroup({
-    // idForm: new FormControl('', Validators.required),
-    descripcionForm: new FormControl('', Validators.required),
+    descripcionForm: this.descripcion
   });
+  
   constructor(
     public rest: RolesService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService,
   ) { 
     this.nuevoRolForm.setValue({
-      // idForm: '',
       descripcionForm: '',
     });
   }
 
   ngOnInit(): void {
-    this.url = this.router.url;
-    console.log(this.router.url);
-    this.limpliarCampos();
+    this.limpiarCampos();
   }
-  limpliarCampos(){
-    this.nuevoRolForm.setValue({
-      descripcionForm: '',
-    });
+
+  obtenerMensajeErrorDescripcion() {
+    if (this.descripcion.hasError('required')) {
+      return 'Debe ingresar algun nombre';
+    }
+    return this.descripcion.hasError('pattern') ? 'No ingresar números' : '';
+  }
+
+  limpiarCampos(){
+    this.nuevoRolForm.reset();
   }
 
   insertarRol(form){
     let dataRol= {
-      // id: form.idForm,
       nombre: form.descripcionForm,
     };
+
     this.rest.postRoles(dataRol).subscribe(response => {
       console.log(response);  
-      alert("Rol guardado")
-      this.limpliarCampos();
-      this.router.navigate(['/','roles']);
-    },
-      error => {
+      this.toastr.success('Operacion Exitosa', 'Rol guardado');
+      this.limpiarCampos();
+    },error => {
         console.log(error);
-      })
+    });
+  }
+
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!((key >= 48 && key <= 63)|| key==8 || key==46))
   }
 }

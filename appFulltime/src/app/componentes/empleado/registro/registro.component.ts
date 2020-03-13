@@ -40,7 +40,6 @@ export class RegistroComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.limpliarCampos();
     this.cargarRoles();
     this.primeroFormGroup = this._formBuilder.group({
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
@@ -71,7 +70,9 @@ export class RegistroComponent implements OnInit {
   }
 
   limpliarCampos() {
-    // this.nuevoEmpleadoForm.reset();
+    this.primeroFormGroup.reset();
+    this.segundoFormGroup.reset();
+    this.terceroFormGroup.reset();
   }
 
   cargarRoles(){
@@ -116,7 +117,6 @@ export class RegistroComponent implements OnInit {
       });
 
     this.limpliarCampos();
-
   }
 
 }

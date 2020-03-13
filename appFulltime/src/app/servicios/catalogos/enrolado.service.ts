@@ -15,9 +15,7 @@ export class EnroladoService {
   // catalogo de enrolados
 
   getEnroladosRest(){
-    console.log(this.http.get(`${this.API_URL}/enrolados`));
     return this.http.get(`${this.API_URL}/enrolados`);
-    
   }
 
   getOneEnroladosRest(id:number){
@@ -25,11 +23,8 @@ export class EnroladoService {
   }
   
   postEnroladosRest(data: any){
-    console.log(data);
+    console.log(data)
     return this.http.post(`${this.API_URL}/enrolados`, data);
   }
-
- 
-  
 
 }

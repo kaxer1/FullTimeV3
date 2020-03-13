@@ -1,79 +1,57 @@
-<br>
-<div class="container">
-
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Enrolados - Criterios de Búsqueda</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <!--<form>-->
-
-    <div class="container border border-primary">
-
-        <!-- contenedor de registro de datos -->
-        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-
-            <div class="container" style="text-align: center">
-                <!-- <form> -->
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Id</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control">
-                    </div>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Enrolados - Criterios de Búsqueda</h5>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">ID Usuario</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="">
+                            <mat-form-field>
+                                <mat-label>Ingresar ID Usuario</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Nombre</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Activo</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Finger</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Data Finger</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                        </form>
                     </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Nuevo Enrolado</button>
                 </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Nombre</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Activo</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Finger</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Data Finger</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-                
-         
-               
-                <!-- </form> -->
-            </div>
+            </mat-card>
         </div>
+        <div class="col-3"></div>
     </div>
-
-    <!-- Botones -->
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [routerLink]="['/registrarEnrolados/']">Crear</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
-    <!--</form>-->
 </div>
 
-<br>
-
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <p class="display-4" style="text-align: center;">Resultado de búsqueda</p>
+    <mat-toolbar>
+        <span style="text-align: center;">Resultado de búsqueda</span>
+    </mat-toolbar>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
@@ -82,9 +60,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Activo</th>
                 <th scope="col">Finger</th>
-                <th scope="col">Borrar</th>
-                <th scope="col">Editar</th>
-               
+                <th scope="col">Acción</th>
             </tr>
         </thead>
         <tbody>
@@ -94,15 +70,11 @@
                 <td style="padding-top: 10px;text-align: center;">{{enrolado.nombre}}</td>
                 <td style="padding-top: 10px;text-align: center;">{{enrolado.activo}}</td>
                 <td style="padding-top: 10px;text-align: center;">{{enrolado.finger}}</td>
-                <td>
+
                     
-                        <i class="far fa-trash-alt" style="color:red"></i> 
-                    
-                </td>
-                <td>
-                    
-                        <i class="fas fa-edit" style="color:green" ></i> 
-                    
+                <td style="padding-top: 10px;text-align: center;">
+                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i> 
+                    <i  class="fas fa-edit" style="color:green;" ></i> 
                 </td>
             </tr>
         </tbody>
