@@ -155,11 +155,11 @@
                     </div>
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                        <input type="submit" class="btn btn-primary"
-                            (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
-                            [disabled]="!terceroFormGroup.valid" value="Grabar" style="margin: 0px;">
                         <button mat-button (click)="stepper.reset()" class="btn btn-danger"
-                            style="margin-left: 15px;">Cancelar</button>
+                        style="margin-left: 15px;">Cancelar</button>
+                        <input type="submit" class="btn btn-primary"
+                            (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value); stepper.reset()"
+                            [disabled]="!terceroFormGroup.valid" value="Guardar Empleado" style="margin: 0px;">
                     </div>
                 </form>
             </mat-step>

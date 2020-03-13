@@ -6,13 +6,13 @@
                 <div style="text-align: center;">
                     <h5>Añadir Título</h5>
                 </div>
-                <!-- Formulario Completo -->
                 <form [formGroup]="nuevoTituloForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center;">
                             <mat-form-field>
                                 <mat-label>Ingresar Nombre de Título</mat-label>
-                                <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre" required>
+                                <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"
+                                    required>
                                 <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
                             </mat-form-field>
                             <br>
@@ -27,15 +27,13 @@
                         </div>
                     </mat-card-content>
                 </form>
-                <div >
-                    
-                    <input type="submit" class="btn btn-primary" (click)="insertarTitulo(nuevoTituloForm.value)" style="margin-left: 20px;"
-                    [disabled]="!nuevoTituloForm.valid" value="Grabar">
-                    <input type="submit" class="btn btn-danger" value="Cancelar">
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-primary" (click)="insertarTitulo(nuevoTituloForm.value)"
+                        style="margin-left: 20px;" [disabled]="!nuevoTituloForm.valid" value="Grabar">
+                    <input type="submit" class="btn btn-danger" (click)="limpiarCampos()" value="Cancelar">
                 </div>
             </mat-card>
         </div>
         <div class="col-4"></div>
-    
-
+    </div>
 </div>

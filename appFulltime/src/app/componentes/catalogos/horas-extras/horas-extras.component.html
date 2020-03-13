@@ -103,11 +103,10 @@
                 </form>
                 <div>
                     <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
+                    <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                     <input type="submit" class="btn btn-primary"
-                        (click)="insertarHoraExtra(primeroFormGroup.value, segundoFormGroup.value)"
+                        (click)="insertarHoraExtra(primeroFormGroup.value, segundoFormGroup.value); stepper.reset()"
                         [disabled]="!segundoFormGroup.valid" value="Grabar" style="margin: 0px;">
-                    <button mat-button (click)="stepper.reset()" class="btn btn-danger"
-                        style="margin-left: 15px;">Cancelar</button>
                 </div>
             </mat-step>
         </mat-horizontal-stepper>

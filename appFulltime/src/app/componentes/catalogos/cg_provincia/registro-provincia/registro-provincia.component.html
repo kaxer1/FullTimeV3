@@ -1,29 +1,24 @@
-
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
     <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title class="contened">Añadir Provincia</mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="nuevaProvinciaForm" (ngSubmit)="insertarProvincia(nuevaProvinciaForm.value)">
+        <div style="text-align: center;">
+            <h5>Añadir Provincia</h5>
+        </div>
+        <form [formGroup]="nuevaProvinciaForm">
             <mat-card-content>
                 <div class="container">
-                    <mat-label class="label-theme">Nombre de la Provincia</mat-label>
-                    <input matInput placeholder="Ej: Pichincha" (keypress)="soloLetras($event)" formControlName="nombreForm" required>
-                    
+                    <mat-form-field>
+                        <mat-label>Nombre de la Provincia</mat-label>
+                        <input matInput placeholder="Ej: Pichincha" [formControl]="nombre"
+                            (keypress)="soloLetras($event)" required>
+                        <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                    </mat-form-field>
                 </div>
-                
             </mat-card-content>
-                   
-       
-            <mat-card-actions>
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
-                    [disabled]="!nuevaProvinciaForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px" (click)="cancelarRegistroProvincia()"
-                value="Cancelar" >
-            </mat-card-actions>
         </form>
+        <div style="text-align: center;">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProvincia(nuevaProvinciaForm.value)"
+                [disabled]="!nuevaProvinciaForm.valid" value="Grabar">
+            <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
+        </div>
     </mat-card>
-
 </div>

@@ -263,9 +263,9 @@
                    
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                        <input type="submit" class="btn btn-primary" (click)="insertarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
+                        <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
+                        <input type="submit" class="btn btn-primary" (click)="insertarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value); stepper.reset()"
                         [disabled]="!terceroFormGroup.valid" value="Grabar" style="margin: 0px;">
-                        <button mat-button (click)="stepper.reset()" class="btn btn-danger" style="margin-left: 15px;">Cancelar</button>
                     </div>
                 </form>
             </mat-step>

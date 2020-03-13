@@ -73,11 +73,7 @@ export class DiscapacidadComponent implements OnInit {
   }
 
   limpiarCampos(){
-    this.nuevoCarnetForm.setValue({
-      carnetForm: '',
-      porcentajeForm: '',
-      tipoForm: '',
-    });
+    this.nuevoCarnetForm.reset();
   }
 
 }

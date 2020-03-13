@@ -1,16 +1,13 @@
-import { Component, OnInit, ɵConsole } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProcesoService } from 'src/app/servicios/catalogos/proceso.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { CompileShallowModuleMetadata } from '@angular/compiler';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 // ayuda para crear los niveles
 interface Nivel {
   valor: string;
   nombre: string
-
 }
 
 @Component({
@@ -24,8 +21,8 @@ export class RegistroProcesoComponent implements OnInit {
   nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
   nivel = new FormControl('', Validators.required);
   procesoPadre = new FormControl('');
+
   procesos: any = [];
-  //procesoPadreId;
 
   // asignar los campos en un formulario en grupo
   public nuevoProcesoForm = new FormGroup({
@@ -43,14 +40,11 @@ export class RegistroProcesoComponent implements OnInit {
     { valor: '4', nombre: '4' },
     { valor: '5', nombre: '5' }
   ];
-  
 
   constructor(
     private rest: ProcesoService,
     private toastr: ToastrService,
-    private router: Router
   ) {
-    //this.limpiarCampos();
   }
 
   ngOnInit(): void {
@@ -65,34 +59,28 @@ export class RegistroProcesoComponent implements OnInit {
   }
 
   insertarProceso(form) {
-
     var procesoPadreId
-
     var procesoPadreNombre = form.procesoProcesoPadreForm;
+    console.log(form.procesoProcesoPadreForm);
 
-    if (procesoPadreNombre != '') {
+    if (procesoPadreNombre != '' || procesoPadreNombre == null) {
       this.rest.getIdProcesoPadre(procesoPadreNombre).subscribe(data => {
-
         procesoPadreId = data[0].id;
-
         let dataProceso = {
           nombre: form.procesoNombreForm,
           nivel: form.procesoNivelForm,
           proc_padre: procesoPadreId
         };
 
-        console.log(dataProceso);
-
         this.rest.postProcesoRest(dataProceso)
           .subscribe(response => {
             this.toastr.success('Operacion Exitosa', 'Proceso guardado');
-            //this.limpiarCampos();
-            this.router.navigate(['/', 'proceso']);
+            this.limpiarCampos();
           }, error => {
             console.log(error);
           });;
+      });
 
-      })
     } else {
 
       let dataProceso = {
@@ -101,46 +89,26 @@ export class RegistroProcesoComponent implements OnInit {
         proc_padre: null
       };
 
-      console.log(dataProceso);
-
       this.rest.postProcesoRest(dataProceso)
         .subscribe(response => {
           this.toastr.success('Operacion Exitosa', 'Proceso guardado');
-          //this.limpiarCampos();
-          this.router.navigate(['/', 'proceso']);
+          this.limpiarCampos();
         }, error => {
           console.log(error);
         });;
-
-
-
     }
 
   }
 
   limpiarCampos() {
-    this.nuevoProcesoForm.setValue({
-      tituloNombreForm: '',
-      tituloNivelForm: '',
-      procesoProcesoPadreForm: ''
-    });
+    this.nuevoProcesoForm.reset();
   }
 
   getProcesos() {
     this.procesos = [];
     this.rest.getProcesosRest().subscribe(data => {
-      
       this.procesos = data
     })
   }
-
-
-
-  cancelarRegistroProceso() {
-    this.router.navigate(['/', 'proceso']);
-  }
-
-
-
 
 }

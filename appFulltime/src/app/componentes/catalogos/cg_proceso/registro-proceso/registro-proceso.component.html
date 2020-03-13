@@ -5,7 +5,7 @@
             <mat-card-title>Añadir Proceso</mat-card-title>
         </mat-card-header>
 
-        <form [formGroup]="nuevoProcesoForm" (ngSubmit)="insertarProceso(nuevoProcesoForm.value)">
+        <form [formGroup]="nuevoProcesoForm" >
             <mat-card-content>
                 <div class="container">
                     <mat-form-field>
@@ -35,13 +35,14 @@
                     </mat-form-field>
                 </div>
             </mat-card-content>
-            <mat-card-actions>
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
-                    [disabled]="!nuevoProcesoForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
-                    (click)="cancelarRegistroProceso()" value="Cancelar">
-            </mat-card-actions>
         </form>
+        <div style="text-align: center;">
+            
+                <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
+                    [disabled]="!nuevoProcesoForm.valid" value="Grabar">
+                <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
+        </div>
+            
 
     </mat-card>
 

@@ -1,6 +1,6 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-4"></div>
+        <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z8">
                 <div style="text-align: center;">
@@ -14,14 +14,17 @@
                                 <mat-label>Busqueda por Código</mat-label>
                                 <input matInput placeholder="Ej: ">
                             </mat-form-field>
+                            <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Cédula</mat-label>
                                 <input matInput placeholder="Ej: ">
                             </mat-form-field>
+                            <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Nombre</mat-label>
                                 <input matInput placeholder="Ej: ">
                             </mat-form-field>
+                            <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Apellido</mat-label>
                                 <input matInput placeholder="Ej: ">
@@ -30,13 +33,13 @@
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <button type="button" class="btn btn-success" [routerLink]="['/registrarEmpleado']">Crear</button>
-                    <input type="submit" class="btn btn-primary" value="Grabar">
-                    <input type="submit" class="btn btn-danger" style="margin-top: 15px;" value="Cancelar">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Nuevo Empleado</button>
                 </div>
             </mat-card>
         </div>
-        <div class="col-4"></div>
+        <div class="col-3"></div>
     </div>
 </div>
 

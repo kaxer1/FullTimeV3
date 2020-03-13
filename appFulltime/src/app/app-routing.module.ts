@@ -16,7 +16,6 @@ import { RelojesComponent} from './componentes/catalogos/relojes/relojes.compone
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
-import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
 import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
@@ -40,7 +39,6 @@ const routes: Routes = [
   { path: 'titulos', component: TitulosComponent},
   { path: 'discapacidad', component: DiscapacidadComponent},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
-  { path: 'registrarRol', component: RegistroRolComponent},
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
   { path: 'regimenLaboral', component: RegimenComponent},
   { path: 'tipoComidas', component: TipoComidasComponent},
@@ -48,7 +46,6 @@ const routes: Routes = [
   { path: 'proceso', component: PrincipalProcesoComponent},
   { path: 'registrarProceso', component: RegistroProcesoComponent },
   { path: 'provincia', component: PrincipalProvinciaComponent},
-  { path: 'registrarProvincia', component:RegistroProvinciaComponent},
   { path: 'departamento', component: PrincipalDepartamentoComponent},
   { path: 'registrarDepartamento', component: RegistroDepartamentoComponent},
   { path: 'horario', component: PrincipalHorarioComponent},

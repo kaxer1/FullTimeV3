@@ -11,54 +11,42 @@ import { Router } from '@angular/router';
 })
 export class RegistroProvinciaComponent implements OnInit {
 
-
+  nombre = new FormControl('',[ Validators.required, Validators.pattern('[a-zA-ZñÑ ]*')])
   public nuevaProvinciaForm = new FormGroup({
-    // idForm: new FormControl('', Validators.required),
-    nombreForm: new FormControl('',[ Validators.required, Validators.pattern('[a-zA-ZñÑ ]*')]),
+    nombreForm: this.nombre,
   });
   
   constructor(
     private rest: ProvinciaService,
     private toastr: ToastrService,
-    private router: Router
   ) { }
 
   ngOnInit(): void {
   }
 
   obtenerMensajeErrorNombre() {
-    if (this.nuevaProvinciaForm.hasError('required')) {
-      return 'Debe ingresar algun nombre';
+    if (this.nombre.hasError('required')) {
+      return 'Debe ingresar alguna Provincia';
     }
-    return this.nuevaProvinciaForm.hasError('pattern') ? 'No ingresar números' : '';
+    return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
   }
 
   insertarProvincia(form){
-    let dataTitulo = {
+    let dataProvincia = {
       nombre: form.nombreForm,
-      
     };
 
-    this.rest.postProvinciaRest(dataTitulo)
+    this.rest.postProvinciaRest(dataProvincia)
     .subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Provincia guardada');
         this.limpiarCampos();
-        this.router.navigate(['/','provincia']);
       }, error => {
         console.log(error);
       });;
   }
 
   limpiarCampos(){
-    this.nuevaProvinciaForm.setValue({
-     nombreForm: '',
-     
-    });
-  }
-
-
-  cancelarRegistroProvincia(){
-    this.router.navigate(['/','provincia']);
+    this.nuevaProvinciaForm.reset();
   }
 
   soloLetras(e) {
