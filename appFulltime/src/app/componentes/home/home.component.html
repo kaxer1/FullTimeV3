@@ -1,32 +1,26 @@
-
-<div class="container">
-    <nav class="navbar navbar-dark bg-primary border boder-radios">
-        <h5 class="navbar-text text-light center" >Bienvenido</h5>
-    </nav>
-    <!-- <br>
-    <img class="center" src="../../../assets/imagenes/logo/logoAdmin.png" width="1500" height="200"> -->
-</div>
-<mat-card class="example-card mat-elevation-z8">
-  <div>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+  <mat-toolbar>
+    <span>Bienvenido</span>
+  </mat-toolbar>
+  <br>
+  <mat-card class="example-card mat-elevation-z8">
     <div>
-      <div class="chart">
-        <canvas baseChart
-        [data]="pieChartData"
-        [labels]="pieChartLabels"
-        [chartType]="pieChartType"
-        [options]="pieChartOptions"
-        [plugins]="pieChartPlugins"
-        [colors]="pieChartColors"
-        [legend]="pieChartLegend">
-      </canvas>
+      <div>
+        <div class="chart">
+          <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
+          </canvas>
+        </div>
+      </div>
     </div>
-  </div>
+    <div>
+      <button mat-button mat-raised-button color="primary" (click)="pieChartLegend=!pieChartLegend">Toggle
+        Legend</button>
+      <button mat-button mat-raised-button color="primary" (click)="changeLabels()">Change Labels</button>
+      <button mat-button mat-raised-button color="primary" (click)="addSlice()">Add Slice</button>
+      <button mat-button mat-raised-button color="primary" (click)="removeSlice()">Remove Slice</button>
+      <button mat-button mat-raised-button color="primary" (click)="changeLegendPosition()">Change Legend
+        Position</button>
+    </div>
+  </mat-card>
 </div>
-<div>
-  <button mat-button mat-raised-button color="primary" (click)="pieChartLegend=!pieChartLegend">Toggle Legend</button>
-  <button mat-button mat-raised-button color="primary" (click)="changeLabels()">Change Labels</button>
-  <button mat-button mat-raised-button color="primary" (click)="addSlice()">Add Slice</button>
-  <button mat-button mat-raised-button color="primary" (click)="removeSlice()">Remove Slice</button>
-  <button mat-button mat-raised-button color="primary" (click)="changeLegendPosition()">Change Legend Position</button>
-</div>
-</mat-card>

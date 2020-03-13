@@ -1,36 +1,41 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title>Añadir Título</mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="nuevoTituloForm" (ngSubmit)="insertarTitulo(nuevoTituloForm.value)">
-            <mat-card-content>
-                <div class="container">
-                    <mat-form-field>
-                        <mat-label>Ingresar Nombre de Título</mat-label>
-                        <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre" required>
-                        <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Seleccione Nivel</mat-label>
-                        <mat-select [formControl]="nivel">
-                            <mat-option *ngFor="let n of niveles" [value]="n.value">
-                                {{n.viewValue}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Añadir Título</h5>
                 </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                <!-- Formulario Completo -->
+                <form [formGroup]="nuevoTituloForm">
+                    <mat-card-content>
+                        <div class="container" style="text-align: center;">
+                            <mat-form-field>
+                                <mat-label>Ingresar Nombre de Título</mat-label>
+                                <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre" required>
+                                <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Seleccione Nivel</mat-label>
+                                <mat-select [formControl]="nivel">
+                                    <mat-option *ngFor="let n of niveles" [value]="n.value">
+                                        {{n.viewValue}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </mat-card-content>
+                </form>
+                <div >
+                    
+                    <input type="submit" class="btn btn-primary" (click)="insertarTitulo(nuevoTituloForm.value)" style="margin-left: 20px;"
                     [disabled]="!nuevoTituloForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
-                    [disabled]="!nuevoTituloForm.valid" value="Cancelar">
-            </mat-card-actions>
-        </form>
-    </mat-card>
+                    <input type="submit" class="btn btn-danger" value="Cancelar">
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-4"></div>
+    
 
 </div>

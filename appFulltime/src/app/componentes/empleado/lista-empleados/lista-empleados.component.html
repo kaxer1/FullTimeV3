@@ -1,57 +1,44 @@
-<br>
-<div class="container">
-
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Empleados - Criterios de Búsqueda</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <!--<form>-->
-
-    <div class="container border border-primary">
-
-        <!-- contenedor de registro de datos -->
-        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-
-            <div class="container" style="text-align: center">
-                <!-- <form> -->
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Codigo</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control">
-                    </div>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Empleados - Criterios de Búsqueda</h5>
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Cédula</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="">
+                            <mat-form-field>
+                                <mat-label>Busqueda por Código</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Cédula</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Nombre</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Apellido</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                        </form>
                     </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <button type="button" class="btn btn-success" [routerLink]="['/registrarEmpleado']">Crear</button>
+                    <input type="submit" class="btn btn-primary" value="Grabar">
+                    <input type="submit" class="btn btn-danger" style="margin-top: 15px;" value="Cancelar">
                 </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Nombre</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Apellido</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control">
-                    </div>
-                </div>
-                <!-- </form> -->
-            </div>
+            </mat-card>
         </div>
+        <div class="col-4"></div>
     </div>
-
-    <!-- Botones -->
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Crear</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
-    <!--</form>-->
 </div>
-
-<br>
 
 <div class="container  table-responsive" style="padding-bottom: 50px;">
     <mat-toolbar >

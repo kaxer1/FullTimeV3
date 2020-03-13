@@ -5,8 +5,8 @@
         </mat-toolbar>
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
             <mat-step [stepControl]="primeroFormGroup">
-                <form [formGroup]="primeroFormGroup">
-                    <ng-template matStepLabel>Sección 1 </ng-template>
+                <ng-template matStepLabel>Sección 1 </ng-template>
+                    <form [formGroup]="primeroFormGroup">
                     <div class="container">
                         <div class="row">
                             <div class="col">
@@ -53,15 +53,14 @@
                             </div>
                         </div>
                     </div>
+                </form>
                     <div>
                         <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                     </div>
-                </form>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
-                <form [formGroup]="segundoFormGroup">
-                    <ng-template matStepLabel>Sección 2</ng-template>
-                    
+                <ng-template matStepLabel>Sección 2</ng-template>
+                    <form [formGroup]="segundoFormGroup">
                     <div class="container">
                         <div class="row">
                             <div class="col">
@@ -164,12 +163,11 @@
                             </div>
                         </div>
                     </div>
-
+                </form>
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                         <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                     </div>
-                </form>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
                 <form [formGroup]="terceroFormGroup">

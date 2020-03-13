@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { ToastrService} from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/roles/roles.service';
@@ -11,46 +11,58 @@ import { RolesService } from 'src/app/servicios/roles/roles.service';
 })
 export class RegistroComponent implements OnInit {
 
-    nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
-    apellido = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")]);
-    cedula = new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'), Validators.maxLength(10)]);
-    email = new FormControl('', [Validators.required, Validators.email]);
-    telefono = new FormControl('', Validators.required);
-    domicilio = new FormControl('', Validators.required);
-    fecha = new FormControl('', Validators.required);
-    estadoCivil = new FormControl('', Validators.required);
-    genero = new FormControl('', Validators.required);
-    estado = new FormControl('', Validators.required);
-    correoAlternativo = new FormControl('', [Validators.required, Validators.email]);
-    nacionalidad = new FormControl('', Validators.required);
-
-  public nuevoEmpleadoForm = new FormGroup({
-    nombreForm: this.nombre,
-    apellidoForm: this.apellido,
-    cedulaForm: this.cedula,
-    emailForm: this.email,
-    telefonoForm: this.telefono,
-    domicilioForm: this.domicilio,
-    fechaForm: this.fecha,
-    estadoCivilForm: this.estadoCivil,
-    generoForm: this.genero,
-    estadoForm: this.estado,
-    correoAlternativoForm: this.correoAlternativo,
-    nacionalidadForm: this.nacionalidad
-  });
+    // nombre = new FormControl('', );
+    // apellido = new FormControl('', );
+    // cedula = new FormControl('', );
+    // email = new FormControl('', );
+    // telefono = new FormControl('', Validators.required);
+    // domicilio = new FormControl('', Validators.required);
+    // fecha = new FormControl('', Validators.required);
+    // estadoCivil = new FormControl('', Validators.required);
+    // genero = new FormControl('', Validators.required);
+    // estado = new FormControl('', Validators.required);
+    // correoAlternativo = new FormControl('', );
+    // nacionalidad = new FormControl('', Validators.required);
 
   empleadoGuardado: any = [];
   roles: any = [];
 
+  isLinear = true;
+  primeroFormGroup: FormGroup;
+  segundoFormGroup: FormGroup;
+  terceroFormGroup: FormGroup;
+
   constructor(
     private rest: EmpleadoService,
     private toastr: ToastrService,
-    private rol: RolesService
+    private rol: RolesService,
+    private _formBuilder: FormBuilder
   ) { }
 
   ngOnInit(): void {
     this.limpliarCampos();
     this.cargarRoles();
+    this.primeroFormGroup = this._formBuilder.group({
+      nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
+      apellidoForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")],
+      cedulaForm: ['', Validators.required],
+      emailForm: ['', Validators.email],
+      correoAlternativoForm: ['', Validators.email],
+      fechaForm: ['', Validators.required],
+    });
+    this.segundoFormGroup = this._formBuilder.group({
+      telefonoForm: ['', Validators.required],
+      domicilioForm: ['', Validators.required],
+      estadoCivilForm: ['', Validators.required],
+      generoForm: ['', Validators.required],
+      estadoForm: ['', Validators.required],
+      nacionalidadForm: ['', Validators.required]
+    });
+    this.terceroFormGroup = this._formBuilder.group({
+      rolForm: ['', Validators.required],
+      userForm: ['', Validators.required],
+      passForm: ['', Validators.required],
+    });
   }
 
   soloNumeros(e) {
@@ -59,7 +71,7 @@ export class RegistroComponent implements OnInit {
   }
 
   limpliarCampos() {
-    this.nuevoEmpleadoForm.reset();
+    // this.nuevoEmpleadoForm.reset();
   }
 
   cargarRoles(){
@@ -68,30 +80,36 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  insertarEmpleado(form) {
+  insertarEmpleado(form1, form2, form3) {
     let dataEmpleado = {
-      cedula: form.cedulaForm,
-      apellido: form.apellidoForm,
-      nombre: form.nombreForm,
-      esta_civil: form.estadoCivilForm,
-      genero: form.generoForm,
-      correo: form.emailForm,
-      fec_nacimiento: form.fechaForm,
-      estado: form.estadoForm,
-      mail_alernativo: form.correoAlternativoForm,
-      domicilio: form.domicilioForm,
-      telefono: form.telefonoForm,
-      nacionalidad: form.nacionalidadForm
+      cedula: form1.cedulaForm,
+      apellido: form1.apellidoForm,
+      nombre: form1.nombreForm,
+      esta_civil: form2.estadoCivilForm,
+      genero: form2.generoForm,
+      correo: form1.emailForm,
+      fec_nacimiento: form1.fechaForm,
+      estado: form2.estadoForm,
+      mail_alernativo: form1.correoAlternativoForm,
+      domicilio: form2.domicilioForm,
+      telefono: form2.telefonoForm,
+      nacionalidad: form2.nacionalidadForm
     };
 
     this.rest.postEmpleadoRest(dataEmpleado)
     .subscribe(
       response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-        // console.log(response);
         this.empleadoGuardado = response;
-        let idEmpleadoGuardado = this.empleadoGuardado.text[0].id;
-        console.log();
+        let dataUser = {
+          usuario: form3.userForm,
+          contrasena: form3.passForm,
+          estado: true,
+          id_rol: form3.rolForm,
+          id_empleado: this.empleadoGuardado.id,
+          app_habilita: true
+        }
+        console.log(dataUser);
       },
       error => {
         console.log(error);

@@ -31,6 +31,30 @@ export class NotificacionesComponent implements OnInit {
     this.limpiarCampos();
   }
 
+  ObtenerMensajeErrorTipoRequerido() {
+    if (this.tipo.hasError('required')) {
+      return 'Debe ingresar un tipo';
+    }
+  }
+
+  ObtenerMensajeErrorNivelRequerido() {
+    if (this.tipo.hasError('required')) {
+      return 'Debe ingresar un nivel';
+    }
+  }
+
+  ObtenerMensajeErrorDepartamentoRequerido() {
+    if (this.tipo.hasError('required')) {
+      return 'Debe ingresar un departamento';
+    }
+  }
+
+  ObtenerMensajeErrorPermisoRequerido() {
+    if (this.tipo.hasError('required')) {
+      return 'Debe ingresar un tipo de permiso';
+    }
+  }
+
   insertarNotificacion(form){
     let newNoti = {
       tipo: form.tipoForm,
