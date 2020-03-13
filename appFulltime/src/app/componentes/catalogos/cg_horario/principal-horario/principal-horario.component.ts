@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HorarioService } from 'src/app/servicios/catalogos/horario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 
 @Component({
   selector: 'app-principal-horario',
@@ -14,12 +16,13 @@ export class PrincipalHorarioComponent implements OnInit {
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    public vistaRegistrarHorario: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.getHorarios();
-  }
+  }n
 
 
   getHorarios() {
@@ -38,7 +41,9 @@ export class PrincipalHorarioComponent implements OnInit {
     //alert("Prueba")
   }
 
- 
+  AbrirVentanaRegistrarHorario(): void {
+    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '350px' })
+  }
 
   
 }

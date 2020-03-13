@@ -1,5 +1,5 @@
 .example-card { 
-    max-width: 275px;
+    max-width: 300px;
     justify-content:center;
   
     
@@ -21,3 +21,4 @@ mat-slider {width: 175px;}
 .label-error{
     color:red
 }
+.btn { margin-left: 15px; border-radius: 25px;}

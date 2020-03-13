@@ -1,65 +1,65 @@
-<div class="container" style="padding-top: 25px; padding-bottom: 25px;">
+<mat-card class="example-card mat-elevation-z8">
+    <mat-card-header>
+        <mat-card-title style="text-align: center" ><b>Añadir Horario</b>
+        </mat-card-title>
+    </mat-card-header>
+    <!-- Formulario Completo -->
+    <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
 
-    <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header justify-content:center>
-            <mat-card-title aria-colspan="4" justify-content:center><b>Añadir Horario</b></mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
+        <mat-card-content>
+            <div class="container">
 
-            <mat-card-content>
-                <div class="container">
-                   
-                       
-                        <mat-form-field>
-                            <mat-label>Nombre de Horario</mat-label>
-                            <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
-                            <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
-                            <br>
-                        </mat-form-field>
-                   
-                    
-                    <br>
-                    <section>
-                        <label class="label-theme" for="nombre">Minutos de almuerzo</label>
-                        <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required  (keypress)="soloEnteros($event)">
-                      
-                    </section>
-                    <br>
-                    <section>
-                        <label class="label-theme" for="nombre">Horas de Trabajo</label>
-                        <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required  (keypress)="soloNumeros($event)">
-                        
-                    </section>
 
+                <mat-form-field>
+                    <mat-label>Nombre de Horario</mat-label>
+                    <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
+                    <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
                     <br>
-                    <section>
-                        <label class="label-theme" >Flexible</label>
-                        <mat-radio-group  aria-label="select an option" [formControl]="flexible" required  [value]="flexible.value">
-                            <mat-radio-button class="example-match"value="true">Si </mat-radio-button> 
-                            <mat-radio-button class="example-match" value="false">No </mat-radio-button> 
-                        </mat-radio-group>
-                        
-                    </section>
-                        
-                    <section>
-                        <label class="label-theme" >Por Horas</label>
-                        <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value" >
-                            <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
-                            <mat-radio-button class="example-match" value="false">No</mat-radio-button>
-                          </mat-radio-group>
-                    </section>
-                    
-                    
-                </div>
-            </mat-card-content>
-            <mat-card-actions>
-                <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
+                </mat-form-field>
+
+
+                <br>
+                <section>
+                    <label class="label-theme" for="nombre">Minutos de almuerzo</label>
+                    <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required
+                        (keypress)="soloEnteros($event)">
+
+                </section>
+                <br>
+                <section>
+                    <label class="label-theme" for="nombre">Horas de Trabajo</label>
+                    <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required
+                        (keypress)="soloNumeros($event)">
+
+                </section>
+
+                <br>
+                <section>
+                    <label class="label-theme">Flexible</label>
+                    <mat-radio-group aria-label="select an option" [formControl]="flexible" required
+                        [value]="flexible.value">
+                        <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
+                        <mat-radio-button class="example-match" value="false">No </mat-radio-button>
+                    </mat-radio-group>
+
+                </section>
+
+                <section>
+                    <label class="label-theme">Por Horas</label>
+                    <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value">
+                        <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
+                        <mat-radio-button class="example-match" value="false">No</mat-radio-button>
+                    </mat-radio-group>
+                </section>
+
+
+            </div>
+        </mat-card-content>
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
                 [disabled]="!nuevoHorarioForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;"
-                    (click)="cancelarRegistroHorario()" value="Cancelar">
-            </mat-card-actions>
-        </form>
-    </mat-card>
-
-</div>
+            <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;"
+                (click)="CerrarVentanaRegistroHorario()" value="Cancelar">
+        </mat-card-actions>
+    </form>
+</mat-card>

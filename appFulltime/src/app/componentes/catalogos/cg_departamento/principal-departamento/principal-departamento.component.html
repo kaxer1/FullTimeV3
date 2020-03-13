@@ -1,94 +1,83 @@
-<br>
-<div class="container">
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <mat-card-header>
+                    <mat-card-title style="text-align: center">Departamentos - Críterios de Búsqueda</mat-card-title>
+                </mat-card-header>
 
-    <nav class="navbar navbar-dark bg-primary">
-        <h5 class="navbar-text text-light">Departamento - Criterios de Búsqueda</h5>
-    </nav>
-    <!-- Formulario Completo -->
-    <!--<form>-->
-
-    <div class="container border border-primary">
-
-        <!-- contenedor de registro de datos -->
-        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-
-            <div class="container" style="text-align: center">
-                <!-- <form> -->
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Codigo</label>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control">
+                <!-- <form [formGroup]="BuscarFeriadosForm">-->
+                <mat-card-content>
+                    <div class="container" style="text-align: center">
+                        <mat-form-field>
+                            <mat-label>Código</mat-label>
+                            <input matInput placeholder="Ingresar Código">
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput placeholder="Nombre Departamento">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Nivel</mat-label>
+                            <input matInput placeholder="Nivel Departamento">
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Departamento Padre</mat-label>
+                            <input matInput placeholder="Departamento Padre">
+                        </mat-form-field>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Nombre</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Nivel</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-
-                <div class="form-group row">
-                    <label class="col-sm-5 col-form-label">Departamento Padre</label>
-                    <div class="col-sm-5">
-                        <input type="password" class="form-control">
-                    </div>
-                </div>
-                
-         
-               
-                <!-- </form> -->
-            </div>
+                </mat-card-content>
+                <!-- </form>-->
+                <mat-card-actions style="text-align: center">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarFeriado()" value="Ir a Registrar">
+                </mat-card-actions>
+            </mat-card>
         </div>
+        <div class="col-4"></div>
     </div>
-
-    <!-- Botones -->
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;" [routerLink]="['/registrarDepartamento/']">Crear</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Buscar</button>
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Cancelar</button>
-    <!--</form>-->
 </div>
 
 <br>
+<div>
+    <mat-card class="example-card mat-elevation-z9" id="carta2">
+        <mat-card-header>
+            <mat-card-title>Resultados de Búsqueda</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="container  table-responsive" style="padding-bottom: 50px;">
+                <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+                    <thead class="thead-light">
+                        <tr style="text-align: center;">
+                            <th scope="col">Código </th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Nivel</th>
+                            <th scope="col">Departamento Padre</th>
 
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <p class="display-4">Resultado de búsqueda</p>
-    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Id </th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Nivel</th>
-                <th scope="col">Departamento Padre</th>
-                <th scope="col">Borrar</th>
-                <th scope="col">Editar</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let departamento of departamentos">
-                <th style="padding-top: 10px; text-align: center;" scope="row">{{departamento.id}}</th>
-                <td style="padding-top: 10px;text-align: center;">{{departamento.nombre}}</td>
-                <td style="padding-top: 10px;text-align: center;">{{departamento.nivel}}</td>
-                <td style="padding-top: 10px;text-align: center;">{{departamento.depa_padre}}</td>
-                <td>
-                    
-                        <i class="far fa-trash-alt" style="color:red"></i> 
-                    
-                </td>
-                <td>
-                    
-                        <i class="fas fa-edit" style="color:green" [routerLink]="['/modificarDepartamento/', departamento.id]"></i> 
-                    
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let departamento of departamentos">
+                            <th style="padding-top: 10px; text-align: center;" scope="row">{{departamento.id}}</th>
+                            <td style="padding-top: 10px;text-align: center;">{{departamento.nombre}}</td>
+                            <td style="padding-top: 10px;text-align: center;">{{departamento.nivel}}</td>
+                            <td style="padding-top: 10px;text-align: center;">{{departamento.depa_padre}}</td>
+                            <td>
+
+                                <i class="far fa-trash-alt" style="color:red"></i>
+
+                            </td>
+                            <td>
+                                <i class="fas fa-edit" style="color:green;"
+                                    [routerLink]="['/modificarDepartamento/', departamento.id]"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>
-

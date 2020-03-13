@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ValueConverter } from '@angular/compiler/src/render3/view/template';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-registro-horario',
@@ -33,7 +34,8 @@ porHoras = new FormControl('', Validators.required);
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    public dialogRef: MatDialogRef<RegistroHorarioComponent>,
 
   ) { }
 
@@ -102,6 +104,10 @@ porHoras = new FormControl('', Validators.required);
     return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
   }
 
+  CerrarVentanaRegistroHorario() {
+
+    this.dialogRef.close();
+  }
 
 
 }

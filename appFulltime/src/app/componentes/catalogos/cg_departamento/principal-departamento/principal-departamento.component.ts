@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { DepartamentoService } from 'src/app/servicios/catalogos/departamento.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+
 
 @Component({
   selector: 'app-principal-departamento',
@@ -17,7 +20,8 @@ export class PrincipalDepartamentoComponent implements OnInit {
   constructor(
     private rest: DepartamentoService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    public vistaRegistrarDepartamento: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +57,10 @@ export class PrincipalDepartamentoComponent implements OnInit {
     }
     this.rest.updateDepartamento(id, dataDepartamento)
 
+  }
+
+  AbrirVentanaRegistrarFeriado(): void {
+    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '300px' })
   }
 }
 

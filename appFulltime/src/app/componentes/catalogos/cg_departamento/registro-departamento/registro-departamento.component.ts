@@ -3,35 +3,35 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { DepartamentoService } from 'src/app/servicios/catalogos/departamento.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
 import { empty } from 'rxjs';
+
 
 interface Nivel {
   valor: string;
   nombre: string
-
 }
-
 
 @Component({
   selector: 'app-registro-departamento',
   templateUrl: './registro-departamento.component.html',
   styleUrls: ['./registro-departamento.component.css']
 })
-export class RegistroDepartamentoComponent implements OnInit {
 
+export class RegistroDepartamentoComponent implements OnInit {
+  
   // Control de los campos del formulario
   nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
   nivel = new FormControl('', Validators.required);
   departamentoPadre = new FormControl('');
+
+  // Datos Departamento
   departamentos: any = [];
   departamentoModificar: any = []
-
   edit: boolean = false;
   selectPadre;
 
-  //departamentoPadreId;
-
-  // asignar los campos en un formulario en grupo
+  // Asignar los campos en un formulario en grupo
   public nuevoDepartamentoForm = new FormGroup({
     departamentoNombreForm: this.nombre,
     departamentoNivelForm: this.nivel,
@@ -55,7 +55,8 @@ export class RegistroDepartamentoComponent implements OnInit {
     private rest: DepartamentoService,
     private toastr: ToastrService,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
   ) {
 
   }
@@ -115,9 +116,8 @@ export class RegistroDepartamentoComponent implements OnInit {
 
       this.rest.postDepartamentoRest(datadepartamento)
         .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'departamento guardado');
-
-          this.router.navigate(['/', 'departamento']);
+          this.toastr.success('Operacion Exitosa', 'departamento guardado jj');
+this.LimpiarCampos();
         }, error => {
           console.log(error);
         });
@@ -206,9 +206,9 @@ export class RegistroDepartamentoComponent implements OnInit {
         });
 
 
-        
+
     } else {
-      
+
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
 
         departamentoPadreId = data[0].id;
@@ -240,17 +240,22 @@ export class RegistroDepartamentoComponent implements OnInit {
   }
 
 
-  obtenerNombre(id: number){
+  obtenerNombre(id: number) {
     this.selectPadre
-    this.rest.getOneDepartamentoRest(id).subscribe(data=>{
+    this.rest.getOneDepartamentoRest(id).subscribe(data => {
       console.log(data[0].nombre);
-      this.selectPadre=data[0].nombre
-    },error=>{
+      this.selectPadre = data[0].nombre
+    }, error => {
 
     });
   }
-
-
+  LimpiarCampos() {
+    this.nuevoDepartamentoForm.reset();
+  }
+  CerrarVentanaRegistroDepartamento() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+  }
 
 
 }
