@@ -5,27 +5,25 @@
             <mat-card-title>Añadir Proceso</mat-card-title>
         </mat-card-header>
 
-        <form [formGroup]="nuevoProcesoForm" >
+        <form [formGroup]="nuevoProcesoForm">
             <mat-card-content>
                 <div class="container">
                     <mat-form-field>
                         <mat-label>Nombre de proceso</mat-label>
                         <input matInput placeholder="Ej: Emergencia" [formControl]="nombre" required>
                         <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
-                        <br>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Proceso Padre</mat-label>
                         <mat-select [formControl]="procesoPadre">
-                            <mat-option *ngFor="let proceso of procesos" [value]="proceso.nombre">
-                                {{proceso.nombre}}
+                            <mat-option *ngFor="let p of procesos" [value]="p.nombre">
+                                {{p.nombre}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-
                         <mat-label>Nivel</mat-label>
                         <mat-select [formControl]="nivel">
                             <mat-option *ngFor="let n of niveles" [value]="n.nombre">
@@ -37,13 +35,9 @@
             </mat-card-content>
         </form>
         <div style="text-align: center;">
-            
-                <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
-                    [disabled]="!nuevoProcesoForm.valid" value="Grabar">
-                <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
+                [disabled]="!nuevoProcesoForm.valid" value="Grabar">
+            <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
         </div>
-            
-
     </mat-card>
-
 </div>

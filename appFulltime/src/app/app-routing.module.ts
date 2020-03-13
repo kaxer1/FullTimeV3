@@ -26,8 +26,6 @@ import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
-import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
-
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -57,8 +55,6 @@ const routes: Routes = [
   { path: 'listarFeriados', component: ListarFeriadosComponent},
   { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
   { path: 'enrolados', component:PrincipalEnroladosComponent},
-  { path: 'registrarEnrolados', component:RegistroEnroladosComponent}
-
 ];
 
 @NgModule({

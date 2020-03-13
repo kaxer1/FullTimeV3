@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EnroladoService } from 'src/app/servicios/catalogos/enrolado.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
 
 @Component({
   selector: 'app-principal-enrolados',
@@ -14,29 +14,22 @@ export class PrincipalEnroladosComponent implements OnInit {
  
   constructor(
     private rest: EnroladoService,
-    private toastr: ToastrService,
-    private router: Router
+    public vistaRegistrarEnrolado: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.getEnrolados();
   }
 
-
   getEnrolados() {
     this.enrolados = [];
-
     this.rest.getEnroladosRest().subscribe(data => {
-    
       this.enrolados = data
-    })
-      
-    
+    });
   }
 
-  
+  AbrirVentanaRegistrarEnrolado(){
+    this.vistaRegistrarEnrolado.open(RegistroEnroladosComponent, { width: '350px' });
+  }
     
- 
-
-  
 }

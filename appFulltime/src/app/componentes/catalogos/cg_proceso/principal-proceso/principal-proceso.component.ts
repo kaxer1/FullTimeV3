@@ -46,6 +46,6 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProceso(){
-    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '300px' })
+    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '300px' });
   }
 }

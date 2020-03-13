@@ -15,15 +15,11 @@ export class UsuarioService {
   // catalogo de usuarios
 
   getUsuariosRest(){
-    console.log(this.http.get(`${this.API_URL}/usuarios`));
     return this.http.get(`${this.API_URL}/usuarios`);
-    
   }
 
   getIdByUsuarioRest(usuario:string){
-    console.log(this.http.get(`${this.API_URL}/usuarios/busqueda/${usuario}`))
     return this.http.get(`${this.API_URL}/usuarios/busqueda/${usuario}`);
   }
-  
   
 }

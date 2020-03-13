@@ -74,13 +74,21 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <a mat-list-item [routerLink]="['/provincia']" class="texcol">Provincia</a>
-
-          <a mat-list-item [routerLink]="['/proceso']" class="texcol">Proceso</a>
-
-          <a mat-list-item [routerLink]="['/horario']" class="texcol">Horario</a>
-
-          <a mat-list-item [routerLink]="['/departamento']" class="texcol">Departamento</a>
+          <a mat-list-item [routerLink]="['/provincia']" class="texcol">
+            <h5 matLine>Provincia</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
+            <h5 matLine>Proceso</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/horario']" class="texcol">
+            <h5 matLine>Horario</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
+            <h5 matLine>Departamento</h5>
+          </a>
+          <a mat-list-item [routerLink]="['/listarFeriados']" class="texcol">
+            <h5 matLine>Feriados</h5>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
 
@@ -93,17 +101,14 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <a mat-list-item [routerLink]="['/home']" class="texcol">
-            <span matLine>.....</span>
+          <a mat-list-item [routerLink]="['/enrolados']" class="texcol">
+            <h5 matLine>Enrolados</h5>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
-    <mat-nav-list>
-      <a mat-list-item [routerLink]="['/enrolados']" class="texcol">Enrolados</a>
-      <mat-divider></mat-divider>
 
-    </mat-nav-list>
+
 
   </mat-sidenav>
 

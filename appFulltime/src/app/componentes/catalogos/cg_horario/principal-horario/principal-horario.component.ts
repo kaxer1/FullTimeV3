@@ -26,19 +26,11 @@ export class PrincipalHorarioComponent implements OnInit {
     this.horarios = [];
 
     this.rest.getHorariosRest().subscribe(data => {
-      console.log(data);
       this.horarios = data
     })
       
     
   }
-
-  foo(){
-    console.log("hola ")
-    //alert("Prueba")
-  }
-
- 
 
   
 }

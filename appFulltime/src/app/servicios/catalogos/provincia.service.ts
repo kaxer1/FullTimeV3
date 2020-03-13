@@ -14,9 +14,7 @@ export class ProvinciaService {
   // catalogo de Provincias
 
   getProvinciasRest(){
-    console.log(this.http.get(`${this.API_URL}/provincia`));
     return this.http.get(`${this.API_URL}/provincia`);
-    
   }
 
   getOneProvinciaRest(id:number){
