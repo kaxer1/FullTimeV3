@@ -11,7 +11,7 @@ export class LoginService {
   constructor(private http: HttpClient) { }
 
   postCredenciales(data: any) {
-    console.log(data);
+    // console.log(data);
     return this.http.post(`${this.API_URI}/login`, data);
   }
   
