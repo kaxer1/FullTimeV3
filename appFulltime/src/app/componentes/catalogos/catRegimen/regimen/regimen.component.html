@@ -54,9 +54,9 @@
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary" style="margin-left: 15px;" [disabled]="!RegimenForm.valid"
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!RegimenForm.valid"
             (click)="InsertarRegimen(RegimenForm.value)" value="Guardar">
-        <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="CerrarVentanaRegistroRegimen()"
-            value="Cancelar">
+        <input type="submit" class="btn btn-danger btn-sm"  (click)="CerrarVentanaRegistroRegimen()"
+            value="Salir">
     </mat-card-actions>
 </mat-card>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { RelojesService } from 'src/app/servicios/catalogos/relojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -39,7 +40,8 @@ export class RelojesComponent implements OnInit {
 
   constructor(
     private rest: RelojesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialogRef: MatDialogRef<RelojesComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -129,5 +131,12 @@ export class RelojesComponent implements OnInit {
   LimpiarCampos() {
     this.RelojesForm.reset();
   }
+
+  CerrarVentanaRegistroReloj() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
+  }
+
 
 }

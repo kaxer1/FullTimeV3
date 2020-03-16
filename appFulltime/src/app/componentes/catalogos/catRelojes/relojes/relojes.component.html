@@ -1,7 +1,5 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z9">
-        <div mat-dialog-content>
+<mat-card class="example-card mat-elevation-z9">
+    <div mat-dialog-content>
         <mat-card-header>
             <mat-card-title>Añadir Reloj</mat-card-title>
         </mat-card-header>
@@ -18,13 +16,14 @@
                     <mat-form-field>
                         <mat-label>IP</mat-label>
                         <input matInput placeholder="Ingresar IP del reloj" [formControl]="ipF"
-                        (keypress)="IngresarIp($event)">
+                            (keypress)="IngresarIp($event)">
                         <mat-error *ngIf="ipF.invalid">{{ObtenerMensajeErrorIp()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Puerto</mat-label>
-                        <input matInput placeholder="Ingresar puerto" [formControl]="puertoF" (keypress)="IngresarSoloNumeros($event)">
+                        <input matInput placeholder="Ingresar puerto" [formControl]="puertoF"
+                            (keypress)="IngresarSoloNumeros($event)">
                         <mat-error *ngIf="puertoF.invalid">{{ObtenerMensajeErrorPuerto()}}</mat-error>
                     </mat-form-field>
                     <br>
@@ -45,7 +44,8 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Serie</mat-label>
-                        <input matInput placeholder="Ingresar serie" [formControl]="serieF" (keypress)="IngresarSoloNumeros($event)">
+                        <input matInput placeholder="Ingresar serie" [formControl]="serieF"
+                            (keypress)="IngresarSoloNumeros($event)">
                         <mat-error *ngIf="serieF.invalid">{{ObtenerMensajeErrorSerie()}}</mat-error>
                     </mat-form-field>
                     <br>
@@ -66,12 +66,9 @@
             </mat-card-content>
         </form>
     </div>
-        <mat-card-actions style="text-align: center">
-            <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
-                    [disabled]="!RelojesForm.valid" (click)="InsertarReloj(RelojesForm.value)" value="Guardar">
-            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="LimpiarCampos()"
-                value="Cancelar">
-        </mat-card-actions>
-    </mat-card>
-
-</div>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!RelojesForm.valid"
+            (click)="InsertarReloj(RelojesForm.value)" value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroReloj()" value=" Salir">
+    </mat-card-actions>
+</mat-card>

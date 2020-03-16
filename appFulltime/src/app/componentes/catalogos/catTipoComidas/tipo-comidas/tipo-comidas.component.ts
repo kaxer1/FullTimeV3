@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { TipoComidasService } from 'src/app/servicios/catalogos/tipoComidas/tipo-comidas.service';
+import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+
+import { TipoComidasService } from 'src/app/servicios/catalogos/tipoComidas/tipo-comidas.service';
+
 
 @Component({
   selector: 'app-tipo-comidas',
@@ -24,7 +27,8 @@ export class TipoComidasComponent implements OnInit {
 
   constructor(
     private rest: TipoComidasService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialogRef: MatDialogRef<TipoComidasComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -79,6 +83,12 @@ export class TipoComidasComponent implements OnInit {
 
   LimpiarCampos() {
     this.TipoComidaForm.reset();
+  }
+
+  CerrarVentanaRegistroTipoComidas() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

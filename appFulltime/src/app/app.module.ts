@@ -29,7 +29,7 @@ import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/reg
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
-import { RelojesComponent } from './componentes/catalogos/relojes/relojes.component';
+import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
@@ -84,6 +84,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
+import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
+
 
 @NgModule({
   declarations: [
@@ -120,7 +122,9 @@ import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComid
     TipoPermisosComponent,
     EditarFeriadosComponent,
     ListarRegimenComponent,
-    ListarTipoComidasComponent
+    ListarTipoComidasComponent,
+    ListarRelojesComponent,
+
 
   ],
   imports: [
