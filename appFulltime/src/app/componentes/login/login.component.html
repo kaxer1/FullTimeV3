@@ -1,42 +1,42 @@
-<div class="container">
+<div class="container pantalla">
     <!-- Formulario Completo -->
     <br>
-    <div class="container" style="text-align: center">
-        <img class="center" src="../../../assets/imagenes/logo/logoAdmin.png" >
+    <div class="container">
+        <img src="../../../assets/imagenes/logo/logoAdmin.png">
     </div>
     <br>
-    <h5 style="text-align: center">Acceso al Sistema</h5>
+    <h5>Acceso al Sistema</h5>
     <br>
-    <form [formGroup]="validarCredencialesF" (ngSubmit)="validarUsuario(validarCredencialesF.value)">
-        <div class="container border border-primary">
-            <!-- contenedor de registro de datos -->
-            <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-                <div class="container" style="text-align: center">
-                    <!-- <form> -->
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Usuario</label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" formControlName="usuarioF">
-                        </div>
+    <div class="container">
+        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="col"></div>
+            <div class="col">
+                <mat-card class="mat-elevation-z8">
+                    <form [formGroup]="validarCredencialesF">
+                        <mat-form-field>
+                            <mat-label>Ingresa tu Usuario</mat-label>
+                            <input matInput placeholder="pat@example.com" [formControl]="userMail" required>
+                            <mat-error *ngIf="userMail.invalid">{{getCampoUsuarioError()}}</mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Ingresa tu contraseña</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" [formControl]="pass" required>
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                [attr.aria-pressed]="hide">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="pass.invalid">{{getCampoContraseniaError()}}</mat-error>
+                        </mat-form-field>
+                    </form>
+                    <div style="margin: auto;">
+                        <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px; margin-top: 15px;"
+                            (click)="validarUsuario(validarCredencialesF.value)"
+                            [disabled]="!validarCredencialesF.valid" value="Ingresar">
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-5 col-form-label">Clave</label>
-                        <div class="col-sm-5">
-                            <input type="password" class="form-control" formControlName="passwordF">
-                        </div>
-                    </div>
-                    <!-- </form> -->
-                    <!-- Botones -->
-                    <input type="submit" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;"
-                        [disabled]="!validarCredencialesF.valid" value="INGRESAR">
-
-                </div>
+                </mat-card>
             </div>
+            <div class="col"></div>
         </div>
-    </form>
-</div>
-<br>
-<div style="text-align: center">
-    <!-- Footer -->
+    </div>
 </div>

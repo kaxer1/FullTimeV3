@@ -1,0 +1,19 @@
+mat-form-field {
+    width: 200px;
+}
+img { width: 100%};
+
+.pantalla { margin: auto;}
+
+.btn { border-radius: 25px;}
+
+mat-card {
+    border-style: groove;
+    border-radius: 10px;
+    border-color: rgb(207, 207, 207); 
+    text-align: center; 
+    margin: auto;
+    padding-bottom: 25px;
+    padding-top: 25px;
+}
+
