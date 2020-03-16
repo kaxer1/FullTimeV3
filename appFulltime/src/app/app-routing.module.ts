@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
@@ -12,7 +13,7 @@ import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-r
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { RegimenComponent} from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent} from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
-import { RelojesComponent} from './componentes/catalogos/relojes/relojes.component'
+import { RelojesComponent} from './componentes/catalogos/catRelojes/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
@@ -25,9 +26,9 @@ import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
-
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
+import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
 
 
 const routes: Routes = [
@@ -60,6 +61,7 @@ const routes: Routes = [
   { path: 'tipoPermisos', component: TipoPermisosComponent},
   { path: 'listarRegimen', component: ListarRegimenComponent},
   { path: 'listarTipoComidas', component: ListarTipoComidasComponent},
+  { path: 'listarRelojes', component: ListarRelojesComponent},
 ];
 
 @NgModule({

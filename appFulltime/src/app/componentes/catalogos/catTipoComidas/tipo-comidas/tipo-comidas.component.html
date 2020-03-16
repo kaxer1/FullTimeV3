@@ -1,39 +1,34 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z9">
-        <mat-card-header>
-            <mat-card-title>Añadir Tipo de Comida</mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="TipoComidaForm">
-            <mat-card-content>
-                <div class="container" style="text-align: center">
-                    <mat-form-field>
-                        <mat-label>Nuevo Tipo de Comida</mat-label>
-                        <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
-                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Valor</mat-label>
-                        <input matInput placeholder="Ingresar valor del plato" [formControl]="valorF"
+<mat-card class="example-card mat-elevation-z9">
+    <mat-card-header>
+        <mat-card-title>Añadir Tipo de Comida</mat-card-title>
+    </mat-card-header>
+    <!-- Formulario Completo -->
+    <form [formGroup]="TipoComidaForm">
+        <mat-card-content>
+            <div class="container" style="text-align: center">
+                <mat-form-field>
+                    <mat-label>Nuevo Tipo de Comida</mat-label>
+                    <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
+                    <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Valor</mat-label>
+                    <input matInput placeholder="Ingresar valor del plato" [formControl]="valorF"
                         (keypress)="IngresarNumeroDecimal($event)" required>
-                        <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}</mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Observación</mat-label>
-                        <input matInput placeholder="Ingresar una observación" [formControl]="observacionF">
-                    </mat-form-field>
-                </div>
-            </mat-card-content>
-        </form>
-        <mat-card-actions style="text-align: center">
-            <input type="submit" class="btn btn-primary" style="margin-left: 15px;"
-                    [disabled]="!TipoComidaForm.valid" (click)="InsertarTipoComida(TipoComidaForm.value)" value="Guardar">
-            <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="LimpiarCampos()"
-                value="Cancelar">
-        </mat-card-actions>
-    </mat-card>
-
-</div>
+                    <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Observación</mat-label>
+                    <input matInput placeholder="Ingresar una observación" [formControl]="observacionF">
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </form>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!TipoComidaForm.valid"
+            (click)="InsertarTipoComida(TipoComidaForm.value)" value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroTipoComidas()" value="Salir">
+    </mat-card-actions>
+</mat-card>
