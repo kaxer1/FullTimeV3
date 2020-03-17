@@ -26,7 +26,8 @@
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -134,6 +135,10 @@
   },
   "defaultProject": "appFulltime",
   "cli": {
+<<<<<<< HEAD
     "analytics": false
+=======
+    "analytics": "5dd88edc-8f7c-49e8-bf0c-3440daff0a58"
+>>>>>>> e85836e1f7814d954cfae333d1a7edd09617f8f0
   }
 }

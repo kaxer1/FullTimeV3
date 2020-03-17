@@ -1,0 +1,114 @@
+<div class="container" style="padding-top: 15px;">
+    <mat-card class="example-card mat-elevation-z8">
+        <mat-toolbar style="background: white;">
+            <span>Añadir Hora Extra</span>
+        </mat-toolbar>
+        <mat-horizontal-stepper [linear]="isLinear" #stepper>
+            <mat-step [stepControl]="primeroFormGroup">
+                <ng-template matStepLabel>Sección 1 </ng-template>
+                <form [formGroup]="primeroFormGroup">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Ingresar Descripción</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="descripcionForm" required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Seleccione Tipo Descuento</mat-label>
+                                    <mat-select formControlName="tipoDescuentoForm">
+                                        <mat-option *ngFor="let d of descuentos" [value]="d.value">
+                                            {{d.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-label>Porcentaje de recargo</mat-label>
+                                <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="1" max="100"
+                                    [formControl]="recaPorcentaje" required>
+                                </mat-slider>
+                                <br>
+                                <mat-form-field>
+                                    <input matInput type="date" placeholder="Selecciona Dia de hora extra"
+                                        [formControl]="diaHoraExtra" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <input matInput type="time" placeholder="Hora Inicio" formControlName="horaInicioForm"
+                                        required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <input matInput type="time" placeholder="Hora Final" formControlName="horaFinalForm" required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="segundoFormGroup">
+                <form [formGroup]="segundoFormGroup">
+                    <ng-template matStepLabel>Sección 2</ng-template>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Tipo Función</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="tipoFuncionForm" required>
+                                    <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Hora Jornada</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="horaJornadaForm" required>
+                                    <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Tipo Dia</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="tipoDiaForm" required>
+                                    <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Código</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="codigoForm" required>
+                                    <!-- <mat-error *ngIf="descripcion.invalid">{{}}</mat-error> -->
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <section class="example-section">
+                                    <mat-radio-group aria-label="Select an option" formControlName="inclAlmuerzoForm"
+                                        required>
+                                        <label>Incluye Almuerzo</label>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    <mat-radio-button value="true">Si</mat-radio-button>
+                                                    <mat-radio-button value="false">No</mat-radio-button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </mat-radio-group>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
+                    <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
+                    <input type="submit" class="btn btn-primary"
+                        (click)="insertarHoraExtra(primeroFormGroup.value, segundoFormGroup.value); stepper.reset()"
+                        [disabled]="!segundoFormGroup.valid" value="Grabar" style="margin: 0px;">
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </mat-card>
+</div>

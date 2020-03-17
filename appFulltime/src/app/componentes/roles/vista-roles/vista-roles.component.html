@@ -1,18 +1,55 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Roles - Criterios de Búsqueda</h5>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="">
+                            <mat-form-field>
+                                <mat-label>Ingresar Descripción</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Nuevo Rol</button>
+                    <!-- <button type="button" class="btn btn-success btn-sm" [routerLink]="['/registrarRol/']">Nuevo Rol</button> -->
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
 
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let rol of roles">
-            <th scope="row">{{rol.id}}</th>
-            <td>{{rol.descripcion}}</td>
-            <td>{{rol.usuarios}}</td>
-        </tr>
-
-    </tbody>
-</table>
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <mat-toolbar>
+        <span style="text-align: center;">Resultado de búsqueda</span>
+    </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let rol of roles">
+                <td style="padding-top: 10px; text-align: center;">{{rol.nombre}}</td>
+                <td>
+                    <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary">Ver</button>
+                </td>
+                <td>
+                    <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary"
+                        [routerLink]="['/seleccionarPermisos/', rol.id]">Permisos</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

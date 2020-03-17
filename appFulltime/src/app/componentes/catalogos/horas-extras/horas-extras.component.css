@@ -1,0 +1,21 @@
+.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
+  
+.example-margin { margin: 0 10px; }
+
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
+.disenioTitulo{
+  position: absolute; 
+  left: 50px; top: 30px; z-index: 3;
+  width: auto;
+  text-align: center;
+  display: flex;
+  color: white;
+  background: rgb(14, 147, 236);
+  border-radius: 5px;
+  box-shadow: 0 0 15px 10px rgba(195, 195, 195, 0.513)
+}
+
+mat-slider {width: 190px;}
+
+.btn { border-radius: 25px; margin-right: 15px; margin-top: 15px;}

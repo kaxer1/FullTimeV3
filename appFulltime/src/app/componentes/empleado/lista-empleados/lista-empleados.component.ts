@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RolesService } from 'src/app/servicios/roles/roles.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -9,10 +10,13 @@ import { RolesService } from 'src/app/servicios/roles/roles.service';
 export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
+  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
   
   constructor(
-    public rest: RolesService
-  ) { }
+    public rest: EmpleadoService,
+    public router: Router
+  ) { 
+  }
 
   ngOnInit(): void {
     this.getEmpleados();
@@ -21,14 +25,15 @@ export class ListaEmpleadosComponent implements OnInit {
   getEmpleados(){
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
-      console.log(data);
+      // console.log(data);
       this.empleado = data
     })
   }
 
   verEmpleado(id: any){
+    this.empleado = []
     this.rest.getOneEmpleadoRest(id).subscribe(data => {
-      console.log(data);
+      this.empleado = data;
     })
   }
 

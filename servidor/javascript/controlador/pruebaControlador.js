@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../database"));
 class PruebaControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const roles = yield database_1.default.query('SELECT * FROM roles');
+            const roles = yield database_1.default.query('SELECT * FROM cg_roles');
             //res.json({text: 'Describe prueba'});
             res.json(roles.rows);
         });
@@ -24,10 +24,10 @@ class PruebaControlador {
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const rol = yield database_1.default.query('SELECT * FROM roles WHERE id = $1', [id]);
+            const rol = yield database_1.default.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
             // console.log(rol);
             if (rol.rowCount > 0) {
-                return res.json(rol.rows[0]);
+                return res.json(rol.rows);
             }
             //res.json({message: 'Rol encontrado'});
             //res.json({text: 'Esta es una prueba ' + req.params.id});
@@ -36,28 +36,10 @@ class PruebaControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, descripcion, usuarios } = req.body;
-            yield database_1.default.query('INSERT INTO roles (id, descripcion, usuarios) VALUES ($1, $2, $3)', [id, descripcion, usuarios]);
+            const { nombre } = req.body;
+            yield database_1.default.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
             //console.log(req.body);
             res.json({ message: 'Rol guardado' });
-        });
-    }
-    update(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { descripcion, usuarios } = req.body;
-            yield database_1.default.query('UPDATE roles SET descripcion = $1, usuarios = $2 WHERE id = $3', [descripcion, usuarios, id]);
-            //res.json({text: 'eliminado un dato ' + req.params.id});
-            res.json({ message: 'Rol actualizado exitosamente' });
-            // res.json({text: 'Actualizando un dato ' + req.params.id});
-        });
-    }
-    delete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            yield database_1.default.query('DELETE FROM roles WHERE id = $1', [id]);
-            //res.json({text: 'eliminado un dato ' + req.params.id});
-            res.json({ message: 'Rol eliminado' });
         });
     }
 }

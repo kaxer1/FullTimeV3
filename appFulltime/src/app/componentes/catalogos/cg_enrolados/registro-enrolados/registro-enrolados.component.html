@@ -1,0 +1,63 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="example-card mat-elevation-z8">
+        <div style="text-align: center;">
+            <h5>Añadir Enrolado</h5>
+        </div>
+        <form [formGroup]="nuevoEnroladoForm">
+            <mat-card-content>
+                <div class="container" style="text-align: center;">
+                    <mat-form-field>
+                        <mat-label>Seleccione usuario</mat-label>
+                        <mat-select formControlName="enroladoId_UsuarioForm">
+                            <mat-option *ngFor="let u of usuarios" [value]="u.usuario">
+                                {{u.usuario}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Ingresar Nombre</mat-label>
+                        <input matInput placeholder="Ej: Usuario1" formControlName="enroladoNombreForm" required>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Ingresar Contraseña</mat-label>
+                        <input matInput placeholder="máximo 10 caracteres" type="password" formControlName="enroladoContraseniaForm" required>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Número de huella </mat-label>
+                        <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm" (keypress)="soloEnteros($event)"
+                            required>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Data finger </mat-label>
+                        <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm" required>
+                    </mat-form-field>
+                    <br>
+                    <section class="example-section">
+                        <mat-radio-group aria-label="Select an option" formControlName="enroladoActivoForm" required>
+                            <mat-label>Activo</mat-label>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <mat-radio-button value="true">Si</mat-radio-button>
+                                        <mat-radio-button value="false">No</mat-radio-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-radio-group>
+                    </section>
+                </div>
+            </mat-card-content>
+        </form>
+        <div style="text-align: center;">
+            <input type="submit" class="btn btn-primary btn-ms" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
+                [disabled]="!nuevoEnroladoForm.valid" value="Grabar">
+            <input type="submit" class="btn btn-danger btn-ms" (click)="limpiarCampos()" value="Cancelar">
+        </div>
+    </mat-card>
+</div>
+              

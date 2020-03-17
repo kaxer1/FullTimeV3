@@ -1,3 +1,4 @@
+<br>
 <div class="container">
 
     <nav class="navbar navbar-dark bg-primary">
@@ -13,7 +14,7 @@
 
             <div class="col-md">
 
-                <div class="container">
+                <div class="container" *ngFor="let e of empleadoUno">
                     <!-- formulario datos personales -->
                     <!-- <form> -->
                     <div class="row">
@@ -21,7 +22,7 @@
                             <label class="col-sm-5 col-form-label">Código</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.id}}</label>
                         </div>
                     </div>
                     <div class="row">
@@ -29,13 +30,13 @@
                             <label class="col-sm-5 col-form-label">Apellidos</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.apellido}}</label>
                         </div>
                         <div class="col">
                             <label class="col-sm-5 col-form-label">Nombres</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{e.nombre}}</label>
                         </div>
                     </div>
 
@@ -44,7 +45,7 @@
                             <label class="col-sm-5 col-form-label">Fecha de Nacimiento</label>
                         </div>
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">-</label>
+                            <label class="col-sm-5 col-form-label">{{fecha}}</label>
                         </div>
                     </div>
 
@@ -67,13 +68,13 @@
 
                     <hr>
 
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col">
                             <label class="col-sm-5 col-form-label">Subir Foto</label>
                             <image-upload buttonCaption="Añadir Foto" dropBoxMessage="Seleccionar Imagen"
                                 (uploadFinished)="onUploadFinish($event)"></image-upload>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- </form> -->
 
                 </div>
@@ -105,7 +106,7 @@
                     <!-- <form> -->
                     <div class="row">
                         <div class="col">
-                            <label class="col-sm-5 col-form-label">Subir Foto</label>
+                            <label class="col-sm-5 col-form-label">Horarios</label>
                         </div>
                         <div class="col">
                             <label class="col-sm-5 col-form-label">-</label>
@@ -118,8 +119,4 @@
         <div class="container" style="padding-bottom: 15px;">
         </div>
     </div>
-
-    <!-- Botones -->
-    <button type="button" class="btn btn-primary" style="margin-left: 15px; margin-top: 15px;">Aceptar</button>
-    <!--</form>-->
 </div>

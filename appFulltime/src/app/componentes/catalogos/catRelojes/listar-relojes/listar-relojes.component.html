@@ -1,0 +1,83 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-4"></div>
+        <div class="col">
+
+            <mat-card class="example-card mat-elevation-z9">
+                <div class="container" style="text-align: center">
+                    <mat-card-header>
+                        <mat-card-title>Críterios de Búsqueda</mat-card-title>
+                    </mat-card-header>
+                </div>
+                <form [formGroup]="BuscarRelojesForm">
+                    <mat-card-content>
+                        <div class="container" style="text-align: center">
+                            <mat-form-field>
+                                <mat-label>Nombre</mat-label>
+                                <input matInput placeholder="Nombre reloj" [formControl]="nombreF">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>IP</mat-label>
+                                <input matInput placeholder="Ingresar IP" [formControl]="ipF">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Modelo</mat-label>
+                                <input matInput placeholder="Ingresar modelo" [formControl]="modeloF">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Fabricante</mat-label>
+                                <input matInput placeholder="Ingresar fabricante" [formControl]="fabricanteF">
+                            </mat-form-field>
+                        </div>
+                    </mat-card-content>
+                </form>
+                <mat-card-actions style="text-align: center">
+                    <input type="submit" class="btn btn-success btn-sm" [disabled]="!BuscarRelojesForm.valid"
+                       value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarReloj()"
+                        value="Ir a Registrar">
+                </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="col-4"></div>
+    </div>
+</div>
+
+<br>
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <mat-toolbar>
+        <span style="text-align: center;">Resultado de búsqueda</span>
+    </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">IP</th>
+                <th scope="col">Puerto</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">MAC</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let reloj of relojes">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.nombre}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.ip}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.puerto}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.marca}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.modelo}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{reloj.mac}}</td>
+                <td style="padding-top: 10px; text-align: center;">
+                    <i class="fas fa-edit" style="color:green"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

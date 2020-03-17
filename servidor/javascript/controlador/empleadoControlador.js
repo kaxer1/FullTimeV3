@@ -16,22 +16,28 @@ const database_1 = __importDefault(require("../database"));
 class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const empleado = yield database_1.default.query('SELECT * FROM empleado');
-            //res.json({text: 'Describe prueba'});
+            const empleado = yield database_1.default.query('SELECT * FROM empleados');
             res.json(empleado.rows);
         });
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const rol = yield database_1.default.query('SELECT * FROM empleado WHERE id = $1', [id]);
-            // console.log(rol);
-            if (rol.rowCount > 0) {
-                return res.json(rol.rows[0]);
+            const unEmpleado = yield database_1.default.query('SELECT * FROM empleados WHERE id = $1', [id]);
+            if (unEmpleado.rowCount > 0) {
+                return res.json(unEmpleado.rows);
             }
-            //res.json({message: 'Rol encontrado'});
-            //res.json({text: 'Esta es una prueba ' + req.params.id});
-            res.status(404).json({ text: 'El rol no ha sido encontrado' });
+            res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+        });
+    }
+    create(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad } = req.body;
+            yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad]);
+            console.log(req.body);
+            const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
+            const idEmployGuardado = oneEmpley.rows[0].id;
+            res.json({ message: 'Empleado guardado', id: idEmployGuardado });
         });
     }
 }

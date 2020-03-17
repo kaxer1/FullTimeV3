@@ -1,0 +1,5 @@
+.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
+
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
+.btn { border-radius: 25px; margin-right: 15px; margin-top: 15px;}

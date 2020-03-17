@@ -1,4 +1,65 @@
-<img class="center" src="../../assets/LOGOBLFT.png">
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+  <mat-toolbar>
+    <span>Bienvenido</span>
+  </mat-toolbar>
+  <br>
+  <mat-card class="example-card mat-elevation-z8">
+    <div>
+      <div>
+        <div class="chart">
+          <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
+          </canvas>
+        </div>
+      </div>
+    </div>
+    <div>
+      <!-- <button mat-button mat-raised-button color="primary" (click)="pieChartLegend=!pieChartLegend">Toggle
+        Legend</button>
+      <button mat-button mat-raised-button color="primary" (click)="changeLabels()">Change Labels</button>
+      <button mat-button mat-raised-button color="primary" (click)="addSlice()">Add Slice</button>
+      <button mat-button mat-raised-button color="primary" (click)="removeSlice()">Remove Slice</button>
+      <button mat-button mat-raised-button color="primary" (click)="changeLegendPosition()">Change Legend
+        Position</button> -->
+    </div>
+  </mat-card>
+</div>
 
-
-
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+  
+  <mat-card class="example-card mat-elevation-z8">
+    
+    <div class="flex">
+      <div class="flex-item">
+        <div style="display: block;">
+          <canvas baseChart width="600" height="600"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType"
+          [plugins]="lineChartPlugins"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"></canvas>
+        </div>
+      </div>
+      <!-- <div class="flex-item">
+        <table class="table table-responsive table-condensed">
+          <tr>
+            <th *ngFor="let label of lineChartLabels">{{label}}</th>
+          </tr>
+          <tr *ngFor="let d of lineChartData; let i=index" [class]="'line-'+i">
+            <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+          </tr>
+        </table>
+        <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
+        <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
+        <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
+        <button mat-button mat-raised-button color="primary" (click)="hideOne()">Toggle Series B</button>
+        <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
+      </div> -->
+    </div>
+  </mat-card>
+  
+</div>

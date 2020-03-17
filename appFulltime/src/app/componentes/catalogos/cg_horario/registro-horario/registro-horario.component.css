@@ -1,0 +1,24 @@
+.example-card { 
+    max-width: 300px;
+    justify-content:center;
+  
+    
+    
+    
+}
+
+mat-slider {width: 175px;}
+
+.example-match{
+    margin: 0 10px;
+    color: black
+}
+
+.label-theme{
+    color: black
+}
+
+.label-error{
+    color:red
+}
+.btn { margin-left: 15px; border-radius: 25px;}

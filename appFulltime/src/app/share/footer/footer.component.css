@@ -1,0 +1,13 @@
+a { color:rgb(221, 221, 221);}
+
+.footer {
+    padding-top: 25px;
+    padding-bottom: 25px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgb(46, 137, 190);
+    text-align: center;
+    color: white;
+}

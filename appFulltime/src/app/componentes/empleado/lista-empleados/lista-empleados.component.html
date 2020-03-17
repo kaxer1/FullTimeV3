@@ -1,27 +1,77 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Id empleado</th>
-            <th scope="col">Nombre</th>
-            <th scope="col">Apellido</th>
-            <th scope="col">Cedula</th>
-            <th scope="col">Estado</th>
-            <th scope="col">correo</th>
-            <th scope="col">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let e of empleado">
-            <th scope="row">{{e.empl_id}}</th>
-            <td>{{e.nombre}}</td>
-            <td>{{e.apellido}}</td>
-            <td>{{e.cedula}}</td>
-            <td>{{e.estado}}</td>
-            <td>{{e.correo}}</td>
-            <td>
-                <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary" [routerLink]="['/verEmpleado/', e.empl_id]">Ver</button>
-            </td>
-        </tr>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Empleados - Criterios de Búsqueda</h5>
+                </div>
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="">
+                            <mat-form-field>
+                                <mat-label>Busqueda por Código</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Cédula</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Nombre</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Busqueda por Apellido</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Nuevo Empleado</button>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
 
-    </tbody>
-</table>
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <mat-toolbar >
+        <span style="text-align: center;">Resultado de búsqueda</span>
+      </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Id </th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+                <th scope="col">Cédula</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let e of empleado">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{e.id}}</th>
+                <td style="padding-top: 10px;">{{e.nombre}}</td>
+                <td style="padding-top: 10px;">{{e.apellido}}</td>
+                <td style="padding-top: 10px;">{{e.cedula}}</td>
+                <td style="padding-top: 10px; text-align: center;">{{e.estado}}</td>
+                <td style="padding-top: 10px;">{{e.correo}}</td>
+                <td>
+                    <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
+                        [routerLink]="['/verEmpleado/', e.id]">Ver</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

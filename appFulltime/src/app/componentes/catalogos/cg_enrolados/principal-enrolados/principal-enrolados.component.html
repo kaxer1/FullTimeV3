@@ -1,0 +1,84 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col">
+            <mat-card class="example-card mat-elevation-z8">
+                <div style="text-align: center;">
+                    <h5>Enrolados - Criterios de Búsqueda</h5>
+                </div>
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <div class="container" style="text-align: center;">
+                        <form [formGroup]="">
+                            <mat-form-field>
+                                <mat-label>Ingresar ID Usuario</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Nombre</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Activo</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Finger</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Data Finger</mat-label>
+                                <input matInput placeholder="Ej: ">
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </mat-card-content>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
+                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Nuevo Enrolado</button>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <mat-toolbar>
+        <span style="text-align: center;">Resultado de búsqueda</span>
+    </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Id </th>
+                <th scope="col">Id Usuario</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Activo</th>
+                <th scope="col">Finger</th>
+                <th scope="col">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let enrolado of enrolados">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{enrolado.id}}</th>
+                <td style="padding-top: 10px;text-align: center;">{{enrolado.id_usuario}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{enrolado.nombre}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{enrolado.activo}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{enrolado.finger}}</td>
+
+                    
+                <td style="padding-top: 10px;text-align: center;">
+                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i> 
+                    <i  class="fas fa-edit" style="color:green;" ></i> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
