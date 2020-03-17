@@ -132,5 +132,8 @@
       }
     }
   },
-  "defaultProject": "appFulltime"
+  "defaultProject": "appFulltime",
+  "cli": {
+    "analytics": false
+  }
 }

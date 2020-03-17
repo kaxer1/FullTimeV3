@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,29 @@ export class AppComponent {
   @Input() recibeUrl: string;
 
   constructor(
-    public router: Router
-  ){ }
+    public router: Router,
+    public location: Location
+  ) { }
 
+  removerMenu() {
+    var titlee = this.location.prepareExternalUrl(this.location.path());
+    titlee = titlee.slice(1);
+    if (titlee === 'login') {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  removerLogin() {
+    var titlee = this.location.prepareExternalUrl(this.location.path());
+    titlee = titlee.slice(1);
+    if (titlee != 'login') {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
 }
