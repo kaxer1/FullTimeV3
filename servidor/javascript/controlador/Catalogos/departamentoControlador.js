@@ -14,10 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
-    list(req, res) {
+    ListarDepartamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const provincia = yield database_1.default.query('SELECT * FROM cg_departamentos');
-            res.json(provincia.rows);
+            const PROVINCIA = yield database_1.default.query('SELECT * FROM cg_departamentos');
+            if (PROVINCIA.rowCount > 0) {
+                return res.json(PROVINCIA.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
     getOne(req, res) {
@@ -34,8 +39,7 @@ class DepartamentoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, depa_padre, nivel } = req.body;
             yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre,nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
-            console.log(req.body);
-            res.json({ message: 'El departamento ha sido guardado en éxito' });
+            res.json({ message: 'El departamento ha sido guardado con éxito' });
         });
     }
     getIdByNombre(req, res) {

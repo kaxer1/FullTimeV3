@@ -32,8 +32,8 @@ import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tip
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
-import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
-import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/catDepartamentos/listar-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
@@ -50,7 +50,7 @@ import { ProvinciaService } from './servicios/catalogos/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { EnroladoService } from './servicios/catalogos/enrolado.service';
-import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { DepartamentosService } from './servicios/catalogos/departamentos/departamentos.service';
 import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
 
@@ -125,7 +125,6 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
     ListarTipoComidasComponent,
     ListarRelojesComponent,
 
-
   ],
   imports: [
     BrowserModule,
@@ -161,7 +160,8 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
-    MatStepperModule
+    MatStepperModule,
+
   ],
   providers: [
     LoginService,
@@ -171,13 +171,14 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
     DiscapacidadService,
     ProvinciaService,
     HorarioService,
-    DepartamentoService,
     EnroladoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
     RolPermisosService, 
-    TipoPermisosService
+    TipoPermisosService,
+    DepartamentosService,
+    
   ],
   bootstrap: [AppComponent],
 })

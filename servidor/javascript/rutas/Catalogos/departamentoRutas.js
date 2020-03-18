@@ -11,7 +11,7 @@ class DepartamentoRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', departamentoControlador_1.default.list);
+        this.router.get('/', departamentoControlador_1.default.ListarDepartamentos);
         this.router.get('/:id', departamentoControlador_1.default.getOne);
         this.router.post('/', departamentoControlador_1.default.create);
         this.router.get('/busqueda/:nombre', departamentoControlador_1.default.getIdByNombre);

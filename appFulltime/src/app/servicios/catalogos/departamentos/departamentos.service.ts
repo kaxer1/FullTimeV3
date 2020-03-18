@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class DepartamentoService {
+export class DepartamentosService {
 
   API_URL = 'http://localhost:3000';
 
@@ -14,18 +14,11 @@ export class DepartamentoService {
 
   // catalogo de departamentos
 
-  getDepartamentosRest(){
-  
+  ConsultarDepartamentos(){
     return this.http.get(`${this.API_URL}/departamento`);
-    
   }
 
-  getOneDepartamentoRest(id:number){
-    return this.http.get(`${this.API_URL}/departamento/${id}`);
-  }
-  
-  postDepartamentoRest(data: any){
-  
+  postDepartamentoRest(data: any){ 
     return this.http.post(`${this.API_URL}/departamento`, data);
   }
 
@@ -36,5 +29,9 @@ export class DepartamentoService {
   updateDepartamento(idDepartamento: number, data:any){
     return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data)
   }
-  
+
+  getOneDepartamentoRest(id:number){
+    return this.http.get(`${this.API_URL}/departamento/${id}`);
+  }
+
 }

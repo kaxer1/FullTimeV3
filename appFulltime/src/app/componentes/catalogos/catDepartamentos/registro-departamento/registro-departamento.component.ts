@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { DepartamentoService } from 'src/app/servicios/catalogos/departamento.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/departamentos/departamentos.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -52,7 +52,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
 
   constructor(
-    private rest: DepartamentoService,
+    private rest: DepartamentosService,
     private toastr: ToastrService,
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -163,7 +163,7 @@ this.LimpiarCampos();
 
   getDepartamentos() {
     this.departamentos = [];
-    this.rest.getDepartamentosRest().subscribe(data => {
+    this.rest.ConsultarDepartamentos().subscribe(data => {
       this.departamentos = data;
       this.departamentos[this.departamentos.length] = { nombre: "Ninguna" };
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
