@@ -2,7 +2,7 @@
 
     <mat-card class="example-card mat-elevation-z8">
         <mat-card-header>
-            <mat-card-title>Añadir Rol Permiso</mat-card-title>
+            <mat-card-title>Añadir Rol Permiso para {{nombreRol}}</mat-card-title>
         </mat-card-header>
         <!-- Formulario Completo -->
         <mat-card-content>
@@ -36,11 +36,12 @@
         </mat-card-content>
         <mat-card-actions>
             <div class="container" style="text-align: center;">
-                <input type="submit" class="btn btn-primary" [disabled]="!nuevoRolPermisoForm.valid"
-                    (click)="insertarRolPermiso(nuevoRolPermisoForm.value)" value="Grabar">
-                <input type="submit" class="btn btn-danger" style="margin-left: 15px;" (click)="limpliarCampos()"
+                <button type="submit" class="btn btn-warning btn-sm" [routerLink]="['/roles']">Atrás</button>
+                <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;" [disabled]="!nuevoRolPermisoForm.valid"
+                    (click)="insertarRolPermiso(nuevoRolPermisoForm.value)" value="Guardar">
+                <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;" (click)="limpliarCampos()"
                     value="Cancelar">
-            </div>
+                </div>
         </mat-card-actions>
     </mat-card>
 

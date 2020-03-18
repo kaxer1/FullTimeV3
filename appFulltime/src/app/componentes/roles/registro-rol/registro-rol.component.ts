@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { RolesService } from 'src/app/servicios/roles/roles.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-registro-rol',
@@ -21,6 +22,7 @@ export class RegistroRolComponent implements OnInit {
     public rest: RolesService,
     private router: Router,
     private toastr: ToastrService,
+    public dialogRef: MatDialogRef<RegistroRolComponent>,
   ) { 
     this.nuevoRolForm.setValue({
       descripcionForm: '',
@@ -59,5 +61,11 @@ export class RegistroRolComponent implements OnInit {
   soloLetras(e) {
     var key = window.Event ? e.which : e.keyCode
     return (!((key >= 48 && key <= 63)|| key==8 || key==46))
+  }
+
+  CerrarVentanaRegistroRol() {
+    this.limpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 }

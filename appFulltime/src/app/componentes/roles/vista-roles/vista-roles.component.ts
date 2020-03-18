@@ -18,19 +18,11 @@ export class VistaRolesComponent implements OnInit {
 
   ngOnInit() {
     this.rest.getRoles().subscribe(
-      //res => console.log(res),
       res => {
         this.roles = res;
       },
       err => console.error(err)
     );
-  }
-
-  verRoles(id: any){
-    this.rest.getOneRol(id).subscribe(data => {
-      console.log(data);
-      
-    })
   }
 
   AbrirVentanaRegistrarRol(){

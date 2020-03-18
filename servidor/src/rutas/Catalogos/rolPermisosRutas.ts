@@ -15,6 +15,7 @@ class RolPermisosRutas {
         this.router.get('/:id', rolPermisosControlador.getOne);
         this.router.post('/', rolPermisosControlador.create);
         this.router.post('/denegado/', rolPermisosControlador.createPermisoDenegado);
+        this.router.get('/denegado/:id', rolPermisosControlador.getPermisosUsuario);
     }
 }
 

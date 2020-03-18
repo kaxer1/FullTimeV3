@@ -12,7 +12,6 @@ import { ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
   title = 'login';
 
-  title = 'login';
   hide = true;
   url: string;
 

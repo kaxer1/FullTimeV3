@@ -9,6 +9,7 @@ class UsuarioRutas {
     }
     configuracion() {
         this.router.get('/', usuarioControlador_1.USUARIO_CONTROLADOR.list);
+        this.router.post('/', usuarioControlador_1.USUARIO_CONTROLADOR.create);
         this.router.get('/busqueda/:usuario', usuarioControlador_1.USUARIO_CONTROLADOR.getIdByUsuario);
     }
 }

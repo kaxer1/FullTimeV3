@@ -3,6 +3,7 @@ import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms'
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { ToastrService} from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/roles/roles.service';
+import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
 
 @Component({
   selector: 'app-registro',
@@ -36,6 +37,7 @@ export class RegistroComponent implements OnInit {
     private rest: EmpleadoService,
     private toastr: ToastrService,
     private rol: RolesService,
+    private user: UsuarioService,
     private _formBuilder: FormBuilder
   ) { }
 
@@ -55,7 +57,7 @@ export class RegistroComponent implements OnInit {
       estadoCivilForm: ['', Validators.required],
       generoForm: ['', Validators.required],
       estadoForm: ['', Validators.required],
-      nacionalidadForm: ['', Validators.required]
+      // nacionalidadForm: ['', Validators.required]
     });
     this.terceroFormGroup = this._formBuilder.group({
       rolForm: ['', Validators.required],
@@ -94,12 +96,11 @@ export class RegistroComponent implements OnInit {
       mail_alernativo: form1.correoAlternativoForm,
       domicilio: form2.domicilioForm,
       telefono: form2.telefonoForm,
-      nacionalidad: form2.nacionalidadForm
+      // nacionalidad: form2.nacionalidadForm
     };
 
     this.rest.postEmpleadoRest(dataEmpleado)
-    .subscribe(
-      response => {
+    .subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
         this.empleadoGuardado = response;
         let dataUser = {
@@ -111,6 +112,9 @@ export class RegistroComponent implements OnInit {
           app_habilita: true
         }
         console.log(dataUser);
+        this.user.postUsuarioRest(dataUser).subscribe(data => {
+          console.log(data);
+        });
       },
       error => {
         console.log(error);

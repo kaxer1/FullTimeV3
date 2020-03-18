@@ -20,7 +20,6 @@
                     <input type="submit" class="btn btn-success btn-sm" value="Buscar">
                     <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
                     <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Nuevo Rol</button>
-                    <!-- <button type="button" class="btn btn-success btn-sm" [routerLink]="['/registrarRol/']">Nuevo Rol</button> -->
                 </div>
             </mat-card>
         </div>
@@ -43,10 +42,7 @@
             <tr *ngFor="let rol of roles">
                 <td style="padding-top: 10px; text-align: center;">{{rol.nombre}}</td>
                 <td>
-                    <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary">Ver</button>
-                </td>
-                <td>
-                    <button type="submit" (click)="verRoles(rol.id)" class="btn btn-primary"
+                    <button type="submit" class="btn btn-info btn-sm"
                         [routerLink]="['/seleccionarPermisos/', rol.id]">Permisos</button>
                 </td>
             </tr>
