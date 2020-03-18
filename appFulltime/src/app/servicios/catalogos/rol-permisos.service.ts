@@ -15,9 +15,7 @@ export class RolPermisosService {
   // catalogo de ROL PERMISOS
 
   getRolPermisoRest(){
-    console.log(this.http.get(`${this.API_URL}/`));
     return this.http.get(`${this.API_URL}/rolPermisos`);
-    
   }
 
   getOneRolPermisoRest(id:number){
@@ -25,14 +23,17 @@ export class RolPermisosService {
   }
   
   postRolPermisoRest(data: any){
-    console.log(data);
     return this.http.post(`${this.API_URL}/rolPermisos`, data);
   }
 
   // permisos denegado
 
+  getPermisosUsuarioRolRest(id: number){
+    return this.http.get(`${this.API_URL}/rolPermisos/denegado/${id}`);
+  }
+
   postPermisoDenegadoRest(data: any){
-    console.log(data);
     return this.http.post(`${this.API_URL}/rolPermisos/denegado`, data);
   }
+
 }

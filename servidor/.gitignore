@@ -2,3 +2,6 @@
 
 # dependencies
 /node_modules
+
+#database no debe ser modificada
+/src/database.ts

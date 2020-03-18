@@ -21,5 +21,9 @@ export class UsuarioService {
   getIdByUsuarioRest(usuario:string){
     return this.http.get(`${this.API_URL}/usuarios/busqueda/${usuario}`);
   }
+
+  postUsuarioRest(data: any){
+    return this.http.post(`${this.API_URL}/usuarios`, data);
+  }
   
 }

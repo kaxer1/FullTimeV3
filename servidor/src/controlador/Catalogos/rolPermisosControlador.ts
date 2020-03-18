@@ -33,6 +33,15 @@ class RolPermisosControlador {
     res.json({ message: 'Permiso denegado Guardado'});
   }
 
+  public async getPermisosUsuario(req: Request, res: Response): Promise<any> {
+    const { id } = req.params;
+    const unRolPermiso = await pool.query('SELECT * FROM rol_perm_denegado WHERE id_rol = $1', [id]);
+    if (unRolPermiso.rowCount > 0) {
+      return res.json(unRolPermiso.rows)
+    }
+    res.status(404).json({ text: 'El rol no tiene permisos' });
+  }
+
 }
 
 export const rolPermisosControlador = new RolPermisosControlador();

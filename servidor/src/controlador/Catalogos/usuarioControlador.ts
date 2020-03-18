@@ -18,6 +18,13 @@ class UsuarioControlador {
     res.status(404).json({ text: 'No se ha encontrado el usuario' });
   }
 
+  public async create(req: Request, res: Response): Promise<void> {
+    const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
+    await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
+    console.log(req.body);
+    res.json({ message: 'Usuario Guardado'});
+  }
+
 }
 
 export const USUARIO_CONTROLADOR = new UsuarioControlador();

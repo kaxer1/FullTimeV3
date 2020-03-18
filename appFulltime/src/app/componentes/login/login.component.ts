@@ -10,8 +10,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   title = 'login';
+
   hide = true;
   url: string;
 
@@ -58,10 +58,9 @@ export class LoginComponent implements OnInit {
       pass: form.passwordF
     };
     this.rest.postCredenciales(dataUsuario).subscribe(response => {
-      console.log(response);
-
+      // console.log(response);
       let dato = String(Object.values(response));
-      console.log(dato);
+      // console.log(dato);
       this.irHome(dato);
     },
       error => {
@@ -71,22 +70,14 @@ export class LoginComponent implements OnInit {
 
   irHome(dato: any) {
     if (dato === '0') {
-      // console.log('Contraseña Incorrecta');
       this.toastr.error('contraseña incorrecta', 'Oops!')
-      // alert('Contraseña incorrrecta')
-
     }
     else if (dato === '1') {
-      // console.log('Usuario no registrado')
       this.toastr.error('Usuario no encontrado', 'Oops!')
-      // alert('Usuario no registrado');
-
     }
     else {
       this.toastr.success('Ingreso Existoso!','Usuario y contraseña válidos')
       this.router.navigate(['/', 'home']);
-      // window.location.href = 'http://localhost:4200/roles'
-      // alert('Bienvenido ' + dataUsuario.nombre_usuario)
     }
   }
 

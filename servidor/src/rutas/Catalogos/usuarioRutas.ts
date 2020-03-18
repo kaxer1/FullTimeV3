@@ -11,7 +11,7 @@ class UsuarioRutas {
 
     configuracion(): void {
         this.router.get('/', USUARIO_CONTROLADOR.list);
-       
+        this.router.post('/', USUARIO_CONTROLADOR.create);
         this.router.get('/busqueda/:usuario', USUARIO_CONTROLADOR.getIdByUsuario);
     }
 }
