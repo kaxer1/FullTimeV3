@@ -66,6 +66,6 @@ export class RegistroRolComponent implements OnInit {
   CerrarVentanaRegistroRol() {
     this.limpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    // window.location.reload();
   }
 }

@@ -7,7 +7,6 @@ import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/
 import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
-import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
@@ -39,7 +38,6 @@ const routes: Routes = [
   { path: 'empleado', component: ListaEmpleadosComponent},
   { path: 'home', component: HomeComponent},
   { path: 'titulos', component: TitulosComponent},
-  { path: 'discapacidad', component: DiscapacidadComponent},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
   { path: 'regimenLaboral', component: RegimenComponent},

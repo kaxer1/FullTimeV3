@@ -1,7 +1,5 @@
-mat-slider {width: 190px;}
-
-.btn { border-radius: 100%; margin-right: 15px;}
-
 .barraTitulo { text-align: center; background: rgb(22, 106, 216); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px;}
 
 .alinear {margin-top: 5px;}
+
+.btn { border-radius: 100%; margin-right: 15px;}

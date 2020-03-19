@@ -12,9 +12,16 @@ export class TituloService {
   ) { }
 
   // catalogo de titulos
+  getOneTituloRest(id: number){
+    return this.http.get(`${this.TITULO_URL}/titulo/${id}`);
+  }
+
+  getTituloRest(){
+    return this.http.get(`${this.TITULO_URL}/titulo/`);
+  }
 
   postTituloRest(data: any){
-    console.log(data);
+    console.log(data); 
     return this.http.post(`${this.TITULO_URL}/titulo`, data);
   }
 

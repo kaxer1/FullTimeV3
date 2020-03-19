@@ -12,7 +12,7 @@ class DiscapacidadRutas {
 
     configuracion(): void {
         this.router.get('/', discapacidadControlador.list);
-        this.router.get('/:id', discapacidadControlador.getOne);
+        this.router.get('/:id_empleado', discapacidadControlador.getOne);
         this.router.post('/', discapacidadControlador.create);
     }
 }

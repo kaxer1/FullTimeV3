@@ -65,7 +65,7 @@ class Server {
         this.app.use('/horasExtras', horasExtrasRutas);
         this.app.use('/notificaciones', notificacionesRutas);
         this.app.use('/enrolados', ENROLADO_RUTA);
-        this.app.use ('/usuarios', USUARIO_RUTA);
+        this.app.use('/usuarios', USUARIO_RUTA);
         this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS);
         this.app.use('/notificaciones', NOTIFICACIONES_RUTAS);
         this.app.use('/rolPermisos', ROL_PERMISOS_RUTAS);

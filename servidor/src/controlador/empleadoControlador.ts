@@ -27,6 +27,21 @@ class EmpleadoControlador {
     res.json({ message: 'Empleado guardado', id: idEmployGuardado});
   }
 
+  public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {
+    const { observacion, id_empleado, id_titulo } = req.body;
+    await pool.query('INSERT INTO empl_titulos ( observacion, id_empleado, id_titulo ) VALUES ($1, $2, $3)', [observacion, id_empleado, id_titulo]);
+    console.log(req.body);
+    res.json({ message: 'Titulo del empleado Guardado'});
+  }
+
+  public async getTitulosDelEmpleado(req: Request, res: Response): Promise<any> {
+    const { id_empleado } = req.params;
+    const unEmpleadoTitulo = await pool.query('SELECT * FROM empl_titulos WHERE id_empleado = $1', [id_empleado]);
+    if (unEmpleadoTitulo.rowCount > 0) {
+      return res.json(unEmpleadoTitulo.rows)
+    }
+    res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
+  }
 }
 
 export const empleadoControlador = new EmpleadoControlador();

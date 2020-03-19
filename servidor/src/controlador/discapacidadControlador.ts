@@ -8,8 +8,8 @@ class DiscapacidadControlador {
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
-    const { id } = req.params;
-    const unaDiscapacidad = await pool.query('SELECT * FROM cg_discapacidades WHERE id = $1', [id]);
+    const { id_empleado } = req.params;
+    const unaDiscapacidad = await pool.query('SELECT * FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
     if (unaDiscapacidad.rowCount > 0) {
       return res.json(unaDiscapacidad.rows)
     }
@@ -20,7 +20,7 @@ class DiscapacidadControlador {
     const { id_empleado, carn_conadis, porcentaje, tipo } = req.body;
     await pool.query('INSERT INTO cg_discapacidades ( id_empleado, carn_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carn_conadis, porcentaje, tipo]);
     console.log(req.body);
-    res.json({ message: 'Discapacidad guardada' });
+    res.json({ message: 'Discapacidad guardada'});
   }
 
 }

@@ -1,44 +1,61 @@
-<div class="container" style="padding-top: 25px; padding-bottom: 25px;">
+<!-- <div class="container" style="padding-top: 25px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col"> -->
             <mat-card class="example-card mat-elevation-z8">
-                <div style="text-align: center;">
+                <div class="barraTitulo">
                     <h5>Añadir Discapacidad</h5>
                 </div>
                 <!-- Formulario Completo -->
                 <form [formGroup]="nuevoCarnetForm">
                     <mat-card-content>
-                        <div class="container" style="text-align: center;">
-                            <mat-form-field>
-                                <mat-label>Ingresar Carnet Conadis</mat-label>
-                                <input matInput type="number" placeholder="Ej: " [formControl]="carnet" required>
-                                <mat-error *ngIf="carnet.invalid">{{obtenerMensajeErrorCarnet()}}</mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Seleccione Tipo Discapacidad</mat-label>
-                                <mat-select [formControl]="tipo">
-                                    <mat-option *ngFor="let d of discapacidades" [value]="d.value">
-                                        {{d.viewValue}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-label>Porcentaje de discapacidad</mat-label><br>
-                            <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="1" max="100"
-                                [formControl]="porcentaje" required>
-                            </mat-slider>
+                        <div class="container" style="padding-top: 15px; text-align: center;">
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Carnet Conadis N°</mat-label>
+                                        <input matInput type="number" placeholder="Ej: " [formControl]="carnet" maxlength="7"
+                                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            (keypress)="soloNumeros($event)" required>
+                                        <mat-error *ngIf="carnet.invalid">{{obtenerMensajeErrorCarnet()}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Seleccione Tipo Discapacidad</mat-label>
+                                        <mat-select [formControl]="tipo">
+                                            <mat-option *ngFor="let d of discapacidades" [value]="d.value">
+                                                {{d.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <mat-label>% de discapacidad</mat-label><br>
+                                    <mat-slider thumbLabel [displayWith]="formatLabel" tickInterval="1" min="1" max="100"
+                                        [formControl]="porcentaje" required>
+                                    </mat-slider>
+                                </div>
+                            </div>
                         </div>
                     </mat-card-content>
                 </form>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-primary" (click)="insertarCarnet(nuevoCarnetForm.value)"
-                        style="margin-left: 15px;" [disabled]="!nuevoCarnetForm.valid" value="Grabar">
-                    <input type="submit" class="btn btn-danger" (click)="limpiarCampos()" style="margin-left: 15px;" value="Cancelar">
+                    <button type="submit" class="btn btn-primary btn-sm" (click)="insertarCarnet(nuevoCarnetForm.value)"
+                        [disabled]="!nuevoCarnetForm.valid"> 
+                        <span class="material-icons alinear">save</span>
+                    </button>
+                    <button type="submit" class="btn btn-info btn-sm" (click)="limpiarCampos()">
+                        <span class="material-icons alinear">backspace</span>
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-sm" (click)="cerrarRegistro()">
+                        <span class="material-icons alinear">close</span>
+                    </button>
                 </div>
             </mat-card>
-        </div>
-        <div class="col-3"></div>
+        <!-- </div>
     </div>
-</div>
+</div> -->
