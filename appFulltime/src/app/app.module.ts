@@ -85,6 +85,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
+import { FiltroDepartamentoPipe } from './filtros/nombreDepartamento/filtro-departamento.pipe';
+import { DepartamentoPadrePipe } from './filtros/departamentoPadre/departamento-padre.pipe';
 
 
 @NgModule({
@@ -124,6 +126,8 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
     ListarRegimenComponent,
     ListarTipoComidasComponent,
     ListarRelojesComponent,
+    FiltroDepartamentoPipe,
+    DepartamentoPadrePipe,
 
   ],
   imports: [

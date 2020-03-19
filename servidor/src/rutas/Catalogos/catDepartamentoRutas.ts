@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import DEPARTAMENTO_CONTROLADOR from '../../controlador/Catalogos/departamentoControlador';
+import DEPARTAMENTO_CONTROLADOR from '../../controlador/Catalogos/catDepartamentoControlador';
 
 class DepartamentoRutas {
     public router: Router = Router();
@@ -12,6 +12,8 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', DEPARTAMENTO_CONTROLADOR.ListarDepartamentos);
+        this.router.get('/nombreDepartamento', DEPARTAMENTO_CONTROLADOR.ListarNombreDepartamentos);
+        this.router.get('/idDepartamento/:nombre', DEPARTAMENTO_CONTROLADOR.ListarIdDepartamentoNombre);
         this.router.get('/:id',  DEPARTAMENTO_CONTROLADOR.getOne);
         this.router.post('/', DEPARTAMENTO_CONTROLADOR.create);
         this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.getIdByNombre);

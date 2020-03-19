@@ -4,9 +4,30 @@ import pool from '../../database';
 class DepartamentoControlador {
 
   public async ListarDepartamentos(req: Request, res: Response) {
-    const PROVINCIA = await pool.query('SELECT * FROM cg_departamentos');
-    if (PROVINCIA.rowCount > 0) {
-      return res.json(PROVINCIA.rows)
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+    if (DEPARTAMENTOS.rowCount > 0) {
+      return res.json(DEPARTAMENTOS.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarNombreDepartamentos(req: Request, res: Response) {
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM cg_departamentos');
+    if (DEPARTAMENTOS.rowCount > 0) {
+      return res.json(DEPARTAMENTOS.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarIdDepartamentoNombre(req: Request, res: Response): Promise<any> {
+    const { nombre } = req.params;
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM cg_departamentos WHERE nombre = $1', [nombre]);
+    if (DEPARTAMENTOS.rowCount > 0) {
+      return res.json(DEPARTAMENTOS.rows)
     }
     else {
       return res.status(404).json({ text: 'No se encuentran registros' });

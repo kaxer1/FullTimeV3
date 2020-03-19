@@ -4,8 +4,6 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/departamentos/
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
-import { empty } from 'rxjs';
-
 
 interface Nivel {
   valor: string;
@@ -19,16 +17,17 @@ interface Nivel {
 })
 
 export class RegistroDepartamentoComponent implements OnInit {
-  
+
   // Control de los campos del formulario
-  nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
+  nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   nivel = new FormControl('', Validators.required);
   departamentoPadre = new FormControl('');
 
   // Datos Departamento
   departamentos: any = [];
+  departamentoId: any = [];
   departamentoModificar: any = []
-  edit: boolean = false;
+  editarDepartamento: boolean = false;
   selectPadre;
 
   // Asignar los campos en un formulario en grupo
@@ -69,7 +68,7 @@ export class RegistroDepartamentoComponent implements OnInit {
       this.rest.getOneDepartamentoRest(params.id).subscribe(
         res => {
           this.departamentoModificar = res[0];
-          this.edit = true;
+          this.editarDepartamento = true;
           console.log(this.departamentoModificar)
           this.nuevoDepartamentoForm.setValue({
             departamentoNombreForm: this.departamentoModificar.nombre,
@@ -92,83 +91,62 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   }
 
-  obtenerMensajeErrorNombre() {
-    if (this.nombre.hasError('required')) {
-      return 'Campo obligatorio';
-    }
-    return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
-  }
 
-  insertarDepartamento(form) {
 
-    var departamentoPadreId
 
+
+
+  InsertarDepartamento(form) {
+    var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-
-    if (departamentoPadreNombre == ' ' || departamentoPadreNombre == "Ninguna") {
-      let datadepartamento = {
-        nombre: form.departamentoNombreForm,
-        nivel: form.departamentoNivelForm,
-        depa_padre: null
-      };
-
-
-
-      this.rest.postDepartamentoRest(datadepartamento)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'departamento guardado jj');
-this.LimpiarCampos();
+    if (departamentoPadreNombre === '' || departamentoPadreNombre === 'Ninguno') {
+      console.log('probandos', departamentoPadreNombre);
+      this.rest.ConsultarIdNombreDepartamentos('Ninguno').subscribe(datos => {
+        this.departamentoId = datos;
+        for (let i = this.departamentoId.length - 1; i >= 0; i--) {
+          var id_dePadre = this.departamentoId[i]['id'];
+          departamentoPadreNombre = id_dePadre;
+        }
+        let datosDepartamento = {
+          nombre: form.departamentoNombreForm,
+          nivel: form.departamentoNivelForm,
+          depa_padre: departamentoPadreNombre,
+        };
+        this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Departamento registrado');
+          this.LimpiarCampos();
         }, error => {
-          console.log(error);
+          this.toastr.error('Operación Fallida', 'Departamento no pudo ser registrado')
         });
-
-
-
-
-
-    } else {
-
-
-
-      this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
-
-        departamentoPadreId = data[0].id;
-
-        let datadepartamento = {
+      }, (error) => {
+        this.toastr.info('Descripción ingresada no coincide con los registros')
+      })
+    }
+    else {
+      this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {
+        departamentoPadreId = datos[0].id;
+        let datosDepartamento = {
           nombre: form.departamentoNombreForm,
           nivel: form.departamentoNivelForm,
           depa_padre: departamentoPadreId
         };
-
-
-
-        this.rest.postDepartamentoRest(datadepartamento)
-          .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'departamento guardado');
-
-            this.router.navigate(['/', 'departamento']);
-          }, error => {
-            console.log(error);
-          });;
-
+        this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Departamento registrado');
+          this.LimpiarCampos();
+        }, error => {
+          this.toastr.error('Operación Fallida', 'Departamento no pudo ser registrado')
+        });
       })
-
     }
-
-
-
-
   }
 
 
   getDepartamentos() {
     this.departamentos = [];
-    this.rest.ConsultarDepartamentos().subscribe(data => {
+    this.rest.ConsultarNombreDepartamentos().subscribe(data => {
       this.departamentos = data;
-      this.departamentos[this.departamentos.length] = { nombre: "Ninguna" };
+      this.departamentos[this.departamentos.length] = { nombre: "Ninguno" };
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
-
-
     })
   }
 
@@ -179,7 +157,7 @@ this.LimpiarCampos();
   }
 
 
-  modificarDepartamento(form) {
+  ModificarDepartamento(form) {
     var departamentoPadreId
 
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
@@ -251,12 +229,40 @@ this.LimpiarCampos();
   }
   LimpiarCampos() {
     this.nuevoDepartamentoForm.reset();
+    this.getDepartamentos();
   }
+
   CerrarVentanaRegistroDepartamento() {
     this.LimpiarCampos();
     this.dialogRef.close();
   }
 
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      return false;
+    }
+  }
+
+  ObtenerMensajeErrorNombre() {
+    if (this.nombre.hasError('required')) {
+      return 'Campo obligatorio';
+    }
+    return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
+  }
 
 }
 

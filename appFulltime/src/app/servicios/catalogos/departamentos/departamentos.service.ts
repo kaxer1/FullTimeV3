@@ -18,6 +18,14 @@ export class DepartamentosService {
     return this.http.get(`${this.API_URL}/departamento`);
   }
 
+  ConsultarNombreDepartamentos(){
+    return this.http.get(`${this.API_URL}/departamento/nombreDepartamento`);
+  }
+
+  ConsultarIdNombreDepartamentos(nombreDepartamento: string){
+    return this.http.get(`${this.API_URL}/departamento/idDepartamento/${nombreDepartamento}`);
+  }
+
   postDepartamentoRest(data: any){ 
     return this.http.post(`${this.API_URL}/departamento`, data);
   }

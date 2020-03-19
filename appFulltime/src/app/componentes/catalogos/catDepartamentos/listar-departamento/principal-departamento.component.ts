@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
+import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -15,6 +16,8 @@ import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/cat
 export class PrincipalDepartamentoComponent implements OnInit {
 
   // Almacenamiento de datos consultados 
+  filtroNombre = '';
+  filtroDeparPadre = '';
   departamentos: any = [];
 
   // Control de campos y validaciones del formulario
@@ -32,6 +35,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     public vistaRegistrarDepartamento: MatDialog,
+    
   ) { }
 
   ngOnInit(): void {
@@ -45,22 +49,6 @@ export class PrincipalDepartamentoComponent implements OnInit {
     })
   }
 
-  BuscarDepartamentos(form) {
-    let datosBusqueda = {
-      nombre: form.departamentoForm,
-      depa_padre: form.departamentoPadreForm,
-    };
-    let nombreB = String(datosBusqueda.nombre);
-    let dep_padreB = String(datosBusqueda.depa_padre);
-    if (nombreB === '' && dep_padreB === '') {
-      this.toastr.info('Primero debe ingresar un criterio de búsqueda')
-    }
-    else if (nombreB != '' && dep_padreB === '') {
-    }
-    else if (dep_padreB != '' && nombreB === '') {
-    }
-  }
-
   updateDepartamento(id: number) {
     let dataDepartamento = {
     }
@@ -72,18 +60,22 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   LimpiarCampos() {
-    this.BuscarDepartamentosForm.reset();
+    this.BuscarDepartamentosForm.setValue({
+      departamentoForm: '',
+      departamentoPadreForm: ''
+    });
+    this.ListaDepartamentos();
   }
 
   ObtenerMensajeDepartamentoLetras() {
     if (this.departamentoF.hasError('pattern')) {
-      return 'Ingrese únicamente letras';
+      return 'Indispensable ingresar dos letras';
     }
   }
 
   ObtenerMensajeDepartamentoPadreLetras() {
     if (this.departamentoPadreF.hasError('pattern')) {
-      return 'Ingrese únicamente letras';
+      return 'Indispensable ingresar dos letras';
     }
   }
 
@@ -93,7 +85,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     //Se define todo el abecedario que se va a usar.
     let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
     //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6];
+    let especiales = [8, 37, 39, 46, 6, 13];
     let tecla_especial = false
     for (var i in especiales) {
       if (key == especiales[i]) {
@@ -106,6 +98,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
       return false;
     }
   }
+
 }
 
 

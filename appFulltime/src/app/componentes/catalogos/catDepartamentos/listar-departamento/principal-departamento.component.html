@@ -11,33 +11,35 @@
                         <div class="container" style="text-align: center">
                             <mat-form-field>
                                 <mat-label>Departamento</mat-label>
-                                <input matInput placeholder="Departamento" [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)">
+                                <input matInput id="depNombre" name="filtroNombre" placeholder="Departamento"
+                                    [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
+                                    [(ngModel)]="filtroNombre">
                                 <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
                                 </mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Departamento Padre</mat-label>
-                                <input matInput placeholder="Departamento Padre" [formControl]="departamentoPadreF" (keypress)="IngresarSoloLetras($event)">
+                                <input matInput id="depPadre" name="filtroDeparPadre" placeholder="Departamento Padre"
+                                    [formControl]="departamentoPadreF" (keypress)="IngresarSoloLetras($event)"
+                                    [(ngModel)]="filtroDeparPadre">
                                 <mat-error *ngIf="departamentoPadreF.invalid">
                                     {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
-                
+                </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-success btn-sm" [disabled]="!BuscarDepartamentosForm.valid"
-                        (click)="BuscarDepartamentos(BuscarDepartamentosForm.value)" value="Buscar">
-                    <input type="submit" class="btn btn-danger btn-sm" [disabled]="!BuscarDepartamentosForm.valid" (click)="LimpiarCampos()" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!BuscarDepartamentosForm.valid" (click)="AbrirVentanaRegistrarDepartamento()"
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarDepartamento()"
                         value="Ir a Registrar">
                 </mat-card-actions>
-            </form>
             </mat-card>
         </div>
         <div class="col-4"></div>
     </div>
 </div>
+
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
     <mat-toolbar>
@@ -53,10 +55,11 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let departamento of departamentos">
+            <tr
+                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre">
                 <td>{{departamento.nombre}}</td>
                 <td>{{departamento.nivel}}</td>
-                <td>{{departamento.depa_padre}}</td>
+                <td>{{departamento.departamento_padre}}</td>
                 <td>
                     <i class="far fa-trash-alt"></i>
                     <i class="fas fa-edit" [routerLink]="['/modificarDepartamento/', departamento.id]"></i>

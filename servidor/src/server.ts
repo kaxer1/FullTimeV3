@@ -14,7 +14,7 @@ import FERIADOS_RUTA from './rutas/Catalogos/catFeriadosRuta';
 import TIPO_COMIDAS_RUTA from './rutas/Catalogos/catTipoComidasRuta';
 import RELOJES_RUTA from './rutas/Catalogos/catRelojesRuta';
 import PROVINCIA_RUTA from './rutas/Catalogos/provinciaRutas';
-import DEPARTAMENTO_RUTA from './rutas/Catalogos/departamentoRutas';
+import DEPARTAMENTO_RUTA from './rutas/Catalogos/catDepartamentoRutas';
 import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
 import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
 import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';

@@ -2,14 +2,13 @@
     <mat-card-header style="text-align: center">
         <mat-card-title style="text-align: center">Añadir Departamento</mat-card-title>
     </mat-card-header>
-    <form [formGroup]="nuevoDepartamentoForm"
-        (ngSubmit)="edit? modificarDepartamento(nuevoDepartamentoForm.value) : insertarDepartamento(nuevoDepartamentoForm.value)">
+    <form [formGroup]="nuevoDepartamentoForm">
         <mat-card-content>
             <div class="container">
                 <mat-form-field>
                     <mat-label>Departamento</mat-label>
-                    <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
-                    <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                    <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" (keypress)="IngresarSoloLetras($event)" required>
+                    <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
                     <br>
                 </mat-form-field>
                 <br>
@@ -33,11 +32,12 @@
                 <br>
             </div>
         </mat-card-content>
-        <mat-card-actions style="text-align: center">
-            <input type="submit" class="btn btn-primary btn-sm"
-                [disabled]=" !nuevoDepartamentoForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroDepartamento()"
-                value="Cancelar">
-        </mat-card-actions>
     </form>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !nuevoDepartamentoForm.valid"
+            (click)="editarDepartamento? ModificarDepartamento(nuevoDepartamentoForm.value) : InsertarDepartamento(nuevoDepartamentoForm.value)"
+            value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroDepartamento()"
+            value="Salir">
+    </mat-card-actions>
 </div>
