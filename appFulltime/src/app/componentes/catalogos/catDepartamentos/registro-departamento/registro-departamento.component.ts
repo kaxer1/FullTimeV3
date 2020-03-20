@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { DepartamentosService } from 'src/app/servicios/catalogos/departamentos/departamentos.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -48,59 +48,18 @@ export class RegistroDepartamentoComponent implements OnInit {
   ];
   selectNivel: string = this.niveles[0].valor;
 
-
-
   constructor(
     private rest: DepartamentosService,
     private toastr: ToastrService,
     private router: Router,
     private activeRoute: ActivatedRoute,
     public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
-  ) {
-
-  }
-
-  ngOnInit(): void {
-    this.departamentos = this.getDepartamentos();
-
-    const params = this.activeRoute.snapshot.params;
-    if (params.id) {
-      this.rest.getOneDepartamentoRest(params.id).subscribe(
-        res => {
-          this.departamentoModificar = res[0];
-          this.editarDepartamento = true;
-          console.log(this.departamentoModificar)
-          this.nuevoDepartamentoForm.setValue({
-            departamentoNombreForm: this.departamentoModificar.nombre,
-            departamentoNivelForm: this.departamentoModificar.nivel,
-            departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
-          })
-
-
-
-          this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
-
-          this.obtenerNombre(this.departamentoModificar.depa_padre);
-
-
-        }, err => {
-          console.log(err);
-        }
-      )
-    }
-
-  }
-
-
-
-
-
+  ) { }
 
   InsertarDepartamento(form) {
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     if (departamentoPadreNombre === '' || departamentoPadreNombre === 'Ninguno') {
-      console.log('probandos', departamentoPadreNombre);
       this.rest.ConsultarIdNombreDepartamentos('Ninguno').subscribe(datos => {
         this.departamentoId = datos;
         for (let i = this.departamentoId.length - 1; i >= 0; i--) {
@@ -140,20 +99,83 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
   }
 
-
-  getDepartamentos() {
+  ObtenerDepartamentos() {
     this.departamentos = [];
-    this.rest.ConsultarNombreDepartamentos().subscribe(data => {
-      this.departamentos = data;
+    this.rest.ConsultarNombreDepartamentos().subscribe(datos => {
+      this.departamentos = datos;
       this.departamentos[this.departamentos.length] = { nombre: "Ninguno" };
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
     })
   }
 
+  ObtenerNombre(id: number) {
+    this.selectPadre
+    this.rest.getOneDepartamentoRest(id).subscribe(datos => {
+      console.log(datos[0].nombre);
+      this.selectPadre = datos[0].nombre
+    }, error => {
+      this.toastr.info('Descripción ingresada no coincide con los registros')
+    });
+  }
 
+  LimpiarCampos() {
+    this.nuevoDepartamentoForm.reset();
+    this.ObtenerDepartamentos();
+  }
 
-  cancelarRegistroDepartamento() {
-    this.router.navigate(['/', 'departamento']);
+  CerrarVentanaRegistroDepartamento() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
+  }
+
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      return false;
+    }
+  }
+
+  ObtenerMensajeErrorNombre() {
+    if (this.nombre.hasError('required')) {
+      return 'Campo obligatorio';
+    }
+    return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
+  }
+
+  ngOnInit(): void {
+    this.departamentos = this.ObtenerDepartamentos();
+
+    const params = this.activeRoute.snapshot.params;
+    if (params.id) {
+      this.rest.getOneDepartamentoRest(params.id).subscribe(res => {
+        this.departamentoModificar = res[0];
+        this.editarDepartamento = true;
+        console.log(this.departamentoModificar)
+        this.nuevoDepartamentoForm.setValue({
+          departamentoNombreForm: this.departamentoModificar.nombre,
+          departamentoNivelForm: this.departamentoModificar.nivel,
+          departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
+        })
+        this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
+        this.ObtenerNombre(this.departamentoModificar.depa_padre);
+      }, err => {
+      }
+      )
+    }
   }
 
 
@@ -215,53 +237,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
 
 
-  }
-
-
-  obtenerNombre(id: number) {
-    this.selectPadre
-    this.rest.getOneDepartamentoRest(id).subscribe(data => {
-      console.log(data[0].nombre);
-      this.selectPadre = data[0].nombre
-    }, error => {
-
-    });
-  }
-  LimpiarCampos() {
-    this.nuevoDepartamentoForm.reset();
-    this.getDepartamentos();
-  }
-
-  CerrarVentanaRegistroDepartamento() {
-    this.LimpiarCampos();
-    this.dialogRef.close();
-  }
-
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
-      return false;
-    }
-  }
-
-  ObtenerMensajeErrorNombre() {
-    if (this.nombre.hasError('required')) {
-      return 'Campo obligatorio';
-    }
-    return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
   }
 
 }

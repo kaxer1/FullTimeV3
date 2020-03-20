@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { DepartamentosService } from 'src/app/servicios/catalogos/departamentos/departamentos.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
-import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -15,7 +14,7 @@ import { disableDebugTools } from '@angular/platform-browser';
 
 export class PrincipalDepartamentoComponent implements OnInit {
 
-  // Almacenamiento de datos consultados 
+  // Almacenamiento de datos consultados y filtros de búsqueda
   filtroNombre = '';
   filtroDeparPadre = '';
   departamentos: any = [];
@@ -33,7 +32,6 @@ export class PrincipalDepartamentoComponent implements OnInit {
   constructor(
     private rest: DepartamentosService,
     private toastr: ToastrService,
-    private router: Router,
     public vistaRegistrarDepartamento: MatDialog,
     
   ) { }
@@ -49,14 +47,8 @@ export class PrincipalDepartamentoComponent implements OnInit {
     })
   }
 
-  updateDepartamento(id: number) {
-    let dataDepartamento = {
-    }
-    this.rest.updateDepartamento(id, dataDepartamento)
-  }
-
   AbrirVentanaRegistrarDepartamento(): void {
-    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '300px' })
+    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '300px' }).disableClose = true;
   }
 
   LimpiarCampos() {

@@ -11,7 +11,7 @@ export class ProvinciaService {
     private http: HttpClient,
   ) { }
 
-  // catalogo de Provincias
+  // Catálogo de Provincias
 
   getProvinciasRest(){
     return this.http.get(`${this.API_URL}/provincia`);
@@ -22,7 +22,6 @@ export class ProvinciaService {
   }
   
   postProvinciaRest(data: any){
-    console.log(data);
     return this.http.post(`${this.API_URL}/provincia`, data);
   }
 

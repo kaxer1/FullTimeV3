@@ -1,6 +1,7 @@
 <div style="text-align: center">
     <mat-card-header style="text-align: center">
-        <mat-card-title style="text-align: center">Añadir Departamento</mat-card-title>
+        <mat-icon>open_with</mat-icon>
+        <mat-card-title mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center" >Añadir Departamento</mat-card-title>
     </mat-card-header>
     <form [formGroup]="nuevoDepartamentoForm">
         <mat-card-content>

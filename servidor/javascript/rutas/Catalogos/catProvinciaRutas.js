@@ -11,9 +11,9 @@ class ProvinciaRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', catProvinciaControlador_1.default.list);
-        this.router.get('/:id', catProvinciaControlador_1.default.getOne);
-        this.router.post('/', catProvinciaControlador_1.default.create);
+        this.router.get('/', catProvinciaControlador_1.default.ListarProvincia);
+        this.router.get('/:id', catProvinciaControlador_1.default.ObtenerUnaProvincia);
+        this.router.post('/', catProvinciaControlador_1.default.CrearProvincia);
     }
 }
 const PROVINCIA_RUTAS = new ProvinciaRutas();

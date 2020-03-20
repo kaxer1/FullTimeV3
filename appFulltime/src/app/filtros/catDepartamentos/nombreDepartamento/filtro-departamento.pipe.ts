@@ -9,7 +9,7 @@ export class FiltroDepartamentoPipe implements PipeTransform {
     if (filtroNombre === '' || filtroNombre.length < 2) return value;
     const RESULTADO_DEPARTAMENTOS = [];
     for (const departamentos of value) {
-      if (departamentos.nombre.toLowerCase().indexOf(filtroNombre.toLowerCase()) > -1) {
+      if (departamentos.nombre && departamentos.nombre.toLowerCase().indexOf(filtroNombre.toLowerCase()) > -1) {
         RESULTADO_DEPARTAMENTOS.push(departamentos);
       }
     };
