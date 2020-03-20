@@ -24,4 +24,13 @@ export class EmpleadoService {
   postEmpleadoRest(data: any){
     return this.http.post(`${this.API_URI}/empleado`, data);
   }
+
+  // para insertar el empleado con sus respectivos titulos
+  postEmpleadoTitulos(data: any){
+    return this.http.post(`${this.API_URI}/empleado/emplTitulos`, data);
+  }
+
+  getEmpleadoTituloRest(id: number){
+    return this.http.get(`${this.API_URI}/empleado/emplTitulos/${id}`);
+  }
 }

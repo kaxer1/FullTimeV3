@@ -1,0 +1,35 @@
+<mat-card class="mat-elevation-z8">
+    <div class="barraTitulo">
+        <h5>Añadir Título al Empleado</h5>
+    </div>
+    <form [formGroup]="nuevoTituloEmpleadoForm">
+        <mat-card-content>
+            <div class="container" style="padding-top: 15px; text-align: center;">
+                <mat-form-field>
+                    <mat-label>Observaciones</mat-label>
+                    <input matInput placeholder="ejemplo" [formControl]="observa">
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Seleccionar título</mat-label>
+                    <mat-select [formControl]="idTitulo">
+                        <mat-option *ngFor="let ct of cgTitulos" [value]="ct.id">
+                            {{ct.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </form>
+    <div style="text-align: center;">
+        <button type="submit" class="btn btn-primary" (click)="insertarTituloEmpleado(nuevoTituloEmpleadoForm.value)"
+            [disabled]="!nuevoTituloEmpleadoForm.valid"> 
+            <span class="material-icons alinear">save</span>
+        </button>
+        <button type="submit" class="btn btn-info" (click)="limpiarCampos()"> 
+            <span class="material-icons alinear">backspace</span>
+        </button>
+        <button type="submit" class="btn btn-danger" (click)="cerrarRegistro()"> 
+            <span class="material-icons alinear">close</span>
+        </button>
+    </div>
+</mat-card>

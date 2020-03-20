@@ -54,9 +54,9 @@
             </mat-card-content>
         </form>
         <div style="text-align: center;">
-            <input type="submit" class="btn btn-primary btn-ms" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
-                [disabled]="!nuevoEnroladoForm.valid" value="Grabar">
-            <input type="submit" class="btn btn-danger btn-ms" (click)="limpiarCampos()" value="Cancelar">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
+                [disabled]="!nuevoEnroladoForm.valid" value="Guardar">
+            <input type="submit" class="btn btn-danger btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
         </div>
     </mat-card>
 </div>

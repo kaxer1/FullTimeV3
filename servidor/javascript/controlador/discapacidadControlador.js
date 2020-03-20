@@ -22,8 +22,8 @@ class DiscapacidadControlador {
     }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades WHERE id = $1', [id]);
+            const { id_empleado } = req.params;
+            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
             if (unaDiscapacidad.rowCount > 0) {
                 return res.json(unaDiscapacidad.rows);
             }

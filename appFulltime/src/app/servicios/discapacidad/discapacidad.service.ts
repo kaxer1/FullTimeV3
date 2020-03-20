@@ -14,7 +14,11 @@ export class DiscapacidadService {
 
   // Catalogo de discapacidad
   postDiscapacidadRest(data: any){
-    console.log(data);
+    // console.log(data);
     return this.http.post(`${this.Discapacidad_URL}/discapacidad`, data);
+  }
+
+  getDiscapacidadUsuarioRest(id: number){
+    return this.http.get(`${this.Discapacidad_URL}/discapacidad/${id}`);
   }
 }

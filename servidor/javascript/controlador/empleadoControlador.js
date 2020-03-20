@@ -42,6 +42,24 @@ class EmpleadoControlador {
             res.json({ message: 'Empleado guardado', id: idEmployGuardado });
         });
     }
+    createEmpleadoTitulos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { observacion, id_empleado, id_titulo } = req.body;
+            yield database_1.default.query('INSERT INTO empl_titulos ( observacion, id_empleado, id_titulo ) VALUES ($1, $2, $3)', [observacion, id_empleado, id_titulo]);
+            console.log(req.body);
+            res.json({ message: 'Titulo del empleado Guardado' });
+        });
+    }
+    getTitulosDelEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const unEmpleadoTitulo = yield database_1.default.query('SELECT * FROM empl_titulos WHERE id_empleado = $1', [id_empleado]);
+            if (unEmpleadoTitulo.rowCount > 0) {
+                return res.json(unEmpleadoTitulo.rows);
+            }
+            res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
+        });
+    }
 }
 exports.empleadoControlador = new EmpleadoControlador();
 exports.default = exports.empleadoControlador;

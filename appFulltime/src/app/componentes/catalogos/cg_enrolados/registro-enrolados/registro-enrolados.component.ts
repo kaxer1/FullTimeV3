@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { EnroladoService } from 'src/app/servicios/catalogos/enrolado.service';
 import { ToastrService } from 'ngx-toastr';
 import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-registro-enrolados',
@@ -35,7 +36,8 @@ export class RegistroEnroladosComponent implements OnInit {
   constructor(
     private rest: EnroladoService,
     private toastr: ToastrService,
-    private restUsuario: UsuarioService
+    private restUsuario: UsuarioService,
+    public dialogRef: MatDialogRef<RegistroEnroladosComponent>,
 
   ) { }
 
@@ -86,6 +88,12 @@ export class RegistroEnroladosComponent implements OnInit {
     this.nuevoEnroladoForm.reset();
   }
 
+  cerrarVentanaRegistroEnrolado(){
+    this.limpiarCampos();
+    this.dialogRef.close();
+    // window.location.reload();
+  }
+
   obtenerMensajeErrorNombre() {
     if (this.nombre.hasError('required')) {
       return 'Debe ingresar algun nombre';
@@ -94,19 +102,17 @@ export class RegistroEnroladosComponent implements OnInit {
   }
 
   getIdUsuario(usuario: string) {
-    this.restUsuario.getIdByUsuarioRest(usuario)
-      .subscribe(response => {
-        this.idUsuario = response[0].id;
-      }, error => {
-        console.log(error);
-      });
+    this.restUsuario.getIdByUsuarioRest(usuario).subscribe(response => {
+      this.idUsuario = response[0].id;
+    }, error => {
+      console.log(error);
+    });
   }
 
   getUsuarios() {
     this.usuarios = [];
     this.restUsuario.getUsuariosRest().subscribe(data => {
       this.usuarios = data
-      console.log(this.usuarios);
     })
   }
 

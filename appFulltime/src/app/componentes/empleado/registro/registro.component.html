@@ -56,6 +56,7 @@
                 </form>
                 <div>
                     <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                    <a mat-button [routerLink]="['/empleado']" class="btn btn-warning">Regresar a Empleado</a>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -155,10 +156,9 @@
                     </div>
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                        <button mat-button (click)="stepper.reset()" class="btn btn-danger"
-                        style="margin-left: 15px;">Cancelar</button>
+                        <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                         <input type="submit" class="btn btn-primary"
-                            (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value); stepper.reset()"
+                            (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
                             [disabled]="!terceroFormGroup.valid" value="Guardar Empleado" style="margin: 0px;">
                     </div>
                 </form>

@@ -1,10 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-4"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
                 <div style="text-align: center;">
-                    <h5>Añadir Título</h5>
+                    <h5>Cat Añadir Título</h5>
                 </div>
                 <form [formGroup]="nuevoTituloForm">
                     <mat-card-content>
@@ -12,7 +12,7 @@
                             <mat-form-field>
                                 <mat-label>Ingresar Nombre de Título</mat-label>
                                 <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"
-                                    required>
+                                    (keypress)="soloLetras($event)" required>
                                 <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
                             </mat-form-field>
                             <br>
@@ -28,12 +28,12 @@
                     </mat-card-content>
                 </form>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-primary" (click)="insertarTitulo(nuevoTituloForm.value)"
-                        style="margin-left: 20px;" [disabled]="!nuevoTituloForm.valid" value="Grabar">
-                    <input type="submit" class="btn btn-danger" (click)="limpiarCampos()" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" (click)="insertarTitulo(nuevoTituloForm.value)"
+                        [disabled]="!nuevoTituloForm.valid" value="Guardar">
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
                 </div>
             </mat-card>
         </div>
-        <div class="col-4"></div>
+        <div class="col-sm"></div>
     </div>
 </div>

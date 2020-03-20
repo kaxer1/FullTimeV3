@@ -4,6 +4,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { ToastrService} from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/roles/roles.service';
 import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
@@ -11,19 +12,6 @@ import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
   styleUrls: ['./registro.component.scss']
 })
 export class RegistroComponent implements OnInit {
-
-    // nombre = new FormControl('', );
-    // apellido = new FormControl('', );
-    // cedula = new FormControl('', );
-    // email = new FormControl('', );
-    // telefono = new FormControl('', Validators.required);
-    // domicilio = new FormControl('', Validators.required);
-    // fecha = new FormControl('', Validators.required);
-    // estadoCivil = new FormControl('', Validators.required);
-    // genero = new FormControl('', Validators.required);
-    // estado = new FormControl('', Validators.required);
-    // correoAlternativo = new FormControl('', );
-    // nacionalidad = new FormControl('', Validators.required);
 
   empleadoGuardado: any = [];
   roles: any = [];
@@ -38,7 +26,8 @@ export class RegistroComponent implements OnInit {
     private toastr: ToastrService,
     private rol: RolesService,
     private user: UsuarioService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -99,8 +88,7 @@ export class RegistroComponent implements OnInit {
       // nacionalidad: form2.nacionalidadForm
     };
 
-    this.rest.postEmpleadoRest(dataEmpleado)
-    .subscribe(response => {
+    this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
         this.empleadoGuardado = response;
         let dataUser = {
@@ -111,9 +99,9 @@ export class RegistroComponent implements OnInit {
           id_empleado: this.empleadoGuardado.id,
           app_habilita: true
         }
-        console.log(dataUser);
+
         this.user.postUsuarioRest(dataUser).subscribe(data => {
-          console.log(data);
+          this.agregarDiscapacidad(this.empleadoGuardado.id);
         });
       },
       error => {
@@ -121,6 +109,10 @@ export class RegistroComponent implements OnInit {
       });
 
     this.limpliarCampos();
+  }
+
+  agregarDiscapacidad(id: string){
+    this.router.navigate(['/verEmpleado/',id]);
   }
 
 }

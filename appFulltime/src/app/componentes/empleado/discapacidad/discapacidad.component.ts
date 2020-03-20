@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 
 // ayuda para crear las Discapacidades
 interface Discapacidad {
@@ -16,7 +18,9 @@ interface Discapacidad {
 })
 export class DiscapacidadComponent implements OnInit {
 
-  carnet = new FormControl('', [Validators.required, Validators.maxLength(255)]);
+  @Input() idEmploy: string;
+
+  carnet = new FormControl('', [Validators.required, Validators.maxLength(8)]);
   porcentaje = new FormControl('', [Validators.required, Validators.maxLength(6)]);
   tipo = new FormControl('', [Validators.required, Validators.maxLength(10)])
 
@@ -38,17 +42,23 @@ export class DiscapacidadComponent implements OnInit {
   constructor(
     private rest: DiscapacidadService,
     private toastr: ToastrService,
-  ) { }
-
+    private metodo: VerEmpleadoComponent
+  ) {}
+  
   ngOnInit(): void {
     this.limpiarCampos();
   }
 
+  soloNumeros(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8))
+  }
+
   obtenerMensajeErrorCarnet() {
     if (this.carnet.hasError('required')) {
-      return 'Debe ingresar el carnet';
+      return 'Debe ingresar N° de carnet';
     }
-    return this.carnet.hasError('maxLength') ? 'ingresar solo 255 caracteres' : '';
+    return this.carnet.hasError('maxLength') ? 'ingresar hasta 7 caracteres' : '';
   }
 
   formatLabel(value: number) {
@@ -57,7 +67,7 @@ export class DiscapacidadComponent implements OnInit {
 
   insertarCarnet(form){
     let dataCarnet = {
-      id_empleado: 3,
+      id_empleado: parseInt(this.idEmploy),
       carn_conadis: form.carnetForm,
       porcentaje: form.porcentajeForm,
       tipo: form.tipoForm,
@@ -67,13 +77,18 @@ export class DiscapacidadComponent implements OnInit {
     .subscribe(response => {
       this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
       this.limpiarCampos();
+      this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
     }, error => {
-      console.log(error);
+      // console.log(error);
     });
   }
 
   limpiarCampos(){
     this.nuevoCarnetForm.reset();
+  }
+  
+  cerrarRegistro(){
+    this.metodo.mostrarDis();
   }
 
 }

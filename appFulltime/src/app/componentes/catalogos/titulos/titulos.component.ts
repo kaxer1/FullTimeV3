@@ -17,7 +17,7 @@ interface Nivel {
 export class TitulosComponent implements OnInit {
   
   // Control de los campos del formulario
-  nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
+  nombre = new FormControl('', Validators.required);
   nivel = new FormControl('', Validators.required)
 
   // asignar los campos en un formulario en grupo
@@ -28,11 +28,11 @@ export class TitulosComponent implements OnInit {
 
   // Arreglo de niveles existentes
   niveles: Nivel[] = [
-    {value: '1', viewValue: 'Primaria'},
-    {value: '2', viewValue: 'Secundaria'},
-    {value: '3', viewValue: 'Bachillerato'},
-    {value: '4', viewValue: 'Universidad'},
-    {value: '5', viewValue: 'MBS'}
+    {value: '1', viewValue: 'Educación Básica'},
+    {value: '2', viewValue: 'Bachillerato'},
+    {value: '3', viewValue: 'Técnico Superior'},
+    {value: '4', viewValue: 'Tercer Nivel'},
+    {value: '5', viewValue: 'Postgrado'}
   ];
 
   constructor(
@@ -44,9 +44,14 @@ export class TitulosComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!( (key >=33 && key <= 45) || (key >= 47 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  }
+
   obtenerMensajeErrorNombre() {
     if (this.nombre.hasError('required')) {
-      return 'Debe ingresar algun nombre';
+      return 'Debe ingresar nombre del título';
     }
     return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
   }

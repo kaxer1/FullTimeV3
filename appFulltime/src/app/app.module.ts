@@ -90,7 +90,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-
+import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ProvinciaPipe } from './filtros/catProvincias/filtroProvincia/provincia.pipe';
 import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe';
 import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
@@ -137,6 +137,7 @@ import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
     ProvinciaPipe,
     BPaisesPipe,
     FiltroRegionPipe,
+    TituloEmpleadoComponent,
 
   ],
   imports: [
