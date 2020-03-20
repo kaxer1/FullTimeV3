@@ -1,69 +1,65 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-4"></div>
+        <div class="col-3"></div>
         <div class="col">
-            <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <mat-card-header>
-                    <mat-card-title style="text-align: center">Regimen Laboral - Críterios de Búsqueda</mat-card-title>
-                </mat-card-header>
-
-                <!-- <form [formGroup]="BuscarFeriadosForm">-->
+            <mat-card class="example-card mat-elevation-z9">
+                    <mat-card-header>
+                        <mat-card-title style="text-align: center"> Regimen Laboral - Críterios de Búsqueda</mat-card-title>
+                    </mat-card-header>
+                <form [formGroup]="BuscarRegimenForm">
                 <mat-card-content>
                     <div class="container" style="text-align: center">
                         <mat-form-field>
                             <mat-label>Descripción</mat-label>
-                            <input matInput placeholder="Ingresar nombre">
+                            <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre" (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF" [(ngModel)]="filtroRegimenLaboral">
+                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
                         </mat-form-field>
                     </div>
                 </mat-card-content>
-                <!-- </form>-->
+                </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
-                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRegimen()" value="Ir a Registrar">
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
+                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRegimen()"
+                        value="Ir a Registrar">
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="col-4"></div>
+        <div class="col-3"></div>
     </div>
 </div>
 
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar >
-        <span style="text-align: center;">Resultado de búsqueda</span>
-      </mat-toolbar>
-                <table mat-table class="mat-elevation-z8 table table-hover table-sm">
-                    <thead class="thead-light">
-                        <tr style="text-align: center;">
-                            <th scope="col">Código </th>
-                            <th scope="col">Descripcion</th>
-                            <th scope="col">Dias Vacación</th>
-                            <th scope="col">Dias Incremento</th>
-                            <th scope="col">Años Antiguedad</th>
-                            <th scope="col">Mes Vacación</th>
-                            <th scope="col">Max Dias Acumulados</th>
-                            <th scope="col">Dias libres Vacación</th>
-                            <th scope="col">Acciones</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let regimenL of regimen">
-                            <th style="padding-top: 10px; text-align: center;" scope="row">{{regimenL.id}}</th>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.descripcion}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.dia_anio_vacacion}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.dia_incr_antiguedad}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.anio_antiguedad}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.dia_mes_vacacion}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.max_dia_acumulacion}}</td>
-                            <td style="padding-top: 10px;text-align: center;">{{regimenL.dia_libr_anio_vacacion}}</td>                      
-                            <td style="padding-top: 10px; text-align: center;">
-
-                                <i class="far fa-trash-alt" style="color:red;"></i>
-                                <i class="fas fa-edit" style="color:green; margin-left: 20px"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <mat-toolbar>
+        <span style="text-align: center;">Resultados de búsqueda</span>
+    </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Regimen Laboral</th>
+                <th scope="col">Dias Vacación</th>
+                <th scope="col">Dias Incremento</th>
+                <th scope="col">Años Antiguedad</th>
+                <th scope="col">Mes Vacación</th>
+                <th scope="col">Max Dias Acumulados</th>
+                <th scope="col">Dias libres Vacación</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral">
+                <td>{{regimenL.descripcion}}</td>
+                <td>{{regimenL.dia_anio_vacacion}}</td>
+                <td>{{regimenL.dia_incr_antiguedad}}</td>
+                <td>{{regimenL.anio_antiguedad}}</td>
+                <td>{{regimenL.dia_mes_vacacion}}</td>
+                <td>{{regimenL.max_dia_acumulacion}}</td>
+                <td>{{regimenL.dia_libr_anio_vacacion}}</td>
+                <td>
+                    <i class="far fa-trash-alt"></i>
+                    <i class="fas fa-edit"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

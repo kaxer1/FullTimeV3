@@ -1,0 +1,44 @@
+<div style="text-align: center">
+    <mat-card-header style="text-align: center">
+        <mat-icon>open_with</mat-icon>
+        <mat-card-title mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center" >Añadir Departamento</mat-card-title>
+    </mat-card-header>
+    <form [formGroup]="nuevoDepartamentoForm">
+        <mat-card-content>
+            <div class="container">
+                <mat-form-field>
+                    <mat-label>Departamento</mat-label>
+                    <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" (keypress)="IngresarSoloLetras($event)" required>
+                    <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                    <br>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Nivel</mat-label>
+                    <mat-select [formControl]="nivel" [(ngModel)]="selectNivel">
+                        <mat-option *ngFor="let n of niveles" [value]="n.nombre">
+                            {{n.valor}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Departamento Padre</mat-label>
+                    <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre">
+                        <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
+                            {{departamento.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+            </div>
+        </mat-card-content>
+    </form>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !nuevoDepartamentoForm.valid"
+            (click)="editarDepartamento? ModificarDepartamento(nuevoDepartamentoForm.value) : InsertarDepartamento(nuevoDepartamentoForm.value)"
+            value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroDepartamento()"
+            value="Salir">
+    </mat-card-actions>
+</div>

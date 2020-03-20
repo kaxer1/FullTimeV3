@@ -13,37 +13,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-class RegimenControlador {
-    ListarRegimen(req, res) {
+class ProvinciaControlador {
+    ListarProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const REGIMEN = yield database_1.default.query('SELECT * FROM cg_regimenes');
-            if (REGIMEN.rowCount > 0) {
-                return res.json(REGIMEN.rows);
+            const PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias ORDER BY nombre, pais ASC');
+            if (PROVINCIA.rowCount > 0) {
+                return res.json(PROVINCIA.rows);
             }
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }
-    ListarUnRegimen(req, res) {
+    ObtenerUnaProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const REGIMEN = yield database_1.default.query('SELECT * FROM cg_regimenes WHERE id = $1', [id]);
-            if (REGIMEN.rowCount > 0) {
-                return res.json(REGIMEN.rows);
+            const UNA_PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias WHERE id = $1', [id]);
+            if (UNA_PROVINCIA.rowCount > 0) {
+                return res.json(UNA_PROVINCIA.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
             }
         });
     }
-    CrearRegimen(req, res) {
+    CrearProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion } = req.body;
-            yield database_1.default.query('INSERT INTO cg_regimenes (descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7)', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion]);
-            res.json({ message: 'Regimen guardado' });
+            const { nombre, pais } = req.body;
+            yield database_1.default.query('INSERT INTO cg_provincias (nombre, pais) VALUES ($1, $2)', [nombre, pais]);
+            res.json({ message: 'La provincia ha sido guardada con éxito' });
         });
     }
 }
-const REGIMEN_CONTROLADOR = new RegimenControlador();
-exports.default = REGIMEN_CONTROLADOR;
+exports.PROVINCIA_CONTROLADOR = new ProvinciaControlador();
+exports.default = exports.PROVINCIA_CONTROLADOR;

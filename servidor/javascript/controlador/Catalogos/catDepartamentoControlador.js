@@ -16,9 +16,32 @@ const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
     ListarDepartamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const PROVINCIA = yield database_1.default.query('SELECT * FROM cg_departamentos');
-            if (PROVINCIA.rowCount > 0) {
-                return res.json(PROVINCIA.rows);
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+            if (DEPARTAMENTOS.rowCount > 0) {
+                return res.json(DEPARTAMENTOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarNombreDepartamentos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM cg_departamentos');
+            if (DEPARTAMENTOS.rowCount > 0) {
+                return res.json(DEPARTAMENTOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarIdDepartamentoNombre(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE nombre = $1', [nombre]);
+            if (DEPARTAMENTOS.rowCount > 0) {
+                return res.json(DEPARTAMENTOS.rows);
             }
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });

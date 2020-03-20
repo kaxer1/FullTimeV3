@@ -1,0 +1,9 @@
+.btn { border-radius: 25px; margin-right: 15px;}
+.mat-icon { 
+    position: relative;
+    cursor: grab;
+    color: blue;
+    font-size: 22px;
+    left: 15px;
+}
+

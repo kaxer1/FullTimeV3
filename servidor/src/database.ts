@@ -1,16 +1,13 @@
-
-//Conexión con la base de datos POstgreSQL
+//Conexión con la base de datos PostgreSQL
 
 import Pool from 'pg-pool';
 
 const pool = new Pool({
-
   user: 'postgres',
   host: 'localhost',
   database: 'fullTimeV3',
-  password: 'fulltime',
-  port: 5432,
-  
+  password: 'admin',
+  port: 5432,  
 })
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
@@ -18,7 +15,6 @@ pool.query('SELECT NOW()', (err, res) => {
       } else {
         console.log("Conexión exitosa")
       }
-    //pool.end()
 })
 
 export default pool;

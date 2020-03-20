@@ -22,8 +22,8 @@ import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-em
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
 import { PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
-import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
-import { RegistroProvinciaComponent } from './componentes/catalogos/cg_provincia/registro-provincia/registro-provincia.component';
+import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvincia/listar-provincia/principal-provincia.component';
+import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
@@ -32,13 +32,16 @@ import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tip
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
-import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
-import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/catDepartamentos/listar-departamento/principal-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
+import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
+import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
+import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -46,13 +49,17 @@ import { LoginService } from './servicios/login/login.service';
 import { TituloService } from './servicios/catalogos/titulo.service';
 import { EmpleadoService } from './servicios/empleado/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
-import { ProvinciaService } from './servicios/catalogos/provincia.service';
+import { ProvinciaService } from './servicios/catalogos/catProvincias/provincia.service';
 import { HorarioService } from './servicios/catalogos/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { EnroladoService } from './servicios/catalogos/enrolado.service';
-import { DepartamentoService } from './servicios/catalogos/departamento.service';
+import { DepartamentosService } from './servicios/catalogos/catDepartamentos/departamentos.service';
 import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
+
+// Filtros de búsqueda
+import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
+import { DepartamentoPadrePipe } from './filtros/catDepartamentos/departamentoPadre/departamento-padre.pipe';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -82,11 +89,11 @@ import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
-import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
-import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
-import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
-import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
+import { ProvinciaPipe } from './filtros/catProvincias/filtroProvincia/provincia.pipe';
+import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe';
+import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
 
 @NgModule({
   declarations: [
@@ -125,8 +132,11 @@ import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/
     ListarRegimenComponent,
     ListarTipoComidasComponent,
     ListarRelojesComponent,
-    TituloEmpleadoComponent,
-
+    FiltroDepartamentoPipe,
+    DepartamentoPadrePipe,
+    ProvinciaPipe,
+    BPaisesPipe,
+    FiltroRegionPipe,
 
   ],
   imports: [
@@ -163,7 +173,9 @@ import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/
     MatDatepickerModule,
     MatNativeDateModule,
     FormsModule,
-    MatStepperModule
+    MatStepperModule,
+    DragDropModule,
+
   ],
   providers: [
     LoginService,
@@ -173,14 +185,21 @@ import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/
     DiscapacidadService,
     ProvinciaService,
     HorarioService,
-    DepartamentoService,
     EnroladoService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     HorasExtrasService,
     NotificacionesService,
     RolPermisosService, 
-    TipoPermisosService
+    TipoPermisosService,
+    DepartamentosService,
+    
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent,
+    
+  ],
+  exports: [
+    MatButtonModule, MatDialogModule, DragDropModule
+  ]
 })
 export class AppModule { }
+export class CustomMaterialModule { }

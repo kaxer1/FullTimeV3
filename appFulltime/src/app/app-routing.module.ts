@@ -15,20 +15,19 @@ import { TipoComidasComponent} from './componentes/catalogos/catTipoComidas/tipo
 import { RelojesComponent} from './componentes/catalogos/catRelojes/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
-import { PrincipalProvinciaComponent } from './componentes/catalogos/cg_provincia/principal-provincia/principal-provincia.component';
-import { PrincipalDepartamentoComponent } from './componentes/catalogos/cg_departamento/principal-departamento/principal-departamento.component';
+import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvincia/listar-provincia/principal-provincia.component';
+import { PrincipalDepartamentoComponent } from './componentes/catalogos/catDepartamentos/listar-departamento/principal-departamento.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component';
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
 import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
 import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
-import { RegistroDepartamentoComponent } from './componentes/catalogos/cg_departamento/registro-departamento/registro-departamento.component';
+import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
-
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},

@@ -1,5 +1,5 @@
 "use strict";
-//Conexión con la base de datos POstgreSQL
+//Conexión con la base de datos PostgreSQL
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -9,7 +9,7 @@ const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
     database: 'fullTimeV3',
-    password: 'fulltime',
+    password: 'admin',
     port: 5432,
 });
 pool.query('SELECT NOW()', (err, res) => {
@@ -19,6 +19,5 @@ pool.query('SELECT NOW()', (err, res) => {
     else {
         console.log("Conexión exitosa");
     }
-    //pool.end()
 });
 exports.default = pool;

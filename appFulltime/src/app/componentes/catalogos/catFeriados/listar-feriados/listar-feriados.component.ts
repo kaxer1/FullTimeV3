@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
@@ -32,7 +32,7 @@ export class ListarFeriadosComponent implements OnInit {
 
   constructor(
     private rest: FeriadosService,
-    public router: Router,
+  
     public vistaRegistrarFeriado: MatDialog,
     private toastr: ToastrService,
   ) {
@@ -124,9 +124,10 @@ export class ListarFeriadosComponent implements OnInit {
   AbrirVentanaRegistrarFeriado(): void {
     this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '300px' })
   }
+
   AbrirVentanaRegistrarFeriado1(id: any, datosSeleccionados: any): void {
     console.log(id, datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: {idSelec: id } })
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: { idSelec: id } })
     console.log(id, datosSeleccionados.fecha);
   }
 
