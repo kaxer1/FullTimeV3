@@ -15,7 +15,7 @@ export class RegistrarFeriadosComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
   fechaF = new FormControl('', Validators.required);
-  descripcionF = new FormControl('', [Validators.required]);
+  descripcionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   fechaRecuperacionF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
@@ -51,14 +51,9 @@ export class RegistrarFeriadosComponent implements OnInit {
 
   ObtenerMensajeErrorNombreRequerido() {
     if (this.descripcionF.hasError('required')) {
-      return 'Debe ingresar un nombre';
+      return 'Campo Obligatorio';
     }
-  }
-
-  ObtenerMensajeErrorFechaRequerida() {
-    if (this.fechaF.hasError('required')) {
-      return 'Debe ingresar una fecha';
-    }
+    return this.descripcionF.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
   LimpiarCampos() {
@@ -69,6 +64,26 @@ export class RegistrarFeriadosComponent implements OnInit {
     this.LimpiarCampos();
     this.dialogRef.close();
     window.location.reload();
+  }
+
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      return false;
+    }
   }
 
 }

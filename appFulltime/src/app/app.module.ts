@@ -20,7 +20,7 @@ import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
-import { PrincipalHorarioComponent} from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
+import { PrincipalHorarioComponent } from './componentes/catalogos/cg_horario/principal-horario/principal-horario.component'
 import { RegistroHorarioComponent } from './componentes/catalogos/cg_horario/registro-horario/registro-horario.component'
 import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvincia/listar-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
@@ -42,6 +42,9 @@ import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/edi
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
+import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
+import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
+import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -60,6 +63,11 @@ import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service
 // Filtros de búsqueda
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
 import { DepartamentoPadrePipe } from './filtros/catDepartamentos/departamentoPadre/departamento-padre.pipe';
+import { ProvinciaPipe } from './filtros/catProvincias/filtroProvincia/provincia.pipe';
+import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe';
+import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
+import { FiltroNombrePipe } from './filtros/catFeriados/filtroNombre/filtro-nombre.pipe';
+import { FiltroFechaPipe } from './filtros/catFeriados/filtroFecha/filtro-fecha.pipe';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -84,16 +92,12 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
-import { ProvinciaPipe } from './filtros/catProvincias/filtroProvincia/provincia.pipe';
-import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe';
-import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
 
 @NgModule({
   declarations: [
@@ -138,6 +142,10 @@ import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
     BPaisesPipe,
     FiltroRegionPipe,
     TituloEmpleadoComponent,
+    FiltroNombrePipe,
+    FiltroFechaPipe,
+    ListarCiudadComponent,
+    RegistrarCiudadComponent,
 
   ],
   imports: [
@@ -187,16 +195,16 @@ import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
     ProvinciaService,
     HorarioService,
     EnroladoService,
-    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
+    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     HorasExtrasService,
     NotificacionesService,
-    RolPermisosService, 
+    RolPermisosService,
     TipoPermisosService,
     DepartamentosService,
-    
+
   ],
   bootstrap: [AppComponent,
-    
+
   ],
   exports: [
     MatButtonModule, MatDialogModule, DragDropModule

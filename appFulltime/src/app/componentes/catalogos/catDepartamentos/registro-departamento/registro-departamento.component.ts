@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 
 interface Nivel {
   valor: string;
@@ -29,6 +30,8 @@ export class RegistroDepartamentoComponent implements OnInit {
   departamentoModificar: any = []
   editarDepartamento: boolean = false;
   selectPadre;
+  idD = '';
+  nombreD = '';
 
   // Asignar los campos en un formulario en grupo
   public nuevoDepartamentoForm = new FormGroup({
@@ -54,7 +57,68 @@ export class RegistroDepartamentoComponent implements OnInit {
     private router: Router,
     private activeRoute: ActivatedRoute,
     public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public descripcionD: any) { }
+
+  ngOnInit(): void {
+    this.departamentos = this.ObtenerDepartamentos();
+    if (this.descripcionD) {
+      this.ValidarCamposModificar();
+    }
+  }
+
+  ValidarCamposModificar() {
+    this.idD = this.descripcionD.id;
+    this.rest.getOneDepartamentoRest(parseInt(this.idD)).subscribe(res => {
+      this.departamentoModificar = res[0];
+      this.editarDepartamento = true;
+      this.nuevoDepartamentoForm.setValue({
+        departamentoNombreForm: this.departamentoModificar.nombre,
+        departamentoNivelForm: this.departamentoModificar.nivel,
+        departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
+      })
+      this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
+      this.ObtenerNombre(this.departamentoModificar.depa_padre);
+    }, err => {
+    }
+    )
+  }
+
+  ModificarDepartamento(form) {
+    var departamentoPadreId
+    var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
+    console.log(form.departamentoDepartamentoPadreForm);
+    if (departamentoPadreNombre == 'Ninguna' || departamentoPadreNombre == null) {
+      let datadepartamento = {
+        nombre: form.departamentoNombreForm,
+        nivel: form.departamentoNivelForm,
+        depa_padre: null
+      };
+      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
+        .subscribe(response => {
+          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+          this.router.navigate(['/', 'departamento']);
+        }, error => {
+          console.log(error);
+        });
+    } else {
+      this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
+        departamentoPadreId = data[0].id;
+        let datadepartamento = {
+          nombre: form.departamentoNombreForm,
+          nivel: form.departamentoNivelForm,
+          depa_padre: departamentoPadreId
+        };
+        this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
+          .subscribe(response => {
+            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+
+            this.router.navigate(['/', 'departamento']);
+          }, error => {
+            console.log(error);
+          });
+      })
+    }
+  }
 
   InsertarDepartamento(form) {
     var departamentoPadreId;
@@ -111,7 +175,6 @@ export class RegistroDepartamentoComponent implements OnInit {
   ObtenerNombre(id: number) {
     this.selectPadre
     this.rest.getOneDepartamentoRest(id).subscribe(datos => {
-      console.log(datos[0].nombre);
       this.selectPadre = datos[0].nombre
     }, error => {
       this.toastr.info('Descripción ingresada no coincide con los registros')
@@ -155,89 +218,5 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
     return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
   }
-
-  ngOnInit(): void {
-    this.departamentos = this.ObtenerDepartamentos();
-
-    const params = this.activeRoute.snapshot.params;
-    if (params.id) {
-      this.rest.getOneDepartamentoRest(params.id).subscribe(res => {
-        this.departamentoModificar = res[0];
-        this.editarDepartamento = true;
-        console.log(this.departamentoModificar)
-        this.nuevoDepartamentoForm.setValue({
-          departamentoNombreForm: this.departamentoModificar.nombre,
-          departamentoNivelForm: this.departamentoModificar.nivel,
-          departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
-        })
-        this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
-        this.ObtenerNombre(this.departamentoModificar.depa_padre);
-      }, err => {
-      }
-      )
-    }
-  }
-
-
-  ModificarDepartamento(form) {
-    var departamentoPadreId
-
-    var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-    console.log(form.departamentoDepartamentoPadreForm);
-
-    if (departamentoPadreNombre == 'Ninguna' || departamentoPadreNombre == null) {
-
-
-      let datadepartamento = {
-        nombre: form.departamentoNombreForm,
-        nivel: form.departamentoNivelForm,
-        depa_padre: null
-      };
-
-
-
-      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-
-          this.router.navigate(['/', 'departamento']);
-        }, error => {
-          console.log(error);
-        });
-
-
-
-    } else {
-
-      this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
-
-        departamentoPadreId = data[0].id;
-
-        let datadepartamento = {
-          nombre: form.departamentoNombreForm,
-          nivel: form.departamentoNivelForm,
-          depa_padre: departamentoPadreId
-        };
-
-
-
-        this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
-          .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-
-            this.router.navigate(['/', 'departamento']);
-          }, error => {
-            console.log(error);
-          });
-
-      })
-
-
-
-    }
-
-
-  }
-
 }
 

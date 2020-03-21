@@ -1,14 +1,12 @@
+<mat-icon>open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Provincia</h5>
 <div style="text-align: center;">
-    <mat-card-header style="text-align: center">
-        <mat-icon>open_with</mat-icon>
-        <mat-card-title mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center" >Añadir Provincia</mat-card-title>
-    </mat-card-header>
     <form [formGroup]="NuevaProvinciasForm">
         <mat-card-content>
             <div class="container">
                 <mat-form-field>
                     <mat-label>Seleccionar País</mat-label>
-                    <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPais" >
+                    <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPais">
                         <mat-option *ngFor="let p of paises" [value]="p.nombre">
                             {{p.valor}}
                         </mat-option>

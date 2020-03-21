@@ -48,7 +48,7 @@ export class ListarRegimenComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarRegimen(): void {
-    this.vistaRegistrarRegimen.open(RegimenComponent, { width: '300px'})
+    this.vistaRegistrarRegimen.open(RegimenComponent, { width: '900px'}).disableClose = true;
   }
 
   LimpiarCampos() {

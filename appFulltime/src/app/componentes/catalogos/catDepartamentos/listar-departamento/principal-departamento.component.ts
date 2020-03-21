@@ -33,7 +33,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     private rest: DepartamentosService,
     private toastr: ToastrService,
     public vistaRegistrarDepartamento: MatDialog,
-    
+
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +49,15 @@ export class PrincipalDepartamentoComponent implements OnInit {
 
   AbrirVentanaRegistrarDepartamento(): void {
     this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '300px' }).disableClose = true;
+  }
+
+  AbrirVentanaEditarDepartamento(departamento: any): void {
+    const DIALOG_REF = this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent,
+      { width: '300px', data: departamento });
+      DIALOG_REF.afterClosed().subscribe(res => {
+        console.log("jhdwhyu",res);
+      })
+      DIALOG_REF.disableClose = true;
   }
 
   LimpiarCampos() {

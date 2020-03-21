@@ -28,6 +28,7 @@ import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolado
 import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
+import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -59,6 +60,8 @@ const routes: Routes = [
   { path: 'listarRegimen', component: ListarRegimenComponent},
   { path: 'listarTipoComidas', component: ListarTipoComidasComponent},
   { path: 'listarRelojes', component: ListarRelojesComponent},
+  { path: 'listarCiudades', component: ListarCiudadComponent},
+  
 ];
 
 @NgModule({

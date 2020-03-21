@@ -3,19 +3,19 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                    <mat-card-header>
-                        <mat-card-title style="text-align: center"> Regimen Laboral - Críterios de Búsqueda</mat-card-title>
-                    </mat-card-header>
+                <h5 style="text-align: center"> Régimen Laboral - Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRegimenForm">
-                <mat-card-content>
-                    <div class="container" style="text-align: center">
-                        <mat-form-field>
-                            <mat-label>Descripción</mat-label>
-                            <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre" (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF" [(ngModel)]="filtroRegimenLaboral">
-                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
-                        </mat-form-field>
-                    </div>
-                </mat-card-content>
+                    <mat-card-content>
+                        <div class="container" style="text-align: center">
+                            <mat-form-field>
+                                <mat-label>Descripción</mat-label>
+                                <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF"
+                                    [(ngModel)]="filtroRegimenLaboral">
+                                <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">

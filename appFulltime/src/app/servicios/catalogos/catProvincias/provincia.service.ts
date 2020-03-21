@@ -25,5 +25,9 @@ export class ProvinciaService {
     return this.http.post(`${this.API_URL}/provincia`, data);
   }
 
+  getIdProvinciaRest(nombre: string){
+    return this.http.get(`${this.API_URL}/provincia/nombreProvincia/${nombre}`);
+  }
+
 }
 

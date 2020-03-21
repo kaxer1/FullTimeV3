@@ -13,33 +13,37 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-class FeriadosControlador {
-    ListarFeriados(req, res) {
+class CiudadControlador {
+    ListarCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const FERIADOS = yield database_1.default.query('SELECT * FROM cg_feriados');
-            if (FERIADOS.rowCount > 0) {
-                return res.json(FERIADOS.rows);
+            const CIUDAD = yield database_1.default.query('SELECT * FROM VistaNombreProvincia ORDER BY descripcion, nombre ASC');
+            if (CIUDAD.rowCount > 0) {
+                return res.json(CIUDAD.rows);
             }
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }
-    ActualizarFeriado(req, res) {
+    ConsularUnaCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { fecha, descripcion, fec_recuperacion } = req.body;
-            yield database_1.default.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
-            res.json({ message: 'Feriado actualizado exitosamente' });
+            const { id_provincia } = req.params;
+            const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades WHERE id_provincia = $1', [id_provincia]);
+            if (CIUDAD.rowCount > 0) {
+                return res.json(CIUDAD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
-    CrearFeriados(req, res) {
+    CrearCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fecha, descripcion, fec_recuperacion } = req.body;
-            yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
-            res.json({ message: 'Feriado guardado' });
+            const { id_provincia, descripcion } = req.body;
+            yield database_1.default.query('INSERT INTO ciudades ( id_provincia, descripcion ) VALUES ($1, $2)', [id_provincia, descripcion]);
+            res.json({ message: 'Ciudad Registrada' });
         });
     }
 }
-const FERIADOS_CONTROLADOR = new FeriadosControlador();
-exports.default = FERIADOS_CONTROLADOR;
+exports.CIUDAD_CONTROLADOR = new CiudadControlador();
+exports.default = exports.CIUDAD_CONTROLADOR;

@@ -12,6 +12,7 @@ class ProvinciaRutas {
     }
     configuracion() {
         this.router.get('/', catProvinciaControlador_1.default.ListarProvincia);
+        this.router.get('/nombreProvincia/:nombre', catProvinciaControlador_1.default.ObtenerIdProvincia);
         this.router.get('/:id', catProvinciaControlador_1.default.ObtenerUnaProvincia);
         this.router.post('/', catProvinciaControlador_1.default.CrearProvincia);
     }

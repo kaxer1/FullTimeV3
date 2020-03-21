@@ -3,51 +3,50 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
-import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
+import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
+import { RegistrarCiudadComponent } from 'src/app/componentes/ciudades/registrar-ciudad/registrar-ciudad.component'
 
 @Component({
-  selector: 'app-principal-provincia',
-  templateUrl: './principal-provincia.component.html',
-  styleUrls: ['./principal-provincia.component.css']
+  selector: 'app-listar-ciudad',
+  templateUrl: './listar-ciudad.component.html',
+  styleUrls: ['./listar-ciudad.component.css']
 })
-
-export class PrincipalProvinciaComponent implements OnInit {
+export class ListarCiudadComponent implements OnInit {
 
   // Almacenamiento de datos
-  provincias: any = [];
-  filtroPais = '';
+  datosCiudades: any = [];
+  filtroCiudad = '';
   filtroProvincia = '';
 
   // Control de campos y validaciones del formulario
-  paisF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
+  ciudadF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   provinciaF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
 
   // Asignación de validaciones a inputs del formulario
-  public BuscarProvinciasForm = new FormGroup({
-    paisForm: this.paisF,
+  public BuscarCiudadForm = new FormGroup({
+    ciudadForm: this.ciudadF,
     provinciaForm: this.provinciaF,
   });
 
   constructor(
-    public rest: ProvinciaService,
-    public vistaRegistrarProvincia: MatDialog,
+    public rest: CiudadService,
+    public vistaRegistrarCiudad: MatDialog,
     private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
-    this.ListarProvincias();
+    this.ListarCiudades();
   }
 
-  ListarProvincias() {
-    this.provincias = [];
-    this.rest.getProvinciasRest().subscribe(datos => {
-      this.provincias = datos;
+  ListarCiudades() {
+    this.datosCiudades = [];
+    this.rest.ConsultarCiudades().subscribe(datos => {
+      this.datosCiudades = datos;
     })
   }
 
-  AbrirVentanaRegistrarProvincia() {
-    this.vistaRegistrarProvincia.open(RegistroProvinciaComponent, { width: '300px' }).disableClose = true;
+  AbrirVentanaRegistrarCiudad() {
+    this.vistaRegistrarCiudad.open(RegistrarCiudadComponent, { width: '300px' }).disableClose = true;
   }
 
   IngresarSoloLetras(e) {
@@ -71,15 +70,15 @@ export class PrincipalProvinciaComponent implements OnInit {
   }
 
   LimpiarCampos() {
-    this.BuscarProvinciasForm.setValue({
-      paisForm: '',
+    this.BuscarCiudadForm.setValue({
+      ciudadForm: '',
       provinciaForm: ''
     });
-    this.ListarProvincias;
+    this.ListarCiudades;
   }
 
-  ObtenerMensajePaisLetras() {
-    if (this.paisF.hasError('pattern')) {
+  ObtenerMensajeCiudadLetras() {
+    if (this.ciudadF.hasError('pattern')) {
       return 'Indispensable ingresar dos letras';
     }
   }

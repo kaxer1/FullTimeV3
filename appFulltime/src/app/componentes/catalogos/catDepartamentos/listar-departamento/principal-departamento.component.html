@@ -3,9 +3,7 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <mat-card-header>
-                    <mat-card-title style="text-align: center">Departamentos - Críterios de Búsqueda</mat-card-title>
-                </mat-card-header>
+                <h5 style="text-align: center">Departamentos - Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarDepartamentosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -61,7 +59,7 @@
                 <td>{{departamento.departamento_padre}}</td>
                 <td>
                     <i class="far fa-trash-alt"></i>
-                    <i class="fas fa-edit" [routerLink]="['/modificarDepartamento/', departamento.id]"></i>
+                    <i class="fas fa-edit"  (click)="AbrirVentanaEditarDepartamento(departamento)"></i>
                 </td>
             </tr>
         </tbody>

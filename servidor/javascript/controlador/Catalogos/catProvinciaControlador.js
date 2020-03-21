@@ -37,6 +37,18 @@ class ProvinciaControlador {
             }
         });
     }
+    ObtenerIdProvincia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const UNA_PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias WHERE nombre = $1', [nombre]);
+            if (UNA_PROVINCIA.rowCount > 0) {
+                return res.json(UNA_PROVINCIA.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+            }
+        });
+    }
     CrearProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, pais } = req.body;

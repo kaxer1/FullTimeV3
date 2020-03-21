@@ -3,29 +3,28 @@
         <div class="col-4"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <div class="container" style="text-align: center">
-                    <mat-card-header>
-                        <mat-card-title>Críterios de Búsqueda</mat-card-title>
-                    </mat-card-header>
-                </div>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarFeriadosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
                             <mat-form-field>
                                 <mat-label>Descripción</mat-label>
-                                <input matInput placeholder="Nombre feriado" [formControl]="descripcionF">
+                                <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
+                                    [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
+                                    (keypress)="IngresarSoloLetras($event)">
+                                    <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
+                                    </mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Fecha</mat-label>
-                                <input matInput type="date" placeholder="Seleccionar fecha" [formControl]="fechaF">
+                                <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
+                                    [formControl]="fechaF" [(ngModel)]="filtradoFecha">
                             </mat-form-field>
                         </div>
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-success btn-sm" [disabled]="!BuscarFeriadosForm.valid"
-                        (click)="BuscarFeriado(BuscarFeriadosForm.value)" value="Buscar">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarFeriado()"
                         value="Ir a Registrar">
@@ -51,12 +50,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let f of feriados">
-                <td style="padding-top: 10px; text-align: center;">{{f.descripcion}}</td>
-                <td style="padding-top: 10px; text-align: center;">{{f.fecha}}</td>
-                <td style="padding-top: 10px; text-align: center;">{{f.fec_recuperacion}}</td>
+            <tr *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha">
+                <td>{{f.descripcion}}</td>
+                <td>{{f.fecha}}</td>
+                <td>{{f.fec_recuperacion}}</td>
                 <td>
-                    <i class="fas fa-edit" style="color:green" (click)="AbrirVentanaRegistrarFeriado1(f.id, f)"></i>
+                    <i class="fas fa-edit" (click)="AbrirVentanaRegistrarFeriado1(f.id, f)"></i>
                 </td>
             </tr>
         </tbody>

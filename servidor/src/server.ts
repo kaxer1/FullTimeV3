@@ -25,6 +25,7 @@ import HORAS_EXTRAS_RUTAS from './rutas/Catalogos/horasExtrasRutas';
 import NOTIFICACIONES_RUTAS from './rutas/Catalogos/notificacionesRutas';
 import ROL_PERMISOS_RUTAS from './rutas/Catalogos/rolPermisosRutas';
 import TIPO_PERMISOS_RUTAS from './rutas/Catalogos/tipoPermisosRutas';
+import CIUDAD_RUTAS from './rutas/ciudades/ciudadesRutas';
 
 class Server {
 
@@ -70,7 +71,7 @@ class Server {
         this.app.use('/notificaciones', NOTIFICACIONES_RUTAS);
         this.app.use('/rolPermisos', ROL_PERMISOS_RUTAS);
         this.app.use('/tipoPermisos', TIPO_PERMISOS_RUTAS);
-
+        this.app.use('/ciudades', CIUDAD_RUTAS);
 
     }
 
