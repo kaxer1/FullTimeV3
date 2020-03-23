@@ -30,6 +30,7 @@ const notificacionesRutas_2 = __importDefault(require("./rutas/Catalogos/notific
 const rolPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/rolPermisosRutas"));
 const tipoPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/tipoPermisosRutas"));
 const ciudadesRutas_1 = __importDefault(require("./rutas/ciudades/ciudadesRutas"));
+const ciudadFeriadoRutas_1 = __importDefault(require("./rutas/CiudadFeriado/ciudadFeriadoRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -68,6 +69,7 @@ class Server {
         this.app.use('/rolPermisos', rolPermisosRutas_1.default);
         this.app.use('/tipoPermisos', tipoPermisosRutas_1.default);
         this.app.use('/ciudades', ciudadesRutas_1.default);
+        this.app.use('/ciudadFeriados', ciudadFeriadoRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

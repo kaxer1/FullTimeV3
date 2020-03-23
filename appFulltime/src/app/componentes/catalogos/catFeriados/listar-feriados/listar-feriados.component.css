@@ -1,5 +1,6 @@
 td { padding-top: 10px; text-align: center; }
 .btn { margin-left: 15px; border-radius: 25px;}
-.fas { color:green; }
-
+.fas { color:green; margin-left: 20px;}
+#ciudad { color: rgb(38, 0, 255); }
+p { font-size: x-small;}
 

@@ -3,8 +3,18 @@ import pool from '../../database';
 
 class CiudadControlador {
 
-    public async ListarCiudad(req: Request, res: Response) {
+    public async ListarNombreCiudad(req: Request, res: Response) {
         const CIUDAD = await pool.query('SELECT * FROM VistaNombreProvincia ORDER BY descripcion, nombre ASC');
+        if (CIUDAD.rowCount > 0) {
+            return res.json(CIUDAD.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async ListarCiudades(req: Request, res: Response) {
+        const CIUDAD = await pool.query('SELECT * FROM ciudades');
         if (CIUDAD.rowCount > 0) {
             return res.json(CIUDAD.rows)
         }

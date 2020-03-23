@@ -6,7 +6,7 @@ class TipoComidasControlador {
 
     public async ListarTipoComidas(req: Request, res: Response) {
 
-        const TIPO_COMIDAS = await pool.query('SELECT * FROM cg_tipo_comidas');
+        const TIPO_COMIDAS = await pool.query('SELECT * FROM cg_tipo_comidas ORDER BY nombre, observacion ASC');
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.json(TIPO_COMIDAS.rows)
         }

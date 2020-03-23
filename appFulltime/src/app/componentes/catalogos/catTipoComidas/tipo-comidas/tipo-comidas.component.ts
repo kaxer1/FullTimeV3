@@ -14,9 +14,9 @@ import { TipoComidasService } from 'src/app/servicios/catalogos/tipoComidas/tipo
 export class TipoComidasComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
-  nombreF = new FormControl('', Validators.required);
-  valorF = new FormControl('', [Validators.required, Validators.pattern("^[0-9]+(.[0-9]+)?$")]);
-  observacionF = new FormControl('');
+  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  valorF = new FormControl('', [Validators.required, Validators.pattern("^[0-9]+(.[0-9][0-9])?$")]);
+  observacionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{5,48}")]);
 
   // Asignación de validaciones a inputs del formulario
   public TipoComidaForm = new FormGroup({
@@ -58,7 +58,7 @@ export class TipoComidasComponent implements OnInit {
       keynum = evt.which;
     }
     // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 44 || keynum == 46) {
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
       return true;
     }
     else {
@@ -69,16 +69,21 @@ export class TipoComidasComponent implements OnInit {
 
   ObtenerMensajeErrorNombreRequerido() {
     if (this.nombreF.hasError('required')) {
-      return 'Debe ingresar un nombre';
+      return 'Campo obligatorio';
     }
   }
 
   ObtenerMensajeErrorCamposNumericosRequeridos() {
     if (this.valorF.hasError('required')) {
-      
-      return 'Debe ingresar un valor';
+      return 'Ingresar un valor hasta con dos decimales';
     }
-    return this.valorF.hasError('pattern') ? 'Ingresar valor con dos decimales' : '';
+    return this.valorF.hasError('pattern') ? 'Ingresar dos decimales' : '';
+  }
+
+  ObtenerMensajeErrorObservacion() {
+    if (this.observacionF.hasError('pattern')) {
+      return 'Ingresar una observación válida';
+    }
   }
 
   LimpiarCampos() {

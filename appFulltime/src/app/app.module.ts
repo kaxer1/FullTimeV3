@@ -98,6 +98,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
 
 @NgModule({
   declarations: [
@@ -146,6 +148,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     FiltroFechaPipe,
     ListarCiudadComponent,
     RegistrarCiudadComponent,
+    AsignarCiudadComponent,
+    FiltrosNombresPipe,
 
   ],
   imports: [

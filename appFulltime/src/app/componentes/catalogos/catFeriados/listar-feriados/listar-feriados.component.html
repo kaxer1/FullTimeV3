@@ -12,8 +12,8 @@
                                 <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
                                     [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
                                     (keypress)="IngresarSoloLetras($event)">
-                                    <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
-                                    </mat-error>
+                                <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
+                                </mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
@@ -34,7 +34,6 @@
         <div class="col-4"></div>
     </div>
 </div>
-
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
     <mat-toolbar>
@@ -55,7 +54,11 @@
                 <td>{{f.fecha}}</td>
                 <td>{{f.fec_recuperacion}}</td>
                 <td>
+                    <i class="fas fa-city" id="ciudad" (click)="AbrirVentanaAsignarCiudad(f)">
+                        <p>Ciudad</p>
+                    </i>
                     <i class="fas fa-edit" (click)="AbrirVentanaRegistrarFeriado1(f.id, f)"></i>
+                   
                 </td>
             </tr>
         </tbody>

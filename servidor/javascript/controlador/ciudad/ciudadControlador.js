@@ -14,9 +14,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 class CiudadControlador {
-    ListarCiudad(req, res) {
+    ListarNombreCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const CIUDAD = yield database_1.default.query('SELECT * FROM VistaNombreProvincia ORDER BY descripcion, nombre ASC');
+            if (CIUDAD.rowCount > 0) {
+                return res.json(CIUDAD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarCiudades(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades');
             if (CIUDAD.rowCount > 0) {
                 return res.json(CIUDAD.rows);
             }

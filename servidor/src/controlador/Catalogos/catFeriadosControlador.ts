@@ -26,6 +26,7 @@ class FeriadosControlador {
         await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
         res.json({ message: 'Feriado guardado' });
     }
+
 }
 
 const FERIADOS_CONTROLADOR = new FeriadosControlador();

@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+
 import { FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
+import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -31,6 +33,7 @@ export class ListarFeriadosComponent implements OnInit {
   constructor(
     private rest: FeriadosService,
     public vistaRegistrarFeriado: MatDialog,
+    public vistaAsignarCiudad: MatDialog,
     private toastr: ToastrService,
   ) { }
 
@@ -62,6 +65,12 @@ export class ListarFeriadosComponent implements OnInit {
     console.log(id, datosSeleccionados);
     this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: { idSelec: id } })
     console.log(id, datosSeleccionados.fecha);
+  }
+
+  AbrirVentanaAsignarCiudad(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampos() {

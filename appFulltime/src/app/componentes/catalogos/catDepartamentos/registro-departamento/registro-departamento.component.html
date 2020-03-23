@@ -10,7 +10,6 @@
                 <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre"
                     (keypress)="IngresarSoloLetras($event)" [(ngModel)]="nombreD" required>
                 <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
-                <br>
             </mat-form-field>
             <br>
             <mat-form-field>

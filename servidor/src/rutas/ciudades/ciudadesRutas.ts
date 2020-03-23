@@ -10,7 +10,8 @@ class CiudadRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', CIUDAD_CONTROLADOR.ListarCiudad);
+        this.router.get('/', CIUDAD_CONTROLADOR.ListarNombreCiudad);
+        this.router.get('/listaCiudad', CIUDAD_CONTROLADOR.ListarCiudades);
         this.router.get('/:id', CIUDAD_CONTROLADOR.ConsularUnaCiudad);
         this.router.post('/', CIUDAD_CONTROLADOR.CrearCiudad);
     }

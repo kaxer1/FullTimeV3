@@ -14,8 +14,12 @@ export class CiudadService {
 
   // catalogo de departamentos
 
-  ConsultarCiudades(){
+  ConsultarNombreCiudades(){
     return this.http.get(`${this.API_URL}/ciudades`);
+  }
+
+  ConsultarCiudades(){
+    return this.http.get(`${this.API_URL}/ciudades/listaCiudad`);
   }
 
   postCiudades(data: any){ 

@@ -11,7 +11,8 @@ class CiudadRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', ciudadControlador_1.default.ListarCiudad);
+        this.router.get('/', ciudadControlador_1.default.ListarNombreCiudad);
+        this.router.get('/listaCiudad', ciudadControlador_1.default.ListarCiudades);
         this.router.get('/:id', ciudadControlador_1.default.ConsularUnaCiudad);
         this.router.post('/', ciudadControlador_1.default.CrearCiudad);
     }

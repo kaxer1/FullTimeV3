@@ -40,7 +40,7 @@ export class ListarCiudadComponent implements OnInit {
 
   ListarCiudades() {
     this.datosCiudades = [];
-    this.rest.ConsultarCiudades().subscribe(datos => {
+    this.rest.ConsultarNombreCiudades().subscribe(datos => {
       this.datosCiudades = datos;
     })
   }

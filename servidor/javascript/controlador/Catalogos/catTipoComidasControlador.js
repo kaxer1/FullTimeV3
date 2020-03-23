@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class TipoComidasControlador {
     ListarTipoComidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas');
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas ORDER BY nombre, observacion ASC');
             if (TIPO_COMIDAS.rowCount > 0) {
                 return res.json(TIPO_COMIDAS.rows);
             }
