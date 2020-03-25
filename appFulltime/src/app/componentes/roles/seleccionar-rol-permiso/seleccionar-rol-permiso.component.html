@@ -12,22 +12,22 @@
                         <div class="col-sm">
                             <mat-form-field>
                                 <mat-label>Ingresar funcion</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="funcion" required>
-                                <!-- <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error> -->
+                                <input matInput placeholder="Ej: Ver" [formControl]="funcion" (keypress)="soloLetras($event)" required>
+                                <mat-error *ngIf="funcion.invalid">{{obtenerMensajeErrorFuncion()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
                                 <mat-label>Ingresar link</mat-label>
-                                <input matInput placeholder="Ej: /home" [formControl]="link" required>
-                                <!-- <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error> -->
+                                <input matInput placeholder="Ej: /home" [formControl]="link" (keypress)="soloLetras($event)" required>
+                                <mat-error *ngIf="link.invalid">{{obtenerMensajeErrorLink()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
                                 <mat-label>Ingresar etiqueta</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="etiqueta" required>
-                                <!-- <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error> -->
+                                <input matInput placeholder="Ej: sirve para visualizar" [formControl]="etiqueta" (keypress)="soloLetras($event)" required>
+                                <mat-error *ngIf="etiqueta.invalid">{{obtenerMensajeErrorEtiqueta()}}</mat-error>
                             </mat-form-field>
                         </div>
                     </div>

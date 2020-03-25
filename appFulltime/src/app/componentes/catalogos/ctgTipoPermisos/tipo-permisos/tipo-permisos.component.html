@@ -12,7 +12,7 @@
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Descripción</mat-label>
-                                    <textarea matInput placeholder="Ej: " formControlName="descripcionForm" required></textarea>
+                                    <textarea matInput placeholder="Ej: Descripcion del tipo de permiso" (keypress)="soloLetras($event)" formControlName="descripcionForm" required></textarea>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
@@ -26,29 +26,29 @@
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Número dia máximo</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="numDiaMaximoForm" required>
+                                    <input matInput placeholder="Ej: 3" (keypress)="soloNumeros($event)" formControlName="numDiaMaximoForm" required>
                                 </mat-form-field>
                             </div>
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Número Hora Máxima</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="numHoraMaximoForm" required>
+                                    <input matInput placeholder="Ej: 4" (keypress)="soloNumeros($event)" formControlName="numHoraMaximoForm" required>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Número Dia Ingreso</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="numDiaIngresoForm" required>
+                                    <input matInput placeholder="Ej: 2" (keypress)="soloNumeros($event)" formControlName="numDiaIngresoForm" required>
                                 </mat-form-field>
                             </div>
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Acceso Empleado</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="acceEmpleadoForm" required>
+                                    <input matInput placeholder="Ej: 3" (keypress)="soloNumeros($event)" formControlName="acceEmpleadoForm" required>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Número dia Justifica</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="numDiaJustificaForm" required>
+                                    <input matInput placeholder="Ej: 2" (keypress)="soloNumeros($event)" formControlName="numDiaJustificaForm" required>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -56,6 +56,7 @@
                 </form>
                     <div>
                         <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                        <button mat-button class="btn btn-warning" [routerLink]="['/verTipoPermiso']">Ir a lista de Tipos Permisos</button>
                     </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -265,7 +266,7 @@
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                         <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                         <input type="submit" class="btn btn-primary" (click)="insertarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value); stepper.reset()"
-                        [disabled]="!terceroFormGroup.valid" value="Grabar" style="margin: 0px;">
+                        [disabled]="!terceroFormGroup.valid" value="Guardar" style="margin: 0px;">
                     </div>
                 </form>
             </mat-step>

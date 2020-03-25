@@ -6,35 +6,28 @@
                 <div style="text-align: center;">
                     <h5>Proceso - Criterios de Búsqueda</h5>
                 </div>
-                <!-- Formulario Completo -->
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
-                        <form [formGroup]="">
+                        <form>
                             <mat-form-field>
-                                <mat-label>Ingresar Codigo</mat-label>
-                                <input matInput placeholder="Ej: ">
+                                <mat-label>Buscar por Nombre</mat-label>
+                                <input matInput placeholder="Ej: Emergencia" [(ngModel)]="filtroNombre" (keypress)="soloLetras($event)" [formControl]="buscarNombre">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Ingresar Nombre</mat-label>
-                                <input matInput placeholder="Ej: ">
+                                <mat-label>Buscar por Nivel</mat-label>
+                                <input matInput placeholder="Ej: 1" type="number" [(ngModel)]="filtroNivel" (keypress)="soloNumeros($event)" [formControl]="buscarNivel">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Ingresar Nivel</mat-label>
-                                <input matInput placeholder="Ej: ">
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Proceso Padre</mat-label>
-                                <input matInput placeholder="Ej: ">
+                                <mat-label>Buscar por Proceso Padre</mat-label>
+                                <input matInput placeholder="Ej: 1" type="number" [(ngModel)]="filtroProPadre" (keypress)="soloNumeros($event)" [formControl]="buscarPadre">
                             </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-success btn-sm" value="Buscar">
-                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar">
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
                     <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarProceso()">Nuevo Proceso</button>
                 </div>
             </mat-card>
@@ -58,7 +51,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let proceso of procesos">
+            <tr *ngFor="let proceso of procesos | nombre:filtroNombre | nivel:filtroNivel | padre:filtroProPadre">
                 <th style="padding-top: 10px; text-align: center;" scope="row">{{proceso.id}}</th>
                 <td style="padding-top: 10px;text-align: center;">{{proceso.nombre}}</td>
                 <td style="padding-top: 10px;text-align: center;">{{proceso.nivel}}</td>

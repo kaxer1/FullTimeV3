@@ -8,17 +8,17 @@
                 </div>
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
-                        <form [formGroup]="">
+                        <form>
                             <mat-form-field>
-                                <mat-label>Ingresar Descripción</mat-label>
-                                <input matInput placeholder="Ej: ">
+                                <mat-label>Buscar por nombre de Rol</mat-label>
+                                <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles" (keypress)="soloLetras($event)" [formControl]="buscarDescripcion" 
+                                     required>
                             </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-success btn-sm" value="Buscar" style="margin-bottom: 15px;">
-                    <input type="submit" class="btn btn-danger btn-sm" value="Cancelar" style="margin-bottom: 15px;">
+                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
                     <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Nuevo Rol</button>
                 </div>
             </mat-card>
@@ -39,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let rol of roles">
+            <tr *ngFor="let rol of roles | roles:filtroRoles">
                 <td style="padding-top: 10px; text-align: center;">{{rol.nombre}}</td>
                 <td>
                     <button type="submit" class="btn btn-info btn-sm"

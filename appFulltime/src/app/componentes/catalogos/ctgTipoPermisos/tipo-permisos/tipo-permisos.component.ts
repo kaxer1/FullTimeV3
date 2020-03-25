@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { TipoPermisosService } from 'src/app/servicios/catalogos/tipo-permisos.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -87,11 +87,20 @@ export class TipoPermisosComponent implements OnInit {
     }
 
     this.rest.postTipoPermisoRest(dataTipoPermiso).subscribe(res => {
-      console.log(res);
       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
     }, error => {
       console.log(error);
     });
+  }
+
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  }
+
+  soloNumeros(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return ((key >= 48 && key <= 57) || (key === 8))
   }
 
   limpiarCampos() {
@@ -99,4 +108,5 @@ export class TipoPermisosComponent implements OnInit {
     this.segundoFormGroup.reset();
     this.primeroFormGroup.reset();
   }
+
 }

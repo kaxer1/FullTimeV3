@@ -1,7 +1,7 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-4"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
                 <div style="text-align: center;">
                     <h5>Añadir Notificación</h5>
@@ -12,25 +12,27 @@
                         <form [formGroup]="nuevaNotificacionForm">
                             <mat-form-field>
                                 <mat-label>Tipo</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="tipo" required>
+                                <input matInput placeholder="Ej: " [formControl]="tipo" (keypress)="soloNumeros($event)" required>
                                 <mat-error *ngIf="tipo.invalid">{{ObtenerMensajeErrorTipoRequerido()}}</mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Nivel</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="nivel" required>
+                                <input matInput placeholder="Ej: " [formControl]="nivel" (keypress)="soloNumeros($event)" required>
                                 <mat-error *ngIf="nivel.invalid">{{ObtenerMensajeErrorNivelRequerido()}}</mat-error>
                             </mat-form-field>
                             <br>
+                            <!-- Cargar en un select cuando ya se pueda registrar los departamentos -->
                             <mat-form-field>
                                 <mat-label>Departamento</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="idDepartamento" required>
+                                <input matInput placeholder="Ej: " [formControl]="idDepartamento" (keypress)="soloNumeros($event)" required>
                                 <mat-error *ngIf="idDepartamento.invalid">{{ObtenerMensajeErrorDepartamentoRequerido()}}</mat-error>
                             </mat-form-field>
                             <br>
+                            <!-- Cargar en un select cuando ya este validado el registro permisos. Es opcional seleccionar este campo -->
                             <mat-form-field>
                                 <mat-label>Tipo Permiso</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" required>
+                                <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" (keypress)="soloNumeros($event)" required>
                                 <mat-error *ngIf="idTipoPermiso.invalid">{{ObtenerMensajeErrorPermisoRequerido()}}</mat-error>
                             </mat-form-field>
                             <br>
@@ -40,12 +42,12 @@
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-primary btn-sm"
                         (click)="insertarNotificacion(nuevaNotificacionForm.value)"
-                        [disabled]="!nuevaNotificacionForm.valid" value="Grabar">
+                        [disabled]="!nuevaNotificacionForm.valid" value="Guardar">
                     <input type="submit" (click)="limpiarCampos()" class="btn btn-danger btn-sm" value="Cancelar"
                         style="margin-left: 15px;">
                 </div>
             </mat-card>
         </div>
-        <div class="col-4"></div>
+        <div class="col-sm"></div>
     </div>
 </div>

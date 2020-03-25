@@ -21,6 +21,7 @@ export class RegistroEnroladosComponent implements OnInit {
 
   usuarios: any = [];
 
+  hide = true;
   public idUsuario: number;
 
   // asignar los campos en un formulario en grupo
@@ -73,13 +74,13 @@ export class RegistroEnroladosComponent implements OnInit {
         console.log(error);
       });
   }
-
-  soloNumeros(e) {
+  
+  soloLetras(e) {
     var key = window.Event ? e.which : e.keyCode
-    return ((key >= 48 && key <= 57) || (key === 8) || (key == 46))
+    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
   }
 
-  soloEnteros(e) {
+  soloNumeros(e) {
     var key = window.Event ? e.which : e.keyCode
     return ((key >= 48 && key <= 57) || (key === 8))
   }
@@ -91,7 +92,7 @@ export class RegistroEnroladosComponent implements OnInit {
   cerrarVentanaRegistroEnrolado(){
     this.limpiarCampos();
     this.dialogRef.close();
-    // window.location.reload();
+    window.location.reload();
   }
 
   obtenerMensajeErrorNombre() {
