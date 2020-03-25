@@ -37,7 +37,7 @@ import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepart
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
-import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
+import { TipoPermisosComponent } from './componentes/catalogos/ctgTipoPermisos/tipo-permisos/tipo-permisos.component';
 import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
@@ -45,6 +45,8 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
+import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -59,6 +61,7 @@ import { EnroladoService } from './servicios/catalogos/enrolado.service';
 import { DepartamentosService } from './servicios/catalogos/catDepartamentos/departamentos.service';
 import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
+import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 
 // Filtros de búsqueda
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
@@ -68,6 +71,17 @@ import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe'
 import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
 import { FiltroNombrePipe } from './filtros/catFeriados/filtroNombre/filtro-nombre.pipe';
 import { FiltroFechaPipe } from './filtros/catFeriados/filtroFecha/filtro-fecha.pipe';
+import { RolesPipe } from './filtros/catRolesPermiso/roles.pipe';
+import { PadrePipe } from './filtros/catProcesos/filtroProcesoPadre/padre.pipe';
+import { NivelPipe } from './filtros/catProcesos/filtroNivel/nivel.pipe';
+import { NombrePipe } from './filtros/catProcesos/filtroNombre/nombre.pipe';
+import { IduserPipe } from './filtros/catEnrolados/filtroUsuario/iduser.pipe';
+import { ActivoPipe } from './filtros/catEnrolados/filtroActivo/activo.pipe';
+import { FingerPipe } from './filtros/catEnrolados/filtroFinger/finger.pipe';
+import { EnrNombrePipe } from './filtros/catEnrolados/filtroEnrNombre/enr-nombre.pipe';
+import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
+import { FiltroModeloPipe } from './filtros/catRelojes/filtroModelo/filtro-modelo.pipe';
+import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -90,7 +104,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
@@ -98,10 +111,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
-import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
-import { FiltroModeloPipe } from './filtros/catRelojes/filtroModelo/filtro-modelo.pipe';
-import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
 
 @NgModule({
   declarations: [
@@ -154,7 +163,15 @@ import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
     FiltrosNombresPipe,
     FiltroModeloPipe,
     FiltroIpPipe,
-
+    RolesPipe,
+    PadrePipe,
+    NivelPipe,
+    NombrePipe,
+    VistaElementosComponent,
+    IduserPipe,
+    ActivoPipe,
+    FingerPipe,
+    EnrNombrePipe
   ],
   imports: [
     BrowserModule,

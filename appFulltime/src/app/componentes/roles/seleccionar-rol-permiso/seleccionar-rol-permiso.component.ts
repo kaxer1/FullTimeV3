@@ -30,6 +30,7 @@ export class SeleccionarRolPermisoComponent implements OnInit {
   tableRoles: any = [];
   tablePermios: any = [];
   nombreRol: string;
+
   constructor(
     public location: Location,
     public rest: RolPermisosService,
@@ -52,8 +53,31 @@ export class SeleccionarRolPermisoComponent implements OnInit {
     this.obtenerPermisosRolUsuario();
   }
 
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!( (key >=33 && key <= 46) || (key >=48 && key <= 64) ||  (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  }
+
   limpliarCampos() {
     this.nuevoRolPermisoForm.reset();
+  }
+
+  obtenerMensajeErrorFuncion(){
+    if (this.funcion.hasError('required')) {
+      return 'Debe ingresar alguna Función';
+    }
+  }
+
+  obtenerMensajeErrorLink(){
+    if (this.link.hasError('required')) {
+      return 'Debe ingresar alguna Url ';
+    }
+  }
+
+  obtenerMensajeErrorEtiqueta(){
+    if (this.etiqueta.hasError('required')) {
+      return 'Debe ingresar alguna etiqueta';
+    }
   }
 
   insertarRolPermiso(form){

@@ -28,7 +28,7 @@ export class TituloEmpleadoComponent implements OnInit {
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
-    private metodo: VerEmpleadoComponent
+    private metodo: VerEmpleadoComponent //se usa para poder refrescar los datos ingresados
   ) { }
 
   ngOnInit(): void {

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProcesoService } from 'src/app/servicios/catalogos/proceso.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
 
 // ayuda para crear los niveles
 interface Nivel {
@@ -44,11 +45,17 @@ export class RegistroProcesoComponent implements OnInit {
   constructor(
     private rest: ProcesoService,
     private toastr: ToastrService,
+    public dialogRef: MatDialogRef<RegistroProcesoComponent>,
   ) {
   }
 
   ngOnInit(): void {
     this.procesos = this.getProcesos();
+  }
+
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
   }
 
   obtenerMensajeErrorNombre() {
@@ -109,6 +116,12 @@ export class RegistroProcesoComponent implements OnInit {
     this.rest.getProcesosRest().subscribe(data => {
       this.procesos = data
     })
+  }
+
+  CerrarVentanaRegistroProceso() {
+    this.limpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

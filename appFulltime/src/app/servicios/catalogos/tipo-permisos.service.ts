@@ -15,7 +15,6 @@ export class TipoPermisosService {
   // catalogo de TIPO PERMISOS
 
   getTipoPermisoRest(){
-    console.log(this.http.get(`${this.TIPO_PERMISOS_URL}/`));
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos`);
   }
 
@@ -24,7 +23,6 @@ export class TipoPermisosService {
   }
   
   postTipoPermisoRest(data: any){
-    console.log(data);
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data);
   }
 }

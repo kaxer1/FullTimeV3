@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { RolesService } from 'src/app/servicios/roles/roles.service';
-import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -20,7 +19,6 @@ export class RegistroRolComponent implements OnInit {
   
   constructor(
     public rest: RolesService,
-    private router: Router,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroRolComponent>,
   ) { 
@@ -35,9 +33,8 @@ export class RegistroRolComponent implements OnInit {
 
   obtenerMensajeErrorDescripcion() {
     if (this.descripcion.hasError('required')) {
-      return 'Debe ingresar algun nombre';
+      return 'Debe ingresar alguna Descripción';
     }
-    return this.descripcion.hasError('pattern') ? 'No ingresar números' : '';
   }
 
   limpiarCampos(){
@@ -60,12 +57,12 @@ export class RegistroRolComponent implements OnInit {
 
   soloLetras(e) {
     var key = window.Event ? e.which : e.keyCode
-    return (!((key >= 48 && key <= 63)|| key==8 || key==46))
+    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
   }
 
   CerrarVentanaRegistroRol() {
     this.limpiarCampos();
     this.dialogRef.close();
-    // window.location.reload();
+    window.location.reload();
   }
 }

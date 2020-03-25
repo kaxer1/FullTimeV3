@@ -1,0 +1,31 @@
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <mat-toolbar>
+        <span style="text-align: center;">Resultado de búsqueda</span>
+        <button mat-button class="btn btn-warning" [routerLink]="['/tipoPermisos']">Regresar a Registros Tipo Permisos</button>
+    </mat-toolbar>
+    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+        <thead class="thead-light">
+            <tr style="text-align: center;">
+                <th scope="col">Id </th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Dias Máximos</th>
+                <th scope="col">Horas Máximas</th>
+                <th scope="col">Dia ingreso</th>
+                <th scope="col">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let tp of tipoPermiso">
+                <th style="padding-top: 10px; text-align: center;" scope="row">{{tp.id}}</th>
+                <td style="padding-top: 10px;text-align: center;">{{tp.descripcion}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{tp.num_dia_maximo}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{tp.num_hora_maximo}}</td>
+                <td style="padding-top: 10px;text-align: center;">{{tp.num_dia_ingreso}}</td>
+                <td style="padding-top: 10px;text-align: center;">
+                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i> 
+                    <i  class="fas fa-edit" style="color:green;" ></i> 
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

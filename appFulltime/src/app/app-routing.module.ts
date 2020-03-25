@@ -25,10 +25,11 @@ import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
-import { TipoPermisosComponent } from './componentes/catalogos/tipo-permisos/tipo-permisos.component';
+import { TipoPermisosComponent } from './componentes/catalogos/ctgTipoPermisos/tipo-permisos/tipo-permisos.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
+import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -61,7 +62,7 @@ const routes: Routes = [
   { path: 'listarTipoComidas', component: ListarTipoComidasComponent},
   { path: 'listarRelojes', component: ListarRelojesComponent},
   { path: 'listarCiudades', component: ListarCiudadComponent},
-  
+  { path: 'verTipoPermiso', component: VistaElementosComponent},
 ];
 
 @NgModule({
