@@ -1,9 +1,5 @@
 import { Request, Response, text } from 'express';
-
-import { QueryResult } from 'pg';
-
 import pool from '../../database';
-
 
 class LoginControlador {
 

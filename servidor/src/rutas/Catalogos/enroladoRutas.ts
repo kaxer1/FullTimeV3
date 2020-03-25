@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import ENROLADOS_CONTROLADOR from '../../controlador/Catalogos/enroladoControlador';
+import ENROLADOS_CONTROLADOR from '../../controlador/catalogos/enroladoControlador';
 
 class EnroladoRutas {
     public router: Router = Router();

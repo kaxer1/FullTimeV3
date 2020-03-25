@@ -1,6 +1,5 @@
 import { Router } from 'express';
-
-import notificacionesControlador from '../../controlador/Catalogos/notificacionesControlador';
+import NOTIFICACIONES_CONTROLADOR from '../../controlador/catalogos/notificacionesControlador';
 
 class NotificacionesRutas {
     public router: Router = Router();
@@ -11,9 +10,9 @@ class NotificacionesRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', notificacionesControlador.list);
-        this.router.get('/:id', notificacionesControlador.getOne);
-        this.router.post('/', notificacionesControlador.create);
+        this.router.get('/', NOTIFICACIONES_CONTROLADOR.list);
+        this.router.get('/:id', NOTIFICACIONES_CONTROLADOR.getOne);
+        this.router.post('/', NOTIFICACIONES_CONTROLADOR.create);
     }
 }
 

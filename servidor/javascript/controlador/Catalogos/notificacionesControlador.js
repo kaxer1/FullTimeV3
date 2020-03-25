@@ -39,5 +39,5 @@ class NotificacionesControlador {
         });
     }
 }
-exports.notificacionesControlador = new NotificacionesControlador();
-exports.default = exports.notificacionesControlador;
+const NOTIFICACIONES_CONTROLADOR = new NotificacionesControlador();
+exports.default = NOTIFICACIONES_CONTROLADOR;

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { RelojesService } from 'src/app/servicios/catalogos/relojes/relojes.service';
+
+import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
 
 
@@ -14,51 +15,70 @@ import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/reloj
 })
 export class ListarRelojesComponent implements OnInit {
 
-    // Control de campos y validaciones del formulario
-    nombreF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
-    ipF = new FormControl('');
-    modeloF = new FormControl('');
-    fabricanteF = new FormControl('');
-  
-    // Asignación de validaciones a inputs del formulario
-    public BuscarRelojesForm = new FormGroup({
-      nombreForm: this.nombreF,
-      ipForm: this.ipF,
-      modeloForm: this.modeloF,
-      fabricanteForm: this.fabricanteF,
+  // Almacenamiento de datos y búsqueda
+  filtroNombreReloj = '';
+  filtroModeloReloj = '';
+  filtroIpReloj = '';
+  relojes: any = [];
+
+  // Control de campos y validaciones del formulario
+  nombreF = new FormControl('', [Validators.minLength(2)]);
+  ipF = new FormControl('');
+  modeloF = new FormControl('', [Validators.minLength(2)]);
+
+  // Asignación de validaciones a inputs del formulario
+  public BuscarRelojesForm = new FormGroup({
+    nombreForm: this.nombreF,
+    ipForm: this.ipF,
+    modeloForm: this.modeloF,
+  });
+
+  constructor(
+    private rest: RelojesService,
+    public router: Router,
+    public vistaRegistrarRelojes: MatDialog,
+    private toastr: ToastrService,
+  ) { }
+
+  ngOnInit(): void {
+    this.ObtenerReloj();
+  }
+
+  ObtenerReloj() {
+    this.relojes = [];
+    this.rest.ConsultarRelojes().subscribe(datos => {
+      this.relojes = datos;
+    })
+  }
+
+  IngresarIp(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
+    }
+  }
+
+  AbrirVentanaRegistrarReloj(): void {
+    this.vistaRegistrarRelojes.open(RelojesComponent, { width: '900px' }).disableClose = true;
+  }
+
+  LimpiarCampos() {
+    this.BuscarRelojesForm.setValue({
+      nombreForm: '',
+      ipForm: '',
+      modeloForm: '',
     });
-  
-    // Almacenamiento de datos consultados  
-    relojes: any = [];
-  
-    constructor(
-      private rest: RelojesService,
-      public router: Router,
-      public vistaRegistrarRelojes: MatDialog,
-      private toastr: ToastrService,
-    ) {
-  
-    }
-  
-    ngOnInit(): void {
-      this.ObtenerReloj();
-    }
-  
-    // Lectura de datos
-    ObtenerReloj() {
-      this.relojes = [];
-      this.rest.ConsultarRelojes().subscribe(datos => {
-        this.relojes = datos;
-      })
-    }
-  
-  
-    AbrirVentanaRegistrarReloj(): void {
-      this.vistaRegistrarRelojes.open(RelojesComponent, { width: '300px' })
-    }
-  
-    LimpiarCampos() {
-      this.BuscarRelojesForm.reset();
-    }
+    this.ObtenerReloj();
+  }
 
 }

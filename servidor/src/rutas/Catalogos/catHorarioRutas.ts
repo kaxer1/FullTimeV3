@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import HORARIO_CONTROLADOR from '../../controlador/Catalogos/catHorarioControlador';
+import HORARIO_CONTROLADOR from '../../controlador/catalogos/catHorarioControlador';
 
 class HorarioRutas {
     public router: Router = Router();
@@ -10,9 +10,9 @@ class HorarioRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', HORARIO_CONTROLADOR.list);
-        this.router.get('/:id',  HORARIO_CONTROLADOR.getOne);
-        this.router.post('/', HORARIO_CONTROLADOR.create);
+        this.router.get('/', HORARIO_CONTROLADOR.ListarHorarios);
+        this.router.get('/:id',  HORARIO_CONTROLADOR.ObtenerUnHorario);
+        this.router.post('/', HORARIO_CONTROLADOR.CrearHorario);
     }
 }
 

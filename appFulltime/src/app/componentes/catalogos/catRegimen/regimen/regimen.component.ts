@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 
-import { RegimenService } from 'src/app/servicios/catalogos/regimen/regimen.service';
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 
 
 interface opcionesRegimen {

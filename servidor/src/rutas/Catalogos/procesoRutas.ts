@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import PROCESO_CONTROLADOR from '../../controlador/Catalogos/procesoControlador';
+import PROCESO_CONTROLADOR from '../../controlador/catalogos/procesoControlador';
 
 class ProcesoRutas {
     public router: Router = Router();

@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { FeriadosService } from 'src/app/servicios/catalogos/feriados/feriados.service';
+import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 
 @Component({
   selector: 'app-editar-feriados',

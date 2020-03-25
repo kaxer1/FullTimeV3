@@ -25,6 +25,6 @@ class NotificacionesControlador {
 
 }
 
-export const notificacionesControlador = new NotificacionesControlador();
+const NOTIFICACIONES_CONTROLADOR = new NotificacionesControlador();
 
-export default notificacionesControlador;
+export default NOTIFICACIONES_CONTROLADOR;

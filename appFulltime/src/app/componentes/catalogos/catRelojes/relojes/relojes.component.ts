@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { RelojesService } from 'src/app/servicios/catalogos/relojes/relojes.service';
+import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
 
 
@@ -13,15 +13,15 @@ import { ToastrService } from 'ngx-toastr';
 export class RelojesComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
-  nombreF = new FormControl('', [Validators.required]);
-  ipF = new FormControl('', Validators.pattern("[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}"));
-  puertoF = new FormControl('', Validators.pattern('[0-9]{4}'));
-  contraseniaF = new FormControl('');
-  marcaF = new FormControl('');
-  modeloF = new FormControl('');
+  nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  ipF = new FormControl('', [Validators.required, Validators.pattern("[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}")]);
+  puertoF = new FormControl('', [Validators.required, Validators.pattern('[0-9]{4}')]);
+  contraseniaF = new FormControl('', [Validators.minLength(4)]);
+  marcaF = new FormControl('', [Validators.minLength(4)]);
+  modeloF = new FormControl('', [Validators.minLength(4)]);
   serieF = new FormControl('', Validators.pattern('[0-9]{0,3}'));
-  idFabricacionF = new FormControl('');
-  fabricanteF = new FormControl('');
+  idFabricacionF = new FormControl('', [Validators.minLength(4)]);
+  fabricanteF = new FormControl('', [Validators.minLength(4)]);
   macF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
@@ -72,25 +72,27 @@ export class RelojesComponent implements OnInit {
 
   ObtenerMensajeErrorNombreRequerido() {
     if (this.nombreF.hasError('required')) {
-      return 'Debe ingresar un nombre';
+      return 'Campo Obligatorio';
     }
   }
 
   ObtenerMensajeErrorIp() {
     if (this.ipF.hasError('pattern')) {
-      return 'Ingresar IP: 0.0.0.0';
+      return 'Ingresar IP Ej: 0.0.0.0';
     }
-
+    return this.ipF.hasError('required') ? 'Campo Obligatorio' : '';
   }
+  
   ObtenerMensajeErrorPuerto() {
     if (this.puertoF.hasError('pattern')) {
       return 'Ingresar 4 números';
     }
+    return this.puertoF.hasError('required') ? 'Campo Obligatorio' : '';
   }
 
   ObtenerMensajeErrorSerie() {
     if (this.serieF.hasError('pattern')) {
-      return 'No ingresar letras';
+      return 'Ingresar tres números';
     }
   }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HorarioService } from 'src/app/servicios/catalogos/horario.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 
 @Component({
@@ -12,35 +12,42 @@ import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorar
 })
 export class PrincipalHorarioComponent implements OnInit {
 
+  // Almacenamiento de datos y búsqueda
   horarios: any = [];
+  filtroNombreHorario = '';
+
+   // Control de campos y validaciones del formulario
+   nombreHorarioF = new FormControl('', [Validators.minLength(2)]);
+
+   // Asignación de validaciones a inputs del formulario
+   public buscarHorarioForm = new FormGroup({
+    nombreHorarioForm: this.nombreHorarioF,
+   });
+ 
   constructor(
     private rest: HorarioService,
-    private toastr: ToastrService,
-    private router: Router,
     public vistaRegistrarHorario: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    this.getHorarios();
-  }n
-
-
-  getHorarios() {
-    this.horarios = [];
-
-    this.rest.getHorariosRest().subscribe(data => {
-      this.horarios = data
-    })
-      
-    
+    this.ObtenerHorarios();
   }
 
-  foo(){
-    console.log("hola ")
-    //alert("Prueba")
+  ObtenerHorarios() {
+    this.horarios = [];
+    this.rest.getHorariosRest().subscribe(datos => {
+      this.horarios = datos;
+    })   
   }
 
   AbrirVentanaRegistrarHorario(): void {
     this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '350px' }).disableClose = true;
+  }
+
+  LimpiarCampos() {
+    this.buscarHorarioForm.setValue({
+      nombreHorarioForm: '',
+    });
+    this.ObtenerHorarios();
   }
 }

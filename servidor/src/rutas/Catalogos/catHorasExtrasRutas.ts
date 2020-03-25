@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import horasExtrasControlador from '../../controlador/Catalogos/horasExtrasControlador';
+import horasExtrasControlador from '../../controlador/catalogos/horasExtrasControlador';
 
 class HorasExtrasRutas {
     public router: Router = Router();
@@ -17,6 +17,6 @@ class HorasExtrasRutas {
     }
 }
 
-const horaExtraRutas = new HorasExtrasRutas();
+const HORA_EXTRA_RUTA = new HorasExtrasRutas();
 
-export default horaExtraRutas.router;
+export default HORA_EXTRA_RUTA.router;

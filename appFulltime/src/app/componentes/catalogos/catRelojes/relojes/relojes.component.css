@@ -1,2 +1,7 @@
-.example-card { max-width: 250px;}
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; border-radius: 25px; }
+.mat-icon { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+#idFabrica { font-size: x-small; }

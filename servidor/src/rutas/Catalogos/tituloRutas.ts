@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import tituloControlador from '../../controlador/Catalogos/tituloControlador';
+import tituloControlador from '../../controlador/catalogos/tituloControlador';
 
 class TituloRutas {
     public router: Router = Router();

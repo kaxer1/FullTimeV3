@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const catDepartamentoControlador_1 = __importDefault(require("../../controlador/Catalogos/catDepartamentoControlador"));
+const catDepartamentoControlador_1 = __importDefault(require("../../controlador/catalogos/catDepartamentoControlador"));
 class DepartamentoRutas {
     constructor() {
         this.router = express_1.Router();

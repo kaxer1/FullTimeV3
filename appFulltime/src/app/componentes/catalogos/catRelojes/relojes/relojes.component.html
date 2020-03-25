@@ -1,45 +1,50 @@
-<mat-card class="example-card mat-elevation-z9">
-    <div mat-dialog-content>
-        <mat-card-header>
-            <mat-card-title>Añadir Reloj</mat-card-title>
-        </mat-card-header>
-        <!-- Formulario Completo -->
-        <form [formGroup]="RelojesForm">
-            <mat-card-content>
-                <div class="container" style="text-align: center">
+<mat-icon>open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Nuevo Reloj</h5>
+<br>
+<!-- Formulario Completo -->
+<form [formGroup]="RelojesForm">
+    <mat-card-content>
+        <div class="container" style="text-align: center">
+            <div class="row">
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Nuevo Reloj</mat-label>
                         <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
                         <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                        <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>IP</mat-label>
                         <input matInput placeholder="Ingresar IP del reloj" [formControl]="ipF"
-                            (keypress)="IngresarIp($event)">
+                            (keypress)="IngresarIp($event)" required>
                         <mat-error *ngIf="ipF.invalid">{{ObtenerMensajeErrorIp()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Puerto</mat-label>
                         <input matInput placeholder="Ingresar puerto" [formControl]="puertoF"
-                            (keypress)="IngresarSoloNumeros($event)">
+                            (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-error *ngIf="puertoF.invalid">{{ObtenerMensajeErrorPuerto()}}</mat-error>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Contraseña</mat-label>
                         <input matInput placeholder="Ingresar contraseña" [formControl]="contraseniaF">
+                        <mat-error *ngIf="contraseniaF.invalid">Ingresar una contraseña válida</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Marca</mat-label>
                         <input matInput placeholder="Ingresar marca" [formControl]="marcaF">
+                        <mat-error *ngIf="marcaF.invalid">Ingresar una marca válida</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Modelo</mat-label>
                         <input matInput placeholder="Ingresar modelo" [formControl]="modeloF">
+                        <mat-error *ngIf="modeloF.invalid">Ingresar un modelo válido</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
@@ -48,27 +53,31 @@
                             (keypress)="IngresarSoloNumeros($event)">
                         <mat-error *ngIf="serieF.invalid">{{ObtenerMensajeErrorSerie()}}</mat-error>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>ID de fabricación</mat-label>
                         <input matInput placeholder="Ingresar id fabricación" [formControl]="idFabricacionF">
+                        <mat-error  id="idFabrica" *ngIf="idFabricacionF.invalid">Ingresar un id de fabricación válido</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Fabricante</mat-label>
                         <input matInput placeholder="Ingresar fabricante" [formControl]="fabricanteF">
+                        <mat-error *ngIf="fabricanteF.invalid">Ingresar un modelo válido</mat-error>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Dirección Física MAC</mat-label>
                         <input matInput placeholder="Ingresar dirección MAC" [formControl]="macF">
+                        <mat-error *ngIf="macF.invalid">Ingresar una dirección MAC válida</mat-error>
                     </mat-form-field>
                 </div>
-            </mat-card-content>
-        </form>
-    </div>
-    <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!RelojesForm.valid"
-            (click)="InsertarReloj(RelojesForm.value)" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroReloj()" value=" Salir">
-    </mat-card-actions>
-</mat-card>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<mat-card-actions style="text-align: center">
+    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!RelojesForm.valid"
+        (click)="InsertarReloj(RelojesForm.value)" value="Guardar">
+    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroReloj()" value=" Salir">
+</mat-card-actions>

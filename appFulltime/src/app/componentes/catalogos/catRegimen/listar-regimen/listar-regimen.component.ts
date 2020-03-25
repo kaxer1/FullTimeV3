@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { RegimenService } from 'src/app/servicios/catalogos/regimen/regimen.service';
+
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
 
 @Component({

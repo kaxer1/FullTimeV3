@@ -40,13 +40,11 @@ export class TipoComidasComponent implements OnInit {
       valor: form.valorForm,
       observacion: form.observacionForm
     };
-
     this.rest.CrearNuevoTipoComida(datosTipoComida).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Tipo de comida registrado')
       this.LimpiarCampos();
     }, error => {
       this.toastr.error('Operación Fallida', 'Tipo de comida no se pudo registrar')
-
     });
   }
 

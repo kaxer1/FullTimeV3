@@ -12,25 +12,23 @@ const pruebaRutas_1 = __importDefault(require("./rutas/pruebaRutas"));
 const empleadoRutas_1 = __importDefault(require("./rutas/empleadoRutas"));
 const loginRuta_1 = __importDefault(require("./rutas/login/loginRuta"));
 const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas"));
-const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
-const catRegimenRuta_1 = __importDefault(require("./rutas/Catalogos/catRegimenRuta"));
-const catFeriadosRuta_1 = __importDefault(require("./rutas/Catalogos/catFeriadosRuta"));
-const catTipoComidasRuta_1 = __importDefault(require("./rutas/Catalogos/catTipoComidasRuta"));
-const catRelojesRuta_1 = __importDefault(require("./rutas/Catalogos/catRelojesRuta"));
-const catProvinciaRutas_1 = __importDefault(require("./rutas/Catalogos/catProvinciaRutas"));
-const catDepartamentoRutas_1 = __importDefault(require("./rutas/Catalogos/catDepartamentoRutas"));
-const procesoRutas_1 = __importDefault(require("./rutas/Catalogos/procesoRutas"));
-const catHorarioRutas_1 = __importDefault(require("./rutas/Catalogos/catHorarioRutas"));
-const horasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
-const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
-const enroladoRutas_1 = __importDefault(require("./rutas/Catalogos/enroladoRutas"));
-const usuarioRutas_1 = __importDefault(require("./rutas//Catalogos/usuarioRutas"));
-const horasExtrasRutas_2 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
-const notificacionesRutas_2 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
-const rolPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/rolPermisosRutas"));
-const tipoPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/tipoPermisosRutas"));
+const tituloRutas_1 = __importDefault(require("./rutas/catalogos/tituloRutas"));
+const catRegimenRuta_1 = __importDefault(require("./rutas/catalogos/catRegimenRuta"));
+const catFeriadosRuta_1 = __importDefault(require("./rutas/catalogos/catFeriadosRuta"));
+const catTipoComidasRuta_1 = __importDefault(require("./rutas/catalogos/catTipoComidasRuta"));
+const catRelojesRuta_1 = __importDefault(require("./rutas/catalogos/catRelojesRuta"));
+const catProvinciaRutas_1 = __importDefault(require("./rutas/catalogos/catProvinciaRutas"));
+const catDepartamentoRutas_1 = __importDefault(require("./rutas/catalogos/catDepartamentoRutas"));
+const procesoRutas_1 = __importDefault(require("./rutas/catalogos/procesoRutas"));
+const catHorarioRutas_1 = __importDefault(require("./rutas/catalogos/catHorarioRutas"));
+const enroladoRutas_1 = __importDefault(require("./rutas/catalogos/enroladoRutas"));
+const usuarioRutas_1 = __importDefault(require("./rutas/catalogos/usuarioRutas"));
+const catHorasExtrasRutas_1 = __importDefault(require("./rutas/catalogos/catHorasExtrasRutas"));
+const rolPermisosRutas_1 = __importDefault(require("./rutas/catalogos/rolPermisosRutas"));
+const tipoPermisosRutas_1 = __importDefault(require("./rutas/catalogos/tipoPermisosRutas"));
 const ciudadesRutas_1 = __importDefault(require("./rutas/ciudades/ciudadesRutas"));
-const ciudadFeriadoRutas_1 = __importDefault(require("./rutas/CiudadFeriado/ciudadFeriadoRutas"));
+const ciudadFeriadoRutas_1 = __importDefault(require("./rutas/ciudadFeriado/ciudadFeriadoRutas"));
+const notificacionesRutas_1 = __importDefault(require("./rutas/catalogos/notificacionesRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -60,16 +58,15 @@ class Server {
         this.app.use('/departamento', catDepartamentoRutas_1.default);
         this.app.use('/proceso', procesoRutas_1.default);
         this.app.use('/horario', catHorarioRutas_1.default);
-        this.app.use('/horasExtras', horasExtrasRutas_1.default);
-        this.app.use('/notificaciones', notificacionesRutas_1.default);
+        this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
         this.app.use('/enrolados', enroladoRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
-        this.app.use('/horasExtras', horasExtrasRutas_2.default);
-        this.app.use('/notificaciones', notificacionesRutas_2.default);
+        this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
         this.app.use('/rolPermisos', rolPermisosRutas_1.default);
         this.app.use('/tipoPermisos', tipoPermisosRutas_1.default);
         this.app.use('/ciudades', ciudadesRutas_1.default);
         this.app.use('/ciudadFeriados', ciudadFeriadoRutas_1.default);
+        this.app.use('/notificaciones', notificacionesRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

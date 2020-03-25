@@ -16,5 +16,5 @@ class HorasExtrasRutas {
         this.router.post('/', horasExtrasControlador_1.default.create);
     }
 }
-const horaExtraRutas = new HorasExtrasRutas();
-exports.default = horaExtraRutas.router;
+const HORA_EXTRA_RUTA = new HorasExtrasRutas();
+exports.default = HORA_EXTRA_RUTA.router;

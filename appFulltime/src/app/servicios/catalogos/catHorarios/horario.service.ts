@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
+
 export class HorarioService {
 
   API_URL = 'http://localhost:3000';
@@ -12,8 +13,7 @@ export class HorarioService {
     private http: HttpClient,
   ) { }
 
-  // catalogo de Horarios
-
+  // Catálogo de Horarios
   getHorariosRest(){
     return this.http.get(`${this.API_URL}/horario`);
   }
@@ -23,11 +23,7 @@ export class HorarioService {
   }
   
   postHorarioRest(data: any){
-    console.log(data);
     return this.http.post(`${this.API_URL}/horario`, data);
-  }
-
- 
-  
+  } 
 
 }

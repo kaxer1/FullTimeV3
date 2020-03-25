@@ -53,7 +53,7 @@ import { TituloService } from './servicios/catalogos/titulo.service';
 import { EmpleadoService } from './servicios/empleado/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
 import { ProvinciaService } from './servicios/catalogos/catProvincias/provincia.service';
-import { HorarioService } from './servicios/catalogos/horario.service';
+import { HorarioService } from './servicios/catalogos/catHorarios/horario.service';
 import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
 import { EnroladoService } from './servicios/catalogos/enrolado.service';
 import { DepartamentosService } from './servicios/catalogos/catDepartamentos/departamentos.service';
@@ -100,6 +100,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
+import { FiltroModeloPipe } from './filtros/catRelojes/filtroModelo/filtro-modelo.pipe';
+import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
 
 @NgModule({
   declarations: [
@@ -150,6 +152,8 @@ import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe
     RegistrarCiudadComponent,
     AsignarCiudadComponent,
     FiltrosNombresPipe,
+    FiltroModeloPipe,
+    FiltroIpPipe,
 
   ],
   imports: [

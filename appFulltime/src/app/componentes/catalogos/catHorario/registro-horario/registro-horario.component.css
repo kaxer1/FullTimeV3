@@ -1,29 +1,9 @@
-.example-card { 
-    max-width: 300px;
-    justify-content:center;
-  
-    
-    
-    
-}
-
-mat-slider {width: 175px;}
-
-.example-match{
-    margin: 0 10px;
-    color: black
-}
-
-.label-theme{
-    color: black
-}
-
-.label-error{
-    color:red
-}
+.example-match { margin: 0 15px; }
 .btn { margin-left: 15px; border-radius: 25px; }
 .mat-icon { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+.label-theme { font-size: 15px; }
+#hora { font-size: x-small; }

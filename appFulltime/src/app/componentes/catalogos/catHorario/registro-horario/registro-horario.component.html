@@ -3,64 +3,53 @@
 </h5>
 <div style="text-align: center">
     <!-- Formulario Completo -->
-    <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
-
+    <form [formGroup]="nuevoHorarioForm">
         <mat-card-content>
             <div class="container">
-
-
                 <mat-form-field>
                     <mat-label>Nombre de Horario</mat-label>
                     <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
-                    <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                    <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                    <mat-error *ngIf="nombre.invalid">Ingresar un nombre válido</mat-error>
                     <br>
                 </mat-form-field>
-
-
                 <br>
-                <section>
-                    <label class="label-theme" for="nombre">Minutos de almuerzo</label>
-                    <input type="number" matInput placeholder="Ejm: 60" [formControl]="minAlmuerzo" required
-                        (keypress)="soloEnteros($event)">
-
-                </section>
+                <mat-form-field>
+                    <mat-label>Minutos de almuerzo</mat-label>
+                    <input type="number" matInput placeholder="Ej: 60" [formControl]="minAlmuerzo"
+                        (keypress)="IngresarSoloNumerosEnteros($event)">
+                </mat-form-field>
                 <br>
-                <section>
-                    <label class="label-theme" for="nombre">Horas de Trabajo</label>
+                <mat-form-field>
+                    <mat-label>Horas de Trabajo</mat-label>
                     <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required
-                        (keypress)="soloNumeros($event)">
-
-                </section>
-
+                        (keypress)="IngresarNumeroDecimal($event)">
+                    <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
+                </mat-form-field>
+                <br>
                 <br>
                 <section>
-                    <label class="label-theme">Flexible</label>
-                    <mat-radio-group aria-label="select an option" [formControl]="flexible" required
+                    <mat-label class="label-theme">Flexible *</mat-label>
+                    <mat-radio-group required aria-label="select an option" [formControl]="flexible" required
                         [value]="flexible.value">
                         <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
                         <mat-radio-button class="example-match" value="false">No </mat-radio-button>
                     </mat-radio-group>
-
                 </section>
-
+                <br>
                 <section>
-                    <label class="label-theme">Por Horas</label>
+                    <label class="label-theme">Por Horas *</label>
                     <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value">
                         <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
                         <mat-radio-button class="example-match" value="false">No</mat-radio-button>
                     </mat-radio-group>
                 </section>
-
-
             </div>
         </mat-card-content>
-
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
-            [disabled]="!nuevoHorarioForm.valid" value="Grabar">
-        <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;"
-            (click)="CerrarVentanaRegistroHorario()" value="Salir">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!nuevoHorarioForm.valid"
+            (click)="InsertarHorario(nuevoHorarioForm.value)" value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroHorario()" value="Salir">
     </mat-card-actions>
-
 </div>

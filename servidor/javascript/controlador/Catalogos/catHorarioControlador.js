@@ -14,27 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 class HorarioControlador {
-    list(req, res) {
+    ListarHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const provincia = yield database_1.default.query('SELECT * FROM cg_horarios ORDER BY nombre ASC');
-            res.json(provincia.rows);
+            const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios ORDER BY nombre ASC');
+            if (HORARIOS.rowCount > 0) {
+                return res.json(HORARIOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
-    getOne(req, res) {
+    ObtenerUnHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unaProvincia = yield database_1.default.query('SELECT * FROM cg_horarios WHERE id = $1', [id]);
-            if (unaProvincia.rowCount > 0) {
-                return res.json(unaProvincia.rows);
+            const UN_HORARIO = yield database_1.default.query('SELECT * FROM cg_horarios WHERE id = $1', [id]);
+            if (UN_HORARIO.rowCount > 0) {
+                return res.json(UN_HORARIO.rows);
             }
-            res.status(404).json({ text: 'No se ha encontrado el horario' });
+            res.status(404).json({ text: 'No se encuentran registros' });
         });
     }
-    create(req, res) {
+    CrearHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
-            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal
-            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2,$3,$4,$5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
             res.json({ message: 'El horario ha sido registrado' });
         });
     }
