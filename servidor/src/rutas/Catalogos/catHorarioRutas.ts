@@ -1,12 +1,11 @@
 import { Router } from 'express';
 
-import HORARIO_CONTROLADOR from '../../controlador/Catalogos/horarioControlador';
+import HORARIO_CONTROLADOR from '../../controlador/Catalogos/catHorarioControlador';
 
 class HorarioRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 

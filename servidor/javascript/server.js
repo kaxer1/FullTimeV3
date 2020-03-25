@@ -20,7 +20,7 @@ const catRelojesRuta_1 = __importDefault(require("./rutas/Catalogos/catRelojesRu
 const catProvinciaRutas_1 = __importDefault(require("./rutas/Catalogos/catProvinciaRutas"));
 const catDepartamentoRutas_1 = __importDefault(require("./rutas/Catalogos/catDepartamentoRutas"));
 const procesoRutas_1 = __importDefault(require("./rutas/Catalogos/procesoRutas"));
-const horarioRutas_1 = __importDefault(require("./rutas/Catalogos/horarioRutas"));
+const catHorarioRutas_1 = __importDefault(require("./rutas/Catalogos/catHorarioRutas"));
 const horasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/horasExtrasRutas"));
 const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
 const enroladoRutas_1 = __importDefault(require("./rutas/Catalogos/enroladoRutas"));
@@ -59,7 +59,7 @@ class Server {
         this.app.use('/provincia', catProvinciaRutas_1.default);
         this.app.use('/departamento', catDepartamentoRutas_1.default);
         this.app.use('/proceso', procesoRutas_1.default);
-        this.app.use('/horario', horarioRutas_1.default);
+        this.app.use('/horario', catHorarioRutas_1.default);
         this.app.use('/horasExtras', horasExtrasRutas_1.default);
         this.app.use('/notificaciones', notificacionesRutas_1.default);
         this.app.use('/enrolados', enroladoRutas_1.default);

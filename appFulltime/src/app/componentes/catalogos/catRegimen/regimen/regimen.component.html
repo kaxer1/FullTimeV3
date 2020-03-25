@@ -1,5 +1,6 @@
 <mat-icon>open_with</mat-icon>
-<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Nuevo Régimen Laboral</h4>
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Nuevo Régimen
+    Laboral</h4>
 <br>
 <!-- Formulario Completo -->
 <form [formGroup]="RegimenForm">
@@ -8,51 +9,71 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Nuevo Régimen Laboral</mat-label>
-                        <input matInput placeholder="Nombre Régime Laboral" [formControl]="descripcionF"
-                            (keypress)="IngresarSoloLetras($event)" required>
+                        <mat-label>Seleccionar Régimen Laboral</mat-label>
+                        <mat-select [formControl]="regimenF" [(ngModel)]="seleccionarRegimen">
+                            <mat-option *ngFor="let rL of regimen" [value]="rL.nombre"
+                                (click)="ActivarDescativarNombre(RegimenForm.value)">
+                                {{rL.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Régimen Laboral</mat-label>
+                        <input matInput placeholder="Nombre Régimen" [formControl]="descripcionF"
+                            (keypress)="IngresarSoloLetras($event)" id="nombreR" style="visibility:hidden">
                         <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Año Vacación</mat-label>
-                        <input matInput placeholder="Ingresar año de vacación" [formControl]="diaAnioVacacionF"
-                            (keypress)="IngresarSoloNumeros($event)">
+                        <mat-label id="anioAnti">Años para considerar antiguedad</mat-label>
+                        <input matInput placeholder="Ingresar años para antiguedad" [formControl]="anioAntiguedadF"
+                            (keypress)="IngresarSoloNumeros($event)" required>
+                        <mat-error *ngIf="anioAntiguedadF.invalid">
+                            {{ObtenerMensajeErrorAnioAntiguedadRequerido()}}
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col">
+                    <p>Vacaciones</p>
                     <mat-form-field>
-                        <mat-label>Días Incremento Antiguedad</mat-label>
-                        <input matInput placeholder="Ingresar incremento" [formControl]="diaIncrAntiguedadF"
-                            (keypress)="IngresarSoloNumeros($event)">
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Años de Antiguedad</mat-label>
-                        <input matInput placeholder="Ingresar años de antiguedad" [formControl]="anioAntiguedadF"
-                            (keypress)="IngresarSoloNumeros($event)">
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Mes de Vacación</mat-label>
-                        <input matInput placeholder="Ingresar mes de vaccación" [formControl]="diaMesVacacionF"
-                            (keypress)="IngresarSoloNumeros($event)" required>
-                        <mat-error *ngIf="diaMesVacacionF.invalid">
+                        <mat-label>Días por año</mat-label>
+                        <input matInput placeholder="Días por año" [formControl]="diaAnioVacacionF"
+                            (keypress)="IngresarSoloNumeros($event)" (click)="LimpiarDiasMeses()" required>
+                        <mat-error *ngIf="diaAnioVacacionF.invalid">
                             {{ObtenerMensajeErrorCamposNumericosRequeridos()}}
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+                    <input type="checkbox" (click)="CalcularDiasMeses(RegimenForm.value)" id="activo" unchecked="false">
+                    <label> Calcular días por mes</label>
+                    <mat-form-field>
+                        <input matInput placeholder="Días por mes" [formControl]="diaMesVacacionF" readonly="readonly" required>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label id="diasIncre">Días de incremento por antiguedad</mat-label>
+                        <input matInput placeholder="Días de incremento" [formControl]="diaIncrAntiguedadF" required
+                            (keypress)="IngresarSoloNumeros($event)">
+                        <mat-error *ngIf="diaIncrAntiguedadF.invalid">
+                            {{ObtenerMensajeErrorIncreAntiguedadRequerido()}}
                         </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Máximo Días Acumulados</mat-label>
-                        <input matInput placeholder="Ingresar días acumulación" [formControl]="maxDiasAcumulacionF"
+                        <mat-label>Máximo de días acumulables</mat-label>
+                        <input matInput placeholder="Días acumulables" [formControl]="maxDiasAcumulacionF" required
                             (keypress)="IngresarSoloNumeros($event)">
+                        <mat-error *ngIf="maxDiasAcumulacionF.invalid">
+                            {{ObtenerMensajeErrorDiasAcumulablesRequerido()}}
+                        </mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Días Libres Vacación</mat-label>
-                        <input matInput placeholder="Ingresar día libre" [formControl]="diaLibreAnioVacaccionF"
-                            (keypress)="IngresarSoloNumeros($event)" required>
+                        <mat-label>Fin de semana: días libres</mat-label>
+                        <input matInput placeholder="Días libres" [formControl]="diaLibreAnioVacacionF"
+                            (keypress)="IngresarSoloNumeros($event)">
                     </mat-form-field>
                 </div>
             </div>

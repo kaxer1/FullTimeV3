@@ -3,7 +3,7 @@ import { HorarioService } from 'src/app/servicios/catalogos/horario.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/cg_horario/registro-horario/registro-horario.component';
+import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 
 @Component({
   selector: 'app-principal-horario',
@@ -41,8 +41,6 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '350px' })
+    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '350px' }).disableClose = true;
   }
-
-  
 }

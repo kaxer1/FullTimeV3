@@ -3,7 +3,7 @@ import pool from '../../database';
 
 class HorarioControlador {
     public async list(req: Request, res: Response) {
-      const provincia = await pool.query('SELECT * FROM cg_horarios');
+      const provincia = await pool.query('SELECT * FROM cg_horarios ORDER BY nombre ASC');
       res.json(provincia.rows);
     }
   

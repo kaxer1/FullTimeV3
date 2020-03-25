@@ -43,10 +43,10 @@
         </thead>
         <tbody>
             <tr *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre">
-                <td>{{comida.nombre}}</td>
-                <td>$ {{comida.valor}}</td>
-                <td>{{comida.observacion}}</td>
-                <td>
+                <td id="centrar">{{comida.nombre}}</td>
+                <td id="fila">$  {{comida.valor}}</td>
+                <td id="centrar">{{comida.observacion}}</td>
+                <td id="centrar">
                     <i class="far fa-trash-alt"></i>
                     <i class="fas fa-edit"></i>
                 </td>

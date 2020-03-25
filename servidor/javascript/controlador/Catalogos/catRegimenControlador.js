@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class RegimenControlador {
     ListarRegimen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const REGIMEN = yield database_1.default.query('SELECT * FROM cg_regimenes');
+            const REGIMEN = yield database_1.default.query('SELECT * FROM cg_regimenes ORDER BY descripcion ASC');
             if (REGIMEN.rowCount > 0) {
                 return res.json(REGIMEN.rows);
             }

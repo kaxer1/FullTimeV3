@@ -36,13 +36,13 @@
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
-                <th scope="col">Regimen Laboral</th>
-                <th scope="col">Dias Vacación</th>
-                <th scope="col">Dias Incremento</th>
-                <th scope="col">Años Antiguedad</th>
-                <th scope="col">Mes Vacación</th>
-                <th scope="col">Max Dias Acumulados</th>
-                <th scope="col">Dias libres Vacación</th>
+                <th scope="col">Régimen Laboral</th>
+                <th scope="col">Vacaciones: días por año</th>
+                <th scope="col">Vacaciones: días por mes</th>
+                <th scope="col">Años considerados antiguedad</th>
+                <th scope="col">Vacaciones: días de incremento</th>
+                <th scope="col">Máximo días acumulables</th>
+                <th scope="col">Vacaciones: días libres</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -50,9 +50,9 @@
             <tr *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral">
                 <td>{{regimenL.descripcion}}</td>
                 <td>{{regimenL.dia_anio_vacacion}}</td>
-                <td>{{regimenL.dia_incr_antiguedad}}</td>
-                <td>{{regimenL.anio_antiguedad}}</td>
                 <td>{{regimenL.dia_mes_vacacion}}</td>
+                <td>{{regimenL.anio_antiguedad}}</td>
+                <td>{{regimenL.dia_incr_antiguedad}}</td>           
                 <td>{{regimenL.max_dia_acumulacion}}</td>
                 <td>{{regimenL.dia_libr_anio_vacacion}}</td>
                 <td>

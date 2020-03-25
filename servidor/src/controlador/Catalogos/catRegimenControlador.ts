@@ -6,7 +6,7 @@ class RegimenControlador {
 
     public async ListarRegimen(req: Request, res: Response) {
 
-        const REGIMEN = await pool.query('SELECT * FROM cg_regimenes');
+        const REGIMEN = await pool.query('SELECT * FROM cg_regimenes ORDER BY descripcion ASC');
         if (REGIMEN.rowCount > 0) {
             return res.json(REGIMEN.rows)
         }

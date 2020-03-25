@@ -21,4 +21,9 @@ mat-slider {width: 175px;}
 .label-error{
     color:red
 }
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; border-radius: 25px; }
+.mat-icon { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}

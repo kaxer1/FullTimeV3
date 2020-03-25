@@ -5,7 +5,7 @@ import pool from '../../database';
 class FeriadosControlador {
 
     public async ListarFeriados(req: Request, res: Response) {
-        const FERIADOS = await pool.query('SELECT * FROM cg_feriados');
+        const FERIADOS = await pool.query('SELECT * FROM cg_feriados ORDER BY descripcion ASC');
         if (FERIADOS.rowCount > 0) {
             return res.json(FERIADOS.rows)
         }

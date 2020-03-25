@@ -13,33 +13,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-class FeriadosControlador {
-    ListarFeriados(req, res) {
+class HorarioControlador {
+    list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const FERIADOS = yield database_1.default.query('SELECT * FROM cg_feriados ORDER BY descripcion ASC');
-            if (FERIADOS.rowCount > 0) {
-                return res.json(FERIADOS.rows);
-            }
-            else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
-            }
+            const provincia = yield database_1.default.query('SELECT * FROM cg_horarios ORDER BY nombre ASC');
+            res.json(provincia.rows);
         });
     }
-    ActualizarFeriado(req, res) {
+    getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const { fecha, descripcion, fec_recuperacion } = req.body;
-            yield database_1.default.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
-            res.json({ message: 'Feriado actualizado exitosamente' });
+            const unaProvincia = yield database_1.default.query('SELECT * FROM cg_horarios WHERE id = $1', [id]);
+            if (unaProvincia.rowCount > 0) {
+                return res.json(unaProvincia.rows);
+            }
+            res.status(404).json({ text: 'No se ha encontrado el horario' });
         });
     }
-    CrearFeriados(req, res) {
+    create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fecha, descripcion, fec_recuperacion } = req.body;
-            yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
-            res.json({ message: 'Feriado guardado' });
+            const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
+            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal
+            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2,$3,$4,$5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+            res.json({ message: 'El horario ha sido registrado' });
         });
     }
 }
-const FERIADOS_CONTROLADOR = new FeriadosControlador();
-exports.default = FERIADOS_CONTROLADOR;
+exports.HORARIO_CONTROLADOR = new HorarioControlador();
+exports.default = exports.HORARIO_CONTROLADOR;

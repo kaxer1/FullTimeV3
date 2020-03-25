@@ -1,8 +1,7 @@
-<mat-card class="example-card mat-elevation-z8">
-    <mat-card-header>
-        <mat-card-title style="text-align: center" ><b>Añadir Horario</b>
-        </mat-card-title>
-    </mat-card-header>
+<mat-icon>open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Departamento
+</h5>
+<div style="text-align: center">
     <!-- Formulario Completo -->
     <form [formGroup]="nuevoHorarioForm" (ngSubmit)="insertarHorario(nuevoHorarioForm.value)">
 
@@ -55,11 +54,13 @@
 
             </div>
         </mat-card-content>
-        <mat-card-actions style="text-align: center">
-            <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
-                [disabled]="!nuevoHorarioForm.valid" value="Grabar">
-            <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;"
-                (click)="CerrarVentanaRegistroHorario()" value="Cancelar">
-        </mat-card-actions>
+
     </form>
-</mat-card>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
+            [disabled]="!nuevoHorarioForm.valid" value="Grabar">
+        <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;"
+            (click)="CerrarVentanaRegistroHorario()" value="Salir">
+    </mat-card-actions>
+
+</div>

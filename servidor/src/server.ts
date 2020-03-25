@@ -16,7 +16,7 @@ import RELOJES_RUTA from './rutas/Catalogos/catRelojesRuta';
 import PROVINCIA_RUTA from './rutas/Catalogos/catProvinciaRutas';
 import DEPARTAMENTO_RUTA from './rutas/Catalogos/catDepartamentoRutas';
 import PROCESO_RUTA from './rutas/Catalogos/procesoRutas';
-import HORARIO_RUTA from './rutas/Catalogos/horarioRutas';
+import HORARIO_RUTA from './rutas/Catalogos/catHorarioRutas';
 import horasExtrasRutas from './rutas/Catalogos/horasExtrasRutas';
 import notificacionesRutas from './rutas/Catalogos/notificacionesRutas';
 import ENROLADO_RUTA from './rutas/Catalogos/enroladoRutas';

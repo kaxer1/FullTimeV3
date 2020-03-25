@@ -4,3 +4,9 @@
     color: blue;
     font-size: 20px;
 }
+mat-select { font-size: small; }
+mat-form-field { font-size: small; }
+mat-checkbox { font-size: small; }
+label { font-size: small; }
+#diasIncre { font-size: x-small; }
+#anioAnti { font-size: x-small; }
