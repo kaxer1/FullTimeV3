@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +10,7 @@ export class EmpleadoService {
 
   constructor(private http: HttpClient) { }
   
-  // Empleados
-  
+  // Empleados  
   getEmpleadosRest(){
     return this.http.get(`${this.API_URI}/empleado`);
   }
@@ -25,12 +23,17 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/empleado`, data);
   }
 
-  // para insertar el empleado con sus respectivos titulos
+  // Servicio para insertar el empleado con sus respectivos titulos
   postEmpleadoTitulos(data: any){
     return this.http.post(`${this.API_URI}/empleado/emplTitulos`, data);
   }
 
   getEmpleadoTituloRest(id: number){
     return this.http.get(`${this.API_URI}/empleado/emplTitulos/${id}`);
+  }
+
+  // Servicio para insertar contrato del empleado
+  CrearContratoEmpleado(datos: any){
+    return this.http.post(`${this.API_URI}/contratoEmpleado`, datos);
   }
 }

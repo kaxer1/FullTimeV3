@@ -30,6 +30,7 @@ import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComid
 import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/listar-relojes/listar-relojes.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { RegistroContratoComponent } from './componentes/contratoEmpleado/registro-contrato/registro-contrato.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -63,6 +64,7 @@ const routes: Routes = [
   { path: 'listarRelojes', component: ListarRelojesComponent},
   { path: 'listarCiudades', component: ListarCiudadComponent},
   { path: 'verTipoPermiso', component: VistaElementosComponent},
+  { path: 'contratoEmpleado', component: RegistroContratoComponent},
 ];
 
 @NgModule({

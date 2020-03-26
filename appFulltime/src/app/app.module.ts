@@ -47,6 +47,7 @@ import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/list
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
 import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { RegistroContratoComponent } from './componentes/contratoEmpleado/registro-contrato/registro-contrato.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -171,7 +172,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     IduserPipe,
     ActivoPipe,
     FingerPipe,
-    EnrNombrePipe
+    EnrNombrePipe,
+    RegistroContratoComponent
   ],
   imports: [
     BrowserModule,
