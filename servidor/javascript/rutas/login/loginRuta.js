@@ -11,8 +11,8 @@ class LoginRuta {
         this.configuracion();
     }
     configuracion() {
-        this.router.post('/', loginControlador_1.default.validar);
+        this.router.post('/', loginControlador_1.default.ValidarCredenciales);
     }
 }
-const loginRuta = new LoginRuta();
-exports.default = loginRuta.router;
+const LOGIN_RUTA = new LoginRuta();
+exports.default = LOGIN_RUTA.router;

@@ -1,38 +1,43 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { LoginService } from '../../servicios/login/login.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import {Md5} from 'ts-md5/dist/md5';
+
+import { LoginService } from '../../servicios/login/login.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
-  title = 'login';
 
+export class LoginComponent implements OnInit {
+
+  title = 'login';
   hide = true;
   url: string;
 
+  // Almacenamiento datos usuario ingresado
+  datosUsuarioIngresado: any = [];
+
+  // Validaciones de campos de formulario
   userMail = new FormControl('', Validators.required);
   pass = new FormControl('', Validators.required);
 
   public validarCredencialesF = new FormGroup({
     usuarioF: this.userMail,
-    passwordF: this.pass 
+    passwordF: this.pass
   });
 
   constructor(
     public rest: LoginService,
     private router: Router,
-    private toastr: ToastrService
-  ) {
+    private toastr: ToastrService) {
     this.validarCredencialesF.setValue({
       usuarioF: '',
       passwordF: ''
     });
-
   }
 
   ngOnInit(): void {
@@ -40,43 +45,44 @@ export class LoginComponent implements OnInit {
     console.log(this.router.url);
   }
 
-  getCampoUsuarioError() {
+  ObtenerMensajeCampoUsuarioError() {
     if (this.userMail.hasError('required')) {
-      return 'Debe escribir el usuario';
+      return 'Ingresar nombre de usuario';
     }
   }
 
-  getCampoContraseniaError() {
+  ObtenerMensajeCampoContraseniaError() {
     if (this.pass.hasError('required')) {
-      return 'Debe escribir la contraseña';
+      return 'Ingresar su contraseña';
     }
   }
 
-  validarUsuario(form) {
+  ValidarUsuario(form) {
+    //Cifrado de contraseña
+    const md5 = new Md5();
+    let clave = md5.appendStr(form.passwordF).end();
+    console.log("pass",clave);
+    
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
       pass: form.passwordF
     };
-    this.rest.postCredenciales(dataUsuario).subscribe(response => {
-      // console.log(response);
-      let dato = String(Object.values(response));
-      // console.log(dato);
-      this.irHome(dato);
+    this.rest.postCredenciales(dataUsuario).subscribe(datos => {
+      this.IrPaginaPrincipal(datos);
     },
       error => {
-        console.log(error);
       })
   }
 
-  irHome(dato: any) {
-    if (dato === '0') {
-      this.toastr.error('contraseña incorrecta', 'Oops!')
-    }
-    else if (dato === '1') {
-      this.toastr.error('Usuario no encontrado', 'Oops!')
+  IrPaginaPrincipal(dato: any) {
+    this.datosUsuarioIngresado = [];
+    let valor = String(Object.values(dato));
+    if (valor === 'error') {
+      this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
     }
     else {
-      this.toastr.success('Ingreso Existoso!','Usuario y contraseña válidos')
+      this.datosUsuarioIngresado = dato;
+      this.toastr.success('Ingreso Existoso! ' + this.datosUsuarioIngresado[0].usuario, 'Usuario y contraseña válidos')
       this.router.navigate(['/', 'home']);
     }
   }

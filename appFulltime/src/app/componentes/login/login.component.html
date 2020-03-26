@@ -5,7 +5,7 @@
         <img width="80" height="250" src="../../../assets/imagenes/logo/logoAdmin.png">
     </div>
     <br>
-    <h5>Acceso al Sistema</h5>
+    <h5 style="text-align: center">Acceso al Sistema</h5>
     <div class="container">
         <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="col"></div>
@@ -15,7 +15,7 @@
                         <mat-form-field>
                             <mat-label>Ingresa tu Usuario</mat-label>
                             <input matInput placeholder="pat@example.com" [formControl]="userMail" required>
-                            <mat-error *ngIf="userMail.invalid">{{getCampoUsuarioError()}}</mat-error>
+                            <mat-error *ngIf="userMail.invalid">{{ObtenerMensajeCampoUsuarioError()}}</mat-error>
                         </mat-form-field>
                         <br>
                         <mat-form-field>
@@ -25,12 +25,12 @@
                                 [attr.aria-pressed]="hide">
                                 <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
-                            <mat-error *ngIf="pass.invalid">{{getCampoContraseniaError()}}</mat-error>
+                            <mat-error *ngIf="pass.invalid">{{ObtenerMensajeCampoContraseniaError()}}</mat-error>
                         </mat-form-field>
                     </form>
                     <div style="margin: auto;">
                         <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px; margin-top: 15px;"
-                            (click)="validarUsuario(validarCredencialesF.value)"
+                            (click)="ValidarUsuario(validarCredencialesF.value)"
                             [disabled]="!validarCredencialesF.valid" value="Ingresar">
                     </div>
                 </mat-card>

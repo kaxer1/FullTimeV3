@@ -3,16 +3,18 @@ import pool from '../../database';
 
 class LoginControlador {
 
-  public async validar(req: Request, res: Response): Promise<void> {
-    const { nombre_usuario, pass } = req.body;
-    const rol = await pool.query('SELECT * FROM acceso_usuarios($1, $2)', [nombre_usuario, pass]);
-    console.log(rol.rows);
-    res.json(rol.rows[0]);
-
+  public async ValidarCredenciales(req: Request, res: Response) {
+    try {
+      const { nombre_usuario, pass } = req.body;
+      const USUARIO = await pool.query('SELECT id, usuario, estado, id_rol, id_empleado, app_habilita FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
+      res.json(USUARIO.rows)
+    } catch (error) {
+      res.json({ message: 'error' });
+    }
   }
 
 }
 
-const loginControlador = new LoginControlador();
+const LOGIN_CONTROLADOR = new LoginControlador();
 
-export default loginControlador;
+export default LOGIN_CONTROLADOR ;
