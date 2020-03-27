@@ -1,7 +1,8 @@
 <div class="container" *ngFor="let e of empleadoUno" style="padding-top: 15px; padding-bottom: 25px;">
+    <a mat-button [routerLink]="['/empleado']" id="navegacion" class="btn btn-warning btn-sm">Regresar a Empleado</a>
+    <button type="submit" id="navegacion" class="btn btn-success">Contrato Empleado</button>
     <div class="row">
         <div class="col-md">
-            <a mat-button [routerLink]="['/empleado']" class="btn btn-warning">Regresar a Empleado</a>
             <mat-card class="mat-elevation-z8">
                 <div class="barraTitulo">
                     <h5>Empleado {{e.nombre}} {{e.apellido}}</h5>
@@ -23,7 +24,7 @@
                             <div class="col">
                                 <label class="col col-form-label">{{e.cedula}}</label>
                             </div>
-                        </div>  
+                        </div>
                         <div class="row">
                             <div class="col">
                                 <label class="col-sm col-form-label">Correo electrónico:</label>
@@ -39,7 +40,7 @@
                             <div class="col">
                                 <label class="col col-form-label">{{e.domicilio}}</label>
                             </div>
-                        </div>           
+                        </div>
                         <div class="row">
                             <div class="col">
                                 <label class="col-sm col-form-label">Teléfono:</label>
@@ -47,7 +48,7 @@
                             <div class="col">
                                 <label class="col col-form-label">{{e.telefono}}</label>
                             </div>
-                        </div> 
+                        </div>
                         <div class="row">
                             <div class="col">
                                 <label class="col-sm col-form-label">Fecha de Nacimiento:</label>
@@ -57,12 +58,10 @@
                             </div>
                         </div>
                     </div>
-                </mat-card-content>    
+                </mat-card-content>
             </mat-card>
             <div class="container" style="padding-bottom: 35px; padding-top: 35px;">
-
                 <div class="container border border-primary">
-
                     <!-- contenedor de registro de datos -->
                     <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
 
@@ -88,23 +87,22 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md">
-            <mat-card  class="mat-elevation-z8" style="padding-bottom: 35px;">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
                 <div class="barraTitulo1">
                     <div class="container">
                         <div class="row" style="text-align: center;">
-                            <div class="col" >
+                            <div class="col">
                                 <h5>Discapacidad</h5>
                             </div>
                             <div class="col">
-                                <button type="submit" class="btn btn-outline-light btn-sm"
-                                [disabled]="!btnHabilitado" (click)="mostrarDis()">{{btnDisc}}</button>
+                                <button type="submit" class="btn btn-outline-light btn-sm" [disabled]="!btnHabilitado"
+                                    (click)="mostrarDis()">{{btnDisc}}</button>
                             </div>
                         </div>
                     </div>
-                </div>    
-                <mat-card-content>    
+                </div>
+                <mat-card-content>
                     <div class="container" style="padding-top: 15px;" *ngFor="let d of discapacidadUser">
                         <div class="row">
                             <div class="col">
@@ -131,30 +129,28 @@
                             </div>
                         </div>
                     </div>
-                </mat-card-content> 
+                </mat-card-content>
             </mat-card>
-
             <div style="padding-bottom: 35px; padding-top: 35px;">
                 <app-discapacidad [idEmploy]="idEmpleado" *ngIf="!mostrarDiscapacidad"></app-discapacidad>
             </div>
-
         </div>
-
         <div class="col-md">
-            <mat-card  class="mat-elevation-z8" style="padding-bottom: 35px;">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
                 <div class="barraTitulo2">
                     <div class="container">
                         <div class="row">
                             <div class="col" style="text-align: right;">
                                 <h5>Títulos</h5>
                             </div>
-                            <div class="col"  style="text-align: left;">
-                                <button type="submit" class="btn btn-outline-light btn-sm" (click)="mostrarTit()">{{btnTitulo}}</button>
+                            <div class="col" style="text-align: left;">
+                                <button type="submit" class="btn btn-outline-light btn-sm"
+                                    (click)="mostrarTit()">{{btnTitulo}}</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <mat-card-content>    
+                <mat-card-content>
                     <div class="container" style="padding-top: 15px;" *ngFor="let rte of relacionTituloEmpleado">
                         <div class="row">
                             <div class="col">
@@ -182,14 +178,11 @@
                         </div>
                         <mat-divider></mat-divider>
                     </div>
-                </mat-card-content>  
+                </mat-card-content>
             </mat-card>
-
             <div style="padding-bottom: 35px; padding-top: 35px;">
                 <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
             </div>
-
         </div>
-
     </div>
 </div>
