@@ -3,8 +3,8 @@ import pool from '../../database';
 
 class UsuarioControlador {
   public async list(req: Request, res: Response) {
-    const titulo = await pool.query('SELECT * FROM usuarios');
-    res.json(titulo.rows);
+    const user = await pool.query('SELECT * FROM usuarios');
+    res.json(user.rows);
   }
 
 
@@ -17,6 +17,16 @@ class UsuarioControlador {
   
     res.status(404).json({ text: 'No se ha encontrado el usuario' });
   }
+
+  // public async getIdByUsuario(req: Request, res: Response): Promise<any>{
+  //   const  {id_empleado} = req.params;
+  //   const unUsuario = await pool.query('SELECT * FROM usuarios WHERE id_empleado = $1', [id_empleado]);
+  //   if (unUsuario.rowCount > 0) {
+  //     return res.json(unUsuario.rows);
+  //   }
+  
+  //   res.status(404).json({ text: 'No se ha encontrado el usuario' });
+  // }
 
   public async create(req: Request, res: Response): Promise<void> {
     const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;

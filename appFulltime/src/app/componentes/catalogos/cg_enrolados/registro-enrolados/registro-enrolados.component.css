@@ -3,3 +3,5 @@
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 
 .btn { border-radius: 25px; margin-right: 15px; margin-top: 15px;}
+
+mat-form-field {width: 195px;}

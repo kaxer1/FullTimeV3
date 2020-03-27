@@ -112,6 +112,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { EmplCodigoPipe } from './filtros/empleado/filtroEmpCod/empl-codigo.pipe';
+import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe';
+import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
+import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
 
 @NgModule({
   declarations: [
@@ -173,7 +178,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     ActivoPipe,
     FingerPipe,
     EnrNombrePipe,
-    RegistroContratoComponent
+    RegistroContratoComponent,
+    EmplCargosComponent,
+    EmplCodigoPipe,
+    EmplCedulaPipe,
+    EmplNombrePipe,
+    EmplApellidoPipe
   ],
   imports: [
     BrowserModule,

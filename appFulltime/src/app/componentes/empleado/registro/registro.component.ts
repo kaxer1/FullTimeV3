@@ -5,6 +5,7 @@ import { ToastrService} from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/roles/roles.service';
 import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
 import { Router } from '@angular/router';
+import { Md5 } from 'ts-md5/dist/md5';
 
 @Component({
   selector: 'app-registro',
@@ -15,6 +16,7 @@ export class RegistroComponent implements OnInit {
 
   empleadoGuardado: any = [];
   roles: any = [];
+  hide = true;
 
   isLinear = true;
   primeroFormGroup: FormGroup;
@@ -55,6 +57,11 @@ export class RegistroComponent implements OnInit {
     });
   }
 
+  soloLetras(e) {
+    var key = window.Event ? e.which : e.keyCode
+    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  }
+
   soloNumeros(e) {
     var key = window.Event ? e.which : e.keyCode
     return ((key >= 48 && key <= 57) || (key === 8))
@@ -91,9 +98,15 @@ export class RegistroComponent implements OnInit {
     this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
         this.empleadoGuardado = response;
+
+        //Cifrado de contraseña
+        const md5 = new Md5();
+        let clave = md5.appendStr(form3.passForm).end();
+        console.log("pass",clave);
+
         let dataUser = {
           usuario: form3.userForm,
-          contrasena: form3.passForm,
+          contrasena: clave,
           estado: true,
           id_rol: form3.rolForm,
           id_empleado: this.empleadoGuardado.id,
