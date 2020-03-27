@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {Md5} from 'ts-md5/dist/md5';
+import { Md5 } from 'ts-md5/dist/md5';
 
 import { LoginService } from '../../servicios/login/login.service';
 
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit {
     
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
-      pass: form.passwordF
+      pass: clave
     };
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
       this.IrPaginaPrincipal(datos);
@@ -84,6 +84,7 @@ export class LoginComponent implements OnInit {
       this.datosUsuarioIngresado = dato;
       this.toastr.success('Ingreso Existoso! ' + this.datosUsuarioIngresado[0].usuario, 'Usuario y contraseña válidos')
       this.router.navigate(['/', 'home']);
+      console.log(dato)
     }
   }
 

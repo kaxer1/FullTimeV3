@@ -127,8 +127,6 @@ export class HorasExtrasComponent implements OnInit {
     this.rest.postHoraExtraRest(dataHoraExtra)
       .subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Hora extra guardada');
-        // this.limpiarCampos();
-        // this.nuevaHoraExtraForm.reset();
       }, error => {
         console.log(error);
       });;

@@ -12,20 +12,20 @@
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Nombre</mat-label>
-                                    <input matInput placeholder="Ej: " type="text" formControlName="nombreForm"
+                                    <input matInput placeholder="Ej: " type="text" formControlName="nombreForm" (keypress)="soloLetras($event)"
                                         required>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Apellido</mat-label>
-                                    <input matInput placeholder="Ej: " type="text" formControlName="apellidoForm"
+                                    <input matInput placeholder="Ej: " type="text" formControlName="apellidoForm" (keypress)="soloLetras($event)"
                                         required>
                                 </mat-form-field>
                             </div>
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Cédula</mat-label>
-                                    <input matInput type="number" placeholder="Ingrese cedula de identidad"
+                                    <input matInput type="text" placeholder="Ingrese cedula de identidad"
                                         maxlength="10" formControlName="cedulaForm"
                                         oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         (keypress)="soloNumeros($event)" required>
@@ -33,7 +33,7 @@
                                 <br>
                                 <mat-form-field class="example-full-width">
                                     <mat-label>Selecciona fecha de nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker" formControlName="fechaForm" required>
+                                    <input matInput [matDatepicker]="picker" placeholder="mm/dd/aaaa" formControlName="fechaForm" required>
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker touchUi #picker></mat-datepicker>
                                 </mat-form-field>
@@ -73,7 +73,7 @@
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Teléfono</mat-label>
-                                    <input matInput placeholder="Ingrese número telefónico" type="number" maxlength="10"
+                                    <input matInput placeholder="Ingrese número telefónico" type="text" maxlength="10"
                                         formControlName="telefonoForm"
                                         oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                         (keypress)="soloNumeros($event)" required>
@@ -147,9 +147,14 @@
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Password</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="passForm" type="password"
-                                        required>
+                                    <mat-label>Contraseña</mat-label>
+                                    <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        formControlName="passForm" required>
+                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                        [attr.aria-pressed]="hide">
+                                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
                                 </mat-form-field>
                             </div>
                         </div>

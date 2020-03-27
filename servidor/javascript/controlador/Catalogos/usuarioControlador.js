@@ -16,8 +16,8 @@ const database_1 = __importDefault(require("../../database"));
 class UsuarioControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const titulo = yield database_1.default.query('SELECT * FROM usuarios');
-            res.json(titulo.rows);
+            const user = yield database_1.default.query('SELECT * FROM usuarios');
+            res.json(user.rows);
         });
     }
     getIdByUsuario(req, res) {
@@ -30,6 +30,14 @@ class UsuarioControlador {
             res.status(404).json({ text: 'No se ha encontrado el usuario' });
         });
     }
+    // public async getIdByUsuario(req: Request, res: Response): Promise<any>{
+    //   const  {id_empleado} = req.params;
+    //   const unUsuario = await pool.query('SELECT * FROM usuarios WHERE id_empleado = $1', [id_empleado]);
+    //   if (unUsuario.rowCount > 0) {
+    //     return res.json(unUsuario.rows);
+    //   }
+    //   res.status(404).json({ text: 'No se ha encontrado el usuario' });
+    // }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
