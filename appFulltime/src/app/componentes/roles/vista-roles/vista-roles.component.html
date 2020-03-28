@@ -10,16 +10,18 @@
                     <div class="container" style="text-align: center;">
                         <form>
                             <mat-form-field>
-                                <mat-label>Buscar por nombre de Rol</mat-label>
-                                <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles" (keypress)="soloLetras($event)" [formControl]="buscarDescripcion" 
-                                     required>
-                            </mat-form-field>
+                                <mat-label>Nombre del Rol</mat-label>
+                                <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarDescripcion">
+                                    <mat-error *ngIf="buscarDescripcion.invalid">Indispensable ingresar dos letras
+                                    </mat-error>
+                                </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Nuevo Rol</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Ir a Registrar</button>
                 </div>
             </mat-card>
         </div>

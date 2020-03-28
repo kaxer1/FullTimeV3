@@ -1,4 +1,7 @@
-<h5 style="text-align: center">Contrato del Empleado</h5>
+<mat-icon>open_with</mat-icon>
+<div class="barraTitulo">
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Contrato del Empleado</h5>
+</div>
 <br>
 <!-- Formulario Completo -->
 <form [formGroup]="ContratoForm">
@@ -7,8 +10,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Empleado</mat-label>
-                        <input matInput placeholder="Empleado" [formControl]="idEmpleadoF" required>
+                        <mat-label>Código Empleado</mat-label>
+                        <input matInput placeholder="Empleado" [formControl]="idEmpleadoF" readonly="readonly" required>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
@@ -60,6 +63,6 @@
 <div style="text-align: center">
 <mat-card-actions style="text-align: center">
     <input type="submit" class="btn btn-primary btn-sm" [disabled]="!ContratoForm.valid" (click)="InsertarContrato(ContratoForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" value=" Salir">
+    <input type="submit" (click)="CerrarVentanaRegistroContrato()" class="btn btn-danger btn-sm" value=" Salir">
 </mat-card-actions>
 </div>

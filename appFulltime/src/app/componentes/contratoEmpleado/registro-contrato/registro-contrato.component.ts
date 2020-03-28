@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
@@ -40,10 +41,15 @@ export class RegistroContratoComponent implements OnInit {
     private rest: EmpleadoService,
     private restR: RegimenService,
     private toastr: ToastrService,
+    public dialogRef: MatDialogRef<RegistroContratoComponent>,
+    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
   ) { }
 
   ngOnInit(): void {
     this.regimenLaboral = this.ObtenerRegimen();
+    this.ContratoForm.patchValue({
+      idEmpleadoForm: this.datoEmpleado,
+    });
   }
 
   ObtenerRegimen() {
@@ -66,10 +72,10 @@ export class RegistroContratoComponent implements OnInit {
         id_regimen: form.idRegimenForm,
       };
       this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Reloj registrado')
-        this.LimpiarCampos();
+        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.CerrarVentanaRegistroContrato();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Reloj no se pudo registrar')
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
       });
     } else {
       this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
@@ -78,6 +84,12 @@ export class RegistroContratoComponent implements OnInit {
 
   LimpiarCampos() {
     this.ContratoForm.reset();
+  }
+
+  CerrarVentanaRegistroContrato() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

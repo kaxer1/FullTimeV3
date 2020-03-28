@@ -1,2 +1,14 @@
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 .btn { margin-left: 15px; border-radius: 25px; } 
+.mat-icon { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+.barraTitulo { 
+    text-align: center; 
+    background: rgb(17, 182, 44); 
+    color: white; 
+    border-radius: 25px; 
+    padding-top: 14px; 
+}

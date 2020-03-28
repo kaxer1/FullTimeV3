@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { RolesService } from '../../../servicios/roles/roles.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistroRolComponent } from '../registro-rol/registro-rol.component';
+import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+
+import { RolesService } from '../../../servicios/roles/roles.service';
+import { RegistroRolComponent } from '../registro-rol/registro-rol.component';
+
 @Component({
   selector: 'app-vista-roles',
   templateUrl: './vista-roles.component.html',
@@ -13,22 +16,37 @@ export class VistaRolesComponent implements OnInit {
   roles: any = [];
   filtroRoles = '';
 
-  buscarDescripcion = new FormControl('', Validators.required);
+  buscarDescripcion = new FormControl('', Validators.minLength(2));
 
   constructor(
     private rest: RolesService,
+    private toastr: ToastrService,
     public vistaRegistrarRol: MatDialog,
   ) {
     this.obtenerRoles();
    }
 
-  ngOnInit() {
-    
+  ngOnInit() {  
   }
 
-  soloLetras(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      return false;
+    }
   }
 
   obtenerRoles(){
@@ -41,7 +59,7 @@ export class VistaRolesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarRol(){
-    this.vistaRegistrarRol.open(RegistroRolComponent, { width: '300px' })
+    this.vistaRegistrarRol.open(RegistroRolComponent, { width: '300px' }).disableClose = true;
   }
 
   limpiarCampoBuscar(){

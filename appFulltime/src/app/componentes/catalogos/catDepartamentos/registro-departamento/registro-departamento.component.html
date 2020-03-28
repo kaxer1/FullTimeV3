@@ -13,7 +13,7 @@
             </mat-form-field>
             <br>
             <mat-form-field>
-                <mat-label>Nivel</mat-label>
+                <mat-label>Nivel *</mat-label>
                 <mat-select [formControl]="nivel" [(ngModel)]="selectNivel">
                     <mat-option *ngFor="let n of niveles" [value]="n.nombre">
                         {{n.valor}}

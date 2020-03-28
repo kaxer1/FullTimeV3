@@ -39,12 +39,12 @@ export class HorasExtrasComponent implements OnInit {
   tipoDia = new FormControl('', Validators.required);
   codigo = new FormControl('', Validators.required);
   inclAlmuerzo = new FormControl('', Validators.required);
-  tipoFuncion = new FormControl('', Validators.required);
+  tipoFuncion = new FormControl('');
   diaHoraExtra = new FormControl('', Validators.required);
 
   descuentos: TipoDescuentos[] = [
     {value: 1, viewValue: 'Horas Extras'},
-    {value: 2, viewValue: 'Extraordinarias'}
+    {value: 2, viewValue: 'Recargo Nocturno'}
   ];
 
   tipoFuncionAlg: Algoritmo[] = [
@@ -54,8 +54,9 @@ export class HorasExtrasComponent implements OnInit {
   ];
 
   horario: Horario[] = [
-    {value: 1, viewValue: 'Diurna'},
-    {value: 2, viewValue: 'Nocturna'}
+    {value: 1, viewValue: 'Matutina'},
+    {value: 2, viewValue: 'Vespertina'},
+    {value: 3, viewValue: 'Nocturna'}
   ];
 
   dia: Dia[] = [
@@ -97,9 +98,24 @@ export class HorasExtrasComponent implements OnInit {
     return value + '%';
   }
 
-  soloLetras(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return (!( (key >=33 && key <= 43) || key == 45 || (key >= 47 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      return false;
+    }
   }
 
   obtenerMensajeErrorDescripcion(){

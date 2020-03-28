@@ -1,25 +1,19 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <mat-card class="example-card mat-elevation-z8">
-        <div style="text-align: center;">
-            <h5>Añadir Rol</h5>
+<mat-icon>open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Rol</h5>
+<form [formGroup]="nuevoRolForm">
+    <mat-card-content>
+        <div class="container">
+            <mat-form-field>
+                <mat-label>Descripción</mat-label>
+                <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
+                    (keypress)="IngresarSoloLetras($event)" required>
+                <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
+            </mat-form-field>
         </div>
-        <form [formGroup]="nuevoRolForm">
-
-            <mat-card-content>
-                <div class="container">
-                    <mat-form-field>
-                        <mat-label>Descripción</mat-label>
-                        <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
-                            (keypress)="soloLetras($event)" required>
-                        <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
-                    </mat-form-field>
-                </div>
-            </mat-card-content>
-        </form>
-        <div style="text-align: center;">
-            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarRol(nuevoRolForm.value)"
-                [disabled]="!nuevoRolForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroRol()" value="Salir">
-        </div>
-    </mat-card>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-primary btn-sm" (click)="insertarRol(nuevoRolForm.value)"
+        [disabled]="!nuevoRolForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroRol()" value="Salir">
 </div>

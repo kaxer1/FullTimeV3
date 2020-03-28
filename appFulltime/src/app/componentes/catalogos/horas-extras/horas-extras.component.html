@@ -11,13 +11,13 @@
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Ingresar Nombre de la hora Extra</mat-label>
-                                    <textarea matInput placeholder="Ej: " formControlName="descripcionForm" (keypress)="soloLetras($event)" required></textarea>
+                                    <mat-label id="horaExtra">Nombre de la hora Extra</mat-label>
+                                    <input matInput placeholder="Ej: " formControlName="descripcionForm" (keypress)="IngresarSoloLetras($event)" required>
                                     <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Seleccione Tipo</mat-label>
+                                    <mat-label>Seleccionar Tipo *</mat-label>
                                     <mat-select formControlName="tipoDescuentoForm">
                                         <mat-option *ngFor="let d of descuentos" [value]="d.value">
                                             {{d.viewValue}}
@@ -32,7 +32,7 @@
                                 </mat-slider>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Dia de referencia</mat-label>
+                                    <mat-label>Dia de referencia *</mat-label>
                                     <input matInput type="date" [formControl]="diaHoraExtra"
                                     min="2020-01-31" max="2021-01-31">
                                 </mat-form-field>
@@ -62,7 +62,7 @@
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Tipo Función V2</mat-label>
-                                    <mat-select formControlName="tipoFuncionForm" required>
+                                    <mat-select formControlName="tipoFuncionForm">
                                         <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
                                             {{t.viewValue}}
                                         </mat-option>
@@ -88,7 +88,7 @@
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <mat-label>Código programacion V2</mat-label>
+                                    <mat-label id="codigoP">Código programacion V2</mat-label>
                                     <mat-select formControlName="codigoForm" required>
                                         <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
                                             {{t.viewValue}}
@@ -100,7 +100,7 @@
                                 <section class="example-section">
                                     <mat-radio-group aria-label="Select an option" formControlName="inclAlmuerzoForm"
                                         required>
-                                        <label>Incluye Almuerzo</label>
+                                        <label>Incluye Almuerzo *</label>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm">
