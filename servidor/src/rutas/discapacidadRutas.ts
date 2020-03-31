@@ -14,6 +14,7 @@ class DiscapacidadRutas {
         this.router.get('/', discapacidadControlador.list);
         this.router.get('/:id_empleado', discapacidadControlador.getOne);
         this.router.post('/', discapacidadControlador.create);
+        this.router.put('/:id_empleado', discapacidadControlador.update);
     }
 }
 

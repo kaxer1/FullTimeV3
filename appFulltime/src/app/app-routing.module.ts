@@ -6,7 +6,6 @@ import { RegistroComponent } from './componentes/empleado/registro/registro.comp
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
-import { TitulosComponent } from './componentes/catalogos/titulos/titulos.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
 import { SeleccionarRolPermisoComponent} from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
@@ -31,6 +30,7 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { ListarTitulosComponent } from './componentes/catalogos/cg_titulos/listar-titulos/listar-titulos.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'registrarEmpleado', component: RegistroComponent},
   { path: 'empleado', component: ListaEmpleadosComponent},
   { path: 'home', component: HomeComponent},
-  { path: 'titulos', component: TitulosComponent},
+  { path: 'titulos', component: ListarTitulosComponent},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
   { path: 'regimenLaboral', component: RegimenComponent},

@@ -19,6 +19,9 @@ interface Discapacidad {
 export class DiscapacidadComponent implements OnInit {
 
   @Input() idEmploy: string;
+  @Input() editar: string;
+
+  userDiscapacidad: any = [];
 
   carnet = new FormControl('', [Validators.required, Validators.maxLength(8)]);
   porcentaje = new FormControl('', [Validators.required, Validators.maxLength(6)]);
@@ -47,6 +50,18 @@ export class DiscapacidadComponent implements OnInit {
   
   ngOnInit(): void {
     this.limpiarCampos();
+    this.editarFormulario();
+  }
+
+  editarFormulario(){
+    if(this.editar == 'editar'){
+      this.rest.getDiscapacidadUsuarioRest(parseInt(this.idEmploy)).subscribe(data => {
+        this.userDiscapacidad = data;
+        this.carnet.setValue(this.userDiscapacidad[0].carn_conadis);
+        this.porcentaje.setValue(this.userDiscapacidad[0].porcentaje);
+        this.tipo.setValue(this.userDiscapacidad[0].tipo);
+      });
+    }
   }
 
   IngresarSoloNumeros(evt) {
@@ -78,21 +93,35 @@ export class DiscapacidadComponent implements OnInit {
   }
 
   insertarCarnet(form){
-    let dataCarnet = {
-      id_empleado: parseInt(this.idEmploy),
-      carn_conadis: form.carnetForm,
-      porcentaje: form.porcentajeForm,
-      tipo: form.tipoForm,
+    if(this.editar != 'editar'){
+      let dataCarnet = {
+        id_empleado: parseInt(this.idEmploy),
+        carn_conadis: form.carnetForm,
+        porcentaje: form.porcentajeForm,
+        tipo: form.tipoForm,
+      }
+
+      this.rest.postDiscapacidadRest(dataCarnet)
+      .subscribe(response => {
+        this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
+        this.limpiarCampos();
+        this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
+      }, error => { });
+
+    } else {
+      let dataUpdate = {
+        carn_conadis: form.carnetForm,
+        porcentaje: form.porcentajeForm,
+        tipo: form.tipoForm,
+      }
+
+      this.rest.putDiscapacidadUsuarioRest(parseInt(this.idEmploy), dataUpdate).subscribe(res => {
+        this.toastr.success('Operación Exitosa', 'Discapacidad Actualiza');
+        this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
+        this.cerrarRegistro();
+      });
     }
 
-    this.rest.postDiscapacidadRest(dataCarnet)
-    .subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
-      this.limpiarCampos();
-      this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
-    }, error => {
-      // console.log(error);
-    });
   }
 
   limpiarCampos(){
