@@ -50,9 +50,11 @@ export class ListarFeriadosComponent implements OnInit {
         var cadena1 = this.feriados[i]['fecha'];
         var aux1 = cadena1.split("T");
         this.feriados[i]['fecha'] = aux1[0];
-        var cadena2 = this.feriados[i]['fec_recuperacion'];
-        var aux2 = cadena2.split("T");
-        this.feriados[i]['fec_recuperacion'] = aux2[0];
+        if (this.feriados[i]['fec_recuperacion'] != null){
+          var cadena2 = this.feriados[i]['fec_recuperacion'];
+          var aux2 = cadena2.split("T");
+          this.feriados[i]['fec_recuperacion'] = aux2[0];
+        }
       }
     })
   }

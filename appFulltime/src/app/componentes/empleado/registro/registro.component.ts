@@ -48,7 +48,7 @@ export class RegistroComponent implements OnInit {
       estadoCivilForm: ['', Validators.required],
       generoForm: ['', Validators.required],
       estadoForm: ['', Validators.required],
-      // nacionalidadForm: ['', Validators.required]
+      nacionalidadForm: ['', Validators.required]
     });
     this.terceroFormGroup = this._formBuilder.group({
       rolForm: ['', Validators.required],
@@ -92,9 +92,8 @@ export class RegistroComponent implements OnInit {
       mail_alernativo: form1.correoAlternativoForm,
       domicilio: form2.domicilioForm,
       telefono: form2.telefonoForm,
-      // nacionalidad: form2.nacionalidadForm
+      nacionalidad: form2.nacionalidadForm
     };
-
     this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');
         this.empleadoGuardado = response;

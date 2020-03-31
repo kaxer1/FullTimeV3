@@ -49,7 +49,7 @@ export class PrincipalEnroladosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarEnrolado(){
-    this.vistaRegistrarEnrolado.open(RegistroEnroladosComponent, { width: '350px' });
+    this.vistaRegistrarEnrolado.open(RegistroEnroladosComponent, { width: '600px' }).disableClose = true;
   }
 
   soloLetras(e) {

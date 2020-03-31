@@ -9,7 +9,7 @@
                 <div class="col">
                     <mat-form-field>
                         <mat-label>Nuevo Reloj</mat-label>
-                        <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
+                        <input matInput placeholder="Nombre del reloj" [formControl]="nombreF" required>
                         <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                         <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
                     </mat-form-field>

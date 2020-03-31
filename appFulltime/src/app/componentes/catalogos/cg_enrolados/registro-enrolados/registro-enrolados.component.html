@@ -1,14 +1,13 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z8">
-        <div style="text-align: center;">
-            <h5>Añadir Enrolado</h5>
-        </div>
-        <form [formGroup]="nuevoEnroladoForm">
-            <mat-card-content>
-                <div class="container" style="text-align: center;">
+<mat-icon id="movimiento">open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Proceso
+</h5>
+<form [formGroup]="nuevoEnroladoForm">
+    <mat-card-content>
+        <div class="container" style="text-align: center;">
+            <div class="row">
+                <div class="col">
                     <mat-form-field>
-                        <mat-label>Seleccione usuario</mat-label>
+                        <mat-label>Seleccione usuario *</mat-label>
                         <mat-select formControlName="enroladoId_UsuarioForm">
                             <mat-option *ngFor="let u of usuarios" [value]="u.usuario">
                                 {{u.usuario}}
@@ -18,12 +17,14 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Ingresar Nombre</mat-label>
-                        <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm" (keypress)="soloLetras($event)" required>
+                        <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm"
+                            (keypress)="soloLetras($event)" required>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Ingresa Contraseña</mat-label>
-                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
+                            maxlength="10"
                             oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             formControlName="enroladoContraseniaForm" required>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
@@ -31,21 +32,23 @@
                             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Número de huella </mat-label>
-                        <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm" (keypress)="soloNumeros($event)"
-                            required>
+                        <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
+                            (keypress)="soloNumeros($event)" required>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Data finger </mat-label>
-                        <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm" (keypress)="soloNumeros($event)" required>
+                        <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm"
+                            (keypress)="soloNumeros($event)" required>
                     </mat-form-field>
                     <br>
                     <section class="example-section">
                         <mat-radio-group aria-label="Select an option" formControlName="enroladoActivoForm" required>
-                            <mat-label>Activo</mat-label>
+                            <mat-label>Activo *</mat-label>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm">
@@ -57,13 +60,12 @@
                         </mat-radio-group>
                     </section>
                 </div>
-            </mat-card-content>
-        </form>
-        <div style="text-align: center;">
-            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
-                [disabled]="!nuevoEnroladoForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-danger btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
+            </div>
         </div>
-    </mat-card>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-primary btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
+        [disabled]="!nuevoEnroladoForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-danger btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
 </div>
-              

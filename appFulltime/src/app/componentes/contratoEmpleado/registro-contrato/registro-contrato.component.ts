@@ -61,26 +61,38 @@ export class RegistroContratoComponent implements OnInit {
     })
   }
 
-  InsertarContrato(form) {
-    if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
-      let datosContrato = {
-        id_empleado: form.idEmpleadoForm,
-        fec_ingreso: form.fechaIngresoForm,
-        fec_salida: form.fechaSalidaForm,
-        vaca_controla: form.controlVacacionesForm,
-        asis_controla: form.controlAsistenciaForm,
-        id_regimen: form.idRegimenForm,
-      };
-      this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Contrato registrado')
-        this.CerrarVentanaRegistroContrato();
-      }, error => {
-        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
-      });
+  ValidarDatosContrato(form) {
+    if (form.fechaSalidaForm === '') {
+      form.fechaSalidaForm = null;
+      this.InsertarContrato(form);
     } else {
-      this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
+      if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
+        this.InsertarContrato(form);
+      }
+      else {
+        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
+      }
     }
   }
+
+  InsertarContrato(form) {
+    let datosContrato = {
+      id_empleado: form.idEmpleadoForm,
+      fec_ingreso: form.fechaIngresoForm,
+      fec_salida: form.fechaSalidaForm,
+      vaca_controla: form.controlVacacionesForm,
+      asis_controla: form.controlAsistenciaForm,
+      id_regimen: form.idRegimenForm,
+    };
+    this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Contrato registrado')
+      this.CerrarVentanaRegistroContrato();
+    }, error => {
+      this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+    });
+  }
+
+
 
   LimpiarCampos() {
     this.ContratoForm.reset();

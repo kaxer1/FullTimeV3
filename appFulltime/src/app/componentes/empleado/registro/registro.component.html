@@ -107,7 +107,7 @@
                                         <mat-option [value]="2">Inactivo</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <!-- <br>
+                                <br>
                                 <mat-form-field>
                                     <mat-label>Nacionalidad</mat-label>
                                     <mat-select formControlName="nacionalidadForm">
@@ -116,7 +116,7 @@
                                         <mat-option [value]="3">Peruana</mat-option>
                                         <mat-option [value]="4">Colombiana</mat-option>
                                     </mat-select>
-                                </mat-form-field> -->
+                                </mat-form-field> 
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Seleccione Rol...</mat-label>
+                                    <mat-label>Seleccionar Rol</mat-label>
                                     <mat-select formControlName="rolForm">
                                         <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>
                                     </mat-select>

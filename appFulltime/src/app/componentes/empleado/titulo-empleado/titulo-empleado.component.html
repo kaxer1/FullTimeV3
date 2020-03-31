@@ -9,6 +9,7 @@
                     <mat-label>Observaciones</mat-label>
                     <input matInput placeholder="ejemplo" [formControl]="observa">
                 </mat-form-field>
+                <br>
                 <mat-form-field>
                     <mat-label>Seleccionar título</mat-label>
                     <mat-select [formControl]="idTitulo">
@@ -22,13 +23,13 @@
     </form>
     <div style="text-align: center;">
         <button type="submit" class="btn btn-primary" (click)="insertarTituloEmpleado(nuevoTituloEmpleadoForm.value)"
-            [disabled]="!nuevoTituloEmpleadoForm.valid"> 
+            [disabled]="!nuevoTituloEmpleadoForm.valid">
             <span class="material-icons alinear">save</span>
         </button>
-        <button type="submit" class="btn btn-info" (click)="limpiarCampos()"> 
+        <button type="submit" class="btn btn-info" (click)="limpiarCampos()">
             <span class="material-icons alinear">backspace</span>
         </button>
-        <button type="submit" class="btn btn-danger" (click)="cerrarRegistro()"> 
+        <button type="submit" class="btn btn-danger" (click)="cerrarRegistro()">
             <span class="material-icons alinear">close</span>
         </button>
     </div>
