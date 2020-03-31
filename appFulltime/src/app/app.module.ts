@@ -14,7 +14,7 @@ import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
-import { TitulosComponent } from './componentes/catalogos/cg_titulos/titulos/titulos.component';
+import { TitulosComponent } from './componentes/catalogos/catTitulos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
@@ -49,7 +49,7 @@ import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { RegistroContratoComponent } from './componentes/contratoEmpleado/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
-import { ListarTitulosComponent } from './componentes/catalogos/cg_titulos/listar-titulos/listar-titulos.component';
+import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -118,6 +118,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
 
 @NgModule({
   declarations: [
@@ -185,7 +186,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EmplCedulaPipe,
     EmplNombrePipe,
     EmplApellidoPipe,
-    ListarTitulosComponent
+    ListarTitulosComponent,
+    FitroNivelPipe
   ],
   imports: [
     BrowserModule,

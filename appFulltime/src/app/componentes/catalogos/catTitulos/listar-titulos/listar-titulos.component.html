@@ -4,26 +4,28 @@
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <!-- <form [formGroup]="BuscarFeriadosForm">
+                <form [formGroup]="BuscarTitulosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
                             <mat-form-field>
-                                <mat-label>Descripción</mat-label>
-                                <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
-                                    [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
+                                <mat-label>Nombre Título</mat-label>
+                                <input matInput placeholder="Nombre Título" name="filtradoNombre"
+                                    [formControl]="nombreF" [(ngModel)]="filtradoNombre"
                                     (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
+                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
                                 </mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Fecha</mat-label>
-                                <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
-                                    [formControl]="fechaF" [(ngModel)]="filtradoFecha">
+                                <mat-label>Nivel</mat-label>
+                                <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
+                                    [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
+                                </mat-error>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
-                </form> -->
+                </form>
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarTitulo()"
@@ -42,20 +44,18 @@
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
-                <th scope="col">Codigo</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Nivel</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let t of verTitulos">
-                <td style="padding-top: 10px; text-align: center;" scope="row">{{t.id}}</td>
+            <tr *ngFor="let t of verTitulos | filtrosNombres: filtradoNombre | fitroNivel: filtradoNivel">
                 <td>{{t.nombre}}</td>
                 <td>{{t.nivel}}</td>
                 <td>
-                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i> 
-                    <i  class="fas fa-edit" style="color:green;" ></i> 
+                    <i class="far fa-trash-alt"></i>
+                    <i class="fas fa-edit"></i>
                 </td>
             </tr>
         </tbody>

@@ -12,12 +12,14 @@
                         <form>
                             <mat-form-field>
                                 <mat-label>Buscar por Id Usuario</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser" [formControl]="idUser" type="number" (keypress)="soloNumeros($event)" required>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser" [formControl]="idUser"
+                                    (keypress)="IngresarSoloNumeros($event)">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Buscar por Nombre</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre" [formControl]="nombre" type="text" (keypress)="soloLetras($event)" required>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
@@ -28,24 +30,19 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Buscar por Finger</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroFinger" [formControl]="finger" type="number" (keypress)="soloNumeros($event)" required>
-                            </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Ir a Registrar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Ir a
+                        Registrar</button>
                 </div>
             </mat-card>
         </div>
         <div class="col-3"></div>
     </div>
 </div>
-
 <div class="container  table-responsive" style="padding-bottom: 50px;">
     <mat-toolbar>
         <span style="text-align: center;">Resultado de búsqueda</span>
@@ -61,18 +58,17 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | finger: filtroFinger | enrNombre: filtroEnrNombre">
-                <td style="padding-top: 10px;text-align: center;">{{enrolado.id_usuario}}</td>
-                <td style="padding-top: 10px;text-align: center;">{{enrolado.nombre}}</td>
-                <td style="padding-top: 10px;text-align: center;">{{enrolado.activo}}</td>
-                <td style="padding-top: 10px;text-align: center;">{{enrolado.finger}}</td>
-                <td style="padding-top: 10px;text-align: center;">
-                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i> 
-                    <i  class="fas fa-edit" style="color:green;" ></i> 
+            <tr
+                *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre">
+                <td>{{enrolado.id_usuario}}</td>
+                <td>{{enrolado.nombre}}</td>
+                <td>{{enrolado.activo}}</td>
+                <td>{{enrolado.finger}}</td>
+                <td>
+                    <i class="far fa-trash-alt"></i>
+                    <i class="fas fa-edit"></i>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-
-

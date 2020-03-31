@@ -25,13 +25,13 @@
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Número dia máximo</mat-label>
+                                    <mat-label>Días máximos de permiso</mat-label>
                                     <input matInput placeholder="Ej: 3" (keypress)="soloNumeros($event)" formControlName="numDiaMaximoForm" required>
                                 </mat-form-field>
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Número Hora Máxima</mat-label>
+                                    <mat-label>Horas máximas de permiso</mat-label>
                                     <input matInput placeholder="Ej: 4" (keypress)="soloNumeros($event)" formControlName="numHoraMaximoForm" required>
                                 </mat-form-field>
                                 <br>
@@ -42,12 +42,12 @@
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Acceso Empleado</mat-label>
+                                    <mat-label>Empleado puede solicitar</mat-label>
                                     <input matInput placeholder="Ej: 3" (keypress)="soloNumeros($event)" formControlName="acceEmpleadoForm" required>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Número dia Justifica</mat-label>
+                                    <mat-label>Dia para justificar</mat-label>
                                     <input matInput placeholder="Ej: 2" (keypress)="soloNumeros($event)" formControlName="numDiaJustificaForm" required>
                                 </mat-form-field>
                             </div>
@@ -93,7 +93,7 @@
                                 </section>
                                 <section class="example-section">
                                     <mat-radio-group aria-label="Select an option" formControlName="correoForm" required>
-                                        <label>Correo</label>
+                                        <label>Enviar al Correo</label>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm">
@@ -109,7 +109,7 @@
                                 <section class="example-section">
                                     <mat-radio-group aria-label="Select an option" formControlName="geneJustificacionForm"
                                         required>
-                                        <label>Año acumula</label>
+                                        <label>Requiere Justificacion</label>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm">
@@ -122,7 +122,7 @@
                                 </section>
                                 <section class="example-section">
                                     <mat-radio-group aria-label="Select an option" formControlName="fecValidarForm" required>
-                                        <label>Año acumula</label>
+                                        <label>Restrición por fecha</label>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm">
@@ -168,6 +168,7 @@
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                         <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                        <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                     </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">

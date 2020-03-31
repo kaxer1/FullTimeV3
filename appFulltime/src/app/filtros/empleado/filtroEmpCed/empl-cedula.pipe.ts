@@ -7,7 +7,7 @@ export class EmplCedulaPipe implements PipeTransform {
 
   transform(value: any, arg: any): any {
 
-    if(arg === undefined || arg === null || arg.length < 3 ) return value;
+    if(arg === undefined || arg === null || arg.length < 2 ) return value;
 
     const resultadoEmpleado = [];
 

@@ -48,9 +48,8 @@ export class HorasExtrasComponent implements OnInit {
   ];
 
   tipoFuncionAlg: Algoritmo[] = [
-    {value: 1, viewValue: 'Algoritmo1'},
-    {value: 2, viewValue: 'Algoritmo2'},
-    {value: 3, viewValue: 'Algoritmo3'}
+    {value: 1, viewValue: 'Entrada'},
+    {value: 2, viewValue: 'Salida'},
   ];
 
   horario: Horario[] = [
