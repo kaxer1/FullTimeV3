@@ -38,6 +38,14 @@ class DiscapacidadControlador {
             res.json({ message: 'Discapacidad guardada' });
         });
     }
+    update(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const { carn_conadis, porcentaje, tipo } = req.body;
+            yield database_1.default.query('UPDATE cg_discapacidades SET carn_conadis = $1, porcentaje = $2, tipo = $3 WHERE id_empleado = $4', [carn_conadis, porcentaje, tipo, id_empleado]);
+            res.json({ message: 'Discapacidad actualizada exitosamente' });
+        });
+    }
 }
 exports.discapacidadControlador = new DiscapacidadControlador();
 exports.default = exports.discapacidadControlador;

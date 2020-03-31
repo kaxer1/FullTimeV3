@@ -16,6 +16,8 @@ export class PrincipalProcesoComponent implements OnInit {
   buscarPadre = new FormControl('', Validators.required);
 
   procesos: any = [];
+  auxiliar1: any = [];
+  auxiliar2: any = [];
   
   filtroNombre = '';
   filtroNivel: number;
@@ -47,9 +49,50 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   getProcesos() {
-    this.procesos = [];
+    this.auxiliar1 = [];
     this.rest.getProcesosRest().subscribe(data => {
       this.procesos = data
+      // this.auxiliar1 = data;
+      // this.auxiliar1.forEach(element => {
+        
+      //   if(element.proc_padre > 0){
+      //     let vistaProceso = {
+      //       id: element.proc_padre,
+      //       nombre: element.nombre
+      //     }
+      //     this.auxiliar2.push(vistaProceso);
+      //   }
+        
+      // });
+      // console.log(this.auxiliar1);
+      // console.log(this.auxiliar2);
+
+      // this.auxiliar1.forEach(obj => {
+      //   let VistaProceso;
+      //   if (obj.proc_padre == 0){
+      //     VistaProceso = {
+      //       id: obj.id,
+      //       nombre: obj.nombre,
+      //       nivel: obj.nivel,
+      //       proc_padre: 'niguno'
+      //     }
+      //     this.procesos.push(VistaProceso);
+      //   }
+
+      //   this.auxiliar2.forEach(obj1 => {
+      //     if(obj.proc_padre == obj1.id){
+      //       VistaProceso = {
+      //         id: obj.id,
+      //         nombre: obj.nombre,
+      //         nivel: obj.nivel,
+      //         proc_padre: obj1.nombre
+      //       }
+      //       this.procesos.push(VistaProceso);
+      //     }
+      //   });
+      // });
+      console.log(this.procesos);
+
     });
   }
 

@@ -17,6 +17,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   empleadoUno: any = [];
   idEmpleado: string;
+  editar: string = '';
   fecha: any = [];
   mostrarDiscapacidad = true;
   mostrarTitulo = true;
@@ -104,20 +105,25 @@ export class VerEmpleadoComponent implements OnInit {
     if (this.discapacidadUser.length == 0) {
       this.btnHabilitado = true;
     } else {
-      this.btnHabilitado = false;
-      this.btnDisc = 'No puede añadir más';
+      this.btnHabilitado = true;
+      this.btnDisc = 'Editar';
       this.mostrarDiscapacidad = true;
     }
   }
 
   // logica de boton para mostrar componente del registro de discapacidad
   mostrarDis() {
-    if (this.mostrarDiscapacidad == true) {
-      this.mostrarDiscapacidad = false;
-      this.btnDisc = 'No Añadir';
+    if(this.btnDisc != 'Editar'){
+      if (this.mostrarDiscapacidad == true) {
+        this.mostrarDiscapacidad = false;
+        this.btnDisc = 'No Añadir';
+      } else {
+        this.mostrarDiscapacidad = true;
+        this.btnDisc = 'Añadir';
+      }
     } else {
-      this.mostrarDiscapacidad = true;
-      this.btnDisc = 'Añadir';
+      this.mostrarDiscapacidad = false;
+      this.editar = 'editar';
     }
   }
 

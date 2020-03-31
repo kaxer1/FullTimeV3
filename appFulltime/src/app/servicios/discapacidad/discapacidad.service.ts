@@ -21,4 +21,8 @@ export class DiscapacidadService {
   getDiscapacidadUsuarioRest(id: number){
     return this.http.get(`${this.Discapacidad_URL}/discapacidad/${id}`);
   }
+
+  putDiscapacidadUsuarioRest(id: number, data: any){
+    return this.http.put(`${this.Discapacidad_URL}/discapacidad/${id}`, data);
+  }
 }
