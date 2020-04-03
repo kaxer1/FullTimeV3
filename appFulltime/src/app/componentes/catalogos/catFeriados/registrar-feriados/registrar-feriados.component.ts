@@ -41,6 +41,11 @@ export class RegistrarFeriadosComponent implements OnInit {
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
     };
+    if(datosFeriado.fec_recuperacion === ''){
+      datosFeriado.fec_recuperacion = null;
+      console.log(datosFeriado.fec_recuperacion)
+
+    }
     this.rest.CrearNuevoFeriado(datosFeriado).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Feriado registrado')
       this.LimpiarCampos();

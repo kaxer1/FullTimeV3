@@ -21,7 +21,7 @@ class RelojesControlador {
                 return res.json(RELOJES.rows);
             }
             else {
-                res.json({ text: 'No se encuentran registros' });
+                return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -33,7 +33,7 @@ class RelojesControlador {
                 return res.json(RELOJES.rows);
             }
             else {
-                res.json({ text: 'No se encuentran registros' });
+                return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }

@@ -8,9 +8,8 @@ const pg_pool_1 = __importDefault(require("pg-pool"));
 const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
-    database: 'fullTimeV3',
-    password: 'fulltime',
-    port: 5432,
+    database: 'fulltime3',
+    password: 'admin',
 });
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {

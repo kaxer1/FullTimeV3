@@ -140,7 +140,7 @@
                                         <mat-option [value]="2">Inactivo</mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <!-- <br>
+                                <br>
                                 <mat-form-field>
                                     <mat-label>Nacionalidad</mat-label>
                                     <mat-select formControlName="nacionalidadForm" matTooltipClass="color-tooltip" matTooltipPosition="right"
@@ -150,7 +150,7 @@
                                         <mat-option [value]="3">Peruana</mat-option>
                                         <mat-option [value]="4">Colombiana</mat-option>
                                     </mat-select>
-                                </mat-form-field> -->
+                                </mat-form-field> 
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Seleccione Rol...</mat-label>
+                                    <mat-label>Seleccione Rol</mat-label>
                                     <mat-select formControlName="rolForm" matTooltipClass="color-tooltip" matTooltipPosition="right"
                                     matTooltip="El rol es el nivel de autorización que el usaurio tendra en el sistema">
                                         <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>

@@ -1,10 +1,21 @@
 <mat-icon>open_with</mat-icon>
 <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Ciudad a:</h5>
 <h4 style="text-align: center">{{feriadoSeleccionado.descripcion}}</h4>
+<br>
 <div style="text-align: center">
     <form [formGroup]="asignarCiudadForm">
         <mat-card-content>
             <div class="container">
+                <mat-form-field>
+                    <mat-label>Seleccionar Provincia</mat-label>
+                    <mat-select [formControl]="nombreProvinciaF" [(ngModel)]="seleccionarProvincia">
+                        <mat-option *ngFor="let provincia of nombreProvincias"
+                             [value]="provincia.nombre" (click)="FiltrarCiudades(asignarCiudadForm.value)">
+                            {{provincia.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
                 <mat-form-field>
                     <mat-label>Seleccionar Ciudad</mat-label>
                     <mat-select [formControl]="nombreCiudadF" [(ngModel)]="seleccionarCiudad">
@@ -13,12 +24,12 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <br>
             </div>
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !asignarCiudadForm.valid" (click)="InsertarFeriadoCiudad(asignarCiudadForm.value)" value="Guardar">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !asignarCiudadForm.valid"
+            (click)="InsertarFeriadoCiudad(asignarCiudadForm.value)" value="Guardar">
         <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaAsignarCiudad()" value="Salir">
     </mat-card-actions>
 </div>

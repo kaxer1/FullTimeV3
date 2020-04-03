@@ -14,7 +14,7 @@ import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
-import { TitulosComponent } from './componentes/catalogos/cg_titulos/titulos/titulos.component';
+import { TitulosComponent } from './componentes/catalogos/catTitulos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
@@ -26,7 +26,7 @@ import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvinci
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
-import { HorasExtrasComponent } from './componentes/catalogos/horas-extras/horas-extras.component';
+import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
@@ -37,7 +37,7 @@ import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepart
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
 import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
-import { TipoPermisosComponent } from './componentes/catalogos/ctgTipoPermisos/tipo-permisos/tipo-permisos.component';
+import { TipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/tipo-permisos/tipo-permisos.component';
 import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
 import { ListarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/listar-tipo-comidas/listar-tipo-comidas.component';
@@ -45,9 +45,11 @@ import { ListarRelojesComponent } from './componentes/catalogos/catRelojes/lista
 import { TituloEmpleadoComponent } from './componentes/empleado/titulo-empleado/titulo-empleado.component';
 import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/listar-ciudad.component';
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
-import { VistaElementosComponent } from './componentes/catalogos/ctgTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
+import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { RegistroContratoComponent } from './componentes/contratoEmpleado/registro-contrato/registro-contrato.component';
+import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/roles/roles.service';
@@ -83,6 +85,10 @@ import { EnrNombrePipe } from './filtros/catEnrolados/filtroEnrNombre/enr-nombre
 import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
 import { FiltroModeloPipe } from './filtros/catRelojes/filtroModelo/filtro-modelo.pipe';
 import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
+import { EmplCodigoPipe } from './filtros/empleado/filtroEmpCod/empl-codigo.pipe';
+import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe';
+import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
+import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -113,12 +119,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
-import { EmplCodigoPipe } from './filtros/empleado/filtroEmpCod/empl-codigo.pipe';
-import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe';
-import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
-import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
-import { ListarTitulosComponent } from './componentes/catalogos/cg_titulos/listar-titulos/listar-titulos.component';
+import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
 
 @NgModule({
   declarations: [
@@ -186,7 +187,8 @@ import { ListarTitulosComponent } from './componentes/catalogos/cg_titulos/lista
     EmplCedulaPipe,
     EmplNombrePipe,
     EmplApellidoPipe,
-    ListarTitulosComponent
+    ListarTitulosComponent,
+    FitroNivelPipe
   ],
   imports: [
     BrowserModule,

@@ -69,7 +69,7 @@ export class RegistroDepartamentoComponent implements OnInit {
   InsertarDepartamento(form) {
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-    if (departamentoPadreNombre === '' || departamentoPadreNombre === 'Ninguno') {
+    if (departamentoPadreNombre === 'Seleccionar' || departamentoPadreNombre === 'Ninguno') {
       this.rest.ConsultarIdNombreDepartamentos('Ninguno').subscribe(datos => {
         this.departamentoId = datos;
         for (let i = this.departamentoId.length - 1; i >= 0; i--) {
@@ -113,7 +113,7 @@ export class RegistroDepartamentoComponent implements OnInit {
     this.departamentos = [];
     this.rest.ConsultarNombreDepartamentos().subscribe(datos => {
       this.departamentos = datos;
-      this.departamentos[this.departamentos.length] = { nombre: "Ninguno" };
+      this.departamentos[this.departamentos.length] = { nombre: "Seleccionar" };
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
     })
   }

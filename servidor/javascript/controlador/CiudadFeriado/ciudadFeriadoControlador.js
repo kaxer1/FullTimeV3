@@ -33,6 +33,29 @@ class CiudadFeriadoControlador {
             }
         });
     }
+    FiltrarCiudadesProvincia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const CIUDAD_FERIADO = yield database_1.default.query('SELECT id, descripcion FROM VistaNombreProvincia WHERE nombre = $1', [nombre]);
+            if (CIUDAD_FERIADO.rowCount > 0) {
+                return res.json(CIUDAD_FERIADO.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    ObtenerProvincia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const CIUDAD_FERIADO = yield database_1.default.query('SELECT * FROM VistaNombreProvincia');
+            if (CIUDAD_FERIADO.rowCount > 0) {
+                return res.json(CIUDAD_FERIADO.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.CIUDAD_FERIADO_CONTROLADOR = new CiudadFeriadoControlador();
 exports.default = exports.CIUDAD_FERIADO_CONTROLADOR;

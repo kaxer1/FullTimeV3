@@ -17,10 +17,15 @@ class TipoPermisosControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
+<<<<<<< HEAD:servidor/src/controlador/Catalogos/tipoPermisosControlador.ts
     const { descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, noautorizar, preautorizar, almu_incluir, num_dia_justifica } = req.body;
     await pool.query('INSERT INTO cg_tipo_permisos (  descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, noautorizar, preautorizar, almu_incluir, num_dia_justifica ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)', [ descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, noautorizar, preautorizar, almu_incluir, num_dia_justifica]);
     console.log(req.body);
 
+=======
+    const { descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica } = req.body;
+    await pool.query('INSERT INTO cg_tipo_permisos (  descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [ descripcion, tipo_descuento, num_dia_maximo, num_hora_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica]);
+>>>>>>> c29b15ad8eabcdfdd5f224e4dfe6e549e4b31197:servidor/src/controlador/Catalogos/catTipoPermisosControlador.ts
     res.json({ message: 'Guardado Tipo Permiso'});
   }
 

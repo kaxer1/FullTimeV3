@@ -1,43 +1,40 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
-    <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title>Añadir Proceso</mat-card-title>
-        </mat-card-header>
-
-        <form [formGroup]="nuevoProcesoForm">
-            <mat-card-content>
-                <div class="container">
-                    <mat-form-field>
-                        <mat-label>Nombre de proceso</mat-label>
-                        <input matInput placeholder="Ej: Emergencia" [formControl]="nombre" (keypress)="soloLetras($event)" required>
-                        <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Proceso Padre</mat-label>
-                        <mat-select [formControl]="procesoPadre">
-                            <mat-option *ngFor="let p of procesos" [value]="p.nombre">
-                                {{p.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Nivel</mat-label>
-                        <mat-select [formControl]="nivel">
-                            <mat-option *ngFor="let n of niveles" [value]="n.nombre">
-                                {{n.valor}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </mat-card-content>
-        </form>
-        <div style="text-align: center;">
-            <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
-                [disabled]="!nuevoProcesoForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroProceso()" value="Salir">
-        </div>
-    </mat-card>
+<mat-icon>open_with</mat-icon>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Proceso
+</h5>
+<div style="text-align: center">
+    <form [formGroup]="nuevoProcesoForm">
+        <mat-card-content>
+            <div class="container">
+                <mat-form-field>
+                    <mat-label>Nombre de proceso</mat-label>
+                    <input matInput placeholder="Ej: Emergencia" [formControl]="nombre"
+                        (keypress)="IngresarSoloLetras($event)" required>
+                    <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Proceso Padre</mat-label>
+                    <mat-select [formControl]="procesoPadre">
+                        <mat-option *ngFor="let p of procesos" [value]="p.nombre">
+                            {{p.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label>Nivel</mat-label>
+                    <mat-select [formControl]="nivel">
+                        <mat-option *ngFor="let n of niveles" [value]="n.nombre">
+                            {{n.valor}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </form>
+    <div style="text-align: center;">
+        <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
+            [disabled]="!nuevoProcesoForm.valid" value="Guardar">
+        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroProceso()" value="Salir">
+    </div>
 </div>

@@ -12,29 +12,29 @@
                         <form [formGroup]="">
                             <mat-form-field>
                                 <mat-label>Busqueda por Código</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo" type="number" (keypress)="soloNumeros($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Cédula</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula" type="text" (keypress)="soloNumeros($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Nombre</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre" type="text" (keypress)="soloLetras($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Apellido</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido" type="text" (keypress)="soloLetras($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido" type="text" (keypress)="IngresarSoloLetras($event)">
                             </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Nuevo Empleado</button>
+                    <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Ir a Registrar</button>
                 </div>
             </mat-card>
         </div>

@@ -3,7 +3,6 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
 import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-feriados.service';
 
 @Component({
@@ -13,21 +12,24 @@ import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-f
 })
 export class AsignarCiudadComponent implements OnInit {
 
-  // Control de los campos del formulario
-  nombreCiudadF = new FormControl('', [Validators.required]);
-
   // Datos Departamento
   nombreCiudades: any = [];
   ciudadFeriados: any = [];
+  nombreProvincias: any = [];
   seleccionarCiudad;
+  seleccionarProvincia;
+
+  // Control de los campos del formulario
+  nombreProvinciaF = new FormControl('');
+  nombreCiudadF = new FormControl('', [Validators.required]);
 
   // Asignar los campos en un formulario en grupo
   public asignarCiudadForm = new FormGroup({
+    nombreProvinciaForm: this.nombreProvinciaF,
     nombreCiudadForm: this.nombreCiudadF,
   });
 
   constructor(
-    private rest: CiudadService,
     private restF: CiudadFeriadosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<AsignarCiudadComponent>,
@@ -35,21 +37,43 @@ export class AsignarCiudadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.seleccionarCiudad = this.ObtenerCiudades();
+    this.seleccionarProvincia = this.ObtenerProvincias();
   }
 
-  ObtenerCiudades() {
+  ObtenerProvincias() {
+    this.nombreProvincias = [];
+    this.restF.BuscarProvincia().subscribe(datos => {
+      this.nombreProvincias = datos;
+      this.nombreProvincias[this.nombreProvincias.length] = { nombre: "Seleccionar Provincia" };
+      this.seleccionarProvincia = this.nombreProvincias[this.nombreProvincias.length - 1].nombre;
+    })
+  }
+
+  ObtenerCiudades(provincia) {
     this.nombreCiudades = [];
-    this.rest.ConsultarCiudades().subscribe(datos => {
+    this.restF.BuscarCiudadProvincia(provincia).subscribe(datos => {
       this.nombreCiudades = datos;
+      console.log(this.nombreCiudades);
       this.nombreCiudades[this.nombreCiudades.length] = { descripcion: "Seleccionar Ciudad" };
       this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
     })
   }
 
+  FiltrarCiudades(form) {
+    var nombreProvincia = form.nombreProvinciaForm;
+    console.log(nombreProvincia);
+    if (nombreProvincia === 'Seleccionar Provincia' || nombreProvincia === '') {
+      this.toastr.info('No ha seleccionado ninguna opción')
+    }
+    else {
+      this.seleccionarCiudad = this.ObtenerCiudades(nombreProvincia);
+    }
+  }
+
   LimpiarCampos() {
     this.asignarCiudadForm.reset();
-    this.ObtenerCiudades();
+    this.ObtenerProvincias();
+    this.nombreCiudades = [];
   }
 
   CerrarVentanaAsignarCiudad() {
