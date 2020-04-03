@@ -5,7 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 
-
 interface opcionesRegimen {
   valor: string;
   nombre: string
@@ -46,6 +45,7 @@ export class RegimenComponent implements OnInit {
     { valor: 'Seleccionar', nombre: 'Seleccionar' },
     { valor: 'CODIGO DE TRABAJO', nombre: 'CODIGO DE TRABAJO' },
     { valor: 'LOSEP', nombre: 'LOSEP' },
+    { valor: 'LOES', nombre: 'LOES' },
     { valor: 'OTRO', nombre: 'OTRO' },
   ];
   seleccionarRegimen: string = this.regimen[0].valor;
@@ -77,6 +77,11 @@ export class RegimenComponent implements OnInit {
       this.LimpiarDiasMeses();
       this.IngresarDatosLosep();
     }
+    else if (nombreRegimen === 'LOES') {
+      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
+      this.LimpiarDiasMeses();
+      this.IngresarDatosLoes();
+    }
     else {
       (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
       this.IngresarDatosOtro();
@@ -89,6 +94,8 @@ export class RegimenComponent implements OnInit {
     this.RegimenForm.patchValue({
       diaAnioVacacionForm: 11,
       diaLibreAnioVacacionForm: 4,
+      anioAntiguedadForm: 5,
+      diaIncrAntiguedadForm: 1,
     });
   }
 
@@ -96,6 +103,17 @@ export class RegimenComponent implements OnInit {
     this.RegimenForm.patchValue({
       diaAnioVacacionForm: 22,
       diaLibreAnioVacacionForm: 8,
+      anioAntiguedadForm: 5,
+      diaIncrAntiguedadForm: 1,
+    });
+  }
+
+  IngresarDatosLoes() {
+    this.RegimenForm.patchValue({
+      diaAnioVacacionForm: 11,
+      diaLibreAnioVacacionForm: 4,
+      anioAntiguedadForm: 5,
+      diaIncrAntiguedadForm: 1,
     });
   }
 
@@ -103,6 +121,8 @@ export class RegimenComponent implements OnInit {
     this.RegimenForm.patchValue({
       diaAnioVacacionForm: '',
       diaLibreAnioVacacionForm: '',
+      anioAntiguedadForm: '',
+      diaIncrAntiguedadForm: '',
     });
   }
 
@@ -127,6 +147,9 @@ export class RegimenComponent implements OnInit {
         this.CambiarValores(datosRegimen);
         this.VerificarValoresMenores(datosRegimen);
       }
+    }
+    else if (nombreRegimen === 'Seleccionar') {
+      this.toastr.info('Seleccionar nombre del nuevo Régimen Laboral', 'Campo Obligatorio');
     }
     else {
       datosRegimen.descripcion = nombreRegimen;
@@ -269,7 +292,9 @@ export class RegimenComponent implements OnInit {
   LimpiarDiasMeses() {
     this.RegimenForm.patchValue({
       diaMesVacacionForm: '',
+      descripcionForm: '',
     });
     (<HTMLInputElement>document.getElementById('activo')).checked = false;
   }
+
 }

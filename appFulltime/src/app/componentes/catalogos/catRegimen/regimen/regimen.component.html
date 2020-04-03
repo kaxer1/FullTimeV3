@@ -26,7 +26,7 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label id="anioAnti">Años para considerar antiguedad</mat-label>
+                        <mat-label id="anioAnti">Años considerados antiguedad</mat-label>
                         <input matInput placeholder="Ingresar años para antiguedad" [formControl]="anioAntiguedadF"
                             (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-error *ngIf="anioAntiguedadF.invalid">
@@ -52,7 +52,7 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label id="diasIncre">Días de incremento por antiguedad</mat-label>
+                        <mat-label id="diasIncre">Días de incremento-antiguedad</mat-label>
                         <input matInput placeholder="Días de incremento" [formControl]="diaIncrAntiguedadF" required
                             (keypress)="IngresarSoloNumeros($event)">
                         <mat-error *ngIf="diaIncrAntiguedadF.invalid">

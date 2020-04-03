@@ -8,5 +8,5 @@ mat-select { font-size: small; }
 mat-form-field { font-size: small; }
 mat-checkbox { font-size: small; }
 label { font-size: small; }
-#diasIncre { font-size: x-small; }
-#anioAnti { font-size: x-small; }
+#diasIncre { font-size: 12px; }
+#anioAnti { font-size: 12px; }

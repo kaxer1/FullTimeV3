@@ -40,7 +40,6 @@ export class HorasExtrasComponent implements OnInit {
   codigo = new FormControl('', Validators.required);
   inclAlmuerzo = new FormControl('', Validators.required);
   tipoFuncion = new FormControl('');
-  diaHoraExtra = new FormControl('', Validators.required);
 
   descuentos: TipoDescuentos[] = [
     {value: 1, viewValue: 'Horas Extras'},
@@ -75,17 +74,15 @@ export class HorasExtrasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.limpiarCampos();
     this.primeroFormGroup = this._formBuilder.group({
       descripcionForm: this.descripcion,
       tipoDescuentoForm: this.tipoDescuento,
       recaPorcentajeForm: this.recaPorcentaje,
-      diaHoraExtraForm: this.diaHoraExtra, //campo extra para poder almacenar el dia
       horaInicioForm: this.horaInicio,
-      horaFinalForm: this.horaFinal
+      horaFinalForm: this.horaFinal,
+      horaJornadaForm: this.horaJornada,
     });
     this.segundoFormGroup = this._formBuilder.group({
-      horaJornadaForm: this.horaJornada,
       tipoDiaForm: this.tipoDia,
       codigoForm: this.codigo,
       inclAlmuerzoForm: this.inclAlmuerzo,
@@ -97,42 +94,20 @@ export class HorasExtrasComponent implements OnInit {
     return value + '%';
   }
 
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
-      return false;
-    }
-  }
-
   obtenerMensajeErrorDescripcion(){
     if (this.descripcion.hasError('required')) {
-      return 'Debe ingresar la descripcion de la hora extra';
+      return 'Campo obligatorio';
     }
   }
 
   insertarHoraExtra(form1, form2) {
-    let fechaHoraInicio = form1.diaHoraExtraForm + ' ' + form1.horaInicioForm + ':00';
-    let fechaHoraFin = form1.diaHoraExtraForm + ' ' + form1.horaFinalForm + ':00';
     let dataHoraExtra = {
       descripcion: form1.descripcionForm,
       tipo_descuento: form1.tipoDescuentoForm,
       reca_porcentaje: form1.recaPorcentajeForm,
-      hora_inicio: fechaHoraInicio,
-      hora_final: fechaHoraFin,
-      hora_jornada: form2.horaJornadaForm,
+      hora_inicio: form1.horaInicioForm,
+      hora_final: form1.horaFinalForm,
+      hora_jornada: form1.horaJornadaForm,
       tipo_dia: form2.tipoDiaForm,
       codigo: form2.codigoForm,
       incl_almuerzo: form2.inclAlmuerzoForm,
@@ -145,10 +120,6 @@ export class HorasExtrasComponent implements OnInit {
       }, error => {
         console.log(error);
       });;
-  }
-
-  limpiarCampos() {
-    // this.nuevaHoraExtraForm.reset();
   }
 
 }

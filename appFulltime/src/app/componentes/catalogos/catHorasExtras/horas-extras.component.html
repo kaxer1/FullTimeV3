@@ -1,23 +1,24 @@
 <div class="container" style="padding-top: 15px;">
     <mat-card class="example-card mat-elevation-z8">
         <mat-toolbar style="background: white;">
-            <span>Añadir Hora Extra</span>
+            <span>Hora Extra</span>
         </mat-toolbar>
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
             <mat-step [stepControl]="primeroFormGroup">
-                <ng-template matStepLabel>Sección 1 </ng-template>
+                <ng-template matStepLabel>Configuraciones Generales </ng-template>
                 <form [formGroup]="primeroFormGroup">
                     <div class="container">
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label id="horaExtra">Nombre de la hora Extra</mat-label>
-                                    <input matInput placeholder="Ej: " formControlName="descripcionForm" (keypress)="IngresarSoloLetras($event)" required>
-                                    <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
+                                    <input matInput placeholder="Ej: " formControlName="descripcionForm" required>
+                                    <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}
+                                    </mat-error>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Seleccionar Tipo *</mat-label>
+                                    <mat-label id="tipoRecargo">Seleccionar tipo recargo *</mat-label>
                                     <mat-select formControlName="tipoDescuentoForm">
                                         <mat-option *ngFor="let d of descuentos" [value]="d.value">
                                             {{d.viewValue}}
@@ -32,45 +33,7 @@
                                 </mat-slider>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Dia de referencia *</mat-label>
-                                    <input matInput type="date" [formControl]="diaHoraExtra"
-                                    min="2020-01-31" max="2021-01-31">
-                                </mat-form-field>
-                            </div>
-                            <div class="col">
-                                <mat-form-field>
-                                    <input matInput type="time" placeholder="Hora Inicio" formControlName="horaInicioForm"
-                                        required>
-                                </mat-form-field>
-                                <br>
-                                <mat-form-field>
-                                    <input matInput type="time" placeholder="Hora Final" formControlName="horaFinalForm" required>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <div>
-                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
-                </div>
-            </mat-step>
-            <mat-step [stepControl]="segundoFormGroup">
-                <form [formGroup]="segundoFormGroup">
-                    <ng-template matStepLabel>Sección 2</ng-template>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <mat-form-field>
-                                    <mat-label>Tipo Función V2</mat-label>
-                                    <mat-select formControlName="tipoFuncionForm">
-                                        <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
-                                            {{t.viewValue}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                                <br>
-                                <mat-form-field>
-                                    <mat-label>Hora Jornada</mat-label>
+                                    <mat-label>Tipo de jornada</mat-label>
                                     <mat-select formControlName="horaJornadaForm" required>
                                         <mat-option *ngFor="let h of horario" [value]="h.value">
                                             {{h.viewValue}}
@@ -80,15 +43,40 @@
                             </div>
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Tipo Dia</mat-label>
-                                    <mat-select formControlName="tipoDiaForm" required>
-                                        <mat-option *ngFor="let d of dia" [value]="d.value">
-                                            {{d.viewValue}}
+                                    <input matInput type="time" placeholder="Hora Inicio"
+                                        formControlName="horaInicioForm" required>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <input matInput type="time" placeholder="Hora Final" formControlName="horaFinalForm"
+                                        required>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                    <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="segundoFormGroup">
+                <form [formGroup]="segundoFormGroup">
+                    <ng-template matStepLabel>Configuraciones Generales</ng-template>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Función del reloj</mat-label>
+                                    <mat-select formControlName="tipoFuncionForm">
+                                        <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
+                                            {{t.viewValue}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
+                                <br>
                                 <mat-form-field>
-                                    <mat-label id="codigoP">Código programacion V2</mat-label>
+                                    <mat-label id="codigoP">Código programacion</mat-label>
                                     <mat-select formControlName="codigoForm" required>
                                         <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
                                             {{t.viewValue}}
@@ -97,6 +85,16 @@
                                 </mat-form-field>
                             </div>
                             <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Tipo de día</mat-label>
+                                    <mat-select formControlName="tipoDiaForm" required>
+                                        <mat-option *ngFor="let d of dia" [value]="d.value">
+                                            {{d.viewValue}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <br>
+                                <br>
                                 <section class="example-section">
                                     <mat-radio-group aria-label="Select an option" formControlName="inclAlmuerzoForm"
                                         required>
