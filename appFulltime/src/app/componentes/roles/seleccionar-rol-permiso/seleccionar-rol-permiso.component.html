@@ -1,32 +1,53 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
 
     <mat-card class="example-card mat-elevation-z8">
-        <mat-card-header>
-            <mat-card-title>Añadir Rol Permiso para {{nombreRol}}</mat-card-title>
-        </mat-card-header>
+        <div class="barraTitulo">
+            <span>Añadir permisos para el rol {{nombreRol}}</span>
+        </div>
         <!-- Formulario Completo -->
         <mat-card-content>
+            <div class="subtitulo">
+                <span>
+                    Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado pantalla 
+                    por medio de los links y selecionando una etiqueta de descripcion de lo que realiza en ese página 
+                </span>
+            </div>
             <form [formGroup]="nuevoRolPermisoForm">
                 <div class="container" style="text-align: center;">
                     <div class="row">
                         <div class="col-sm">
                             <mat-form-field>
-                                <mat-label>Ingresar funcion</mat-label>
-                                <input matInput placeholder="Ej: Ver" [formControl]="funcion" (keypress)="soloLetras($event)" required>
+                                <mat-label>Seleccionar Función</mat-label>
+                                <mat-select [formControl]="funcion" matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="El rol es " required>
+                                    <mat-option *ngFor="let f of funciones" [value]="f.value">
+                                        {{f.value}}
+                                    </mat-option>
+                                </mat-select>
                                 <mat-error *ngIf="funcion.invalid">{{obtenerMensajeErrorFuncion()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
-                                <mat-label>Ingresar link</mat-label>
-                                <input matInput placeholder="Ej: /home" [formControl]="link" (keypress)="soloLetras($event)" required>
+                                <mat-label>Seleccionar Links</mat-label>
+                                <mat-select [formControl]="link" matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="El rol es el nivel " required>
+                                    <mat-option *ngFor="let l of links" [value]="l.value">
+                                        {{l.viewValue}}
+                                    </mat-option>
+                                </mat-select>
                                 <mat-error *ngIf="link.invalid">{{obtenerMensajeErrorLink()}}</mat-error>
                             </mat-form-field>
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
-                                <mat-label>Ingresar etiqueta</mat-label>
-                                <input matInput placeholder="Ej: sirve para visualizar" [formControl]="etiqueta" (keypress)="soloLetras($event)" required>
+                                <mat-label>Seleccionar etiquetas</mat-label>
+                                <mat-select [formControl]="etiqueta" matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="El rol es el nivel " required>
+                                    <mat-option *ngFor="let e of etiquetas" [value]="e.value">
+                                        {{e.value}}
+                                    </mat-option>
+                                </mat-select>
                                 <mat-error *ngIf="etiqueta.invalid">{{obtenerMensajeErrorEtiqueta()}}</mat-error>
                             </mat-form-field>
                         </div>

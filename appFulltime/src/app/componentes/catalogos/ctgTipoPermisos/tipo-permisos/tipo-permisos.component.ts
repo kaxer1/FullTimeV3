@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { TipoPermisosService } from 'src/app/servicios/catalogos/tipo-permisos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,8 @@ interface TipoDescuentos {
 @Component({
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
-  styleUrls: ['./tipo-permisos.component.css']
+  styleUrls: ['./tipo-permisos.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class TipoPermisosComponent implements OnInit {
 
@@ -22,7 +23,7 @@ export class TipoPermisosComponent implements OnInit {
     { value: '4', viewValue: 'desc4' },
   ];
 
-  isLinear = true;
+  isLinear = false;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
@@ -50,10 +51,9 @@ export class TipoPermisosComponent implements OnInit {
       geneJustificacionForm: ['', Validators.required],
       fecValidarForm: ['', Validators.required],
       actualizarForm: ['', Validators.required],
-      autorizarForm: ['', Validators.required],
     });
     this.terceroFormGroup = this._formBuilder.group({
-      crearForm: ['', Validators.required],
+      autorizarForm: ['', Validators.required],
       eliminarForm: ['', Validators.required],
       legalizarForm: ['', Validators.required],
       noautorizarForm: ['', Validators.required],
@@ -76,8 +76,7 @@ export class TipoPermisosComponent implements OnInit {
       fec_validar: form2.fecValidarForm,
       acce_empleado: form1.acceEmpleadoForm,
       actualizar: form2.actualizarForm,
-      autorizar: form2.autorizarForm,
-      crear: form3.crearForm,
+      autorizar: form3.autorizarForm,
       eliminar: form3.eliminarForm,
       legalizar: form3.legalizarForm,
       noautorizar: form3.noautorizarForm,

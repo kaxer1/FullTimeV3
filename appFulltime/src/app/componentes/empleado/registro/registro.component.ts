@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation} from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
 import { ToastrService} from 'ngx-toastr'
@@ -10,7 +10,8 @@ import { Md5 } from 'ts-md5/dist/md5';
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
-  styleUrls: ['./registro.component.scss']
+  styleUrls: ['./registro.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class RegistroComponent implements OnInit {
 
