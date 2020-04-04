@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import horasExtrasControlador from '../../controlador/catalogos/horasExtrasControlador';
+import horasExtrasControlador from '../../controlador/catalogos/catHorasExtrasControlador';
 
 class HorasExtrasRutas {
     public router: Router = Router();
@@ -11,9 +11,9 @@ class HorasExtrasRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', horasExtrasControlador.list);
-        this.router.get('/:id', horasExtrasControlador.getOne);
-        this.router.post('/', horasExtrasControlador.create);
+        this.router.get('/', horasExtrasControlador.ListarHorasExtras);
+        this.router.get('/:id', horasExtrasControlador.ObtenerUnaHoraExtra);
+        this.router.post('/', horasExtrasControlador.CrearHoraExtra);
     }
 }
 

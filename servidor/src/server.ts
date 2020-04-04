@@ -4,29 +4,29 @@ import morgan from 'morgan';
 
 // rutas importadas
 import indexRutas from './rutas/indexRutas';
-import roles from './rutas/pruebaRutas';
-import empleado from './rutas/empleadoRutas';
+import ROLES_RUTAS from './rutas/catalogos/catRolesRutas';
+import EMPLEADO_RUTAS from './rutas/empleado/empleadoRegistro/empleadoRutas';
 import LOGIN_RUTA from './rutas/login/loginRuta';
-import DISCAPACIDAD_RUTAS from './rutas/discapacidadRutas';
-import TITULO_RUTA from './rutas/catalogos/tituloRutas';
+import DISCAPACIDAD_RUTAS from './rutas/empleado/empleadoDiscapacidad/discapacidadRutas';
+import TITULO_RUTA from './rutas/catalogos/catTituloRutas';
 import REGIMEN_RUTA from './rutas/catalogos/catRegimenRuta';
 import FERIADOS_RUTA from './rutas/catalogos/catFeriadosRuta';
 import TIPO_COMIDAS_RUTA from './rutas/catalogos/catTipoComidasRuta';
 import RELOJES_RUTA from './rutas/catalogos/catRelojesRuta';
 import PROVINCIA_RUTA from './rutas/catalogos/catProvinciaRutas';
 import DEPARTAMENTO_RUTA from './rutas/catalogos/catDepartamentoRutas';
-import PROCESO_RUTA from './rutas/catalogos/procesoRutas';
+import PROCESO_RUTA from './rutas/catalogos/catProcesoRutas';
 import HORARIO_RUTA from './rutas/catalogos/catHorarioRutas';
-import ENROLADO_RUTA from './rutas/catalogos/enroladoRutas';
-import USUARIO_RUTA from './rutas/catalogos/usuarioRutas';
+import ENROLADO_RUTA from './rutas/catalogos/catEnroladoRutas';
+import USUARIO_RUTA from './rutas/usuarios/usuarioRutas';
 import HORAS_EXTRAS_RUTAS from './rutas/catalogos/catHorasExtrasRutas';
-import ROL_PERMISOS_RUTAS from './rutas/catalogos/rolPermisosRutas';
-import TIPO_PERMISOS_RUTAS from './rutas/catalogos/tipoPermisosRutas';
+import ROL_PERMISOS_RUTAS from './rutas/catalogos/catRolPermisosRutas';
+import TIPO_PERMISOS_RUTAS from './rutas/catalogos/catTipoPermisosRutas';
 import CIUDAD_RUTAS from './rutas/ciudades/ciudadesRutas';
 import CIUDAD_FERIADOS_RUTAS from './rutas/ciudadFeriado/ciudadFeriadoRutas';
-import notificacionesRutas from './rutas/catalogos/notificacionesRutas';
-import CONTRATO_EMPLEADO_RUTAS from './rutas/contratoEmpleado/contratoEmpleadoRutas';
-import EMPLEADO_CARGO_RUTAS from './rutas/EmpleadoCargos/emplCargosRutas'
+import NOTIFICACIONES_RUTAS from './rutas/catalogos/catNotificacionesRutas';
+import CONTRATO_EMPLEADO_RUTAS from './rutas/empleado/empleadoContrato/contratoEmpleadoRutas';
+import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRutas'
 
 class Server {
 
@@ -48,11 +48,11 @@ class Server {
 
     rutas(): void {
         this.app.use('/', indexRutas);
-        this.app.use('/rol', roles);
+        this.app.use('/rol', ROLES_RUTAS);
         this.app.use('/login', LOGIN_RUTA);
 
         //Empleado
-        this.app.use('/empleado', empleado);
+        this.app.use('/empleado', EMPLEADO_RUTAS);
         this.app.use('/contratoEmpleado', CONTRATO_EMPLEADO_RUTAS);
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
 
@@ -75,7 +75,7 @@ class Server {
         this.app.use('/tipoPermisos', TIPO_PERMISOS_RUTAS);
         this.app.use('/ciudades', CIUDAD_RUTAS);
         this.app.use('/ciudadFeriados', CIUDAD_FERIADOS_RUTAS);
-        this.app.use('/notificaciones', notificacionesRutas);
+        this.app.use('/notificaciones', NOTIFICACIONES_RUTAS);
 
     }
 

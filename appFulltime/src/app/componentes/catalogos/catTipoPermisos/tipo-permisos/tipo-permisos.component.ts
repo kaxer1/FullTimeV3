@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { TipoPermisosService } from 'src/app/servicios/catalogos/tipo-permisos.service';
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { ToastrService } from 'ngx-toastr';
 
 interface TipoDescuentos {

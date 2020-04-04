@@ -6,7 +6,6 @@ class DepartamentoRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
@@ -14,10 +13,10 @@ class DepartamentoRutas {
         this.router.get('/', DEPARTAMENTO_CONTROLADOR.ListarDepartamentos);
         this.router.get('/nombreDepartamento', DEPARTAMENTO_CONTROLADOR.ListarNombreDepartamentos);
         this.router.get('/idDepartamento/:nombre', DEPARTAMENTO_CONTROLADOR.ListarIdDepartamentoNombre);
-        this.router.get('/:id',  DEPARTAMENTO_CONTROLADOR.getOne);
-        this.router.post('/', DEPARTAMENTO_CONTROLADOR.create);
-        this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.getIdByNombre);
-        this.router.put('/:id', DEPARTAMENTO_CONTROLADOR.updateDepartamento)
+        this.router.get('/:id',  DEPARTAMENTO_CONTROLADOR.ObtenerUnDepartamento);
+        this.router.post('/', DEPARTAMENTO_CONTROLADOR.CrearDepartamento);
+        this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.ObtenerIdDepartamento);
+        this.router.put('/:id', DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento)
     }
 }
 

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
-import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
-import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
+import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 
-import { RegistroContratoComponent } from 'src/app/componentes/contratoEmpleado/registro-contrato/registro-contrato.component'
+import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 
 @Component({
   selector: 'app-ver-empleado',

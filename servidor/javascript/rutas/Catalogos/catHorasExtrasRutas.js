@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const horasExtrasControlador_1 = __importDefault(require("../../controlador/catalogos/horasExtrasControlador"));
+const catHorasExtrasControlador_1 = __importDefault(require("../../controlador/catalogos/catHorasExtrasControlador"));
 class HorasExtrasRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', horasExtrasControlador_1.default.list);
-        this.router.get('/:id', horasExtrasControlador_1.default.getOne);
-        this.router.post('/', horasExtrasControlador_1.default.create);
+        this.router.get('/', catHorasExtrasControlador_1.default.ListarHorasExtras);
+        this.router.get('/:id', catHorasExtrasControlador_1.default.ObtenerUnaHoraExtra);
+        this.router.post('/', catHorasExtrasControlador_1.default.CrearHoraExtra);
     }
 }
 const HORA_EXTRA_RUTA = new HorasExtrasRutas();

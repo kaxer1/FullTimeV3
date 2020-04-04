@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { HorasExtrasService } from 'src/app/servicios/catalogos/horas-extras.service';
+import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
 
 interface TipoDescuentos{
   value: number;

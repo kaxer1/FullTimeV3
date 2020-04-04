@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
+import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 
 @Component({

@@ -14,10 +14,10 @@ class DepartamentoRutas {
         this.router.get('/', catDepartamentoControlador_1.default.ListarDepartamentos);
         this.router.get('/nombreDepartamento', catDepartamentoControlador_1.default.ListarNombreDepartamentos);
         this.router.get('/idDepartamento/:nombre', catDepartamentoControlador_1.default.ListarIdDepartamentoNombre);
-        this.router.get('/:id', catDepartamentoControlador_1.default.getOne);
-        this.router.post('/', catDepartamentoControlador_1.default.create);
-        this.router.get('/busqueda/:nombre', catDepartamentoControlador_1.default.getIdByNombre);
-        this.router.put('/:id', catDepartamentoControlador_1.default.updateDepartamento);
+        this.router.get('/:id', catDepartamentoControlador_1.default.ObtenerUnDepartamento);
+        this.router.post('/', catDepartamentoControlador_1.default.CrearDepartamento);
+        this.router.get('/busqueda/:nombre', catDepartamentoControlador_1.default.ObtenerIdDepartamento);
+        this.router.put('/:id', catDepartamentoControlador_1.default.ActualizarDepartamento);
     }
 }
 const DEPARTAMENTO_RUTAS = new DepartamentoRutas();

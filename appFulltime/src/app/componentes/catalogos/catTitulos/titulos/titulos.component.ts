@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 
-import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
+import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 
 // Interface para creación de selección de niveles
 interface Nivel {

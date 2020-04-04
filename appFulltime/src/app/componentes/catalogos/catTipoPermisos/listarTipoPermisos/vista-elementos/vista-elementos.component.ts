@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TipoPermisosService } from 'src/app/servicios/catalogos/tipo-permisos.service';
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 
 @Component({
   selector: 'app-vista-elementos',

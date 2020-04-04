@@ -32,12 +32,14 @@ class HorarioControlador {
             if (UN_HORARIO.rowCount > 0) {
                 return res.json(UN_HORARIO.rows);
             }
-            res.status(404).json({ text: 'No se encuentran registros' });
+            else {
+                res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
     CrearHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
+            //HORA_TRABAJO --SOLO PERMITE 2 Números 1 entero, un decimal 
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
             res.json({ message: 'El horario ha sido registrado' });

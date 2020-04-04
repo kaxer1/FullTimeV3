@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { EmplCargosService } from 'src/app/servicios/empleado/empl-cargos.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

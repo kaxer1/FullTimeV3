@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ToastrService} from 'ngx-toastr'
-import { RolesService } from 'src/app/servicios/roles/roles.service';
-import { UsuarioService } from 'src/app/servicios/catalogos/usuario.service';
+import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 

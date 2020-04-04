@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
-import { EmpleadoService } from 'src/app/servicios/empleado/empleado.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-lista-empleados',

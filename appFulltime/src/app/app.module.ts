@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 
 // vistas
-import { VistaRolesComponent } from './componentes/roles/vista-roles/vista-roles.component';
+import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -17,26 +17,26 @@ import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/
 import { TitulosComponent } from './componentes/catalogos/catTitulos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
 import { HomeComponent } from './componentes/home/home.component';
-import { RegistroRolComponent } from './componentes/roles/registro-rol/registro-rol.component';
+import { RegistroRolComponent } from './componentes/catalogos/catRoles/registro-rol/registro-rol.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
-import { SeleccionarRolPermisoComponent } from './componentes/roles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
+import { SeleccionarRolPermisoComponent } from './componentes/catalogos/catRoles/seleccionar-rol-permiso/seleccionar-rol-permiso.component';
 import { PrincipalHorarioComponent } from './componentes/catalogos/catHorario/principal-horario/principal-horario.component'
 import { RegistroHorarioComponent } from './componentes/catalogos/catHorario/registro-horario/registro-horario.component'
 import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvincia/listar-provincia/principal-provincia.component';
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
-import { PrincipalProcesoComponent } from './componentes/catalogos/cg_proceso/principal-proceso/principal-proceso.component';
-import { RegistroProcesoComponent } from './componentes/catalogos/cg_proceso/registro-proceso/registro-proceso.component';
+import { PrincipalProcesoComponent } from './componentes/catalogos/catProcesos/principal-proceso/principal-proceso.component';
+import { RegistroProcesoComponent } from './componentes/catalogos/catProcesos/registro-proceso/registro-proceso.component';
 import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
-import { NotificacionesComponent } from './componentes/catalogos/notificaciones/notificaciones.component';
+import { NotificacionesComponent } from './componentes/catalogos/catNotificaciones/notificaciones.component';
 import { ListarFeriadosComponent } from './componentes/catalogos/catFeriados/listar-feriados/listar-feriados.component';
 import { PrincipalDepartamentoComponent } from './componentes/catalogos/catDepartamentos/listar-departamento/principal-departamento.component';
 import { RegistroDepartamentoComponent } from './componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { RegistrarFeriadosComponent } from './componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
-import { PrincipalEnroladosComponent } from './componentes/catalogos/cg_enrolados/principal-enrolados/principal-enrolados.component';
-import { RegistroEnroladosComponent } from './componentes/catalogos/cg_enrolados/registro-enrolados/registro-enrolados.component';
+import { PrincipalEnroladosComponent } from './componentes/catalogos/catEnrolados/principal-enrolados/principal-enrolados.component';
+import { RegistroEnroladosComponent } from './componentes/catalogos/catEnrolados/registro-enrolados/registro-enrolados.component';
 import { TipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/tipo-permisos/tipo-permisos.component';
 import { EditarFeriadosComponent } from './componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
@@ -47,24 +47,24 @@ import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/list
 import { RegistrarCiudadComponent } from './componentes/ciudades/registrar-ciudad/registrar-ciudad.component';
 import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
-import { RegistroContratoComponent } from './componentes/contratoEmpleado/registro-contrato/registro-contrato.component';
+import { RegistroContratoComponent } from './componentes/empleadoContrato/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 
 // conexión Rest Postgresql Servicios
-import { RolesService } from './servicios/roles/roles.service';
+import { RolesService } from './servicios/catalogos/catRoles/roles.service';
 import { LoginService } from './servicios/login/login.service';
-import { TituloService } from './servicios/catalogos/titulo.service';
-import { EmpleadoService } from './servicios/empleado/empleado.service'
+import { TituloService } from './servicios/catalogos/catTitulos/titulo.service';
+import { EmpleadoService } from './servicios/empleado/empleadoRegistro/empleado.service'
 import { DiscapacidadService } from './servicios/discapacidad/discapacidad.service';
 import { ProvinciaService } from './servicios/catalogos/catProvincias/provincia.service';
 import { HorarioService } from './servicios/catalogos/catHorarios/horario.service';
-import { HorasExtrasService } from './servicios/catalogos/horas-extras.service';
-import { EnroladoService } from './servicios/catalogos/enrolado.service';
+import { HorasExtrasService } from './servicios/catalogos/catHorasExtras/horas-extras.service';
+import { EnroladoService } from './servicios/catalogos/catEnrolados/enrolado.service';
 import { DepartamentosService } from './servicios/catalogos/catDepartamentos/departamentos.service';
-import { RolPermisosService } from './servicios/catalogos/rol-permisos.service';
-import { TipoPermisosService } from './servicios/catalogos/tipo-permisos.service';
-import { NotificacionesService } from './servicios/catalogos/notificaciones.service';
+import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-permisos.service';
+import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
+import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
 
 // Filtros de búsqueda
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';

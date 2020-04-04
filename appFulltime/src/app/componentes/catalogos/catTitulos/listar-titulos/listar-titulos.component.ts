@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { TitulosComponent } from '../titulos/titulos.component'
-import { TituloService } from 'src/app/servicios/catalogos/titulo.service';
+import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 
 interface Nivel {
   value: string;

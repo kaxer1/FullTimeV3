@@ -48,34 +48,34 @@ class DepartamentoControlador {
             }
         });
     }
-    getOne(req, res) {
+    ObtenerIdDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const unaProvincia = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE id = $1', [id]);
-            if (unaProvincia.rowCount > 0) {
-                return res.json(unaProvincia.rows);
+            const { nombre } = req.params;
+            const DEPARTAMENTO = yield database_1.default.query('SELECT id FROM cg_departamentos WHERE nombre = $1', [nombre]);
+            if (DEPARTAMENTO.rowCount > 0) {
+                return res.json(DEPARTAMENTO.rows);
             }
             res.status(404).json({ text: 'El departamento no ha sido encontrado' });
         });
     }
-    create(req, res) {
+    ObtenerUnDepartamento(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const DEPARTAMENTO = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE id = $1', [id]);
+            if (DEPARTAMENTO.rowCount > 0) {
+                return res.json(DEPARTAMENTO.rows);
+            }
+            res.status(404).json({ text: 'El departamento no ha sido encontrado' });
+        });
+    }
+    CrearDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, depa_padre, nivel } = req.body;
             yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre,nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
             res.json({ message: 'El departamento ha sido guardado con éxito' });
         });
     }
-    getIdByNombre(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.params;
-            const unIdProceso = yield database_1.default.query('SELECT id FROM cg_departamentos WHERE nombre = $1', [nombre]);
-            if (unIdProceso.rowCount > 0) {
-                return res.json(unIdProceso.rows);
-            }
-            res.status(404).json({ text: 'El departamento no ha sido encontrado' });
-        });
-    }
-    updateDepartamento(req, res) {
+    ActualizarDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, nivel, depa_padre } = req.body;
             const { id } = req.params;
