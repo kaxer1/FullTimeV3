@@ -4,7 +4,8 @@
         <div class="col">
             <mat-card class="example-card mat-elevation-z8">
                 <div style="text-align: center;">
-                    <h5>Provincia - Criterios de Búsqueda</h5>
+                    <h4>Provincias - Departamentos - Estados</h4>
+                    <h5>Criterios de Búsqueda</h5>
                 </div>
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
@@ -19,7 +20,7 @@
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Ingresar Provincia</mat-label>
+                                <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
                                 <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
                                     [(ngModel)]="filtroProvincia">
@@ -31,8 +32,8 @@
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarProvincia()">Ir a
-                        Registrar</button>
+                    <button type="button" class="btn btn-primary btn-sm"
+                        (click)="AbrirVentanaRegistrarProvincia()">Crear nueva Provincia</button>
                 </div>
             </mat-card>
         </div>
@@ -40,7 +41,7 @@
     </div>
 </div>
 
-<div class="container  table-responsive" style="padding-bottom: 50px;">
+<div class="container table-responsive" style="padding-bottom: 50px;">
     <mat-toolbar>
         <span style="text-align: center;">Resultados de búsqueda</span>
     </mat-toolbar>
@@ -48,7 +49,7 @@
         <thead class="thead-light">
             <tr style="text-align: center;">
                 <th scope="col">País</th>
-                <th scope="col">Nombre</th>
+                <th scope="col">Provincia-Departamento-Estado</th>
                 <th scope="col">Acción</th>
             </tr>
         </thead>

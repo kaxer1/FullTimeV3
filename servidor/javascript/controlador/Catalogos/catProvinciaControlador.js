@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class ProvinciaControlador {
     ListarProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias ORDER BY nombre, pais ASC');
+            const PROVINCIA = yield database_1.default.query('SELECT *FROM VistaNombrePais ORDER BY pais, nombre ASC');
             if (PROVINCIA.rowCount > 0) {
                 return res.json(PROVINCIA.rows);
             }
@@ -25,10 +25,33 @@ class ProvinciaControlador {
             }
         });
     }
+    ListarContinentes(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const CONTINENTE = yield database_1.default.query('SELECT continente FROM cg_paises GROUP BY continente ORDER BY continente ASC');
+            if (CONTINENTE.rowCount > 0) {
+                return res.json(CONTINENTE.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPaises(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { continente } = req.params;
+            const CONTINENTE = yield database_1.default.query('SELECT * FROM cg_paises WHERE continente = $1 ORDER BY nombre ASC', [continente]);
+            if (CONTINENTE.rowCount > 0) {
+                return res.json(CONTINENTE.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ObtenerUnaProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const UNA_PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias WHERE id = $1', [id]);
+            const { id_pais } = req.params;
+            const UNA_PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias WHERE id_pais = $1', [id_pais]);
             if (UNA_PROVINCIA.rowCount > 0) {
                 return res.json(UNA_PROVINCIA.rows);
             }
@@ -51,8 +74,8 @@ class ProvinciaControlador {
     }
     CrearProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, pais } = req.body;
-            yield database_1.default.query('INSERT INTO cg_provincias (nombre, pais) VALUES ($1, $2)', [nombre, pais]);
+            const { nombre, id_pais } = req.body;
+            yield database_1.default.query('INSERT INTO cg_provincias (nombre, id_pais) VALUES ($1, $2)', [nombre, id_pais]);
             res.json({ message: 'La provincia ha sido guardada con éxito' });
         });
     }

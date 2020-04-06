@@ -46,7 +46,7 @@ export class ListarCiudadComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarCiudad() {
-    this.vistaRegistrarCiudad.open(RegistrarCiudadComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarCiudad.open(RegistrarCiudadComponent, { width: '600px' }).disableClose = true;
   }
 
   IngresarSoloLetras(e) {

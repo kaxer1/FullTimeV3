@@ -6,24 +6,48 @@
     <form [formGroup]="asignarCiudadForm">
         <mat-card-content>
             <div class="container">
-                <mat-form-field>
-                    <mat-label>Seleccionar Provincia</mat-label>
-                    <mat-select [formControl]="nombreProvinciaF" [(ngModel)]="seleccionarProvincia">
-                        <mat-option *ngFor="let provincia of nombreProvincias"
-                             [value]="provincia.nombre" (click)="FiltrarCiudades(asignarCiudadForm.value)">
-                            {{provincia.nombre}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>Seleccionar Ciudad</mat-label>
-                    <mat-select [formControl]="nombreCiudadF" [(ngModel)]="seleccionarCiudad">
-                        <mat-option *ngFor="let ciudad of nombreCiudades" [value]="ciudad.id">
-                            {{ciudad.descripcion}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Seleccionar Continente *</mat-label>
+                            <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
+                                <mat-option *ngFor="let c of continentes" [value]="c.continente"
+                                    (click)="FiltrarPaises(asignarCiudadForm.value)">
+                                    {{c.continente}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Seleccionar País *</mat-label>
+                            <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
+                                <mat-option *ngFor="let pais of paises" [value]="pais.id"
+                                    (click)="FiltrarProvincias(asignarCiudadForm.value)">
+                                    {{pais.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Seleccionar Provincia</mat-label>
+                            <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia">
+                                <mat-option *ngFor="let pro of provincias" [value]="pro.nombre" (click)="FiltrarCiudades(asignarCiudadForm.value)">
+                                    {{pro.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Seleccionar Ciudad</mat-label>
+                            <mat-select [formControl]="nombreCiudadF" [(ngModel)]="seleccionarCiudad">
+                                <mat-option *ngFor="let ciudad of nombreCiudades" [value]="ciudad.id" (click)="SeleccionarCiudad(asignarCiudadForm.value)">
+                                    {{ciudad.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
             </div>
         </mat-card-content>
     </form>

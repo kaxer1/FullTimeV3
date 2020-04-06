@@ -27,7 +27,4 @@ export class CiudadFeriadosService {
     return this.http.get(`${this.API_URL}/ciudadFeriados/${nombre}`);
   }
   
-  BuscarProvincia(){
-    return this.http.get(`${this.API_URL}/ciudadFeriados`);
-  }
 }

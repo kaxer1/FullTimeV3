@@ -18,24 +18,22 @@ interface opcionesPais {
 
 export class RegistroProvinciaComponent implements OnInit {
 
+  continentes: any = [];
+  seleccionarContinente;
+  paises: any = [];
+  seleccionarPaises;
+
   // Control de campos y validaciones del formulario
+  nombreContinenteF = new FormControl('');
   nombrePaisF = new FormControl('', [Validators.required]);
   nombreProvinciaF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
 
   // Asignación de validaciones a inputs del formulario
   public NuevaProvinciasForm = new FormGroup({
+    nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
     nombreProvinciaForm: this.nombreProvinciaF,
   });
-
-  // Arreglo de paises existentes
-  paises: opcionesPais[] = [
-    { valor: 'Ecuador', nombre: 'Ecuador' },
-    { valor: 'Colombia', nombre: 'Colombia' },
-    { valor: 'Venezuela', nombre: 'Venezuela' },
-    { valor: 'Perú', nombre: 'Perú' },
-  ];
-  seleccionarPais: string = this.paises[0].valor;
 
   constructor(
     private rest: ProvinciaService,
@@ -44,11 +42,36 @@ export class RegistroProvinciaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.continentes = this.ObtenerContinentes();
   }
 
-  ObtenerMensajePaisRequerido() {
-    if (this.nombrePaisF.hasError('required')) {
-      return 'Campo Obligatorio';
+  ObtenerContinentes() {
+    this.continentes = [];
+    this.rest.BuscarContinente().subscribe(datos => {
+      this.continentes = datos;
+      this.continentes[this.continentes.length] = { continente: "Seleccionar" };
+      this.seleccionarContinente = this.continentes[this.continentes.length - 1].continente;
+    })
+  }
+
+  ObtenerPaises(continente) {
+    this.paises = [];
+    this.rest.BuscarPais(continente).subscribe(datos => {
+      this.paises = datos;
+      this.paises[this.paises.length] = { nombre: "Seleccionar" };
+      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+    })
+  }
+
+  FiltrarPaises(form) {
+    var nombreContinente = form.nombreContinenteForm;
+    if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
+      this.toastr.info('No ha seleccionado ninguna opción')
+      this.paises = [];
+      this.seleccionarPaises = '';
+    }
+    else {
+      this.seleccionarPaises = this.ObtenerPaises(nombreContinente);
     }
   }
 
@@ -61,19 +84,26 @@ export class RegistroProvinciaComponent implements OnInit {
 
   InsertarProvincia(form) {
     let dataProvincia = {
-      pais: form.nombrePaisForm,
       nombre: form.nombreProvinciaForm,
+      id_pais: form.nombrePaisForm,
     };
-    this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Provincia guardada');
-      this.LimpiarCampos();
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada')
-    });;
+    if (dataProvincia.id_pais === 'Seleccionar') {
+      this.toastr.info('Seleccionar un país')
+    }
+    else {
+      this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
+        this.toastr.success('Registro guardado', 'Provincia - Departamento - Estado');
+        this.LimpiarCampos();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada')
+      });
+    }
   }
 
   LimpiarCampos() {
     this.NuevaProvinciasForm.reset();
+    this.ObtenerContinentes();
+    this.paises = [];
   }
 
   IngresarSoloLetras(e) {

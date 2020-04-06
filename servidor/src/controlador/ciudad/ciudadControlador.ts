@@ -4,7 +4,7 @@ import pool from '../../database';
 class CiudadControlador {
 
     public async ListarNombreCiudad(req: Request, res: Response) {
-        const CIUDAD = await pool.query('SELECT * FROM VistaNombreProvincia ORDER BY descripcion, nombre ASC');
+        const CIUDAD = await pool.query('SELECT * FROM VistaNombreProvincia ORDER BY nombre, descripcion ASC');
         if (CIUDAD.rowCount > 0) {
             return res.json(CIUDAD.rows)
         }

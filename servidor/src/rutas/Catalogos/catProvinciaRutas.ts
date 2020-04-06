@@ -11,8 +11,10 @@ class ProvinciaRutas {
 
     configuracion(): void {
         this.router.get('/', PROVINCIA_CONTROLADOR.ListarProvincia);
+        this.router.get('/continentes', PROVINCIA_CONTROLADOR.ListarContinentes);
+        this.router.get('/pais/:continente', PROVINCIA_CONTROLADOR.ListarPaises);
         this.router.get('/nombreProvincia/:nombre', PROVINCIA_CONTROLADOR.ObtenerIdProvincia);
-        this.router.get('/:id',  PROVINCIA_CONTROLADOR.ObtenerUnaProvincia);
+        this.router.get('/:id_pais',  PROVINCIA_CONTROLADOR.ObtenerUnaProvincia);
         this.router.post('/',  PROVINCIA_CONTROLADOR.CrearProvincia);
     }
 }

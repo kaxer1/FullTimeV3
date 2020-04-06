@@ -1,21 +1,32 @@
 <mat-icon>open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Provincia</h5>
+<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir</h5>
+<h5 style="text-align: center">Provincia - Departamento - Estado</h5>
+<br>
 <div style="text-align: center;">
     <form [formGroup]="NuevaProvinciasForm">
         <mat-card-content>
             <div class="container">
                 <mat-form-field>
-                    <mat-label>Seleccionar País *</mat-label>
-                    <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPais">
-                        <mat-option *ngFor="let p of paises" [value]="p.nombre">
-                            {{p.valor}}
+                    <mat-label>Seleccionar Continente *</mat-label>
+                    <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
+                        <mat-option *ngFor="let c of continentes" [value]="c.continente" (click)="FiltrarPaises(NuevaProvinciasForm.value)">
+                            {{c.continente}}
                         </mat-option>
                     </mat-select>
-                    <mat-error *ngIf="nombrePaisF.invalid">{{ObtenerMensajeProvinciaRequerido()}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Nombre de la Provincia</mat-label>
+                    <mat-label>Seleccionar País *</mat-label>
+                    <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
+                        <mat-option *ngFor="let pais of paises"
+                             [value]="pais.id">
+                            {{pais.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <mat-label id="nombreP">Provincia-Departamento-Estado</mat-label>
                     <input matInput placeholder="Ej: Pichincha" [formControl]="nombreProvinciaF"
                         (keypress)="IngresarSoloLetras($event)" required>
                     <mat-error *ngIf="nombreProvinciaF.invalid">{{ObtenerMensajeProvinciaRequerido()}}</mat-error>

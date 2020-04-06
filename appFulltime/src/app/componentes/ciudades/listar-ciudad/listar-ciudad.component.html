@@ -10,20 +10,20 @@
                     <div class="container" style="text-align: center;">
                         <form [formGroup]="BuscarCiudadForm">
                             <mat-form-field>
-                                <mat-label>Buscar Ciudad</mat-label>
-                                <input matInput name="filtroCiudad" placeholder="Ej: Ecuador"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
-                                    [(ngModel)]="filtroCiudad">
-                                <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Buscar Provincia</mat-label>
+                                <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
                                 <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
                                     [(ngModel)]="filtroProvincia">
                                 <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
+                                </mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Buscar Ciudad</mat-label>
+                                <input matInput name="filtroCiudad" placeholder="Ej: Quito"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
+                                    [(ngModel)]="filtroCiudad">
+                                <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
                                 </mat-error>
                             </mat-form-field>
                         </form>
@@ -31,8 +31,8 @@
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarCiudad()">Ir a
-                        Registrar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarCiudad()">Crear
+                        nueva Ciudad</button>
                 </div>
             </mat-card>
         </div>
@@ -47,15 +47,15 @@
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
+                <th scope="col">Provincia-Departamento-Estado</th>
                 <th scope="col">Ciudad</th>
-                <th scope="col">Provincia</th>
                 <th scope="col">Acción</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let ciudad of datosCiudades | provincia: filtroProvincia | filtroNombre: filtroCiudad">
-                <td>{{ciudad.descripcion}}</td>
                 <td>{{ciudad.nombre}}</td>
+                <td>{{ciudad.descripcion}}</td>
                 <td>
                     <i class="far fa-trash-alt"></i>
                 </td>

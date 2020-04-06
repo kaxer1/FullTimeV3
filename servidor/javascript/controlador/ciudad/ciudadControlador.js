@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class CiudadControlador {
     ListarNombreCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const CIUDAD = yield database_1.default.query('SELECT * FROM VistaNombreProvincia ORDER BY descripcion, nombre ASC');
+            const CIUDAD = yield database_1.default.query('SELECT * FROM VistaNombreProvincia ORDER BY nombre, descripcion ASC');
             if (CIUDAD.rowCount > 0) {
                 return res.json(CIUDAD.rows);
             }

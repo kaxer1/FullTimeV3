@@ -47,7 +47,7 @@ export class PrincipalProvinciaComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProvincia() {
-    this.vistaRegistrarProvincia.open(RegistroProvinciaComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarProvincia.open(RegistroProvinciaComponent, { width: '400px' }).disableClose = true;
   }
 
   IngresarSoloLetras(e) {

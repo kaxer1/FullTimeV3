@@ -16,16 +16,23 @@ export class RegistrarCiudadComponent implements OnInit {
   // Control de los campos del formulario
   nombreF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   idProvinciaF = new FormControl('', [Validators.required]);
+  nombreContinenteF = new FormControl('', Validators.required);
+  nombrePaisF = new FormControl('', Validators.required);
 
-  // Datos Departamento
-  ciudades: any = [];
-  provinciaId: any = [];
+  // Datos Provincias
+  provincias: any = [];
   seleccionarProvincia;
+  continentes: any = [];
+  seleccionarContinente;
+  paises: any = [];
+  seleccionarPaises;
 
   // Asignar los campos en un formulario en grupo
   public nuevaCiudadForm = new FormGroup({
     nombreForm: this.nombreF,
     idProvinciaForm: this.idProvinciaF,
+    nombreContinenteForm: this.nombreContinenteF,
+    nombrePaisForm: this.nombrePaisF,
   });
 
   constructor(
@@ -36,50 +43,89 @@ export class RegistrarCiudadComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ciudades = this.ObtenerProvincias();
+    this.continentes = this.ObtenerContinentes();
+  }
+
+  ObtenerContinentes() {
+    this.continentes = [];
+    this.restP.BuscarContinente().subscribe(datos => {
+      this.continentes = datos;
+      this.continentes[this.continentes.length] = { continente: "Seleccionar" };
+      this.seleccionarContinente = this.continentes[this.continentes.length - 1].continente;
+    })
+  }
+
+  ObtenerPaises(continente) {
+    this.paises = [];
+    this.restP.BuscarPais(continente).subscribe(datos => {
+      this.paises = datos;
+      this.paises[this.paises.length] = { nombre: "Seleccionar" };
+      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+    })
+  }
+
+  FiltrarPaises(form) {
+    var nombreContinente = form.nombreContinenteForm;
+    if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
+      this.toastr.info('No ha seleccionado ninguna opción')
+      this.paises = [];
+      this.provincias = [];
+      this.seleccionarPaises = '';
+    }
+    else {
+      this.seleccionarPaises = this.ObtenerPaises(nombreContinente);
+    }
+  }
+
+  ObtenerProvincias(pais) {
+    this.provincias = [];
+    this.restP.BuscarUnaProvincia(pais).subscribe(datos => {
+      this.provincias = datos;
+      this.provincias[this.provincias.length] = { nombre: "Seleccionar" };
+      this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
+    }, error => {
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+    })
+  }
+
+  FiltrarProvincias(form) {
+    var nombrePais = form.nombrePaisForm;
+    if (nombrePais === undefined) {
+      this.toastr.info('No ha seleccionado ninguna opción')
+      this.provincias = [];
+      this.seleccionarProvincia = '';
+    }
+    else {
+      this.seleccionarProvincia = this.ObtenerProvincias(nombrePais);
+    }
   }
 
   InsertarCiudad(form) {
-    var provinciaNombre = form.idProvinciaForm;
-    var idP;
-    if (provinciaNombre === 'Seleccionar') {
+    var provinciaId = form.idProvinciaForm;
+    var nombreCiudad = form.nombreForm;
+    console.log(provinciaId, nombreCiudad)
+    if (provinciaId === 'Seleccionar') {
       this.toastr.info('Seleccione una provincia')
     }
     else {
-      this.restP.getIdProvinciaRest(provinciaNombre).subscribe(datos => {
-        this.provinciaId = datos;
-        for (let i = this.provinciaId.length - 1; i >= 0; i--) {
-          var id_Pro = this.provinciaId[i]['id'];
-          idP = id_Pro;
-        }
-        let datosCiudad = {
-          descripcion: form.nombreForm,
-          id_provincia: idP,
-        };
-        this.rest.postCiudades(datosCiudad).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Ciudad registrada');
-          this.LimpiarCampos();
-        }, error => {
-          this.toastr.error('Operación Fallida', 'Ciudad no pudo ser registrada')
-        });
-      }, (error) => {
-        this.toastr.info('Descripción ingresada no coincide con los registros')
-      })
+      let datosCiudad = {
+        descripcion: form.nombreForm,
+        id_provincia: provinciaId,
+      };
+      this.rest.postCiudades(datosCiudad).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Ciudad registrada');
+        this.LimpiarCampos();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Ciudad no pudo ser registrada')
+      });
     }
-  }
-
-  ObtenerProvincias() {
-    this.ciudades = [];
-    this.restP.getProvinciasRest().subscribe(datos => {
-      this.ciudades = datos;
-      this.ciudades[this.ciudades.length] = { nombre: "Seleccionar" };
-      this.seleccionarProvincia = this.ciudades[this.ciudades.length - 1].nombre;
-    })
   }
 
   LimpiarCampos() {
     this.nuevaCiudadForm.reset();
-    this.ObtenerProvincias();
+    this.ObtenerContinentes();
+    this.paises = [];
+    this.provincias = [];
   }
 
   CerrarVentanaRegistroCiudad() {

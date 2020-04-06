@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-feriados.service';
+import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 
 @Component({
   selector: 'app-asignar-ciudad',
@@ -12,67 +13,135 @@ import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-f
 })
 export class AsignarCiudadComponent implements OnInit {
 
-  // Datos Departamento
-  nombreCiudades: any = [];
+  // Datos Ciudad-Feriado
   ciudadFeriados: any = [];
   nombreProvincias: any = [];
-  seleccionarCiudad;
+
+  // Datos Provincias, Continentes, Países y Ciudades
+  provincias: any = [];
   seleccionarProvincia;
+  continentes: any = [];
+  seleccionarContinente;
+  paises: any = [];
+  seleccionarPaises;
+  nombreCiudades: any = [];
+  seleccionarCiudad;
 
   // Control de los campos del formulario
-  nombreProvinciaF = new FormControl('');
   nombreCiudadF = new FormControl('', [Validators.required]);
+  idProvinciaF = new FormControl('', [Validators.required]);
+  nombreContinenteF = new FormControl('', Validators.required);
+  nombrePaisF = new FormControl('', Validators.required);
 
   // Asignar los campos en un formulario en grupo
   public asignarCiudadForm = new FormGroup({
-    nombreProvinciaForm: this.nombreProvinciaF,
     nombreCiudadForm: this.nombreCiudadF,
+    idProvinciaForm: this.idProvinciaF,
+    nombreContinenteForm: this.nombreContinenteF,
+    nombrePaisForm: this.nombrePaisF,
   });
 
   constructor(
     private restF: CiudadFeriadosService,
+    private restP: ProvinciaService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<AsignarCiudadComponent>,
     @Inject(MAT_DIALOG_DATA) public feriadoSeleccionado: any
   ) { }
 
   ngOnInit(): void {
-    this.seleccionarProvincia = this.ObtenerProvincias();
+    this.continentes = this.ObtenerContinentes();
   }
 
-  ObtenerProvincias() {
-    this.nombreProvincias = [];
-    this.restF.BuscarProvincia().subscribe(datos => {
-      this.nombreProvincias = datos;
-      this.nombreProvincias[this.nombreProvincias.length] = { nombre: "Seleccionar Provincia" };
-      this.seleccionarProvincia = this.nombreProvincias[this.nombreProvincias.length - 1].nombre;
+  ObtenerContinentes() {
+    this.continentes = [];
+    this.restP.BuscarContinente().subscribe(datos => {
+      this.continentes = datos;
+      this.continentes[this.continentes.length] = { continente: "Seleccionar" };
+      this.seleccionarContinente = this.continentes[this.continentes.length - 1].continente;
     })
+  }
+
+  ObtenerPaises(continente) {
+    this.paises = [];
+    this.restP.BuscarPais(continente).subscribe(datos => {
+      this.paises = datos;
+      this.paises[this.paises.length] = { nombre: "Seleccionar" };
+      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+    })
+  }
+
+  FiltrarPaises(form) {
+    var nombreContinente = form.nombreContinenteForm;
+    if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
+      this.toastr.info('No ha seleccionado ninguna opción')
+      this.paises = [];
+      this.provincias = [];
+      this.nombreCiudades = [];
+      this.seleccionarPaises = '';
+    }
+    else {
+      this.seleccionarPaises = this.ObtenerPaises(nombreContinente);
+    }
+  }
+
+  ObtenerProvincias(pais) {
+    this.provincias = [];
+    this.restP.BuscarUnaProvincia(pais).subscribe(datos => {
+      this.provincias = datos;
+      this.provincias[this.provincias.length] = { nombre: "Seleccionar" };
+      this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
+    }, error => {
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+    })
+  }
+
+  FiltrarProvincias(form) {
+    var nombrePais = form.nombrePaisForm;
+    if (nombrePais === undefined) {
+      this.toastr.info('No ha seleccionado ninguna opción')
+      this.provincias = [];
+      this.seleccionarProvincia = '';
+    }
+    else {
+      this.seleccionarProvincia = this.ObtenerProvincias(nombrePais);
+    }
   }
 
   ObtenerCiudades(provincia) {
     this.nombreCiudades = [];
     this.restF.BuscarCiudadProvincia(provincia).subscribe(datos => {
       this.nombreCiudades = datos;
-      console.log(this.nombreCiudades);
-      this.nombreCiudades[this.nombreCiudades.length] = { descripcion: "Seleccionar Ciudad" };
+      this.nombreCiudades[this.nombreCiudades.length] = { descripcion: "Seleccionar" };
       this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
+    }, error => {
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
     })
   }
 
   FiltrarCiudades(form) {
-    var nombreProvincia = form.nombreProvinciaForm;
-    console.log(nombreProvincia);
-    if (nombreProvincia === 'Seleccionar Provincia' || nombreProvincia === '') {
+    var nombreProvincia = form.idProvinciaForm;
+    if (nombreProvincia === 'Seleccionar') {
       this.toastr.info('No ha seleccionado ninguna opción')
+      this.seleccionarCiudad = '';
     }
     else {
       this.seleccionarCiudad = this.ObtenerCiudades(nombreProvincia);
     }
   }
 
+  SeleccionarCiudad(form) {
+    var nombreCiudad = form.nombreCiudadForm;
+    if (nombreCiudad === undefined) {
+      this.toastr.info('No ha seleccionado ninguna opción')
+    }
+  }
+
   LimpiarCampos() {
     this.asignarCiudadForm.reset();
-    this.ObtenerProvincias();
+    this.ObtenerContinentes();
+    this.paises = [];
+    this.provincias = [];
     this.nombreCiudades = [];
   }
 
@@ -84,25 +153,18 @@ export class AsignarCiudadComponent implements OnInit {
   InsertarFeriadoCiudad(form) {
     var idFeriado = this.feriadoSeleccionado.id;
     var nombreCiudad = form.nombreCiudadForm;
-    if (nombreCiudad != 'Seleccionar Ciudad') {
-      this.ciudadFeriados = [];
-      let buscarCiudad = {
+    if (nombreCiudad != 'Seleccionar') {
+      var buscarCiudad = {
         id_feriado: idFeriado,
         id_ciudad: nombreCiudad
       }
+      this.ciudadFeriados = [];
       this.restF.BuscarIdCiudad(buscarCiudad).subscribe(datos => {
         this.ciudadFeriados = datos;
-        if (this.ciudadFeriados.length > 0) {
-          this.toastr.info('Se le recuerda que esta Ciudad ya fue asignada a este Feriado')
-          this.LimpiarCampos();
-        }
+        this.toastr.info('Se le recuerda que esta Ciudad ya fue asignada a este Feriado')
+        this.LimpiarCampos();
       }, error => {
-        let datosCiudadFeriado = {
-          id_feriado: idFeriado,
-          id_ciudad: nombreCiudad,
-        };
-        console.log("datos", datosCiudadFeriado)
-        this.restF.CrearCiudadFeriado(datosCiudadFeriado).subscribe(response => {
+        this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
           this.LimpiarCampos();
         }, error => {

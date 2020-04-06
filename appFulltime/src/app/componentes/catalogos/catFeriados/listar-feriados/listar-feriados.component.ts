@@ -71,7 +71,7 @@ export class ListarFeriadosComponent implements OnInit {
 
   AbrirVentanaAsignarCiudad(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 
