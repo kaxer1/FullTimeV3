@@ -1,15 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
 import { RolPermisosService } from 'src/app/servicios/catalogos/catRolPermisos/rol-permisos.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RolesService } from '../../../../servicios/catalogos/catRoles/roles.service';
 
+interface Funciones {
+  value: string;
+}
+
+interface Links {
+  value: string;
+  viewValue: string;
+}
+
+interface Etiquetas {
+  value: string;
+}
 
 @Component({
   selector: 'app-seleccionar-rol-permiso',
   templateUrl: './seleccionar-rol-permiso.component.html',
-  styleUrls: ['./seleccionar-rol-permiso.component.css']
+  styleUrls: ['./seleccionar-rol-permiso.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class SeleccionarRolPermisoComponent implements OnInit {
 
@@ -22,6 +35,29 @@ export class SeleccionarRolPermisoComponent implements OnInit {
     linkForm: this.link,
     etiquetaForm: this.etiqueta
   });
+
+  funciones: Funciones[] = [
+    {value: 'Ver'},
+    {value: 'Crear'},
+    {value: 'Editar'},
+    {value: 'Eliminar'}
+  ];
+
+  links: Links[] = [
+    {value: '/home', viewValue:'Home'},
+    {value: '/horasExtras', viewValue:'Horas Extras'},
+    {value: '/notificaciones', viewValue:'Notificaciones'},
+    {value: '/tipoPermisos', viewValue:'Tipo Permisos'},
+    {value: '/empleado', viewValue:'Empleado'},
+    {value: '/departamento', viewValue:'Departamento'},
+  ];
+
+  etiquetas: Etiquetas[] = [
+    {value: 'para visualizar información'},
+    {value: 'para crear nuevos registros'},
+    {value: 'para editar información'},
+    {value: 'para eliminar información'}
+  ];
 
   idRol: string;
   idPermiso: string;
@@ -84,7 +120,7 @@ export class SeleccionarRolPermisoComponent implements OnInit {
     let dataRol = {
       funcion: form.funcionForm,
       link: form.linkForm,
-      etiqueta: form.etiquetaForm
+      etiqueta: form.etiquetaForm + ' ' + form.linkForm
     }
 
     this.rest.postRolPermisoRest(dataRol).subscribe(res => {

@@ -108,6 +108,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -225,7 +226,7 @@ import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pip
     FormsModule,
     MatStepperModule,
     DragDropModule,
-
+    MatTooltipModule
   ],
   providers: [
     LoginService,

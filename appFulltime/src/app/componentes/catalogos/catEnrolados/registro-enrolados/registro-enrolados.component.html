@@ -35,6 +35,16 @@
                 </div>
                 <div class="col">
                     <mat-form-field>
+                        <mat-label>Confirmar Contraseña</mat-label>
+                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
+                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                            [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
                         <mat-label>Número de huella </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
                             (keypress)="soloNumeros($event)" required>

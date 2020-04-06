@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +21,8 @@ interface opcionesSolicitud {
 @Component({
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
-  styleUrls: ['./tipo-permisos.component.css']
+  styleUrls: ['./tipo-permisos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class TipoPermisosComponent implements OnInit {
