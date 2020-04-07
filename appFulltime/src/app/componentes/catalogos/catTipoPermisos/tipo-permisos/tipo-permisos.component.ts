@@ -177,7 +177,6 @@ export class TipoPermisosComponent implements OnInit {
   }
 
   VerificarJustificacion(datos) {
-    console.log(datos.num_dia_justifica, datos.gene_justificacion)
     if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'true') {
       this.toastr.info('Ingresar número de días para presentar justificación')
     }
