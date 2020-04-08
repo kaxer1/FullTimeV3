@@ -50,6 +50,8 @@ import { AsignarCiudadComponent } from './componentes/catalogos/catFeriados/asig
 import { RegistroContratoComponent } from './componentes/empleadoContrato/registro-contrato/registro-contrato.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
+import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
+import { FooterComponent } from './share/footer/footer.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -89,6 +91,7 @@ import { EmplCodigoPipe } from './filtros/empleado/filtroEmpCod/empl-codigo.pipe
 import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe';
 import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
 import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
+import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
 
 // material
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -109,7 +112,6 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FooterComponent } from './share/footer/footer.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -119,7 +121,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
 
 @NgModule({
   declarations: [
@@ -188,7 +189,8 @@ import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pip
     EmplNombrePipe,
     EmplApellidoPipe,
     ListarTitulosComponent,
-    FitroNivelPipe
+    FitroNivelPipe,
+    ListarCiudadFeriadosComponent
   ],
   imports: [
     BrowserModule,

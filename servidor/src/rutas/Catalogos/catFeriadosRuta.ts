@@ -12,8 +12,10 @@ class FeriadosRuta {
 
     configuracion(): void {
         this.router.get('/', FERIADOS_CONTROLADOR.ListarFeriados);
+        this.router.get('/ultimoId', FERIADOS_CONTROLADOR.ObtenerUltimoId);
+        this.router.get('/:id', FERIADOS_CONTROLADOR.ObtenerUnFeriado);
         this.router.post('/', FERIADOS_CONTROLADOR.CrearFeriados);
-        this.router.put('/:id', FERIADOS_CONTROLADOR.ActualizarFeriado);
+        this.router.put('/', FERIADOS_CONTROLADOR.ActualizarFeriado);
     }
 }
 

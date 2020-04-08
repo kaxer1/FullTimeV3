@@ -3,7 +3,8 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h5 style="text-align: center">Relojes - Críterios de Búsqueda</h5>
+                <h4>DISPOSITIVOS</h4>
+                <h5>Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRelojesForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -11,6 +12,9 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
                                     [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                    matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
+                                    help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos letras
                                 </mat-error>
                             </mat-form-field>
@@ -19,12 +23,18 @@
                                 <mat-label>IP</mat-label>
                                 <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
                                     [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                    matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por la dirección IP">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Modelo</mat-label>
                                 <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
                                     name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                    matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
+                                    help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos letras
                                 </mat-error>
                             </mat-form-field>
@@ -34,7 +44,7 @@
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarReloj()"
-                        value="Ir a Registrar">
+                        value="Crear nuevo Dispositivo">
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -55,7 +65,7 @@
                 <th scope="col">Puerto</th>
                 <th scope="col">Marca</th>
                 <th scope="col">Modelo</th>
-                <th scope="col">MAC</th>
+                <th scope="col">Tiene Funciones</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
@@ -68,7 +78,7 @@
                 <td>{{reloj.puerto}}</td>
                 <td>{{reloj.marca}}</td>
                 <td>{{reloj.modelo}}</td>
-                <td>{{reloj.mac}}</td>
+                <td>{{reloj.tien_funciones}}</td>
                 <td>
                     <i class="fas fa-edit"></i>
                 </td>

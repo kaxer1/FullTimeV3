@@ -1,6 +1,10 @@
 .btn { margin-left: 15px; border-radius: 25px; } 
-.mat-icon { 
+#movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
+}
+#ayuda { color:green; }
+.primary-tooltip {
+    background-color : rgb(23, 46, 177) ;
 }

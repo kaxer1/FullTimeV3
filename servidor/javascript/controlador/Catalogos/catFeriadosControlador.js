@@ -25,10 +25,20 @@ class FeriadosControlador {
             }
         });
     }
+    ObtenerUltimoId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const FERIADOS = yield database_1.default.query('SELECT MAX(id) FROM cg_feriados');
+            if (FERIADOS.rowCount > 0) {
+                return res.json(FERIADOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ActualizarFeriado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
-            const { fecha, descripcion, fec_recuperacion } = req.body;
+            const { fecha, descripcion, fec_recuperacion, id } = req.body;
             yield database_1.default.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
             res.json({ message: 'Feriado actualizado exitosamente' });
         });
@@ -38,6 +48,16 @@ class FeriadosControlador {
             const { fecha, descripcion, fec_recuperacion } = req.body;
             yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
             res.json({ message: 'Feriado guardado' });
+        });
+    }
+    ObtenerUnFeriado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const FERIADO = yield database_1.default.query('SELECT * FROM cg_feriados WHERE id = $1', [id]);
+            if (FERIADO.rowCount > 0) {
+                return res.json(FERIADO.rows);
+            }
+            res.status(404).json({ text: 'Registros no encontrados' });
         });
     }
 }

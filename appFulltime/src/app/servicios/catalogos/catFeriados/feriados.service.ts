@@ -21,7 +21,16 @@ export class FeriadosService {
     return this.http.get(`${this.API_URL}/feriados`);
   }
 
-  ActualizarUnFeriado(id: number, datos:any){
-    return this.http.put(`${this.API_URL}/feriados/${id}`, datos);
+  ConsultarUnFeriado(id: number){
+    return this.http.get(`${this.API_URL}/feriados/${id}`);
   }
+
+  ActualizarUnFeriado(datos:any){
+    return this.http.put(`${this.API_URL}/feriados`, datos);
+  }
+
+  ConsultarUltimoId(){
+    return this.http.get(`${this.API_URL}/feriados/ultimoId`);
+  }
+
 }

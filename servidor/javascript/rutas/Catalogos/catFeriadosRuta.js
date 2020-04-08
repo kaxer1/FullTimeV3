@@ -12,8 +12,10 @@ class FeriadosRuta {
     }
     configuracion() {
         this.router.get('/', catFeriadosControlador_1.default.ListarFeriados);
+        this.router.get('/ultimoId', catFeriadosControlador_1.default.ObtenerUltimoId);
+        this.router.get('/:id', catFeriadosControlador_1.default.ObtenerUnFeriado);
         this.router.post('/', catFeriadosControlador_1.default.CrearFeriados);
-        this.router.put('/:id', catFeriadosControlador_1.default.ActualizarFeriado);
+        this.router.put('/', catFeriadosControlador_1.default.ActualizarFeriado);
     }
 }
 const FERIADOS_RUTA = new FeriadosRuta();

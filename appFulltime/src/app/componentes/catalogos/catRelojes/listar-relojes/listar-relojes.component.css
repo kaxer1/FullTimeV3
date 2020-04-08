@@ -2,3 +2,7 @@
 td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 20px; }
 #nombre { font-size: x-small; }
+h4 { font-weight: bold; text-align: center; }
+h5 { text-align: center; }
+#dispositivo { color:rgb(0, 102, 128); font-size: 18px;}
+.color-tooltip { background-color : rgb(23, 46, 177); }

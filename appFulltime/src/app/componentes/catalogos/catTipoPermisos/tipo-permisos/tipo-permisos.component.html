@@ -26,7 +26,7 @@
                                 <mat-form-field>
                                     <mat-label>Descripción</mat-label>
                                     <input matInput placeholder="Ej: Descripcion del tipo de permiso"
-                                        (keypress)="soloLetras($event)" formControlName="nombreForm" id="nombreTP"
+                                        (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm" id="nombreTP"
                                         style="visibility:hidden">
                                     <mat-icon matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                         matTooltip="Ingresar nombre del nuevo permiso">help_outline</mat-icon>
@@ -44,7 +44,7 @@
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Horas y minutos de permiso</mat-label>
-                                    <input matInput placeholder="Ej: 4" (keypress)="soloNumeros($event)"
+                                    <input matInput type="time" placeholder="Ej: 4" (keypress)="soloNumeros($event)"
                                         formControlName="numHoraMaximoForm" required>
                                     <mat-icon matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                         matTooltip="Ingresar -----------------------">help_outline</mat-icon>
@@ -340,5 +340,4 @@
             </mat-step>
         </mat-horizontal-stepper>
     </mat-card>
-
 </div>

@@ -1,0 +1,60 @@
+<div class="container" *ngFor="let f of datosFeriado" style="padding-top: 15px;">
+    <mat-card class="example-card mat-elevation-z8">
+        <div class="barraTitulo">
+            <span>DATOS GENERALES</span>
+        </div>
+        <mat-card-content>
+            <div class="container" style="padding-top: 15px;">
+                <div class="row">
+                    <br>
+                    <div class="col">
+                        <label class="col-sm col-form-label">Descripción:</label>
+                        <br>
+                        <label id="datos" class="col-sm col-form-label">{{f.descripcion}}</label>
+                    </div>
+                    <br>
+                    <div class="col">
+                        <label class="col-sm col-form-label">Fecha:</label>
+                        <br>
+                        <label id="datos" class="col-sm col-form-label">{{f.fecha}}</label>
+                    </div>
+                    <br>
+                    <div class="col">
+                        <label class="col-sm col-form-label">Fecha de Recuperación:</label>
+                        <br>
+                        <label id="datos" class="col-sm col-form-label">{{f.fec_recuperacion}}</label>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+            <hr>
+            <div class="container table-responsive" style="padding-bottom: 50px;">
+                <p id="lista">Lista de Ciudades</p>
+                <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+                    <thead class="thead-light">
+                        <tr style="text-align: center;">
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Ciudades</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let dc of datosCiudades">
+                            <td>{{dc.nombreferiado}}</td>
+                            <td>{{dc.nombreciudad}}</td>
+                            <td>
+                                <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                    matTooltip="Modificar ciudad en la que rige el feriado" class="fas fa-edit">
+                                    <p id="editar">Editar</p>
+                                </i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" class="btn btn-success btn-sm" [routerLink]="['/listarFeriados/']" value="Ir a la Lista de Feriados">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaAsignarCiudad(f)" value="Asignar una Ciudad">
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -29,8 +29,8 @@ class RelojesControlador {
 
     public async CrearRelojes(req: Request, res: Response): Promise<void> {
 
-        const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac } = req.body;
-        await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac]);
+        const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones } = req.body;
+        await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones]);
         res.json({ message: 'Reloj Guardado' });
     }
 

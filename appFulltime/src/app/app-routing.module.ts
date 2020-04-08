@@ -31,6 +31,7 @@ import { ListarCiudadComponent } from './componentes/ciudades/listar-ciudad/list
 import { VistaElementosComponent } from './componentes/catalogos/catTipoPermisos/listarTipoPermisos/vista-elementos/vista-elementos.component';
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
+import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -65,6 +66,7 @@ const routes: Routes = [
   { path: 'listarCiudades', component: ListarCiudadComponent},
   { path: 'verTipoPermiso', component: VistaElementosComponent},
   { path: 'emplCargos', component: EmplCargosComponent},
+  { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent},
 
 ];
 

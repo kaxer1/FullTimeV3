@@ -63,15 +63,15 @@ export class ListarFeriadosComponent implements OnInit {
     this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '300px' }).disableClose = true;
   }
 
-  AbrirVentanaRegistrarFeriado1(id: any, datosSeleccionados: any): void {
-    console.log(id, datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: { idSelec: id } })
-    console.log(id, datosSeleccionados.fecha);
+  AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    console.log(datosSeleccionados.fecha);
   }
 
   AbrirVentanaAsignarCiudad(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
+    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: false} }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 

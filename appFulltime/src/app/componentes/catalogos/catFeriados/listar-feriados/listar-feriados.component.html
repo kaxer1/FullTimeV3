@@ -3,8 +3,8 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h5 style="text-align: center">Feriados</h5>
-                <h5 style="text-align: center">Críterios de Búsqueda</h5>
+                <h4>FERIADOS</h4>
+                <h5>Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarFeriadosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -13,6 +13,8 @@
                                 <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
                                     [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
                                     (keypress)="IngresarSoloLetras($event)">
+                                    <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                    matTooltip="Búsqueda del feriado por el nombre">help_outline</mat-icon>
                                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
                                 </mat-error>
                             </mat-form-field>
@@ -21,6 +23,8 @@
                                 <mat-label>Fecha</mat-label>
                                 <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
                                     [formControl]="fechaF" [(ngModel)]="filtradoFecha">
+                                    <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                    matTooltip="Búsqueda del feriado por la fecha">help_outline</mat-icon>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
@@ -28,7 +32,7 @@
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarFeriado()"
-                        value="Ir a Registrar">
+                        value="Crear nuevo Feriado">
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -55,13 +59,18 @@
                 <td>{{f.fecha}}</td>
                 <td>{{f.fec_recuperacion}}</td>
                 <td>
-                    <i class="fas fa-city" id="ciudad" (click)="AbrirVentanaAsignarCiudad(f)">
+                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Asignar ciudad en la que rige este feriado" class="fas fa-city" id="ciudad" (click)="AbrirVentanaAsignarCiudad(f)">
                         <p>Ciudad</p>
                     </i>
-                    <i class="fas fa-edit" (click)="AbrirVentanaRegistrarFeriado1(f.id, f)"></i>
-                   
+                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar datos generales de este feriado" class="fas fa-edit" (click)="AbrirVentanaEditarFeriado(f)">
+                        <p>Editar</p>
+                    </i>
+                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver" [routerLink]="['/verFeriados/', f.id]"><p>Ver</p></i>
                 </td>
             </tr>
         </tbody>
     </table>
-</div>
+</div> 

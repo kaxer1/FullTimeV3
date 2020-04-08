@@ -31,6 +31,17 @@ class CiudadFeriadoControlador {
         }
     }
 
+    public async EncontrarCiudadesFeriado(req: Request, res: Response): Promise<any> {
+        const { idferiado } = req.params;
+        const CIUDAD_FERIADO = await pool.query('SELECT * FROM NombreFeriadoCiudad WHERE idferiado = $1', [idferiado]);
+        if (CIUDAD_FERIADO.rowCount > 0) {
+            return res.json(CIUDAD_FERIADO.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'Registros no encontrados' });
+        }
+    }
+
 }
 
 export const CIUDAD_FERIADO_CONTROLADOR = new CiudadFeriadoControlador();

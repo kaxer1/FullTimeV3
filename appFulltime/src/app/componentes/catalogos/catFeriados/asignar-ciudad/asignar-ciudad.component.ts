@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-feriados.service';
@@ -16,6 +17,8 @@ export class AsignarCiudadComponent implements OnInit {
   // Datos Ciudad-Feriado
   ciudadFeriados: any = [];
   nombreProvincias: any = [];
+
+  actualizarPagina: boolean = false;
 
   // Datos Provincias, Continentes, Países y Ciudades
   provincias: any = [];
@@ -45,12 +48,15 @@ export class AsignarCiudadComponent implements OnInit {
     private restF: CiudadFeriadosService,
     private restP: ProvinciaService,
     private toastr: ToastrService,
+    private router: Router,
     public dialogRef: MatDialogRef<AsignarCiudadComponent>,
-    @Inject(MAT_DIALOG_DATA) public feriadoSeleccionado: any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
+    console.log(this.data.actualizar)
+    console.log(this.data.feriado.id)
   }
 
   ObtenerContinentes() {
@@ -148,10 +154,11 @@ export class AsignarCiudadComponent implements OnInit {
   CerrarVentanaAsignarCiudad() {
     this.LimpiarCampos();
     this.dialogRef.close();
+    window.location.reload();
   }
 
-  InsertarFeriadoCiudad(form) {
-    var idFeriado = this.feriadoSeleccionado.id;
+  InsertarFeriadoCiudad(form, id) {
+    var idFeriado = this.data.feriado.id;
     var nombreCiudad = form.nombreCiudadForm;
     if (nombreCiudad != 'Seleccionar') {
       var buscarCiudad = {
@@ -166,7 +173,15 @@ export class AsignarCiudadComponent implements OnInit {
       }, error => {
         this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
-          this.LimpiarCampos();
+          this.actualizarPagina = this.data.actualizar;
+          if(this.actualizarPagina === true){
+            this.dialogRef.close();
+            window.location.reload();
+          }
+          else {
+            this.dialogRef.close();
+            this.router.navigate(['/verFeriados/', id]);
+          }          
         }, error => {
           this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado')
         });

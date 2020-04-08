@@ -22,6 +22,7 @@ export class RelojesComponent implements OnInit {
   serieF = new FormControl('', Validators.pattern('[0-9]{0,3}'));
   idFabricacionF = new FormControl('', [Validators.minLength(4)]);
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
+  funcionesF = new FormControl('', [Validators.required]);
   macF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
@@ -35,7 +36,8 @@ export class RelojesComponent implements OnInit {
     serieForm: this.serieF,
     idFabricacionForm: this.idFabricacionF,
     fabricanteForm: this.fabricanteF,
-    macForm: this.macF
+    macForm: this.macF,
+    funcionesForm: this.funcionesF,
   });
 
   constructor(
@@ -58,15 +60,15 @@ export class RelojesComponent implements OnInit {
       serie: form.serieForm,
       id_fabricacion: form.idFabricacionForm,
       fabricante: form.fabricanteForm,
-      mac: form.macForm
+      mac: form.macForm,
+      tien_funciones: form.funcionesForm
     };
 
     this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Reloj registrado')
+      this.toastr.success('Operación Exitosa', 'Dispositivo registrado')
       this.LimpiarCampos();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Reloj no se pudo registrar')
-
+      this.toastr.error('Operación Fallida', 'Dispositivo no pudo ser registrado')
     });
   }
 
@@ -139,6 +141,5 @@ export class RelojesComponent implements OnInit {
     this.dialogRef.close();
     window.location.reload();
   }
-
 
 }

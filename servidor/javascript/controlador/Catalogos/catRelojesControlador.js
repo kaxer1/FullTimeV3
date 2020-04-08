@@ -39,8 +39,8 @@ class RelojesControlador {
     }
     CrearRelojes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac } = req.body;
-            yield database_1.default.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac]);
+            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones } = req.body;
+            yield database_1.default.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones]);
             res.json({ message: 'Reloj Guardado' });
         });
     }

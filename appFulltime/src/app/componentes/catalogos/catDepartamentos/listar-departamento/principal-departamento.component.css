@@ -3,3 +3,8 @@
 .far { color:red }
 tr { text-align: center; }
 td { padding-top: 10px; text-align: center; }
+h4 { font-weight: bold; text-align: center; }
+h5 { text-align: center; }
+span { font-weight: bold; }
+#color { color:green; }
+.color-tooltip { background: rgb(23, 46, 177) ; }

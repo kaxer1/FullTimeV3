@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 
 @Component({
@@ -12,6 +13,8 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 })
 
 export class RegistrarFeriadosComponent implements OnInit {
+
+  idUltimoFeriado: any = [];
 
   // Control de campos y validaciones del formulario
   fechaF = new FormControl('', Validators.required);
@@ -28,8 +31,8 @@ export class RegistrarFeriadosComponent implements OnInit {
   constructor(
     private rest: FeriadosService,
     private toastr: ToastrService,
+    private router: Router,
     public dialogRef: MatDialogRef<RegistrarFeriadosComponent>,
-    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -41,14 +44,17 @@ export class RegistrarFeriadosComponent implements OnInit {
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
     };
-    if(datosFeriado.fec_recuperacion === ''){
+    if (datosFeriado.fec_recuperacion === '') {
       datosFeriado.fec_recuperacion = null;
-      console.log(datosFeriado.fec_recuperacion)
-
     }
     this.rest.CrearNuevoFeriado(datosFeriado).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Feriado registrado')
-      this.LimpiarCampos();
+      this.rest.ConsultarUltimoId().subscribe(response => {
+        this.idUltimoFeriado = response;
+        this.LimpiarCampos();
+        this.dialogRef.close();
+        this.router.navigate(['/verFeriados/', this.idUltimoFeriado[0].max]);
+      }, error => { });
     }, error => {
       this.toastr.error('Operación Fallida', 'Feriado no se pudo registrar')
     });

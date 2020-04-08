@@ -14,6 +14,7 @@ class CiudadRutas {
         this.router.post('/insertar', ciudadFeriadoControlador_1.default.AsignarCiudadFeriado);
         this.router.post('/buscar', ciudadFeriadoControlador_1.default.ObtenerIdCiudades);
         this.router.get('/:nombre', ciudadFeriadoControlador_1.default.FiltrarCiudadesProvincia);
+        this.router.get('/nombresCiudades/:idferiado', ciudadFeriadoControlador_1.default.EncontrarCiudadesFeriado);
     }
 }
 const CIUDAD_FERIADOS_RUTAS = new CiudadRutas();
