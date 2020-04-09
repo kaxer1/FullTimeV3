@@ -3,8 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h4>FERIADOS</h4>
-                <h5>Críterios de Búsqueda</h5>
+                <div class="barraTituloF">
+                    <span>FERIADOS</span>
+                </div>
+                <br>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarFeriadosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -13,8 +16,9 @@
                                 <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
                                     [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
                                     (keypress)="IngresarSoloLetras($event)">
-                                    <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                    matTooltip="Búsqueda del feriado por el nombre">help_outline</mat-icon>
+                                <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
+                                    matTooltipPosition="right" matTooltip="Búsqueda del feriado por el nombre">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
                                 </mat-error>
                             </mat-form-field>
@@ -23,8 +27,9 @@
                                 <mat-label>Fecha</mat-label>
                                 <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
                                     [formControl]="fechaF" [(ngModel)]="filtradoFecha">
-                                    <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                    matTooltip="Búsqueda del feriado por la fecha">help_outline</mat-icon>
+                                <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
+                                    matTooltipPosition="right" matTooltip="Búsqueda del feriado por la fecha">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
@@ -41,9 +46,7 @@
 </div>
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultado de búsqueda</span>
-    </mat-toolbar>
+    <div id="resultados">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
@@ -59,18 +62,23 @@
                 <td>{{f.fecha}}</td>
                 <td>{{f.fec_recuperacion}}</td>
                 <td>
-                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Asignar ciudad en la que rige este feriado" class="fas fa-city" id="ciudad" (click)="AbrirVentanaAsignarCiudad(f)">
+                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Asignar ciudad en la que rige este feriado" class="fas fa-city" id="ciudad"
+                        (click)="AbrirVentanaAsignarCiudad(f)">
                         <p>Ciudad</p>
                     </i>
-                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Modificar datos generales de este feriado" class="fas fa-edit" (click)="AbrirVentanaEditarFeriado(f)">
+                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
+                        (click)="AbrirVentanaEditarFeriado(f)">
                         <p>Editar</p>
                     </i>
-                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver" [routerLink]="['/verFeriados/', f.id]"><p>Ver</p></i>
+                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                        [routerLink]="['/verFeriados/', f.id]">
+                        <p>Ver</p>
+                    </i>
                 </td>
             </tr>
         </tbody>
     </table>
-</div> 
+</div>

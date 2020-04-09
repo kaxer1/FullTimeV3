@@ -1,5 +1,8 @@
 <mat-icon id="movilidad">open_with</mat-icon>
-<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">{{data.descripcion}}</h4>
+<div class="barraTituloE">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">{{data.descripcion}}</span>
+</div>
+<br>
 <!-- Formulario Completo -->
 <form [formGroup]="EditarFeriadosForm">
     <mat-card-content>
@@ -8,7 +11,7 @@
                 <mat-label>Descripción</mat-label>
                 <input matInput placeholder="Descripción feriado" [formControl]="descripcionF"
                     (keypress)="IngresarSoloLetras($event)" required>
-                    <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar nombre de este feriado">help_outline</mat-icon>
                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
             </mat-form-field>
@@ -16,14 +19,14 @@
             <mat-form-field>
                 <mat-label>Fecha</mat-label>
                 <input matInput type="date" placeholder="Seleccionar fecha" [formControl]="fechaF" required>
-                <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar fecha de este feriado">help_outline</mat-icon>
             </mat-form-field>
             <br>
             <mat-form-field>
                 <mat-label>Fecha Recuperación</mat-label>
                 <input matInput type="date" placeholder="Selecionar fecha" [formControl]="fechaRecuperacionF">
-                <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar fecha de recuperación para este feriado">help_outline</mat-icon>
             </mat-form-field>
         </div>

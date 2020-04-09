@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,8 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 @Component({
   selector: 'app-editar-feriados',
   templateUrl: './editar-feriados.component.html',
-  styleUrls: ['./editar-feriados.component.css']
+  styleUrls: ['./editar-feriados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EditarFeriadosComponent implements OnInit {
 

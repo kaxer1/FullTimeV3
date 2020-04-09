@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -11,7 +11,8 @@ import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriado
 @Component({
   selector: 'app-listar-feriados',
   templateUrl: './listar-feriados.component.html',
-  styleUrls: ['./listar-feriados.component.css']
+  styleUrls: ['./listar-feriados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ListarFeriadosComponent implements OnInit {
 

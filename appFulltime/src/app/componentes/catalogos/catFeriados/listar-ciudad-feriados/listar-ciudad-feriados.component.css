@@ -1,8 +1,8 @@
 .btn { border-radius: 25px; margin-right: 15px; margin-top: 15px; margin-left: 15px; }
-.barraTitulo { 
+.barraTituloD { 
     font-size: 25px; 
     text-align: center; 
-    background: rgba(22, 106, 216, 0.828); 
+    background: rgb(66, 0, 128); 
     color: white; 
     border-radius: 10px; 
     padding-top: 10px; 
@@ -14,4 +14,13 @@ td { padding-top: 10px; text-align: center; }
 #editar { font-size: x-small; }
 .color-tooltip { background-color : rgb(23, 46, 177); }
 #lista { font-weight: bold; }
-hr { background-color: #999999; }
+hr { background-color: rgb(66, 0, 128); }
+#resultados { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(66, 0, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

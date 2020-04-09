@@ -1,11 +1,22 @@
+.relojRegistro-tooltip { background-color : rgb(0, 102, 128); }
 .btn { margin-left: 15px; border-radius: 25px; }
 #movilidad { 
-    cursor: grab;
+    cursor: move;
     color: blue;
     font-size: 20px;
 }
 #idFabrica { font-size: x-small; }
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 #reloj { font-size: 14px; }
-#dispositivo { color:rgb(0, 102, 128); font-size: 18px;}
-.color-tooltip { background-color : rgb(23, 46, 177); }
+#dispositivo { color:rgb(0, 102, 128); font-size: 18px; }
+.barraTituloRelojR { 
+    font-size: 25px; 
+    text-align: center; 
+    background: rgb(0, 102, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}
+
+
+

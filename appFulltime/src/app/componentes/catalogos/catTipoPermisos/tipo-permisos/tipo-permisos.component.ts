@@ -18,6 +18,11 @@ interface opcionesSolicitud {
   nombre: string
 }
 
+interface opcionesDiasHoras {
+  valor: string;
+  nombre: string
+}
+
 @Component({
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
@@ -35,6 +40,11 @@ export class TipoPermisosComponent implements OnInit {
   solicitudes: opcionesSolicitud[] = [
     { valor: 1, nombre: 'Si' },
     { valor: 2, nombre: 'No' },
+  ];
+
+  diasHoras: opcionesDiasHoras[] = [
+    { valor: 'Días', nombre: 'Días' },
+    { valor: 'Horas', nombre: 'Horas' },
   ];
 
   validarGuardar: boolean = false;
@@ -69,11 +79,12 @@ export class TipoPermisosComponent implements OnInit {
     this.primeroFormGroup = this._formBuilder.group({
       descripcionForm: ['', Validators.required],
       nombreForm: [''],
-      numDiaMaximoForm: ['', Validators.required],
-      numHoraMaximoForm: ['', Validators.required],
+      numDiaMaximoForm: [''],
+      numHoraMaximoForm: [''],
       numDiaIngresoForm: ['', Validators.required],
       acceEmpleadoForm: ['', Validators.required],
-      almuIncluirForm: ['', Validators.required]
+      almuIncluirForm: ['', Validators.required],
+      diasHorasForm: ['', Validators.required]
     });
     this.segundoFormGroup = this._formBuilder.group({
       vacaAfectaForm: ['', Validators.required],
@@ -100,7 +111,6 @@ export class TipoPermisosComponent implements OnInit {
       descripcion: form1.descripcionForm,
       tipo_descuento: form2.tipoDescuentoForm,
       num_dia_maximo: form1.numDiaMaximoForm,
-      num_hora_maximo: form1.numHoraMaximoForm,
       num_dia_ingreso: form1.numDiaIngresoForm,
       vaca_afecta: form2.vacaAfectaForm,
       anio_acumula: form2.anioAcumulaForm,
@@ -114,7 +124,8 @@ export class TipoPermisosComponent implements OnInit {
       legalizar: form3.legalizarForm,
       preautorizar: form3.preautorizarForm,
       almu_incluir: form1.almuIncluirForm,
-      num_dia_justifica: form3.numDiaJustificaForm
+      num_dia_justifica: form3.numDiaJustificaForm,
+      num_hora_maximo: form1.numHoraMaximoForm,
     }
     if (nombrePermiso === 'OTRO') {
       if (nuevoPermiso === '') {
@@ -122,14 +133,14 @@ export class TipoPermisosComponent implements OnInit {
       }
       else {
         dataTipoPermiso.descripcion = nuevoPermiso;
-        this.VerificarJustificacion(dataTipoPermiso);
+        this.VerificarJustificacion(form1, dataTipoPermiso);
       }
     }
     else if (nombrePermiso === 'Seleccionar') {
       this.toastr.info('Seleccionar o definir una descripción del nuevo tipo de permiso', 'Información General');
     }
     else {
-      this.VerificarJustificacion(dataTipoPermiso);
+      this.VerificarJustificacion(form1, dataTipoPermiso);
     }
   }
 
@@ -160,14 +171,14 @@ export class TipoPermisosComponent implements OnInit {
 
   }
 
-  ActivarJustificacion(form3) {
+  ActivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
       (<HTMLInputElement>document.getElementById('diasJustificar')).style.visibility = 'visible';
       this.toastr.info('Ingresar número de días para presentar justificación')
     }
   }
 
-  DesactivarJustificacion(form3) {
+  DesactivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('no')).value = 'false') {
       (<HTMLInputElement>document.getElementById('diasJustificar')).style.visibility = 'hidden';
       this.terceroFormGroup.patchValue({
@@ -176,16 +187,56 @@ export class TipoPermisosComponent implements OnInit {
     }
   }
 
-  VerificarJustificacion(datos) {
+  VerificarJustificacion(form1, datos) {
     if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'true') {
       this.toastr.info('Ingresar número de días para presentar justificación')
     }
     else if (datos.num_dia_justifica != '' && datos.gene_justificacion === 'true') {
+      this.CambiarValoresDiasHoras(form1, datos);
       this.IngresarDatos(datos);
     }
     else if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'false') {
       datos.num_dia_justifica = 0;
+      this.CambiarValoresDiasHoras(form1, datos);
       this.IngresarDatos(datos);
+    }
+  }
+
+  ActivarDiasHoras(form) {
+    if (form.diasHorasForm === 'Días') {
+      this.primeroFormGroup.patchValue({
+        numDiaMaximoForm: '',
+      });
+      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
+      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+      this.toastr.info('Ingresar número de días máximos de permiso');
+    }
+    else {
+      this.primeroFormGroup.patchValue({
+        numHoraMaximoForm: '',
+      });
+      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
+      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
+      this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+    }
+  }
+
+  CambiarValoresDiasHoras(form, datos) {
+    if (form.diasHorasForm === 'Días') {
+      if (datos.num_dia_maximo === '') {
+        this.toastr.info('Ingresar número de días máximos de permiso');
+      }
+      else {
+        datos.num_hora_maximo = '00:00';
+      }
+    }
+    else {
+      if (datos.num_hora_maximo === '') {
+        this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+      }
+      else {
+        datos.num_dia_maximo = 0;
+      }
     }
   }
 
@@ -209,9 +260,21 @@ export class TipoPermisosComponent implements OnInit {
     }
   }
 
-  soloNumeros(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return ((key >= 48 && key <= 57) || (key === 8))
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
+    }
   }
 
   LimpiarCampoNombre() {

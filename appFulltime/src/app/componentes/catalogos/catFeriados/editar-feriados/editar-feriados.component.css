@@ -5,4 +5,12 @@
     font-size: 20px;
 }
 #feriado { color:rgb(66, 0, 128); font-size: 18px;}
-.color-tooltip { background-color : rgb(23, 46, 177); }
+.editar-tooltip { background-color : rgb(66, 0, 128); }
+.barraTituloE { 
+    font-size: 18px; 
+    text-align: center; 
+    background: rgb(66, 0, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}

@@ -3,8 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h4>DISPOSITIVOS</h4>
-                <h5>Críterios de Búsqueda</h5>
+                <div class="barraTituloReloj">
+                    <span>DISPOSITIVOS</span>
+                </div>
+                <br>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRelojesForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -12,7 +15,7 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
                                     [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                     matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
                                     help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos letras
@@ -23,7 +26,7 @@
                                 <mat-label>IP</mat-label>
                                 <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
                                     [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                     matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por la dirección IP">
                                     help_outline</mat-icon>
                             </mat-form-field>
@@ -32,7 +35,7 @@
                                 <mat-label>Modelo</mat-label>
                                 <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
                                     name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="color-tooltip"
+                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                     matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
                                     help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos letras
@@ -53,9 +56,7 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultados de búsqueda</span>
-    </mat-toolbar>
+    <div id="resultadosRelojes">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">

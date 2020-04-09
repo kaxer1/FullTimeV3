@@ -3,8 +3,25 @@
 .far { color:red }
 tr { text-align: center; }
 td { padding-top: 10px; text-align: center; }
-h4 { font-weight: bold; text-align: center; }
 h5 { text-align: center; }
 span { font-weight: bold; }
-#color { color:green; }
-.color-tooltip { background: rgb(23, 46, 177) ; }
+#color { color:rgb(122, 3, 106); font-size: 18px; }
+.departamento-tooltip { background: rgb(122, 3, 106); }
+.tituloDepartamentos { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(122, 3, 106); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#resulDepartamentos { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(122, 3, 106); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

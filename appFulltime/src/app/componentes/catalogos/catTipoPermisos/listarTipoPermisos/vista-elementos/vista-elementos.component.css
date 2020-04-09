@@ -1,0 +1,21 @@
+.btn { margin-left: 15px; border-radius: 25px; }
+.barraTitulo { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgba(22, 106, 216, 0.828); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#resultados { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgba(22, 106, 216, 0.828); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#permiso { color:rgb(0, 102, 128); font-size: 18px; }
+.color-tooltip { background: #2c6ec5; }

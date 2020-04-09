@@ -7,4 +7,22 @@ p { font-size: x-small;}
 h4 { font-weight: bold; text-align: center; }
 h5 { text-align: center; }
 #feriado { color:rgb(66, 0, 128); font-size: 18px;}
-.color-tooltip { background-color : rgb(23, 46, 177); }
+.listaF-tooltip { background-color : rgb(66, 0, 128); }
+.barraTituloF { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(66, 0, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#resultados { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(66, 0, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

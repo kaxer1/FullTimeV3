@@ -67,6 +67,8 @@ import { DepartamentosService } from './servicios/catalogos/catDepartamentos/dep
 import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
+import { CiudadFeriadosService} from './servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadService } from './servicios/ciudad/ciudad.service';
 
 // Filtros de búsqueda
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
@@ -228,7 +230,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     FormsModule,
     MatStepperModule,
     DragDropModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   providers: [
     LoginService,
@@ -245,6 +247,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     RolPermisosService,
     TipoPermisosService,
     DepartamentosService,
+    CiudadFeriadosService,
+    CiudadService,
 
   ],
   bootstrap: [AppComponent,

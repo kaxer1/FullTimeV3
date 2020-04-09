@@ -31,6 +31,7 @@ const ciudadFeriadoRutas_1 = __importDefault(require("./rutas/ciudadFeriado/ciud
 const catNotificacionesRutas_1 = __importDefault(require("./rutas/catalogos/catNotificacionesRutas"));
 const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/empleado/empleadoContrato/contratoEmpleadoRutas"));
 const emplCargosRutas_1 = __importDefault(require("./rutas/empleado/empleadoCargos/emplCargosRutas"));
+const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComidasRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -52,6 +53,8 @@ class Server {
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/contratoEmpleado', contratoEmpleadoRutas_1.default);
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
+        //Almuerzo
+        this.app.use('/planComidas', planComidasRutas_1.default);
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', catTituloRutas_1.default);
         this.app.use('/discapacidad', discapacidadRutas_1.default);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
@@ -8,7 +8,8 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-relojes',
   templateUrl: './relojes.component.html',
-  styleUrls: ['./relojes.component.css']
+  styleUrls: ['./relojes.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RelojesComponent implements OnInit {
 

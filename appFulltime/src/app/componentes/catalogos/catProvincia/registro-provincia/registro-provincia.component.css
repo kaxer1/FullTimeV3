@@ -1,7 +1,17 @@
 .btn { border-radius: 25px; margin-right: 15px; }
-.mat-icon { 
+#movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
 #nombreP { font-size: 12px; }
+.barraTituloProvinciaR { 
+    font-size: 18px; 
+    text-align: center; 
+    background: rgb(6, 194, 15); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}
+#provReg { color:rgb(6, 194, 15); font-size: 18px; }
+.provinciaReg-tooltip { background-color : rgb(6, 194, 15); }

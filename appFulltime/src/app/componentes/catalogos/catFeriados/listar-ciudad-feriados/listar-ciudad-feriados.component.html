@@ -1,6 +1,6 @@
 <div class="container" *ngFor="let f of datosFeriado" style="padding-top: 15px;">
     <mat-card class="example-card mat-elevation-z8">
-        <div class="barraTitulo">
+        <div class="barraTituloD">
             <span>DATOS GENERALES</span>
         </div>
         <mat-card-content>
@@ -30,7 +30,7 @@
             <br>
             <hr>
             <div class="container table-responsive" style="padding-bottom: 50px;">
-                <p id="lista">Lista de Ciudades</p>
+                <div id="resultados">Lista de Ciudades</div>
                 <table mat-table class="mat-elevation-z8 table table-hover table-sm">
                     <thead class="thead-light">
                         <tr style="text-align: center;">
@@ -53,7 +53,7 @@
                     </tbody>
                 </table>
             </div>
-            <input type="submit" class="btn btn-success btn-sm" [routerLink]="['/listarFeriados/']" value="Ir a la Lista de Feriados">
+            <input type="submit" class="btn btn-warning btn-sm" [routerLink]="['/listarFeriados/']" value="Ir a la Lista de Feriados">
             <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaAsignarCiudad(f)" value="Asignar una Ciudad">
         </mat-card-content>
     </mat-card>

@@ -1,16 +1,17 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { CiudadFeriadosService } from 'src/app/servicios/CiudadFeriados/ciudad-feriados.service';
+import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 
 @Component({
   selector: 'app-asignar-ciudad',
   templateUrl: './asignar-ciudad.component.html',
-  styleUrls: ['./asignar-ciudad.component.css']
+  styleUrls: ['./asignar-ciudad.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class AsignarCiudadComponent implements OnInit {
 

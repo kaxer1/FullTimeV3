@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,8 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 @Component({
   selector: 'app-titulo-empleado',
   templateUrl: './titulo-empleado.component.html',
-  styleUrls: ['./titulo-empleado.component.css']
+  styleUrls: ['./titulo-empleado.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TituloEmpleadoComponent implements OnInit {
 
@@ -23,7 +24,7 @@ export class TituloEmpleadoComponent implements OnInit {
     observacionForm: this.observa,
     idTituloForm: this.idTitulo
   });
-  
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -36,13 +37,13 @@ export class TituloEmpleadoComponent implements OnInit {
     this.limpiarCampos();
   }
 
-  obtenerTitulos(){
+  obtenerTitulos() {
     this.restTitulo.getTituloRest().subscribe(data => {
       this.cgTitulos = data;
     });
   }
 
-  insertarTituloEmpleado(form){
+  insertarTituloEmpleado(form) {
     let dataTituloEmpleado = {
       observacion: form.observacionForm,
       id_empleado: parseInt(this.idEmploy),
@@ -75,11 +76,15 @@ export class TituloEmpleadoComponent implements OnInit {
     }
   }
 
-  limpiarCampos(){
+  limpiarCampos() {
     this.nuevoTituloEmpleadoForm.reset();
   }
 
-  cerrarRegistro(){
+  cerrarRegistro() {
     this.metodo.mostrarTit();
+  }
+
+  VerificarTitulo() {
+    window.open("https://www.senescyt.gob.ec/web/guest/consultas", "_blank");
   }
 }

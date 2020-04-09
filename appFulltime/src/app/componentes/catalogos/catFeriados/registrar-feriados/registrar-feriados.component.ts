@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,8 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 @Component({
   selector: 'app-registrar-feriados',
   templateUrl: './registrar-feriados.component.html',
-  styleUrls: ['./registrar-feriados.component.css']
+  styleUrls: ['./registrar-feriados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class RegistrarFeriadosComponent implements OnInit {

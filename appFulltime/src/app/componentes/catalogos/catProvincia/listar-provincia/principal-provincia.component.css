@@ -2,3 +2,23 @@
 td { padding-top: 10px; text-align: center; }
 .far { color:red; margin-right: 15px; }
 #departamento { font-size: 12px; }
+.TituloListaProvincia { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(6, 194, 15); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#resulProvincia { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(6, 194, 15); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+.provincia-tooltip { background-color : rgb(6, 194, 15); }
+#prov { color:rgb(6, 194, 15); font-size: 18px;}

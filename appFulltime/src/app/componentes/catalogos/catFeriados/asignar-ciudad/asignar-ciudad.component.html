@@ -1,5 +1,7 @@
 <mat-icon id="movilidad">open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Ciudad a:</h5>
+<div class="barraTituloC">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Asignar Ciudad a:</span>
+</div>
 <h4 style="text-align: center">{{data.feriado.descripcion}}</h4>
 <br>
 <div style="text-align: center">
@@ -10,7 +12,7 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Seleccionar Continente *</mat-label>
-                            <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            <mat-icon id="feriado" matSuffix matTooltipClass="feriado-tooltip" matTooltipPosition="right"
                                     matTooltip="Lista de continentes">help_outline</mat-icon>
                             <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
                                 <mat-option *ngFor="let c of continentes" [value]="c.continente"
@@ -22,7 +24,7 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Seleccionar País *</mat-label>
-                            <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            <mat-icon id="feriado" matSuffix matTooltipClass="feriado-tooltip" matTooltipPosition="right"
                                     matTooltip="Lista de países del continente seleccionado">help_outline</mat-icon>
                             <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
                                 <mat-option *ngFor="let pais of paises" [value]="pais.id"
@@ -35,7 +37,7 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Seleccionar Provincia</mat-label>
-                            <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            <mat-icon id="feriado" matSuffix matTooltipClass="feriado-tooltip" matTooltipPosition="right"
                                     matTooltip="Lista de provincias, departamentos o estados del país seleccionado">help_outline</mat-icon>
                             <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia">
                                 <mat-option *ngFor="let pro of provincias" [value]="pro.nombre" (click)="FiltrarCiudades(asignarCiudadForm.value)">
@@ -46,7 +48,7 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Seleccionar Ciudad</mat-label>
-                            <mat-icon id="feriado" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            <mat-icon id="feriado" matSuffix matTooltipClass="feriado-tooltip" matTooltipPosition="right"
                                     matTooltip="Lista de ciudades de la provincia, departamento o estado seleccionado">help_outline</mat-icon>
                             <mat-select [formControl]="nombreCiudadF" [(ngModel)]="seleccionarCiudad">
                                 <mat-option *ngFor="let ciudad of nombreCiudades" [value]="ciudad.id" (click)="SeleccionarCiudad(asignarCiudadForm.value)">

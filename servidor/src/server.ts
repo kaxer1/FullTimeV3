@@ -26,7 +26,8 @@ import CIUDAD_RUTAS from './rutas/ciudades/ciudadesRutas';
 import CIUDAD_FERIADOS_RUTAS from './rutas/ciudadFeriado/ciudadFeriadoRutas';
 import NOTIFICACIONES_RUTAS from './rutas/catalogos/catNotificacionesRutas';
 import CONTRATO_EMPLEADO_RUTAS from './rutas/empleado/empleadoContrato/contratoEmpleadoRutas';
-import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRutas'
+import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRutas';
+import PLAN_COMIDAS_RUTAS from './rutas/planComidas/planComidasRutas';
 
 class Server {
 
@@ -55,6 +56,9 @@ class Server {
         this.app.use('/empleado', EMPLEADO_RUTAS);
         this.app.use('/contratoEmpleado', CONTRATO_EMPLEADO_RUTAS);
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
+
+        //Almuerzo
+        this.app.use('/planComidas', PLAN_COMIDAS_RUTAS );
 
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', TITULO_RUTA);

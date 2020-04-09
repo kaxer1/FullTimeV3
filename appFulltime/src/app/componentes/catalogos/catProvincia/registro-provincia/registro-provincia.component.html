@@ -1,6 +1,8 @@
-<mat-icon>open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir</h5>
-<h5 style="text-align: center">Provincia - Departamento - Estado</h5>
+<mat-icon id="movilidad">open_with</mat-icon>
+<h5 style="text-align: center;">REGISTRAR</h5>
+<div class="barraTituloProvinciaR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Provincia - Departamento - Estado</span>
+</div>
 <br>
 <div style="text-align: center;">
     <form [formGroup]="NuevaProvinciasForm">
@@ -8,8 +10,12 @@
             <div class="container">
                 <mat-form-field>
                     <mat-label>Seleccionar Continente *</mat-label>
+                    <mat-icon id="provReg" matSuffix matTooltipClass="provinciaReg-tooltip" matTooltipPosition="right"
+                        matTooltip="Seleccionar un continente">
+                        help_outline</mat-icon>
                     <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
-                        <mat-option *ngFor="let c of continentes" [value]="c.continente" (click)="FiltrarPaises(NuevaProvinciasForm.value)">
+                        <mat-option *ngFor="let c of continentes" [value]="c.continente"
+                            (click)="FiltrarPaises(NuevaProvinciasForm.value)">
                             {{c.continente}}
                         </mat-option>
                     </mat-select>
@@ -17,9 +23,11 @@
                 <br>
                 <mat-form-field>
                     <mat-label>Seleccionar País *</mat-label>
+                    <mat-icon id="provReg" matSuffix matTooltipClass="provinciaReg-tooltip" matTooltipPosition="right"
+                        matTooltip="Lista de países que se encuentran en el continente seleccionado">
+                        help_outline</mat-icon>
                     <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
-                        <mat-option *ngFor="let pais of paises"
-                             [value]="pais.id">
+                        <mat-option *ngFor="let pais of paises" [value]="pais.id">
                             {{pais.nombre}}
                         </mat-option>
                     </mat-select>
@@ -29,6 +37,9 @@
                     <mat-label id="nombreP">Provincia-Departamento-Estado</mat-label>
                     <input matInput placeholder="Ej: Pichincha" [formControl]="nombreProvinciaF"
                         (keypress)="IngresarSoloLetras($event)" required>
+                    <mat-icon id="provReg" matSuffix matTooltipClass="provinciaReg-tooltip" matTooltipPosition="right"
+                        matTooltip="Ingresar nombre de una provincia, departamento o estado ubicado en el país seleccionado">
+                        help_outline</mat-icon>
                     <mat-error *ngIf="nombreProvinciaF.invalid">{{ObtenerMensajeProvinciaRequerido()}}</mat-error>
                 </mat-form-field>
             </div>

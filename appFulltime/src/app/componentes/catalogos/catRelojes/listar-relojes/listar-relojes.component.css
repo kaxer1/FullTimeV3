@@ -1,8 +1,26 @@
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; border-radius: 25px; }
 td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 20px; }
 #nombre { font-size: x-small; }
 h4 { font-weight: bold; text-align: center; }
 h5 { text-align: center; }
-#dispositivo { color:rgb(0, 102, 128); font-size: 18px;}
-.color-tooltip { background-color : rgb(23, 46, 177); }
+#dispositivo { color:rgb(0, 102, 128); font-size: 18px; }
+.barraTituloReloj { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(0, 102, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+.reloj-tooltip { background-color : rgb(0, 102, 128); }
+#resultadosRelojes { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(0, 102, 128); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

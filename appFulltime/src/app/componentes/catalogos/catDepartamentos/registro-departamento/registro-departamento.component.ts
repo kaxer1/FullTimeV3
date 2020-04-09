@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -14,7 +14,8 @@ interface Nivel {
 @Component({
   selector: 'app-registro-departamento',
   templateUrl: './registro-departamento.component.html',
-  styleUrls: ['./registro-departamento.component.css']
+  styleUrls: ['./registro-departamento.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroDepartamentoComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -9,7 +9,8 @@ import { RegistroProvinciaComponent } from '../registro-provincia/registro-provi
 @Component({
   selector: 'app-principal-provincia',
   templateUrl: './principal-provincia.component.html',
-  styleUrls: ['./principal-provincia.component.css']
+  styleUrls: ['./principal-provincia.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class PrincipalProvinciaComponent implements OnInit {

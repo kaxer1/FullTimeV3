@@ -4,7 +4,13 @@
     color: blue;
     font-size: 20px;
 }
-#ayuda { color:green; }
-.primary-tooltip {
-    background-color : rgb(23, 46, 177) ;
+#ayuda { color:rgb(122, 3, 106); font-size: 18px; }
+.regDepa-tooltip { background-color : rgb(122, 3, 106); }
+.barraTituloRegDepa { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(122, 3, 106); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
 }

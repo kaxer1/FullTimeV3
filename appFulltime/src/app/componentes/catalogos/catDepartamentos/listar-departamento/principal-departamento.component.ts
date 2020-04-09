@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -9,7 +9,8 @@ import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/cat
 @Component({
   selector: 'app-principal-departamento',
   templateUrl: './principal-departamento.component.html',
-  styleUrls: ['./principal-departamento.component.css']
+  styleUrls: ['./principal-departamento.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class PrincipalDepartamentoComponent implements OnInit {

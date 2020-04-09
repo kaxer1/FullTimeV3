@@ -3,8 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h4>DEPARTAMENTOS</h4>
-                <h5>Críterios de Búsqueda</h5>
+                <div class="tituloDepartamentos">
+                    <span>DEPARTAMENTOS</span>
+                </div>
+                <br>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarDepartamentosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -14,7 +17,7 @@
                                     [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
                                     [(ngModel)]="filtroNombre">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="color-tooltip" matTooltip="Búsqueda por Departamento">
+                                    matTooltipClass="departamento-tooltip" matTooltip="Búsqueda por Departamento">
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
                                 </mat-error>
@@ -26,7 +29,8 @@
                                     placeholder="Departamento Superior" [formControl]="departamentoPadreF"
                                     (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroDeparPadre">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="color-tooltip" matTooltip="Búsqueda por Departamento Superior">
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda por Departamento Superior">
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="departamentoPadreF.invalid">
                                     {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
@@ -46,9 +50,7 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span>Resultados de búsqueda</span>
-    </mat-toolbar>
+    <div id="resulDepartamentos">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr>
