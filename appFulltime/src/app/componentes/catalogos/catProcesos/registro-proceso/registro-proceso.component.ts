@@ -21,7 +21,7 @@ export class RegistroProcesoComponent implements OnInit {
   // Control de los campos del formulario
   nombre = new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]);
   nivel = new FormControl('', Validators.required);
-  procesoPadre = new FormControl('');
+  procesoPadre = new FormControl('', Validators.required);
 
   procesos: any = [];
 
@@ -83,10 +83,26 @@ export class RegistroProcesoComponent implements OnInit {
   insertarProceso(form) {
     var procesoPadreId
     var procesoPadreNombre = form.procesoProcesoPadreForm;
-    console.log(form.procesoProcesoPadreForm);
 
-    if (procesoPadreNombre != '' || procesoPadreNombre == null) {
+    if (procesoPadreNombre == 0) {
+
+      let dataProceso = {
+        nombre: form.procesoNombreForm,
+        nivel: form.procesoNivelForm,
+      };
+
+      this.rest.postProcesoRest(dataProceso)
+        .subscribe(response => {
+          this.toastr.success('Operacion Exitosa', 'Proceso guardado');
+          this.limpiarCampos();
+        }, error => {
+          console.log(error);
+        });
+
+    } else {
+
       this.rest.getIdProcesoPadre(procesoPadreNombre).subscribe(data => {
+        // console.log(data);
         procesoPadreId = data[0].id;
         let dataProceso = {
           nombre: form.procesoNombreForm,
@@ -103,21 +119,6 @@ export class RegistroProcesoComponent implements OnInit {
           });;
       });
 
-    } else {
-
-      let dataProceso = {
-        nombre: form.procesoNombreForm,
-        nivel: form.procesoNivelForm,
-        proc_padre: null
-      };
-
-      this.rest.postProcesoRest(dataProceso)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Proceso guardado');
-          this.limpiarCampos();
-        }, error => {
-          console.log(error);
-        });;
     }
 
   }

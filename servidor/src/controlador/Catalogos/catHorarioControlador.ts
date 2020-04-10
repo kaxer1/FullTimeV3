@@ -1,6 +1,19 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
 
+import excel from 'xlsx';
+
+// const xlsxFile = require('read-excel-file/node');
+ 
+// xlsxFile('./plantillas/horarios.xlsx').then((rows) => {
+//   rows.forEach((col)=>{
+//     col.forEach((data)=>{
+//       console.log(data);
+//       // console.log(typeof data);
+//     });
+//   });
+// });
+
 class HorarioControlador {
 
   public async ListarHorarios(req: Request, res: Response) {
@@ -25,10 +38,38 @@ class HorarioControlador {
   }
 
   public async CrearHorario(req: Request, res: Response): Promise<void> {
+<<<<<<< HEAD
     //HORA_TRABAJO --SOLO PERMITE 2 Números 1 entero, un decimal 
     const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
     await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
     res.json({ message: 'El horario ha sido registrado' });
+=======
+    console.log( req.file.filename);
+
+    const workbook = excel.readFile(`./plantillas/${req.file.filename}`);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+
+    let obj: any = [];
+    plantilla.forEach(data => {
+      obj.push(data);
+    });
+      //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
+    console.log(obj.length);
+    for(let i = 0; i <= obj.length; i++){
+      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
+      console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
+      // console.log(flexible);
+      await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+      res.json({ message: 'El horario ha sido registrado' });
+    };
+
+    res.send({
+      success: true,
+      message: 'file upload'  
+    });
+    
+>>>>>>> 06167363ec0cb38bfe8074c610dd2718b80dcecf
   }
 
 }

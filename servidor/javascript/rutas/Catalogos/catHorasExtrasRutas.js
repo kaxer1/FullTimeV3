@@ -4,7 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+<<<<<<< HEAD
 const catHorasExtrasControlador_1 = __importDefault(require("../../controlador/catalogos/catHorasExtrasControlador"));
+=======
+const horasExtrasControlador_1 = __importDefault(require("../../controlador/Catalogos/horasExtrasControlador"));
+>>>>>>> 06167363ec0cb38bfe8074c610dd2718b80dcecf
 class HorasExtrasRutas {
     constructor() {
         this.router = express_1.Router();

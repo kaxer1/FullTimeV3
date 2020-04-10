@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {USUARIO_CONTROLADOR} from '../../controlador/usuarios/usuarioControlador'
 
+
 class UsuarioRutas {
     public router: Router = Router();
 

@@ -17,8 +17,8 @@ class ProcesoControlador {
     }
   
     public async create(req: Request, res: Response): Promise<void> {
-      const { nombre, proc_padre, nivel } = req.body;
-      await pool.query('INSERT INTO cg_procesos (nombre,nivel, proc_padre) VALUES ($1, $2,$3)', [nombre,nivel,proc_padre]);
+      const { nombre, nivel, proc_padre } = req.body;
+      await pool.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre,nivel,proc_padre]);
       console.log(req.body);
       res.json({ message: 'El departamento ha sido guardado en éxito' });
     }

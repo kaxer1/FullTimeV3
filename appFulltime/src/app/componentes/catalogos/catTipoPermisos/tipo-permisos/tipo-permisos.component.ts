@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { ToastrService } from 'ngx-toastr';
+
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 
 interface TipoDescuentos {
   value: string;
@@ -64,7 +65,7 @@ export class TipoPermisosComponent implements OnInit {
   ];
   seleccionarPermiso: string = this.permisos[0].valor;
 
-  isLinear = true;
+  isLinear = false;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
@@ -87,6 +88,7 @@ export class TipoPermisosComponent implements OnInit {
       diasHorasForm: ['', Validators.required]
     });
     this.segundoFormGroup = this._formBuilder.group({
+      almuIncluirForm: ['', Validators.required],
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
       correoForm: ['', Validators.required],

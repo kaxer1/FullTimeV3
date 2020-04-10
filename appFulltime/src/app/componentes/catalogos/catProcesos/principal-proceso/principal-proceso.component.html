@@ -1,10 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
                 <div style="text-align: center;">
-                    <h5>Proceso - Criterios de Búsqueda</h5>
+                    <h5>Criterios de Búsqueda</h5>
                 </div>
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
@@ -21,18 +21,18 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Buscar por Proceso Padre</mat-label>
-                                <input matInput placeholder="Ej: 1" type="number" [(ngModel)]="filtroProPadre" (keypress)="soloNumeros($event)" [formControl]="buscarPadre">
+                                <input matInput placeholder="Ej: ninguno" [(ngModel)]="filtroProPadre" (keypress)="soloLetras($event)" [formControl]="buscarPadre">
                             </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarProceso()">Ir a Registrar</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarProceso()">Crear nuevo Proceso</button>
                 </div>
             </mat-card>
         </div>
-        <div class="col-3"></div>
+        <div class="col-sm"></div>
     </div>
 </div>
 

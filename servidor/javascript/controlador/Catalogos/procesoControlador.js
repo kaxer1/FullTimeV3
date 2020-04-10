@@ -32,8 +32,8 @@ class ProcesoControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, proc_padre, nivel } = req.body;
-            yield database_1.default.query('INSERT INTO cg_procesos (nombre,nivel, proc_padre) VALUES ($1, $2,$3)', [nombre, nivel, proc_padre]);
+            const { nombre, nivel, proc_padre } = req.body;
+            yield database_1.default.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre, nivel, proc_padre]);
             console.log(req.body);
             res.json({ message: 'El departamento ha sido guardado en éxito' });
         });
