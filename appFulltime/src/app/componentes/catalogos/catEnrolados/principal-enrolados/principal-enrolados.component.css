@@ -1,4 +1,28 @@
+td { padding-top: 10px; text-align: center; }
+h5 { text-align: center; } 
+p { font-size: x-small;}
 .btn { border-radius: 25px; margin-right: 15px; }
-td { padding-top: 10px; text-align: center; } 
 .fas { color:green; margin-left: 20px; }
-.far { color:red; }
+.far { color:red; margin-left: 20px; }
+.enrolado-tooltip { background-color : rgb(3, 167, 167); }
+.TituloEnrolado { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(3, 167, 167); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#i_enrolado { color:rgb(3, 167, 167); font-size: 18px;}
+#enr_reloj { color: rgb(38, 0, 255); }
+#verEnrolado { color: indianred; }
+#resulEnrolado { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(3, 167, 167); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

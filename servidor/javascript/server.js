@@ -32,6 +32,7 @@ const catNotificacionesRutas_1 = __importDefault(require("./rutas/catalogos/catN
 const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/empleado/empleadoContrato/contratoEmpleadoRutas"));
 const emplCargosRutas_1 = __importDefault(require("./rutas/empleado/empleadoCargos/emplCargosRutas"));
 const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComidasRutas"));
+const enroladoRelojRutas_1 = __importDefault(require("./rutas/enroladoReloj/enroladoRelojRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -55,19 +56,21 @@ class Server {
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
         //Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
+        //Enrolados
+        this.app.use('/enrolados', catEnroladoRutas_1.default);
+        this.app.use('/relojes', catRelojesRuta_1.default);
+        this.app.use('/enroladosRelojes', enroladoRelojRutas_1.default);
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', catTituloRutas_1.default);
         this.app.use('/discapacidad', discapacidadRutas_1.default);
         this.app.use('/regimenLaboral', catRegimenRuta_1.default);
         this.app.use('/feriados', catFeriadosRuta_1.default);
         this.app.use('/tipoComidas', catTipoComidasRuta_1.default);
-        this.app.use('/relojes', catRelojesRuta_1.default);
         this.app.use('/provincia', catProvinciaRutas_1.default);
         this.app.use('/departamento', catDepartamentoRutas_1.default);
         this.app.use('/proceso', catProcesoRutas_1.default);
         this.app.use('/horario', catHorarioRutas_1.default);
         this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
-        this.app.use('/enrolados', catEnroladoRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
         this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
         this.app.use('/rolPermisos', catRolPermisosRutas_1.default);

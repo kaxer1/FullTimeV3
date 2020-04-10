@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
+import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.component';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 
 interface buscarActivo {
@@ -14,7 +15,8 @@ interface buscarActivo {
 @Component({
   selector: 'app-principal-enrolados',
   templateUrl: './principal-enrolados.component.html',
-  styleUrls: ['./principal-enrolados.component.css']
+  styleUrls: ['./principal-enrolados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PrincipalEnroladosComponent implements OnInit {
 
@@ -37,6 +39,7 @@ export class PrincipalEnroladosComponent implements OnInit {
   constructor(
     private rest: EnroladoService,
     public vistaRegistrarEnrolado: MatDialog,
+    public vistaAsignarReloj: MatDialog,
     private toastr: ToastrService,
   ) { }
 
@@ -53,6 +56,12 @@ export class PrincipalEnroladosComponent implements OnInit {
 
   AbrirVentanaRegistrarEnrolado(){
     this.vistaRegistrarEnrolado.open(RegistroEnroladosComponent, { width: '600px' }).disableClose = true;
+  }
+
+  AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaAsignarReloj.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false} }).disableClose = true;
+    console.log(datosSeleccionados.nombre);
   }
 
   IngresarSoloLetras(e) {

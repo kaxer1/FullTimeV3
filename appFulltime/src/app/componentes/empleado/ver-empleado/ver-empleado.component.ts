@@ -7,6 +7,7 @@ import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
+import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 
 @Component({
   selector: 'app-ver-empleado',
@@ -37,6 +38,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restDiscapacidad: DiscapacidadService,
     public restTitulo: TituloService,
     public vistaRegistrarContrato: MatDialog,
+    public vistaRegistrarPlanificacion: MatDialog,
     public router: Router
   ) {
     var cadena = this.router.url;
@@ -113,7 +115,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   // logica de boton para mostrar componente del registro de discapacidad
   mostrarDis() {
-    if(this.btnDisc != 'Editar'){
+    if (this.btnDisc != 'Editar') {
       if (this.mostrarDiscapacidad == true) {
         this.mostrarDiscapacidad = false;
         this.btnDisc = 'No Añadir';
@@ -140,8 +142,11 @@ export class VerEmpleadoComponent implements OnInit {
 
   // Ventana para ingresar contrato del empleado
   AbrirVentanaCrearContrato(): void {
+    this.vistaRegistrarContrato.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarContrato.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado}).disableClose = true;
-    console.log(this.idEmpleado);
+    this.vistaRegistrarPlanificacion.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
   }
 }

@@ -1,12 +1,8 @@
 td { padding-top: 10px; text-align: center; }
+h5 { text-align: center; }
+p { font-size: x-small;}
 .btn { margin-left: 15px; border-radius: 25px;}
 .fas { color:green; margin-left: 25px;}
-#ciudad { color: rgb(38, 0, 255); }
-#ver { color: indianred; }
-p { font-size: x-small;}
-h4 { font-weight: bold; text-align: center; }
-h5 { text-align: center; }
-#feriado { color:rgb(66, 0, 128); font-size: 18px;}
 .listaF-tooltip { background-color : rgb(66, 0, 128); }
 .barraTituloF { 
     font-size: 20px; 
@@ -17,6 +13,9 @@ h5 { text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+#ciudad { color: rgb(38, 0, 255); }
+#ver { color: indianred; }
+#feriado { color:rgb(66, 0, 128); font-size: 18px;}
 #resultados { 
     font-size: 17px; 
     text-align: center; 

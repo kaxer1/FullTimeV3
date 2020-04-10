@@ -123,6 +123,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { EnroladoRelojComponent } from './componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
+import { PlanificacionComidasComponent } from './componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
 
 @NgModule({
   declarations: [
@@ -192,7 +194,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EmplApellidoPipe,
     ListarTitulosComponent,
     FitroNivelPipe,
-    ListarCiudadFeriadosComponent
+    ListarCiudadFeriadosComponent,
+    EnroladoRelojComponent,
+    PlanificacionComidasComponent
   ],
   imports: [
     BrowserModule,

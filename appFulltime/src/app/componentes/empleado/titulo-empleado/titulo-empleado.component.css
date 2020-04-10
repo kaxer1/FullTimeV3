@@ -7,5 +7,5 @@
     padding-bottom: 6px;
 }
 .alinear {margin-top: 5px; }   
-.btn { border-radius: 100%; margin-right: 15px; }
 .color-tooltip { background: #2c6ec5; }
+#botonTitulo { margin-left: 10px; border-radius: 100%;  }

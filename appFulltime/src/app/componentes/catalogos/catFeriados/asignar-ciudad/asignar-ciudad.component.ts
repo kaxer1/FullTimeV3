@@ -176,12 +176,11 @@ export class AsignarCiudadComponent implements OnInit {
           this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
           this.actualizarPagina = this.data.actualizar;
           if(this.actualizarPagina === true){
-            this.dialogRef.close();
-            window.location.reload();
+            this.LimpiarCampos();
           }
           else {
-            this.dialogRef.close();
-            this.router.navigate(['/verFeriados/', id]);
+           this.dialogRef.close();
+           this.router.navigate(['/verFeriados/', id]);
           }          
         }, error => {
           this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado')

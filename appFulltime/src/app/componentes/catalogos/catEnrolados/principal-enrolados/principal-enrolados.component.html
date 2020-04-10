@@ -3,27 +3,41 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z8">
-                <div style="text-align: center;">
-                    <h5>Enrolados - Criterios de Búsqueda</h5>
+                <div class="TituloEnrolado">
+                    <span>EMPLEADOS ENROLADOS </span>
                 </div>
+                <br>
+                <h5>Críterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
                         <form>
                             <mat-form-field>
-                                <mat-label>Buscar por Id Usuario</mat-label>
+                                <mat-label>Ingresar ID de usuario</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser" [formControl]="idUser"
                                     (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda del empleado enrolado por el ID de usuario">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Buscar por Nombre</mat-label>
+                                <mat-label>Ingresar Nombre</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre" [formControl]="nombre"
                                     type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda del empleado enrolado por el nombre">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Buscar por Activo</mat-label>
+                                <mat-label>Seleccionar Estado</mat-label>
+                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda del empleado enrolado por el estado">
+                                    help_outline</mat-icon>
                                 <mat-select [formControl]="activo" [(ngModel)]="filtroActivo">
                                     <mat-option *ngFor="let d of activoBus" [value]="d.value">
                                         {{d.viewValue}}
@@ -35,8 +49,8 @@
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Ir a
-                        Registrar</button>
+                    <button type="button" class="btn btn-primary btn-sm"
+                        (click)="AbrirVentanaRegistrarEnrolado()">Enrolar a un empleado</button>
                 </div>
             </mat-card>
         </div>
@@ -44,9 +58,7 @@
     </div>
 </div>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultado de búsqueda</span>
-    </mat-toolbar>
+    <div id="resulEnrolado">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
@@ -65,8 +77,23 @@
                 <td>{{enrolado.activo}}</td>
                 <td>{{enrolado.finger}}</td>
                 <td>
-                    <i class="far fa-trash-alt"></i>
-                    <i class="fas fa-edit"></i>
+                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Agregar empleado enrolado a un dispositivo" class="far fa-clock" id="enr_reloj"
+                        (click)="AbrirVentanaAsignarReloj(enrolado)">
+                        <p>Dispositivo</p>
+                    </i>
+                    <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                        <p>Editar</p>
+                    </i>
+                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado">
+                        <p>Ver</p>
+                    </i>
+                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
+                        <p>Eliminar</p>
+                    </i>
                 </td>
             </tr>
         </tbody>
