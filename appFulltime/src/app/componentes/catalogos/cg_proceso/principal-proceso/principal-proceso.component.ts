@@ -21,7 +21,7 @@ export class PrincipalProcesoComponent implements OnInit {
   
   filtroNombre = '';
   filtroNivel: number;
-  filtroProPadre: number;
+  filtroProPadre = '';
 
   constructor(
     private rest: ProcesoService,
@@ -51,47 +51,47 @@ export class PrincipalProcesoComponent implements OnInit {
   getProcesos() {
     this.auxiliar1 = [];
     this.rest.getProcesosRest().subscribe(data => {
-      this.procesos = data
-      // this.auxiliar1 = data;
-      // this.auxiliar1.forEach(element => {
+      this.auxiliar1 = data;
+      this.auxiliar1.forEach(element => {
         
-      //   if(element.proc_padre > 0){
-      //     let vistaProceso = {
-      //       id: element.proc_padre,
-      //       nombre: element.nombre
-      //     }
-      //     this.auxiliar2.push(vistaProceso);
-      //   }
+        if(element.proc_padre != null){
+          let vistaProceso = {
+            id: element.proc_padre
+          }
+          this.auxiliar2.push(vistaProceso);
+        }        
+      });
+
+      this.auxiliar1.forEach(obj => {
+        let VistaProceso;
         
-      // });
-      // console.log(this.auxiliar1);
-      // console.log(this.auxiliar2);
+        if (obj.proc_padre == null){
+          VistaProceso = {
+            id: obj.id,
+            nombre: obj.nombre,
+            nivel: obj.nivel,
+            proc_padre: 'ninguno'
+          }
+          this.procesos.push(VistaProceso);
+        }
 
-      // this.auxiliar1.forEach(obj => {
-      //   let VistaProceso;
-      //   if (obj.proc_padre == 0){
-      //     VistaProceso = {
-      //       id: obj.id,
-      //       nombre: obj.nombre,
-      //       nivel: obj.nivel,
-      //       proc_padre: 'niguno'
-      //     }
-      //     this.procesos.push(VistaProceso);
-      //   }
+        this.auxiliar2.forEach(obj1 => {
+          
+          this.rest.getOneProcesoRest(obj1.id).subscribe(data => {
+            if(obj1.id == obj.proc_padre){
+              VistaProceso = {
+                id: obj.id,
+                nombre: obj.nombre,
+                nivel: obj.nivel,
+                proc_padre: data[0]['nombre']
+              }
+              this.procesos.push(VistaProceso);
+            }
+          });
 
-      //   this.auxiliar2.forEach(obj1 => {
-      //     if(obj.proc_padre == obj1.id){
-      //       VistaProceso = {
-      //         id: obj.id,
-      //         nombre: obj.nombre,
-      //         nivel: obj.nivel,
-      //         proc_padre: obj1.nombre
-      //       }
-      //       this.procesos.push(VistaProceso);
-      //     }
-      //   });
-      // });
-      console.log(this.procesos);
+        });
+        
+      });
 
     });
   }

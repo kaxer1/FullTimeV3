@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import CIUDAD_FERIADO_CONTROLADOR from '../../controlador/ciudadFeriado/ciudadFeriadoControlador';
+import CIUDAD_FERIADO_CONTROLADOR from '../../controlador/CiudadFeriado/ciudadFeriadoControlador';
 
 class CiudadRutas {
     public router: Router = Router();

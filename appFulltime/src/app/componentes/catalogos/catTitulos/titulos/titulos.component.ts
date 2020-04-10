@@ -32,10 +32,11 @@ export class TitulosComponent implements OnInit {
   niveles: Nivel[] = [
     { value: '1', viewValue: 'Educación Básica' },
     { value: '2', viewValue: 'Bachillerato' },
-    { value: '3', viewValue: 'Técnico Superior' },
-    { value: '4', viewValue: 'Tercer Nivel' },
-    { value: '5', viewValue: 'Ingenieria' },
-    { value: '6', viewValue: 'Postgrado' }
+    { value: '3', viewValue: 'Certificados' },
+    { value: '4', viewValue: 'Diplomas' },
+    { value: '5', viewValue: 'Tercer Nivel' },
+    { value: '6', viewValue: 'Postgrado' },
+    { value: '7', viewValue: 'PHD' }
   ];
 
   constructor(

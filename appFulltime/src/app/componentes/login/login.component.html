@@ -1,41 +1,45 @@
-<div class="container pantalla">
-    <!-- Formulario Completo -->
-    <br>
-    <div class="container">
-        <img width="80" height="250" src="../../../assets/imagenes/logo/logoAdmin.png">
-    </div>
-    <br>
-    <h5 style="text-align: center">Acceso al Sistema</h5>
-    <div class="container">
-        <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-            <div class="col"></div>
-            <div class="col">
-                <mat-card class="mat-elevation-z8">
-                    <form [formGroup]="validarCredencialesF">
-                        <mat-form-field>
-                            <mat-label>Ingresa tu Usuario</mat-label>
-                            <input matInput placeholder="pat@example.com" [formControl]="userMail" required>
-                            <mat-error *ngIf="userMail.invalid">{{ObtenerMensajeCampoUsuarioError()}}</mat-error>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Ingresa tu contraseña</mat-label>
-                            <input matInput [type]="hide ? 'password' : 'text'" [formControl]="pass" required>
-                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                                [attr.aria-pressed]="hide">
-                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                            <mat-error *ngIf="pass.invalid">{{ObtenerMensajeCampoContraseniaError()}}</mat-error>
-                        </mat-form-field>
-                    </form>
-                    <div style="margin: auto;">
-                        <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px; margin-top: 15px;"
-                            (click)="ValidarUsuario(validarCredencialesF.value)"
-                            [disabled]="!validarCredencialesF.valid" value="Ingresar">
+<header id="home-section">
+    <div class="dark-overlay">
+        <div class="home-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm"></div>    
+                    <div class="col-sm">    
+                        <mat-card class="mat-elevation-z8">
+                            <img src="../../../assets/imagenes/logo/logoAdmin.png"> <br><br>
+                            <form [formGroup]="validarCredencialesF">
+                                <mat-form-field>
+                                    <mat-label>Ingresa tu Usuario</mat-label>
+                                    <input matInput placeholder="pat@example.com" [formControl]="userMail" required>
+                                    <mat-error *ngIf="userMail.invalid">{{ObtenerMensajeCampoUsuarioError()}}</mat-error>
+                                </mat-form-field>
+                                <br>
+                                <mat-form-field>
+                                    <mat-label>Ingresa tu contraseña</mat-label>
+                                    <input matInput [type]="hide ? 'password' : 'text'" [formControl]="pass" required>
+                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                        [attr.aria-pressed]="hide">
+                                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="pass.invalid">{{ObtenerMensajeCampoContraseniaError()}}</mat-error>
+                                </mat-form-field>
+                            </form>
+                            <div class="caja1">
+                                <a href="#" class="verde">Olvidó su contraseña?</a>
+                            </div>
+                            <div style="margin: auto;">
+                                <button type="submit" class="btn btn-lg btn-block" (click)="ValidarUsuario(validarCredencialesF.value)"
+                                    [disabled]="!validarCredencialesF.valid">Ingresar</button>
+                            </div>
+                            <div class="caja2">
+                                <span>Aún no registrado?</span>
+                                <a href="#" class="verde">Solicitar registro</a>
+                            </div>
+                        </mat-card>                            
                     </div>
-                </mat-card>
+                    <div class="col-sm"></div>    
+                </div>
             </div>
-            <div class="col"></div>
         </div>
     </div>
-</div>
+</header>

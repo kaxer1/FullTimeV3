@@ -14,7 +14,8 @@
                 <br>
                 <mat-form-field>
                     <mat-label>Proceso Padre</mat-label>
-                    <mat-select [formControl]="procesoPadre">
+                    <mat-select [formControl]="procesoPadre" required>
+                        <mat-option [value]="0">Ninguno proceso</mat-option>
                         <mat-option *ngFor="let p of procesos" [value]="p.nombre">
                             {{p.nombre}}
                         </mat-option>

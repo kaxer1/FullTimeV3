@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import  PROVINCIA_CONTROLADOR  from '../../controlador/catalogos/catProvinciaControlador';
+import  PROVINCIA_CONTROLADOR  from '../../controlador/Catalogos/catProvinciaControlador';
 
 class ProvinciaRutas {
     public router: Router = Router();

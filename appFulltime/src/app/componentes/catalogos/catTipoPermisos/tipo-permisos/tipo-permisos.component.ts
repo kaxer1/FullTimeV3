@@ -54,7 +54,7 @@ export class TipoPermisosComponent implements OnInit {
   ];
   seleccionarPermiso: string = this.permisos[0].valor;
 
-  isLinear = true;
+  isLinear = false;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
@@ -72,10 +72,10 @@ export class TipoPermisosComponent implements OnInit {
       numDiaMaximoForm: ['', Validators.required],
       numHoraMaximoForm: ['', Validators.required],
       numDiaIngresoForm: ['', Validators.required],
-      acceEmpleadoForm: ['', Validators.required],
-      almuIncluirForm: ['', Validators.required]
+      acceEmpleadoForm: ['', Validators.required]
     });
     this.segundoFormGroup = this._formBuilder.group({
+      almuIncluirForm: ['', Validators.required],
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
       correoForm: ['', Validators.required],

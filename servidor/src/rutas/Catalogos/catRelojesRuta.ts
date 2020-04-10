@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import RELOJES_CONTROLADOR from '../../controlador/catalogos/catRelojesControlador';
+import RELOJES_CONTROLADOR from '../../controlador/Catalogos/catRelojesControlador';
 
 class RelojesRuta {
     public router: Router = Router();
