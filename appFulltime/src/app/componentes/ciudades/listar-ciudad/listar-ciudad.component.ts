@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -9,7 +9,8 @@ import { RegistrarCiudadComponent } from 'src/app/componentes/ciudades/registrar
 @Component({
   selector: 'app-listar-ciudad',
   templateUrl: './listar-ciudad.component.html',
-  styleUrls: ['./listar-ciudad.component.css']
+  styleUrls: ['./listar-ciudad.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ListarCiudadComponent implements OnInit {
 

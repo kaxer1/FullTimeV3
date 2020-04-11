@@ -1,7 +1,7 @@
 td { padding-top: 10px; text-align: center; }
 h5 { text-align: center; } 
 p { font-size: x-small;}
-.btn { border-radius: 25px; margin-right: 15px; }
+.btn { border-radius: 25px; margin-left: 15px; }
 .fas { color:green; margin-left: 20px; }
 .far { color:red; margin-left: 20px; }
 .enrolado-tooltip { background-color : rgb(3, 167, 167); }

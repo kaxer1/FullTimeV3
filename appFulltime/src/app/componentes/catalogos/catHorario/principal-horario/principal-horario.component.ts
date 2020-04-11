@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -8,7 +8,8 @@ import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorar
 @Component({
   selector: 'app-principal-horario',
   templateUrl: './principal-horario.component.html',
-  styleUrls: ['./principal-horario.component.css']
+  styleUrls: ['./principal-horario.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PrincipalHorarioComponent implements OnInit {
 

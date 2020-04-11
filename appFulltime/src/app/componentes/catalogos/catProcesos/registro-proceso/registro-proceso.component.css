@@ -1,7 +1,17 @@
 .btn { border-radius: 25px; margin-right: 15px; }
-.mat-icon { 
+#movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+.tituloprocesoR { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(114, 43, 2); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}
+#iprocesoR { color:rgb(114, 43, 2); font-size: 18px; }
+.procesoR-tooltip { background-color : rgb(114, 43, 2); }
 

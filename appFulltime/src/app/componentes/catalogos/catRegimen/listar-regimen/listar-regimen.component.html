@@ -3,7 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
-                <h5 style="text-align: center"> Régimen Laboral - Críterios de Búsqueda</h5>
+                <div class="tituloRegL">
+                    <span>RÉGIMEN LABORAL</span>
+                </div>
+                <br>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRegimenForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -12,6 +16,10 @@
                                 <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF"
                                     [(ngModel)]="filtroRegimenLaboral">
+                                <mat-icon id="iRegL" matSuffix matTooltipClass="regimenL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de Régimen Laboral por la descripción">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
                             </mat-form-field>
                         </div>
@@ -20,7 +28,7 @@
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRegimen()"
-                        value="Ir a Registrar">
+                        value="Crear nuevo Régimen Laboral">
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -30,9 +38,7 @@
 
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultados de búsqueda</span>
-    </mat-toolbar>
+    <div id="resulRegimen">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
@@ -52,7 +58,7 @@
                 <td>{{regimenL.dia_anio_vacacion}}</td>
                 <td>{{regimenL.dia_mes_vacacion}}</td>
                 <td>{{regimenL.anio_antiguedad}}</td>
-                <td>{{regimenL.dia_incr_antiguedad}}</td>           
+                <td>{{regimenL.dia_incr_antiguedad}}</td>
                 <td>{{regimenL.max_dia_acumulacion}}</td>
                 <td>{{regimenL.dia_libr_anio_vacacion}}</td>
                 <td>

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import HORARIO_CONTROLADOR from '../../controlador/Catalogos/catHorarioControlador';
+import HORARIO_CONTROLADOR from '../../controlador/catalogos/catHorarioControlador';
 
 const path = require('path');
 const multer = require('multer');

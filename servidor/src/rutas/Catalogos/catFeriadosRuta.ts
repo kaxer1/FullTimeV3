@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import FERIADOS_CONTROLADOR from '../../controlador/Catalogos/catFeriadosControlador';
+import FERIADOS_CONTROLADOR from '../../controlador/catalogos/catFeriadosControlador';
 
 class FeriadosRuta {
     public router: Router = Router();

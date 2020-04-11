@@ -1,7 +1,9 @@
 <div class="container" *ngFor="let e of empleadoUno" style="padding-top: 15px; padding-bottom: 25px;">
     <a mat-button [routerLink]="['/empleado']" id="navegacion" class="btn btn-warning btn-sm">Regresar a Empleado</a>
-    <button type="submit" id="navegacion" (click)="AbrirVentanaCrearContrato()" class="btn btn-success">Contrato Empleado</button>
-    <button type="submit" id="planCom" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos</button>
+    <button type="submit" id="navegacion" (click)="AbrirVentanaCrearContrato()" class="btn btn-success">Contrato
+        Empleado</button>
+    <button type="submit" id="planCom" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación
+        Almuerzos</button>
     <div class="row">
         <div class="col-md">
             <mat-card class="mat-elevation-z8">
@@ -61,80 +63,6 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <div class="container" style="padding-bottom: 35px; padding-top: 35px;">
-                <div class="container border border-primary">
-                    <!-- contenedor de registro de datos -->
-                    <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-                        <div class="col-md">
-
-                            <div class="container">
-                                <!-- formulario datos personales -->
-                                <!-- <form> -->
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm-5 col-form-label">Horarios</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col-sm-5 col-form-label">-</label>
-                                    </div>
-                                </div>
-                                <!-- </form> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container" style="padding-bottom: 15px;">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md">
-            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
-                <div class="barraTitulo1">
-                    <div class="container">
-                        <div class="row" style="text-align: center;">
-                            <div class="col">
-                                <h5>Discapacidad</h5>
-                            </div>
-                            <div class="col">
-                                <button type="submit" class="btn btn-outline-light btn-sm" [disabled]="!btnHabilitado"
-                                    (click)="mostrarDis()">{{btnDisc}}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <mat-card-content>
-                    <div class="container" style="padding-top: 15px;" *ngFor="let d of discapacidadUser">
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Carnet Conadis:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{d.carn_conadis}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Tipo:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{d.tipo}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Porcentaje:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{d.porcentaje}} %</label>
-                            </div>
-                        </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-            <div style="padding-bottom: 35px; padding-top: 35px;">
-                <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad"></app-discapacidad>
-            </div>
         </div>
         <div class="col-md">
             <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
@@ -184,6 +112,52 @@
             <div style="padding-bottom: 35px; padding-top: 35px;">
                 <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
             </div>
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
+                <div class="barraTitulo1">
+                    <div class="container">
+                        <div class="row" style="text-align: center;">
+                            <div class="col">
+                                <h5>Discapacidad</h5>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-outline-light btn-sm" [disabled]="!btnHabilitado"
+                                    (click)="mostrarDis()">{{btnDisc}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px;" *ngFor="let d of discapacidadUser">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Carnet Conadis:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{d.carn_conadis}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Tipo:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{d.tipo}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Porcentaje:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{d.porcentaje}} %</label>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div style="padding-bottom: 35px; padding-top: 35px;">
+                <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
+                </app-discapacidad>
+            </div>
         </div>
     </div>
-</div>

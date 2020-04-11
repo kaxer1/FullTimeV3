@@ -1,12 +1,13 @@
 .btn { margin-left: 15px; border-radius: 25px; } 
 .planComida-tooltip { background-color : rgb(240, 5, 122); }
 .tituloPlanificacionAlmuerzos { 
-    font-size: 20px; 
+    font-size: 25px; 
     text-align: center; 
     background: rgb(240, 5, 122); 
     color: white; 
-    border-radius: 10px; 
-    padding-top: 10px; 
+    border-radius: 35px; 
+    padding-top: 14px;
+    padding-bottom: 0.5px;
 }
 #nomEmpleado { font-size: 14px; }
 #planComida { color:rgb(240, 5, 122); font-size: 18px; }

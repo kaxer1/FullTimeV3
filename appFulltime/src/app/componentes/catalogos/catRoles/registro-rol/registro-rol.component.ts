@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { ToastrService } from 'ngx-toastr';
@@ -7,7 +7,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-registro-rol',
   templateUrl: './registro-rol.component.html',
-  styleUrls: ['./registro-rol.component.css']
+  styleUrls: ['./registro-rol.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistroRolComponent implements OnInit {
 

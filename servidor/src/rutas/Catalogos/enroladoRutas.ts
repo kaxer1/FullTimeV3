@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import ENROLADOS_CONTROLADOR from '../../controlador/Catalogos/enroladoControlador';
+import ENROLADOS_CONTROLADOR from '../../controlador/catalogos/catEnroladoControlador';
 
 class EnroladoRutas {
     public router: Router = Router();
@@ -11,10 +11,10 @@ class EnroladoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', ENROLADOS_CONTROLADOR.list);
-        this.router.get('/:id',  ENROLADOS_CONTROLADOR.getOne);
-        this.router.post('/', ENROLADOS_CONTROLADOR.create);
-        this.router.get('/busqueda/:nombre', ENROLADOS_CONTROLADOR.getIdByNombre)
+        this.router.get('/', ENROLADOS_CONTROLADOR.ListarEnrolados);
+        this.router.get('/:id',  ENROLADOS_CONTROLADOR.ObtenerUnEnrolado);
+        this.router.post('/', ENROLADOS_CONTROLADOR.CraerEnrolado);
+        this.router.get('/busqueda/:nombre', ENROLADOS_CONTROLADOR.ObtenerUnEnrolado)
     }
 }
 

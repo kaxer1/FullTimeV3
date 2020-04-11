@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import DEPARTAMENTO_CONTROLADOR from '../../controlador/Catalogos/catDepartamentoControlador';
+import DEPARTAMENTO_CONTROLADOR from '../../controlador/catalogos/catDepartamentoControlador';
 
 class DepartamentoRutas {
     public router: Router = Router();

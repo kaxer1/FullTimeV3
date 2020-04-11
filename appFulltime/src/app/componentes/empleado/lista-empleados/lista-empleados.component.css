@@ -1,1 +1,21 @@
-.btn { border-radius: 25px; margin-right: 15px;}
+.btn { border-radius: 25px; margin-left: 15px; }
+#iemple { color:rgb(17, 157, 182); font-size: 18px; }
+.emple-tooltip { background: rgb(17, 157, 182); }
+.tituloEmpleados { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(17, 157, 182); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+#resulEmpleados { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(17, 157, 182); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

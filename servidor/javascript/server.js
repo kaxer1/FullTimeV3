@@ -11,7 +11,6 @@ const indexRutas_1 = __importDefault(require("./rutas/indexRutas"));
 const catRolesRutas_1 = __importDefault(require("./rutas/catalogos/catRolesRutas"));
 const empleadoRutas_1 = __importDefault(require("./rutas/empleado/empleadoRegistro/empleadoRutas"));
 const loginRuta_1 = __importDefault(require("./rutas/login/loginRuta"));
-<<<<<<< HEAD
 const discapacidadRutas_1 = __importDefault(require("./rutas/empleado/empleadoDiscapacidad/discapacidadRutas"));
 const catTituloRutas_1 = __importDefault(require("./rutas/catalogos/catTituloRutas"));
 const catRegimenRuta_1 = __importDefault(require("./rutas/catalogos/catRegimenRuta"));
@@ -34,28 +33,6 @@ const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/empleado/emplea
 const emplCargosRutas_1 = __importDefault(require("./rutas/empleado/empleadoCargos/emplCargosRutas"));
 const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComidasRutas"));
 const enroladoRelojRutas_1 = __importDefault(require("./rutas/enroladoReloj/enroladoRelojRutas"));
-=======
-const discapacidadRutas_1 = __importDefault(require("./rutas/discapacidadRutas"));
-const tituloRutas_1 = __importDefault(require("./rutas/Catalogos/tituloRutas"));
-const catRegimenRuta_1 = __importDefault(require("./rutas/Catalogos/catRegimenRuta"));
-const catFeriadosRuta_1 = __importDefault(require("./rutas/Catalogos/catFeriadosRuta"));
-const catTipoComidasRuta_1 = __importDefault(require("./rutas/Catalogos/catTipoComidasRuta"));
-const catRelojesRuta_1 = __importDefault(require("./rutas/Catalogos/catRelojesRuta"));
-const catProvinciaRutas_1 = __importDefault(require("./rutas/Catalogos/catProvinciaRutas"));
-const catDepartamentoRutas_1 = __importDefault(require("./rutas/Catalogos/catDepartamentoRutas"));
-const procesoRutas_1 = __importDefault(require("./rutas/Catalogos/procesoRutas"));
-const catHorarioRutas_1 = __importDefault(require("./rutas/Catalogos/catHorarioRutas"));
-const enroladoRutas_1 = __importDefault(require("./rutas/Catalogos/enroladoRutas"));
-const usuarioRutas_1 = __importDefault(require("./rutas/Catalogos/usuarioRutas"));
-const catHorasExtrasRutas_1 = __importDefault(require("./rutas/Catalogos/catHorasExtrasRutas"));
-const rolPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/rolPermisosRutas"));
-const tipoPermisosRutas_1 = __importDefault(require("./rutas/Catalogos/tipoPermisosRutas"));
-const ciudadesRutas_1 = __importDefault(require("./rutas/ciudades/ciudadesRutas"));
-const ciudadFeriadoRutas_1 = __importDefault(require("./rutas/CiudadFeriado/ciudadFeriadoRutas"));
-const notificacionesRutas_1 = __importDefault(require("./rutas/Catalogos/notificacionesRutas"));
-const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/contratoEmpleado/contratoEmpleadoRutas"));
-const emplCargosRutas_1 = __importDefault(require("./rutas/EmpleadoCargos/emplCargosRutas"));
->>>>>>> 06167363ec0cb38bfe8074c610dd2718b80dcecf
 class Server {
     constructor() {
         this.app = express_1.default();

@@ -3,7 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <h5 style="text-align: center">Horarios - Críterios de Búsqueda</h5>
+                <div class="tituloHorarioL">
+                    <span>HORARIOS</span>
+                </div>
+                <br>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="buscarHorarioForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
@@ -11,6 +15,10 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreHorario" placeholder="Nombre Horario"
                                     [formControl]="nombreHorarioF" [(ngModel)]="filtroNombreHorario">
+                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de horario por el nombre">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="nombreHorarioF.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                             </mat-form-field>
@@ -20,7 +28,7 @@
                 <mat-card-actions style="text-align: center">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                     <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarHorario()"
-                        value="Ir a Registrar">
+                        value="Crear nuevo Horario">
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -29,9 +37,7 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultados de búsqueda</span>
-    </mat-toolbar>
+    <div id="resulHorario">Resultado de búsqueda</div>
     <table mat-table class=" mat-elevation-z8 table table-hover table-sm ">
         <thead class="thead-light">
             <tr style="text-align: center;">

@@ -49,12 +49,10 @@ class HorarioControlador {
     }
     CrearHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-<<<<<<< HEAD
             //HORA_TRABAJO --SOLO PERMITE 2 Números 1 entero, un decimal 
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
             res.json({ message: 'El horario ha sido registrado' });
-=======
             console.log(req.file.filename);
             const workbook = xlsx_1.default.readFile(`./plantillas/${req.file.filename}`);
             const sheet_name_list = workbook.SheetNames;
@@ -77,7 +75,6 @@ class HorarioControlador {
                 success: true,
                 message: 'file upload'
             });
->>>>>>> 06167363ec0cb38bfe8074c610dd2718b80dcecf
         });
     }
 }

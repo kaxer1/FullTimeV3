@@ -1,6 +1,8 @@
-<mat-icon>open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Proceso
-</h5>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloprocesoR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Acciones de Personal Registrar Proceso</span>
+</div>
+<br>
 <div style="text-align: center">
     <form [formGroup]="nuevoProcesoForm">
         <mat-card-content>
@@ -9,11 +11,17 @@
                     <mat-label>Nombre de proceso</mat-label>
                     <input matInput placeholder="Ej: Emergencia" [formControl]="nombre"
                         (keypress)="IngresarSoloLetras($event)" required>
+                    <mat-icon id="iprocesoR" matSuffix matTooltipClass="procesoR-tooltip" matTooltipPosition="right"
+                        matTooltip="Ingresar nombre con el que se va a identificar el nuevo proceso">
+                        help_outline</mat-icon>
                     <mat-error *ngIf="nombre.invalid">{{obtenerMensajeErrorNombre()}}</mat-error>
                 </mat-form-field>
                 <br>
                 <mat-form-field>
                     <mat-label>Proceso Padre</mat-label>
+                    <mat-icon id="iprocesoR" matSuffix matTooltipClass="procesoR-tooltip" matTooltipPosition="right"
+                        matTooltip="Seleccionar uno de los procesos listados, el mismo que figurar como proceso superior al nuevo proceso creado">
+                        help_outline</mat-icon>
                     <mat-select [formControl]="procesoPadre" required>
                         <mat-option [value]="0">Ninguno proceso</mat-option>
                         <mat-option *ngFor="let p of procesos" [value]="p.nombre">
@@ -23,7 +31,10 @@
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Nivel</mat-label>
+                    <mat-label>Nivel *</mat-label>
+                    <mat-icon id="iprocesoR" matSuffix matTooltipClass="procesoR-tooltip" matTooltipPosition="right"
+                        matTooltip="Seleccionar el nivel del nuevo proceso">
+                        help_outline</mat-icon>
                     <mat-select [formControl]="nivel">
                         <mat-option *ngFor="let n of niveles" [value]="n.nombre">
                             {{n.valor}}

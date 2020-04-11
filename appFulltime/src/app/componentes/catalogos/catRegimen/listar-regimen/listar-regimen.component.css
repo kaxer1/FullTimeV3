@@ -3,3 +3,23 @@ td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 20px; }
 .far { color:red; }
 th { font-size: small; }
+#iRegL { color:rgb(35, 3, 122); font-size: 18px; }
+.regimenL-tooltip { background-color : rgb(35, 3, 122); }
+.tituloRegL { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(35, 3, 122); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px;
+    padding-bottom: 6px; 
+}
+#resulRegimen { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(35, 3, 122); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

@@ -3,39 +3,65 @@
         <div class="col-sm"></div>
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
-                <div style="text-align: center;">
-                    <h5>Añadir Notificación</h5>
+                <div class="tituloNotifica">
+                    <span>Registrar Notificación</span>
                 </div>
+                <br>
                 <!-- Formulario Completo -->
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
                         <form [formGroup]="nuevaNotificacionForm">
                             <mat-form-field>
-                                <mat-label>Tipo</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="tipo" (keypress)="soloNumeros($event)" required>
+                                <mat-label>Código de notificación</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="tipo"
+                                    (keypress)="IngresarSoloNumeros($event)" required>
+                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="notifica-tooltip"
+                                    matTooltip="Ingresar un código de identificación de la notificación">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="tipo.invalid">{{ObtenerMensajeErrorTipoRequerido()}}</mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Nivel</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="nivel" (keypress)="soloNumeros($event)" required>
-                                <mat-error *ngIf="nivel.invalid">{{ObtenerMensajeErrorNivelRequerido()}}</mat-error>
+                                <mat-label>Nivel *</mat-label>
+                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="notifica-tooltip"
+                                    matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="nivel">
+                                    <mat-option *ngFor="let n of niveles" [value]="n.valor">
+                                        {{n.valor}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                             <br>
                             <!-- Cargar en un select cuando ya se pueda registrar los departamentos -->
                             <mat-form-field>
-                                <mat-label>Departamento</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="idDepartamento" (keypress)="soloNumeros($event)" required>
-                                <mat-error *ngIf="idDepartamento.invalid">{{ObtenerMensajeErrorDepartamentoRequerido()}}</mat-error>
+                                <mat-label id="selecDepa">Seleccionar Departamento*</mat-label>
+                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Lista de departamentos existentes en la empresa">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="idDepartamento">
+                                    <mat-option *ngFor="let depa of departamentos" [value]="depa.id">
+                                        {{depa.nombre}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
                             <br>
                             <!-- Cargar en un select cuando ya este validado el registro permisos. Es opcional seleccionar este campo -->
                             <mat-form-field>
-                                <mat-label>Tipo Permiso</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="idTipoPermiso" (keypress)="soloNumeros($event)" required>
-                                <mat-error *ngIf="idTipoPermiso.invalid">{{ObtenerMensajeErrorPermisoRequerido()}}</mat-error>
+                                <mat-label>Seleccionar Permiso*</mat-label>
+                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Lista de permisos que pudo solicitar un empleado">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="idTipoPermiso">
+                                    <mat-option *ngFor="let permiso of tipoPermiso" [value]="permiso.id">
+                                        {{permiso.descripcion}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
-                            <br>
                         </form>
                     </div>
                 </mat-card-content>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
@@ -26,7 +26,8 @@ interface Dia{
 @Component({
   selector: 'app-horas-extras',
   templateUrl: './horas-extras.component.html',
-  styleUrls: ['./horas-extras.component.css']
+  styleUrls: ['./horas-extras.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class HorasExtrasComponent implements OnInit {
 

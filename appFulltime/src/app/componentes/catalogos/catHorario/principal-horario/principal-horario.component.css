@@ -2,3 +2,23 @@
 td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 20px;  }
 .far { color:red }
+.tituloHorarioL { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(10, 2, 114); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px;
+}
+#iHorL { color:rgb(10, 2, 114); font-size: 18px; }
+.horarioL-tooltip { background-color : rgb(10, 2, 114); }
+#resulHorario { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(10, 2, 114); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

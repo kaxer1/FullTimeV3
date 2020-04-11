@@ -1,15 +1,15 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-
     <mat-card class="example-card mat-elevation-z8">
-        <div class="barraTitulo">
-            <span>Añadir permisos para el rol {{nombreRol}}</span>
+        <div class="tituloPermisoS">
+            <span>Funciones que tendrá el Rol {{nombreRol}}</span>
         </div>
         <!-- Formulario Completo -->
         <mat-card-content>
             <div class="subtitulo">
                 <span>
-                    Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado pantalla 
-                    por medio de los links y selecionando una etiqueta de descripcion de lo que realiza en ese página 
+                    Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado
+                    pantalla
+                    por medio de los links y selecionando una etiqueta de descripcion de lo que realiza en ese página
                 </span>
             </div>
             <form [formGroup]="nuevoRolPermisoForm">
@@ -18,8 +18,11 @@
                         <div class="col-sm">
                             <mat-form-field>
                                 <mat-label>Seleccionar Función</mat-label>
-                                <mat-select [formControl]="funcion" matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="El rol es " required>
+                                <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Lista de funciones que se podrán realizar en el sistema">
+                                help_outline</mat-icon>
+                                <mat-select [formControl]="funcion" required>
                                     <mat-option *ngFor="let f of funciones" [value]="f.value">
                                         {{f.value}}
                                     </mat-option>
@@ -30,8 +33,12 @@
                         <div class="col-sm">
                             <mat-form-field>
                                 <mat-label>Seleccionar Links</mat-label>
-                                <mat-select [formControl]="link" matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="El rol es el nivel " required>
+                                <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Lista de páginas existentes en el sistema">
+                                help_outline</mat-icon>
+                                <mat-select [formControl]="link" matTooltipClass="selPermiso-tooltip"
+                                    matTooltipPosition="right" matTooltip="El rol es el nivel " required>
                                     <mat-option *ngFor="let l of links" [value]="l.value">
                                         {{l.viewValue}}
                                     </mat-option>
@@ -41,9 +48,13 @@
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
-                                <mat-label>Seleccionar etiquetas</mat-label>
-                                <mat-select [formControl]="etiqueta" matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="El rol es el nivel " required>
+                                <mat-label id="funcion">Seleccionar etiquetas</mat-label>
+                                <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Lista de nombres que referencian las funciones que se pueden realizar en el sistema">
+                                help_outline</mat-icon>
+                                <mat-select [formControl]="etiqueta" matTooltipClass="selPermiso-tooltip"
+                                    matTooltipPosition="right" matTooltip="El rol es el nivel " required>
                                     <mat-option *ngFor="let e of etiquetas" [value]="e.value">
                                         {{e.value}}
                                     </mat-option>
@@ -58,20 +69,18 @@
         <mat-card-actions>
             <div class="container" style="text-align: center;">
                 <button type="submit" class="btn btn-warning btn-sm" [routerLink]="['/roles']">Atrás</button>
-                <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;" [disabled]="!nuevoRolPermisoForm.valid"
-                    (click)="insertarRolPermiso(nuevoRolPermisoForm.value)" value="Guardar">
+                <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
+                    [disabled]="!nuevoRolPermisoForm.valid" (click)="insertarRolPermiso(nuevoRolPermisoForm.value)"
+                    value="Guardar">
                 <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;" (click)="limpliarCampos()"
                     value="Cancelar">
-                </div>
+            </div>
         </mat-card-actions>
     </mat-card>
-
 </div>
-
+<br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar >
-        <span style="text-align: center;">Resultado de búsqueda</span>
-      </mat-toolbar>
+    <div id="resulSelPermiso">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">

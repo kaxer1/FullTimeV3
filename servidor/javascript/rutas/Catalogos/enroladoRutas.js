@@ -4,17 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const enroladoControlador_1 = __importDefault(require("../../controlador/Catalogos/enroladoControlador"));
+const catEnroladoControlador_1 = __importDefault(require("../../controlador/catalogos/catEnroladoControlador"));
 class EnroladoRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', enroladoControlador_1.default.list);
-        this.router.get('/:id', enroladoControlador_1.default.getOne);
-        this.router.post('/', enroladoControlador_1.default.create);
-        this.router.get('/busqueda/:nombre', enroladoControlador_1.default.getIdByNombre);
+        this.router.get('/', catEnroladoControlador_1.default.ListarEnrolados);
+        this.router.get('/:id', catEnroladoControlador_1.default.ObtenerUnEnrolado);
+        this.router.post('/', catEnroladoControlador_1.default.CraerEnrolado);
+        this.router.get('/busqueda/:nombre', catEnroladoControlador_1.default.ObtenerUnEnrolado);
     }
 }
 const ENROLADO_RUTAS = new EnroladoRutas();

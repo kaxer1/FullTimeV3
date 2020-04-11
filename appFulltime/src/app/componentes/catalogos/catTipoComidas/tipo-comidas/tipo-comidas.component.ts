@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,8 @@ import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/t
 @Component({
   selector: 'app-tipo-comidas',
   templateUrl: './tipo-comidas.component.html',
-  styleUrls: ['./tipo-comidas.component.css']
+  styleUrls: ['./tipo-comidas.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class TipoComidasComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,8 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 @Component({
   selector: 'app-lista-empleados',
   templateUrl: './lista-empleados.component.html',
-  styleUrls: ['./lista-empleados.component.css']
+  styleUrls: ['./lista-empleados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class ListaEmpleadosComponent implements OnInit {
 

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const catHorarioControlador_1 = __importDefault(require("../../controlador/Catalogos/catHorarioControlador"));
+const catHorarioControlador_1 = __importDefault(require("../../controlador/catalogos/catHorarioControlador"));
 const path = require('path');
 const multer = require('multer');
 let storage = multer.diskStorage({

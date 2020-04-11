@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,7 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-registro-enrolados',
   templateUrl: './registro-enrolados.component.html',
-  styleUrls: ['./registro-enrolados.component.css']
+  styleUrls: ['./registro-enrolados.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistroEnroladosComponent implements OnInit {
 

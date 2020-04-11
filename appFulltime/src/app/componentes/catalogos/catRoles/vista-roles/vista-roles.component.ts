@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -9,7 +9,8 @@ import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/reg
 @Component({
   selector: 'app-vista-roles',
   templateUrl: './vista-roles.component.html',
-  styleUrls: ['./vista-roles.component.css']
+  styleUrls: ['./vista-roles.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class VistaRolesComponent implements OnInit {
 
