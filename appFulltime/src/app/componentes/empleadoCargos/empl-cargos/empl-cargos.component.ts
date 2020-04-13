@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { ToastrService } from 'ngx-toastr';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-empl-cargos',
@@ -11,13 +14,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EmplCargosComponent implements OnInit {
 
+  @Input() idContratoEmpleado: string;
+
   departamento: any = [];
+  sucursales: any = [];
 
   idEmpleContrato = new FormControl('', [Validators.required]);
   idDepartamento = new FormControl('', [Validators.required]);
   fechaInicio = new FormControl('', Validators.required);
   fechaFinal = new FormControl('', Validators.required);
-  idBaseHorario = new FormControl('', [Validators.required]);
   idSucursal = new FormControl('', [Validators.required]);
   sueldo = new FormControl('', [Validators.required]);
   horaTrabaja = new FormControl('', [Validators.required]);
@@ -27,7 +32,6 @@ export class EmplCargosComponent implements OnInit {
     idDeparForm: this.idDepartamento,
     fecInicioForm: this.fechaInicio,
     fecFinalForm: this.fechaFinal,
-    idBaseHorarioForm: this.idBaseHorario,
     idSucursalForm: this.idSucursal,
     sueldoForm: this.sueldo,
     horaTrabajaForm: this.horaTrabaja 
@@ -36,12 +40,20 @@ export class EmplCargosComponent implements OnInit {
   constructor(
     private restCatDepartamento: DepartamentosService,
     private restEmplCargos: EmplCargosService,
+    private restSucursales: SucursalService,
     private toastr: ToastrService,
-  ) { }
+    public dialogRef: MatDialogRef<EmplCargosComponent>,
+    public router: Router,
+  ) {
+    let cadena = this.router.url;
+    let aux = cadena.split('/');
+    console.log(aux[2]);
+   }
 
   ngOnInit(): void {
     this.limpiarCampos();
     this.obtenerCatDepartamentos();
+    this.obtenerSucursales();
   }
 
   limpiarCampos(){
@@ -59,14 +71,19 @@ export class EmplCargosComponent implements OnInit {
     })
   }
 
+  obtenerSucursales(){
+    this.restSucursales.getSucursalesRest().subscribe(data => {
+      this.sucursales = data
+    });
+  }
+
   insertarEmpleadoCargo(form){
     let dataEmpleadoCargo = {
       id_empl_contrato: 2, 
       id_departamento: form.idDeparForm, 
       fec_inicio: form.fecInicioForm, //"2020-03-26" 
       fec_final: form.fecFinalForm, 
-      id_base_horario: form.idBaseHorarioForm, 
-      id_sucursal: 1, 
+      id_sucursal: form.idSucursalForm, 
       sueldo: form.sueldoForm, 
       hora_trabaja: form.horaTrabajaForm
     }
@@ -74,7 +91,15 @@ export class EmplCargosComponent implements OnInit {
 
     this.restEmplCargos.postEmpleadoCargosRest(dataEmpleadoCargo).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Cargo del empleado Guardado');
+      this.limpiarCampos();
     });
   }
+
+  CerrarVentanaRegistroContrato() {
+    this.limpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
+  }
+
 
 }

@@ -96,6 +96,7 @@ import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.
 import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
 
 // material
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -125,6 +126,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EnroladoRelojComponent } from './componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
 import { PlanificacionComidasComponent } from './componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
+import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
+import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
+import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
+import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
 
 @NgModule({
   declarations: [
@@ -196,7 +201,11 @@ import { PlanificacionComidasComponent } from './componentes/planificacionComida
     FitroNivelPipe,
     ListarCiudadFeriadosComponent,
     EnroladoRelojComponent,
-    PlanificacionComidasComponent
+    PlanificacionComidasComponent,
+    ListaSucursalesComponent,
+    RegistrarSucursalesComponent,
+    SucNombrePipe,
+    SucCiudadPipe
   ],
   imports: [
     BrowserModule,
@@ -235,6 +244,7 @@ import { PlanificacionComidasComponent } from './componentes/planificacionComida
     MatStepperModule,
     DragDropModule,
     MatTooltipModule,
+    MatAutocompleteModule
   ],
   providers: [
     LoginService,

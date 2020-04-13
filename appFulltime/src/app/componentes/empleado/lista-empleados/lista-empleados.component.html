@@ -1,11 +1,13 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
-                <div style="text-align: center;">
-                    <h5>Empleados - Criterios de Búsqueda</h5>
+                <div class="barraTituloEmp">
+                    <span>EMPLEADOS</span>
                 </div>
+                <br>
+                <h5 style="text-align: center;">Criterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
@@ -14,42 +16,48 @@
                                 <mat-label>Busqueda por Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
                                     (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
+                                    matTooltip="Busqueda del empleado por su código">help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Cédula</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula"
                                     type="text" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
+                                    matTooltip="Busqueda del empleado por su cédula">help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Nombre</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
                                     type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
+                                    matTooltip="Busqueda del empleado por su nombre">help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Busqueda por Apellido</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
                                     type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
+                                    matTooltip="Busqueda del empleado por su apellido">help_outline</mat-icon>
                             </mat-form-field>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Crear nuevo Empleado</button>
+                    <button mat-button type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()">Cancelar</button>
+                    <button mat-button type="button" class="btn btn-primary btn-sm" [routerLink]="['/registrarEmpleado']">Crear nuevo Empleado</button>
                 </div>
             </mat-card>
         </div>
-        <div class="col-3"></div>
+        <div class="col-sm"></div>
     </div>
 </div>
 
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultado de búsqueda</span>
-    </mat-toolbar>
+    <div id="resultadosEmp">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">

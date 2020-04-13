@@ -3,25 +3,31 @@
         <div class="col-sm"></div>
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z9">
+                <div class="barraTituloTit">
+                    <span>TITULOS</span>
+                </div>
+                <br>
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarTitulosForm">
                     <mat-card-content>
                         <div class="container" style="text-align: center">
                             <mat-form-field>
-                                <mat-label>Nombre Título</mat-label>
+                                <mat-label>Busqueda por nombre</mat-label>
                                 <input matInput placeholder="Nombre Título" name="filtradoNombre"
                                     [formControl]="nombreF" [(ngModel)]="filtradoNombre"
                                     (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
-                                </mat-error>
+                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                                <mat-icon id="permisoTit" matSuffix matTooltipClass="color-tooltipTit" matTooltipPosition="right"
+                                    matTooltip="Busqueda de título por nombre">help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Nivel</mat-label>
+                                <mat-label>Busqueda por nivel</mat-label>
                                 <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
                                     [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
-                                </mat-error>
+                                <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}</mat-error>
+                                <mat-icon id="permisoTit" matSuffix matTooltipClass="color-tooltipTit" matTooltipPosition="right"
+                                    matTooltip="Busqueda de título por nivel">help_outline</mat-icon>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
@@ -37,9 +43,7 @@
 </div>
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultado de búsqueda</span>
-    </mat-toolbar>
+    <div id="resultadosTit">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">

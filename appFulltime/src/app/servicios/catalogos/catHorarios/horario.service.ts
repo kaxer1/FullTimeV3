@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +25,16 @@ export class HorarioService {
   postHorarioRest(data: any){
     return this.http.post(`${this.API_URL}/horario`, data);
   } 
+
+  UploadExcel(formData: FormData) {  
+    let headers = new HttpHeaders();  
+  
+    headers.append('Content-Type', 'multipart/form-data');  
+    headers.append('Accept', 'application/json');  
+  
+    const httpOptions = { headers: headers };  
+  
+    return this.http.post(this.API_URL + 'horario/upload', formData, httpOptions)  
+  }
 
 }

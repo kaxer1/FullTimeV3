@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -14,7 +14,8 @@ interface Nivel {
 @Component({
   selector: 'app-listar-titulos',
   templateUrl: './listar-titulos.component.html',
-  styleUrls: ['./listar-titulos.component.css']
+  styleUrls: ['./listar-titulos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class ListarTitulosComponent implements OnInit {

@@ -38,8 +38,8 @@ class CiudadControlador {
     }
     ConsularUnaCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_provincia } = req.params;
-            const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades WHERE id_provincia = $1', [id_provincia]);
+            const { id } = req.params;
+            const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades WHERE id = $1', [id]);
             if (CIUDAD.rowCount > 0) {
                 return res.json(CIUDAD.rows);
             }

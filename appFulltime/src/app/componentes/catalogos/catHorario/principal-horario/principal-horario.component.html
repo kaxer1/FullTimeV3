@@ -11,20 +11,23 @@
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreHorario" placeholder="Nombre Horario"
                                     [formControl]="nombreHorarioF" [(ngModel)]="filtroNombreHorario">
-                                <mat-error *ngIf="nombreHorarioF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
+                                <mat-error *ngIf="nombreHorarioF.invalid">Indispensable ingresar dos letras</mat-error>
+                                <mat-icon id="permisoRol" matSuffix matTooltipClass="color-tooltipRol" matTooltipPosition="right"
+                                matTooltip="Busqueda del empleado por su apellido">help_outline</mat-icon>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarHorario()"
-                        value="Ir a Registrar">
+                    <button mat-button type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()">Cancelar</button>
+                    <button mat-button type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarHorario()">Crear nuevo Horario</button>
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="col-3"></div>
+        <div class="col-3">
+            <input class="form-control" type="file" #fileInput />  
+            <button class="btn btn-primary" (click)="uploadFile();">Upload</button>  
+        </div>
     </div>
 </div>
 <br>

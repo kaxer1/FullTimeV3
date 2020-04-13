@@ -1,0 +1,27 @@
+<mat-icon>open_with</mat-icon>
+<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Sucursal
+</h4>
+<form [formGroup]="nuevaSucursalForm">
+    <div class="container" style="text-align: center;">
+        <mat-form-field>
+            <mat-label>Nueva Sucursal</mat-label>
+            <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre"
+                (keypress)="IngresarSoloLetras($event)" required>
+            <!-- <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error> -->
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Seleccionar Ciudad </mat-label>
+            <mat-select [formControl]="idCiudad">
+                <mat-option *ngFor="let c of ciudades" [value]="c.id">
+                    {{c.descripcion}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-primary btn-sm" (click)="InsertarSucursal(nuevaSucursalForm.value)"
+        [disabled]="!nuevaSucursalForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroSucursal()" value="Salir">
+</div>

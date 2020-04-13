@@ -11,7 +11,6 @@ const pool = new pg_pool_1.default({
     port: 5432,
     database: 'fulltime3',
     password: 'fulltime',
-    port: 5432,
 });
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {

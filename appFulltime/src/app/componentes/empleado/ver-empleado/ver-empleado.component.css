@@ -7,3 +7,4 @@ mat-divider { background: rgba(131, 131, 131, 0.609);}
 #derecha { float: right; }
 #navegacion { margin-right: 15px; }
 #planCom { margin-right: 15px; background: rgb(240, 5, 122); border-radius: 30px; color: white }
+#cargo { margin-right: 15px; background: rgb(4, 156, 136); border-radius: 30px; color: white }

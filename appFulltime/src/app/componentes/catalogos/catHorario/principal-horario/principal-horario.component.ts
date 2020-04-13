@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -20,9 +20,11 @@ export class PrincipalHorarioComponent implements OnInit {
    nombreHorarioF = new FormControl('', [Validators.minLength(2)]);
 
    // Asignación de validaciones a inputs del formulario
-   public buscarHorarioForm = new FormGroup({
+  public buscarHorarioForm = new FormGroup({
     nombreHorarioForm: this.nombreHorarioF,
-   });
+  });
+
+  @ViewChild('fileInput') fileInput; 
  
   constructor(
     private rest: HorarioService,
@@ -32,6 +34,16 @@ export class PrincipalHorarioComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerHorarios();
   }
+
+  uploadFile() {  
+    let formData = new FormData();  
+    formData.append('upload', this.fileInput.nativeElement.files[0])  
+  
+    this.rest.UploadExcel(formData).subscribe(result => {  
+      console.log(result);
+    });   
+  
+  }  
 
   ObtenerHorarios() {
     this.horarios = [];

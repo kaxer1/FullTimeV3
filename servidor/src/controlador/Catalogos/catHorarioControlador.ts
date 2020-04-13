@@ -38,12 +38,6 @@ class HorarioControlador {
   }
 
   public async CrearHorario(req: Request, res: Response): Promise<void> {
-<<<<<<< HEAD
-    //HORA_TRABAJO --SOLO PERMITE 2 Números 1 entero, un decimal 
-    const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
-    await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-    res.json({ message: 'El horario ha sido registrado' });
-=======
     console.log( req.file.filename);
 
     const workbook = excel.readFile(`./plantillas/${req.file.filename}`);
@@ -69,7 +63,6 @@ class HorarioControlador {
       message: 'file upload'  
     });
     
->>>>>>> 06167363ec0cb38bfe8074c610dd2718b80dcecf
   }
 
 }

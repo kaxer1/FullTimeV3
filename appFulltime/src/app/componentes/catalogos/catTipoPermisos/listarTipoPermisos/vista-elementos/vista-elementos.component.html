@@ -1,7 +1,7 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z9" id="carta 1">
                 <div class="barraTitulo">
                     <span>TIPO DE PERMISOS</span>
@@ -18,24 +18,22 @@
                                         help_outline</mat-icon>
                                 <input matInput name="filtroDescripcion" placeholder="Ingresar nombre" minlength="2"
                                     [formControl]="nombreF" [(ngModel)]="filtroDescripcion">
-                                <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
+                                <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras</mat-error>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <button mat-button class="btn btn-primary btn-sm" [routerLink]="['/tipoPermisos']">Crear nuevo
-                        Permiso</button>
+                    <button mat-button type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()">Cancelar</button>
+                    <button mat-button class="btn btn-primary btn-sm" [routerLink]="['/tipoPermisos']">Crear nuevo Permiso</button>
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="col-3"></div>
+        <div class="col-sm"></div>
     </div>
 </div>
 <br>
-<div class="container  table-responsive" style="padding-bottom: 50px;">
+<div class="container table-responsive" style="padding-bottom: 50px;">
     <div id="resultados">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">

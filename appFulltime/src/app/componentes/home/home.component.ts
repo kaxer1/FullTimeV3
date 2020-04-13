@@ -11,6 +11,7 @@ import * as pluginAnnotations from 'chartjs-plugin-annotation';
 })
 export class HomeComponent implements OnInit {
 
+  fecha: string;
   // estes es para la grafica de pie
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -122,6 +123,11 @@ export class HomeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+    var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+    var f=new Date();
+    this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+    console.log(this.fecha);
   }
 
    // events y codigo del pie

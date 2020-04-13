@@ -1,1 +1,27 @@
-.btn { border-radius: 25px; margin-right: 15px;}
+.btn { margin-left: 15px; border-radius: 25px; }
+
+.barraTituloEmp { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgba(0, 45, 168, 0.828); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
+#resultadosEmp { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgba(0, 45, 168, 0.828); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
+.color-tooltipEmp { background: rgba(0, 45, 168, 0.828); }
+
+
+#permisoEmp { color:rgba(0, 45, 168, 0.828); font-size: 18px; }
+

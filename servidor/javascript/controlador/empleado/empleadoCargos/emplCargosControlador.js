@@ -32,8 +32,8 @@ class EmpleadoCargosControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empl_contrato, id_departamento, fec_inicio, fec_final, id_base_horario, id_sucursal, sueldo, hora_trabaja } = req.body;
-            yield database_1.default.query('INSERT INTO empl_cargos ( id_empl_contrato, id_departamento, fec_inicio, fec_final, id_base_horario, id_sucursal, sueldo, hora_trabaja) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id_empl_contrato, id_departamento, fec_inicio, fec_final, id_base_horario, id_sucursal, sueldo, hora_trabaja]);
+            const { id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja } = req.body;
+            yield database_1.default.query('INSERT INTO empl_cargos ( id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja]);
             console.log(req.body);
             res.json({ message: 'Cargo empleado guardado' });
         });

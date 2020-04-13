@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const notificacionesControlador_1 = __importDefault(require("../../controlador/Catalogos/notificacionesControlador"));
+const catNotificacionesControlador_1 = __importDefault(require("../../controlador/Catalogos/catNotificacionesControlador"));
 class NotificacionesRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', notificacionesControlador_1.default.list);
-        this.router.get('/:id', notificacionesControlador_1.default.getOne);
-        this.router.post('/', notificacionesControlador_1.default.create);
+        this.router.get('/', catNotificacionesControlador_1.default.ListarNotificaciones);
+        this.router.get('/:id', catNotificacionesControlador_1.default.ObtenerUnaNotificacion);
+        this.router.post('/', catNotificacionesControlador_1.default.CrearNotificacion);
     }
 }
 const notificacionesRutas = new NotificacionesRutas();

@@ -18,6 +18,10 @@ export class CiudadService {
     return this.http.get(`${this.API_URL}/ciudades`);
   }
 
+  getUnaCiudadRest(id: number){
+    return this.http.get(`${this.API_URL}/ciudades/${id}`);
+  }
+
   ConsultarCiudades(){
     return this.http.get(`${this.API_URL}/ciudades/listaCiudad`);
   }

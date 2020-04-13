@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import ROLES_CONTROLADOR from '../../controlador/catalogos/catRolesControlador';
+import ROLES_CONTROLADOR from '../../controlador/Catalogos/catRolesControlador';
 
 class PruebasRutas {
     public router: Router = Router();

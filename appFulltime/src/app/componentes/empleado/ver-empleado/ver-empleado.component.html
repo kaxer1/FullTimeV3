@@ -2,6 +2,7 @@
     <a mat-button [routerLink]="['/empleado']" id="navegacion" class="btn btn-warning btn-sm">Regresar a Empleado</a>
     <button type="submit" id="navegacion" (click)="AbrirVentanaCrearContrato()" class="btn btn-success">Contrato Empleado</button>
     <button type="submit" id="planCom" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos</button>
+    <button type="submit" id="cargo" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
     <div class="row">
         <div class="col-md">
             <mat-card class="mat-elevation-z8">
@@ -61,31 +62,8 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <div class="container" style="padding-bottom: 35px; padding-top: 35px;">
-                <div class="container border border-primary">
-                    <!-- contenedor de registro de datos -->
-                    <div class="row" style="padding-top: 15px; padding-bottom: 25px;">
-
-                        <div class="col-md">
-
-                            <div class="container">
-                                <!-- formulario datos personales -->
-                                <!-- <form> -->
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm-5 col-form-label">Horarios</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col-sm-5 col-form-label">-</label>
-                                    </div>
-                                </div>
-                                <!-- </form> -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="container" style="padding-bottom: 15px;">
-                    </div>
-                </div>
+            <div style="padding-bottom: 35px; padding-top: 35px;">
+                <!-- <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos> -->
             </div>
         </div>
         <div class="col-md">
