@@ -56,8 +56,6 @@ export class AsignarCiudadComponent implements OnInit {
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
-    console.log(this.data.actualizar)
-    console.log(this.data.feriado.id)
   }
 
   ObtenerContinentes() {

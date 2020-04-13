@@ -1,11 +1,7 @@
 .btn { border-radius: 25px; margin-left: 15px; margin-top: 15px;}
-
 td { padding-top: 10px; text-align: center; } 
-
 .fas { color:green; margin-left: 20px; }
-
 .far { color:red; }
-
 .tituloL-tooltip { background: #4622aa; }
 #itituloL { color:#4622aa; font-size: 18px; }
 .tituloRegistro { 
@@ -26,3 +22,4 @@ td { padding-top: 10px; text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+

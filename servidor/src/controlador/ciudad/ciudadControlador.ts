@@ -24,8 +24,8 @@ class CiudadControlador {
     }
 
     public async ConsularUnaCiudad(req: Request, res: Response): Promise<any> {
-        const { id_provincia } = req.params;
-        const CIUDAD = await pool.query('SELECT * FROM ciudades WHERE id_provincia = $1', [id_provincia]);
+        const { id } = req.params;
+        const CIUDAD = await pool.query('SELECT * FROM ciudades WHERE id = $1', [id]);
         if (CIUDAD.rowCount > 0) {
             return res.json(CIUDAD.rows)
         }

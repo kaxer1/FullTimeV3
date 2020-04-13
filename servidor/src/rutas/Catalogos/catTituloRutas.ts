@@ -1,5 +1,7 @@
 import { Router } from 'express';
+
 import tituloControlador from '../../controlador/catalogos/catTituloControlador';
+
 
 class TituloRutas {
     public router: Router = Router();

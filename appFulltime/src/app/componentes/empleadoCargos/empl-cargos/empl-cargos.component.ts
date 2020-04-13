@@ -1,23 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { ToastrService } from 'ngx-toastr';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-empl-cargos',
   templateUrl: './empl-cargos.component.html',
-  styleUrls: ['./empl-cargos.component.css']
+  styleUrls: ['./empl-cargos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EmplCargosComponent implements OnInit {
 
+  @Input() idContratoEmpleado: string;
+
   departamento: any = [];
+  sucursales: any = [];
 
   idEmpleContrato = new FormControl('', [Validators.required]);
   idDepartamento = new FormControl('', [Validators.required]);
   fechaInicio = new FormControl('', Validators.required);
   fechaFinal = new FormControl('', Validators.required);
-  idBaseHorario = new FormControl('', [Validators.required]);
   idSucursal = new FormControl('', [Validators.required]);
   sueldo = new FormControl('', [Validators.required]);
   horaTrabaja = new FormControl('', [Validators.required]);
@@ -27,7 +33,6 @@ export class EmplCargosComponent implements OnInit {
     idDeparForm: this.idDepartamento,
     fecInicioForm: this.fechaInicio,
     fecFinalForm: this.fechaFinal,
-    idBaseHorarioForm: this.idBaseHorario,
     idSucursalForm: this.idSucursal,
     sueldoForm: this.sueldo,
     horaTrabajaForm: this.horaTrabaja 
@@ -36,21 +41,41 @@ export class EmplCargosComponent implements OnInit {
   constructor(
     private restCatDepartamento: DepartamentosService,
     private restEmplCargos: EmplCargosService,
+    private restSucursales: SucursalService,
     private toastr: ToastrService,
-  ) { }
+    public dialogRef: MatDialogRef<EmplCargosComponent>,
+    public router: Router,
+  ) {
+    let cadena = this.router.url;
+    let aux = cadena.split('/');
+    console.log(aux[2]);
+   }
 
   ngOnInit(): void {
     this.limpiarCampos();
     this.obtenerCatDepartamentos();
+    this.obtenerSucursales();
   }
 
   limpiarCampos(){
     this.nuevoEmplCargosForm.reset();
   }
 
-  soloNumeros(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return ((key >= 48 && key <= 57) || (key === 8))
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
+    }
   }
 
   obtenerCatDepartamentos(){
@@ -59,14 +84,19 @@ export class EmplCargosComponent implements OnInit {
     })
   }
 
+  obtenerSucursales(){
+    this.restSucursales.getSucursalesRest().subscribe(data => {
+      this.sucursales = data
+    });
+  }
+
   insertarEmpleadoCargo(form){
     let dataEmpleadoCargo = {
       id_empl_contrato: 2, 
       id_departamento: form.idDeparForm, 
       fec_inicio: form.fecInicioForm, //"2020-03-26" 
       fec_final: form.fecFinalForm, 
-      id_base_horario: form.idBaseHorarioForm, 
-      id_sucursal: 1, 
+      id_sucursal: form.idSucursalForm, 
       sueldo: form.sueldoForm, 
       hora_trabaja: form.horaTrabajaForm
     }
@@ -74,7 +104,15 @@ export class EmplCargosComponent implements OnInit {
 
     this.restEmplCargos.postEmpleadoCargosRest(dataEmpleadoCargo).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Cargo del empleado Guardado');
+      this.limpiarCampos();
     });
   }
+
+  CerrarVentanaRegistroCargo() {
+    this.limpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
+  }
+
 
 }

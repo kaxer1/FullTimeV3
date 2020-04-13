@@ -12,7 +12,7 @@ class EnroladoRutas {
     configuracion(): void {
         this.router.get('/', ENROLADOS_CONTROLADOR.ListarEnrolados);
         this.router.get('/:id',  ENROLADOS_CONTROLADOR.ObtenerUnEnrolado);
-        this.router.post('/', ENROLADOS_CONTROLADOR.CraerEnrolado);
+        this.router.post('/', ENROLADOS_CONTROLADOR.CrearEnrolado);
         this.router.get('/busqueda/:nombre', ENROLADOS_CONTROLADOR.ObtenerIdEnroladoNombre)
     }
 }

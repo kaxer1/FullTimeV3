@@ -1,9 +1,10 @@
 import { Component, ViewChild, HostBinding, Input, OnInit,  } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-main-nav',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./main-nav.component.css']
 
 })
-export class MainNavComponent {
+export class MainNavComponent implements OnInit {
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -20,6 +21,11 @@ export class MainNavComponent {
     );
 
   pestania: string;
+
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
@@ -49,6 +55,18 @@ export class MainNavComponent {
     this.roter.navigate(['/login']);
   }
 
+  ngOnInit() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
   
 
 

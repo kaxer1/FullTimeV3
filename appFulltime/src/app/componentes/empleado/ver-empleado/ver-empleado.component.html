@@ -4,8 +4,10 @@
         Empleado</button>
     <button type="submit" id="planCom" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación
         Almuerzos</button>
+    <button type="submit" id="cargo" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
     <div class="row">
         <div class="col-md">
+            <br>
             <mat-card class="mat-elevation-z8">
                 <div class="barraTitulo">
                     <h5>Empleado {{e.nombre}} {{e.apellido}}</h5>
@@ -63,8 +65,14 @@
                     </div>
                 </mat-card-content>
             </mat-card>
+
+            <div style="padding-bottom: 35px; padding-top: 35px;">
+                <!-- <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos> -->
+            </div>
+
         </div>
         <div class="col-md">
+            <br>
             <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
                 <div class="barraTitulo2">
                     <div class="container">

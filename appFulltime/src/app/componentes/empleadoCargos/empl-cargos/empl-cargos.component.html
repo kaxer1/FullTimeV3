@@ -1,75 +1,77 @@
-<mat-card class="example-card mat-elevation-z8">
-    <div class="barraTitulo">
-        <h5>Añadir Cargo del Empleado</h5>
-    </div>
-    <!-- Formulario Completo -->
-    <form [formGroup]="nuevoEmplCargosForm">
-        <mat-card-content>
-            <div class="container" style="padding-top: 15px; text-align: center;">
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Seleccione Departamento</mat-label>
-                            <mat-select [formControl]="idDepartamento">
-                                <mat-option *ngFor="let d of departamento" [value]="d.id">{{d.nombre}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Selecciona fecha de Inicio</mat-label>
-                            <input matInput type="date" [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31">
-                        </mat-form-field>
-                    </div>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="barraTituloCargoE">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Cargo del Empleado</h5>
+</div>
+<br>
+<!-- Formulario Completo -->
+<form [formGroup]="nuevoEmplCargosForm">
+    <mat-card-content>
+        <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="row">
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label id="selecDepa">Seleccionar Departamento</mat-label>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Lista de departamentos existentes en la empresa">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="idDepartamento" required>
+                            <mat-option *ngFor="let d of departamento" [value]="d.id">{{d.nombre}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccionar fecha de Inicio</mat-label>
+                        <input matInput type="date" [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31" required>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Indicar la fecha de ingreso del empleado">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha de Finalización</mat-label>
+                        <input matInput type="date" [formControl]="fechaFinal" required>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Indicar la fecha de finalización del cargo del empelado">
+                            help_outline</mat-icon>
+                    </mat-form-field>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Selecciona fecha de Final</mat-label>
-                            <input matInput type="date" [formControl]="fechaFinal" required>
-                            
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>id base Horario</mat-label>
-                            <input matInput placeholder="Ej: 1" type="number" maxlength="7"
-                                [formControl]="idBaseHorario"
-                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                (keypress)="soloNumeros($event)" required>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Seleccione sucursal</mat-label>
-                            <mat-select [formControl]="idSucursal">
-                                <mat-option *ngFor="let d of departamento" [value]="d.id">{{d.nombre}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Sueldo</mat-label>
-                            <input matInput [formControl]="sueldo" type="number" style="text-align: right;">
-                            <span matPrefix>$&nbsp;</span>
-                            <span matSuffix>.00</span>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Horas que trabaja</mat-label>
-                            <input matInput placeholder="Ej: 8" type="number" maxlength="2"
-                                [formControl]="horaTrabaja"
-                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                (keypress)="soloNumeros($event)" required>
-                        </mat-form-field>
-                    </div>
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Seleccionar Sucursal</mat-label>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Indicar cuál es la Sucursal en la que va a laborar el empleado">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="idSucursal" required>
+                            <mat-option *ngFor="let s of sucursales" [value]="s.id">{{s.nombre}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Sueldo</mat-label>
+                        <input matInput [formControl]="sueldo" style="text-align: right;" (keypress)="IngresarSoloNumeros($event)" required>
+                        <span matPrefix>$&nbsp;</span>
+                        <span matSuffix>.00</span>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Indicar cual es el sueldo del empleado">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Horas de trabajo</mat-label>
+                        <input matInput placeholder="Ej: 8" maxlength="2" [formControl]="horaTrabaja"
+                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            (keypress)="IngresarSoloNumeros($event)" required>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right" matTooltip="Indicar el número de horas que va a laborar el empleado">
+                            help_outline</mat-icon>
+                    </mat-form-field>
                 </div>
             </div>
-        </mat-card-content>
-    </form>
-    <div style="text-align: center;">
-        <button type="submit" class="btn btn-primary btn-sm" (click)="insertarEmpleadoCargo(nuevoEmplCargosForm.value)"
-            [disabled]="!nuevoEmplCargosForm.valid"> Guardar </button>
-        <button type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()"> Cancelar </button>
-    </div>
-</mat-card>
-
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <button type="submit" class="btn btn-primary btn-sm" (click)="insertarEmpleadoCargo(nuevoEmplCargosForm.value)"
+        [disabled]="!nuevoEmplCargosForm.valid"> Guardar </button>
+    <button type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroCargo()"> Salir </button>
+</div>

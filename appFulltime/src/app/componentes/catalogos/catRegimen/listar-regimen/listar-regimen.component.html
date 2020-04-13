@@ -1,7 +1,7 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col-sm"></div>
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z9">
                 <div class="tituloRegL">
                     <span>RÉGIMEN LABORAL</span>
@@ -26,13 +26,14 @@
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRegimen()"
-                        value="Crear nuevo Régimen Laboral">
+                    <button mat-button type="submit" class="btn btn-danger btn-sm"
+                        (click)="LimpiarCampos()">Cancelar</button>
+                    <button mat-button type="submit" class="btn btn-primary btn-sm"
+                        (click)="AbrirVentanaRegistrarRegimen()">Crear nuevo Régimen Laboral</button>
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="col-3"></div>
+        <div class="col-sm"></div>
     </div>
 </div>
 

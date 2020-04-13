@@ -8,6 +8,7 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
+import { EmplCargosComponent } from '../../empleadoCargos/empl-cargos/empl-cargos.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -39,6 +40,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restTitulo: TituloService,
     public vistaRegistrarContrato: MatDialog,
     public vistaRegistrarPlanificacion: MatDialog,
+    public vistaRegistrarCargoEmpeado: MatDialog,
     public router: Router
   ) {
     var cadena = this.router.url;
@@ -148,5 +150,9 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
     this.vistaRegistrarPlanificacion.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  AbrirVentanaCargo(): void {
+    this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
   }
 }

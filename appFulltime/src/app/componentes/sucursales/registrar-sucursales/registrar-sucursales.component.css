@@ -1,0 +1,16 @@
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+.tituloSucursalR{ 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgba(233, 33, 33, 0.828); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}
+#sucursalR { color:rgba(233, 33, 33, 0.828); font-size: 18px; }
+.sucursalR-tooltip { background-color : rgba(233, 33, 33, 0.828); }
+#provSelec { font-size: 15px;}

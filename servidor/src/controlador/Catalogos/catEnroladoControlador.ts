@@ -24,7 +24,7 @@ class EnroladoControlador {
     }
   }
 
-  public async CraerEnrolado(req: Request, res: Response): Promise<void> {
+  public async CrearEnrolado(req: Request, res: Response): Promise<void> {
     const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = req.body;
     await pool.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
     res.json({ message: 'Se ha añadido correctamente al catálogo enrolados' });

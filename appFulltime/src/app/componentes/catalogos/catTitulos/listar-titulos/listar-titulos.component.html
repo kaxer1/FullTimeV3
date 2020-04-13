@@ -12,10 +12,10 @@
                     <mat-card-content>
                         <div class="container" style="text-align: center">
                             <mat-form-field>
-                                <mat-label>Nombre Título</mat-label>
+                                <mat-label>Busqueda por nombre</mat-label>
                                 <input matInput placeholder="Nombre Título" name="filtradoNombre"
                                     [formControl]="nombreF" [(ngModel)]="filtradoNombre"
-                                    (keypress)="IngresarSoloLetras($event)">
+                                    (keypress)="IngresarSoloLetras($event)">D
                                 <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
                                     matTooltip="Búsqueda de un título profesional por su nombre">
                                     help_outline</mat-icon>
@@ -24,7 +24,7 @@
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Nivel</mat-label>
+                                <mat-label>Busqueda por nivel</mat-label>
                                 <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
                                     [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
                                     <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"

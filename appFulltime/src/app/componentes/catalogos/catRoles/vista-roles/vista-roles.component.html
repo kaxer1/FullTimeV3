@@ -12,7 +12,7 @@
                     <div class="container" style="text-align: center;">
                         <form>
                             <mat-form-field>
-                                <mat-label>Nombre del Rol</mat-label>
+                                <mat-label>Busqueda por nombre</mat-label>
                                 <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="buscarDescripcion">
                                 <mat-icon id="iRolL" matSuffix matTooltipClass="rolL-tooltip" matTooltipPosition="right"
@@ -25,9 +25,10 @@
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear
-                        nuevo Rol</button>
+                    <button mat-button type="submit" class="btn btn-danger btn-sm"
+                        (click)="limpiarCampoBuscar()">Cancelar</button>
+                    <button mat-button type="button" class="btn btn-primary btn-sm"
+                        (click)="AbrirVentanaRegistrarRol()">Crear nuevo Rol</button>
                 </div>
             </mat-card>
         </div>
