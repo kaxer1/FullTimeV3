@@ -1,6 +1,6 @@
-<mat-icon>open_with</mat-icon>
+<mat-icon id="movilidad">open_with</mat-icon>
 <div class="barraTitulo">
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Contrato del Empleado</h5>
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Contrato del Empleado</h5>
 </div>
 <br>
 <!-- Formulario Completo -->
@@ -12,11 +12,17 @@
                     <mat-form-field>
                         <mat-label>Código Empleado</mat-label>
                         <input matInput placeholder="Empleado" [formControl]="idEmpleadoF" readonly="readonly" required>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Código único de identifiacción del empleado">
+                        help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Seleccionar Régimen *</mat-label>
-                        <mat-select [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen">
+                        <mat-label>Seleccionar Régimen</mat-label>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Seleccionar Régimen Laboral con el cual va a prestar sus servicios el empleado">
+                        help_outline</mat-icon>
+                        <mat-select [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen" required>
                             <mat-option *ngFor="let regimen of regimenLaboral" [value]="regimen.id">
                                 {{regimen.descripcion}}
                             </mat-option>
@@ -28,16 +34,25 @@
                         <mat-label>Fecha de ingreso</mat-label>
                         <input matInput type="date" placeholder="Ingresar fecha de ingreso"
                             [formControl]="fechaIngresoF" required>
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de ingreso del empleado a la empresa">
+                            date_range</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Fecha de salida</mat-label>
                         <input matInput type="date" placeholder="Ingresar fecha de salida" [formControl]="fechaSalidaF">
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha estimada de salida del empleado, en caso de conocerla">
+                            event</mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <section>
                         <mat-label>Controlar Vacaciones *</mat-label>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
+                        help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
                             required [value]="controlVacacionesF.value">
                             <br>
@@ -48,6 +63,9 @@
                     <br>
                     <section>
                         <mat-label>Controlar Asistencia *</mat-label>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                        help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
                             required [value]="controlAsistenciaF.value">
                             <br>
@@ -61,8 +79,9 @@
     </mat-card-content>
 </form>
 <div style="text-align: center">
-<mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!ContratoForm.valid" (click)="ValidarDatosContrato(ContratoForm.value)" value="Guardar">
-    <input type="submit" (click)="CerrarVentanaRegistroContrato()" class="btn btn-danger btn-sm" value=" Salir">
-</mat-card-actions>
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!ContratoForm.valid"
+            (click)="ValidarDatosContrato(ContratoForm.value)" value="Guardar">
+        <input type="submit" (click)="CerrarVentanaRegistroContrato()" class="btn btn-danger btn-sm" value=" Salir">
+    </mat-card-actions>
 </div>

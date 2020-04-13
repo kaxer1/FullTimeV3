@@ -65,16 +65,16 @@
                                     <mat-icon id="iHora" matSuffix matTooltipPosition="right"
                                         matTooltipClass="horaE-tooltip"
                                         matTooltip="Ingresar la hora desde la cual se va a considerar hora extra">
-                                        help_outline</mat-icon>
+                                        alarm</mat-icon>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <input matInput type="time" placeholder="Hora de Final" formControlName="horaFinalForm"
+                                    <input matInput type="time" placeholder="Hora de Finalización" formControlName="horaFinalForm"
                                         required>
                                     <mat-icon id="iHora" matSuffix matTooltipPosition="right"
                                         matTooltipClass="horaE-tooltip"
                                         matTooltip="Ingresar la hora en la que finaliza la jornada laboral">
-                                        help_outline</mat-icon>
+                                        alarm_on</mat-icon>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -155,7 +155,7 @@
                 <div>
                     <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
-                    <i matSuffix matTooltipPosition="right"
+                    <i id="iconoG" matSuffix matTooltipPosition="right"
                                         matTooltipClass="horaE-tooltip"
                                         matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Guardar">                      
                     <input type="submit" class="btn btn-primary"

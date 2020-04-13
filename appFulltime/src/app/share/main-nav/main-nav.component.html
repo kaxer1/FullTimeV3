@@ -29,20 +29,23 @@
           <a mat-list-item [routerLink]="['/home']" class="texcol">
             <span matLine>Home</span>
           </a>
-          <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
-            <span matLine>Horas Extras</span>
+          <a mat-list-item [routerLink]="['/roles']" class="texcol">
+            <span matLine>Crear Rol</span>
           </a>
-          <a mat-list-item [routerLink]="['/notificaciones']" class="texcol">
-            <span matLine>Notificaciones</span>
+          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
+            <span matLine>Crear Proceso</span>
           </a>
-          <a mat-list-item [routerLink]="['/tipoPermisos']" class="texcol">
-            <span matLine>Tipos de Permisos</span>
+          <a mat-list-item [routerLink]="['/listarFeriados']" class="texcol">
+            <span matLine>Crear Feriados</span>
+          </a>
+          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
+            <span matLine>Crear Departamento</span>
           </a>
           <a mat-list-item [routerLink]="['/listarRegimen']" class="texcol">
-            <span matLine>Régimen Laboral</span>
+            <span matLine>Crear Régimen Laboral</span>
           </a>
-          <a mat-list-item [routerLink]="['/listarRelojes']" class="texcol">
-            <span matLine>Relojes</span>
+          <a mat-list-item [routerLink]="['/titulos']" class="texcol">
+            <span matLine>Craer Título Profesional</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -57,13 +60,10 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item [routerLink]="['/empleado']" class="texcol">
-            <span matLine>Empleado</span>
+            <span matLine>Crear Empleado</span>
           </a>
-          <a mat-list-item [routerLink]="['/roles']" class="texcol">
-            <h5 matLine>Roles</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/titulos']" class="texcol">
-            <h5 matLine>Título Profesional</h5>
+          <a mat-list-item [routerLink]="['/emplCargos']" class="texcol">
+            <span matLine>Cargo del Empleado</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -77,26 +77,26 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <a mat-list-item [routerLink]="['/provincia']" class="texcol">
-            <h5 matLine>Provincia</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/listarCiudades']" class="texcol">
-            <h5 matLine>Ciudad</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
-            <h5 matLine>Proceso</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/horario']" class="texcol">
-            <h5 matLine>Horario</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
-            <h5 matLine>Departamento</h5>
-          </a>
-          <a mat-list-item [routerLink]="['/listarFeriados']" class="texcol">
-            <h5 matLine>Feriados</h5>
-          </a>
           <a mat-list-item [routerLink]="['/listarTipoComidas']" class="texcol">
-            <h5 matLine>Tipo Comidas</h5>
+            <span matLine>Tipo de Comidas</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Ubicación -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec5">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon> location_on</mat-icon>
+            <span>Ubicación</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/listarCiudades']" class="texcol">
+            <span matLine>Registrar Ciudad</span>
+          </a>
+          <a mat-list-item [routerLink]="['/provincia']" class="texcol">
+            <span matLine>Registrar Provincia</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -105,16 +105,52 @@
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec2">
           <mat-panel-title class="item">
-            <mat-icon mat-list-icon>cloud_download</mat-icon>
-            <span>Descarga</span>
+            <mat-icon mat-list-icon>notifications</mat-icon>
+            <span>Notificaciones</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/notificaciones']" class="texcol">
+            <span matLine>Notificaciones</span>
+          </a>
+          <a mat-list-item [routerLink]="['/tipoPermisos']" class="texcol">
+            <span matLine>Configurar Permisos</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Dispositivos -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec6">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon>schedule</mat-icon>
+            <span>Dispositivos</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item [routerLink]="['/enrolados']" class="texcol">
-            <h5 matLine>Enrolados</h5>
+            <span matLine>Enrolar Empleado</span>
           </a>
-          <a mat-list-item [routerLink]="['/emplCargos']" class="texcol">
-            <h5 matLine>Empleado Cargos</h5>
+          <a mat-list-item [routerLink]="['/listarRelojes']" class="texcol">
+            <span matLine>Registrar Dispositivo</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Horarios -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec7">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon>assignment</mat-icon>
+            <span>Horarios</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/horario']" class="texcol">
+            <span matLine>Crear Horario</span>
+          </a>
+          <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
+            <span matLine>Configurar Horas Extras</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>

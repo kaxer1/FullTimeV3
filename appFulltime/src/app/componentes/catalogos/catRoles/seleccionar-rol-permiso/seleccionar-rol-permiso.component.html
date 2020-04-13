@@ -6,11 +6,11 @@
         <!-- Formulario Completo -->
         <mat-card-content>
             <div class="subtitulo">
-                <span>
-                    Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado
+               <!--   <span>
+                  Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado
                     pantalla
                     por medio de los links y selecionando una etiqueta de descripcion de lo que realiza en ese página
-                </span>
+                </span>-->
             </div>
             <form [formGroup]="nuevoRolPermisoForm">
                 <div class="container" style="text-align: center;">
@@ -35,7 +35,7 @@
                                 <mat-label>Seleccionar Links</mat-label>
                                 <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
                                 matTooltipPosition="right"
-                                matTooltip="Lista de páginas existentes en el sistema">
+                                matTooltip="Secciones del sistema a las que va a afectar la función seleccionada">
                                 help_outline</mat-icon>
                                 <mat-select [formControl]="link" matTooltipClass="selPermiso-tooltip"
                                     matTooltipPosition="right" matTooltip="El rol es el nivel " required>

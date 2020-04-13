@@ -7,6 +7,7 @@ mat-slider { width: 190px; }
 #iHora { color:chocolate; font-size: 18px; }
 .example-section { display: flex; align-content: center; align-items: center; height: 60px; }
 .btn { border-radius: 25px; margin-left: 15px; margin-top: 15px; }
+#iconoG { margin-left: 15px; }
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 .example-margin { margin: 0 10px; }
 .tituloExtra { 

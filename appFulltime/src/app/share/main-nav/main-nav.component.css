@@ -44,7 +44,7 @@
   color: white;
 }
 
-.acordeon{ margin-top: 50px;}
+.acordeon{ margin-top: 50px; }
 
 .menus{ background-color: rgba(4, 101, 139, 0.801);}
 
@@ -76,4 +76,22 @@ mat-expansion-panel-header{ background-color: rgb(255, 255, 255);}
   border-radius: 25px;
   background: rgb(240,239,242);
   background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(171,205,29,0.9108018207282913) 97%);
+}
+
+.mat-expansion-panel-header.mat-expanded.selec5:focus {
+  border-radius: 25px;
+  background: rgb(240,239,242);
+  background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(85, 205, 29, 0.911) 97%);
+}
+
+.mat-expansion-panel-header.mat-expanded.selec6:focus {
+  border-radius: 25px;
+  background: rgb(240,239,242);
+  background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(205, 99, 29, 0.911) 97%);
+}
+
+.mat-expansion-panel-header.mat-expanded.selec7:focus {
+  border-radius: 25px;
+  background: rgb(240,239,242);
+  background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(241, 18, 241, 0.911) 97%);
 }

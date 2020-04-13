@@ -26,7 +26,8 @@
                 </mat-card-content>
                 <div style="text-align: center;">
                     <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear nuevo Rol</button>
+                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear
+                        nuevo Rol</button>
                 </div>
             </mat-card>
         </div>
@@ -45,10 +46,13 @@
         </thead>
         <tbody>
             <tr *ngFor="let rol of roles | roles:filtroRoles">
-                <td style="padding-top: 10px; text-align: center;">{{rol.nombre}}</td>
+                <td>{{rol.nombre}}</td>
                 <td>
-                    <button type="submit" class="btn btn-info btn-sm"
-                        [routerLink]="['/seleccionarPermisos/', rol.id]">Permisos</button>
+                    <i matSuffix matTooltipClass="rolL-tooltip" matTooltipPosition="right"
+                        matTooltip="Agregar funciones a este Rol" class="fas fa-grip-horizontal" id="funtion"
+                        [routerLink]="['/seleccionarPermisos/', rol.id]">
+                        <p>Funciones</p>
+                    </i>
                 </td>
             </tr>
         </tbody>

@@ -85,9 +85,12 @@
                 <td style="padding-top: 10px;">{{e.cedula}}</td>
                 <td style="padding-top: 10px; text-align: center;">{{e.estado}}</td>
                 <td style="padding-top: 10px;">{{e.correo}}</td>
-                <td>
-                    <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
-                        [routerLink]="['/verEmpleado/', e.id]">Ver</button>
+                <td style="padding-top: 10px; text-align: center;">
+                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                        matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                        [routerLink]="['/verEmpleado/', e.id]">
+                        <p>Ver</p>
+                    </i>
                 </td>
             </tr>
         </tbody>

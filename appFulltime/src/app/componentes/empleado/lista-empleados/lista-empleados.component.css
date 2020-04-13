@@ -1,4 +1,6 @@
 .btn { border-radius: 25px; margin-left: 15px; }
+p { font-size: x-small; }
+#ver { color: indianred; }
 #iemple { color:rgb(17, 157, 182); font-size: 18px; }
 .emple-tooltip { background: rgb(17, 157, 182); }
 .tituloEmpleados { 
