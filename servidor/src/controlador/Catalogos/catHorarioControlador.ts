@@ -1,18 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-
 import excel from 'xlsx';
-
-// const xlsxFile = require('read-excel-file/node');
- 
-// xlsxFile('./plantillas/horarios.xlsx').then((rows) => {
-//   rows.forEach((col)=>{
-//     col.forEach((data)=>{
-//       console.log(data);
-//       // console.log(typeof data);
-//     });
-//   });
-// });
 
 class HorarioControlador {
 
@@ -38,9 +26,21 @@ class HorarioControlador {
   }
 
   public async CrearHorario(req: Request, res: Response): Promise<void> {
-    console.log( req.file.filename);
+      //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
+      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
+      console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
+      // console.log(flexible);
+      await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+      res.json({ message: 'El horario ha sido registrado' });    
+  }
 
-    const workbook = excel.readFile(`./plantillas/${req.file.filename}`);
+  public async CrearHorarioPlantilla(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let aux = cadena.split("\\"); 
+    let filename = aux[1];
+
+    const workbook = excel.readFile(`./plantillas/${filename}`);
     const sheet_name_list = workbook.SheetNames;
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
 
@@ -48,20 +48,12 @@ class HorarioControlador {
     plantilla.forEach(data => {
       obj.push(data);
     });
-      //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
-    console.log(obj.length);
-    for(let i = 0; i <= obj.length; i++){
-      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
-      console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
-      // console.log(flexible);
-      await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-      res.json({ message: 'El horario ha sido registrado' });
-    };
 
-    res.send({
-      success: true,
-      message: 'file upload'  
-    });
+    for(let i = 0; i < obj.length; i++){
+      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
+      await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+    };
+    res.json({ message: 'La plantilla a sido receptada' });
     
   }
 

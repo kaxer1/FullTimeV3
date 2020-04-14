@@ -33,4 +33,8 @@ export class FeriadosService {
     return this.http.get(`${this.API_URL}/feriados/ultimoId`);
   }
 
+  subirArchivoExcel(formData) {
+    return this.http.post(this.API_URL + '/feriados/upload', formData)  
+  }
+
 }

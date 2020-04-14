@@ -19,6 +19,7 @@ export class ListarFeriadosComponent implements OnInit {
   // Control de campos y validaciones del formulario
   descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   fechaF = new FormControl('');
+  archivoForm = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public BuscarFeriadosForm = new FormGroup({
@@ -30,6 +31,9 @@ export class ListarFeriadosComponent implements OnInit {
   feriados: any = [];
   filtroDescripcion = '';
   filtradoFecha = '';
+
+  nameFile: string;
+  archivoSubido: Array < File > ;
 
   constructor(
     private rest: FeriadosService,
@@ -110,4 +114,22 @@ export class ListarFeriadosComponent implements OnInit {
     }
   }
 
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = 'Archivo seleccionado: ' + this.archivoSubido[0].name;
+    console.log(this.nameFile);
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.subirArchivoExcel(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
+      this.ObtenerFeriados();
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
+  }
 }

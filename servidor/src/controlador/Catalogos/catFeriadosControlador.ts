@@ -1,6 +1,6 @@
 import { Request, Response, text } from 'express';
-
 import pool from '../../database';
+import excel from 'xlsx';
 
 class FeriadosControlador {
 
@@ -43,6 +43,30 @@ class FeriadosControlador {
             return res.json(FERIADO.rows)
         }
         res.status(404).json({ text: 'Registros no encontrados' });
+    }
+
+    public async CrearFeriadoPlantilla(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let aux = cadena.split("\\"); 
+        let filename = aux[1];
+    
+        const workbook = excel.readFile(`./plantillas/${filename}`);
+        const sheet_name_list = workbook.SheetNames;
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+    
+        let obj: any = [];
+        plantilla.forEach(data => {
+          obj.push(data);
+        });
+    
+        for(let i = 0; i < obj.length; i++){
+          const { fecha, descripcion, fec_recuperacion } = obj[i];
+          console.log(obj[i]);
+          await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+        };
+        res.json({ message: 'La plantilla a sido receptada' });
+        
     }
 }
 

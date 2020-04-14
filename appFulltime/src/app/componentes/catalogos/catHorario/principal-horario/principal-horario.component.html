@@ -1,7 +1,6 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
-        <div class="col">
+        <div class="col-sm">
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <h5 style="text-align: center">Horarios - Críterios de Búsqueda</h5>
                 <form [formGroup]="buscarHorarioForm">
@@ -24,9 +23,22 @@
                 </mat-card-actions>
             </mat-card>
         </div>
-        <div class="col-3">
-            <input class="form-control" type="file" #fileInput />  
-            <button class="btn btn-primary" (click)="uploadFile();">Upload</button>  
+        <div class="col-md">
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span  class="input-group-text upload"  (click)="plantilla()"  id="btnUpload">Subir</span>
+                    </div>
+                    <div class="custom-file">
+                        <form  method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm"  class="custom-file-input"  id="inputGroupFile01"  aria-describedby="inputGroupFileAddon01"> 
+                        </form>
+                        <label class="custom-file-label" for="inputGroupFile01">Elegir un archivo</label>
+                    </div>
+                </div>  
+                <br>
+                <span>{{nameFile}}</span>
+            </mat-card>
         </div>
     </div>
 </div>

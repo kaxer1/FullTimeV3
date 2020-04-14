@@ -1,20 +1,11 @@
 import { Router } from 'express';
-
 import HORARIO_CONTROLADOR from '../../controlador/Catalogos/catHorarioControlador';
 
-const path = require('path');
-const multer = require('multer');
+const multipart = require('connect-multiparty');  
 
-let storage = multer.diskStorage({
-  destination:(req: any, file: any, cb: any)=>{
-    cb(null, './plantillas/')
-  },
-  filename:(req: any, file: any, cb: any)=>{
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-  }
+const multipartMiddleware = multipart({  
+    uploadDir: './plantillas',
 });
-
-const upload = multer({storage})
 
 class HorarioRutas {
     public router: Router = Router();
@@ -26,7 +17,8 @@ class HorarioRutas {
     configuracion(): void {
         this.router.get('/', HORARIO_CONTROLADOR.ListarHorarios);
         this.router.get('/:id',  HORARIO_CONTROLADOR.ObtenerUnHorario);
-        this.router.post('/upload', upload.single('file'), HORARIO_CONTROLADOR.CrearHorario);
+        this.router.post('/', HORARIO_CONTROLADOR.CrearHorario);
+        this.router.post('/upload', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioPlantilla);
     }
 }
 
