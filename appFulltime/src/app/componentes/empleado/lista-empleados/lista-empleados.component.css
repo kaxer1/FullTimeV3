@@ -1,27 +1,24 @@
-.btn { margin-left: 15px; border-radius: 25px; }
-
-.barraTituloEmp { 
+.btn { border-radius: 25px; margin-left: 15px; }
+p { font-size: x-small; }
+#ver { color: indianred; }
+#iemple { color:rgb(17, 157, 182); font-size: 18px; }
+.emple-tooltip { background: rgb(17, 157, 182); }
+.tituloEmpleados { 
     font-size: 20px; 
     text-align: center; 
-    background: rgba(0, 45, 168, 0.828); 
+    background: rgb(17, 157, 182); 
     color: white; 
     border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
-
-#resultadosEmp { 
+#resulEmpleados { 
     font-size: 17px; 
     text-align: center; 
-    background: rgba(0, 45, 168, 0.828); 
+    background: rgb(17, 157, 182); 
     color: white; 
     border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
-
-.color-tooltipEmp { background: rgba(0, 45, 168, 0.828); }
-
-
-#permisoEmp { color:rgba(0, 45, 168, 0.828); font-size: 18px; }
 

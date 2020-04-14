@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-empl-cargos',
   templateUrl: './empl-cargos.component.html',
-  styleUrls: ['./empl-cargos.component.css']
+  styleUrls: ['./empl-cargos.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class EmplCargosComponent implements OnInit {
 
@@ -61,9 +62,21 @@ export class EmplCargosComponent implements OnInit {
     this.nuevoEmplCargosForm.reset();
   }
 
-  soloNumeros(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return ((key >= 48 && key <= 57) || (key === 8))
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
+    }
   }
 
   obtenerCatDepartamentos(){
@@ -96,7 +109,7 @@ export class EmplCargosComponent implements OnInit {
     });
   }
 
-  CerrarVentanaRegistroContrato() {
+  CerrarVentanaRegistroCargo() {
     this.limpiarCampos();
     this.dialogRef.close();
     window.location.reload();

@@ -43,7 +43,6 @@ class HorarioControlador {
             //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
-            // console.log(flexible);
             yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
             res.json({ message: 'El horario ha sido registrado' });
         });

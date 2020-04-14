@@ -1,6 +1,8 @@
-<mat-icon id="movimiento">open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Nuevo Enrolado
-</h5>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloEnrolar">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Enrolar a un Empleado</span>
+</div>
+<br>
 <form [formGroup]="nuevoEnroladoForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
@@ -8,6 +10,9 @@
                 <div class="col">
                     <mat-form-field>
                         <mat-label>Seleccione usuario *</mat-label>
+                        <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Búsqueda de Régimen Laboral por la descripción">
+                            help_outline</mat-icon>
                         <mat-select formControlName="enroladoId_UsuarioForm">
                             <mat-option *ngFor="let u of usuarios" [value]="u.usuario">
                                 {{u.usuario}}
@@ -19,6 +24,9 @@
                         <mat-label>Ingresar Nombre</mat-label>
                         <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm"
                             (keypress)="soloLetras($event)" required>
+                        <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar nombre del usuario enrolado">
+                            help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
@@ -29,18 +37,22 @@
                             formControlName="enroladoContraseniaForm" required>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
-                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Ocultar o mostrar la contraseña ingresada">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field>
                         <mat-label>Confirmar Contraseña</mat-label>
-                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
-                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" required>
+                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
+                            maxlength="10"
+                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            required>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
-                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Ocultar o mostrar la contraseña ingresada">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
                     <br>
@@ -48,17 +60,26 @@
                         <mat-label>Número de huella </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
                             (keypress)="soloNumeros($event)" required>
+                        <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar el número del dedo del cual se va a obtener la huella del empleado">
+                            help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Data finger </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm"
                             (keypress)="soloNumeros($event)" required>
+                        <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Registro de la huella del empleado que será enrolado">
+                            help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <section class="example-section">
                         <mat-radio-group aria-label="Select an option" formControlName="enroladoActivoForm" required>
                             <mat-label>Activo *</mat-label>
+                            <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar cual es el estado del enpleado enrolado">
+                                help_outline</mat-icon>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm">

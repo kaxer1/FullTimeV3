@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import ROLES_CONTROLADOR from '../../controlador/Catalogos/catRolesControlador';
 
 class PruebasRutas {

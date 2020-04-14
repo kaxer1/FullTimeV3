@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import horasExtrasControlador from '../../controlador/Catalogos/catHorasExtrasControlador';
 
 class HorasExtrasRutas {

@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 
 // ayuda para crear los niveles
@@ -14,7 +13,8 @@ interface Nivel {
 @Component({
   selector: 'app-registro-proceso',
   templateUrl: './registro-proceso.component.html',
-  styleUrls: ['./registro-proceso.component.css']
+  styleUrls: ['./registro-proceso.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistroProcesoComponent implements OnInit {
 

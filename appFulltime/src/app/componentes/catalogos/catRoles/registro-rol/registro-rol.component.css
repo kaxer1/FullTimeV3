@@ -1,3 +1,16 @@
 .btn { border-radius: 25px; margin-left: 15px;}
-
-.mat-icon { cursor: grab; color: blue; font-size: 20px;}
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+.rolR-tooltip { background: #ad4bc5; }
+#iRolR { color:#ad4bc5; font-size: 18px; }
+.tituloRolR { 
+    font-size: 35px; 
+    text-align: center; 
+    background: #ad4bc5; 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}

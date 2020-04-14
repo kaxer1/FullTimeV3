@@ -44,14 +44,14 @@
                     </mat-card-content>
                 </form>
                 <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary btn-sm" (click)="insertarCarnet(nuevoCarnetForm.value)"
+                    <button type="submit" class="btn btn-primary btn-lg" (click)="insertarCarnet(nuevoCarnetForm.value)"
                         [disabled]="!nuevoCarnetForm.valid"> 
                         <span class="material-icons alinear">save</span>
                     </button>
-                    <button type="submit" class="btn btn-info btn-sm" (click)="limpiarCampos()">
+                    <button type="submit" class="btn btn-info btn-lg" (click)="limpiarCampos()">
                         <span class="material-icons alinear">backspace</span>
                     </button>
-                    <button type="submit" class="btn btn-danger btn-sm" (click)="cerrarRegistro()">
+                    <button type="submit" class="btn btn-danger btn-lg" (click)="cerrarRegistro()">
                         <span class="material-icons alinear">close</span>
                     </button>
                 </div>

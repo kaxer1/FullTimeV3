@@ -1,5 +1,7 @@
-<mat-icon>open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Rol</h5>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloRolR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Rol</span>
+</div>
 <form [formGroup]="nuevoRolForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
@@ -7,6 +9,9 @@
                 <mat-label>Descripción</mat-label>
                 <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
                     (keypress)="IngresarSoloLetras($event)" required>
+                <mat-icon id="iRolR" matSuffix matTooltipClass="rolR-tooltip" matTooltipPosition="right"
+                    matTooltip="Ingresar nombre de identificación del nuevo rol">
+                    help_outline</mat-icon>
                 <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
             </mat-form-field>
         </div>

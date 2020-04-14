@@ -1,31 +1,25 @@
+.btn { border-radius: 25px; margin-left: 15px; margin-top: 15px;}
 td { padding-top: 10px; text-align: center; } 
-
 .fas { color:green; margin-left: 20px; }
-
 .far { color:red; }
-
-.btn { border-radius: 25px; margin-right: 15px;}
-
-.barraTituloTit { 
+.tituloL-tooltip { background: #4622aa; }
+#itituloL { color:#4622aa; font-size: 18px; }
+.tituloRegistro { 
     font-size: 20px; 
     text-align: center; 
-    background: rgba(179, 0, 75, 0.828); 
+    background: #4622aa; 
     color: white; 
     border-radius: 10px; 
-    padding-top: 10px; 
+    padding-top: 10px;
     padding-bottom: 6px; 
 }
-
-#resultadosTit { 
+#resulTitulos { 
     font-size: 17px; 
     text-align: center; 
-    background: rgba(179, 0, 75, 0.828); 
+    background: #4622aa; 
     color: white; 
     border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 
-#permisoTit { color: rgba(179, 0, 75, 0.828); font-size: 18px; }
-
-.color-tooltipTit { background: rgba(179, 0, 75, 0.828); }

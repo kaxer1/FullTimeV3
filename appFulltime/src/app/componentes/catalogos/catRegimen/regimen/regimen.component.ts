@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +13,8 @@ interface opcionesRegimen {
 @Component({
   selector: 'app-regimen',
   templateUrl: './regimen.component.html',
-  styleUrls: ['./regimen.component.css']
+  styleUrls: ['./regimen.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class RegimenComponent implements OnInit {

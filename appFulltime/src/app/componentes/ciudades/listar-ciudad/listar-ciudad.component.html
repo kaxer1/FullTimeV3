@@ -3,9 +3,11 @@
         <div class="col-3"></div>
         <div class="col">
             <mat-card class="example-card mat-elevation-z8">
-                <div style="text-align: center;">
-                    <h5>Ciudad - Criterios de Búsqueda</h5>
+                <div class="tituloCiudadesL">
+                    <span>CIUDADES</span>
                 </div>
+                <br>
+                <h5 style="text-align: center;">Críterios de Búsqueda</h5>
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
                         <form [formGroup]="BuscarCiudadForm">
@@ -14,6 +16,10 @@
                                 <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
                                     [(ngModel)]="filtroProvincia">
+                                <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de ciudad por el nombre de provincia, departamento o estado seleccionado">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
                                 </mat-error>
                             </mat-form-field>
@@ -23,6 +29,10 @@
                                 <input matInput name="filtroCiudad" placeholder="Ej: Quito"
                                     (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
                                     [(ngModel)]="filtroCiudad">
+                                <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de una ciudad por su nombre">
+                                    help_outline</mat-icon>
                                 <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
                                 </mat-error>
                             </mat-form-field>
@@ -41,9 +51,7 @@
 </div>
 
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <mat-toolbar>
-        <span style="text-align: center;">Resultados de búsqueda</span>
-    </mat-toolbar>
+    <div id="resulCiudad">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">

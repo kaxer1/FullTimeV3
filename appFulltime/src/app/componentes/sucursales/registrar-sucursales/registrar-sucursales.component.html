@@ -1,24 +1,78 @@
-<mat-icon>open_with</mat-icon>
-<h4 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Sucursal
-</h4>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloSucursalR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Sucursal</span>
+</div>
+<br>
 <form [formGroup]="nuevaSucursalForm">
-    <div class="container" style="text-align: center;">
-        <mat-form-field>
-            <mat-label>Nueva Sucursal</mat-label>
-            <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre"
-                (keypress)="IngresarSoloLetras($event)" required>
-            <!-- <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error> -->
-        </mat-form-field>
-        <br>
-        <mat-form-field>
-            <mat-label>Seleccionar Ciudad </mat-label>
-            <mat-select [formControl]="idCiudad">
-                <mat-option *ngFor="let c of ciudades" [value]="c.id">
-                    {{c.descripcion}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+    <mat-card-content>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Seleccionar Continente</mat-label>
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de continentes">help_outline</mat-icon>
+                        <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente" required>
+                            <mat-option *ngFor="let c of continentes" [value]="c.continente"
+                                (click)="FiltrarPaises(nuevaSucursalForm.value)">
+                                {{c.continente}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccionar País</mat-label>
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de países del continente seleccionado">help_outline</mat-icon>
+                        <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises" required>
+                            <mat-option *ngFor="let pais of paises" [value]="pais.id"
+                                (click)="FiltrarProvincias(nuevaSucursalForm.value)">
+                                {{pais.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label id="provSelec">Seleccionar Provincia</mat-label>
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de provincias, departamentos o estados del país seleccionado">help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia" required>
+                            <mat-option *ngFor="let pro of provincias" [value]="pro.nombre"
+                                (click)="FiltrarCiudades(nuevaSucursalForm.value)">
+                                {{pro.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccionar Ciudad</mat-label>
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de ciudades de la provincia, departamento o estado seleccionado">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="idCiudad" [(ngModel)]="seleccionarCiudad" required>
+                            <mat-option *ngFor="let ciudad of nombreCiudades" [value]="ciudad.id"
+                                (click)="SeleccionarCiudad(nuevaSucursalForm.value)">
+                                {{ciudad.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Nueva Sucursal</mat-label>
+                        <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre"
+                            (keypress)="IngresarSoloLetras($event)" required>
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
+                            matTooltipPosition="right" matTooltip="Ingresar nombre de identificación de nueva sucursal">
+                            help_outline</mat-icon>
+                        <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
 </form>
 <div style="text-align: center;">
     <input type="submit" class="btn btn-primary btn-sm" (click)="InsertarSucursal(nuevaSucursalForm.value)"

@@ -3,45 +3,51 @@
         <div class="col-sm"></div>
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
-                <div class="barraTituloEmp">
+                <div class="tituloEmpleados">
                     <span>EMPLEADOS</span>
                 </div>
                 <br>
-                <h5 style="text-align: center;">Criterios de Búsqueda</h5>
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
                         <form [formGroup]="">
                             <mat-form-field>
-                                <mat-label>Busqueda por Código</mat-label>
+                                <mat-label>Ingresar Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
                                     (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
-                                    matTooltip="Busqueda del empleado por su código">help_outline</mat-icon>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
+                                    help_outline</mat-icon>
+
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Busqueda por Cédula</mat-label>
+                                <mat-label>Ingresar CI o pasaporte</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula"
                                     type="text" (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
-                                    matTooltip="Busqueda del empleado por su cédula">help_outline</mat-icon>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Busqueda por Nombre</mat-label>
+                                <mat-label>Ingresar Nombres</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
                                     type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
-                                    matTooltip="Busqueda del empleado por su nombre">help_outline</mat-icon>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
-                                <mat-label>Busqueda por Apellido</mat-label>
+                                <mat-label>Ingresar Apellidos</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
                                     type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="permisoEmp" matSuffix matTooltipClass="color-tooltipEmp" matTooltipPosition="right"
-                                    matTooltip="Busqueda del empleado por su apellido">help_outline</mat-icon>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                         </form>
                     </div>
@@ -55,9 +61,9 @@
         <div class="col-sm"></div>
     </div>
 </div>
-
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resultadosEmp">Resultado de búsqueda</div>
+<br>
+<div class="container table-responsive" style="padding-bottom: 50px;">
+    <div id="resulEmpleados">Resultado de búsqueda</div>
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
@@ -79,9 +85,12 @@
                 <td style="padding-top: 10px;">{{e.cedula}}</td>
                 <td style="padding-top: 10px; text-align: center;">{{e.estado}}</td>
                 <td style="padding-top: 10px;">{{e.correo}}</td>
-                <td>
-                    <button type="submit" (click)="verEmpleado(e.id)" class="btn btn-primary"
-                        [routerLink]="['/verEmpleado/', e.id]">Ver</button>
+                <td style="padding-top: 10px; text-align: center;">
+                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                        matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                        [routerLink]="['/verEmpleado/', e.id]">
+                        <p>Ver</p>
+                    </i>
                 </td>
             </tr>
         </tbody>

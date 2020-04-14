@@ -1,9 +1,18 @@
 .btn { border-radius: 25px;}
 
-.barraTitulo { font-size: 25px; text-align: center; background: rgba(22, 106, 216, 0.828); color: white; border-radius: 10px; padding-top: 10px; padding-bottom: 6px; }
-
-.color-tooltip { background: #276bc3;}
-
+.tituloPermisoS { font-size: 25px; text-align: center; background: #ad4bc5; color: white; border-radius: 10px; padding-top: 10px; padding-bottom: 6px; }
 .titulo { position: relative; float: left; font-size: 25px; font-weight: bold; text-align: center; color: rgb(0, 0, 0); padding-top: 25px;}
 
 .subtitulo { font-weight: bold; padding-left: 5px; padding-top: 25px; padding-bottom: 25px; text-align: justify;}
+.selPermiso-tooltip { background: #ad4bc5; }
+#iselPermiso { color:#ad4bc5; font-size: 18px; }
+#funcion { font-size: 15px;}
+#resulSelPermiso { 
+    font-size: 17px; 
+    text-align: center; 
+    background: #ad4bc5; 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

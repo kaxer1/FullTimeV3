@@ -1,5 +1,5 @@
 .btn { margin-left: 15px; border-radius: 25px; }
-.mat-icon { 
+#movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
@@ -10,3 +10,14 @@ mat-checkbox { font-size: small; }
 label { font-size: small; }
 #diasIncre { font-size: 12px; }
 #anioAnti { font-size: 12px; }
+.tituloRegimen { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(35, 3, 122); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+}
+#iReg { color:rgb(35, 3, 122); font-size: 18px; }
+.regimen-tooltip { background-color : rgb(35, 3, 122); }
+#maxD { font-size: 13px;}

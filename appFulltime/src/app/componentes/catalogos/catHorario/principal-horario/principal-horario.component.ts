@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -9,7 +9,8 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-principal-horario',
   templateUrl: './principal-horario.component.html',
-  styleUrls: ['./principal-horario.component.css']
+  styleUrls: ['./principal-horario.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class PrincipalHorarioComponent implements OnInit {
 

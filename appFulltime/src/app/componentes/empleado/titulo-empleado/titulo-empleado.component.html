@@ -22,20 +22,20 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button id="botonTitulo" type="submit" class="btn btn-primary btn-lg" (click)="insertarTituloEmpleado(nuevoTituloEmpleadoForm.value)"
+        <button id="botonTitulo" type="submit" class="btn btn-primary btn-xs" (click)="insertarTituloEmpleado(nuevoTituloEmpleadoForm.value)"
             [disabled]="!nuevoTituloEmpleadoForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
             matTooltipClass="color-tooltip" matTooltip="Guardar registro">save</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-info btn-lg" (click)="limpiarCampos()">
+        <button id="botonTitulo" type="submit" class="btn btn-info btn-xs" (click)="limpiarCampos()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
             matTooltipClass="color-tooltip" matTooltip="Borrar datos ingresados">backspace</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-danger btn-lg" (click)="cerrarRegistro()">
+        <button id="botonTitulo" type="submit" class="btn btn-danger btn-xs" (click)="cerrarRegistro()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
             matTooltipClass="color-tooltip" matTooltip="Cancelar registro">close</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-success btn-lg" (click)="VerificarTitulo()">
+        <button id="botonTitulo" type="submit" class="btn btn-success btn-xs" (click)="VerificarTitulo()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
             matTooltipClass="color-tooltip" matTooltip="Verificar título profesional del empleado antes de registrarlo">insert_link</span>
         </button>

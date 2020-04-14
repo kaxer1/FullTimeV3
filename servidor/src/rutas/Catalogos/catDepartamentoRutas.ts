@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import DEPARTAMENTO_CONTROLADOR from '../../controlador/Catalogos/catDepartamentoControlador';
 
 class DepartamentoRutas {

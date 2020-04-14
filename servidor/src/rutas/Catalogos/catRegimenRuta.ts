@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import REGIMEN_CONTROLADOR from '../../controlador/Catalogos/catRegimenControlador';
 
 class RegimenRuta {

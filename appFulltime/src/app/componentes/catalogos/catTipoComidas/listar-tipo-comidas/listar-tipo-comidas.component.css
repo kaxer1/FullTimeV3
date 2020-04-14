@@ -3,3 +3,23 @@
 #fila { padding-top: 10px; margin-left: 50px; }
 .fas { color:green; margin-left: 20px; }
 .far { color:red; }
+#iComidasL { color:rgb(40, 155, 184); font-size: 18px; }
+.comidasL-tooltip { background-color : rgb(40, 155, 184); }
+.tituloTipoCoL { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(40, 155, 184); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px;
+    padding-bottom: 6px; 
+}
+#resulComidas { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(40, 155, 184); 
+    color: white; 
+    border-radius: 10px; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}

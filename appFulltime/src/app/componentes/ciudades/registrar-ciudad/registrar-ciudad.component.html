@@ -1,6 +1,8 @@
-<mat-icon>open_with</mat-icon>
-<h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" style="text-align: center">Añadir Ciudad
-</h5>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloCiudadR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Ciudad</span>
+</div>
+<br>
 <div style="text-align: center">
     <form [formGroup]="nuevaCiudadForm">
         <mat-card-content>
@@ -9,6 +11,9 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Seleccionar Continente *</mat-label>
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
+                                matTooltipPosition="right" matTooltip="Lista de continentes registrados en el sistema">
+                                help_outline</mat-icon>
                             <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
                                 <mat-option *ngFor="let c of continentes" [value]="c.continente"
                                     (click)="FiltrarPaises(nuevaCiudadForm.value)">
@@ -19,8 +24,13 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Seleccionar País *</mat-label>
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Lista de paises ubicados en el continente seleccionado">
+                                help_outline</mat-icon>
                             <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
-                                <mat-option *ngFor="let pais of paises" [value]="pais.id" (click)="FiltrarProvincias(nuevaCiudadForm.value)">
+                                <mat-option *ngFor="let pais of paises" [value]="pais.id"
+                                    (click)="FiltrarProvincias(nuevaCiudadForm.value)">
                                     {{pais.nombre}}
                                 </mat-option>
                             </mat-select>
@@ -29,6 +39,10 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Seleccionar Provincia</mat-label>
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Lista de provincias, departamentos o estados ubicados en el país seleccionado">
+                                help_outline</mat-icon>
                             <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia">
                                 <mat-option *ngFor="let pro of provincias" [value]="pro.id">
                                     {{pro.nombre}}
@@ -40,6 +54,10 @@
                             <mat-label>Ingresar Ciudad</mat-label>
                             <input matInput placeholder="Ej: Contabilidad" [formControl]="nombreF"
                                 (keypress)="IngresarSoloLetras($event)" required>
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar un nombre de las ciudades ubicadas en la provincia, departamento o estado seleccionado">
+                                help_outline</mat-icon>
                             <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
                         </mat-form-field>
                     </div>

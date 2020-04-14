@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -10,7 +10,8 @@ import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regim
 @Component({
   selector: 'app-listar-regimen',
   templateUrl: './listar-regimen.component.html',
-  styleUrls: ['./listar-regimen.component.css']
+  styleUrls: ['./listar-regimen.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class ListarRegimenComponent implements OnInit {

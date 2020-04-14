@@ -14,8 +14,8 @@ import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
 })
 export class ListaSucursalesComponent implements OnInit {
 
-  buscarNombre = new FormControl('', Validators.required);
-  buscarCiudad = new FormControl('', Validators.required);
+  buscarNombre = new FormControl('',[Validators.minLength(2)]);
+  buscarCiudad = new FormControl('',[Validators.minLength(2)]);
   filtroNombreSuc = '';
   filtroCiudadSuc = '';
 
@@ -57,7 +57,7 @@ export class ListaSucursalesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarSucursal(){
-    this.vistaRegistrarSucursal.open(RegistrarSucursalesComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarSucursal.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
   }
 
   LimpiarCampoBuscar(){

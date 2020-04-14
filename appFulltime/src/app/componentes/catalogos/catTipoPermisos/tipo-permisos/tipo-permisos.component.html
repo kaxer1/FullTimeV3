@@ -120,7 +120,9 @@
                 </form>
                 <br>
                 <div>
-                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                    <button mat-button matStepperNext class="btn btn-primary" matSuffix matTooltipClass="color-tooltip"
+                    matTooltipPosition="right"
+                    matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente">Siguiente</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                     <button mat-button class="btn btn-warning" [routerLink]="['/verTipoPermiso']">Lista de Tipo de
                         Permisos</button>
@@ -250,20 +252,15 @@
                 <br>
                 <div>
                     <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                    <button mat-button matStepperNext class="btn btn-primary" matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente">Siguiente</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
                 <form [formGroup]="terceroFormGroup">
-                    <ng-template matStepLabel>Sección 3</ng-template>
-                    <div class="titulo">
-                        <span>Condiciones del Permiso</span>
-                    </div>
-                    <br>
-                    <div class="subtitulo">
-                        <span>--- descripcion por llenar.</span>
-                    </div>
+                    <ng-template matStepLabel>Condiciones del Permiso</ng-template>
                     <div class="container">
                         <div class="row">
                             <div class="col-sm">
@@ -386,9 +383,12 @@
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                         <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
-                        <button mat-button type="submit" class="btn btn-primary"
+                        <i matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente"> 
+                        <input mat-button type="submit" class="btn btn-primary"
                             (click)="insertarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
-                            [disabled]="!terceroFormGroup.valid">Guardar</button>
+                            [disabled]="!terceroFormGroup.valid" value="Guardar"></i>
                     </div>
                 </form>
             </mat-step>

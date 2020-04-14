@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -9,7 +9,8 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
 @Component({
   selector: 'app-registrar-ciudad',
   templateUrl: './registrar-ciudad.component.html',
-  styleUrls: ['./registrar-ciudad.component.css']
+  styleUrls: ['./registrar-ciudad.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistrarCiudadComponent implements OnInit {
 

@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import RELOJES_CONTROLADOR from '../../controlador/Catalogos/catRelojesControlador';
 
 class RelojesRuta {

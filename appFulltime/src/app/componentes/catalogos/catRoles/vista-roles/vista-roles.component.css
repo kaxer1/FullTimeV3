@@ -1,25 +1,25 @@
-.btn { border-radius: 25px; margin-left: 15px;}
-
-.barraTituloRol { 
+.btn { border-radius: 25px; margin-left: 15px; }
+p { font-size: x-small; }
+td { padding-top: 10px; text-align: center; }
+.rolL-tooltip { background: #ad4bc5; }
+#iRolL { color:#ad4bc5; font-size: 18px; }
+#funtion { color: rgb(17, 4, 66); }
+.tituloRolesL { 
     font-size: 20px; 
     text-align: center; 
-    background: rgba(0, 122, 179, 0.828); 
+    background: #ad4bc5; 
     color: white; 
     border-radius: 10px; 
-    padding-top: 10px; 
+    padding-top: 10px;
     padding-bottom: 6px; 
 }
-
-#resultadosRol { 
+#resulRoles { 
     font-size: 17px; 
     text-align: center; 
-    background: rgba(0, 122, 179, 0.828); 
+    background: #ad4bc5; 
     color: white; 
     border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 
-#permisoRol { color: rgba(0, 122, 179, 0.828); font-size: 18px; }
-
-.color-tooltipRol { background: rgba(0, 122, 179, 0.828); }

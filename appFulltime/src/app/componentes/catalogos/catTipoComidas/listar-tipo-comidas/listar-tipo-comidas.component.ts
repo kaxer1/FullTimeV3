@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -10,7 +10,8 @@ import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComid
 @Component({
   selector: 'app-listar-tipo-comidas',
   templateUrl: './listar-tipo-comidas.component.html',
-  styleUrls: ['./listar-tipo-comidas.component.css']
+  styleUrls: ['./listar-tipo-comidas.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class ListarTipoComidasComponent implements OnInit {

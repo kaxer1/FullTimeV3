@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import TIPO_COMIDAS_CONTROLADOR from '../../controlador/Catalogos/catTipoComidasControlador';
 
 class TipoComidasRuta {

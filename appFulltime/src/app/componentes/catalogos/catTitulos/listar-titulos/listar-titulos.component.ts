@@ -74,7 +74,7 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTitulo(): void {
-    this.vistaRegistrarTitulo.open(TitulosComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarTitulo.open(TitulosComponent, { width: '350px' }).disableClose = true;
   }
 
   LimpiarCampos() {

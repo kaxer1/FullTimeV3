@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
@@ -9,7 +8,8 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 @Component({
   selector: 'app-registro-horario',
   templateUrl: './registro-horario.component.html',
-  styleUrls: ['./registro-horario.component.css']
+  styleUrls: ['./registro-horario.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroHorarioComponent implements OnInit {

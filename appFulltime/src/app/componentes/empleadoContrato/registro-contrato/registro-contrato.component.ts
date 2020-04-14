@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -10,7 +10,8 @@ import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.s
 @Component({
   selector: 'app-registro-contrato',
   templateUrl: './registro-contrato.component.html',
-  styleUrls: ['./registro-contrato.component.css']
+  styleUrls: ['./registro-contrato.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class RegistroContratoComponent implements OnInit {
 

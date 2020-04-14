@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import tipoPermisosControlador from '../../controlador/Catalogos/catTipoPermisosControlador';
 
 class TipoPermisosRutas {
