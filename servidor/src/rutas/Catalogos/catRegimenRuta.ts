@@ -1,6 +1,5 @@
 import { Router } from 'express';
-
-import REGIMEN_CONTROLADOR from '../../controlador/catalogos/catRegimenControlador';
+import REGIMEN_CONTROLADOR from '../../controlador/Catalogos/catRegimenControlador';
 
 class RegimenRuta {
     public router: Router = Router();

@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class EmplCargosComponent implements OnInit {
 
-  @Input() idContratoEmpleado: string;
+  idEmpleado: string;
 
   departamento: any = [];
   sucursales: any = [];
@@ -48,7 +48,8 @@ export class EmplCargosComponent implements OnInit {
   ) {
     let cadena = this.router.url;
     let aux = cadena.split('/');
-    console.log(aux[2]);
+    this.idEmpleado = aux[2];
+    console.log(this.idEmpleado);
    }
 
   ngOnInit(): void {

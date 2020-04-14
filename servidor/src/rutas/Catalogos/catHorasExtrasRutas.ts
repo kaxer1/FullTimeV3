@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import horasExtrasControlador from '../../controlador/catalogos/catHorasExtrasControlador';
+import horasExtrasControlador from '../../controlador/Catalogos/catHorasExtrasControlador';
 
 class HorasExtrasRutas {
     public router: Router = Router();

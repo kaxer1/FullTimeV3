@@ -26,15 +26,8 @@ export class HorarioService {
     return this.http.post(`${this.API_URL}/horario`, data);
   } 
 
-  UploadExcel(formData: FormData) {  
-    let headers = new HttpHeaders();  
-  
-    headers.append('Content-Type', 'multipart/form-data');  
-    headers.append('Accept', 'application/json');  
-  
-    const httpOptions = { headers: headers };  
-  
-    return this.http.post(this.API_URL + 'horario/upload', formData, httpOptions)  
+  subirArchivoExcel(formData) {
+    return this.http.post(this.API_URL + '/horario/upload', formData)  
   }
 
 }

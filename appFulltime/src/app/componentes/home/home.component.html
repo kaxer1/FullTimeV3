@@ -39,18 +39,14 @@
   <br>
   <!-- caja de los graficos grandes -->
   <div class="row">
-    <div class="col-sm">
+    <div class="col-md">
       <mat-card class="example-card mat-elevation-z8">
-        <div>
-          <div>
-            <div class="chart">
-              <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
-                [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
-              </canvas>
-            </div>
-          </div>
+        <div class="chart">
+          <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+            [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
+          </canvas>
         </div>
-        <div>
+        <!-- <div> -->
           <!-- <button mat-button mat-raised-button color="primary" (click)="pieChartLegend=!pieChartLegend">Toggle
             Legend</button>
           <button mat-button mat-raised-button color="primary" (click)="changeLabels()">Change Labels</button>
@@ -58,10 +54,10 @@
           <button mat-button mat-raised-button color="primary" (click)="removeSlice()">Remove Slice</button>
           <button mat-button mat-raised-button color="primary" (click)="changeLegendPosition()">Change Legend
             Position</button> -->
-        </div>
+        <!-- </div> -->
       </mat-card>
     </div>
-    <div class="col-sm">
+    <div class="col-md">
       <mat-card class="example-card mat-elevation-z8">
   
         <div class="flex">

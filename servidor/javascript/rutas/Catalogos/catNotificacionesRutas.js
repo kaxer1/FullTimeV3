@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const catNotificacionesControlador_1 = __importDefault(require("../../controlador/catalogos/catNotificacionesControlador"));
+const catNotificacionesControlador_1 = __importDefault(require("../../controlador/Catalogos/catNotificacionesControlador"));
 class NotificacionesRutas {
     constructor() {
         this.router = express_1.Router();

@@ -50,7 +50,7 @@ export class RegistroProcesoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.procesos = this.getProcesos();
+    this.getProcesos();
   }
 
   IngresarSoloLetras(e) {

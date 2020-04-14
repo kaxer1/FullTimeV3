@@ -14,15 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
-// const xlsxFile = require('read-excel-file/node');
-// xlsxFile('./plantillas/horarios.xlsx').then((rows) => {
-//   rows.forEach((col)=>{
-//     col.forEach((data)=>{
-//       console.log(data);
-//       // console.log(typeof data);
-//     });
-//   });
-// });
 class HorarioControlador {
     ListarHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -49,32 +40,32 @@ class HorarioControlador {
     }
     CrearHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            /* //HORA_TRABAJO --SOLO PERMITE 2 Números 1 entero, un decimal
-             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
-             await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo,flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-             res.json({ message: 'El horario ha sido registrado' });
-             console.log( req.file.filename);*/
-            const workbook = xlsx_1.default.readFile(`./plantillas/${req.file.filename}`);
+            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
+            const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
+            console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
+            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+            res.json({ message: 'El horario ha sido registrado' });
+        });
+    }
+    CrearHorarioPlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let aux = cadena.split("\\");
+            let filename = aux[1];
+            const workbook = xlsx_1.default.readFile(`./plantillas/${filename}`);
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             let obj = [];
             plantilla.forEach(data => {
                 obj.push(data);
             });
-            //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
-            console.log(obj.length);
-            for (let i = 0; i <= obj.length; i++) {
+            for (let i = 0; i < obj.length; i++) {
                 const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
-                console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
-                // console.log(flexible);
                 yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-                res.json({ message: 'El horario ha sido registrado' });
             }
             ;
-            res.send({
-                success: true,
-                message: 'file upload'
-            });
+            res.json({ message: 'La plantilla a sido receptada' });
         });
     }
 }

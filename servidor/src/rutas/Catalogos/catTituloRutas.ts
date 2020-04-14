@@ -1,6 +1,5 @@
 import { Router } from 'express';
-
-import tituloControlador from '../../controlador/catalogos/catTituloControlador';
+import tituloControlador from '../../controlador/Catalogos/catTituloControlador';
 
 
 class TituloRutas {

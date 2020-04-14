@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import NOTIFICACIONES_CONTROLADOR from '../../controlador/catalogos/catNotificacionesControlador';
+import NOTIFICACIONES_CONTROLADOR from '../../controlador/Catalogos/catNotificacionesControlador';
 
 class NotificacionesRutas {
     public router: Router = Router();
