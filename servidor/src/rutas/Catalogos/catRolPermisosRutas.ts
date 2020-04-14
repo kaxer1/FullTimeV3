@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import rolPermisosControlador from '../../controlador/Catalogos/catRolPermisosControlador';
+import rolPermisosControlador from '../../controlador/catalogos/catRolPermisosControlador';
 
 class RolPermisosRutas {
     public router: Router = Router();

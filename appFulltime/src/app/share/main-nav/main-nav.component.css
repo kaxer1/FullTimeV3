@@ -128,17 +128,15 @@ mat-expansion-panel-header{ background: transparent; }
 }
 
 .mat-list-item:hover{
-  background: rgb(26, 115, 199);
-}
+  background: rgb(26, 115, 199); }
 
 a.mat-list-item.texcol:active{
-  background: rgb(26, 115, 199);
-}
+  background: rgb(26, 115, 199); }
 
-mat-form-field { height: 10px;}
+mat-form-field { height: 10px; }
 
-.example-form { min-width: 50px; max-width: 300px; width: 100%; font-size: 15px;}
+.example-form { min-width: 50px; max-width: 300px; width: 100%; font-size: 15px; }
 
 .example-full-width { width: 100%; }
 
-.card-text {margin-top: -10px;}
+.card-text {margin-top: -10px; }

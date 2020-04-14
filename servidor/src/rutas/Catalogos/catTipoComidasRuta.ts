@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import TIPO_COMIDAS_CONTROLADOR from '../../controlador/Catalogos/catTipoComidasControlador';
+import TIPO_COMIDAS_CONTROLADOR from '../../controlador/catalogos/catTipoComidasControlador';
 
 class TipoComidasRuta {
     public router: Router = Router();

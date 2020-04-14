@@ -10,20 +10,14 @@
                         matTooltipPosition="right" matTooltip="Sección 1: Datos Personales">person_add
                     </mat-icon>
                 </ng-template>
-                <div class="titulo">
-                    <span>Datos Personales
-                        <mat-icon id="icono_info" matSuffix matTooltipClass="empleadoR-tooltip"
-                            matTooltipPosition="right" matTooltip="Llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente para
-                            continuar">
-                            error
-                        </mat-icon>
-                    </span>
+                <div class="titulo_empleR">
+                    <span>Datos Personales</span>
                 </div>
                 <br>
-                <!-- <div class="subtitulo">
-                    <span>Por favor llenar todos los campos del formulario y dar click en Siguiente para
-                        continuar.</span>
-                </div>-->
+                <div class="subtitulo_empleR">
+                    <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente
+                        para continuar.</span>
+                </div>
                 <form [formGroup]="primeroFormGroup">
                     <div class="container">
                         <div class="row">
@@ -84,7 +78,7 @@
                                 <mat-form-field>
                                     <mat-label>Correo Alternativo</mat-label>
                                     <input matInput type="text" placeholder="ejemplo2@mail.com"
-                                        formControlName="correoAlternativoForm" required>
+                                        formControlName="correoAlternativoForm">
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
                                         matTooltip="Ingrese un correo electrónico alternativo valido">alternate_email
@@ -106,20 +100,14 @@
                             matTooltipPosition="right" matTooltip="Sección 2: Datos Personales">person_add
                         </mat-icon>
                     </ng-template>
-                    <div class="titulo">
-                        <span>Datos Personales
-                            <mat-icon id="icono_info" matSuffix matTooltipClass="empleadoR-tooltip"
-                                matTooltipPosition="right" matTooltip="Llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente para
-                            continuar">
-                                error
-                            </mat-icon>
-                        </span>
+                    <div class="titulo_empleR">
+                        <span>Datos Personales</span>
                     </div>
                     <br>
-                    <!--  <div class="subtitulo">
-                        <span>Por favor llenar todos los campos del formulario y dar click en Siguiente para
-                            continuar.</span>
-                    </div>-->
+                    <div class="subtitulo_empleR">
+                        <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en
+                            Siguiente para continuar.</span>
+                    </div>
                     <div class="container">
                         <div class="row">
                             <div class="col">
@@ -218,25 +206,22 @@
                             matTooltipPosition="right" matTooltip="Sección 3: Datos de Usuario">insert_emoticon
                         </mat-icon>
                     </ng-template>
-                    <div class="titulo">
-                        <span>Datos de Usuario
-                            <mat-icon id="icono_info" matSuffix matTooltipClass="empleadoR-tooltip"
-                                matTooltipPosition="right" matTooltip="Llenar todos los campos obligatorios ( * ) del formulario y dar click en Guardar. Recuerde estas son las credenciales que usará el empleado
-                                para ingresar al sistema y ver su información.">
-                                error
-                            </mat-icon>
-                        </span>
+                    <div class="titulo_empleR">
+                        <span>Datos de Usuario</span>
                     </div>
                     <br>
-                    <!--  <div class="subtitulo">
-                        <span>Llenar el formulario y dar click en Guardar, estas son credenciales para que el empleado
-                            pueda ingresar al sistema y ver su información.</span>
-                    </div>-->
+                    <div class="subtitulo_empleR">
+                        <span>Llenar todos los campos obligatorios ( * ) del formulario y dar click en Guardar.</span>
+                        <br>
+                        <span>Recuerde estas son las credenciales que usará el empleado para ingresar al sistema y ver
+                            su información.
+                        </span>
+                    </div>
                     <div class="container">
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
-                                    <mat-label>Seleccione Rol</mat-label>
+                                    <mat-label>Seleccionar un Rol</mat-label>
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
                                         matTooltip="El rol es el nivel de autorización que el usaurio tendra en el sistema">

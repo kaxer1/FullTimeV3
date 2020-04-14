@@ -5,7 +5,19 @@
         </div>
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
             <mat-step [stepControl]="primeroFormGroup">
-                <ng-template matStepLabel>Información General</ng-template>
+                <ng-template matStepLabel>
+                    <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        matTooltip="Sección 1: Información General">person_add
+                    </mat-icon>
+                </ng-template>
+                <div class="titulo_permisoR">
+                    <span>Información General</span>
+                </div>
+                <br>
+                <div class="subtitulo_permisoR">
+                    <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente
+                        para continuar.</span>
+                </div>
                 <form [formGroup]="primeroFormGroup">
                     <div class="container">
                         <div class="row">
@@ -74,12 +86,12 @@
                             <div class="col">
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Empleado podrá solicitar*</mat-label>
+                                    <mat-label id="emple_solicitar">Empleado podrá solicitar</mat-label>
                                     <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
                                         matTooltipPosition="right"
                                         matTooltip="Seleccionar si el empleado puede solicitar permiso">
                                         help_outline</mat-icon>
-                                    <mat-select formControlName="acceEmpleadoForm">
+                                    <mat-select formControlName="acceEmpleadoForm" required>
                                         <mat-option *ngFor="let sol of solicitudes" [value]="sol.valor">
                                             {{sol.nombre}}
                                         </mat-option>
@@ -120,16 +132,26 @@
                 </form>
                 <br>
                 <div>
-                    <button mat-button matStepperNext class="btn btn-primary" matSuffix matTooltipClass="color-tooltip"
-                    matTooltipPosition="right"
-                    matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente">Siguiente</button>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                     <button mat-button class="btn btn-warning" [routerLink]="['/verTipoPermiso']">Lista de Tipo de
                         Permisos</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
-                <ng-template matStepLabel>Efectos del Permiso</ng-template>
+                <ng-template matStepLabel>
+                    <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        matTooltip="Sección 2: Efectos del Permiso">person_add
+                    </mat-icon>
+                </ng-template>
+                <div class="titulo_permisoR">
+                    <span>Efectos del Permiso</span>
+                </div>
+                <br>
+                <div class="subtitulo_permisoR">
+                    <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente
+                        para continuar.</span>
+                </div>
                 <form [formGroup]="segundoFormGroup">
                     <div class="container">
                         <div class="row">
@@ -252,15 +274,25 @@
                 <br>
                 <div>
                     <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                    <button mat-button matStepperNext class="btn btn-primary" matSuffix matTooltipClass="color-tooltip"
-                        matTooltipPosition="right"
-                        matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente">Siguiente</button>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
                 <form [formGroup]="terceroFormGroup">
-                    <ng-template matStepLabel>Condiciones del Permiso</ng-template>
+                    <ng-template matStepLabel>
+                        <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip"
+                            matTooltipPosition="right" matTooltip="Sección 3: Condiciones del Permiso">person_add
+                        </mat-icon>
+                    </ng-template>
+                    <div class="titulo_permisoR">
+                        <span>Condiciones del Permiso</span>
+                    </div>
+                    <br>
+                    <div class="subtitulo_permisoR">
+                        <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en
+                            Guardar.</span>
+                    </div>
                     <div class="container">
                         <div class="row">
                             <div class="col-sm">
@@ -383,12 +415,9 @@
                     <div>
                         <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                         <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
-                        <i matSuffix matTooltipClass="color-tooltip"
-                        matTooltipPosition="right"
-                        matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Siguiente"> 
                         <input mat-button type="submit" class="btn btn-primary"
                             (click)="insertarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
-                            [disabled]="!terceroFormGroup.valid" value="Guardar"></i>
+                            [disabled]="!terceroFormGroup.valid" value="Guardar">
                     </div>
                 </form>
             </mat-step>
