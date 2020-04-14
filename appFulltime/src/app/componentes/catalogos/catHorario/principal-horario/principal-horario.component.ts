@@ -63,7 +63,7 @@ export class PrincipalHorarioComponent implements OnInit {
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
-    this.nameFile = 'Archivo seleccionado: ' + this.archivoSubido[0].name;
+    this.nameFile = this.archivoSubido[0].name;
     console.log(this.nameFile);
   }
   

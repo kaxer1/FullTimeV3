@@ -19,7 +19,7 @@ export class ListarFeriadosComponent implements OnInit {
   // Control de campos y validaciones del formulario
   descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   fechaF = new FormControl('');
-  archivoForm = new FormControl('');
+  archivoForm = new FormControl('', Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public BuscarFeriadosForm = new FormGroup({
@@ -116,7 +116,7 @@ export class ListarFeriadosComponent implements OnInit {
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
-    this.nameFile = 'Archivo seleccionado: ' + this.archivoSubido[0].name;
+    this.nameFile = this.archivoSubido[0].name;
     console.log(this.nameFile);
   }
   

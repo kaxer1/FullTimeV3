@@ -33,9 +33,6 @@
         <div class="col-md">
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span  class="input-group-text upload"  (click)="plantilla()"  id="btnUpload">Subir</span>
-                    </div>
                     <div class="custom-file">
                         <form  method="post" enctype="multipart/form-data">
                             <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm"  class="custom-file-input"  id="inputGroupFile01"  aria-describedby="inputGroupFileAddon01"> 
@@ -44,7 +41,10 @@
                     </div>
                 </div>  
                 <br>
-                <span>{{nameFile}}</span>
+                <div class="input-group-prepend">
+                    <span class="material-icons input-group-text upload" (click)="plantilla()" id="btnUpload">cloud_upload</span>
+                    <span>{{nameFile}}</span>
+                </div>
             </mat-card>
         </div>
     </div>
