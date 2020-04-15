@@ -11,7 +11,6 @@ class FeriadosRuta {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
