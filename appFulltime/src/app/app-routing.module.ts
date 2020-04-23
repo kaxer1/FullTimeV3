@@ -7,11 +7,11 @@ import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/
 import { LoginComponent } from './componentes/login/login.component';
 import { HomeComponent } from './componentes/home/home.component';
 import { VerEmpleadoComponent } from './componentes/empleado/ver-empleado/ver-empleado.component';
-import { SeleccionarRolPermisoComponent} from './componentes/catalogos/catRoles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
+import { SeleccionarRolPermisoComponent } from './componentes/catalogos/catRoles/seleccionar-rol-permiso/seleccionar-rol-permiso.component'
 import { ListarRegimenComponent } from './componentes/catalogos/catRegimen/listar-regimen/listar-regimen.component';
-import { RegimenComponent} from './componentes/catalogos/catRegimen/regimen/regimen.component';
-import { TipoComidasComponent} from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
-import { RelojesComponent} from './componentes/catalogos/catRelojes/relojes/relojes.component'
+import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
+import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
+import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component'
 import { PrincipalProcesoComponent } from './componentes/catalogos/catProcesos/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/catProcesos/registro-proceso/registro-proceso.component';
 import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvincia/listar-provincia/principal-provincia.component';
@@ -33,42 +33,44 @@ import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/em
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
 import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
+import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
-  { path: 'roles', component: VistaRolesComponent},
-  { path: 'login', component: LoginComponent},
-  { path: 'registrarEmpleado', component: RegistroComponent},
-  { path: 'empleado', component: ListaEmpleadosComponent},
-  { path: 'home', component: HomeComponent},
-  { path: 'titulos', component: ListarTitulosComponent},
-  { path: 'verEmpleado/:id', component: VerEmpleadoComponent},
-  { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent},
-  { path: 'regimenLaboral', component: RegimenComponent},
-  { path: 'tipoComidas', component: TipoComidasComponent},
-  { path: 'relojes', component: RelojesComponent},
-  { path: 'proceso', component: PrincipalProcesoComponent},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'roles', component: VistaRolesComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'registrarEmpleado', component: RegistroComponent },
+  { path: 'empleado', component: ListaEmpleadosComponent },
+  { path: 'home', component: HomeComponent },
+  { path: 'titulos', component: ListarTitulosComponent },
+  { path: 'verEmpleado/:id', component: VerEmpleadoComponent },
+  { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent },
+  { path: 'regimenLaboral', component: RegimenComponent },
+  { path: 'tipoComidas', component: TipoComidasComponent },
+  { path: 'relojes', component: RelojesComponent },
+  { path: 'proceso', component: PrincipalProcesoComponent },
   { path: 'registrarProceso', component: RegistroProcesoComponent },
-  { path: 'provincia', component: PrincipalProvinciaComponent},
-  { path: 'departamento', component: PrincipalDepartamentoComponent},
-  { path: 'registrarDepartamento', component: RegistroDepartamentoComponent},
-  { path: 'horario', component: PrincipalHorarioComponent},
-  { path: 'registrarHorario', component:RegistroHorarioComponent},
-  { path: 'horasExtras', component: HorasExtrasComponent},
-  { path: 'notificaciones', component: NotificacionesComponent},
-  { path: 'feriados', component: RegistrarFeriadosComponent},
-  { path: 'listarFeriados', component: ListarFeriadosComponent},
-  { path: 'modificarDepartamento/:id', component:RegistroDepartamentoComponent},
-  { path: 'enrolados', component:PrincipalEnroladosComponent},
-  { path: 'tipoPermisos', component: TipoPermisosComponent},
-  { path: 'listarRegimen', component: ListarRegimenComponent},
-  { path: 'listarTipoComidas', component: ListarTipoComidasComponent},
-  { path: 'listarRelojes', component: ListarRelojesComponent},
-  { path: 'listarCiudades', component: ListarCiudadComponent},
-  { path: 'verTipoPermiso', component: VistaElementosComponent},
-  { path: 'emplCargos', component: EmplCargosComponent},
-  { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent},
-  { path: 'sucursales', component: ListaSucursalesComponent},
+  { path: 'provincia', component: PrincipalProvinciaComponent },
+  { path: 'departamento', component: PrincipalDepartamentoComponent },
+  { path: 'registrarDepartamento', component: RegistroDepartamentoComponent },
+  { path: 'horario', component: PrincipalHorarioComponent },
+  { path: 'registrarHorario', component: RegistroHorarioComponent },
+  { path: 'horasExtras', component: HorasExtrasComponent },
+  { path: 'notificaciones', component: NotificacionesComponent },
+  { path: 'feriados', component: RegistrarFeriadosComponent },
+  { path: 'listarFeriados', component: ListarFeriadosComponent },
+  { path: 'modificarDepartamento/:id', component: RegistroDepartamentoComponent },
+  { path: 'enrolados', component: PrincipalEnroladosComponent },
+  { path: 'tipoPermisos', component: TipoPermisosComponent },
+  { path: 'listarRegimen', component: ListarRegimenComponent },
+  { path: 'listarTipoComidas', component: ListarTipoComidasComponent },
+  { path: 'listarRelojes', component: ListarRelojesComponent },
+  { path: 'listarCiudades', component: ListarCiudadComponent },
+  { path: 'verTipoPermiso', component: VistaElementosComponent },
+  { path: 'emplCargos', component: EmplCargosComponent },
+  { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent },
+  { path: 'sucursales', component: ListaSucursalesComponent },
+  { path: 'empresa', component: RegistroEmpresaComponent },
 
 ];
 

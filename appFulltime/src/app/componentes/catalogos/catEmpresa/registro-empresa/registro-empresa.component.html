@@ -1,0 +1,81 @@
+<div class="container" style="padding-top: 15px;">
+    <div class="tituloEmpresaR">
+        <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Empresa</span>
+    </div>
+    <mat-card class="example-card mat-elevation-z8">
+        <!-- Formulario Completo -->
+        <form [formGroup]="RegistroEmpresaForm">
+            <mat-card-content>
+                <div class="container" style="text-align: center">
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Nombre de la Empresa</mat-label>
+                                <input matInput placeholder="Nombre del empre" [formControl]="nombreF" required>
+                                <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip"
+                                    matTooltipPosition="right" matTooltip="Ingresar nombre de la nueva Empresa">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                                <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>RUC</mat-label>
+                                <input matInput placeholder="Ingresar marca" [formControl]="rucF"
+                                    (keypress)="IngresarSoloNumeros($event)" required>
+                                <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip"
+                                    matTooltipPosition="right" matTooltip="Ingresar el RUC de la Empresa">
+                                    help_outline
+                                </mat-icon>
+                                <mat-error *ngIf="rucF.invalid">{{ObtenerMensajeErrorRucRequerido()}}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Teléfono</mat-label>
+                                <input matInput placeholder="Ingresar puerto" [formControl]="telefonoF" maxlength="10"
+                                    (keypress)="IngresarSoloNumeros($event)"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    required>
+                                <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip"
+                                    matTooltipPosition="right" matTooltip="Ingresar número de contacto de la Empresa">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="telefonoF.invalid">{{ObtenerMensajeErrorTelefonoRequerido()}}
+                                </mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Dirección</mat-label>
+                                <input matInput placeholder="Ingresar modelo" [formControl]="direccionF" required>
+                                <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Ingresar dirección de ubicación de la Empresa">
+                                    help_outline
+                                </mat-icon>
+                                <mat-error *ngIf="direccionF.invalid">{{ObtenerMensajeErrorDireccionRequerido()}}
+                                </mat-error>
+                                <mat-error *ngIf="direccionF.invalid">Ingresar una dirección válida</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Correo</mat-label>
+                                <input matInput placeholder="Ingresar serie" [formControl]="correoF" required>
+                                <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip"
+                                    matTooltipPosition="right" matTooltip="Ingresar correo electrónico de la Empresa">
+                                    help_outline
+                                </mat-icon>
+                                <mat-error *ngIf="correoF.invalid">{{ObtenerMensajeErrorCorreoRequerido()}}</mat-error>
+                                <mat-error *ngIf="correoF.invalid">Ingresar un correo electrónico válido</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </form>
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-sm" [disabled]="!RegistroEmpresaForm.valid" value="Guardar"
+                (click)="InsertarEmpresa(RegistroEmpresaForm.value)">
+            <input type="submit" class="btn btn-sm" value="Salir">
+        </mat-card-actions>
+    </mat-card>
+</div>

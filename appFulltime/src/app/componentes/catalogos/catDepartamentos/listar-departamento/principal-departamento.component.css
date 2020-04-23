@@ -3,8 +3,7 @@
 .far { color:red }
 tr { text-align: center; }
 td { padding-top: 10px; text-align: center; }
-h5 { text-align: center; }
-span { font-weight: bold; }
+#negrita_dep { font-weight: bold; }
 #color { color:rgb(122, 3, 106); font-size: 18px; }
 .departamento-tooltip { background: rgb(122, 3, 106); }
 .tituloDepartamentos { 

@@ -130,6 +130,7 @@ import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursa
 import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
 import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
+import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 
 @NgModule({
   declarations: [
@@ -205,7 +206,8 @@ import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe
     ListaSucursalesComponent,
     RegistrarSucursalesComponent,
     SucNombrePipe,
-    SucCiudadPipe
+    SucCiudadPipe,
+    RegistroEmpresaComponent
   ],
   imports: [
     BrowserModule,

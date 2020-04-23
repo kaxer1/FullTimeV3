@@ -30,6 +30,7 @@ import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRuta
 import PLAN_COMIDAS_RUTAS from './rutas/planComidas/planComidasRutas';
 import ENROLADO_RELOJ_RUTAS from './rutas/enroladoReloj/enroladoRelojRutas';
 import SUCURSAL_RUTAS from './rutas/Sucursal/sucursalRutas';
+import EMPRESA_RUTAS from './rutas/catalogos/catEmpresaRutas';
 
 class Server {
 
@@ -60,7 +61,7 @@ class Server {
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
 
         //Almuerzo
-        this.app.use('/planComidas', PLAN_COMIDAS_RUTAS );
+        this.app.use('/planComidas', PLAN_COMIDAS_RUTAS);
 
         //Enrolados
         this.app.use('/enrolados', ENROLADO_RUTA);
@@ -70,6 +71,7 @@ class Server {
         //Redireccionamiento a páginas que contienen catálogos
         this.app.use('/titulo', TITULO_RUTA);
         this.app.use('/discapacidad', DISCAPACIDAD_RUTAS);
+        this.app.use('/empresas', EMPRESA_RUTAS);
         this.app.use('/regimenLaboral', REGIMEN_RUTA);
         this.app.use('/feriados', FERIADOS_RUTA);
         this.app.use('/tipoComidas', TIPO_COMIDAS_RUTA);

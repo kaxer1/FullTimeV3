@@ -16,18 +16,18 @@ import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-f
 })
 export class RegistrarSucursalesComponent implements OnInit {
 
-    // Datos Provincias, Continentes, Países y Ciudades
-    provincias: any = [];
-    seleccionarProvincia;
-    continentes: any = [];
-    seleccionarContinente;
-    paises: any = [];
-    seleccionarPaises;
-    nombreCiudades: any = [];
-    seleccionarCiudad;
+  // Datos Provincias, Continentes, Países y Ciudades
+  provincias: any = [];
+  seleccionarProvincia;
+  continentes: any = [];
+  seleccionarContinente;
+  paises: any = [];
+  seleccionarPaises;
+  nombreCiudades: any = [];
+  seleccionarCiudad;
 
-  nombre = new FormControl('',[Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]  );
-  idCiudad = new FormControl('',[Validators.required]);
+  nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
@@ -39,7 +39,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
   });
-  
+
   constructor(
     public restCiudad: CiudadService,
     public restSucursal: SucursalService,
@@ -151,10 +151,10 @@ export class RegistrarSucursalesComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevaSucursalForm.reset();
-      this.ObtenerContinentes();
-      this.paises = [];
-      this.provincias = [];
-      this.nombreCiudades = [];
+    this.ObtenerContinentes();
+    this.paises = [];
+    this.provincias = [];
+    this.nombreCiudades = [];
   }
 
   CerrarVentanaRegistroSucursal() {
@@ -163,31 +163,10 @@ export class RegistrarSucursalesComponent implements OnInit {
     window.location.reload();
   }
 
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
-      return false;
-    }
-  }
-
   ObtenerMensajeErrorNombre() {
     if (this.nombre.hasError('required')) {
       return 'Campo Obligatorio';
     }
-    return this.nombre.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
 }
