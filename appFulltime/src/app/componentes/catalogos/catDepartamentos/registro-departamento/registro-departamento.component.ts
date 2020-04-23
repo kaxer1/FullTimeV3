@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
 interface Nivel {
   valor: string;
@@ -15,7 +17,7 @@ interface Nivel {
   selector: 'app-registro-departamento',
   templateUrl: './registro-departamento.component.html',
   styleUrls: ['./registro-departamento.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroDepartamentoComponent implements OnInit {
@@ -24,8 +26,12 @@ export class RegistroDepartamentoComponent implements OnInit {
   nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   nivel = new FormControl('', Validators.required);
   departamentoPadre = new FormControl('');
+  idEmpresaF = new FormControl('', Validators.required);
+  idSucursalF = new FormControl('', Validators.required);
 
   // Datos Departamento
+  empresas: any = [];
+  sucursales: any = [];
   departamentos: any = [];
   departamentoId: any = [];
   departamentoModificar: any = []
@@ -38,7 +44,9 @@ export class RegistroDepartamentoComponent implements OnInit {
   public nuevoDepartamentoForm = new FormGroup({
     departamentoNombreForm: this.nombre,
     departamentoNivelForm: this.nivel,
-    departamentoDepartamentoPadreForm: this.departamentoPadre
+    departamentoDepartamentoPadreForm: this.departamentoPadre,
+    idEmpresaForm: this.idEmpresaF,
+    idSucursalForm: this.idSucursalF,
   });
 
   // Arreglo de niveles existentes
@@ -54,6 +62,8 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   constructor(
     private rest: DepartamentosService,
+    private restE: EmpresaService,
+    private restS: SucursalService,
     private toastr: ToastrService,
     private router: Router,
     private activeRoute: ActivatedRoute,
@@ -61,62 +71,73 @@ export class RegistroDepartamentoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public descripcionD: any) { }
 
   ngOnInit(): void {
-    this.departamentos = this.ObtenerDepartamentos();
+    this.BuscarEmpresas();
     if (this.descripcionD) {
       this.ValidarCamposModificar();
     }
   }
 
+  BuscarEmpresas() {
+    this.empresas = [];
+    this.restE.ConsultarEmpresas().subscribe(datos => {
+      this.empresas = datos;
+    })
+  }
+
+  FiltrarSucursales(form) {
+    let idEmpre = form.idEmpresaForm
+    this.sucursales = [];
+    this.restS.BuscarSucEmpresa(idEmpre).subscribe(datos => {
+      this.sucursales = datos;
+    }, error => {
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+    })
+  }
+
   InsertarDepartamento(form) {
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-    if (departamentoPadreNombre === 'Seleccionar' || departamentoPadreNombre === 'Ninguno') {
-      this.rest.ConsultarIdNombreDepartamentos('Ninguno').subscribe(datos => {
+    var datosDepartamento = {
+      nombre: form.departamentoNombreForm,
+      nivel: form.departamentoNivelForm,
+      depa_padre: departamentoPadreNombre,
+      id_sucursal: form.idSucursalForm
+    };
+    if (departamentoPadreNombre === 'Ninguno') {
+      this.rest.ConsultarIdNombreDepartamentos(departamentoPadreNombre).subscribe(datos => {
         this.departamentoId = datos;
         for (let i = this.departamentoId.length - 1; i >= 0; i--) {
           var id_dePadre = this.departamentoId[i]['id'];
-          departamentoPadreNombre = id_dePadre;
         }
-        let datosDepartamento = {
-          nombre: form.departamentoNombreForm,
-          nivel: form.departamentoNivelForm,
-          depa_padre: departamentoPadreNombre,
-        };
+        datosDepartamento.depa_padre = id_dePadre;
         this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Departamento registrado');
           this.LimpiarCampos();
-        }, error => {
-          this.toastr.error('Operación Fallida', 'Departamento no pudo ser registrado')
         });
       }, (error) => {
-        this.toastr.info('Descripción ingresada no coincide con los registros')
       })
     }
     else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {
         departamentoPadreId = datos[0].id;
-        let datosDepartamento = {
-          nombre: form.departamentoNombreForm,
-          nivel: form.departamentoNivelForm,
-          depa_padre: departamentoPadreId
-        };
+        datosDepartamento.depa_padre = departamentoPadreId;
         this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Departamento registrado');
           this.LimpiarCampos();
-        }, error => {
-          this.toastr.error('Operación Fallida', 'Departamento no pudo ser registrado')
         });
       })
     }
   }
 
-  ObtenerDepartamentos() {
+  ObtenerDepartamentos(form) {
     this.departamentos = [];
-    this.rest.ConsultarNombreDepartamentos().subscribe(datos => {
+    let idSucursal = form.idSucursalForm;
+    this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamentos = datos;
-      this.departamentos[this.departamentos.length] = { nombre: "Seleccionar" };
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
-    })
+    }, error => {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
   }
 
   ObtenerNombre(id: number) {
@@ -130,7 +151,6 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoDepartamentoForm.reset();
-    this.ObtenerDepartamentos();
   }
 
   CerrarVentanaRegistroDepartamento() {

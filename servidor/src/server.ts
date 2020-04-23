@@ -29,7 +29,7 @@ import CONTRATO_EMPLEADO_RUTAS from './rutas/empleado/empleadoContrato/contratoE
 import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRutas';
 import PLAN_COMIDAS_RUTAS from './rutas/planComidas/planComidasRutas';
 import ENROLADO_RELOJ_RUTAS from './rutas/enroladoReloj/enroladoRelojRutas';
-import SUCURSAL_RUTAS from './rutas/Sucursal/sucursalRutas';
+import SUCURSAL_RUTAS from './rutas/sucursal/sucursalRutas';
 import EMPRESA_RUTAS from './rutas/catalogos/catEmpresaRutas';
 
 class Server {

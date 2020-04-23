@@ -13,15 +13,25 @@ export class SucursalService {
   ) { }
 
   // Catálogo de Horarios
-  getSucursalesRest(){
+  getSucursalesRest() {
     return this.http.get(`${this.API_URL}/sucursales`);
   }
 
-  getOneSucursalRest(id:number){
-    return this.http.get(`${this.API_URL}/sucursales/${id}`);
+  EncontrarUltimoId() {
+    return this.http.get(`${this.API_URL}/sucursales/ultimoId`);
   }
-  
-  postSucursalRest(data: any){
+
+  getOneSucursalRest(id: number) {
+    return this.http.get(`${this.API_URL}/sucursales/unaSucursal/${id}`);
+  }
+
+  postSucursalRest(data: any) {
     return this.http.post(`${this.API_URL}/sucursales`, data);
-  } 
+  }
+
+  BuscarSucEmpresa(id_empresa: number) {
+    return this.http.get(`${this.API_URL}/sucursales/buscar/nombreSuc/${id_empresa}`);
+  }
+
+
 }

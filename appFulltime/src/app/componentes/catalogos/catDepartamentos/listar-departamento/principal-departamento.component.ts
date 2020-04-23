@@ -17,12 +17,16 @@ export class PrincipalDepartamentoComponent implements OnInit {
 
   // Almacenamiento de datos consultados y filtros de búsqueda
   filtroNombre = '';
+  filtroNombreSuc = '';
+  filtroEmpresaSuc = '';
   filtroDeparPadre = '';
   departamentos: any = [];
 
   // Control de campos y validaciones del formulario
   departamentoF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   departamentoPadreF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarEmpresa = new FormControl('', [Validators.minLength(2)]);
 
   // Asignación de validaciones a inputs del formulario
   public BuscarDepartamentosForm = new FormGroup({
@@ -49,7 +53,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarDepartamento(): void {
-    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '600px' }).disableClose = true;
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
@@ -64,6 +68,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
       departamentoPadreForm: ''
     });
     this.ListaDepartamentos();
+    
   }
 
   ObtenerMensajeDepartamentoLetras() {

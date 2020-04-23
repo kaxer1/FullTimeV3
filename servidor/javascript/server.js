@@ -33,7 +33,7 @@ const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/empleado/emplea
 const emplCargosRutas_1 = __importDefault(require("./rutas/empleado/empleadoCargos/emplCargosRutas"));
 const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComidasRutas"));
 const enroladoRelojRutas_1 = __importDefault(require("./rutas/enroladoReloj/enroladoRelojRutas"));
-const sucursalRutas_1 = __importDefault(require("./rutas/Sucursal/sucursalRutas"));
+const sucursalRutas_1 = __importDefault(require("./rutas/sucursal/sucursalRutas"));
 const catEmpresaRutas_1 = __importDefault(require("./rutas/catalogos/catEmpresaRutas"));
 class Server {
     constructor() {

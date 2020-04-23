@@ -153,6 +153,6 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   AbrirVentanaCargo(): void {
-    this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
+    this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
   }
 }

@@ -24,6 +24,32 @@
                             </mat-form-field>
                             <br>
                             <mat-form-field>
+                                <mat-label>Empresa</mat-label>
+                                <input matInput id="depPadre" name="filtroEmpresaSuc" placeholder="Nombre de Empresa"
+                                    [formControl]="buscarEmpresa" (keypress)="IngresarSoloLetras($event)"
+                                    [(ngModel)]="filtroEmpresaSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Empresa">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarEmpresa.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Sucursal</mat-label>
+                                <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
+                                    [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Sucursal">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarNombre.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
                                 <mat-label>Departamento Superior</mat-label>
                                 <input matInput id="depPadre" name="filtroDeparPadre"
                                     placeholder="Departamento Superior" [formControl]="departamentoPadreF"
@@ -54,6 +80,8 @@
     <table mat-table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr>
+                <th scope="col">Empresa</th>
+                <th scope="col">Sucursal</th>
                 <th scope="col">Departamento</th>
                 <th scope="col">Nivel</th>
                 <th scope="col">Departamento Superior</th>
@@ -62,7 +90,9 @@
         </thead>
         <tbody>
             <tr
-                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre">
+                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc">
+                <td>{{departamento.nomempresa}}</td>
+                <td>{{departamento.nomsucursal}}</td>
                 <td>{{departamento.nombre}}</td>
                 <td>{{departamento.nivel}}</td>
                 <td>{{departamento.departamento_padre}}</td>

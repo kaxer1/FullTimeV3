@@ -12,6 +12,7 @@ class EmpleadoRutas {
 
     configuracion(): void {
         this.router.get('/', EMPLEADO_CONTROLADOR.list);
+        this.router.get('/nacionalidades', EMPLEADO_CONTROLADOR.ListarNacionalidades);
         this.router.get('/:id', EMPLEADO_CONTROLADOR.getOne);
         this.router.post('/', EMPLEADO_CONTROLADOR.create);
         this.router.get('/emplTitulos/:id_empleado', EMPLEADO_CONTROLADOR.getTitulosDelEmpleado);

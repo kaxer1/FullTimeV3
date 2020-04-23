@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../../../database';
 
 class EmpleadoControlador {
+
   public async list(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados');
     res.json(empleado.rows);
@@ -17,8 +18,8 @@ class EmpleadoControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad} = req.body;
-    await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad]);
+    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad} = req.body;
+    await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
     console.log(req.body);
     // const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad } = req.body;
     // await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad]);
@@ -41,6 +42,11 @@ class EmpleadoControlador {
       return res.json(unEmpleadoTitulo.rows)
     }
     res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
+  }
+
+  public async ListarNacionalidades(req: Request, res: Response) {
+    const empleado = await pool.query('SELECT * FROM nacionalidades');
+    res.json(empleado.rows);
   }
 }
 

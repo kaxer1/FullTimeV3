@@ -16,6 +16,7 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class RegistroComponent implements OnInit {
 
   empleadoGuardado: any = [];
+  nacionalidades: any = [];
   roles: any = [];
   hide = true;
 
@@ -35,6 +36,7 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarRoles();
+    this.BuscarNacionalidades();
     this.primeroFormGroup = this._formBuilder.group({
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
       apellidoForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")],
@@ -80,6 +82,12 @@ export class RegistroComponent implements OnInit {
     });
   }
 
+  BuscarNacionalidades(){
+    this.rest.BuscarNacionalidades().subscribe(data => {
+      this.nacionalidades = data;
+    });
+  }
+
   insertarEmpleado(form1, form2, form3) {
     let dataEmpleado = {
       cedula: form1.cedulaForm,
@@ -93,7 +101,7 @@ export class RegistroComponent implements OnInit {
       mail_alernativo: form1.correoAlternativoForm,
       domicilio: form2.domicilioForm,
       telefono: form2.telefonoForm,
-      nacionalidad: form2.nacionalidadForm
+      id_nacionalidad: form2.nacionalidadForm
     };
     this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
         this.toastr.success('Operacion Exitosa', 'Empleado guardado');

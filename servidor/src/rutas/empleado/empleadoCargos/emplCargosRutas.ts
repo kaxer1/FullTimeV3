@@ -13,7 +13,7 @@ class EmpleadosCargpsRutas {
     configuracion(): void {
         this.router.get('/', EMPLEADO_CARGO_CONTROLADOR.list);
         this.router.get('/:id', EMPLEADO_CARGO_CONTROLADOR.getOne);
-        this.router.post('/', EMPLEADO_CARGO_CONTROLADOR.create);
+        this.router.post('/', EMPLEADO_CARGO_CONTROLADOR.Crear);
     }
 }
 

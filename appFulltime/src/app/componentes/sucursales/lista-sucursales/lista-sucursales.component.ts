@@ -10,18 +10,18 @@ import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
   selector: 'app-lista-sucursales',
   templateUrl: './lista-sucursales.component.html',
   styleUrls: ['./lista-sucursales.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListaSucursalesComponent implements OnInit {
 
-  buscarNombre = new FormControl('',[Validators.minLength(2)]);
-  buscarCiudad = new FormControl('',[Validators.minLength(2)]);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarCiudad = new FormControl('', [Validators.minLength(2)]);
+  buscarEmpresa = new FormControl('', [Validators.minLength(2)]);
   filtroNombreSuc = '';
   filtroCiudadSuc = '';
+  filtroEmpresaSuc = '';
 
   sucursales: any = [];
-  auxSuc: any = [];
-  auxCiu: any = [];
 
   constructor(
     private rest: SucursalService,
@@ -34,33 +34,17 @@ export class ListaSucursalesComponent implements OnInit {
     this.ObtenerSucursal();
   }
 
-  ObtenerSucursal(){
+  ObtenerSucursal() {
     this.rest.getSucursalesRest().subscribe(data => {
-      this.auxSuc = data;
-
-      this.auxSuc.forEach(obj => {
-
-        this.restCiudad.getUnaCiudadRest(obj.id_ciudad).subscribe(data => {
-
-          this.auxCiu = data;
-          
-          let dataSucursal = {
-            id: obj.id,
-            nombre: obj.nombre,
-            ciudad: this.auxCiu[0].descripcion
-          }
-
-          this.sucursales.push(dataSucursal);
-        })
-      });
+      this.sucursales = data;
     });
   }
 
-  AbrirVentanaRegistrarSucursal(){
+  AbrirVentanaRegistrarSucursal() {
     this.vistaRegistrarSucursal.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
   }
 
-  LimpiarCampoBuscar(){
+  LimpiarCampoBuscar() {
     this.buscarNombre.reset();
     this.buscarCiudad.reset();
   }

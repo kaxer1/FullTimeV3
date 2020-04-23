@@ -7,16 +7,19 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 
 @Component({
   selector: 'app-registrar-sucursales',
   templateUrl: './registrar-sucursales.component.html',
   styleUrls: ['./registrar-sucursales.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistrarSucursalesComponent implements OnInit {
 
   // Datos Provincias, Continentes, Países y Ciudades
+  empresas: any = [];
   provincias: any = [];
   seleccionarProvincia;
   continentes: any = [];
@@ -25,12 +28,14 @@ export class RegistrarSucursalesComponent implements OnInit {
   seleccionarPaises;
   nombreCiudades: any = [];
   seleccionarCiudad;
+  ultimoId: any = [];
 
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
+  idEmpresaF = new FormControl('', Validators.required);
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -38,6 +43,8 @@ export class RegistrarSucursalesComponent implements OnInit {
     idProvinciaForm: this.idProvinciaF,
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
+    idEmpresaForm: this.idEmpresaF,
+
   });
 
   constructor(
@@ -45,12 +52,15 @@ export class RegistrarSucursalesComponent implements OnInit {
     public restSucursal: SucursalService,
     private restP: ProvinciaService,
     private restF: CiudadFeriadosService,
+    private restE: EmpresaService,
+    private restD: DepartamentosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistrarSucursalesComponent>,
   ) { }
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
+    this.BuscarEmpresas();
   }
 
   ObtenerContinentes() {
@@ -137,16 +147,38 @@ export class RegistrarSucursalesComponent implements OnInit {
     }
   }
 
+  BuscarEmpresas() {
+    this.empresas = [];
+    this.restE.ConsultarEmpresas().subscribe(datos => {
+      this.empresas = datos;
+    })
+  }
+
   InsertarSucursal(form) {
     let dataSucursal = {
       nombre: form.sucursalNombreForm,
       id_ciudad: form.idCiudadForm,
+      id_empresa: form.idEmpresaForm
     };
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
     }, error => {
-    });;
+    });
+    //Obtener ultimo ID para regitrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
+    this.ultimoId = [];
+    this.restSucursal.EncontrarUltimoId().subscribe(datos => {
+      this.ultimoId = datos;
+      let datosDepartamentos = {
+        nombre: 'Ninguno',
+        nivel: 0,
+        depa_padre: null,
+        id_sucursal: this.ultimoId[0].max
+      };
+      this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+      });
+    }, error => {
+    });
   }
 
   LimpiarCampos() {

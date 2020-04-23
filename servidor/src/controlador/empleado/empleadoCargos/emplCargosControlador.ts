@@ -16,7 +16,7 @@ class EmpleadoCargosControlador {
     res.status(404).json({ text: 'Cargo del empleado no encontrado' });
   }
 
-  public async create(req: Request, res: Response): Promise<void> {
+  public async Crear(req: Request, res: Response): Promise<void> {
     const { id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja } = req.body;
     await pool.query('INSERT INTO empl_cargos ( id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja]);
     console.log(req.body);

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import SUCURSAL_CONTROLADOR from '../../controlador/Sucursal/sucursalControlador';
+import SUCURSAL_CONTROLADOR from '../../controlador/sucursal/sucursalControlador';
 
 class SucursalRutas {
     public router: Router = Router();
@@ -11,8 +11,10 @@ class SucursalRutas {
 
     configuracion(): void {
         this.router.get('/', SUCURSAL_CONTROLADOR.ListarSucursales);
-        this.router.get('/id:', SUCURSAL_CONTROLADOR.ObtenerUnaSucursal);
+        this.router.get('/unaSucursal/:id', SUCURSAL_CONTROLADOR.ObtenerUnaSucursal);
+        this.router.get('/buscar/nombreSuc/:id_empresa', SUCURSAL_CONTROLADOR.ObtenerSucursalEmpresa);
         this.router.post('/', SUCURSAL_CONTROLADOR.CrearSucursal);
+        this.router.get('/ultimoId', SUCURSAL_CONTROLADOR.ObtenerUltimoId);
 
     }
 }

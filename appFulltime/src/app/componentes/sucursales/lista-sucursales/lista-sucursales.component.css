@@ -1,24 +1,22 @@
 .barraTituloSuc { 
     font-size: 20px; 
     text-align: center; 
-    background: rgba(233, 33, 33, 0.828); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 #resultadosSuc { 
     font-size: 17px; 
     text-align: center; 
-    background: rgba(233, 33, 33, 0.828); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 
-#permisoSuc { color: rgba(233, 33, 33, 0.828); font-size: 18px; }
-.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }
-.btn { border-radius: 25px; margin-left: 15px;}
+#permisoSuc { color: black; font-size: 18px; }
+/*.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
+.btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 25px; }

@@ -183,11 +183,8 @@
                                         matTooltip="Seleccionar la nacionalidad del empleado">
                                         help_outline
                                     </mat-icon>
-                                    <mat-select required formControlName="nacionalidadForm">
-                                        <mat-option [value]="1">Ecuatoriana</mat-option>
-                                        <mat-option [value]="2">Venezolana</mat-option>
-                                        <mat-option [value]="3">Peruana</mat-option>
-                                        <mat-option [value]="4">Colombiana</mat-option>
+                                    <mat-select required formControlName="nacionalidadForm" required>
+                                        <mat-option *ngFor="let nac of nacionalidades" [value]="nac.id">{{nac.nombre}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
