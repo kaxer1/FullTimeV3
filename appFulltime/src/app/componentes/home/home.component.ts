@@ -127,7 +127,6 @@ export class HomeComponent implements OnInit {
     var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
     var f=new Date();
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
-    console.log(this.fecha);
   }
 
    // events y codigo del pie

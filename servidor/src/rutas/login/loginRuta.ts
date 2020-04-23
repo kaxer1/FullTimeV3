@@ -1,5 +1,4 @@
 import { Router } from 'express';
-
 import LOGIN_CONTROLADOR from '../../controlador/login/loginControlador';
 
 class LoginRuta {
@@ -12,6 +11,7 @@ class LoginRuta {
     configuracion(): void {
         this.router.post('/', LOGIN_CONTROLADOR.ValidarCredenciales);
     }
+
 }
 
 const LOGIN_RUTA = new LoginRuta();

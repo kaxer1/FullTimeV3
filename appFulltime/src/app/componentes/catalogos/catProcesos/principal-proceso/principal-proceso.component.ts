@@ -71,6 +71,7 @@ export class PrincipalProcesoComponent implements OnInit {
     this.auxiliar1 = [];
     this.rest.getProcesosRest().subscribe(data => {
       this.auxiliar1 = data;
+      // console.log(data);
       this.auxiliar1.forEach(element => {
         
         if(element.proc_padre != null){

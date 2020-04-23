@@ -42,7 +42,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.url = this.router.url;
-    console.log(this.router.url);
   }
 
   ObtenerMensajeCampoUsuarioError() {
@@ -61,31 +60,31 @@ export class LoginComponent implements OnInit {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form.passwordF).end();
-    console.log("pass",clave);
     
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
       pass: clave
     };
-    this.rest.postCredenciales(dataUsuario).subscribe(datos => {
-      this.IrPaginaPrincipal(datos);
-    },
-      error => {
-      })
-  }
 
-  IrPaginaPrincipal(dato: any) {
-    this.datosUsuarioIngresado = [];
-    let valor = String(Object.values(dato));
-    if (valor === 'error') {
-      this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
-    }
-    else {
-      this.datosUsuarioIngresado = dato;
-      this.toastr.success('Ingreso Existoso! ' + this.datosUsuarioIngresado[0].usuario, 'Usuario y contraseña válidos')
-      this.router.navigate(['/', 'home']);
-      console.log(dato)
-    }
+    // validacion del login
+    this.rest.postCredenciales(dataUsuario).subscribe(datos => {
+      console.log(datos);
+
+      if (datos.message === 'error') {
+        this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
+      }
+      else {
+        localStorage.setItem('token', datos.token);
+        localStorage.setItem('usuario', datos.usuario);
+        localStorage.setItem('rol', datos.rol);
+        localStorage.setItem('empleado', datos.empleado);
+        
+        this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
+        this.router.navigate(['/home'])
+      }
+    }, error => {
+
+    })
   }
 
 }

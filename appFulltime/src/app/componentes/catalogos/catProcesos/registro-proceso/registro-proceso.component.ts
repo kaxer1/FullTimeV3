@@ -102,7 +102,6 @@ export class RegistroProcesoComponent implements OnInit {
     } else {
 
       this.rest.getIdProcesoPadre(procesoPadreNombre).subscribe(data => {
-        // console.log(data);
         procesoPadreId = data[0].id;
         let dataProceso = {
           nombre: form.procesoNombreForm,

@@ -12,7 +12,7 @@ export class AppComponent {
 
   constructor(
     public router: Router,
-    public location: Location
+    public location: Location,
   ){ }
 
   removerMenu(){

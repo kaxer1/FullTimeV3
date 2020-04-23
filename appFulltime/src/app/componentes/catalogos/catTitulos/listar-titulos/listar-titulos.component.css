@@ -23,3 +23,6 @@ td { padding-top: 10px; text-align: center; }
     padding-bottom: 6px; 
 }
 
+table { width: 100%; font-size: 14px;}
+  
+/* .mat-form-field { font-size: 14px; width: 100%;} */

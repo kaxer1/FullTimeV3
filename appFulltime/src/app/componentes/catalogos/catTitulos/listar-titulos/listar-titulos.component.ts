@@ -5,10 +5,13 @@ import { ToastrService } from 'ngx-toastr';
 
 import { TitulosComponent } from '../titulos/titulos.component'
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
+import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
+import { MatTableDataSource } from '@angular/material/table';
 
-interface Nivel {
-  value: string;
-  viewValue: string;
+export interface Titulo {
+  id: number;
+  nombre: string;
+  nivel: string;
 }
 
 @Component({
@@ -29,25 +32,21 @@ export class ListarTitulosComponent implements OnInit {
   nombreF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   nivelF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
 
+  ArrayTitulos: Array<Titulo> = [];
+  
+  displayedColumns: string[] = ['id', 'nombre', 'nivel'];
+  dataSource: any;
+
   // Asignación de validaciones a inputs del formulario
   public BuscarTitulosForm = new FormGroup({
     nombreForm: this.nombreF,
     nivelForm: this.nivelF,
   });
 
-  niveles: Nivel[] = [
-    { value: '1', viewValue: 'Educación Básica' },
-    { value: '2', viewValue: 'Bachillerato' },
-    { value: '3', viewValue: 'Certificados' },
-    { value: '4', viewValue: 'Diplomas' },
-    { value: '5', viewValue: 'Tercer Nivel' },
-    { value: '6', viewValue: 'Postgrado' },
-    { value: '7', viewValue: 'PHD' }
-  ];
-
   constructor(
     public vistaRegistrarTitulo: MatDialog,
     public rest: TituloService,
+    public restNivelTitulos: NivelTitulosService,
     private toastr: ToastrService,
   ) { }
 
@@ -55,20 +54,24 @@ export class ListarTitulosComponent implements OnInit {
     this.ObtenerTitulos();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   ObtenerTitulos() {
     this.rest.getTituloRest().subscribe(data => {
       this.titulos = data;
       this.titulos.forEach(obj => {
-        this.niveles.forEach(niv => {
-          if (niv.value == obj.nivel) {
-            let dataTitulos = {
-              id: obj.id,
-              nombre: obj.nombre,
-              nivel: niv.viewValue
-            }
-            this.verTitulos.push(dataTitulos);
+        this.restNivelTitulos.getOneNivelTituloRest(obj.id_nivel).subscribe(res => {
+          let dataTitulos = {
+            id: obj.id,
+            nombre: obj.nombre,
+            nivel: res[0].nombre
           }
-        })
+          this.verTitulos.push(dataTitulos);
+          this.dataSource = new MatTableDataSource(this.verTitulos);
+        });
       })
     });
   }

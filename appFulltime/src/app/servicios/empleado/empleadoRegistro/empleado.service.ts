@@ -16,7 +16,7 @@ export class EmpleadoService {
   }
   
   getOneEmpleadoRest(id: number){
-    return this.http.get(`${this.API_URI}/empleado/${id}`);
+    return this.http.get<any>(`${this.API_URI}/empleado/${id}`);
   }
 
   postEmpleadoRest(data: any){
@@ -36,4 +36,10 @@ export class EmpleadoService {
   CrearContratoEmpleado(datos: any){
     return this.http.post(`${this.API_URI}/contratoEmpleado`, datos);
   }
+
+  // servicio para obtener la lista de las nacionalidades
+  getListaNacionalidades(){
+    return this.http.get<any>(`${this.API_URI}/nacionalidades`)
+  }
+
 }

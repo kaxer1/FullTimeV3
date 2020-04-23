@@ -1,0 +1,14 @@
+.btn { border-radius: 25px; margin-left: 15px;}
+.tituloR-tooltip { background: #4622aa; }
+#itituloR { color:#4622aa; font-size: 10px; }
+.tituloR { 
+    font-size: 35px; 
+    text-align: center; 
+    background: #4622aa; 
+    color: white; 
+    border-radius: 10px; 
+}
+
+table { width: 100%; font-size: 14px;}
+  
+.mat-form-field { font-size: 14px; width: 100%;}

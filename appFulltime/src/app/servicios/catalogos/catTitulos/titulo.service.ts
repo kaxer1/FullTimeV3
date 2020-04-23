@@ -8,7 +8,7 @@ export class TituloService {
   TITULO_URL = 'http://localhost:3000';
 
   constructor(
-    private http: HttpClient,
+    private http: HttpClient
   ) { }
 
   // catalogo de titulos

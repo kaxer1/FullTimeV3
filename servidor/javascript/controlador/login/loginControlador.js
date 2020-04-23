@@ -13,16 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const jwt = require('jsonwebtoken');
 class LoginControlador {
     ValidarCredenciales(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { nombre_usuario, pass } = req.body;
-                const USUARIO = yield database_1.default.query('SELECT id, usuario, estado, id_rol, id_empleado, app_habilita FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
-                res.json(USUARIO.rows);
+                const USUARIO = yield database_1.default.query('SELECT id, usuario, id_rol, id_empleado FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
+                const token = jwt.sign({ _id: USUARIO.rows[0].id }, 'llaveSecreta');
+                return res.status(200).json({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado });
             }
             catch (error) {
-                res.json({ message: 'error' });
+                return res.json({ message: 'error' });
             }
         });
     }

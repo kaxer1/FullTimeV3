@@ -20,8 +20,8 @@
                 matTooltip="Seleccionar el tipo de nivel que tiene el nuevo título profesional">
                 help_outline</mat-icon>
             <mat-select [formControl]="nivel" required>
-                <mat-option *ngFor="let n of niveles" [value]="n.value">
-                    {{n.viewValue}}
+                <mat-option *ngFor="let n of niveles" [value]="n.id">
+                    {{n.nombre}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

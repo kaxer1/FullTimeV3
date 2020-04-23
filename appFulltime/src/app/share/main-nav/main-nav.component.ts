@@ -5,6 +5,8 @@ import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import {FormControl} from '@angular/forms';
+import { LoginService } from 'src/app/servicios/login/login.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -13,6 +15,9 @@ import {FormControl} from '@angular/forms';
 
 })
 export class MainNavComponent implements OnInit {
+
+  UserEmail: string;
+  UserName: string;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -29,6 +34,8 @@ export class MainNavComponent implements OnInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
+    public loginService: LoginService,
+    private empleadoService: EmpleadoService,
     private roter: Router
   ) {
     var tituloPestania = this.location.prepareExternalUrl(this.location.path());
@@ -51,11 +58,8 @@ export class MainNavComponent implements OnInit {
     }
   }
 
-  salir(){
-    this.roter.navigate(['/login']);
-  }
-
   ngOnInit() {
+    this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value))
@@ -68,6 +72,16 @@ export class MainNavComponent implements OnInit {
     return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
   
+  infoUser(){
+    const id_empleado = parseInt(localStorage.getItem('empleado'));
+    if(id_empleado.toString() === 'NaN') return id_empleado;
+
+    this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
+      
+      this.UserEmail = res[0].correo;
+      this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
+    });
+  }
 
 
 }

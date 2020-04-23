@@ -17,8 +17,8 @@ class TituloControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const { nombre, nivel } = req.body;
-    await pool.query('INSERT INTO cg_titulos ( nombre, nivel ) VALUES ($1, $2)', [nombre, nivel]);
+    const { nombre, id_nivel } = req.body;
+    await pool.query('INSERT INTO cg_titulos ( nombre, id_nivel ) VALUES ($1, $2)', [nombre, id_nivel]);
     console.log(req.body);
     res.json({ message: 'Titulo guardado' });
   }
