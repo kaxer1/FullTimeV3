@@ -137,6 +137,7 @@ import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/reg
 import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
 
 import { AuthGuard } from "./guards/auth.guard";
+import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 
 @NgModule({
   declarations: [
@@ -216,6 +217,7 @@ import { AuthGuard } from "./guards/auth.guard";
     RegistroEmpresaComponent,
     SucEmpresaPipe,
     RegistrarNivelTitulosComponent,
+    DispositivosEnroladosComponent,
 
   ],
   imports: [

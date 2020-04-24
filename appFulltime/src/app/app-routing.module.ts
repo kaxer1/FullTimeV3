@@ -34,9 +34,10 @@ import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/lista
 import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
 import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
 import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
+import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
+import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 
 import { AuthGuard } from "./guards/auth.guard";
-import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -74,7 +75,8 @@ const routes: Routes = [
   { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent, canActivate: [AuthGuard]},
   { path: 'sucursales', component: ListaSucursalesComponent, canActivate: [AuthGuard]},
   { path: 'nivelTitulos', component: RegistrarNivelTitulosComponent, canActivate: [AuthGuard]},
-  { path: 'empresa', component: RegistroEmpresaComponent },
+  { path: 'empresa', component: RegistroEmpresaComponent, canActivate: [AuthGuard] },
+  { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard]},
 
 ];
 

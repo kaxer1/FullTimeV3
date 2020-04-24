@@ -88,7 +88,8 @@
                         <p>Editar</p>
                     </i>
                     <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                        matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado">
+                        matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado"
+                        [routerLink]="['/enroladoDispositivo/', enrolado.id]">
                         <p>Ver</p>
                     </i>
                     <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"

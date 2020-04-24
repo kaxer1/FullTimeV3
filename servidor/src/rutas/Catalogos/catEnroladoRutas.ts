@@ -13,6 +13,7 @@ class EnroladoRutas {
         this.router.get('/:id',  ENROLADOS_CONTROLADOR.ObtenerUnEnrolado);
         this.router.post('/', ENROLADOS_CONTROLADOR.CrearEnrolado);
         this.router.get('/busqueda/:nombre', ENROLADOS_CONTROLADOR.ObtenerIdEnroladoNombre)
+        this.router.get('/buscar/ultimoId', ENROLADOS_CONTROLADOR.ObtenerUltimoId)
     }
 }
 

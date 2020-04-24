@@ -15,6 +15,7 @@ class EnroladoRutas {
         this.router.get('/:id', catEnroladoControlador_1.default.ObtenerUnEnrolado);
         this.router.post('/', catEnroladoControlador_1.default.CrearEnrolado);
         this.router.get('/busqueda/:nombre', catEnroladoControlador_1.default.ObtenerIdEnroladoNombre);
+        this.router.get('/buscar/ultimoId', catEnroladoControlador_1.default.ObtenerUltimoId);
     }
 }
 const ENROLADO_RUTAS = new EnroladoRutas();

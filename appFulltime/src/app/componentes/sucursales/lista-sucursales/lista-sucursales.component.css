@@ -15,8 +15,8 @@
     padding-bottom: 6px; 
 }
 
-#permisoSuc { color: black; font-size: 18px; }
-/*.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
+/*#permisoSuc { color: black; font-size: 20px; }
+.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 td { padding-top: 10px; text-align: center; }
 .fas { color:green; margin-left: 25px; }
