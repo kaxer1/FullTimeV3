@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject, Input, ViewEncapsulation } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -50,12 +50,11 @@ export class EmplCargosComponent implements OnInit {
     private restE: EmpresaService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EmplCargosComponent>,
+    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
     public router: Router,
   ) {
-    let cadena = this.router.url;
-    let aux = cadena.split('/');
-    this.idEmpleado = aux[2];
-    console.log(this.idEmpleado);
+    this.idEmpleado = datoEmpleado.idEmpleado;
+    console.log("idEmpleado ", this.idEmpleado);
   }
 
   ngOnInit(): void {
@@ -113,7 +112,7 @@ export class EmplCargosComponent implements OnInit {
 
   insertarEmpleadoCargo(form) {
     let dataEmpleadoCargo = {
-      id_empl_contrato: 4,
+      id_empl_contrato: this.datoEmpleado.idContrato,
       id_departamento: form.idDeparForm,
       fec_inicio: form.fecInicioForm, //"2020-03-26" 
       fec_final: form.fecFinalForm,
@@ -124,7 +123,7 @@ export class EmplCargosComponent implements OnInit {
     console.log(dataEmpleadoCargo);
     this.restEmplCargos.postEmpleadoCargosRest(dataEmpleadoCargo).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Cargo del empleado Guardado');
-      this.limpiarCampos();
+      this.CerrarVentanaRegistroCargo();
     });
   }
 

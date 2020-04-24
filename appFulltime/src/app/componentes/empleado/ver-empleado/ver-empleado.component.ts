@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
@@ -8,7 +9,7 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
-import { EmplCargosComponent } from '../../empleadoCargos/empl-cargos/empl-cargos.component';
+import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -34,6 +35,8 @@ export class VerEmpleadoComponent implements OnInit {
   relacionTituloEmpleado: any = [];
   auxRestTitulo: any = [];
 
+  idContrato: any = [];
+
   constructor(
     public restEmpleado: EmpleadoService,
     public restDiscapacidad: DiscapacidadService,
@@ -41,7 +44,8 @@ export class VerEmpleadoComponent implements OnInit {
     public vistaRegistrarContrato: MatDialog,
     public vistaRegistrarPlanificacion: MatDialog,
     public vistaRegistrarCargoEmpeado: MatDialog,
-    public router: Router
+    public router: Router,
+    private toastr: ToastrService,
   ) {
     var cadena = this.router.url;
     this.idEmpleado = cadena.split("/")[2];
@@ -152,6 +156,13 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   AbrirVentanaCargo(): void {
-    this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
+    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idcargo ",this.idContrato[0].id)
+      this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data:{ idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id}  }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+    });
+
   }
 }

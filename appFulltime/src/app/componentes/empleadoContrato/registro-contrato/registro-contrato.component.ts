@@ -11,12 +11,13 @@ import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.s
   selector: 'app-registro-contrato',
   templateUrl: './registro-contrato.component.html',
   styleUrls: ['./registro-contrato.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistroContratoComponent implements OnInit {
 
   // Datos Régimen
   regimenLaboral: any = [];
+  empleados: any = [];
   seleccionarRegimen;
 
   // Control de campos y validaciones del formulario
@@ -48,9 +49,7 @@ export class RegistroContratoComponent implements OnInit {
 
   ngOnInit(): void {
     this.regimenLaboral = this.ObtenerRegimen();
-    this.ContratoForm.patchValue({
-      idEmpleadoForm: this.datoEmpleado,
-    });
+    this.ObtenerEmpleados(this.datoEmpleado);
   }
 
   ObtenerRegimen() {
@@ -61,6 +60,18 @@ export class RegistroContratoComponent implements OnInit {
       this.seleccionarRegimen = this.regimenLaboral[this.regimenLaboral.length - 1].nombre;
     })
   }
+
+    // metodo para ver la informacion del empleado 
+    ObtenerEmpleados(idemploy: any) {
+      this.empleados = [];
+      this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
+        this.empleados = data;
+        console.log(this.empleados)
+        this.ContratoForm.patchValue({
+          idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
+        })
+      })
+    }
 
   ValidarDatosContrato(form) {
     if (form.fechaSalidaForm === '') {
@@ -78,7 +89,7 @@ export class RegistroContratoComponent implements OnInit {
 
   InsertarContrato(form) {
     let datosContrato = {
-      id_empleado: form.idEmpleadoForm,
+      id_empleado: this.datoEmpleado,
       fec_ingreso: form.fechaIngresoForm,
       fec_salida: form.fechaSalidaForm,
       vaca_controla: form.controlVacacionesForm,
