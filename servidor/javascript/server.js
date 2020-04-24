@@ -35,8 +35,8 @@ const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComi
 const enroladoRelojRutas_1 = __importDefault(require("./rutas/enroladoReloj/enroladoRelojRutas"));
 const catEmpresaRutas_1 = __importDefault(require("./rutas/catalogos/catEmpresaRutas"));
 const sucursalRutas_1 = __importDefault(require("./rutas/sucursal/sucursalRutas"));
-const nacionalidadRutas_1 = __importDefault(require("./rutas/Nacionalidad/nacionalidadRutas"));
-const nivelTituloRutas_1 = __importDefault(require("./rutas/NivelTitulo/nivelTituloRutas"));
+const nacionalidadRutas_1 = __importDefault(require("./rutas/nacionalidad/nacionalidadRutas"));
+const nivelTituloRutas_1 = __importDefault(require("./rutas/nivelTitulo/nivelTituloRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();

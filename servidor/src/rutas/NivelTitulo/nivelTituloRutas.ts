@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import nivelTituloControlador from '../../controlador/NivelTitulo/NivelTituloControlador';
+import nivelTituloControlador from '../../controlador/nivelTitulo/nivelTituloControlador';
 
 
 class NivelTituloRutas {

@@ -31,8 +31,8 @@ import PLAN_COMIDAS_RUTAS from './rutas/planComidas/planComidasRutas';
 import ENROLADO_RELOJ_RUTAS from './rutas/enroladoReloj/enroladoRelojRutas';
 import EMPRESA_RUTAS from './rutas/catalogos/catEmpresaRutas';
 import SUCURSAL_RUTAS from './rutas/sucursal/sucursalRutas';
-import NACIONALIDADES_RUTAS from './rutas/Nacionalidad/nacionalidadRutas';
-import NIVEL_TITULO_RUTAS from './rutas/NivelTitulo/nivelTituloRutas';
+import NACIONALIDADES_RUTAS from './rutas/nacionalidad/nacionalidadRutas';
+import NIVEL_TITULO_RUTAS from './rutas/nivelTitulo/nivelTituloRutas';
 
 
 class Server {
