@@ -16,6 +16,7 @@ const database_1 = __importDefault(require("../../../database"));
 class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(req.body.userId + ' este es del listar empleado');
             const empleado = yield database_1.default.query('SELECT * FROM empleados');
             res.json(empleado.rows);
         });
@@ -35,8 +36,6 @@ class EmpleadoControlador {
             const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad } = req.body;
             yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
             console.log(req.body);
-            // const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad } = req.body;
-            // await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad]);
             const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
             const idEmployGuardado = oneEmpley.rows[0].id;
             res.json({ message: 'Empleado guardado', id: idEmployGuardado });
@@ -55,15 +54,10 @@ class EmpleadoControlador {
             const { id_empleado } = req.params;
             const unEmpleadoTitulo = yield database_1.default.query('SELECT * FROM empl_titulos WHERE id_empleado = $1', [id_empleado]);
             if (unEmpleadoTitulo.rowCount > 0) {
+                console.log('algo');
                 return res.json(unEmpleadoTitulo.rows);
             }
             res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
-        });
-    }
-    ListarNacionalidades(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const empleado = yield database_1.default.query('SELECT * FROM nacionalidades');
-            res.json(empleado.rows);
         });
     }
 }

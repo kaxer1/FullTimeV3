@@ -39,7 +39,10 @@
             <span matLine>Crear Régimen Laboral</span>
           </a>
           <a mat-list-item [routerLink]="['/titulos']" class="texcol">
-            <span matLine>Craer Título Profesional</span>
+            <span matLine>Crear Título Profesional</span>
+          </a>
+          <a mat-list-item [routerLink]="['/nivelTitulos']" class="texcol">
+            <span matLine>Crear Nivel de Educación</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -166,8 +169,8 @@
       <div class="dos">
         <div class="card border-0" style="background-color: transparent; margin-top: auto;">
           <div class="card-body">
-            <h3 class="card-title">UserName</h3>
-            <p class="card-text" style="font-size: 13px;">ej@mail.com</p>
+            <h3 class="card-title">{{UserName}}</h3>
+            <p class="card-text" style="font-size: 13px;">{{UserEmail}}</p>
           </div>
         </div>
       </div>
@@ -192,16 +195,14 @@
             <mat-icon>notifications_none</mat-icon>
             <mat-icon>notifications_off</mat-icon>
             <mat-icon>notifications_paused</mat-icon> -->
-      <button mat-mini-fab >
-        <mat-icon  id="iconos-navegador" aria-hidden="false" matBadge="15" matBadgeColor="warn" style="margin-left: 8px;">person
+      <button mat-mini-fab>
+        <mat-icon id="iconos-navegador" aria-hidden="false" matBadge="15" matBadgeColor="warn"
+          style="margin-left: 8px;">person
         </mat-icon>
       </button>
-
-      <button mat-mini-fab style="margin-left: 10px;" (click)="salir()">
-        <mat-icon  id="iconos-navegador" class="fas fa-sign-out-alt" style="margin-left: 10px;"></mat-icon>
+      <button mat-mini-fab class="iconos-navegador" style="margin-left: 10px;" (click)="loginService.logout()">
+        <mat-icon class="fas fa-sign-out-alt" style="margin-left: 10px;"></mat-icon>
       </button>
-
-
     </mat-toolbar>
 
     <div class="container">

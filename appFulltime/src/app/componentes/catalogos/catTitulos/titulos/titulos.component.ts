@@ -4,12 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
-
-// Interface para creación de selección de niveles
-interface Nivel {
-  value: string;
-  viewValue: string;
-}
+import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
 @Component({
   selector: 'app-titulos',
@@ -30,24 +25,25 @@ export class TitulosComponent implements OnInit {
   });
 
   // Arreglo de niveles existentes
-  niveles: Nivel[] = [
-    { value: '1', viewValue: 'Educación Básica' },
-    { value: '2', viewValue: 'Bachillerato' },
-    { value: '3', viewValue: 'Certificados' },
-    { value: '4', viewValue: 'Diplomas' },
-    { value: '5', viewValue: 'Tercer Nivel' },
-    { value: '6', viewValue: 'Postgrado' },
-    { value: '7', viewValue: 'PHD' }
-  ];
+  niveles: any = [];
 
   constructor(
     private rest: TituloService,
+    private restNivelTitulo: NivelTitulosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<TitulosComponent>,
   ) {
   }
 
   ngOnInit(): void {
+    this.obtenerNivelesTitulo();
+  }
+
+  obtenerNivelesTitulo(){
+    this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
+      this.niveles = res;
+      console.log(res)
+    });
   }
 
   IngresarSoloLetras(e) {
@@ -80,7 +76,7 @@ export class TitulosComponent implements OnInit {
   InsertarTitulo(form) {
     let dataTitulo = {
       nombre: form.tituloNombreForm,
-      nivel: form.tituloNivelForm,
+      id_nivel: form.tituloNivelForm,
     };
     this.rest.postTituloRest(dataTitulo).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Título guardado');

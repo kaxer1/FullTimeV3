@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { ToastrService} from 'ngx-toastr'
+import { ToastrService } from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registro',
@@ -20,10 +22,15 @@ export class RegistroComponent implements OnInit {
   roles: any = [];
   hide = true;
 
-  isLinear = true;
+  private idNacionalidad: number;
+
+  isLinear = false;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
+
+  NacionalidadControl = new FormControl('', Validators.required);
+  filteredOptions: Observable<string[]>;
 
   constructor(
     private rest: EmpleadoService,
@@ -36,7 +43,7 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarRoles();
-    this.BuscarNacionalidades();
+    this.obtenerNacionalidades();
     this.primeroFormGroup = this._formBuilder.group({
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
       apellidoForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")],
@@ -51,18 +58,30 @@ export class RegistroComponent implements OnInit {
       estadoCivilForm: ['', Validators.required],
       generoForm: ['', Validators.required],
       estadoForm: ['', Validators.required],
-      nacionalidadForm: ['', Validators.required]
+      nacionalidadForm: this.NacionalidadControl
     });
     this.terceroFormGroup = this._formBuilder.group({
       rolForm: ['', Validators.required],
       userForm: ['', Validators.required],
       passForm: ['', Validators.required],
     });
+    this.filteredOptions = this.NacionalidadControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.nacionalidades.filter(nacionalidades => nacionalidades.nombre.toLowerCase().includes(filterValue));
+    }
   }
 
   soloLetras(e) {
     var key = window.Event ? e.which : e.keyCode
-    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+    return (!((key >= 33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225)))
   }
 
   soloNumeros(e) {
@@ -76,23 +95,37 @@ export class RegistroComponent implements OnInit {
     this.terceroFormGroup.reset();
   }
 
-  cargarRoles(){
+  cargarRoles() {
     this.rol.getRoles().subscribe(data => {
       this.roles = data;
     });
   }
 
-  BuscarNacionalidades(){
-    this.rest.BuscarNacionalidades().subscribe(data => {
-      this.nacionalidades = data;
-    });
-  }
-
   insertarEmpleado(form1, form2, form3) {
+
+    // busca el id de la nacionalidad elegida en el autocompletado
+    this.nacionalidades.forEach(obj => {
+      if (form2.nacionalidadForm == obj.nombre) {
+        console.log(obj);
+        this.idNacionalidad = obj.id;
+      }
+    });
+
+    // realiza un capital letter a los nombres y apellidos
+    let nombres = form1.nombreForm.split(' ');
+    let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+    let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+    const NombreCapitalizado = name1 + ' ' + name2;
+
+    let apellidos = form1.apellidoForm.split(' ');
+    let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+    let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+    const ApellidoCapitalizado = lastname1 + ' ' + lastname2;
+
     let dataEmpleado = {
       cedula: form1.cedulaForm,
-      apellido: form1.apellidoForm,
-      nombre: form1.nombreForm,
+      apellido: ApellidoCapitalizado,
+      nombre: NombreCapitalizado,
       esta_civil: form2.estadoCivilForm,
       genero: form2.generoForm,
       correo: form1.emailForm,
@@ -101,30 +134,32 @@ export class RegistroComponent implements OnInit {
       mail_alernativo: form1.correoAlternativoForm,
       domicilio: form2.domicilioForm,
       telefono: form2.telefonoForm,
-      id_nacionalidad: form2.nacionalidadForm
+      id_nacionalidad: this.idNacionalidad
     };
+
+    console.log(dataEmpleado);
     this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-        this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-        this.empleadoGuardado = response;
+      this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+      this.empleadoGuardado = response;
 
-        //Cifrado de contraseña
-        const md5 = new Md5();
-        let clave = md5.appendStr(form3.passForm).end();
-        console.log("pass",clave);
+      //Cifrado de contraseña
+      const md5 = new Md5();
+      let clave = md5.appendStr(form3.passForm).end();
+      console.log("pass", clave);
 
-        let dataUser = {
-          usuario: form3.userForm,
-          contrasena: clave,
-          estado: true,
-          id_rol: form3.rolForm,
-          id_empleado: this.empleadoGuardado.id,
-          app_habilita: true
-        }
+      let dataUser = {
+        usuario: form3.userForm,
+        contrasena: clave,
+        estado: true,
+        id_rol: form3.rolForm,
+        id_empleado: this.empleadoGuardado.id,
+        app_habilita: true
+      }
 
-        this.user.postUsuarioRest(dataUser).subscribe(data => {
-          this.agregarDiscapacidad(this.empleadoGuardado.id);
-        });
-      },
+      this.user.postUsuarioRest(dataUser).subscribe(data => {
+        this.agregarDiscapacidad(this.empleadoGuardado.id);
+      });
+    },
       error => {
         console.log(error);
       });
@@ -132,8 +167,14 @@ export class RegistroComponent implements OnInit {
     this.limpliarCampos();
   }
 
-  agregarDiscapacidad(id: string){
-    this.router.navigate(['/verEmpleado/',id]);
+  agregarDiscapacidad(id: string) {
+    this.router.navigate(['/verEmpleado/', id]);
+  }
+
+  obtenerNacionalidades() {
+    this.rest.getListaNacionalidades().subscribe(res => {
+      this.nacionalidades = res;
+    });
   }
 
 }

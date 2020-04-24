@@ -29,8 +29,11 @@ import CONTRATO_EMPLEADO_RUTAS from './rutas/empleado/empleadoContrato/contratoE
 import EMPLEADO_CARGO_RUTAS from './rutas/empleado/empleadoCargos/emplCargosRutas';
 import PLAN_COMIDAS_RUTAS from './rutas/planComidas/planComidasRutas';
 import ENROLADO_RELOJ_RUTAS from './rutas/enroladoReloj/enroladoRelojRutas';
-import SUCURSAL_RUTAS from './rutas/sucursal/sucursalRutas';
 import EMPRESA_RUTAS from './rutas/catalogos/catEmpresaRutas';
+import SUCURSAL_RUTAS from './rutas/sucursal/sucursalRutas';
+import NACIONALIDADES_RUTAS from './rutas/Nacionalidad/nacionalidadRutas';
+import NIVEL_TITULO_RUTAS from './rutas/NivelTitulo/nivelTituloRutas';
+
 
 class Server {
 
@@ -88,6 +91,8 @@ class Server {
         this.app.use('/ciudadFeriados', CIUDAD_FERIADOS_RUTAS);
         this.app.use('/notificaciones', NOTIFICACIONES_RUTAS);
         this.app.use('/sucursales', SUCURSAL_RUTAS);
+        this.app.use('/nacionalidades', NACIONALIDADES_RUTAS);
+        this.app.use('/nivel-titulo', NIVEL_TITULO_RUTAS);
 
     }
 

@@ -44,8 +44,7 @@ export class VerEmpleadoComponent implements OnInit {
     public router: Router
   ) {
     var cadena = this.router.url;
-    var aux = cadena.split("/");
-    this.idEmpleado = aux[2];
+    this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(this.idEmpleado);
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
   }

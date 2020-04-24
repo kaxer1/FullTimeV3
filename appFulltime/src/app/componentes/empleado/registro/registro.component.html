@@ -177,15 +177,17 @@
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Nacionalidad</mat-label>
-                                    <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
-                                        matTooltipPosition="right"
-                                        matTooltip="Seleccionar la nacionalidad del empleado">
-                                        help_outline
-                                    </mat-icon>
-                                    <mat-select required formControlName="nacionalidadForm" required>
-                                        <mat-option *ngFor="let nac of nacionalidades" [value]="nac.id">{{nac.nombre}}</mat-option>
-                                    </mat-select>
+                                    
+                                    <input type="text" placeholder="Nacionalidad" aria-label="Number" matInput
+                                        [formControl]="NacionalidadControl" [matAutocomplete]="auto" required>
+                                    <mat-autocomplete #auto="matAutocomplete">
+                                        <mat-option *ngFor="let option of filteredOptions | async"
+                                            [value]="option.nombre">
+                                            {{option.nombre}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                    <mat-icon matSuffix matTooltipClass="empleadoR-tooltip" matTooltipPosition="right"
+                                        matTooltip="Ingrese la nacionalidad del empleado">help_outline</mat-icon>
                                 </mat-form-field>
                             </div>
                         </div>

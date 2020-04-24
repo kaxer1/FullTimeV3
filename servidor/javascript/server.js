@@ -33,8 +33,10 @@ const contratoEmpleadoRutas_1 = __importDefault(require("./rutas/empleado/emplea
 const emplCargosRutas_1 = __importDefault(require("./rutas/empleado/empleadoCargos/emplCargosRutas"));
 const planComidasRutas_1 = __importDefault(require("./rutas/planComidas/planComidasRutas"));
 const enroladoRelojRutas_1 = __importDefault(require("./rutas/enroladoReloj/enroladoRelojRutas"));
-const sucursalRutas_1 = __importDefault(require("./rutas/sucursal/sucursalRutas"));
 const catEmpresaRutas_1 = __importDefault(require("./rutas/catalogos/catEmpresaRutas"));
+const sucursalRutas_1 = __importDefault(require("./rutas/sucursal/sucursalRutas"));
+const nacionalidadRutas_1 = __importDefault(require("./rutas/Nacionalidad/nacionalidadRutas"));
+const nivelTituloRutas_1 = __importDefault(require("./rutas/NivelTitulo/nivelTituloRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -82,6 +84,8 @@ class Server {
         this.app.use('/ciudadFeriados', ciudadFeriadoRutas_1.default);
         this.app.use('/notificaciones', catNotificacionesRutas_1.default);
         this.app.use('/sucursales', sucursalRutas_1.default);
+        this.app.use('/nacionalidades', nacionalidadRutas_1.default);
+        this.app.use('/nivel-titulo', nivelTituloRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

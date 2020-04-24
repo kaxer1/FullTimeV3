@@ -54,10 +54,9 @@
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
     <div id="resulProceso">Resultado de búsqueda</div>
-    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+    <table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
-                <th scope="col">Id </th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Nivel</th>
                 <th scope="col">Proceso Superior</th>
@@ -66,7 +65,6 @@
         </thead>
         <tbody>
             <tr *ngFor="let proceso of procesos | nombre:filtroNombre | nivel:filtroNivel | padre:filtroProPadre">
-                <th style="padding-top: 10px; text-align: center;" scope="row">{{proceso.id}}</th>
                 <td style="padding-top: 10px;text-align: center;">{{proceso.nombre}}</td>
                 <td style="padding-top: 10px;text-align: center;">{{proceso.nivel}}</td>
                 <td style="padding-top: 10px;text-align: center;">{{proceso.proc_padre}}</td>

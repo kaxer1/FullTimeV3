@@ -1,6 +1,5 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-sm"></div>
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
                 <div class="tituloEmpleados">
@@ -12,43 +11,52 @@
                 <mat-card-content>
                     <div class="container" style="text-align: center;">
                         <form [formGroup]="">
-                            <mat-form-field>
-                                <mat-label>Ingresar Código</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
-                                    (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
-                                    help_outline</mat-icon>
-
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar CI o pasaporte</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula"
-                                    type="text" (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Nombres</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Apellidos</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
+                            <div class="row">
+                                <div class="col-sm">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar Código</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
+                                            (keypress)="IngresarSoloNumeros($event)">
+                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
+                                            help_outline</mat-icon>
+        
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar CI o pasaporte</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" [formControl]="cedula"
+                                            type="text" (keypress)="IngresarSoloNumeros($event)">
+                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="emple-tooltip"
+                                            matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
+                                            help_outline</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar Nombres</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
+                                            type="text" (keypress)="IngresarSoloLetras($event)">
+                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
+                                            help_outline</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar Apellidos</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
+                                            type="text" (keypress)="IngresarSoloLetras($event)">
+                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
+                                            help_outline</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                            </div>
                         </form>
                     </div>
                 </mat-card-content>
@@ -58,13 +66,12 @@
                 </div>
             </mat-card>
         </div>
-        <div class="col-sm"></div>
     </div>
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
     <div id="resulEmpleados">Resultado de búsqueda</div>
-    <table mat-table class="mat-elevation-z8 table table-hover table-sm">
+    <table class="mat-elevation-z8 table table-hover table-sm">
         <thead class="thead-light">
             <tr style="text-align: center;">
                 <th scope="col">Id </th>

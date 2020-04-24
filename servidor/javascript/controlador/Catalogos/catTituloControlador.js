@@ -32,8 +32,8 @@ class TituloControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, nivel } = req.body;
-            yield database_1.default.query('INSERT INTO cg_titulos ( nombre, nivel ) VALUES ($1, $2)', [nombre, nivel]);
+            const { nombre, id_nivel } = req.body;
+            yield database_1.default.query('INSERT INTO cg_titulos ( nombre, id_nivel ) VALUES ($1, $2)', [nombre, id_nivel]);
             console.log(req.body);
             res.json({ message: 'Titulo guardado' });
         });

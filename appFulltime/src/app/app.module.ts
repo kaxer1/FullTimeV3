@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -69,6 +69,7 @@ import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
 import { CiudadFeriadosService} from './servicios/ciudadFeriados/ciudad-feriados.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
+import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 
 // Filtros de búsqueda
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
@@ -106,6 +107,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { ImageUploadModule } from 'angular2-image-upload';
+import { MatTableModule } from '@angular/material/table';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -127,11 +129,14 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { EnroladoRelojComponent } from './componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
 import { PlanificacionComidasComponent } from './componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
 import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
+import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
 import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
 import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
 import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
+
+import { AuthGuard } from "./guards/auth.guard";
 
 @NgModule({
   declarations: [
@@ -209,7 +214,9 @@ import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empres
     SucNombrePipe,
     SucCiudadPipe,
     RegistroEmpresaComponent,
-    SucEmpresaPipe
+    SucEmpresaPipe,
+    RegistrarNivelTitulosComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -248,9 +255,16 @@ import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empres
     MatStepperModule,
     DragDropModule,
     MatTooltipModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatTableModule
   ],
   providers: [
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    },
     LoginService,
     RolesService,
     TituloService,
@@ -259,7 +273,7 @@ import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empres
     ProvinciaService,
     HorarioService,
     EnroladoService,
-    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+    // { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     HorasExtrasService,
     NotificacionesService,
     RolPermisosService,
@@ -267,11 +281,8 @@ import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empres
     DepartamentosService,
     CiudadFeriadosService,
     CiudadService,
-
   ],
-  bootstrap: [AppComponent,
-
-  ],
+  bootstrap: [AppComponent],
   exports: [
     MatButtonModule, MatDialogModule, DragDropModule
   ]
