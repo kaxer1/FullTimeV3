@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.component';
 import { FormControl, Validators } from '@angular/forms';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-principal-proceso',
@@ -32,8 +34,18 @@ export class PrincipalProcesoComponent implements OnInit {
     public vistaRegistrarProceso: MatDialog,
   ) { }
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+  
   ngOnInit(): void {
     this.getProcesos();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   IngresarSoloLetras(e) {
@@ -70,49 +82,7 @@ export class PrincipalProcesoComponent implements OnInit {
   getProcesos() {
     this.auxiliar1 = [];
     this.rest.getProcesosRest().subscribe(data => {
-      this.auxiliar1 = data;
-      // console.log(data);
-      this.auxiliar1.forEach(element => {
-        
-        if(element.proc_padre != null){
-          let vistaProceso = {
-            id: element.proc_padre
-          }
-          this.auxiliar2.push(vistaProceso);
-        }        
-      });
-
-      this.auxiliar1.forEach(obj => {
-        let VistaProceso;
-        
-        if (obj.proc_padre == null){
-          VistaProceso = {
-            id: obj.id,
-            nombre: obj.nombre,
-            nivel: obj.nivel,
-            proc_padre: 'ninguno'
-          }
-          this.procesos.push(VistaProceso);
-        }
-
-        this.auxiliar2.forEach(obj1 => {
-          
-          this.rest.getOneProcesoRest(obj1.id).subscribe(data => {
-            if(obj1.id == obj.proc_padre){
-              VistaProceso = {
-                id: obj.id,
-                nombre: obj.nombre,
-                nivel: obj.nivel,
-                proc_padre: data[0]['nombre']
-              }
-              this.procesos.push(VistaProceso);
-            }
-          });
-
-        });
-        
-      });
-
+      this.procesos = data;
     });
   }
 

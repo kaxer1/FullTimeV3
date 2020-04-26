@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/registro-rol/registro-rol.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-vista-roles',
@@ -17,6 +18,11 @@ export class VistaRolesComponent implements OnInit {
   roles: any = [];
   filtroRoles = '';
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   buscarDescripcion = new FormControl('', Validators.minLength(2));
 
   constructor(
@@ -25,9 +31,14 @@ export class VistaRolesComponent implements OnInit {
     public vistaRegistrarRol: MatDialog,
   ) {
     this.obtenerRoles();
-   }
+  }
 
   ngOnInit() {  
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   IngresarSoloLetras(e) {
@@ -51,8 +62,7 @@ export class VistaRolesComponent implements OnInit {
   }
 
   obtenerRoles(){
-    this.rest.getRoles().subscribe(
-      res => {
+    this.rest.getRoles().subscribe(res => {
         this.roles = res;
       },
       err => console.error(err)

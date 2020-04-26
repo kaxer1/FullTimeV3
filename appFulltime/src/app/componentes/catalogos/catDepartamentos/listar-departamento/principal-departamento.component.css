@@ -25,3 +25,7 @@ span { font-weight: bold; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
+table {width: 100%;}
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }

@@ -52,8 +52,9 @@ class RolPermisosControlador {
     getPermisosUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unRolPermiso = yield database_1.default.query('SELECT * FROM rol_perm_denegado WHERE id_rol = $1', [id]);
+            const unRolPermiso = yield database_1.default.query('SELECT * FROM VistaPermisoRoles WHERE id_rol = $1', [id]);
             if (unRolPermiso.rowCount > 0) {
+                console.log(unRolPermiso.rows);
                 return res.json(unRolPermiso.rows);
             }
             res.status(404).json({ text: 'El rol no tiene permisos' });

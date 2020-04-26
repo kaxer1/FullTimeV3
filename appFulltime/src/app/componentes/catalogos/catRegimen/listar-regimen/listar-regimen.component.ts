@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-regimen',
@@ -28,17 +29,25 @@ export class ListarRegimenComponent implements OnInit {
   regimen: any = [];
   filtroRegimenLaboral= '';
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     private rest: RegimenService,
     public router: Router,
     public vistaRegistrarRegimen: MatDialog,
     private toastr: ToastrService,
-  ) {
-
-  }
+  ) {  }
 
   ngOnInit(): void {
     this.ObtenerRegimen();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   // Lectura de datos

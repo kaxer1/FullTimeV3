@@ -54,7 +54,7 @@ class DepartamentoControlador {
 
   public async CrearDepartamento(req: Request, res: Response): Promise<void> {
     const { nombre, depa_padre, nivel } = req.body;
-    await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre,nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
+    await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
     res.json({ message: 'El departamento ha sido guardado con éxito' });
   }
 

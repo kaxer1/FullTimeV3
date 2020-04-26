@@ -48,8 +48,9 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
-    <div id="resulDepartamentos">Resultado de búsqueda</div>
-    <table class="mat-elevation-z8 table table-hover table-sm">
+    <mat-card class="mat-elevation-z8">
+        <div id="resulDepartamentos">Resultado de búsqueda</div>
+    <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
                 <th scope="col">Departamento</th>
@@ -60,7 +61,7 @@
         </thead>
         <tbody>
             <tr
-                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre">
+                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | paginate:tamanio_pagina:numero_pagina">
                 <td>{{departamento.nombre}}</td>
                 <td>{{departamento.nivel}}</td>
                 <td>{{departamento.departamento_padre}}</td>
@@ -71,4 +72,7 @@
             </tr>
         </tbody>
     </table>
+    <mat-paginator [length]="departamentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
+                (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+    </mat-card>
 </div>

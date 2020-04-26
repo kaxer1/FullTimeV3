@@ -4,6 +4,7 @@ import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -26,15 +27,24 @@ export class ListaEmpleadosComponent implements OnInit {
   filtroNombre: '';
   filtroApellido: '';
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     public rest: EmpleadoService,
     public router: Router,
     private toastr: ToastrService,
-  ) { 
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getEmpleados();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   IngresarSoloLetras(e) {

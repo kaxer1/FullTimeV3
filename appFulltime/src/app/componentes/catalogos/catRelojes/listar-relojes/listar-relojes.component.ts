@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-relojes',
@@ -33,6 +34,11 @@ export class ListarRelojesComponent implements OnInit {
     modeloForm: this.modeloF,
   });
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     private rest: RelojesService,
     public router: Router,
@@ -42,6 +48,11 @@ export class ListarRelojesComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerReloj();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   ObtenerReloj() {

@@ -60,40 +60,44 @@
     </div>
 </div>
 <br>
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resultados">Resultado de búsqueda</div>
-    <table class="mat-elevation-z8 table table-hover table-sm">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Descripción</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Fecha Recuperación</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha">
-                <td>{{f.descripcion}}</td>
-                <td>{{f.fecha}}</td>
-                <td>{{f.fec_recuperacion}}</td>
-                <td>
-                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Asignar ciudad en la que rige este feriado" class="fas fa-city" id="ciudad"
-                        (click)="AbrirVentanaAsignarCiudad(f)">
-                        <p>Ciudad</p>
-                    </i>
-                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
-                        (click)="AbrirVentanaEditarFeriado(f)">
-                        <p>Editar</p>
-                    </i>
-                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
-                        [routerLink]="['/verFeriados/', f.id]">
-                        <p>Ver</p>
-                    </i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container table-responsive" style="padding-bottom: 10px; margin-bottom: 35px;">
+    <mat-card class="mat-elevation-z8 ">
+        <div id="resultados">Resultado de búsqueda</div>
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Fecha Recuperación</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
+                    <td style="font-size: 14px;">{{f.descripcion}}</td>
+                    <td style="font-size: 12px;">{{f.fecha}}</td>
+                    <td style="font-size: 12px;">{{f.fec_recuperacion}}</td>
+                    <td>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Asignar ciudad en la que rige este feriado" class="fas fa-city" id="ciudad"
+                            (click)="AbrirVentanaAsignarCiudad(f)">
+                            <p>Ciudad</p>
+                        </i>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
+                            (click)="AbrirVentanaEditarFeriado(f)">
+                            <p>Editar</p>
+                        </i>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                            [routerLink]="['/verFeriados/', f.id]">
+                            <p>Ver</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="feriados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
+                (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+    </mat-card>
 </div>

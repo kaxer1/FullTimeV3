@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-principal-horario',
@@ -31,6 +32,11 @@ export class PrincipalHorarioComponent implements OnInit {
   
   nameFile: string;
   archivoSubido: Array < File > ;
+
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
  
   constructor(
     private rest: HorarioService,
@@ -41,6 +47,11 @@ export class PrincipalHorarioComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerHorarios();
     this.nameFile = '';
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   ObtenerHorarios() {

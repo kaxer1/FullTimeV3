@@ -7,6 +7,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -31,6 +32,11 @@ export class ListarFeriadosComponent implements OnInit {
   feriados: any = [];
   filtroDescripcion = '';
   filtradoFecha = '';
+
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   nameFile: string;
   archivoSubido: Array < File > ;
@@ -112,6 +118,11 @@ export class ListarFeriadosComponent implements OnInit {
     if (this.descripcionF.hasError('pattern')) {
       return 'Indispensable ingresar dos letras';
     }
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1
   }
 
   fileChange(element) {

@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -29,16 +30,24 @@ export class PrincipalDepartamentoComponent implements OnInit {
     departamentoForm: this.departamentoF,
     departamentoPadreForm: this.departamentoPadreF,
   });
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     private rest: DepartamentosService,
     private toastr: ToastrService,
-    public vistaRegistrarDepartamento: MatDialog,
-
+    public vistaRegistrarDepartamento: MatDialog
   ) { }
 
   ngOnInit(): void {
     this.ListaDepartamentos();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1
   }
 
   ListaDepartamentos() {

@@ -12,11 +12,11 @@ export class RolesService {
   // Roles
 
   getRoles(){
-    return this.http.get(`${this.API_URI}/rol`);
+    return this.http.get<any>(`${this.API_URI}/rol`);
   }
 
   getOneRol(id: number){
-    return this.http.get(`${this.API_URI}/rol/${id}`);
+    return this.http.get<any>(`${this.API_URI}/rol/${id}`);
   }
 
   eliminarRol(id: number){

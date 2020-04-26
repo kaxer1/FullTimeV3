@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
 import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.component';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
+import { PageEvent } from '@angular/material/paginator';
 
 interface buscarActivo {
   value: boolean;
@@ -31,6 +32,11 @@ export class PrincipalEnroladosComponent implements OnInit {
   filtroActivo: boolean;
   filtroFinger: number;
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   activoBus: buscarActivo[] = [
     { value: true, viewValue: 'Activados' },
     { value: false, viewValue: 'Desactivados' }
@@ -45,6 +51,11 @@ export class PrincipalEnroladosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEnrolados();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   getEnrolados() {

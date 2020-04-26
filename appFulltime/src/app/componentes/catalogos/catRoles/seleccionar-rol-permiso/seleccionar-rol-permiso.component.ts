@@ -4,6 +4,7 @@ import { RolPermisosService } from 'src/app/servicios/catalogos/catRolPermisos/r
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { RolesService } from '../../../../servicios/catalogos/catRoles/roles.service';
+import { PageEvent } from '@angular/material/paginator';
 
 interface Funciones {
   value: string;
@@ -67,6 +68,11 @@ export class SeleccionarRolPermisoComponent implements OnInit {
   tablePermios: any = [];
   nombreRol: string;
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     public location: Location,
     public rest: RolPermisosService,
@@ -76,8 +82,7 @@ export class SeleccionarRolPermisoComponent implements OnInit {
   ) { 
     // codigo para obtner el id del rol seleccionado
     var url = this.location.prepareExternalUrl(this.location.path());
-    var arrayUrl = url.split('/');
-    this.idRol = arrayUrl[2];
+    this.idRol = url.split('/')[2];
     // codigo para obtener el nombre del rol
     this.rol.getOneRol(parseInt(this.idRol)).subscribe(data => {
       this.nombreRol = data[0].nombre;
@@ -89,9 +94,9 @@ export class SeleccionarRolPermisoComponent implements OnInit {
     this.obtenerPermisosRolUsuario();
   }
 
-  soloLetras(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return (!( (key >=33 && key <= 46) || (key >=48 && key <= 64) ||  (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1
   }
 
   limpliarCampos() {
@@ -145,34 +150,13 @@ export class SeleccionarRolPermisoComponent implements OnInit {
     this.limpliarCampos();
   }
 
-  // metodo para obtener todos los permisos de un solo ROL
-
   obtenerPermisosRolUsuario(){
     this.guardarRoles = [];
 
     this.rest.getPermisosUsuarioRolRest(parseInt(this.idRol)).subscribe(res => {
-      
-      this.tableRoles = res;
-
-      for(let perUser of this.tableRoles){
-      
-        this.rest.getOneRolPermisoRest(perUser.id_permiso).subscribe(data => {
-          this.tablePermios = data;
-          let dataPermisos = {
-            id: this.tablePermios[0].id,
-            funcion: this.tablePermios[0].funcion,
-            link: this.tablePermios[0].link,
-            etiqueta: this.tablePermios[0].etiqueta,
-          }
-          this.guardarRoles.push(dataPermisos);
-        }, error => {
-          console.log(error);
-        });
-
-      }
-
+      this.guardarRoles = res;
     }, error => {
-      // console.log(error);
+      console.log(error);
     });
   }
 

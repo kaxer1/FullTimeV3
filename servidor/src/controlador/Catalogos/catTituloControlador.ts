@@ -3,7 +3,7 @@ import pool from '../../database';
 
 class TituloControlador {
   public async list(req: Request, res: Response) {
-    const titulo = await pool.query('SELECT * FROM cg_titulos');
+    const titulo = await pool.query('SELECT ct.id, ct.nombre, nt.nombre as nivel FROM cg_titulos AS ct, nivel_titulo AS nt WHERE ct.id_nivel = nt.id');
     res.json(titulo.rows);
   }
 

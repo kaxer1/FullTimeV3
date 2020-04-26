@@ -71,7 +71,7 @@ class DepartamentoControlador {
     CrearDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, depa_padre, nivel } = req.body;
-            yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre,nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
+            yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel) VALUES ($1, $2,$3)', [nombre, depa_padre, nivel]);
             res.json({ message: 'El departamento ha sido guardado con éxito' });
         });
     }

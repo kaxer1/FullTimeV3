@@ -22,3 +22,5 @@ td { padding-top: 10px; text-align: center; }
 }
 .provincia-tooltip { background-color : rgb(6, 194, 15); }
 #prov { color:rgb(6, 194, 15); font-size: 18px;}
+table { width: 100%; font-size: 14px;}
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }

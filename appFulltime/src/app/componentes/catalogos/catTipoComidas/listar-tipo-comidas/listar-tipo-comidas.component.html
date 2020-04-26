@@ -35,26 +35,30 @@
 </div>
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resulComidas">Resultado de búsqueda</div>
-    <table class="mat-elevation-z8 table table-hover table-sm">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Descripción</th>
-                <th scope="col">Valor</th>
-                <th scope="col">Observación</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre">
-                <td id="centrar">{{comida.nombre}}</td>
-                <td id="fila">$  {{comida.valor}}</td>
-                <td id="centrar">{{comida.observacion}}</td>
-                <td id="centrar">
-                    <i class="far fa-trash-alt"></i>
-                    <i class="fas fa-edit"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <mat-card class="mat-elevation-z8 ">
+        <div id="resulComidas">Resultado de búsqueda</div>
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Observación</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                    <td id="centrar">{{comida.nombre}}</td>
+                    <td id="fila">$  {{comida.valor}}</td>
+                    <td id="centrar">{{comida.observacion}}</td>
+                    <td id="centrar">
+                        <i class="far fa-trash-alt"></i>
+                        <i class="fas fa-edit"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="tipoComidas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
+                        (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+    </mat-card>
 </div>

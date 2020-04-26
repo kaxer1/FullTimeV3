@@ -24,3 +24,5 @@ h5 { text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+table { width: 100%; font-size: 14px;}
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }

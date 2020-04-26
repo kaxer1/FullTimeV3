@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
+import { PageEvent } from '@angular/material/paginator';
 
 
 @Component({
@@ -28,6 +29,11 @@ export class ListarTipoComidasComponent implements OnInit {
   tipoComidas: any = [];
   filtroNombre = '';
 
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     private rest: TipoComidasService,
     public router: Router,
@@ -36,6 +42,11 @@ export class ListarTipoComidasComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerTipoComidas();
+  }
+  
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   // Lectura de datos

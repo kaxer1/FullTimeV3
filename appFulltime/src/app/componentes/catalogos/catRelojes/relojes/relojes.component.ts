@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 
 
 @Component({
@@ -25,6 +27,8 @@ export class RelojesComponent implements OnInit {
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);
   macF = new FormControl('');
+  idSucursalesF = new FormControl('', [Validators.required]);
+  idDepartamentoF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public RelojesForm = new FormGroup({
@@ -39,15 +43,29 @@ export class RelojesComponent implements OnInit {
     fabricanteForm: this.fabricanteF,
     macForm: this.macF,
     funcionesForm: this.funcionesF,
+    idSucursalForm: this.idSucursalesF, 
+    idDepartamentoForm: this.idDepartamentoF
   });
+
+  sucursales: any = [];
 
   constructor(
     private rest: RelojesService,
+    private restSucursal: SucursalService,
+    private restDepartamento: DepartamentosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RelojesComponent>,
   ) { }
 
   ngOnInit(): void {
+    this.ObtenerSucursales();
+  }
+
+  ObtenerSucursales(){
+    this.restSucursal.getSucursalesRest().subscribe(res => {
+      this.sucursales = res;
+      console.log(this.sucursales);
+    })
   }
 
   InsertarReloj(form) {
@@ -62,7 +80,9 @@ export class RelojesComponent implements OnInit {
       id_fabricacion: form.idFabricacionForm,
       fabricante: form.fabricanteForm,
       mac: form.macForm,
-      tien_funciones: form.funcionesForm
+      tien_funciones: form.funcionesForm,
+      id_sucursal: form.idSucursalForm, 
+      id_departamento: form.idDepartamentoForm
     };
 
     this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {

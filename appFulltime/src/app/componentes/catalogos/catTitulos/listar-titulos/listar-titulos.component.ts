@@ -7,12 +7,7 @@ import { TitulosComponent } from '../titulos/titulos.component'
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface Titulo {
-  id: number;
-  nombre: string;
-  nivel: string;
-}
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-titulos',
@@ -23,7 +18,6 @@ export interface Titulo {
 
 export class ListarTitulosComponent implements OnInit {
 
-  titulos: any = [];
   verTitulos: any = [];
   filtradoNombre = '';
   filtradoNivel = '';
@@ -32,16 +26,16 @@ export class ListarTitulosComponent implements OnInit {
   nombreF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   nivelF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
 
-  ArrayTitulos: Array<Titulo> = [];
-  
-  displayedColumns: string[] = ['id', 'nombre', 'nivel'];
-  dataSource: any;
-
   // Asignación de validaciones a inputs del formulario
   public BuscarTitulosForm = new FormGroup({
     nombreForm: this.nombreF,
     nivelForm: this.nivelF,
   });
+
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public vistaRegistrarTitulo: MatDialog,
@@ -54,25 +48,14 @@ export class ListarTitulosComponent implements OnInit {
     this.ObtenerTitulos();
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   ObtenerTitulos() {
     this.rest.getTituloRest().subscribe(data => {
-      this.titulos = data;
-      this.titulos.forEach(obj => {
-        this.restNivelTitulos.getOneNivelTituloRest(obj.id_nivel).subscribe(res => {
-          let dataTitulos = {
-            id: obj.id,
-            nombre: obj.nombre,
-            nivel: res[0].nombre
-          }
-          this.verTitulos.push(dataTitulos);
-          this.dataSource = new MatTableDataSource(this.verTitulos);
-        });
-      })
+      this.verTitulos = data;
     });
   }
 

@@ -24,3 +24,7 @@ th { font-size: small; }
     padding-bottom: 6px; 
 }
 
+table {width: 100%; font-size: 12px;}
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+

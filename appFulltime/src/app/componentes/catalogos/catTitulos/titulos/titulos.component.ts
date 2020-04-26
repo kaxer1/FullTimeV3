@@ -42,7 +42,6 @@ export class TitulosComponent implements OnInit {
   obtenerNivelesTitulo(){
     this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
       this.niveles = res;
-      console.log(res)
     });
   }
 

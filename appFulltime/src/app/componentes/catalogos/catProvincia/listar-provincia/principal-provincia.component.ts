@@ -5,6 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
 import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-principal-provincia',
@@ -19,6 +20,11 @@ export class PrincipalProvinciaComponent implements OnInit {
   provincias: any = [];
   filtroPais = '';
   filtroProvincia = '';
+
+  // items de paginacion de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   // Control de campos y validaciones del formulario
   paisF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
@@ -38,6 +44,11 @@ export class PrincipalProvinciaComponent implements OnInit {
 
   ngOnInit(): void {
     this.ListarProvincias();
+  }
+
+  ManejarPagina(e: PageEvent){
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   ListarProvincias() {

@@ -117,6 +117,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -135,6 +136,8 @@ import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
 
 import { AuthGuard } from "./guards/auth.guard";
+import { PaginatePipe } from './pipes/paginate.pipe';
+import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 
 @NgModule({
   declarations: [
@@ -212,6 +215,7 @@ import { AuthGuard } from "./guards/auth.guard";
     SucNombrePipe,
     SucCiudadPipe,
     RegistrarNivelTitulosComponent,
+    PaginatePipe,
   ],
   imports: [
     BrowserModule,
@@ -251,7 +255,8 @@ import { AuthGuard } from "./guards/auth.guard";
     DragDropModule,
     MatTooltipModule,
     MatAutocompleteModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
   ],
   providers: [
     AuthGuard,
@@ -260,6 +265,7 @@ import { AuthGuard } from "./guards/auth.guard";
       useClass: TokenInterceptorService,
       multi: true
     },
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     LoginService,
     RolesService,
     TituloService,
@@ -268,7 +274,7 @@ import { AuthGuard } from "./guards/auth.guard";
     ProvinciaService,
     HorarioService,
     EnroladoService,
-    // { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     HorasExtrasService,
     NotificacionesService,
     RolPermisosService,

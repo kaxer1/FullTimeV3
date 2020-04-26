@@ -124,6 +124,17 @@
                             help_outline</mat-icon>
                         <mat-error *ngIf="macF.invalid">Ingresar una dirección MAC válida</mat-error>
                     </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Ubicación Sucursal</mat-label>
+                        <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip" matTooltipPosition="right"
+                            matTooltip="Seleccionar sucursal de ubicacion del dispositivo a registrar">
+                            help_outline</mat-icon>
+                        <!-- <mat-select [formControl]="idSucursalesF" required>
+                            <mat-option *ngFor="let s of sucursales" [value]="p.nombre">
+                                {{p.nombre}}
+                            </mat-option>
+                        </mat-select> -->
+                    </mat-form-field>
                 </div>
             </div>
         </div>

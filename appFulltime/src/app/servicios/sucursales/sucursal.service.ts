@@ -14,11 +14,11 @@ export class SucursalService {
 
   // Catálogo de Horarios
   getSucursalesRest(){
-    return this.http.get(`${this.API_URL}/sucursales`);
+    return this.http.get<any>(`${this.API_URL}/sucursales`);
   }
 
   getOneSucursalRest(id:number){
-    return this.http.get(`${this.API_URL}/sucursales/${id}`);
+    return this.http.get<any>(`${this.API_URL}/sucursales/${id}`);
   }
   
   postSucursalRest(data: any){

@@ -24,5 +24,6 @@ td { padding-top: 10px; text-align: center; }
 }
 
 table { width: 100%; font-size: 14px;}
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }
   
-/* .mat-form-field { font-size: 14px; width: 100%;} */
