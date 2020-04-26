@@ -13,9 +13,8 @@ export class SucursalService {
   ) { }
 
   // Catálogo de Horarios
-
   getSucursalesRest() {
-    return this.http.get<any>(`${this.API_URL}/sucursales`);
+    return this.http.get(`${this.API_URL}/sucursales`);
   }
 
   EncontrarUltimoId() {

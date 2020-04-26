@@ -1,46 +1,61 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <div class="row">
-        <div class="col-sm"></div>
-        <div class="col-sm">
-            <mat-card class="example-card mat-elevation-z9">
-                <div class="barraTituloSuc">
-                    <span>SUCURSALES</span>
-                </div>
-                <br>
-                <div style="text-align: center;">
-                    <h5 style="text-align: center;">Criterios de Búsqueda</h5>
-                </div>
-                <form [formGroup]="">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
+    <div class="barraTituloSuc">
+        <span>SUCURSALES</span>
+    </div>
+    <mat-card class="example-card mat-elevation-z9">
+        <div style="text-align: center;">
+            <h5 style="text-align: center;">Criterios de Búsqueda</h5>
+        </div>
+        <form [formGroup]="">
+            <mat-card-content>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
                             <mat-form-field>
                                 <mat-label>Nombre</mat-label>
-                                <input matInput name="filtroNombreSuc" placeholder="Nombre de la Sucursal" (keypress)="IngresarSoloLetras($event)" 
-                                    [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
+                                <input matInput name="filtroNombreSuc" placeholder="Nombre de la Sucursal"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
                                 <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
-                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc" matTooltipPosition="right"
-                                matTooltip="Busqueda de la Sucursal por su nombre">help_outline</mat-icon>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Ciudad</mat-label>
-                                <input matInput name="filtroCiudadSuc" placeholder="Ciudad de la Sucursal" (keypress)="IngresarSoloLetras($event)" 
-                                    [formControl]="buscarCiudad" [(ngModel)]="filtroCiudadSuc">
-                                <mat-error *ngIf="buscarCiudad.invalid">Indispensable ingresar dos letras</mat-error>
-                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc" matTooltipPosition="right"
-                                matTooltip="Busqueda de la Sucursal por su ciudad">help_outline</mat-icon>
+                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                                    matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por su nombre">
+                                    help_outline</mat-icon>
                             </mat-form-field>
                         </div>
-                    </mat-card-content>
-                </form>
-                <mat-card-actions style="text-align: center">
-                    <button mat-button type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
-                    <button mat-button type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarSucursal()">Crear nueva Sucursal</button>
-                </mat-card-actions>
-            </mat-card>
-        </div>
-        <div class="col-sm">
-        </div>
-    </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Empresa</mat-label>
+                                <input matInput name="filtroEmpresaSuc" placeholder="Nombre de su Empresa"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarEmpresa"
+                                    [(ngModel)]="filtroEmpresaSuc">
+                                <mat-error *ngIf="buscarEmpresa.invalid">Indispensable ingresar dos letras</mat-error>
+                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                                    matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por Empresa">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Ciudad</mat-label>
+                                <input matInput name="filtroCiudadSuc" placeholder="Ciudad de la Sucursal"
+                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarCiudad"
+                                    [(ngModel)]="filtroCiudadSuc">
+                                <mat-error *ngIf="buscarCiudad.invalid">Indispensable ingresar dos letras</mat-error>
+                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                                    matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por su ciudad">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </form>
+        <mat-card-actions style="text-align: center">
+            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarSucursal()">Crear
+                nueva Sucursal</button>
+            <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
+        </mat-card-actions>
+    </mat-card>
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
@@ -50,16 +65,18 @@
         <thead class="thead-light">
             <tr style="text-align: center;">
                 <th scope="col">Id</th>
-                <th scope="col">Nombre</th>
+                <th scope="col">Empresa</th>
+                <th scope="col">Sucursal</th>
                 <th scope="col">Ciudad</th>
                 <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | paginate:tamanio_pagina:numero_pagina">
+            <tr *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
                 <td>{{s.id}}</td>
+                <td>{{s.nomempresa}}</td>
                 <td>{{s.nombre}}</td>
-                <td>{{s.ciudad}}</td>
+                <td>{{s.descripcion}}</td>
                 <td>
                     <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i>
                     <i class="fas fa-edit"></i>

@@ -134,10 +134,13 @@ import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/regis
 import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
 import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
+import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
+import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
 
 import { AuthGuard } from "./guards/auth.guard";
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
+import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 
 @NgModule({
   declarations: [
@@ -214,8 +217,12 @@ import { CustomMatPaginatorIntl } from './pipes/paginator-es';
     RegistrarSucursalesComponent,
     SucNombrePipe,
     SucCiudadPipe,
+    RegistroEmpresaComponent,
+    SucEmpresaPipe,
     RegistrarNivelTitulosComponent,
     PaginatePipe,
+    DispositivosEnroladosComponent,
+
   ],
   imports: [
     BrowserModule,

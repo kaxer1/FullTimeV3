@@ -4,7 +4,7 @@
         <div class="col">
             <mat-card class="example-card mat-elevation-z8">
                 <div class="TituloEnrolado">
-                    <span>EMPLEADOS ENROLADOS </span>
+                    <span>EMPLEADOS ENROLADOS</span>
                 </div>
                 <br>
                 <h5>Críterios de Búsqueda</h5>
@@ -72,30 +72,30 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
+                <tr *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
                     <td>{{enrolado.id_usuario}}</td>
                     <td>{{enrolado.nombre}}</td>
                     <td>{{enrolado.activo}}</td>
                     <td>{{enrolado.finger}}</td>
                     <td>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Agregar empleado enrolado a un dispositivo" class="far fa-clock" id="enr_reloj"
-                            (click)="AbrirVentanaAsignarReloj(enrolado)">
-                            <p>Dispositivo</p>
-                        </i>
-                        <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
-                            <p>Editar</p>
-                        </i>
-                        <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado">
-                            <p>Ver</p>
-                        </i>
-                        <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
-                            <p>Eliminar</p>
-                        </i>
+                        matTooltip="Agregar empleado enrolado a un dispositivo" class="far fa-clock" id="enr_reloj"
+                        (click)="AbrirVentanaAsignarReloj(enrolado)">
+                        <p>Dispositivo</p>
+                    </i>
+                    <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                        <p>Editar</p>
+                    </i>
+                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado"
+                        [routerLink]="['/enroladoDispositivo/', enrolado.id]">
+                        <p>Ver</p>
+                    </i>
+                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                        matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
+                        <p>Eliminar</p>
+                    </i>
                     </td>
                 </tr>
             </tbody>

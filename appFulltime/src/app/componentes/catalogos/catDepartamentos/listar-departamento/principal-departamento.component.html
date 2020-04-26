@@ -3,7 +3,7 @@
         <div class="col">
             <mat-card class="example-card mat-elevation-z9">
                 <div class="tituloDepartamentos">
-                    <span>DEPARTAMENTOS</span>
+                    <span id="negrita_dep">DEPARTAMENTOS</span>
                 </div>
                 <br>
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
@@ -20,6 +20,32 @@
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
                                 </mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Empresa</mat-label>
+                                <input matInput id="depPadre" name="filtroEmpresaSuc" placeholder="Nombre de Empresa"
+                                    [formControl]="buscarEmpresa" (keypress)="IngresarSoloLetras($event)"
+                                    [(ngModel)]="filtroEmpresaSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Empresa">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarEmpresa.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Sucursal</mat-label>
+                                <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
+                                    [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Sucursal">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarNombre.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
@@ -53,6 +79,8 @@
     <table class="table table-hover table-sm">
         <thead class="thead-light">
             <tr>
+                <th scope="col">Empresa</th>
+                <th scope="col">Sucursal</th>
                 <th scope="col">Departamento</th>
                 <th scope="col">Nivel</th>
                 <th scope="col">Departamento Superior</th>
@@ -60,8 +88,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr
-                *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | paginate:tamanio_pagina:numero_pagina">
+            <tr *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                <td>{{departamento.nomempresa}}</td>
+                <td>{{departamento.nomsucursal}}</td>
                 <td>{{departamento.nombre}}</td>
                 <td>{{departamento.nivel}}</td>
                 <td>{{departamento.departamento_padre}}</td>
