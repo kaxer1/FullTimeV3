@@ -92,6 +92,9 @@
           <a mat-list-item [routerLink]="['/provincia']" class="texcol">
             <span matLine>Registrar Provincia</span>
           </a>
+          <a mat-list-item [routerLink]="['/empresa']" class="texcol">
+            <span matLine>Registrar Empresa</span>
+          </a>
           <a mat-list-item [routerLink]="['/sucursales']" class="texcol">
             <span matLine>Registrar Sucursal</span>
           </a>
@@ -192,16 +195,14 @@
             <mat-icon>notifications_none</mat-icon>
             <mat-icon>notifications_off</mat-icon>
             <mat-icon>notifications_paused</mat-icon> -->
-      <button mat-mini-fab class="iconos-navegador">
-        <mat-icon aria-hidden="false" matBadge="15" matBadgeColor="warn" style="margin-left: 8px;">person
+      <button mat-mini-fab>
+        <mat-icon id="iconos-navegador" aria-hidden="false" matBadge="15" matBadgeColor="warn"
+          style="margin-left: 8px;">person
         </mat-icon>
       </button>
-
-      <button mat-mini-fab class="iconos-navegador" style="margin-left: 10px;" (click)="loginService.logout()">
-        <mat-icon class="fas fa-sign-out-alt" style="margin-left: 10px;"></mat-icon>
+      <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
+        <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>
       </button>
-
-
     </mat-toolbar>
 
     <div class="container">

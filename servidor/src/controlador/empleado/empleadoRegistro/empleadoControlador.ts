@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../../../database';
 
 class EmpleadoControlador {
+
   public async list(req: Request, res: Response) {
     console.log(req.body.userId + ' este es del listar empleado');
     const empleado = await pool.query('SELECT * FROM empleados');
@@ -42,6 +43,7 @@ class EmpleadoControlador {
     }
     res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
   }
+
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();

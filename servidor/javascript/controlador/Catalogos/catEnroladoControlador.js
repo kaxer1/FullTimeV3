@@ -54,6 +54,17 @@ class EnroladoControlador {
             res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
         });
     }
+    ObtenerUltimoId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ENROLADOS = yield database_1.default.query('SELECT MAX(id) FROM cg_enrolados');
+            if (ENROLADOS.rowCount > 0) {
+                return res.json(ENROLADOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.ENROLADOS_CONTROLADOR = new EnroladoControlador();
 exports.default = exports.ENROLADOS_CONTROLADOR;

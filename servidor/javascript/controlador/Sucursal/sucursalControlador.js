@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class SucursalControlador {
     ListarSucursales(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const SUCURSAL = yield database_1.default.query('SELECT * FROM sucursales');
+            const SUCURSAL = yield database_1.default.query('SELECT *FROM NombreCiudadEmpresa');
             if (SUCURSAL.rowCount > 0) {
                 return res.json(SUCURSAL.rows);
             }
@@ -37,11 +37,34 @@ class SucursalControlador {
             }
         });
     }
+    ObtenerSucursalEmpresa(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empresa } = req.params;
+            const SUCURSAL = yield database_1.default.query('SELECT * FROM sucursales WHERE id_empresa = $1', [id_empresa]);
+            if (SUCURSAL.rowCount > 0) {
+                return res.json(SUCURSAL.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearSucursal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, id_ciudad } = req.body;
-            yield database_1.default.query('INSERT INTO sucursales (nombre, id_ciudad) VALUES ($1, $2)', [nombre, id_ciudad]);
+            const { nombre, id_ciudad, id_empresa } = req.body;
+            yield database_1.default.query('INSERT INTO sucursales (nombre, id_ciudad, id_empresa) VALUES ($1, $2, $3)', [nombre, id_ciudad, id_empresa]);
             res.json({ message: 'Sucursal ha sido guardado con éxito' });
+        });
+    }
+    ObtenerUltimoId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const SUCURSAL = yield database_1.default.query('SELECT MAX(id) FROM sucursales');
+            if (SUCURSAL.rowCount > 0) {
+                return res.json(SUCURSAL.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

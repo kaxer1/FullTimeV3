@@ -38,7 +38,17 @@ class EnroladoControlador {
     }
     res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
   }
-  
+
+  public async ObtenerUltimoId(req: Request, res: Response) {
+    const ENROLADOS = await pool.query('SELECT MAX(id) FROM cg_enrolados');
+    if (ENROLADOS.rowCount > 0) {
+      return res.json(ENROLADOS.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
 }
 
 export const ENROLADOS_CONTROLADOR = new EnroladoControlador();

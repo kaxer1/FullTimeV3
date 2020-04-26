@@ -42,4 +42,8 @@ export class DepartamentosService {
     return this.http.get(`${this.API_URL}/departamento/${id}`);
   }
 
+  BuscarDepartamentoSucursal(id:number){
+    return this.http.get(`${this.API_URL}/departamento/buscarDepa/${id}`);
+  }
+
 }

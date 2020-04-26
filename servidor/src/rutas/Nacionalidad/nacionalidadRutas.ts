@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import nacionalidadControlador from '../../controlador/Nacionalidad/nacionalidadControlador';
+import nacionalidadControlador from '../../controlador/nacionalidad/nacionalidadControlador';
 
 class NacionalidadRutas {
     public router: Router = Router();

@@ -14,3 +14,21 @@ mat-label { font-size: 14px; }
     padding-bottom: 6px; }
 .color-tooltip { background: #2c6ec5; }
 #permiso { color:rgb(0, 102, 128); font-size: 18px; }
+#emple_solicitar { font-size: 13px;}
+.titulo_permisoR { 
+    position: relative; 
+    float: left; 
+    font-size: 19px; 
+    font-weight: bold; 
+    text-align: center; 
+    color: rgb(0, 0, 0);}
+
+.subtitulo_permisoR {
+    font-size: 14px; 
+    font-weight: bold; 
+    padding-left: 5px; 
+    padding-top: 25px; 
+    padding-bottom: 25px; 
+    text-align: justify;
+}
+#seccion_permiso { color: rgba(8, 10, 124, 0.828); }

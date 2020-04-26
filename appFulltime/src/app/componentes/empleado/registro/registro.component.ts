@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewEncapsulation} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { ToastrService} from 'ngx-toastr'
+import { ToastrService } from 'ngx-toastr'
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { Router } from '@angular/router';
@@ -18,8 +18,8 @@ import { startWith, map } from 'rxjs/operators';
 export class RegistroComponent implements OnInit {
 
   empleadoGuardado: any = [];
-  roles: any = [];
   nacionalidades: any = [];
+  roles: any = [];
   hide = true;
 
   private idNacionalidad: number;
@@ -43,7 +43,7 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarRoles();
-    this.obtenerNacionalidades()
+    this.obtenerNacionalidades();
     this.primeroFormGroup = this._formBuilder.group({
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
       apellidoForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")],
@@ -73,7 +73,7 @@ export class RegistroComponent implements OnInit {
   }
 
   private _filter(value: string): string[] {
-    if( value != null){
+    if (value != null) {
       const filterValue = value.toLowerCase();
       return this.nacionalidades.filter(nacionalidades => nacionalidades.nombre.toLowerCase().includes(filterValue));
     }
@@ -81,7 +81,7 @@ export class RegistroComponent implements OnInit {
 
   soloLetras(e) {
     var key = window.Event ? e.which : e.keyCode
-    return (!( (key >=33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225) ))
+    return (!((key >= 33 && key <= 64) || (key >= 91 && key <= 96) || (key >= 123 && key <= 128) || (key >= 131 && key <= 159) || (key >= 164 && key <= 225)))
   }
 
   soloNumeros(e) {
@@ -95,17 +95,17 @@ export class RegistroComponent implements OnInit {
     this.terceroFormGroup.reset();
   }
 
-  cargarRoles(){
+  cargarRoles() {
     this.rol.getRoles().subscribe(data => {
       this.roles = data;
     });
   }
 
   insertarEmpleado(form1, form2, form3) {
-    
+
     // busca el id de la nacionalidad elegida en el autocompletado
     this.nacionalidades.forEach(obj => {
-      if( form2.nacionalidadForm == obj.nombre){
+      if (form2.nacionalidadForm == obj.nombre) {
         console.log(obj);
         this.idNacionalidad = obj.id;
       }
@@ -145,7 +145,7 @@ export class RegistroComponent implements OnInit {
       //Cifrado de contraseña
       const md5 = new Md5();
       let clave = md5.appendStr(form3.passForm).end();
-      console.log("pass",clave);
+      console.log("pass", clave);
 
       let dataUser = {
         usuario: form3.userForm,
@@ -160,18 +160,18 @@ export class RegistroComponent implements OnInit {
         this.agregarDiscapacidad(this.empleadoGuardado.id);
       });
     },
-    error => {
-      console.log(error);
-    });
+      error => {
+        console.log(error);
+      });
 
     this.limpliarCampos();
   }
 
-  agregarDiscapacidad(id: string){
-    this.router.navigate(['/verEmpleado/',id]);
+  agregarDiscapacidad(id: string) {
+    this.router.navigate(['/verEmpleado/', id]);
   }
 
-  obtenerNacionalidades(){
+  obtenerNacionalidades() {
     this.rest.getListaNacionalidades().subscribe(res => {
       this.nacionalidades = res;
     });

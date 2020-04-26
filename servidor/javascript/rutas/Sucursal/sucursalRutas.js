@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const sucursalControlador_1 = __importDefault(require("../../controlador/Sucursal/sucursalControlador"));
+const sucursalControlador_1 = __importDefault(require("../../controlador/sucursal/sucursalControlador"));
 class SucursalRutas {
     constructor() {
         this.router = express_1.Router();
@@ -12,8 +12,10 @@ class SucursalRutas {
     }
     configuracion() {
         this.router.get('/', sucursalControlador_1.default.ListarSucursales);
-        this.router.get('/id:', sucursalControlador_1.default.ObtenerUnaSucursal);
+        this.router.get('/unaSucursal/:id', sucursalControlador_1.default.ObtenerUnaSucursal);
+        this.router.get('/buscar/nombreSuc/:id_empresa', sucursalControlador_1.default.ObtenerSucursalEmpresa);
         this.router.post('/', sucursalControlador_1.default.CrearSucursal);
+        this.router.get('/ultimoId', sucursalControlador_1.default.ObtenerUltimoId);
     }
 }
 const SUCURSAL_RUTAS = new SucursalRutas();

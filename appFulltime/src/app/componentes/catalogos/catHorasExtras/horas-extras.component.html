@@ -6,7 +6,19 @@
         <br>
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
             <mat-step [stepControl]="primeroFormGroup">
-                <ng-template matStepLabel>Configuraciones Generales </ng-template>
+                <ng-template matStepLabel>
+                    <mat-icon id="seccion_horaE" matSuffix matTooltipClass="horaE-tooltip" matTooltipPosition="right"
+                        matTooltip="Sección 1: Configuraciones Generales">person_add
+                    </mat-icon>
+                </ng-template>
+                <div class="titulo_horaE">
+                    <span>Configuraciones Generales</span>
+                </div>
+                <br>
+                <div class="subtitulo_horaE">
+                    <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente
+                        para continuar.</span>
+                </div>
                 <form [formGroup]="primeroFormGroup">
                     <div class="container">
                         <div class="row">
@@ -69,8 +81,8 @@
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <input matInput type="time" placeholder="Hora de Finalización" formControlName="horaFinalForm"
-                                        required>
+                                    <input matInput type="time" placeholder="Hora de Finalización"
+                                        formControlName="horaFinalForm" required>
                                     <mat-icon id="iHora" matSuffix matTooltipPosition="right"
                                         matTooltipClass="horaE-tooltip"
                                         matTooltip="Ingresar la hora en la que finaliza la jornada laboral">
@@ -81,24 +93,34 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperNext class="btn btn-primary" matSuffix
-                        matTooltipPosition="right" matTooltipClass="horaS-tooltip"
-                        matTooltip="Llenar todos los datos requeridos ( * ) y luego dar click en Siguiente">Siguiente</button>
+                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
                 <form [formGroup]="segundoFormGroup">
-                    <ng-template matStepLabel>Configuraciones Generales</ng-template>
+                    <ng-template matStepLabel>
+                        <mat-icon id="seccion_horaE" matSuffix matTooltipClass="horaE-tooltip"
+                            matTooltipPosition="right" matTooltip="Sección 2: Configuraciones Generales">person_add
+                        </mat-icon>
+                    </ng-template>
+                    <div class="titulo_horaE">
+                        <span>Condiciones del Permiso</span>
+                    </div>
+                    <br>
+                    <div class="subtitulo_horaE">
+                        <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en
+                            Guardar.</span>
+                    </div>
                     <div class="container">
                         <div class="row">
                             <div class="col">
                                 <mat-form-field>
                                     <mat-label>Función del reloj</mat-label>
                                     <mat-icon id="iHora" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="horaE-tooltip"
-                                    matTooltip="Seleccionar función del dispositivo">
-                                    help_outline</mat-icon>
+                                        matTooltipClass="horaE-tooltip"
+                                        matTooltip="Seleccionar función del dispositivo">
+                                        help_outline</mat-icon>
                                     <mat-select formControlName="tipoFuncionForm">
                                         <mat-option *ngFor="let t of tipoFuncionAlg" [value]="t.value">
                                             {{t.viewValue}}
@@ -119,9 +141,9 @@
                                 <mat-form-field>
                                     <mat-label>Tipo de día</mat-label>
                                     <mat-icon id="iHora" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="horaE-tooltip"
-                                    matTooltip="Seleccionar el tipo de día en los que se podrá realizar horas extras">
-                                    help_outline</mat-icon>
+                                        matTooltipClass="horaE-tooltip"
+                                        matTooltip="Seleccionar el tipo de día en los que se podrá realizar horas extras">
+                                        help_outline</mat-icon>
                                     <mat-select formControlName="tipoDiaForm" required>
                                         <mat-option *ngFor="let d of dia" [value]="d.value">
                                             {{d.viewValue}}
@@ -135,9 +157,9 @@
                                         required>
                                         <label>Incluye Almuerzo *</label>
                                         <mat-icon id="iHora" matSuffix matTooltipPosition="right"
-                                        matTooltipClass="horaE-tooltip"
-                                        matTooltip="Indicar si dentro de las horas extras realizadas se podrá incluir hora de almuerzo">
-                                        help_outline</mat-icon>
+                                            matTooltipClass="horaE-tooltip"
+                                            matTooltip="Indicar si dentro de las horas extras realizadas se podrá incluir hora de almuerzo">
+                                            help_outline</mat-icon>
                                         <div class="container">
                                             <div class="row">
                                                 <div class="col-sm">
@@ -155,12 +177,10 @@
                 <div>
                     <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
                     <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
-                    <i id="iconoG" matSuffix matTooltipPosition="right"
-                                        matTooltipClass="horaE-tooltip"
-                                        matTooltip="Llenar todos los datos requeridos ( * ) y dar click en Guardar">                      
-                    <input type="submit" class="btn btn-primary"
+                    <button mat-button type="submit" class="btn btn-primary"
                         (click)="insertarHoraExtra(primeroFormGroup.value, segundoFormGroup.value); stepper.reset()"
-                        [disabled]="!segundoFormGroup.valid" value="Guardar" style="margin: 0px;"></i>
+                        [disabled]="!segundoFormGroup.valid" id="iconoG">Guardar
+                    </button>
                 </div>
             </mat-step>
         </mat-horizontal-stepper>

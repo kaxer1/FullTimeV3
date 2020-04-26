@@ -23,7 +23,7 @@
                     <mat-form-field>
                         <mat-label>Ingresar Nombre</mat-label>
                         <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm"
-                            (keypress)="soloLetras($event)" required>
+                            (keypress)="IngresarSoloLetras($event)" required>
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar nombre del usuario enrolado">
                             help_outline</mat-icon>
@@ -59,7 +59,7 @@
                     <mat-form-field>
                         <mat-label>Número de huella </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
-                            (keypress)="soloNumeros($event)" required>
+                            (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar el número del dedo del cual se va a obtener la huella del empleado">
                             help_outline</mat-icon>
@@ -68,7 +68,7 @@
                     <mat-form-field>
                         <mat-label>Data finger </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm"
-                            (keypress)="soloNumeros($event)" required>
+                            (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                             matTooltip="Registro de la huella del empleado que será enrolado">
                             help_outline</mat-icon>

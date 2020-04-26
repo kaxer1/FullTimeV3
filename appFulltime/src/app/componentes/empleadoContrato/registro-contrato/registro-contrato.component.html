@@ -10,8 +10,8 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Código Empleado</mat-label>
-                        <input matInput placeholder="Empleado" [formControl]="idEmpleadoF" readonly="readonly" required>
+                        <mat-label>Empleado</mat-label>
+                        <input id="nomEmple" matInput placeholder="Empleado" [formControl]="idEmpleadoF" readonly="readonly" required>
                         <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
                         matTooltip="Código único de identifiacción del empleado">
                         help_outline</mat-icon>
@@ -80,8 +80,8 @@
 </form>
 <div style="text-align: center">
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!ContratoForm.valid"
+        <input type="submit" class="btn btn-sm" [disabled]="!ContratoForm.valid"
             (click)="ValidarDatosContrato(ContratoForm.value)" value="Guardar">
-        <input type="submit" (click)="CerrarVentanaRegistroContrato()" class="btn btn-danger btn-sm" value=" Salir">
+        <input type="submit" (click)="CerrarVentanaRegistroContrato()" class="btn btn-sm" value=" Salir">
     </mat-card-actions>
 </div>

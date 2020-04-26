@@ -7,30 +7,35 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 
 @Component({
   selector: 'app-registrar-sucursales',
   templateUrl: './registrar-sucursales.component.html',
   styleUrls: ['./registrar-sucursales.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistrarSucursalesComponent implements OnInit {
 
-    // Datos Provincias, Continentes, Países y Ciudades
-    provincias: any = [];
-    seleccionarProvincia;
-    continentes: any = [];
-    seleccionarContinente;
-    paises: any = [];
-    seleccionarPaises;
-    nombreCiudades: any = [];
-    seleccionarCiudad;
+  // Datos Provincias, Continentes, Países y Ciudades
+  empresas: any = [];
+  provincias: any = [];
+  seleccionarProvincia;
+  continentes: any = [];
+  seleccionarContinente;
+  paises: any = [];
+  seleccionarPaises;
+  nombreCiudades: any = [];
+  seleccionarCiudad;
+  ultimoId: any = [];
 
-  nombre = new FormControl('',[Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]  );
-  idCiudad = new FormControl('',[Validators.required]);
+  nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
+  idEmpresaF = new FormControl('', Validators.required);
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -38,19 +43,24 @@ export class RegistrarSucursalesComponent implements OnInit {
     idProvinciaForm: this.idProvinciaF,
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
+    idEmpresaForm: this.idEmpresaF,
+
   });
-  
+
   constructor(
     public restCiudad: CiudadService,
     public restSucursal: SucursalService,
     private restP: ProvinciaService,
     private restF: CiudadFeriadosService,
+    private restE: EmpresaService,
+    private restD: DepartamentosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistrarSucursalesComponent>,
   ) { }
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
+    this.BuscarEmpresas();
   }
 
   ObtenerContinentes() {
@@ -137,24 +147,46 @@ export class RegistrarSucursalesComponent implements OnInit {
     }
   }
 
+  BuscarEmpresas() {
+    this.empresas = [];
+    this.restE.ConsultarEmpresas().subscribe(datos => {
+      this.empresas = datos;
+    })
+  }
+
   InsertarSucursal(form) {
     let dataSucursal = {
       nombre: form.sucursalNombreForm,
       id_ciudad: form.idCiudadForm,
+      id_empresa: form.idEmpresaForm
     };
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
     }, error => {
-    });;
+    });
+    //Obtener ultimo ID para regitrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
+    this.ultimoId = [];
+    this.restSucursal.EncontrarUltimoId().subscribe(datos => {
+      this.ultimoId = datos;
+      let datosDepartamentos = {
+        nombre: 'Ninguno',
+        nivel: 0,
+        depa_padre: null,
+        id_sucursal: this.ultimoId[0].max
+      };
+      this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+      });
+    }, error => {
+    });
   }
 
   LimpiarCampos() {
     this.nuevaSucursalForm.reset();
-      this.ObtenerContinentes();
-      this.paises = [];
-      this.provincias = [];
-      this.nombreCiudades = [];
+    this.ObtenerContinentes();
+    this.paises = [];
+    this.provincias = [];
+    this.nombreCiudades = [];
   }
 
   CerrarVentanaRegistroSucursal() {
@@ -163,31 +195,10 @@ export class RegistrarSucursalesComponent implements OnInit {
     window.location.reload();
   }
 
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
-      return false;
-    }
-  }
-
   ObtenerMensajeErrorNombre() {
     if (this.nombre.hasError('required')) {
       return 'Campo Obligatorio';
     }
-    return this.nombre.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
 }

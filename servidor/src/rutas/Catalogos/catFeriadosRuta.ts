@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import FERIADOS_CONTROLADOR from '../../controlador/Catalogos/catFeriadosControlador';
+import FERIADOS_CONTROLADOR from '../../controlador/catalogos/catFeriadosControlador';
 
 const multipart = require('connect-multiparty');  
 
@@ -11,7 +11,6 @@ class FeriadosRuta {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 

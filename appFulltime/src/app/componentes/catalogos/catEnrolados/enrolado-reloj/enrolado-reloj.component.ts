@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { EnroladosRelojesService } from 'src/app/servicios/enroladosRelojes/enrolados-relojes.service';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
@@ -19,6 +20,7 @@ export class EnroladoRelojComponent implements OnInit {
   seleccionarDispositivo;
   actualizarPagina: boolean = false;
 
+
   // Control de los campos del formulario
   dispositivoF = new FormControl('', [Validators.required]);
 
@@ -26,11 +28,12 @@ export class EnroladoRelojComponent implements OnInit {
   public asignarRelojForm = new FormGroup({
     dispositivoForm: this.dispositivoF,
   });
-
+l
   constructor(
     private rest: EnroladosRelojesService,
     private restR: RelojesService,
     private toastr: ToastrService,
+    private router: Router,
     public dialogRef: MatDialogRef<EnroladoRelojComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -80,7 +83,7 @@ export class EnroladoRelojComponent implements OnInit {
         }
         else {
           this.dialogRef.close();
-          // this.router.navigate(['/verFeriados/', id]);
+          this.router.navigate(['/enroladoDispositivo/', id]);
         }
       }, error => {
         this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo')
