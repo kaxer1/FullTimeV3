@@ -37,6 +37,7 @@ const catEmpresaRutas_1 = __importDefault(require("./rutas/catalogos/catEmpresaR
 const sucursalRutas_1 = __importDefault(require("./rutas/sucursal/sucursalRutas"));
 const nacionalidadRutas_1 = __importDefault(require("./rutas/nacionalidad/nacionalidadRutas"));
 const nivelTituloRutas_1 = __importDefault(require("./rutas/nivelTitulo/nivelTituloRutas"));
+const periodoVacacionRutas_1 = __importDefault(require("./rutas/empleado/empleadoPeriodoVacacion/periodoVacacionRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -58,6 +59,7 @@ class Server {
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/contratoEmpleado', contratoEmpleadoRutas_1.default);
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
+        this.app.use('/perVacacion', periodoVacacionRutas_1.default);
         //Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
         //Enrolados

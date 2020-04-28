@@ -1,11 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col">
+            <div class="tituloDepartamentos">
+                <span id="negrita_dep">DEPARTAMENTOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z9">
-                <div class="tituloDepartamentos">
-                    <span id="negrita_dep">DEPARTAMENTOS</span>
-                </div>
-                <br>
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarDepartamentosForm">
                     <mat-card-content>
@@ -25,8 +24,7 @@
                             <mat-form-field>
                                 <mat-label>Empresa</mat-label>
                                 <input matInput id="depPadre" name="filtroEmpresaSuc" placeholder="Nombre de Empresa"
-                                    [formControl]="buscarEmpresa" (keypress)="IngresarSoloLetras($event)"
-                                    [(ngModel)]="filtroEmpresaSuc">
+                                    [formControl]="buscarEmpresa" [(ngModel)]="filtroEmpresaSuc">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip"
                                     matTooltip="Búsqueda del Departamento por nombre de Empresa">
@@ -38,8 +36,7 @@
                             <mat-form-field>
                                 <mat-label>Sucursal</mat-label>
                                 <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
-                                    [formControl]="buscarNombre"
-                                    [(ngModel)]="filtroNombreSuc">
+                                    [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip"
                                     matTooltip="Búsqueda del Departamento por nombre de Sucursal">
@@ -64,9 +61,9 @@
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarDepartamento()"
+                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarDepartamento()"
                         value="Crear nuevo Departamento">
+                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -74,34 +71,35 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 50px;">
+    <div id="resulDepartamentos">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8">
-        <div id="resulDepartamentos">Resultado de búsqueda</div>
-    <table class="table table-hover table-sm">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Empresa</th>
-                <th scope="col">Sucursal</th>
-                <th scope="col">Departamento</th>
-                <th scope="col">Nivel</th>
-                <th scope="col">Departamento Superior</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
-                <td>{{departamento.nomempresa}}</td>
-                <td>{{departamento.nomsucursal}}</td>
-                <td>{{departamento.nombre}}</td>
-                <td>{{departamento.nivel}}</td>
-                <td>{{departamento.departamento_padre}}</td>
-                <td>
-                    <i class="far fa-trash-alt"></i>
-                    <i class="fas fa-edit" (click)="AbrirVentanaEditarDepartamento(departamento)"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <mat-paginator [length]="departamentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Sucursal</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Nivel</th>
+                    <th scope="col">Departamento Superior</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{departamento.nomempresa}}</td>
+                    <td>{{departamento.nomsucursal}}</td>
+                    <td>{{departamento.nombre}}</td>
+                    <td>{{departamento.nivel}}</td>
+                    <td>{{departamento.departamento_padre}}</td>
+                    <td>
+                        <i class="far fa-trash-alt"></i>
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditarDepartamento(departamento)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="departamentos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </mat-card>
 </div>

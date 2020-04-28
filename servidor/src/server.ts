@@ -33,7 +33,7 @@ import EMPRESA_RUTAS from './rutas/catalogos/catEmpresaRutas';
 import SUCURSAL_RUTAS from './rutas/sucursal/sucursalRutas';
 import NACIONALIDADES_RUTAS from './rutas/nacionalidad/nacionalidadRutas';
 import NIVEL_TITULO_RUTAS from './rutas/nivelTitulo/nivelTituloRutas';
-
+import PERIODO_VACACION__RUTAS from './rutas/empleado/empleadoPeriodoVacacion/periodoVacacionRutas';
 
 class Server {
 
@@ -62,6 +62,7 @@ class Server {
         this.app.use('/empleado', EMPLEADO_RUTAS);
         this.app.use('/contratoEmpleado', CONTRATO_EMPLEADO_RUTAS);
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
+        this.app.use('/perVacacion', PERIODO_VACACION__RUTAS);
 
         //Almuerzo
         this.app.use('/planComidas', PLAN_COMIDAS_RUTAS);

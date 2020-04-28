@@ -166,16 +166,18 @@ export class RegistrarSucursalesComponent implements OnInit {
     }, error => {
     });
     //Obtener ultimo ID para regitrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
-    this.ultimoId = [];
     this.restSucursal.EncontrarUltimoId().subscribe(datos => {
       this.ultimoId = datos;
+      console.log("id sucursal: ", this.ultimoId[0].max);
       let datosDepartamentos = {
         nombre: 'Ninguno',
         nivel: 0,
         depa_padre: null,
         id_sucursal: this.ultimoId[0].max
       };
+      console.log("insertar departamento: ", datosDepartamentos);
       this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+        this.ultimoId = [];
       });
     }, error => {
     });

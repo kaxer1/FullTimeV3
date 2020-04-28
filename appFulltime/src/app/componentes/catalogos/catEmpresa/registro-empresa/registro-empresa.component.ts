@@ -96,8 +96,8 @@ export class RegistroEmpresaComponent implements OnInit {
       correo: form.correoForm,
     };
     this.rest.IngresarEmpresas(datosEmpresa).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
       this.LimpiarCampos();
+      this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
     }, error => {
     });
   }

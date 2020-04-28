@@ -141,6 +141,10 @@ import { AuthGuard } from "./guards/auth.guard";
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
+import { RegistrarPeriodoVComponent } from './componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
+import { FiltroEmpresaRPipe } from './filtros/catRelojes/filtroEmpresa/filtro-empresa-r.pipe';
+import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-sucursal-r.pipe';
+import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
 
 @NgModule({
   declarations: [
@@ -222,6 +226,10 @@ import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrol
     RegistrarNivelTitulosComponent,
     PaginatePipe,
     DispositivosEnroladosComponent,
+    RegistrarPeriodoVComponent,
+    FiltroEmpresaRPipe,
+    FiltroSucursalRPipe,
+    FiltroDepartamentoRPipe,
 
   ],
   imports: [

@@ -40,7 +40,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let dc of datosCiudades">
+                        <tr *ngFor="let dc of datosCiudades | paginate:tamanio_pagina:numero_pagina">
                             <td>{{dc.nombreferiado}}</td>
                             <td>{{dc.nombreciudad}}</td>
                             <td>
@@ -52,9 +52,14 @@
                         </tr>
                     </tbody>
                 </table>
+                <mat-paginator [length]="datosCiudades.length" [pageSize]="tamanio_pagina"
+                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+                </mat-paginator>
             </div>
-            <input type="submit" class="btn btn-warning btn-sm" [routerLink]="['/listarFeriados/']" value="Ir a la Lista de Feriados">
-            <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaAsignarCiudad(f)" value="Asignar una Ciudad">
+            <input type="submit" class="btn btn-warning btn-sm" [routerLink]="['/listarFeriados/']"
+                value="Ir a la Lista de Feriados">
+            <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaAsignarCiudad(f)"
+                value="Asignar una Ciudad">
         </mat-card-content>
     </mat-card>
 </div>

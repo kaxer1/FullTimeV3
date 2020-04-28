@@ -1,26 +1,24 @@
-.btn { margin-left: 15px; border-radius: 25px; } 
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
 .fas { color:green; margin-left: 20px;  }
 .far { color:red }
 tr { text-align: center; }
 td { padding-top: 10px; text-align: center; }
 #negrita_dep { font-weight: bold; }
-#color { color:rgb(122, 3, 106); font-size: 18px; }
-.departamento-tooltip { background: rgb(122, 3, 106); }
+/*#color { color:rgb(122, 3, 106); font-size: 18px; }
+.departamento-tooltip { background: rgb(122, 3, 106); }*/
 .tituloDepartamentos { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(122, 3, 106); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 #resulDepartamentos { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(122, 3, 106); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

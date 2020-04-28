@@ -3,17 +3,22 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
-import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
 
 @Component({
   selector: 'app-relojes',
   templateUrl: './relojes.component.html',
   styleUrls: ['./relojes.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RelojesComponent implements OnInit {
+
+  empresas: any = [];
+  sucursales: any = [];
+  departamento: any = [];
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -27,7 +32,8 @@ export class RelojesComponent implements OnInit {
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);
   macF = new FormControl('');
-  idSucursalesF = new FormControl('', [Validators.required]);
+  idEmpresaF = new FormControl('', Validators.required);
+  idSucursalF = new FormControl('', Validators.required);
   idDepartamentoF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
@@ -43,30 +49,51 @@ export class RelojesComponent implements OnInit {
     fabricanteForm: this.fabricanteF,
     macForm: this.macF,
     funcionesForm: this.funcionesF,
-    idSucursalForm: this.idSucursalesF, 
-    idDepartamentoForm: this.idDepartamentoF
+    idSucursalForm: this.idSucursalF,
+    idDepartamentoForm: this.idDepartamentoF,
+    idEmpresaForm: this.idEmpresaF,
   });
-
-  sucursales: any = [];
 
   constructor(
     private rest: RelojesService,
-    private restSucursal: SucursalService,
-    private restDepartamento: DepartamentosService,
+    private restCatDepartamento: DepartamentosService,
+    private restSucursales: SucursalService,
+    private restE: EmpresaService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RelojesComponent>,
   ) { }
 
   ngOnInit(): void {
-    this.ObtenerSucursales();
+    this.BuscarEmpresas();
   }
 
-  ObtenerSucursales(){
-    this.restSucursal.getSucursalesRest().subscribe(res => {
-      this.sucursales = res;
-      console.log(this.sucursales);
+  BuscarEmpresas() {
+    this.empresas = [];
+    this.restE.ConsultarEmpresas().subscribe(datos => {
+      this.empresas = datos;
     })
   }
+
+  FiltrarSucursales(form) {
+    let idEmpre = form.idEmpresaForm
+    this.sucursales = [];
+    this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
+      this.sucursales = datos;
+    }, error => {
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+    })
+  }
+
+  ObtenerDepartamentos(form) {
+    this.departamento = [];
+    let idSucursal = form.idSucursalForm;
+    this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
+      this.departamento = datos;
+    }, error => {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
+  }
+
 
   InsertarReloj(form) {
     let datosReloj = {
@@ -81,13 +108,13 @@ export class RelojesComponent implements OnInit {
       fabricante: form.fabricanteForm,
       mac: form.macForm,
       tien_funciones: form.funcionesForm,
-      id_sucursal: form.idSucursalForm, 
+      id_sucursal: form.idSucursalForm,
       id_departamento: form.idDepartamentoForm
     };
 
     this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Dispositivo registrado')
       this.LimpiarCampos();
+      this.toastr.success('Operación Exitosa', 'Dispositivo registrado')
     }, error => {
       this.toastr.error('Operación Fallida', 'Dispositivo no pudo ser registrado')
     });
@@ -105,7 +132,7 @@ export class RelojesComponent implements OnInit {
     }
     return this.ipF.hasError('required') ? 'Campo Obligatorio' : '';
   }
-  
+
   ObtenerMensajeErrorPuerto() {
     if (this.puertoF.hasError('pattern')) {
       return 'Ingresar 4 números';

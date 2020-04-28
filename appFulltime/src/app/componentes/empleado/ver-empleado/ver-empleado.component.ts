@@ -10,6 +10,7 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { RegistrarPeriodoVComponent } from 'src/app/componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -38,12 +39,13 @@ export class VerEmpleadoComponent implements OnInit {
   idContrato: any = [];
 
   constructor(
+    public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
     public restDiscapacidad: DiscapacidadService,
-    public restTitulo: TituloService,
     public vistaRegistrarContrato: MatDialog,
     public vistaRegistrarPlanificacion: MatDialog,
     public vistaRegistrarCargoEmpeado: MatDialog,
+    public vistaRegistrarPerVacaciones: MatDialog,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -158,11 +160,20 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaCargo(): void {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ",this.idContrato[0].id)
-      this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data:{ idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id}  }).disableClose = true;
+      console.log("idcargo ", this.idContrato[0].id)
+      this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
+  }
 
+  AbrirVentanaPerVacaciones(): void {
+    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idcargo ", this.idContrato[0].id)
+      this.vistaRegistrarPerVacaciones.open(RegistrarPeriodoVComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+    });
   }
 }
