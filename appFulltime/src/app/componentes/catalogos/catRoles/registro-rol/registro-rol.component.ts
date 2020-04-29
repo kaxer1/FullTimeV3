@@ -8,7 +8,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-registro-rol',
   templateUrl: './registro-rol.component.html',
   styleUrls: ['./registro-rol.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistroRolComponent implements OnInit {
 

@@ -12,6 +12,7 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.get('/', periodoVacacionControlador_1.default.ListarPerVacaciones);
+        this.router.get('/buscar/:id_empleado', periodoVacacionControlador_1.default.EncontrarIdPerVacaciones);
         this.router.post('/', periodoVacacionControlador_1.default.CrearPerVacaciones);
     }
 }

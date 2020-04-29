@@ -21,4 +21,9 @@ export class EmplCargosService {
   postEmpleadoCargosRest(data: any){
     return this.http.post(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos`, data);
   }
+
+  BuscarIDCargo(id: number){
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/${id}`);
+  }
+
 }

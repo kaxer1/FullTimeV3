@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
   selector: 'app-principal-proceso',
   templateUrl: './principal-proceso.component.html',
   styleUrls: ['./principal-proceso.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class PrincipalProcesoComponent implements OnInit {
 
@@ -105,6 +105,6 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProceso(){
-    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
   }
 }

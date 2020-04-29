@@ -1,15 +1,8 @@
 <div class="container" *ngFor="let e of empleadoUno" style="padding-top: 15px; padding-bottom: 25px;">
-    <a mat-button [routerLink]="['/empleado']" id="navegacion" class="btn btn-warning btn-sm">Regresar a Empleado</a>
-    <button type="submit" id="navegacion" (click)="AbrirVentanaCrearContrato()" class="btn btn-success">Contrato
-        Empleado</button>
-    <button type="submit" id="planCom" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación
-        Almuerzos</button>
-    <button type="submit" id="cargo" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
-    <button type="submit"  (click)="AbrirVentanaPerVacaciones()" class="btn">Período de Vacaciones</button>
     <div class="row">
         <div class="col-md">
             <br>
-            <mat-card class="mat-elevation-z8">
+            <mat-card class="mat-elevation-z8" style="width: 450px">
                 <div class="barraTitulo">
                     <h5>{{e.nombre}} {{e.apellido}}</h5>
                 </div>
@@ -74,7 +67,7 @@
         </div>
         <div class="col-md">
             <br>
-            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px; width: 350px">
                 <div class="barraTitulo2">
                     <div class="container">
                         <div class="row">
@@ -121,7 +114,7 @@
             <div style="padding-bottom: 35px; padding-top: 35px;">
                 <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
             </div>
-            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px; width: 350px">
                 <div class="barraTitulo1">
                     <div class="container">
                         <div class="row" style="text-align: center;">
@@ -168,5 +161,24 @@
                 <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
                 </app-discapacidad>
             </div>
+        </div>
+        <div class="col-md" style="text-align: right; width: 220px">
+            <br>
+            <button type="submit" id="boton" [routerLink]="['/empleado']" class="btn">Regresar a Empleado</button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaCrearContrato()" class="btn">Contrato Empleado
+            </button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos Empleado</button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos
+            </button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaPerVacaciones()" class="btn">Período de Vacaciones
+            </button>
+            <br>
+            <button type="submit" id="boton" (click)="AbrirVentanaVacaciones()" class="btn">Vacaciones</button>
         </div>
     </div>

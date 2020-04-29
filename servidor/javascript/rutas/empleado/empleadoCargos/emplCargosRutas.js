@@ -14,6 +14,7 @@ class EmpleadosCargpsRutas {
         this.router.get('/', emplCargosControlador_1.default.list);
         this.router.get('/:id', emplCargosControlador_1.default.getOne);
         this.router.post('/', emplCargosControlador_1.default.Crear);
+        this.router.get('/buscar/:id_empleado', emplCargosControlador_1.default.EncontrarIdCargo);
     }
 }
 const EMPLEADO_CARGO_RUTAS = new EmpleadosCargpsRutas();

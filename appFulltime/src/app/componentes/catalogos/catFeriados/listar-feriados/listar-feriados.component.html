@@ -1,11 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col-sm">
+            <div class="barraTituloF">
+                <span>FERIADOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z9">
-                <div class="barraTituloF">
-                    <span>FERIADOS</span>
-                </div>
-                <br>
                 <h5>Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarFeriadosForm">
                     <mat-card-content>
@@ -34,26 +33,34 @@
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                    <input type="submit" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarFeriado()"
+                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarFeriado()"
                         value="Crear nuevo Feriado">
+                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                 </mat-card-actions>
             </mat-card>
         </div>
         <div class="col-md">
+            <div class="barraTituloF">
+                <span>REGISTRO MULTIPLE DE FERIADOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="input-group">
                     <div class="custom-file">
-                        <form  method="post" enctype="multipart/form-data">
-                            <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm"  class="custom-file-input"  id="inputGroupFile01"  aria-describedby="inputGroupFileAddon01"> 
+                        <form method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm"
+                                class="custom-file-input" id="inputGroupFile01"
+                                aria-describedby="inputGroupFileAddon01">
                         </form>
-                        <label class="custom-file-label" for="inputGroupFile01">Elegir un archivo</label>
+                        <label class="custom-file-label" for="inputGroupFile01" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
+                        matTooltip="Seleccionar una plantilla de registro de feriados ubicada en la carpeta plantilla">Elegir un archivo</label>
                     </div>
-                </div>  
+                </div>
                 <br>
                 <div class="input-group-prepend">
-                    <span class="material-icons input-group-text upload" (click)="plantilla()" id="btnUpload">cloud_upload</span>
-                    <span>{{nameFile}}</span>
+                    <span class="material-icons input-group-text upload" (click)="plantilla()"
+                        id="btnUpload" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
+                        matTooltip="Registrar Feriados por medio del uso de plantilla seleccionada">cloud_upload </span>
+                    <span>Cargar datos {{nameFile}}</span>
                 </div>
             </mat-card>
         </div>
@@ -61,8 +68,8 @@
 </div>
 <br>
 <div class="container table-responsive" style="padding-bottom: 10px; margin-bottom: 35px;">
+    <div id="resultados">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8 ">
-        <div id="resultados">Resultado de búsqueda</div>
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr style="text-align: center;">
@@ -73,7 +80,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
+                <tr
+                    *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
                     <td style="font-size: 14px;">{{f.descripcion}}</td>
                     <td style="font-size: 12px;">{{f.fecha}}</td>
                     <td style="font-size: 12px;">{{f.fec_recuperacion}}</td>
@@ -97,7 +105,8 @@
                 </tr>
             </tbody>
         </table>
-        <mat-paginator [length]="feriados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="feriados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
     </mat-card>
 </div>

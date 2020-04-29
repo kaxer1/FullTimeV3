@@ -31,11 +31,11 @@
                 </mat-form-field>
                 <br>
                 <mat-form-field>
-                    <mat-label>Nivel *</mat-label>
+                    <mat-label>Nivel</mat-label>
                     <mat-icon id="iprocesoR" matSuffix matTooltipClass="procesoR-tooltip" matTooltipPosition="right"
                         matTooltip="Seleccionar el nivel del nuevo proceso">
                         help_outline</mat-icon>
-                    <mat-select [formControl]="nivel">
+                    <mat-select [formControl]="nivel" required>
                         <mat-option *ngFor="let n of niveles" [value]="n.nombre">
                             {{n.valor}}
                         </mat-option>
@@ -45,8 +45,8 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <input type="submit" class="btn btn-primary btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
+        <input type="submit" class="btn btn-sm" (click)="insertarProceso(nuevoProcesoForm.value)"
             [disabled]="!nuevoProcesoForm.valid" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroProceso()" value="Salir">
+        <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroProceso()" value="Salir">
     </div>
 </div>

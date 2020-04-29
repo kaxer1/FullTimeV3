@@ -1,24 +1,22 @@
-.btn { border-radius: 25px; margin-left: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 p { font-size: x-small; }
 td { padding-top: 10px; text-align: center; }
-.rolL-tooltip { background: #ad4bc5;}
-#iRolL { color:#ad4bc5; font-size: 18px; cursor: pointer;}
+/*.rolL-tooltip { background: #ad4bc5;}*/
+#iRolL { cursor: pointer;}
 #funtion { color: rgb(17, 4, 66); cursor: pointer;}
 .tituloRolesL { 
     font-size: 20px; 
     text-align: center; 
-    background: #ad4bc5; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px;
     padding-bottom: 6px; 
 }
 #resulRoles { 
     font-size: 17px; 
     text-align: center; 
-    background: #ad4bc5; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

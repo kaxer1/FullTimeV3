@@ -19,6 +19,15 @@ class PeriodoVacacionControlador {
         res.json({ message: 'Período de Vacación guardado' });
     }
 
+    public async EncontrarIdPerVacaciones(req: Request, res: Response): Promise<any> {
+        const { id_empleado } = req.params;
+        const VACACIONES = await pool.query('SELECT pv.id FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND e.id = $1', [id_empleado]);
+        if (VACACIONES.rowCount > 0) {
+            return res.json(VACACIONES.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
+
 }
 
 const PERIODO_VACACION_CONTROLADOR = new PeriodoVacacionControlador();

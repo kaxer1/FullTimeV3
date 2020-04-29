@@ -10,7 +10,7 @@ import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulo
   selector: 'app-titulos',
   templateUrl: './titulos.component.html',
   styleUrls: ['./titulos.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class TitulosComponent implements OnInit {
 

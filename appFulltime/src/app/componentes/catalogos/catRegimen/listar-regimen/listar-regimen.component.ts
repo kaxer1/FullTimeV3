@@ -12,7 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-regimen',
   templateUrl: './listar-regimen.component.html',
   styleUrls: ['./listar-regimen.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class ListarRegimenComponent implements OnInit {

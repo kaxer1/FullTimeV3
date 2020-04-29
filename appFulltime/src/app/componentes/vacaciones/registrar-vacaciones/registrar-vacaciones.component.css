@@ -1,0 +1,17 @@
+#dias { font-size: 13px; }
+#fecVaca { font-size: 14px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.vacacionesE { 
+    font-size: 25px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white;  
+    padding-top: 10px; 
+}
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+#nomEmple { font-size: 13px; }
+.mat-radio-button ~ .mat-radio-button { margin-left: 18px; }

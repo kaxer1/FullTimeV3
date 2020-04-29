@@ -1,0 +1,45 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="procesoE">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Procesos del Empleado</h5>
+</div>
+<!-- Formulario Completo -->
+<form [formGroup]="EmpleProcesoForm">
+    <mat-card-content>
+        <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="row">
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Empleado</mat-label>
+                        <input id="nomEmple" matInput placeholder="Empleado" [formControl]="nombreEmpleado" readonly="readonly" required>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Nombre de identifiacción del empleado">
+                        help_outline</mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Seleccionar fecha de Inicio</mat-label>
+                        <input matInput type="date" [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31"
+                            required>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de inicio de período del proceso">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha de Finalización</mat-label>
+                        <input matInput type="date" [formControl]="fechaFinal" required>
+                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de finalización de período del proceso">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <button type="submit" class="btn btn-sm" (click)="ValidarDatosProeso(EmpleProcesoForm.value)"
+        [disabled]="!EmpleProcesoForm.valid"> Guardar </button>
+    <button type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroProceso()"> Salir </button>
+</div>

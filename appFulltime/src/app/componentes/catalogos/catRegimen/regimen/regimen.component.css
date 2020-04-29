@@ -1,23 +1,29 @@
-.btn { margin-left: 15px; border-radius: 25px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
-mat-select { font-size: small; }
-mat-form-field { font-size: small; }
-mat-checkbox { font-size: small; }
+
 label { font-size: small; }
+
 #diasIncre { font-size: 12px; }
+
 #anioAnti { font-size: 12px; }
+
 .tituloRegimen { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(35, 3, 122); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
 }
-#iReg { color:rgb(35, 3, 122); font-size: 18px; }
-.regimen-tooltip { background-color : rgb(35, 3, 122); }
+
+#iReg { cursor: pointer; }
+
+/*.regimen-tooltip { background-color : rgb(35, 3, 122); }*/
+
 #maxD { font-size: 13px;}
+
+#anio { font-size: 14px; }

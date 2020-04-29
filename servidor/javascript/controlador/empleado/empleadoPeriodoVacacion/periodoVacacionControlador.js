@@ -32,6 +32,16 @@ class PeriodoVacacionControlador {
             res.json({ message: 'Período de Vacación guardado' });
         });
     }
+    EncontrarIdPerVacaciones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const VACACIONES = yield database_1.default.query('SELECT pv.id FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND e.id = $1', [id_empleado]);
+            if (VACACIONES.rowCount > 0) {
+                return res.json(VACACIONES.rows);
+            }
+            res.status(404).json({ text: 'Registro no encontrado' });
+        });
+    }
 }
 const PERIODO_VACACION_CONTROLADOR = new PeriodoVacacionControlador();
 exports.default = PERIODO_VACACION_CONTROLADOR;

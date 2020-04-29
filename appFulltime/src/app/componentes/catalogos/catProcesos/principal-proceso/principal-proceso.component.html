@@ -1,10 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col-sm">
+            <div class="tituloProcesoL">
+                <span>ACCIONES DE PERSONAL PROCESOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z8">
-                <div class="tituloProcesoL">
-                    <span>ACCIONES DE PERSONAL PROCESOS</span>
-                </div>
                 <br>
                 <h5 style="text-align: center;">Críterios de Búsqueda</h5>
                 <mat-card-content>
@@ -41,15 +41,16 @@
                                             matTooltip="Búsqueda del proceso por el nombre del proceso superior">
                                             help_outline</mat-icon>
                                     </mat-form-field>
-                                </div>                                
+                                </div>
                             </div>
                         </form>
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="AbrirVentanaRegistrarProceso()">Crear
-                        nuevo Proceso</button>
+                    <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarProceso()">Crear nuevo
+                        Proceso
+                    </button>
+                    <input type="submit" class="btn btn-sm" (click)="limpiarCampoBuscar()" value="Cancelar">
                 </div>
             </mat-card>
         </div>
@@ -57,8 +58,8 @@
 </div>
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
+    <div id="resulProceso">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8 ">
-        <div id="resulProceso">Resultado de búsqueda</div>
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr style="text-align: center;">
@@ -69,19 +70,29 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let proceso of procesos | nombre:filtroNombre | nivel:filtroNivel | padre:filtroProPadre | paginate:tamanio_pagina:numero_pagina">
-                    <td style="padding-top: 10px;text-align: center;">{{proceso.nombre}}</td>
-                    <td style="padding-top: 10px;text-align: center;">{{proceso.nivel}}</td>
-                    <td style="padding-top: 10px;text-align: center;">{{proceso.proc_padre}}</td>
-                    <td style="padding-top: 10px;text-align: center;">
-                        <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i>
-                        <i class="fas fa-edit" style="color:green;"></i>
+                <tr
+                    *ngFor="let proceso of procesos | nombre:filtroNombre | nivel:filtroNivel | padre:filtroProPadre | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{proceso.nombre}}</td>
+                    <td>{{proceso.nivel}}</td>
+                    <td>{{proceso.proc_padre}}</td>
+                    <td>
+                        <i class="far fa-trash-alt" style="color:red; margin-right: 15px;" id="iprocesoL" matSuffix
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Eliminar registro">
+                            <p>Eliminar</p>
+                        </i>
+                        <i class="fas fa-edit" style="color:green;" id="iprocesoL" matSuffix
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar los datos generales del registro">
+                            <p>Editar</p>
+                        </i>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <mat-paginator [length]="procesos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                    (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="procesos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
     </mat-card>
 
 </div>

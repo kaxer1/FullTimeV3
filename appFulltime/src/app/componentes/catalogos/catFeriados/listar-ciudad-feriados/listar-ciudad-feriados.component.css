@@ -1,25 +1,30 @@
 p { font-size: x-small; }
+
 td { padding-top: 10px; text-align: center; }
-hr { background-color: rgb(66, 0, 128); }
-.btn { border-radius: 25px; margin-left: 15px; }
+
+hr { background-color: black; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
 .barraTituloD { 
     font-size: 25px; 
     text-align: center; 
-    background: rgb(66, 0, 128); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
-#editarI { color:green; margin-left: 25px; }
+#editarI { color:green; margin-left: 25px; cursor: pointer; }
+
 #datosF { font-weight: bold; font-size: 18px; }
+
 #resulCiudades { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(66, 0, 128); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }

@@ -10,7 +10,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
   selector: 'app-editar-feriados',
   templateUrl: './editar-feriados.component.html',
   styleUrls: ['./editar-feriados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class EditarFeriadosComponent implements OnInit {
 

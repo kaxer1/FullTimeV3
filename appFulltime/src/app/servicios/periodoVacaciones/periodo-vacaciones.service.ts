@@ -22,4 +22,8 @@ export class PeriodoVacacionesService {
     return this.http.post(`${this.API_URL}/perVacacion`, datos);
   }
 
+  BuscarIDPerVacaciones(id: number){
+    return this.http.get(`${this.API_URL}/perVacacion/buscar/${id}`);
+  }
+
 }

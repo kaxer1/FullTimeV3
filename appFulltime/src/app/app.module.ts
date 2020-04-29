@@ -145,6 +145,8 @@ import { RegistrarPeriodoVComponent } from './componentes/periodoVacaciones/regi
 import { FiltroEmpresaRPipe } from './filtros/catRelojes/filtroEmpresa/filtro-empresa-r.pipe';
 import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-sucursal-r.pipe';
 import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
+import { RegistrarEmpleProcesoComponent } from './componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
+import { RegistrarVacacionesComponent } from './componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
 
 @NgModule({
   declarations: [
@@ -230,6 +232,8 @@ import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento
     FiltroEmpresaRPipe,
     FiltroSucursalRPipe,
     FiltroDepartamentoRPipe,
+    RegistrarEmpleProcesoComponent,
+    RegistrarVacacionesComponent,
 
   ],
   imports: [

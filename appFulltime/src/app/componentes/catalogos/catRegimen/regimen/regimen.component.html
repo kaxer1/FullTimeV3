@@ -45,9 +45,8 @@
                     </mat-form-field>
                 </div>
                 <div class="col">
-                    <p>Vacaciones</p>
                     <mat-form-field>
-                        <mat-label>Días por año</mat-label>
+                        <mat-label id="anio">Vacaciones: Días por año</mat-label>
                         <input matInput placeholder="Días por año" [formControl]="diaAnioVacacionF"
                             (keypress)="IngresarSoloNumeros($event)" (click)="LimpiarDiasMeses()" required>
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
@@ -64,13 +63,14 @@
                         matTooltip="Dar click para realizar cálculo de días de vacación por mes que se concederan al empleado al cumplir un año de servicio">
                         help_outline</mat-icon>
                     <mat-form-field>
-                        <input matInput placeholder="Días por mes" [formControl]="diaMesVacacionF" readonly="readonly"
+                        <input  matInput placeholder="Vacación: Días por mes" [formControl]="diaMesVacacionF" readonly="readonly"
                             required>
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                             matTooltip="Días por mes de vacación que se concedera al empleado">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label id="diasIncre">Días incremento-antiguedad</mat-label>
                         <input matInput placeholder="Días de incremento" [formControl]="diaIncrAntiguedadF" required
@@ -82,8 +82,7 @@
                             {{ObtenerMensajeErrorIncreAntiguedadRequerido()}}
                         </mat-error>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label id="maxD">Máximo de días acumulables</mat-label>
                         <input matInput placeholder="Días acumulables" [formControl]="maxDiasAcumulacionF" required
@@ -110,7 +109,7 @@
     </mat-card-content>
 </form>
 <mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!RegimenForm.valid"
-        (click)="InsertarRegimen(RegimenForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroRegimen()" value="Salir">
+    <input type="submit" class="btn btn-sm" [disabled]="!RegimenForm.valid" (click)="InsertarRegimen(RegimenForm.value)"
+        value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroRegimen()" value="Salir">
 </mat-card-actions>

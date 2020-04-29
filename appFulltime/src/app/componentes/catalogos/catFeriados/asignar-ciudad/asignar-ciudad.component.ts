@@ -11,7 +11,7 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
   selector: 'app-asignar-ciudad',
   templateUrl: './asignar-ciudad.component.html',
   styleUrls: ['./asignar-ciudad.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class AsignarCiudadComponent implements OnInit {
 

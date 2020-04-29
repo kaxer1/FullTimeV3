@@ -1,24 +1,30 @@
-.btn { border-radius: 25px; margin-left: 15px; margin-top: 15px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+p { font-size: x-small; }
+
 td { padding-top: 10px; text-align: center; } 
-.fas { color:green; margin-left: 20px; }
-.far { color:red; }
-.tituloL-tooltip { background: #4622aa; }
-#itituloL { color:#4622aa; font-size: 18px; }
+
+.fas { color:green; margin-left: 20px; cursor: pointer; }
+
+.far { color:red; cursor: pointer;}
+
+/*.tituloL-tooltip { background: #4622aa; }*/
+
+#itituloL { cursor: pointer; }
+
 .tituloRegistro { 
     font-size: 20px; 
     text-align: center; 
-    background: #4622aa; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px;
     padding-bottom: 6px; 
 }
 #resulTitulos { 
     font-size: 17px; 
     text-align: center; 
-    background: #4622aa; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

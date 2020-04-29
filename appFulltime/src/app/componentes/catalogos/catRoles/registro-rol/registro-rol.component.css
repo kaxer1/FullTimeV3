@@ -1,16 +1,15 @@
-.btn { border-radius: 25px; margin-left: 15px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
-.rolR-tooltip { background: #ad4bc5; }
-#iRolR { color:#ad4bc5; font-size: 18px; }
+/*.rolR-tooltip { background: #ad4bc5; }*/
+#iRolR { cursor: pointer; }
 .tituloRolR { 
     font-size: 35px; 
     text-align: center; 
-    background: #ad4bc5; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
-    padding-top: 10px; 
+    padding-top: 8px; 
 }

@@ -1,17 +1,20 @@
-.btn { border-radius: 25px; margin-right: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .tituloprocesoR { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(114, 43, 2); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
 }
-#iprocesoR { color:rgb(114, 43, 2); font-size: 18px; }
-.procesoR-tooltip { background-color : rgb(114, 43, 2); }
+
+#iprocesoR { cursor: pointer; }
+
+/*.procesoR-tooltip { background-color : rgb(114, 43, 2); }*/
 

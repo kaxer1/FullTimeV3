@@ -11,8 +11,8 @@
                 <mat-label>Descripción</mat-label>
                 <input matInput placeholder="Descripción feriado" [formControl]="descripcionF"
                     (keypress)="IngresarSoloLetras($event)" required>
-                    <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar nombre de este feriado">help_outline</mat-icon>
+                <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar nombre de este feriado">help_outline</mat-icon>
                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
             </mat-form-field>
             <br>
@@ -20,20 +20,22 @@
                 <mat-label>Fecha</mat-label>
                 <input matInput type="date" placeholder="Seleccionar fecha" [formControl]="fechaF" required>
                 <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar fecha de este feriado">event</mat-icon>
+                    matTooltip="Modificar fecha de este feriado">event
+                </mat-icon>
             </mat-form-field>
             <br>
             <mat-form-field>
                 <mat-label>Fecha Recuperación</mat-label>
                 <input matInput type="date" placeholder="Selecionar fecha" [formControl]="fechaRecuperacionF">
                 <mat-icon id="feriado" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar fecha de recuperación para este feriado">date_range</mat-icon>
+                    matTooltip="Modificar fecha de recuperación para este feriado">date_range
+                </mat-icon>
             </mat-form-field>
         </div>
     </mat-card-content>
 </form>
 <mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!EditarFeriadosForm.valid"
+    <input type="submit" class="btn btn-sm" [disabled]="!EditarFeriadosForm.valid"
         (click)="ActualizarFeriados(EditarFeriadosForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaEditarFeriado()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaEditarFeriado()" value="Salir">
 </mat-card-actions>

@@ -27,8 +27,9 @@
         </mat-form-field>
     </div>
 </form>
+<br>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-primary btn-sm" (click)="InsertarTitulo(nuevoTituloForm.value)"
+    <input type="submit" class="btn btn-sm" (click)="InsertarTitulo(nuevoTituloForm.value)"
         [disabled]="!nuevoTituloForm.valid" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
 </div>
