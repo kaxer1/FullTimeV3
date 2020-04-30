@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
+const fs_1 = __importDefault(require("fs"));
 class FeriadosControlador {
     ListarFeriados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,22 +66,22 @@ class FeriadosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
-            let aux = cadena.split("\\");
-            let filename = aux[1];
-            const workbook = xlsx_1.default.readFile(`./plantillas/${filename}`);
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            let obj = [];
-            plantilla.forEach(data => {
-                obj.push(data);
-            });
-            for (let i = 0; i < obj.length; i++) {
-                const { fecha, descripcion, fec_recuperacion } = obj[i];
-                console.log(obj[i]);
-                yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
-            }
-            ;
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { fecha, descripcion, fec_recuperacion } = data;
+                if (fecha != undefined) {
+                    yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+                }
+                else {
+                    res.json({ error: 'plantilla equivocada' });
+                }
+            }));
             res.json({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
         });
     }
 }

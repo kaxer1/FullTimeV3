@@ -52,9 +52,9 @@ class EmpleadoControlador {
     getTitulosDelEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const unEmpleadoTitulo = yield database_1.default.query('SELECT * FROM empl_titulos WHERE id_empleado = $1', [id_empleado]);
+            // const unEmpleadoTitulo = await pool.query('SELECT * FROM empl_titulos WHERE id_empleado = $1', [id_empleado]);
+            const unEmpleadoTitulo = yield database_1.default.query('SELECT et.observacion As observaciones, ct.nombre, nt.nombre as nivel FROM empleados as e, empl_titulos AS et, cg_titulos AS ct, nivel_titulo AS nt WHERE e.id = $1 and et.id_titulo = ct.id and ct.id_nivel = nt.id', [id_empleado]);
             if (unEmpleadoTitulo.rowCount > 0) {
-                console.log('algo');
                 return res.json(unEmpleadoTitulo.rows);
             }
             res.status(404).json({ text: 'El empleado no tiene titulos asignados' });

@@ -75,7 +75,19 @@ export class PrincipalHorarioComponent implements OnInit {
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
-    console.log(this.nameFile);
+    let arrayItems =  this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0,8);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'horarios') {
+        this.plantilla();
+      } else {
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
   }
   
   plantilla() {

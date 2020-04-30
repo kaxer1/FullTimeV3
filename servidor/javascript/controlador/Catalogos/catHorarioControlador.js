@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
+const fs_1 = __importDefault(require("fs"));
 class HorarioControlador {
     ListarHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -51,21 +52,22 @@ class HorarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
-            let aux = cadena.split("\\");
-            let filename = aux[1];
-            const workbook = xlsx_1.default.readFile(`./plantillas/${filename}`);
-            const sheet_name_list = workbook.SheetNames;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            let obj = [];
-            plantilla.forEach(data => {
-                obj.push(data);
-            });
-            for (let i = 0; i < obj.length; i++) {
-                const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
-                yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-            }
-            ;
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = data;
+                if (nombre != undefined) {
+                    yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+                }
+                else {
+                    res.json({ error: 'plantilla equivocada' });
+                }
+            }));
             res.json({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
         });
     }
 }

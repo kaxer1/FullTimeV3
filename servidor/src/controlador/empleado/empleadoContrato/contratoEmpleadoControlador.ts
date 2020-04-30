@@ -29,6 +29,15 @@ class ContratoEmpleadoControlador {
         res.status(404).json({ text: 'Registro no encontrado' });
     }
 
+    public async EncontrarContratoEmpleadoRegimen(req: Request, res: Response): Promise<any> {
+        const { id_empleado } = req.params;
+        const CONTRATO_EMPLEADO_REGIMEN = await pool.query('SELECT ec.fec_ingreso, fec_salida, cr.descripcion, dia_anio_vacacion FROM empleados AS e, empl_contratos AS ec, cg_regimenes AS cr WHERE e.id = $1 and ec.id_regimen = cr.id', [id_empleado]);
+        if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
+            return res.json(CONTRATO_EMPLEADO_REGIMEN.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
+
 }
 
 const CONTRATO_EMPLEADO_CONTROLADOR = new ContratoEmpleadoControlador();

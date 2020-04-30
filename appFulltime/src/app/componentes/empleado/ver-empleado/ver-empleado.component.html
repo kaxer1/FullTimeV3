@@ -169,3 +169,29 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="shadow-sm card action-buttons">
+    <button (click)="generarPdf('open')" class="btn btn-primary d-flex align-items-center justify-content-center">
+        <i class="material-icons">picture_as_pdf</i><span>Open PDF</span></button>
+    <button (click)="generarPdf('download')"
+        class="btn btn-primary d-flex align-items-center justify-content-center">
+        <i class="material-icons">cloud_download</i><span>Download PDF</span>
+    </button>
+    <button (click)="generarPdf('print')" class="btn btn-primary d-flex align-items-center justify-content-center">
+        <i class="material-icons">print</i><span>Print PDF</span>
+    </button>
+    <button (click)="exportToExcel()" class="btn btn-success">
+        <i class="material-icons fas fa-file-excel"></i>
+        <span>Exportar a Excel</span></button> 
+    <button (click)="exportToCVS()" class="btn btn-success">
+        <i class="material-icons fas fa-file-csv"></i><span>Exportar a CVS</span>
+    </button> 
+</div>
+<div class="card p-4">
+    <div class="form-group">
+      <label class="h4 mb-3" for="">Show your picture in Resume</label>
+      <input type="file" class="form-control-file" (change)="fileChanged($event)">
+    </div>
+</div>
+
