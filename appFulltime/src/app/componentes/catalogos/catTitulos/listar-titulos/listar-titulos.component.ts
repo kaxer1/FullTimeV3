@@ -64,7 +64,11 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   LimpiarCampos() {
-    console.log('limpiar');
+    this.BuscarTitulosForm.setValue({
+      nombreForm: '',
+      nivelForm: ''
+    });
+    this.ObtenerTitulos();
   }
 
   ObtenerMensajeErrorNombre() {

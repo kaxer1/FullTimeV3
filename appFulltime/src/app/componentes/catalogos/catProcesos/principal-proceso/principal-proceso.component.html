@@ -16,6 +16,8 @@
                                         <mat-label>Ingresar Nombre</mat-label>
                                         <input matInput placeholder="Ej: Emergencia" [(ngModel)]="filtroNombre"
                                             (keypress)="IngresarSoloLetras($event)" [formControl]="buscarNombre">
+                                        <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras
+                                        </mat-error>
                                         <mat-icon id="iprocesoL" matSuffix matTooltipClass="procesoL-tooltip"
                                             matTooltipPosition="right" matTooltip="Búsqueda del proceso por el nombre">
                                             help_outline</mat-icon>
@@ -25,7 +27,7 @@
                                     <mat-form-field>
                                         <mat-label>Ingresar Nivel</mat-label>
                                         <input matInput placeholder="Ej: 1" type="number" [(ngModel)]="filtroNivel"
-                                            (keypress)="soloNumeros($event)" [formControl]="buscarNivel">
+                                            (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarNivel">
                                         <mat-icon id="iprocesoL" matSuffix matTooltipClass="procesoL-tooltip"
                                             matTooltipPosition="right" matTooltip="Búsqueda del proceso por su nivel">
                                             help_outline</mat-icon>
@@ -36,6 +38,8 @@
                                         <mat-label id="proS">Ingresar Proceso Superior</mat-label>
                                         <input matInput placeholder="Ej: ninguno" [(ngModel)]="filtroProPadre"
                                             (keypress)="IngresarSoloLetras($event)" [formControl]="buscarPadre">
+                                        <mat-error *ngIf="buscarPadre.invalid">Indispensable ingresar dos letras
+                                        </mat-error>
                                         <mat-icon id="iprocesoL" matSuffix matTooltipClass="procesoL-tooltip"
                                             matTooltipPosition="right"
                                             matTooltip="Búsqueda del proceso por el nombre del proceso superior">

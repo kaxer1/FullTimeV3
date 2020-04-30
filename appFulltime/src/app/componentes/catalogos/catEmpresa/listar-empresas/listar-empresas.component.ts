@@ -1,31 +1,31 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
-import { Validators, FormControl } from '@angular/forms';
+import { Component, OnInit} from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MatDialog } from '@angular/material/dialog';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 
+import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+
+
 @Component({
-  selector: 'app-lista-empleados',
-  templateUrl: './lista-empleados.component.html',
-  styleUrls: ['./lista-empleados.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  selector: 'app-listar-empresas',
+  templateUrl: './listar-empresas.component.html',
+  styleUrls: ['./listar-empresas.component.css']
 })
-export class ListaEmpleadosComponent implements OnInit {
+export class ListarEmpresasComponent implements OnInit {
 
-  empleado: any = [];
-  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
-  
-  codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre = new FormControl('', [Validators.minLength(2)]);
-  apellido = new FormControl('', [Validators.minLength(2)]);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarRuc = new FormControl('', [Validators.minLength(2)]);
+  filtroNomEmpresa = '';
+  filtroRucEmpresa = '';
 
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombre: '';
-  filtroApellido: '';
+  public BuscarEmpresaForm = new FormGroup({
+    buscarNombreForm: this.buscarNombre,
+    buscarRucForm: this.buscarRuc
+  });
+
+  empresas: any = [];
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -33,18 +33,36 @@ export class ListaEmpleadosComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
-    public rest: EmpleadoService,
-    public router: Router,
+    private rest: EmpresaService,
     private toastr: ToastrService,
+    public vistaRegistrarEmpresa: MatDialog,
   ) { }
 
   ngOnInit(): void {
-    this.getEmpleados();
+    this.ObtenerEmpresa();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  ObtenerEmpresa() {
+    this.rest.ConsultarEmpresas().subscribe(data => {
+      this.empresas = data;
+    });
+  }
+
+  AbrirVentanaRegistrarEmpresa() {
+    this.vistaRegistrarEmpresa.open(RegistroEmpresaComponent, { width: '600px' }).disableClose = true;
+  }
+
+  LimpiarCampoBuscar() {
+    this.BuscarEmpresaForm.setValue({
+      buscarNombreForm: '',
+      buscarRucForm: ''
+    });
+    this.ObtenerEmpresa();
   }
 
   IngresarSoloLetras(e) {
@@ -84,25 +102,4 @@ export class ListaEmpleadosComponent implements OnInit {
     }
   }
 
-  getEmpleados(){
-    this.empleado = [];
-    this.rest.getEmpleadosRest().subscribe(data => {
-      // console.log(data);
-      this.empleado = data
-    })
-  }
-
-  verEmpleado(id: any){
-    this.empleado = []
-    this.rest.getOneEmpleadoRest(id).subscribe(data => {
-      this.empleado = data;
-    })
-  }
-
-  limpiarCampos(){
-    this.codigo.reset();
-    this.cedula.reset();
-    this.nombre.reset();
-    this.apellido.reset();
-  }
 }

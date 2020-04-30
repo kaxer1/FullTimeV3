@@ -10,5 +10,10 @@
     background: rgb(52,65,84); 
     color: white;  
     padding-top: 10px; 
-    padding-bottom: 6px;
+}
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
 }

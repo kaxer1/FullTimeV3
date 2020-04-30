@@ -1,55 +1,23 @@
-<div class="container" style="padding-top: 15px;">
-    <mat-card class="mat-elevation-z8">
-
-        <div class="tituloR">
-            <span>Registrar Título Profesional</span>
-        </div>
-        <form [formGroup]="nuevoNivelTituloForm">
-            <div class="container" style="text-align: center;">
-                <mat-form-field>
-                    <mat-label>Nombre del Nivel</mat-label>
-                    <input matInput placeholder="Ej: Certificados" [formControl]="nombre"
-                    (keypress)="IngresarSoloLetras($event)" required>
-                    <mat-icon id="itituloR" matSuffix matTooltipClass="tituloR-tooltip" matTooltipPosition="right"
-                    matTooltip="Ingresar nombre de nivel de educación">
-                    help_outline</mat-icon>
-                    <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
-                </mat-form-field>
-            </div>
-        </form>
-        <div style="text-align: center;">
-            <input type="submit" class="btn btn-sm" (click)="InsertarNivelTitulo(nuevoNivelTituloForm.value)"
-            [disabled]="!nuevoNivelTituloForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-sm" value="Salir">
-        </div>
-        
-    </mat-card>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Nivel de Título Profesional</span>
 </div>
-<br>
-<div class="container">
-    <mat-card class="mat-elevation-z8">
+<form [formGroup]="nuevoNivelTituloForm">
+    <div class="container" style="text-align: center;">
         <mat-form-field>
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium">
+            <mat-label>Nuevo Nivel de Título</mat-label>
+            <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"
+                (keypress)="IngresarSoloLetras($event)" required>
+            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                matTooltip="Ingresar nombre del nievel de un título profesional">
+                help_outline</mat-icon>
+            <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
         </mat-form-field>
-          
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-        
-            <!-- Position Column -->
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef> No. </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-            </ng-container>
-        
-            <!-- Name Column -->
-            <ng-container matColumnDef="nombre">
-                <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
-            </ng-container>
-        
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        
-        </table>
-    </mat-card>
+    </div>
+</form>
+<br>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-sm" (click)="InsertarNivelTitulo(nuevoNivelTituloForm.value)"
+        [disabled]="!nuevoNivelTituloForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
 </div>

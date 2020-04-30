@@ -228,7 +228,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPlanHorario = datos;
       console.log("idcargo ", this.idPlanHorario[0].id)
-      this.vistaRegistroDetallePlanHorario.open(RegistroDetallePlanHorarioComponent, { width: '300px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
+      this.vistaRegistroDetallePlanHorario.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
     });

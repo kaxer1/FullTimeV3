@@ -33,8 +33,8 @@ import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/em
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
 import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
-import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
-import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
+import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
+import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 
 import { AuthGuard } from "./guards/auth.guard";
@@ -74,8 +74,8 @@ const routes: Routes = [
   { path: 'emplCargos', component: EmplCargosComponent, canActivate: [AuthGuard]},
   { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent, canActivate: [AuthGuard]},
   { path: 'sucursales', component: ListaSucursalesComponent, canActivate: [AuthGuard]},
-  { path: 'nivelTitulos', component: RegistrarNivelTitulosComponent, canActivate: [AuthGuard]},
-  { path: 'empresa', component: RegistroEmpresaComponent, canActivate: [AuthGuard] },
+  { path: 'nivelTitulos', component: ListarNivelTitulosComponent, canActivate: [AuthGuard]},
+  { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard] },
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard]},
 
 ];

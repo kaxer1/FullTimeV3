@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
-import { FormControl, Validators } from '@angular/forms';
-import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -22,6 +21,12 @@ export class ListaSucursalesComponent implements OnInit {
   filtroCiudadSuc = '';
   filtroEmpresaSuc = '';
 
+  public BuscarSucursalForm = new FormGroup({
+    buscarNombreForm: this.buscarNombre,
+    buscarCiudadForm: this.buscarCiudad,
+    buscarEmpresForm: this.buscarEmpresa
+  });
+
   sucursales: any = [];
 
   // items de paginacion de la tabla
@@ -31,7 +36,6 @@ export class ListaSucursalesComponent implements OnInit {
 
   constructor(
     private rest: SucursalService,
-    private restCiudad: CiudadService,
     private toastr: ToastrService,
     public vistaRegistrarSucursal: MatDialog,
   ) { }
@@ -56,9 +60,12 @@ export class ListaSucursalesComponent implements OnInit {
   }
 
   LimpiarCampoBuscar(){
-    this.buscarNombre.reset();
-    this.buscarCiudad.reset();
-    this.buscarEmpresa.reset();
+    this.BuscarSucursalForm.setValue({
+      buscarNombreForm: '',
+      buscarCiudadForm: '',
+      buscarEmpresForm: ''
+    });
+    this.ObtenerSucursal();
   }
 
   IngresarSoloLetras(e) {

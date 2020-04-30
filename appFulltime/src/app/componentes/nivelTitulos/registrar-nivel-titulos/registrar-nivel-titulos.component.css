@@ -2,16 +2,22 @@
 
 /*.tituloR-tooltip { background: #4622aa; }*/
 
-#itituloR { cursor: pointer; }
+#itituloL { cursor: pointer; }
 
 .tituloR { 
     font-size: 35px; 
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
+    padding-top: 10px;
+}
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
 }
 
 table { width: 100%; font-size: 14px;}
   
-.mat-form-field { font-size: 14px; width: 100%;}
+.mat-form-field { width: 100%;}

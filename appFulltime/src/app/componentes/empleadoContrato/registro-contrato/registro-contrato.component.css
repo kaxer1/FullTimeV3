@@ -17,6 +17,6 @@
 
 /*.contratoE-tooltip { background-color : rgb(17, 182, 44); }*/
 
-#contratoE { color:rgb(17, 182, 44); font-size: 18px; }
+#contratoE { cursor: pointer; }
 
 #nomEmple { font-size: 13px; }

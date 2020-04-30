@@ -1,54 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatDialogRef } from '@angular/material/dialog';
 
-export interface NivelTitulo {
-  id: number;
-  nombre: string;
-}
+import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
 @Component({
   selector: 'app-registrar-nivel-titulos',
   templateUrl: './registrar-nivel-titulos.component.html',
   styleUrls: ['./registrar-nivel-titulos.component.css']
 })
+
 export class RegistrarNivelTitulosComponent implements OnInit {
 
   nombre = new FormControl('', Validators.required)
-  nivelTitulos: Array<NivelTitulo> = [];
   
-  displayedColumns: string[] = ['id', 'nombre'];
-  dataSource: any;
-
   public nuevoNivelTituloForm = new FormGroup({
     NivelTituloNombreForm: this.nombre
   });
 
-  
   constructor(
     private restNivelTitulos: NivelTitulosService,
+    public dialogRef: MatDialogRef<RegistrarNivelTitulosComponent>,
     private toastr: ToastrService,
   ) {}
     
   ngOnInit(): void {
-    this.obtenerNiveles();
   }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
-  obtenerNiveles() {
-    this.nivelTitulos = [];
-    this.restNivelTitulos.getNivelesTituloRest().subscribe(res => {
-      this.nivelTitulos = res;
-      this.dataSource = new MatTableDataSource(this.nivelTitulos);
-    });
-  }
-
 
   InsertarNivelTitulo(form){
     let dataNivelTitulo = {
@@ -56,7 +34,6 @@ export class RegistrarNivelTitulosComponent implements OnInit {
     };
     this.restNivelTitulos.postNivelTituloRest(dataNivelTitulo).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Nivel del título guardado');
-      this.obtenerNiveles();
       this.LimpiarCampos();
     }, error => {
     });;
@@ -91,6 +68,12 @@ export class RegistrarNivelTitulosComponent implements OnInit {
       this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
       return false;
     }
+  }
+
+  CerrarVentanaRegistroTitulo() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

@@ -28,6 +28,8 @@
                                         <mat-label>Ingresar CI o pasaporte</mat-label>
                                         <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula"
                                             [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                                        <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
+                                        </mat-error>
                                         <mat-icon id="iemple" matSuffix matTooltipPosition="right"
                                             matTooltipClass="emple-tooltip"
                                             matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
@@ -41,6 +43,8 @@
                                         <mat-label>Ingresar Nombres</mat-label>
                                         <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
                                             [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                        <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
+                                        </mat-error>
                                         <mat-icon id="iemple" matSuffix matTooltipPosition="right"
                                             matTooltipClass="emple-tooltip"
                                             matTooltip="Búsqueda de empleado por el nombre">
@@ -53,6 +57,8 @@
                                         <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
                                             [formControl]="apellido" type="text"
                                             (keypress)="IngresarSoloLetras($event)">
+                                        <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
+                                        </mat-error>
                                         <mat-icon id="iemple" matSuffix matTooltipPosition="right"
                                             matTooltipClass="emple-tooltip"
                                             matTooltip="Búsqueda de empleado por el apellido">
@@ -64,8 +70,8 @@
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <button mat-button type="button" class="btn btn-sm"
-                        [routerLink]="['/registrarEmpleado']">Crear nuevo Empleado
+                    <button mat-button type="button" class="btn btn-sm" [routerLink]="['/registrarEmpleado']">Crear
+                        nuevo Empleado
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="limpiarCampos()">Cancelar
                     </button>
