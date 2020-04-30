@@ -66,8 +66,8 @@
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !nuevaCiudadForm.valid"
+        <input type="submit" class="btn btn-sm" [disabled]=" !nuevaCiudadForm.valid"
             (click)="InsertarCiudad(nuevaCiudadForm.value)" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroCiudad()" value="Salir">
+        <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroCiudad()" value="Salir">
     </mat-card-actions>
 </div>

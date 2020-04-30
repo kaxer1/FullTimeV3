@@ -1,24 +1,31 @@
-.btn { border-radius: 25px; margin-left: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 td { padding-top: 10px; text-align: center; }
-.far { color:red; margin-right: 15px; }
+
+p { font-size: x-small; }
+
+.far { color:red; margin-right: 15px; cursor: pointer; }
+
 #departamento { font-size: 12px; }
-#iciudadL { color:coral; font-size: 18px; }
-.ciudadL-tooltip { background-color : coral; }
+
+#iciudadL { cursor: pointer; }
+
+/*.ciudadL-tooltip { background-color : coral; }*/
+
 .tituloCiudadesL { 
     font-size: 20px; 
     text-align: center; 
-    background: coral; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px;
 }
+
 #resulCiudad { 
     font-size: 17px; 
     text-align: center; 
-    background: coral; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

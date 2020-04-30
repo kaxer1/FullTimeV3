@@ -36,6 +36,8 @@ import NIVEL_TITULO_RUTAS from './rutas/nivelTitulo/nivelTituloRutas';
 import PERIODO_VACACION__RUTAS from './rutas/empleado/empleadoPeriodoVacacion/periodoVacacionRutas';
 import VACACIONES__RUTAS from './rutas/vacaciones/vacacionesRutas';
 import EMPLEADO_PROCESO_RUTAS from './rutas/empleado/empleadoProcesos/empleProcesosRutas';
+import PLAN_HORARIO_RUTAS from './rutas/horarios/planHorario/planHorarioRutas';
+import DETALLE_PLAN_HORARIO_RUTAS from './rutas/horarios/detallePlanHorario/detallePlanHorarioRutas';
 
 class Server {
 
@@ -70,6 +72,10 @@ class Server {
 
         //Almuerzo
         this.app.use('/planComidas', PLAN_COMIDAS_RUTAS);
+
+        //Horarios
+        this.app.use('/planHorario', PLAN_HORARIO_RUTAS);
+        this.app.use('/detallePlanHorario', DETALLE_PLAN_HORARIO_RUTAS);
 
         //Enrolados
         this.app.use('/enrolados', ENROLADO_RUTA);

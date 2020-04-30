@@ -14,7 +14,7 @@ interface Nivel {
   selector: 'app-notificaciones',
   templateUrl: './notificaciones.component.html',
   styleUrls: ['./notificaciones.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class NotificacionesComponent implements OnInit {
 

@@ -40,6 +40,8 @@ const nivelTituloRutas_1 = __importDefault(require("./rutas/nivelTitulo/nivelTit
 const periodoVacacionRutas_1 = __importDefault(require("./rutas/empleado/empleadoPeriodoVacacion/periodoVacacionRutas"));
 const vacacionesRutas_1 = __importDefault(require("./rutas/vacaciones/vacacionesRutas"));
 const empleProcesosRutas_1 = __importDefault(require("./rutas/empleado/empleadoProcesos/empleProcesosRutas"));
+const planHorarioRutas_1 = __importDefault(require("./rutas/horarios/planHorario/planHorarioRutas"));
+const detallePlanHorarioRutas_1 = __importDefault(require("./rutas/horarios/detallePlanHorario/detallePlanHorarioRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -66,6 +68,9 @@ class Server {
         this.app.use('/empleadoProcesos', empleProcesosRutas_1.default);
         //Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
+        //Horarios
+        this.app.use('/planHorario', planHorarioRutas_1.default);
+        this.app.use('/detallePlanHorario', detallePlanHorarioRutas_1.default);
         //Enrolados
         this.app.use('/enrolados', catEnroladoRutas_1.default);
         this.app.use('/relojes', catRelojesRuta_1.default);

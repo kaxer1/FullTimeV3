@@ -20,17 +20,17 @@ class EmpleadoCargosControlador {
     const { id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja } = req.body;
     await pool.query('INSERT INTO empl_cargos ( id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empl_contrato, id_departamento, fec_inicio, fec_final, id_sucursal, sueldo, hora_trabaja]);
     console.log(req.body);
-    res.json({ message: 'Cargo empleado guardado'});
+    res.json({ message: 'Cargo empleado guardado' });
   }
 
   public async EncontrarIdCargo(req: Request, res: Response): Promise<any> {
     const { id_empleado } = req.params;
     const CARGO = await pool.query('SELECT ec.id FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id_empleado]);
     if (CARGO.rowCount > 0) {
-        return res.json(CARGO.rows)
+      return res.json(CARGO.rows)
     }
     res.status(404).json({ text: 'Registro no encontrado' });
-}
+  }
 
 }
 

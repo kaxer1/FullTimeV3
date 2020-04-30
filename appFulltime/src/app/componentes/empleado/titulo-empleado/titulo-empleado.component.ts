@@ -9,7 +9,7 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
   selector: 'app-titulo-empleado',
   templateUrl: './titulo-empleado.component.html',
   styleUrls: ['./titulo-empleado.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class TituloEmpleadoComponent implements OnInit {
 
@@ -82,6 +82,7 @@ export class TituloEmpleadoComponent implements OnInit {
 
   cerrarRegistro() {
     this.metodo.mostrarTit();
+    window.location.reload();
   }
 
   VerificarTitulo() {

@@ -11,7 +11,7 @@ import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.s
   selector: 'app-planificacion-comidas',
   templateUrl: './planificacion-comidas.component.html',
   styleUrls: ['./planificacion-comidas.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class PlanificacionComidasComponent implements OnInit {

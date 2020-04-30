@@ -1,11 +1,15 @@
 .barraTitulo { 
     text-align: center; 
-    background: rgb(22, 106, 216); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 25px; 
     padding-top: 14px; 
     padding-bottom: 6px;
 }
-.alinear {margin-top: 5px; }   
-.color-tooltip { background: #2c6ec5; }
+
+.alinear {margin-top: 5px; }
+
+/*.color-tooltip { background: #2c6ec5; }*/
+
 #botonTitulo { margin-left: 10px; border-radius: 100%; }
+
+#icono { cursor: pointer; }

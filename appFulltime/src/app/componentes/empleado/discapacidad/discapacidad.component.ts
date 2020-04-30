@@ -45,6 +45,7 @@ export class DiscapacidadComponent implements OnInit {
   constructor(
     private rest: DiscapacidadService,
     private toastr: ToastrService,
+    private router: Router,
     private metodo: VerEmpleadoComponent
   ) {}
   
@@ -130,6 +131,7 @@ export class DiscapacidadComponent implements OnInit {
   
   cerrarRegistro(){
     this.metodo.mostrarDis();
+    window.location.reload();
   }
 
 }

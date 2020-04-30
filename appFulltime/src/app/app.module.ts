@@ -147,6 +147,9 @@ import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-
 import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
 import { RegistrarEmpleProcesoComponent } from './componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
 import { RegistrarVacacionesComponent } from './componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
+import { RegistroPlanHorarioComponent } from './componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
+import { RegistroDetallePlanHorarioComponent } from './componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
+import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 
 @NgModule({
   declarations: [
@@ -234,6 +237,9 @@ import { RegistrarVacacionesComponent } from './componentes/vacaciones/registrar
     FiltroDepartamentoRPipe,
     RegistrarEmpleProcesoComponent,
     RegistrarVacacionesComponent,
+    RegistroPlanHorarioComponent,
+    RegistroDetallePlanHorarioComponent,
+    ListarNivelTitulosComponent,
 
   ],
   imports: [

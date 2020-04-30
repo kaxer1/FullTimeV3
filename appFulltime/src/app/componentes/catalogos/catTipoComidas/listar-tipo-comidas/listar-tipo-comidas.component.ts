@@ -12,7 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-tipo-comidas',
   templateUrl: './listar-tipo-comidas.component.html',
   styleUrls: ['./listar-tipo-comidas.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class ListarTipoComidasComponent implements OnInit {
@@ -58,7 +58,7 @@ export class ListarTipoComidasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTipoComidas(): void {
-    this.vistaRegistrarTipoComida.open(TipoComidasComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarTipoComida.open(TipoComidasComponent, { width: '350px' }).disableClose = true;
   }
 
   LimpiarCampos() {

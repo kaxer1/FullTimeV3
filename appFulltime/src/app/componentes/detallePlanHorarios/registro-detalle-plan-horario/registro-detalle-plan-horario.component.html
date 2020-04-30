@@ -1,0 +1,57 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="detallePlanHorarioE">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Planificación Horario</h5>
+</div>
+<br>
+<!-- Formulario Completo -->
+<form [formGroup]="DetallePlanHorarioForm">
+    <mat-card-content>
+        <div class="container" style="text-align: center">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Fecha de inicio de actividades</mat-label>
+                        <input matInput type="date" placeholder="Ingresar fecha de inicio" [formControl]="fechaF"
+                            required>
+                        <mat-icon id="icono" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de inicio de actividades">
+                            date_range</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Tipo de día</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltipClass="horaE-tooltip"
+                            matTooltip="Seleccionar el tipo de día en los que se podrá realizar horas extras">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="tipoDia" required>
+                            <mat-option *ngFor="let d of dia" [value]="d.value">
+                                {{d.viewValue}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccionar Horario</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="sucursalR-tooltip"
+                            matTooltipPosition="right" matTooltip="Lista de países del continente seleccionado">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="horarioF" required>
+                            <mat-option *ngFor="let h of horarios" [value]="h.id">
+                                {{h.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center">
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-sm" [disabled]="!DetallePlanHorarioForm.valid"
+            (click)="InsertarDetallePlanHorario(DetallePlanHorarioForm.value)" value="Guardar">
+        <input type="submit" (click)="CerrarVentanaDetallePlanHorario()" class="btn btn-sm" value=" Salir">
+    </mat-card-actions>
+</div>

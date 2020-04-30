@@ -1,28 +1,37 @@
-.btn { margin-left: 15px; border-radius: 25px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+p { font-size: x-small; }
+
 #centrar { padding-top: 10px; text-align: center; }
+
 #fila { padding-top: 10px; margin-left: 50px; }
-.fas { color:green; margin-left: 20px; }
-.far { color:red; }
-#iComidasL { color:rgb(40, 155, 184); font-size: 18px; }
-.comidasL-tooltip { background-color : rgb(40, 155, 184); }
+
+.fas { color:green; margin-left: 20px; cursor: pointer; }
+
+.far { color:red; cursor: pointer; }
+
+#iComidasL { cursor: pointer; }
+
+/*.comidasL-tooltip { background-color : rgb(40, 155, 184); }*/
+
 .tituloTipoCoL { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(40, 155, 184); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px;
     padding-bottom: 6px; 
 }
+
 #resulComidas { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(40, 155, 184); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
 
-table { width: 100%; font-size: 14px;}
+table { width: 100%; font-size: 14px; }
+
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }

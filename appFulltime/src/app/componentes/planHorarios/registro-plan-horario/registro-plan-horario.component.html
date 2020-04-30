@@ -1,0 +1,43 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="planHorarioE">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Planificación Horario</h5>
+</div>
+<br>
+<!-- Formulario Completo -->
+<form [formGroup]="PlanHorarioForm">
+    <mat-card-content>
+        <div class="container" style="text-align: center">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Fecha de inicio de actividades</mat-label>
+                        <input matInput type="date" placeholder="Ingresar fecha de inicio"
+                            [formControl]="fechaIngresoF" required>
+                        <mat-icon id="icono" matSuffix matTooltipClass="contratoE-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de inicio de actividades">
+                            date_range</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha fin de actividades</mat-label>
+                        <input matInput type="date" placeholder="Ingresar fecha de finalización" [formControl]="fechaSalidaF" required>
+                        <mat-icon id="icono" matSuffix matTooltipClass="contratoE-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de finalización de actividades">
+                            event</mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center">
+    <mat-card-actions style="text-align: center">
+        <input type="submit" class="btn btn-sm" [disabled]="!PlanHorarioForm.valid"
+            (click)="ValidarDatosPlanHorario(PlanHorarioForm.value)" value="Guardar">
+        <input type="submit" (click)="CerrarVentanaPlanHorario()" class="btn btn-sm" value=" Salir">
+    </mat-card-actions>
+</div>

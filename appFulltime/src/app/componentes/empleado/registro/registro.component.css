@@ -2,24 +2,21 @@ mat-form-field {width: 195px; }
 
 #letraT { font-size: 11px; }
 
-#icono_emple { color: rgba(22, 106, 216, 0.828); font-size: 19px; }
-
-#icono_info { color: rgba(221, 10, 10, 0.828); }
+#icono_emple { cursor: pointer; }
 
 #seccion_emple { color: rgba(8, 10, 124, 0.828); }
 
 .container{ padding-top: 15px; }
 
-.empleadoR-tooltip { background: #276bc3; }
+/*.empleadoR-tooltip { background: #276bc3; }*/
 
-.btn { border-radius: 25px; margin-left: 15px; margin-top: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
 .barraTitulo { 
     font-size: 25px; 
     text-align: center; 
-    background: rgba(22, 106, 216, 0.828); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

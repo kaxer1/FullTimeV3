@@ -1,13 +1,15 @@
-.btn { border-radius: 25px; }
-.notifica-tooltip { background-color : brown; }
+.btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
+
+/*.notifica-tooltip { background-color : brown; }*/
+
 .tituloNotifica { 
     font-size: 20px; 
     text-align: center; 
-    background: brown; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 15px; 
     padding-top: 10px; 
     padding-bottom: 6px;
 }
 #selecDepa { font-size: 13px; }
-#notifica { color:brown; font-size: 18px;}
+
+#notifica { cursor: pointer; }

@@ -11,7 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-lista-sucursales',
   templateUrl: './lista-sucursales.component.html',
   styleUrls: ['./lista-sucursales.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListaSucursalesComponent implements OnInit {
 

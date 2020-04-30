@@ -89,8 +89,8 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
-                    <a mat-button [routerLink]="['/empleado']" class="btn btn-warning">Regresar a Empleado</a>
+                    <a mat-button [routerLink]="['/empleado']" class="btn">Regresar a Empleado</a>
+                    <button mat-button matStepperNext class="btn">Siguiente</button>  
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -193,8 +193,8 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                    <button mat-button matStepperNext class="btn btn-primary">Siguiente</button>
+                    <button mat-button matStepperPrevious class="btn">Atrás</button>
+                    <button mat-button matStepperNext class="btn">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
@@ -260,11 +260,12 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button matStepperPrevious class="btn btn-success">Atrás</button>
-                        <button mat-button (click)="stepper.reset()" class="btn btn-danger">Cancelar</button>
+                        <button mat-button matStepperPrevious class="btn">Atrás</button>
                         <button mat-button
                             (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
-                            type="submit" class="btn btn-primary" [disabled]="!terceroFormGroup.valid">Guardar</button>
+                            type="submit" class="btn btn-primary" [disabled]="!terceroFormGroup.valid">Guardar
+                        </button>
+                        <button mat-button (click)="stepper.reset()" class="btn">Cancelar</button>
                     </div>
                 </form>
             </mat-step>

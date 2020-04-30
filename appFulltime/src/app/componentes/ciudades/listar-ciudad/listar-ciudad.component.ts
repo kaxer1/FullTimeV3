@@ -11,7 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-ciudad',
   templateUrl: './listar-ciudad.component.html',
   styleUrls: ['./listar-ciudad.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListarCiudadComponent implements OnInit {
 

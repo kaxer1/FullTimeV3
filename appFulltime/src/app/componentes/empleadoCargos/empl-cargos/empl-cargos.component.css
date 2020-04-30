@@ -1,13 +1,26 @@
-.btn { border-radius: 25px; margin-left: 15px;}
-.barraTituloCargoE { text-align: center; background: rgb(4, 156, 136); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px;}
-.alinear {margin-top: 5px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+.barraTituloCargoE { 
+    text-align: center; 
+    background: rgb(52,65,84);
+     color: white; 
+     padding-top: 14px; 
+}
+
+.alinear {margin-top: 5px; }
+
 mat-form-field {width: 195px; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
-.cargoE-tooltip { background-color : rgb(4, 156, 136); }
-#cargoE { color:rgb(4, 156, 136); font-size: 18px; }
+
+/*.cargoE-tooltip { background-color : rgb(4, 156, 136); }*/
+
+#cargoE { cursor: pointer; }
+
 #selecDepa { font-size: 12px; }
+
 #selEmpre { font-size: 14px; }

@@ -13,7 +13,7 @@ import { startWith, map } from 'rxjs/operators';
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  //encapsulation: ViewEncapsulation.None,
 })
 export class RegistroComponent implements OnInit {
 

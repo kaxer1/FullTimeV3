@@ -10,7 +10,7 @@
                     <mat-label>Nombre del Nivel</mat-label>
                     <input matInput placeholder="Ej: Certificados" [formControl]="nombre"
                     (keypress)="IngresarSoloLetras($event)" required>
-                    <mat-icon matSuffix matTooltipClass="tituloR-tooltip" matTooltipPosition="right"
+                    <mat-icon id="itituloR" matSuffix matTooltipClass="tituloR-tooltip" matTooltipPosition="right"
                     matTooltip="Ingresar nombre de nivel de educación">
                     help_outline</mat-icon>
                     <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
@@ -18,9 +18,9 @@
             </div>
         </form>
         <div style="text-align: center;">
-            <input type="submit" class="btn btn-primary btn-sm" (click)="InsertarNivelTitulo(nuevoNivelTituloForm.value)"
+            <input type="submit" class="btn btn-sm" (click)="InsertarNivelTitulo(nuevoNivelTituloForm.value)"
             [disabled]="!nuevoNivelTituloForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-danger btn-sm" value="Salir">
+            <input type="submit" class="btn btn-sm" value="Salir">
         </div>
         
     </mat-card>

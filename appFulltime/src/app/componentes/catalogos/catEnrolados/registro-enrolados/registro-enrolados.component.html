@@ -38,11 +38,11 @@
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
                             <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                            matTooltip="Ocultar o mostrar la contraseña ingresada">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                matTooltip="Ocultar o mostrar la contraseña ingresada">
+                                {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label>Confirmar Contraseña</mat-label>
                         <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
@@ -52,10 +52,12 @@
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
                             <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                            matTooltip="Ocultar o mostrar la contraseña ingresada">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                matTooltip="Ocultar o mostrar la contraseña ingresada">
+                                {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Número de huella </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
@@ -83,6 +85,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm">
+                                        <br>
                                         <mat-radio-button value="true">Si</mat-radio-button>
                                         <mat-radio-button value="false">No</mat-radio-button>
                                     </div>
@@ -96,7 +99,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-primary btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
+    <input type="submit" class="btn btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
         [disabled]="!nuevoEnroladoForm.valid" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
 </div>

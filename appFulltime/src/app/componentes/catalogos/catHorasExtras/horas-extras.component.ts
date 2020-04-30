@@ -27,7 +27,7 @@ interface Dia{
   selector: 'app-horas-extras',
   templateUrl: './horas-extras.component.html',
   styleUrls: ['./horas-extras.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class HorasExtrasComponent implements OnInit {
 

@@ -10,7 +10,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-lista-empleados',
   templateUrl: './lista-empleados.component.html',
   styleUrls: ['./lista-empleados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListaEmpleadosComponent implements OnInit {
 

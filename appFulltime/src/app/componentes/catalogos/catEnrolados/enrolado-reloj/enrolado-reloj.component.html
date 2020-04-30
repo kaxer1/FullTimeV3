@@ -7,10 +7,10 @@
         <mat-card-content>
             <div class="container">
                 <mat-form-field>
-                    <mat-label id="selecDispositivo">Seleccionar Dispositivo *</mat-label>
+                    <mat-label id="selecDispositivo">Seleccionar Dispositivo</mat-label>
                     <mat-icon id="enrolado_reloj" matSuffix matTooltipClass="reloj-enrolado-tooltip" matTooltipPosition="right"
                         matTooltip="Lista de dispositivos existentes en la empresa">help_outline</mat-icon>
-                    <mat-select [formControl]="dispositivoF" [(ngModel)]="seleccionarDispositivo">
+                    <mat-select [formControl]="dispositivoF" [(ngModel)]="seleccionarDispositivo" required>
                         <mat-option *ngFor="let d of dispositivos" [value]="d.id">
                             {{d.nombre}}
                         </mat-option>
@@ -20,8 +20,8 @@
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]=" !asignarRelojForm.valid"
+        <input type="submit" class="btn btn-sm" [disabled]="!asignarRelojForm.valid"
             (click)="InsertarEnroladoReloj(asignarRelojForm.value, data.datosEnrolado.id)" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaAsignarReloj()" value="Salir">
+        <input type="submit" class="btn btn-sm" (click)="CerrarVentanaAsignarReloj()" value="Salir">
     </mat-card-actions>
 </div>

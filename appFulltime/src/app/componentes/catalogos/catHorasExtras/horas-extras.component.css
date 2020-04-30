@@ -1,31 +1,44 @@
 mat-slider { width: 190px; }
+
 #horaExtra { font-size: small; }
+
 #codigoP { font-size: small; }
+
 #tipoRecargo { font-size: small; }
-.horaE-tooltip { background-color : chocolate; }
-.horaS-tooltip { background-color : chocolate; font-size: 11px; border-radius: 25px;}
-#iHora { color:chocolate; font-size: 18px; }
+
+/*.horaE-tooltip { background-color : chocolate; }*/
+
+/*.horaS-tooltip { background-color : chocolate; font-size: 11px; border-radius: 25px; }*/
+
+#iHora { cursor: pointer; }
+
 .example-section { display: flex; align-content: center; align-items: center; height: 60px; }
-.btn { border-radius: 25px; margin-left: 15px; margin-top: 15px; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 #iconoG { margin-left: 15px; }
+
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
 .example-margin { margin: 0 10px; }
+
 .tituloExtra { 
   font-size: 20px; 
   text-align: center; 
-  background: chocolate; 
+  background: rgb(52,65,84); 
   color: white; 
-  border-radius: 10px; 
   padding-top: 10px;
   padding-bottom: 6px; 
 }
+
 .titulo_horaE { 
   position: relative; 
   float: left; 
   font-size: 19px; 
   font-weight: bold; 
   text-align: center; 
-  color: rgb(0, 0, 0);}
+  color: rgb(0, 0, 0);
+}
 
 .subtitulo_horaE {
   font-size: 14px; 
@@ -35,4 +48,5 @@ mat-slider { width: 190px; }
   padding-bottom: 25px; 
   text-align: justify;
 }
+
 #seccion_horaE { color: rgba(8, 10, 124, 0.828); }

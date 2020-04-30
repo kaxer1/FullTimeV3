@@ -1,60 +1,64 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-3"></div>
         <div class="col">
+            <div class="TituloEnrolado">
+                <span>EMPLEADOS ENROLADOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z8">
-                <div class="TituloEnrolado">
-                    <span>EMPLEADOS ENROLADOS</span>
-                </div>
-                <br>
                 <h5>Críterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
-                <mat-card-content>
-                    <div class="container" style="text-align: center;">
-                        <form>
-                            <mat-form-field>
-                                <mat-label>Ingresar ID de usuario</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser" [formControl]="idUser"
-                                    (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el ID de usuario">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Nombre</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre" [formControl]="nombre"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el nombre">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Seleccionar Estado</mat-label>
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el estado">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="activo" [(ngModel)]="filtroActivo">
-                                    <mat-option *ngFor="let d of activoBus" [value]="d.value">
-                                        {{d.viewValue}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </form>
-                    </div>
-                </mat-card-content>
+                <form>
+                    <mat-card-content>
+                        <div class="container" style="text-align: center;">
+                            <div class="row">
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar ID de usuario</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser"
+                                            [formControl]="idUser" (keypress)="IngresarSoloNumeros($event)">
+                                        <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                            matTooltipPosition="right"
+                                            matTooltip="Búsqueda del empleado enrolado por el ID de usuario">
+                                            help_outline</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Ingresar Nombre</mat-label>
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre"
+                                            [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                        <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                            matTooltipPosition="right"
+                                            matTooltip="Búsqueda del empleado enrolado por el nombre">
+                                            help_outline</mat-icon>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Seleccionar Estado</mat-label>
+                                        <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                            matTooltipPosition="right"
+                                            matTooltip="Búsqueda del empleado enrolado por el estado">
+                                            help_outline</mat-icon>
+                                        <mat-select [formControl]="activo" [(ngModel)]="filtroActivo">
+                                            <mat-option *ngFor="let d of activoBus" [value]="d.value">
+                                                {{d.viewValue}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </form>
                 <div style="text-align: center;">
-                    <input type="submit" class="btn btn-danger btn-sm" (click)="limpiarCampos()" value="Cancelar">
-                    <button type="button" class="btn btn-primary btn-sm"
-                        (click)="AbrirVentanaRegistrarEnrolado()">Enrolar a un empleado</button>
+                    <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Enrolar a un
+                        empleado
+                    </button>
+                    <input type="submit" class="btn btn-sm" (click)="limpiarCampos()" value="Cancelar">
                 </div>
             </mat-card>
         </div>
-        <div class="col-3"></div>
     </div>
 </div>
 <br>
@@ -72,35 +76,36 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
+                <tr
+                    *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
                     <td>{{enrolado.id_usuario}}</td>
                     <td>{{enrolado.nombre}}</td>
                     <td>{{enrolado.activo}}</td>
                     <td>{{enrolado.finger}}</td>
                     <td>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                        matTooltip="Agregar empleado enrolado a un dispositivo" class="far fa-clock" id="enr_reloj"
-                        (click)="AbrirVentanaAsignarReloj(enrolado)">
-                        <p>Dispositivo</p>
-                    </i>
-                    <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
-                        <p>Editar</p>
-                    </i>
-                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                        matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado"
-                        [routerLink]="['/enroladoDispositivo/', enrolado.id]">
-                        <p>Ver</p>
-                    </i>
-                    <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                        matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
-                        <p>Eliminar</p>
-                    </i>
+                            matTooltip="Agregar empleado enrolado a un dispositivo" class="far fa-clock" id="enr_reloj"
+                            (click)="AbrirVentanaAsignarReloj(enrolado)">
+                            <p>Dispositivo</p>
+                        </i>
+                        <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                            <p>Editar</p>
+                        </i>
+                        <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado"
+                            [routerLink]="['/enroladoDispositivo/', enrolado.id]">
+                            <p>Ver</p>
+                        </i>
+                        <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
+                            matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
+                            <p>Eliminar</p>
+                        </i>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <mat-paginator [length]="enrolados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                        (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="enrolados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </mat-card>
 </div>
