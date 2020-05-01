@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -13,11 +13,18 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
+
 import { RegistrarPeriodoVComponent } from 'src/app/componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
 import { RegistrarEmpleProcesoComponent } from 'src/app/componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -25,7 +32,6 @@ import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detalle
   styleUrls: ['./ver-empleado.component.css']
 })
 export class VerEmpleadoComponent implements OnInit {
-
   empleadoUno: any = [];
   idEmpleado: string;
   editar: string = '';
@@ -35,15 +41,17 @@ export class VerEmpleadoComponent implements OnInit {
   btnDisc = 'Añadir';
   btnTitulo = 'Añadir';
   discapacidadUser: any = [];
-  tituloUser: any = [];
-
+  
   btnHabilitado = true;
   barraDis = false;
-
+  
   relacionTituloEmpleado: any = [];
   auxRestTitulo: any = [];
-
+  
   idContrato: any = [];
+  contratoEmpleado: any = [];
+
+  logo: any;
   idCargo: any = [];
   idPerVacacion: any = [];
   idPlanHorario: any = [];
@@ -65,15 +73,18 @@ export class VerEmpleadoComponent implements OnInit {
     public vistaRegistroDetallePlanHorario: MatDialog,
     public router: Router,
     private toastr: ToastrService,
+    private scriptService: ScriptService
   ) {
     var cadena = this.router.url;
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(this.idEmpleado);
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
+    this.scriptService.load('pdfMake', 'vfsFonts');
   }
 
   ngOnInit(): void {
     this.verEmpleado(this.idEmpleado);
+    this.obtenerContratoEmpleadoRegimen();
   }
 
   onUploadFinish(event) {
@@ -86,8 +97,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       // sacar la fecha del JSON 
       var cadena1 = data[0]['fec_nacimiento'];
-      var aux1 = cadena1.split("T");
-      this.fecha = aux1[0];
+      this.fecha = cadena1.split("T")[0];
     })
   }
 
@@ -102,27 +112,16 @@ export class VerEmpleadoComponent implements OnInit {
   // metodo para obtener los titulos de un empleado a traves de la tabla EMPL_TITULOS que conecta a la tabla EMPLEADOS con CG_TITULOS 
   obtenerTituloEmpleado(idEmployTitu: any) {
     this.relacionTituloEmpleado = [];
-
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
-
-      this.tituloUser = data;
-      let aux = {};
-      for (let i of this.tituloUser) {
-
-        this.restTitulo.getOneTituloRest(i.id_titulo).subscribe(res => {
-          this.auxRestTitulo = res;
-          for (let j of this.auxRestTitulo) {
-            aux = {
-              observaciones: i.observacion,
-              nombre: j.nombre,
-              nivel: j.nivel
-            }
-            this.relacionTituloEmpleado.push(aux);
-          }
-        });
-      }
-
+      this.relacionTituloEmpleado = data;
     }, error => { });
+  }
+
+  // metodo para obtener el contrato de un empleado con su respectivo regimen laboral
+  obtenerContratoEmpleadoRegimen(){
+    this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
+      this.contratoEmpleado = res;
+    })
   }
 
   // El metodo controla que solo se habilite el boton si no existe un registro de discapacidad, 
@@ -202,6 +201,247 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
+  }
+
+  // PARA LA GENERACION DE PDFs
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('profile', this.empleadoUno);
+    return {
+      header: function(currentPage, pageCount, pageSize) {
+        // you can apply any logic and return any valid pdfmake element
+        return [
+          { text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
+          { canvas: [ { type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 } ] }
+        ]
+      },
+      content: [
+        this.logoEmplesa(),
+        {
+          text: 'Perfil Empleado',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        {
+          columns: [
+            [{
+              text: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido,
+              style: 'name'
+            },
+            {
+              text: 'Fecha Nacimiento: ' + this.fecha
+            },
+            {
+              text: 'Corre Electronico: ' + this.empleadoUno[0].correo,
+            },
+            {
+              text: 'Teléfono: ' + this.empleadoUno[0].telefono,
+            }
+            ]
+          ]
+        },
+        {
+          text: 'Contrato Empleado',
+          style: 'header'
+        },
+        this.presentarDataPDFcontratoEmpleado(),
+        {
+          text: 'Plan de comidas',
+          style: 'header'
+        },
+        // this.presentarDataPDFplanComidas(),
+        {
+          text: 'Titulos',
+          style: 'header'
+        },
+        this.presentarDataPDFtitulosEmpleado(),
+        {
+          text: 'Discapacidad',
+          style: 'header'
+        },
+        this.presentarDataPDFdiscapacidadEmpleado(),
+      ],
+      info: {
+        title: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido + '_PERFIL',
+        author: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido ,
+        subject: 'Perfil',
+        keywords: 'Perfil, Empleado',
+      },
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            margin: [0, 20, 0, 10],
+            decoration: 'underline'
+          },
+          name: {
+            fontSize: 16,
+            bold: true
+          },
+          jobTitle: {
+            fontSize: 14,
+            bold: true,
+            italics: true
+          },
+          sign: {
+            margin: [0, 50, 0, 10],
+            alignment: 'right',
+            italics: true
+          },
+          tableHeader: {
+            bold: true,
+            alignment: 'center',
+            fillColor: '#6495ED'
+          }
+        }
+    };
+  }
+
+  presentarDataPDFtitulosEmpleado() {
+    return {
+      table: {
+        widths: ['*', '*', '*'],
+        body: [
+          [{
+            text: 'Observaciones',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Nombre',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Nivel',
+            style: 'tableHeader'
+          }
+          ],
+          ...this.relacionTituloEmpleado.map(obj => {
+            return [obj.observaciones, obj.nombre, obj.nivel];
+          })
+        ]
+      }
+    };
+  }
+
+  presentarDataPDFcontratoEmpleado() {
+    return {
+      table: {
+        widths: ['*', 'auto', 100, '*'],
+        body: [
+          [{
+            text: 'Descripción',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Dias Vacacion',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Fecha Ingreso',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Fecha Salida',
+            style: 'tableHeader'
+          }
+          ],
+          ...this.contratoEmpleado.map(obj => {
+            const ingreso = obj.fec_ingreso.split("T")[0];
+            const salida = obj.fec_salida.split("T")[0];
+            return [obj.descripcion, obj.dia_anio_vacacion, ingreso, salida];
+          })
+        ]
+      }
+    };
+
+  }
+  
+  presentarDataPDFdiscapacidadEmpleado() {
+    return {
+      table: {
+        widths: ['*', '*', '*'],
+        body: [
+          [{
+            text: 'Carnet conadis',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Porcentaje',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Tipo',
+            style: 'tableHeader'
+          }
+          ],
+          ...this.discapacidadUser.map(obj => {
+            return [obj.carn_conadis, obj.porcentaje + ' %', obj.tipo];
+          })
+        ]
+      }
+    };
+  }
+  
+  presentarDataPDFplanComidas(){
+
+  }
+
+  logoEmplesa() {
+    if (this.logo) {
+      return {
+        image: this.logo,
+        width: 110,
+        alignment : 'right'
+      };
+    }
+    return null;
+  }
+
+  fileChanged(e) {
+    const file = e.target.files[0];
+    this.getBase64(file);
+  }
+
+  getBase64(file) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // console.log(reader.result);
+      this.logo = reader.result as string;
+    };
+    reader.onerror = (error) => {
+      console.log('Error: ', error);
+    };
+  }
+
+  // *********************************************************************
+
+   exportToExcel() {
+    const ws: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
+    xlsx.writeFile(wb, 'InfoEmpleado.xlsx');
+  }
+
+  exportToCVS(){
+    const hoja: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
+    const ws = xlsx.utils.sheet_to_csv(hoja);
+    console.log(ws);
+    // const wb: xlsx.WorkBook = xlsx.utils.book_new();
   }
 
   AbrirVentanaVacaciones(): void {

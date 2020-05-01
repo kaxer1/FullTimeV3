@@ -1,8 +1,7 @@
 <div class="container" *ngFor="let e of empleadoUno" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col-md">
-            <br>
-            <mat-card class="mat-elevation-z8" style="width: 450px">
+            <mat-card class="mat-elevation-z8">
                 <div class="barraTitulo">
                     <h5>{{e.nombre}} {{e.apellido}}</h5>
                 </div>
@@ -59,15 +58,70 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-
-            <div style="padding-bottom: 35px; padding-top: 35px;">
-                <!-- <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos> -->
-            </div>
-
+            <!-- <div style="padding-bottom: 35px; padding-top: 35px;">
+                <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos>
+            </div> -->
         </div>
+        <br>
         <div class="col-md">
-            <br>
-            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px; width: 350px">
+            <mat-card class="mat-elevation-z8">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <button (click)="generarPdf('open')" class="btn d-flex align-items-center justify-content-center" id="boton"> 
+                                <i class="material-icons">picture_as_pdf</i><span>Abrir PDF</span>
+                            </button>
+                            <button (click)="generarPdf('download')" class="btn d-flex align-items-center justify-content-center" id="boton">
+                                <i class="material-icons">cloud_download</i><span>Descargar PDF</span>
+                            </button>
+                            <button (click)="generarPdf('print')" class="btn d-flex align-items-center justify-content-center" id="boton">
+                                <i class="material-icons">print</i><span>Imprimir PDF</span>
+                            </button>
+                            <button (click)="exportToExcel()" class="btn d-flex align-items-center justify-content-center" id="boton">
+                                <i class="material-icons fas fa-file-excel"></i><span>Exportar a Excel</span>
+                            </button> 
+                            <button (click)="exportToCVS()" class="btn d-flex align-items-center justify-content-center" id="boton">
+                                <i class="material-icons fas fa-file-csv"></i><span>Exportar a CVS</span>
+                            </button>
+                        </div>
+                        <div class="col">
+                            <button type="submit" id="boton" [routerLink]="['/empleado']" class="btn">Regresar a Empleado</button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaCrearContrato()" class="btn">Contrato Empleado
+                            </button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos Empleado</button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos
+                            </button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaPerVacaciones()" class="btn">Período de Vacaciones
+                            </button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaVacaciones()" class="btn">Vacaciones</button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaPlanHorario()" class="btn">Planificación Horario
+                            </button>
+                            <br>
+                            <button type="submit" id="boton" (click)="AbrirVentanaDetallePlanHorario()" class="btn">Detalle Planificación Horario
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- <div class="form-group">
+                    <label class="h4 mb-3" for="">Show your picture in Resume</label>
+                    <input type="file" class="form-control-file" (change)="fileChanged($event)">
+                </div> -->
+            </mat-card>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
                 <div class="barraTitulo2">
                     <div class="container">
                         <div class="row">
@@ -114,7 +168,9 @@
             <div style="padding-bottom: 35px; padding-top: 35px;">
                 <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
             </div>
-            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px; width: 350px">
+        </div>
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
                 <div class="barraTitulo1">
                     <div class="container">
                         <div class="row" style="text-align: center;">
@@ -162,29 +218,10 @@
                 </app-discapacidad>
             </div>
         </div>
-        <div class="col-md" style="text-align: right; width: 220px">
-            <br>
-            <button type="submit" id="boton" [routerLink]="['/empleado']" class="btn">Regresar a Empleado</button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaCrearContrato()" class="btn">Contrato Empleado
-            </button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos Empleado</button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos
-            </button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaPerVacaciones()" class="btn">Período de Vacaciones
-            </button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaVacaciones()" class="btn">Vacaciones</button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaPlanHorario()" class="btn">Planificación Horario
-            </button>
-            <br>
-            <button type="submit" id="boton" (click)="AbrirVentanaDetallePlanHorario()" class="btn">Detalle Planificación Horario
-            </button>
-        </div>
     </div>
+</div>
+
+
+
+
+    

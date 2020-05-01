@@ -44,23 +44,24 @@
                 <span>REGISTRO MULTIPLE DE FERIADOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <div class="input-group">
+                <div class="container">
+                    <form  method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file" 
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
+                        <label for="file" class="btn-2" >Subir Feriados</label>
+                    </form>
+                <!-- <div class="input-group">
                     <div class="custom-file">
-                        <form method="post" enctype="multipart/form-data">
-                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm"
-                                class="custom-file-input" id="inputGroupFile01"
-                                aria-describedby="inputGroupFileAddon01">
-                        </form>
+                    
                         <label class="custom-file-label" for="inputGroupFile01" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                         matTooltip="Seleccionar una plantilla de registro de feriados ubicada en la carpeta plantilla">Elegir un archivo</label>
                     </div>
-                </div>
-                <br>
-                <div class="input-group-prepend">
+                </div> -->
+                <!-- <div class="input-group-prepend">
                     <span class="material-icons input-group-text upload" (click)="plantilla()"
                         id="btnUpload" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                         matTooltip="Registrar Feriados por medio del uso de plantilla seleccionada">cloud_upload </span>
-                    <span>Cargar datos {{nameFile}}</span>
+                    <span>Cargar datos {{nameFile}}</span> -->
                 </div>
             </mat-card>
         </div>

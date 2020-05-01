@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
 import excel from 'xlsx';
+import fs from 'fs';
 
 class HorarioControlador {
 
@@ -36,24 +37,25 @@ class HorarioControlador {
   public async CrearHorarioPlantilla(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
-    let aux = cadena.split("\\"); 
-    let filename = aux[1];
+    let filename = cadena.split("\\")[1]; 
+    var filePath = `./plantillas/${filename}`
 
-    const workbook = excel.readFile(`./plantillas/${filename}`);
-    const sheet_name_list = workbook.SheetNames;
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
 
-    let obj: any = [];
-    plantilla.forEach(data => {
-      obj.push(data);
+    plantilla.forEach(async (data: any) => {
+      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = data;
+      if(nombre != undefined){
+        await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
+      } else {
+        res.json({error: 'plantilla equivocada'});
+      }
     });
 
-    for(let i = 0; i < obj.length; i++){
-      const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = obj[i];
-      await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-    };
     res.json({ message: 'La plantilla a sido receptada' });
-    
+    fs.unlinkSync(filePath);
+
   }
 
 }
