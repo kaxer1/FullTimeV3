@@ -1,5 +1,8 @@
 img { width: 52%; background: white; margin-top: 10px; margin-bottom: 10px;}
 
+.avatar {background-color: rgb(126, 126, 126); border-radius: 100%; margin-top: 10px; margin-bottom: 10px;}
+.iniciales {color: white; font-weight: bold;}
+
 .uno {background: white; margin-bottom: 15px; text-align: center;}
 
 .dos {background: transparent; text-align: left; margin-top: 10px;}

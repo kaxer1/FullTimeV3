@@ -401,8 +401,13 @@ export class VerEmpleadoComponent implements OnInit {
           ],
           ...this.contratoEmpleado.map(obj => {
             const ingreso = obj.fec_ingreso.split("T")[0];
-            const salida = obj.fec_salida.split("T")[0];
-            return [obj.descripcion, obj.dia_anio_vacacion, ingreso, salida];
+            if(obj.fec_salida === null){
+              const salida = '';
+              return [obj.descripcion, obj.dia_anio_vacacion, ingreso, salida];
+            } else {
+              const salida = obj.fec_salida.split("T")[0];
+              return [obj.descripcion, obj.dia_anio_vacacion, ingreso, salida];
+            }
           })
         ]
       }
