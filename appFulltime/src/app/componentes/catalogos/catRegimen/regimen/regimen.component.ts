@@ -14,7 +14,7 @@ interface opcionesRegimen {
   selector: 'app-regimen',
   templateUrl: './regimen.component.html',
   styleUrls: ['./regimen.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegimenComponent implements OnInit {

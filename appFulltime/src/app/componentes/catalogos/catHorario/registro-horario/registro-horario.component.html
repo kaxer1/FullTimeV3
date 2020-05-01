@@ -8,67 +8,72 @@
     <form [formGroup]="nuevoHorarioForm">
         <mat-card-content>
             <div class="container">
-                <mat-form-field>
-                    <mat-label>Nombre de Horario</mat-label>
-                    <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
-                    <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar un nombre con el cual se va a identificar al nuevo horario">
-                        help_outline</mat-icon>
-                    <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
-                    <mat-error *ngIf="nombre.invalid">Ingresar un nombre válido</mat-error>
-                    <br>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>Minutos de almuerzo</mat-label>
-                    <input type="number" matInput placeholder="Ej: 60" [formControl]="minAlmuerzo"
-                        (keypress)="IngresarSoloNumerosEnteros($event)">
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar los minutos de almuerzo que se disponen para el nuevo horario">
-                        help_outline</mat-icon>
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <mat-label>Horas de Trabajo</mat-label>
-                    <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required
-                        (keypress)="IngresarNumeroDecimal($event)">
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar las horas de trabajo. Las horas que se podrá ingresar deben ser menor a 10 horas y puede llevar hasta un decimal">
-                        help_outline</mat-icon>
-                    <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
-                </mat-form-field>
-                <br>
-                <br>
-                <section>
-                    <mat-label class="label-theme">Flexible *</mat-label>
-                    <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                    matTooltip="El horario flexible indica que se controlará entrada y salida">
-                    help_outline</mat-icon>
-                    <br>
-                    <mat-radio-group required aria-label="select an option" [formControl]="flexible" required
-                        [value]="flexible.value">
-                        <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
-                        <mat-radio-button class="example-match" value="false">No </mat-radio-button>
-                    </mat-radio-group>
-                </section>
-                <br>
-                <section>
-                    <label class="label-theme">Por Horas *</label>
-                    <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                    matTooltip="El horario por horas indica que se labora en un rango de horas">
-                    help_outline</mat-icon>
-                    <br>
-                    <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value">
-                        <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
-                        <mat-radio-button class="example-match" value="false">No</mat-radio-button>
-                    </mat-radio-group>
-                </section>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Nombre de Horario</mat-label>
+                            <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre" required>
+                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar un nombre con el cual se va a identificar al nuevo horario">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                            <mat-error *ngIf="nombre.invalid">Ingresar un nombre válido</mat-error>
+                            <br>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Minutos de almuerzo</mat-label>
+                            <input type="number" matInput placeholder="Ej: 60" [formControl]="minAlmuerzo"
+                                (keypress)="IngresarSoloNumerosEnteros($event)">
+                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar los minutos de almuerzo que se disponen para el nuevo horario">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Horas de Trabajo</mat-label>
+                            <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required
+                                (keypress)="IngresarNumeroDecimal($event)">
+                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar las horas de trabajo. Las horas que se podrá ingresar deben ser menor a 10 horas y puede llevar hasta un decimal">
+                                help_outline</mat-icon>
+                            <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <section>
+                            <mat-label class="label-theme">Flexible *</mat-label>
+                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="El horario flexible indica que se controlará entrada y salida">
+                                help_outline</mat-icon>
+                            <br>
+                            <mat-radio-group required aria-label="select an option" [formControl]="flexible" required
+                                [value]="flexible.value">
+                                <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
+                                <mat-radio-button class="example-match" value="false">No </mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                        <br>
+                        <section>
+                            <label class="label-theme">Por Horas *</label>
+                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="El horario por horas indica que se labora en un rango de horas">
+                                help_outline</mat-icon>
+                            <br>
+                            <mat-radio-group aria-label="Select an option" [formControl]="porHoras"
+                                [value]="porHoras.value">
+                                <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
+                                <mat-radio-button class="example-match" value="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                    </div>
+                </div>
             </div>
         </mat-card-content>
     </form>
     <mat-card-actions style="text-align: center">
-        <input type="submit" class="btn btn-primary btn-sm" [disabled]="!nuevoHorarioForm.valid"
+        <input type="submit" class="btn btn-sm" [disabled]="!nuevoHorarioForm.valid"
             (click)="InsertarHorario(nuevoHorarioForm.value)" value="Guardar">
-        <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroHorario()" value="Salir">
+        <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroHorario()" value="Salir">
     </mat-card-actions>
 </div>

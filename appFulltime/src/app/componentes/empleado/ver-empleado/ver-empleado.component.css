@@ -2,10 +2,11 @@
 .barraTitulo1 { text-align: center; background: rgb(81, 19, 182); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px; }
 .barraTitulo2 { text-align: center; background: rgb(19, 117, 182); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px; }
 .col-sm { font-weight: bold;}
-.btn { border-radius: 25px; margin-bottom: 8px; margin-left: 15px;}
+#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px; width:200px; }
 mat-divider { background: rgba(131, 131, 131, 0.609);}
 #derecha { float: right; }
 #navegacion { margin-right: 15px; }
 #planCom { margin-right: 15px; background: rgb(240, 5, 122); border-radius: 30px; color: white }
 #cargo { margin-right: 15px; background: rgb(4, 156, 136); border-radius: 30px; color: white }
 .material-icons {margin-right: 8px;}
+#boton:hover { background-color: rgba(75, 75, 75, 0.609);}

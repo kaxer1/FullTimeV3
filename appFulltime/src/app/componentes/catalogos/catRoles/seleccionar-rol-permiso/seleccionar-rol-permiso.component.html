@@ -1,16 +1,14 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="tituloPermisoS">
+        <span>Funciones que tendrá el Rol {{nombreRol}}</span>
+    </div>
     <mat-card class="example-card mat-elevation-z8">
-        <div class="tituloPermisoS">
-            <span>Funciones que tendrá el Rol {{nombreRol}}</span>
-        </div>
         <!-- Formulario Completo -->
         <mat-card-content>
             <div class="subtitulo">
-               <!--   <span>
-                  Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} en un determinado
-                    pantalla
-                    por medio de los links y selecionando una etiqueta de descripcion de lo que realiza en ese página
-                </span>-->
+                <span>
+                    Seleccionar las funciones o acciones que puede realizar el rol {{nombreRol}} dentro del sistema
+                </span>
             </div>
             <form [formGroup]="nuevoRolPermisoForm">
                 <div class="container" style="text-align: center;">
@@ -19,9 +17,10 @@
                             <mat-form-field>
                                 <mat-label>Seleccionar Función</mat-label>
                                 <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Lista de funciones que se podrán realizar en el sistema">
-                                help_outline</mat-icon>
+                                    matTooltipPosition="right"
+                                    matTooltip="Lista de funciones que se podrán realizar en el sistema">
+                                    help_outline
+                                </mat-icon>
                                 <mat-select [formControl]="funcion" required>
                                     <mat-option *ngFor="let f of funciones" [value]="f.value">
                                         {{f.value}}
@@ -34,11 +33,11 @@
                             <mat-form-field>
                                 <mat-label>Seleccionar Links</mat-label>
                                 <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Secciones del sistema a las que va a afectar la función seleccionada">
-                                help_outline</mat-icon>
-                                <mat-select [formControl]="link" matTooltipClass="selPermiso-tooltip"
-                                    matTooltipPosition="right" matTooltip="El rol es el nivel " required>
+                                    matTooltipPosition="right"
+                                    matTooltip="Secciones del sistema a las que va a afectar la función seleccionada">
+                                    help_outline
+                                </mat-icon>
+                                <mat-select [formControl]="link" required>
                                     <mat-option *ngFor="let l of links" [value]="l.value">
                                         {{l.viewValue}}
                                     </mat-option>
@@ -48,13 +47,13 @@
                         </div>
                         <div class="col-sm">
                             <mat-form-field>
-                                <mat-label id="funcion">Seleccionar etiquetas</mat-label>
+                                <mat-label id="funcion">Seleccionar Etiquetas</mat-label>
                                 <mat-icon id="iselPermiso" matSuffix matTooltipClass="selPermiso-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Lista de nombres que referencian las funciones que se pueden realizar en el sistema">
-                                help_outline</mat-icon>
-                                <mat-select [formControl]="etiqueta" matTooltipClass="selPermiso-tooltip"
-                                    matTooltipPosition="right" matTooltip="El rol es el nivel " required>
+                                    matTooltipPosition="right"
+                                    matTooltip="Lista de nombres que referencian las funciones que se pueden realizar en el sistema">
+                                    help_outline
+                                </mat-icon>
+                                <mat-select [formControl]="etiqueta" required>
                                     <mat-option *ngFor="let e of etiquetas" [value]="e.value">
                                         {{e.value}}
                                     </mat-option>
@@ -68,20 +67,18 @@
         </mat-card-content>
         <mat-card-actions>
             <div class="container" style="text-align: center;">
-                <button type="submit" class="btn btn-warning btn-sm" [routerLink]="['/roles']">Atrás</button>
-                <input type="submit" class="btn btn-primary btn-sm" style="margin-left: 15px;"
-                    [disabled]="!nuevoRolPermisoForm.valid" (click)="insertarRolPermiso(nuevoRolPermisoForm.value)"
-                    value="Guardar">
-                <input type="submit" class="btn btn-danger btn-sm" style="margin-left: 15px;" (click)="limpliarCampos()"
-                    value="Cancelar">
+                <button type="submit" class="btn btn-sm" [routerLink]="['/roles']">Atrás</button>
+                <input type="submit" class="btn btn-sm" [disabled]="!nuevoRolPermisoForm.valid"
+                    (click)="insertarRolPermiso(nuevoRolPermisoForm.value)" value="Guardar">
+                <input type="submit" class="btn btn-sm" (click)="limpliarCampos()" value="Cancelar">
             </div>
         </mat-card-actions>
     </mat-card>
 </div>
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
+    <div id="resulSelPermiso">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8">
-        <div id="resulSelPermiso">Resultado de búsqueda</div>
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr style="text-align: center;">
@@ -101,7 +98,7 @@
                 </tr>
             </tbody>
         </table>
-        <mat-paginator [length]="guardarRoles.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                    (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="guardarRoles.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </mat-card>
 </div>

@@ -10,7 +10,7 @@ import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/t
   selector: 'app-tipo-comidas',
   templateUrl: './tipo-comidas.component.html',
   styleUrls: ['./tipo-comidas.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class TipoComidasComponent implements OnInit {
 

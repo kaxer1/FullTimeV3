@@ -85,6 +85,10 @@ mat-expansion-panel-header{ background: transparent; }
   background: rgba(11, 228, 22, 0.739);
 }
 
+.mat-expansion-panel-header.mat-expanded.selec8:hover {
+  background: rgba(11, 228, 217, 0.739);
+}
+
 .mat-expansion-panel-header.mat-expanded.selec1:focus {
   border-radius: 25px;
   background: rgba(11, 195, 228, 0.739);
@@ -127,6 +131,12 @@ mat-expansion-panel-header{ background: transparent; }
   /* background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(171,205,29,0.9108018207282913) 97%); */
 }
 
+.mat-expansion-panel-header.mat-expanded.selec8:focus {
+  border-radius: 25px;
+  background: rgba(11, 228, 217, 0.739);
+  /* background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(171,205,29,0.9108018207282913) 97%); */
+}
+
 .mat-list-item:hover{
   background: rgb(26, 115, 199); }
 
@@ -140,3 +150,5 @@ mat-form-field { height: 10px; }
 .example-full-width { width: 100%; }
 
 .card-text {margin-top: -10px; }
+
+#accion { font-size: 16px;}

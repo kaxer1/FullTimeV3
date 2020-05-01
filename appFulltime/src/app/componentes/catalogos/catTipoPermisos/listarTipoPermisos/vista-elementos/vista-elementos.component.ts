@@ -8,8 +8,9 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-vista-elementos',
   templateUrl: './vista-elementos.component.html',
   styleUrls: ['./vista-elementos.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
+
 export class VistaElementosComponent implements OnInit {
 
   tipoPermiso: any = [];

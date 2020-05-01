@@ -1,16 +1,19 @@
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
-#feriado { color:rgb(66, 0, 128); font-size: 18px;}
-.registrarF-tooltip { background-color : rgb(66, 0, 128); }
+
+#feriado { cursor: pointer; }
+
+/*.registrarF-tooltip { background-color : rgb(66, 0, 128); }*/
+
 .barraTituloR { 
     font-size: 18px; 
     text-align: center; 
-    background: rgb(66, 0, 128) ; 
-    color: white; 
-    border-radius: 10px; 
+    background: rgb(52,65,84); 
+    color: white;  
     padding-top: 10px; 
 }

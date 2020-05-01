@@ -26,14 +26,8 @@
           <a mat-list-item [routerLink]="['/roles']" class="texcol">
             <span matLine>Crear Rol</span>
           </a>
-          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
-            <span matLine>Crear Proceso</span>
-          </a>
           <a mat-list-item [routerLink]="['/listarFeriados']" class="texcol">
             <span matLine>Crear Feriados</span>
-          </a>
-          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
-            <span matLine>Crear Departamento</span>
           </a>
           <a mat-list-item [routerLink]="['/listarRegimen']" class="texcol">
             <span matLine>Crear Régimen Laboral</span>
@@ -46,7 +40,6 @@
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
-
       <!-- Empleado -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec2">
@@ -86,17 +79,20 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <a mat-list-item [routerLink]="['/listarCiudades']" class="texcol">
-            <span matLine>Registrar Ciudad</span>
-          </a>
           <a mat-list-item [routerLink]="['/provincia']" class="texcol">
             <span matLine>Registrar Provincia</span>
+          </a>
+          <a mat-list-item [routerLink]="['/listarCiudades']" class="texcol">
+            <span matLine>Registrar Ciudad</span>
           </a>
           <a mat-list-item [routerLink]="['/empresa']" class="texcol">
             <span matLine>Registrar Empresa</span>
           </a>
           <a mat-list-item [routerLink]="['/sucursales']" class="texcol">
             <span matLine>Registrar Sucursal</span>
+          </a>
+          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
+            <span matLine>Crear Departamento</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -154,6 +150,22 @@
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
+
+      <!-- Acciones de Personal-->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Acción de Personal</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
+            <span matLine>Crear Proceso</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
     </mat-accordion>
 
   </mat-sidenav>

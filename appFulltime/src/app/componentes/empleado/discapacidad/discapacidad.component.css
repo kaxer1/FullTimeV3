@@ -1,11 +1,16 @@
 mat-slider { width: 190px; }
+
 .btn { border-radius: 100%; margin-left: 15px; }
+
 .barraTitulo { 
     text-align: center; 
-    background: rgb(22, 106, 216); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 25px; 
     padding-top: 14px; 
     padding-bottom: 6px; }
+
 .alinear { margin-top: 5px; }
+
 #tipoD { font-size: small; }
+
+#icono { cursor: pointer; }

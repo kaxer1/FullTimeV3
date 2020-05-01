@@ -1,14 +1,23 @@
-.btn { border-radius: 25px; margin-left: 15px;}
-.tituloR-tooltip { background: #4622aa; }
-#itituloR { color:#4622aa; font-size: 10px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+/*.tituloR-tooltip { background: #4622aa; }*/
+
+#itituloL { cursor: pointer; }
+
 .tituloR { 
     font-size: 35px; 
     text-align: center; 
-    background: #4622aa; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
+    padding-top: 10px;
+}
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
 }
 
 table { width: 100%; font-size: 14px;}
   
-.mat-form-field { font-size: 14px; width: 100%;}
+.mat-form-field { width: 100%;}

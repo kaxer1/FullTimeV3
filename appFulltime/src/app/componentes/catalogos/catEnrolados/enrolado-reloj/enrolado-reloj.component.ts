@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 
+
 import { EnroladosRelojesService } from 'src/app/servicios/enroladosRelojes/enrolados-relojes.service';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 
@@ -11,7 +12,7 @@ import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.s
   selector: 'app-enrolado-reloj',
   templateUrl: './enrolado-reloj.component.html',
   styleUrls: ['./enrolado-reloj.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class EnroladoRelojComponent implements OnInit {
 
@@ -42,6 +43,7 @@ l
     this.ObtenerDispositios();
   }
 
+ 
   LimpiarCampos() {
     this.asignarRelojForm.reset();
     this.ObtenerDispositios();

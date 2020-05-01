@@ -14,7 +14,7 @@ interface Nivel {
   selector: 'app-registro-proceso',
   templateUrl: './registro-proceso.component.html',
   styleUrls: ['./registro-proceso.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistroProcesoComponent implements OnInit {
 

@@ -10,7 +10,7 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
   selector: 'app-registrar-ciudad',
   templateUrl: './registrar-ciudad.component.html',
   styleUrls: ['./registrar-ciudad.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class RegistrarCiudadComponent implements OnInit {
 

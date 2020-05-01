@@ -1,25 +1,33 @@
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+p { font-size: x-small; }
+
 td { padding-top: 10px; text-align: center; }
-.fas { color:green; margin-left: 20px; }
-.far { color:red; }
+
+.fas { color:green; cursor: pointer;}
+
+.far { color:red; cursor: pointer; }
+
 th { font-size: small; }
-#iRegL { color:rgb(35, 3, 122); font-size: 18px; }
-.regimenL-tooltip { background-color : rgb(35, 3, 122); }
+
+#iRegL { cursor: pointer; }
+
+/*.regimenL-tooltip { background-color : rgb(35, 3, 122); }*/
+
 .tituloRegL { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(35, 3, 122); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px;
     padding-bottom: 6px; 
 }
+
 #resulRegimen { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(35, 3, 122); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

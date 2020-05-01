@@ -10,7 +10,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-lista-empleados',
   templateUrl: './lista-empleados.component.html',
   styleUrls: ['./lista-empleados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListaEmpleadosComponent implements OnInit {
 
@@ -18,9 +18,9 @@ export class ListaEmpleadosComponent implements OnInit {
   displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
   
   codigo = new FormControl('');
-  cedula = new FormControl('');
-  nombre = new FormControl('');
-  apellido = new FormControl('');
+  cedula = new FormControl('', [Validators.minLength(2)]);
+  nombre = new FormControl('', [Validators.minLength(2)]);
+  apellido = new FormControl('', [Validators.minLength(2)]);
 
   filtroCodigo: number;
   filtroCedula: '';

@@ -13,7 +13,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-feriados',
   templateUrl: './listar-feriados.component.html',
   styleUrls: ['./listar-feriados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListarFeriadosComponent implements OnInit {
 
@@ -71,12 +71,12 @@ export class ListarFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarFeriado(): void {
-    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '400px' }).disableClose = true;
   }
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 

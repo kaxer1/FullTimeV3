@@ -1,19 +1,25 @@
 .example-match { margin: 0 15px; }
-.btn { margin-left: 15px; border-radius: 25px; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 .label-theme { font-size: 15px; }
+
 #hora { font-size: x-small; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .tituloHorarioR { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(10, 2, 114); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
 }
-#iHor { color:rgb(10, 2, 114); font-size: 18px; }
-.horario-tooltip { background-color : rgb(10, 2, 114); }
+
+#iHor { cursor: pointer; }
+
+/*.horario-tooltip { background-color : rgb(10, 2, 114); }*/

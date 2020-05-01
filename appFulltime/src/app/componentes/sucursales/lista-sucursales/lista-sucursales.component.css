@@ -15,11 +15,18 @@
     padding-bottom: 6px; 
 }
 
-/*#permisoSuc { color: black; font-size: 20px; }
-.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
-.btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
-td { padding-top: 10px; text-align: center; }
-.fas { color:green; margin-left: 25px; }
+#permisoSuc { cursor: pointer; }
 
-table { width: 100%; font-size: 14px;}
+/*.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
+
+.btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
+
+p { font-size: x-small; }
+
+td { padding-top: 10px; text-align: center;  }
+
+.fas { color:green; margin-left: 25px; cursor: pointer; }
+
+table { width: 100%; font-size: 14px; }
+
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }

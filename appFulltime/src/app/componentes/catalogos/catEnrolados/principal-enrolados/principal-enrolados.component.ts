@@ -17,7 +17,7 @@ interface buscarActivo {
   selector: 'app-principal-enrolados',
   templateUrl: './principal-enrolados.component.html',
   styleUrls: ['./principal-enrolados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class PrincipalEnroladosComponent implements OnInit {
 

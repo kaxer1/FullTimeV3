@@ -1,23 +1,27 @@
-.btn { border-radius: 25px; margin-left: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 p { font-size: x-small; }
-#ver { color: indianred; }
-#iemple { color:rgb(17, 157, 182); font-size: 18px; }
-.emple-tooltip { background: rgb(17, 157, 182); }
+
+#ver { color: indianred; cursor: pointer; }
+
+#iemple { cursor: pointer; }
+
+/*.emple-tooltip { background: rgb(17, 157, 182); }*/
+
 .tituloEmpleados { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(17, 157, 182); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
 #resulEmpleados { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(17, 157, 182); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

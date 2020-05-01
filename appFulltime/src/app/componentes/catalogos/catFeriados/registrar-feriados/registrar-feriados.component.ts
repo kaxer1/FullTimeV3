@@ -10,7 +10,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
   selector: 'app-registrar-feriados',
   templateUrl: './registrar-feriados.component.html',
   styleUrls: ['./registrar-feriados.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegistrarFeriadosComponent implements OnInit {

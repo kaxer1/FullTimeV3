@@ -1,11 +1,10 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col-sm">
+            <div class="tituloRegL">
+                <span>RÉGIMEN LABORAL</span>
+            </div>
             <mat-card class="example-card mat-elevation-z9">
-                <div class="tituloRegL">
-                    <span>RÉGIMEN LABORAL</span>
-                </div>
-                <br>
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRegimenForm">
                     <mat-card-content>
@@ -18,17 +17,18 @@
                                 <mat-icon id="iRegL" matSuffix matTooltipClass="regimenL-tooltip"
                                     matTooltipPosition="right"
                                     matTooltip="Búsqueda de Régimen Laboral por la descripción">
-                                    help_outline</mat-icon>
+                                    help_outline
+                                </mat-icon>
                                 <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
                             </mat-form-field>
                         </div>
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <button mat-button type="submit" class="btn btn-danger btn-sm"
-                        (click)="LimpiarCampos()">Cancelar</button>
-                    <button mat-button type="submit" class="btn btn-primary btn-sm"
-                        (click)="AbrirVentanaRegistrarRegimen()">Crear nuevo Régimen Laboral</button>
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarRegimen()">Crear nuevo Régimen Laboral
+                    </button>
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
+                    </button>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -37,38 +37,46 @@
 
 <br>
 <div class="container  table-responsive" style="padding-bottom: 50px;">
+    <div id="resulRegimen">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8">
-        <div id="resulRegimen">Resultado de búsqueda</div>
-    <table class="table table-hover table-sm">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Régimen Laboral</th>
-                <th scope="col">Vacaciones: días por año</th>
-                <th scope="col">Vacaciones: días por mes</th>
-                <th scope="col">Años considerados antiguedad</th>
-                <th scope="col">Vacaciones: días de incremento</th>
-                <th scope="col">Máximo días acumulables</th>
-                <th scope="col">Vacaciones: días libres</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
-                <td>{{regimenL.descripcion}}</td>
-                <td>{{regimenL.dia_anio_vacacion}}</td>
-                <td>{{regimenL.dia_mes_vacacion}}</td>
-                <td>{{regimenL.anio_antiguedad}}</td>
-                <td>{{regimenL.dia_incr_antiguedad}}</td>
-                <td>{{regimenL.max_dia_acumulacion}}</td>
-                <td>{{regimenL.dia_libr_anio_vacacion}}</td>
-                <td>
-                    <i class="far fa-trash-alt"></i>
-                    <i class="fas fa-edit"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <mat-paginator [length]="regimen.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                    (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Régimen Laboral</th>
+                    <th scope="col">Vacaciones: días por año</th>
+                    <th scope="col">Vacaciones: días por mes</th>
+                    <th scope="col">Años considerados antiguedad</th>
+                    <th scope="col">Vacaciones: días de incremento</th>
+                    <th scope="col">Máximo días acumulables</th>
+                    <th scope="col">Vacaciones: días libres</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{regimenL.descripcion}}</td>
+                    <td>{{regimenL.dia_anio_vacacion}}</td>
+                    <td>{{regimenL.dia_mes_vacacion}}</td>
+                    <td>{{regimenL.anio_antiguedad}}</td>
+                    <td>{{regimenL.dia_incr_antiguedad}}</td>
+                    <td>{{regimenL.max_dia_acumulacion}}</td>
+                    <td>{{regimenL.dia_libr_anio_vacacion}}</td>
+                    <td>
+                        <i class="far fa-trash-alt" matSuffix matTooltipClass="regimenL-tooltip"
+                            matTooltipPosition="right" matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
+                        </i>
+                        <i class="fas fa-edit" matSuffix matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
+                            matTooltip="Editar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="regimen.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
     </mat-card>
 </div>

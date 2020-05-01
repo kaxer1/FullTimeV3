@@ -13,7 +13,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-titulos',
   templateUrl: './listar-titulos.component.html',
   styleUrls: ['./listar-titulos.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class ListarTitulosComponent implements OnInit {
@@ -60,11 +60,15 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTitulo(): void {
-    this.vistaRegistrarTitulo.open(TitulosComponent, { width: '350px' }).disableClose = true;
+    this.vistaRegistrarTitulo.open(TitulosComponent, { width: '400px' }).disableClose = true;
   }
 
   LimpiarCampos() {
-    console.log('limpiar');
+    this.BuscarTitulosForm.setValue({
+      nombreForm: '',
+      nivelForm: ''
+    });
+    this.ObtenerTitulos();
   }
 
   ObtenerMensajeErrorNombre() {

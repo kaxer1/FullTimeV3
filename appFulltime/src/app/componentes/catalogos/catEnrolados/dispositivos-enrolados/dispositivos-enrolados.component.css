@@ -4,10 +4,12 @@ p { font-size: x-small; }
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
-.fas { color:green; margin-left: 20px; }
+.fas { color:green; margin-left: 20px; cursor: pointer;  }
 
-.far { color:red; margin-left: 20px; }
+.far { color:red; margin-left: 20px; cursor: pointer;  }
+
 /*.enrolado-tooltip { background-color : rgb(3, 167, 167); }*/
+
 .datosEnrolado { 
     font-size: 20px; 
     text-align: center; 
@@ -25,3 +27,5 @@ p { font-size: x-small; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }

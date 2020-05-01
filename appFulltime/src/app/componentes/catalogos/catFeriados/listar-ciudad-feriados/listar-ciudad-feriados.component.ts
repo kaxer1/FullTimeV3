@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
@@ -18,6 +19,11 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   datosFeriado: any = [];
   datosCiudades: any = [];
 
+  // items de paginación de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     public router: Router,
     private rest: FeriadosService,
@@ -32,6 +38,11 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   ngOnInit(): void {
     this.BuscarDatosFeriado(this.idFeriado);
     this.ListarCiudadesFeriados(this.idFeriado);
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1
   }
 
   BuscarDatosFeriado(idFeriado: any) {
@@ -60,7 +71,7 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaAsignarCiudad(datosSeleccionados): void {
-    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true} }).disableClose = true;
+    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
 }

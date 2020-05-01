@@ -11,7 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-vista-roles',
   templateUrl: './vista-roles.component.html',
   styleUrls: ['./vista-roles.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class VistaRolesComponent implements OnInit {
 
@@ -70,7 +70,7 @@ export class VistaRolesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarRol(){
-    this.vistaRegistrarRol.open(RegistroRolComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarRol.open(RegistroRolComponent, { width: '400px' }).disableClose = true;
   }
 
   limpiarCampoBuscar(){

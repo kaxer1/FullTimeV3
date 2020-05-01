@@ -12,13 +12,13 @@ import { MatTableDataSource } from '@angular/material/table';
   selector: 'app-principal-proceso',
   templateUrl: './principal-proceso.component.html',
   styleUrls: ['./principal-proceso.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class PrincipalProcesoComponent implements OnInit {
 
-  buscarNombre = new FormControl('', Validators.required);
-  buscarNivel = new FormControl('', Validators.required);
-  buscarPadre = new FormControl('', Validators.required);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarNivel = new FormControl('');
+  buscarPadre = new FormControl('', [Validators.minLength(2)]);
 
   procesos: any = [];
   auxiliar1: any = [];
@@ -68,11 +68,6 @@ export class PrincipalProcesoComponent implements OnInit {
     }
   }
 
-  soloNumeros(e) {
-    var key = window.Event ? e.which : e.keyCode
-    return ((key >= 48 && key <= 57) || (key === 8))
-  }
-
   limpiarCampoBuscar(){
     this.buscarNombre.reset();
     this.buscarNivel.reset();
@@ -105,6 +100,23 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProceso(){
-    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '300px' }).disableClose = true;
+    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
+  }
+
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
+    }
   }
 }

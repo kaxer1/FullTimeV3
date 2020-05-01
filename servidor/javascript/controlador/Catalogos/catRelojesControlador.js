@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class RelojesControlador {
     ListarRelojes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const RELOJES = yield database_1.default.query('SELECT * FROM cg_relojes');
+            const RELOJES = yield database_1.default.query('SELECT * FROM NombreDispositivos');
             if (RELOJES.rowCount > 0) {
                 return res.json(RELOJES.rows);
             }

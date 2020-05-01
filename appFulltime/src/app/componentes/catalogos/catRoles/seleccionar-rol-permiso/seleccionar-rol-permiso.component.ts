@@ -23,7 +23,7 @@ interface Etiquetas {
   selector: 'app-seleccionar-rol-permiso',
   templateUrl: './seleccionar-rol-permiso.component.html',
   styleUrls: ['./seleccionar-rol-permiso.component.css'],
-  encapsulation: ViewEncapsulation.None,
+  //encapsulation: ViewEncapsulation.None,
 })
 export class SeleccionarRolPermisoComponent implements OnInit {
 

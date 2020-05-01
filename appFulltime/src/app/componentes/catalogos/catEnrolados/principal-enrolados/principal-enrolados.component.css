@@ -1,28 +1,37 @@
 td { padding-top: 10px; text-align: center; }
+
 h5 { text-align: center; } 
-p { font-size: x-small;}
-.btn { border-radius: 25px; margin-left: 15px; }
-.fas { color:green; margin-left: 20px; }
-.far { color:red; margin-left: 20px; }
-.enrolado-tooltip { background-color : rgb(3, 167, 167); }
+
+p { font-size: x-small; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+.fas { color:green; margin-left: 20px; cursor: pointer; }
+
+.far { color:red; margin-left: 20px; cursor: pointer; }
+
+/*.enrolado-tooltip { background-color : rgb(3, 167, 167); }*/
+
 .TituloEnrolado { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(3, 167, 167); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
-#i_enrolado { color:rgb(3, 167, 167); font-size: 18px;}
+
+#i_enrolado { cursor: pointer; }
+
 #enr_reloj { color: rgb(38, 0, 255); }
+
 #verEnrolado { color: indianred; }
+
 #resulEnrolado { 
     font-size: 17px; 
     text-align: center; 
-    background: rgb(3, 167, 167); 
-    color: white; 
-    border-radius: 10px; 
+    background: rgb(52,65,84); 
+    color: white;  
     padding-top: 10px; 
     padding-bottom: 6px; 
 }

@@ -1,0 +1,78 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-sm">
+            <div class="nivelTituloL">
+                <span>NIVELES DE TÍTULOS PROFESIONALES</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
+                <form [formGroup]="BuscarNivelTitulosForm">
+                    <mat-card-content>
+                        <div class="container" style="text-align: center">
+                            <div class="row">
+                                <div class="col">
+                                </div>
+                                <div class="col">
+                                    <mat-form-field>
+                                        <mat-label>Búsqueda por nombre</mat-label>
+                                        <input matInput placeholder="Nombre Título" name="filtradoNombre"
+                                            [formControl]="nombreF" [(ngModel)]="filtradoNombre"
+                                            (keypress)="IngresarSoloLetras($event)">
+                                        <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
+                                            matTooltipPosition="right"
+                                            matTooltip="Búsqueda de un nivel de título profesional por su nombre">
+                                            help_outline</mat-icon>
+                                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col">
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </form>
+                <mat-card-actions style="text-align: center">
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaNivelTitulo()">Crear Nivel de Título
+                        Profesional
+                    </button>
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <div id="resulTitulos">Resultado de búsqueda</div>
+    <mat-card class="mat-elevation-z8">
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let t of nivelTitulos | filtrosNombres: filtradoNombre |  paginate:tamanio_pagina:numero_pagina">
+                    <td>{{t.nombre}}</td>
+                    <td>
+                        <i class="far fa-trash-alt" matSuffix matTooltipClass="tituloL-tooltip"
+                            matTooltipPosition="right" matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
+                        </i>
+                        <i class="fas fa-edit" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                            matTooltip="Editar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="nivelTitulos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </mat-card>
+</div>

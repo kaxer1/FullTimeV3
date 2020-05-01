@@ -1,16 +1,19 @@
-.btn { margin-left: 15px; border-radius: 25px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .tituloComidaR { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(40, 155, 184); 
-    color: white; 
-    border-radius: 10px; 
+    background: rgb(52,65,84); 
+    color: white;  
     padding-top: 10px; 
 }
-#iComidasR { color:rgb(40, 155, 184); font-size: 18px; }
-.comidasR-tooltip { background-color : rgb(40, 155, 184); }
+
+#iComidasR { cursor: pointer; }
+
+/*.comidasR-tooltip { background-color : rgb(40, 155, 184); }*/

@@ -39,7 +39,7 @@
     </mat-card-content>
 </form>
 <mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!TipoComidaForm.valid"
+    <input type="submit" class="btn btn-sm" [disabled]="!TipoComidaForm.valid"
         (click)="InsertarTipoComida(TipoComidaForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroTipoComidas()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTipoComidas()" value="Salir">
 </mat-card-actions>

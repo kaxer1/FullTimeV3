@@ -1,17 +1,21 @@
-.reloj-enrolado-tooltip { background-color : rgb(3, 167, 167); }
-.btn { border-radius: 25px; margin-left: 15px; }
-#enrolado_reloj { color:rgb(3, 167, 167); font-size: 18px; }
-#selecDispositivo { font-size: 14px;}
+/*.reloj-enrolado-tooltip { background-color : rgb(3, 167, 167); }*/
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+#enrolado_reloj { cursor: pointer; }
+
+#selecDispositivo { font-size: 14px; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .tituloEnrolado_reloj { 
     font-size: 20px; 
     text-align: center; 
-    background: rgb(3, 167, 167); 
-    color: white; 
-    border-radius: 10px; 
+    background: rgb(52,65,84); 
+    color: white;  
     padding-top: 10px; 
 }

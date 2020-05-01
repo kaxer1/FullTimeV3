@@ -33,7 +33,7 @@
     </mat-card-content>
 </form>
 <mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-primary btn-sm" [disabled]="!FeriadosForm.valid"
+    <input type="submit" class="btn btn-sm" [disabled]="!FeriadosForm.valid"
         (click)="InsertarFeriado(FeriadosForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarVentanaRegistroFeriado()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroFeriado()" value="Salir">
 </mat-card-actions>

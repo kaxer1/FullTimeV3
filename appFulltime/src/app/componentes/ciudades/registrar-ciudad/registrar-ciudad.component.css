@@ -1,16 +1,19 @@
-.btn { margin-left: 15px; border-radius: 25px; } 
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .tituloCiudadR{ 
     font-size: 20px; 
     text-align: center; 
-    background: coral; 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
 }
-#iciudadR { color:coral; font-size: 18px; }
-.ciudadR-tooltip { background-color : coral; }
+
+#iciudadR { cursor: pointer; }
+
+/*.ciudadR-tooltip { background-color : coral; }*/

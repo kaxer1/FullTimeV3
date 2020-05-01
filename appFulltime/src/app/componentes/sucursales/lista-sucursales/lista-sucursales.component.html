@@ -6,7 +6,7 @@
         <div style="text-align: center;">
             <h5 style="text-align: center;">Criterios de Búsqueda</h5>
         </div>
-        <form [formGroup]="">
+        <form [formGroup]="BuscarSucursalForm">
             <mat-card-content>
                 <div class="container">
                     <div class="row">
@@ -14,8 +14,7 @@
                             <mat-form-field>
                                 <mat-label>Nombre</mat-label>
                                 <input matInput name="filtroNombreSuc" placeholder="Nombre de la Sucursal"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarNombre"
-                                    [(ngModel)]="filtroNombreSuc">
+                                    [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
                                 <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
                                 <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
                                     matTooltipPosition="right" matTooltip="Busqueda de la Sucursal por su nombre">
@@ -61,30 +60,39 @@
 <div class="container table-responsive" style="padding-bottom: 50px;">
     <mat-card class="mat-elevation-z8">
         <div id="resultadosSuc">Resultado de búsqueda</div>
-    <table class="table table-hover table-sm ">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Id</th>
-                <th scope="col">Empresa</th>
-                <th scope="col">Sucursal</th>
-                <th scope="col">Ciudad</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
-                <td>{{s.id}}</td>
-                <td>{{s.nomempresa}}</td>
-                <td>{{s.nombre}}</td>
-                <td>{{s.descripcion}}</td>
-                <td>
-                    <i class="far fa-trash-alt" style="color:red; margin-right: 15px;"></i>
-                    <i class="fas fa-edit"></i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <mat-paginator [length]="sucursales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions" id="estilo"
-                        (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <table class="table table-hover table-sm ">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Id</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">Sucursal</th>
+                    <th scope="col">Ciudad</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{s.id}}</td>
+                    <td>{{s.nomempresa}}</td>
+                    <td>{{s.nombre}}</td>
+                    <td>{{s.descripcion}}</td>
+                    <td>
+                        <i id="permisoSuc" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
+                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
+                        </i>
+                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="sucursales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
     </mat-card>
 </div>

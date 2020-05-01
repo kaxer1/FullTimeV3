@@ -2,16 +2,17 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
-import { PageEvent } from '@angular/material/paginator';
+
 
 @Component({
   selector: 'app-principal-departamento',
   templateUrl: './principal-departamento.component.html',
   styleUrls: ['./principal-departamento.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class PrincipalDepartamentoComponent implements OnInit {
@@ -33,8 +34,11 @@ export class PrincipalDepartamentoComponent implements OnInit {
   public BuscarDepartamentosForm = new FormGroup({
     departamentoForm: this.departamentoF,
     departamentoPadreForm: this.departamentoPadreF,
+    buscarNombreForm: this.buscarNombre,
+    buscarEmpresaForm: this.buscarEmpresa
   });
-  // items de paginacion de la tabla
+
+  // items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
@@ -74,7 +78,9 @@ export class PrincipalDepartamentoComponent implements OnInit {
   LimpiarCampos() {
     this.BuscarDepartamentosForm.setValue({
       departamentoForm: '',
-      departamentoPadreForm: ''
+      departamentoPadreForm: '',
+      buscarNombreForm: '',
+      buscarEmpresaForm: ''
     });
     this.ListaDepartamentos();
     

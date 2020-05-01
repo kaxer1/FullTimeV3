@@ -12,7 +12,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-listar-relojes',
   templateUrl: './listar-relojes.component.html',
   styleUrls: ['./listar-relojes.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class ListarRelojesComponent implements OnInit {
 
@@ -20,10 +20,16 @@ export class ListarRelojesComponent implements OnInit {
   filtroNombreReloj = '';
   filtroModeloReloj = '';
   filtroIpReloj = '';
+  filtroEmpresaReloj = '';
+  filtroSucursalReloj = '';
+  filtroDepartamentoReloj = '';
   relojes: any = [];
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.minLength(2)]);
+  empresaF = new FormControl('', [Validators.minLength(2)]);
+  sucursalF = new FormControl('', [Validators.minLength(2)]);
+  departamentoF = new FormControl('', [Validators.minLength(2)]);
   ipF = new FormControl('');
   modeloF = new FormControl('', [Validators.minLength(2)]);
 
@@ -32,6 +38,9 @@ export class ListarRelojesComponent implements OnInit {
     nombreForm: this.nombreF,
     ipForm: this.ipF,
     modeloForm: this.modeloF,
+    empresaForm: this.empresaF,
+    sucursalForm: this.sucursalF,
+    departamentoForm: this.departamentoF
   });
 
   // items de paginacion de la tabla
@@ -80,7 +89,7 @@ export class ListarRelojesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarReloj(): void {
-    this.vistaRegistrarRelojes.open(RelojesComponent, { width: '900px' }).disableClose = true;
+    this.vistaRegistrarRelojes.open(RelojesComponent, { width: '1200px' }).disableClose = true;
   }
 
   LimpiarCampos() {
@@ -88,6 +97,9 @@ export class ListarRelojesComponent implements OnInit {
       nombreForm: '',
       ipForm: '',
       modeloForm: '',
+      empresaForm: '',
+      sucursalForm: '',
+      departamentoForm: ''
     });
     this.ObtenerReloj();
   }

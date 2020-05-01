@@ -28,7 +28,7 @@ interface opcionesDiasHoras {
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
   styleUrls: ['./tipo-permisos.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class TipoPermisosComponent implements OnInit {

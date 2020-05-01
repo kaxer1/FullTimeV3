@@ -59,7 +59,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let dr of datosDispositivos">
+            <tr *ngFor="let dr of datosDispositivos | paginate:tamanio_pagina:numero_pagina">
                 <td>{{dr.nombre_enrolado}}</td>
                 <td>{{dr.nombre_reloj}}</td>
                 <td>{{dr.ip_reloj}}</td>
@@ -75,6 +75,9 @@
             </tr>
         </tbody>
     </table>
+    <mat-paginator [length]="datosDispositivos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+        id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+    </mat-paginator>
 </div>
 <input type="submit" class="btn btn-sm" [routerLink]="['/enrolados/']" value="Ir a la Lista de Usuarios Enrolados">
 <input type="submit" class="btn btn-sm" *ngFor="let dE of datosEnrolado" (click)="AbrirVentanaAsignarReloj(dE)"

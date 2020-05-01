@@ -9,7 +9,7 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
   selector: 'app-registro-horario',
   templateUrl: './registro-horario.component.html',
   styleUrls: ['./registro-horario.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroHorarioComponent implements OnInit {

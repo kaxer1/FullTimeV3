@@ -1,0 +1,88 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="empresasL">
+        <span>EMPRESAS</span>
+    </div>
+    <mat-card class="example-card mat-elevation-z9">
+        <div style="text-align: center;">
+            <h5 style="text-align: center;">Criterios de Búsqueda</h5>
+        </div>
+        <form [formGroup]="BuscarEmpresaForm">
+            <mat-card-content>
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>Nombre</mat-label>
+                                <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
+                                    [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
+                                <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
+                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                                    matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col">
+                            <mat-form-field>
+                                <mat-label>RUC</mat-label>
+                                <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa"
+                                    (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
+                                    [(ngModel)]="filtroRucEmpresa">
+                                <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
+                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                                    matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </form>
+        <mat-card-actions style="text-align: center">
+            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva
+                Empresa</button>
+            <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<br>
+<div class="container table-responsive" style="padding-bottom: 50px;">
+    <mat-card class="mat-elevation-z8">
+        <div id="resultadosEmpre">Resultado de búsqueda</div>
+        <table class="table table-hover table-sm ">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Id</th>
+                    <th scope="col">Empresa</th>
+                    <th scope="col">RUC</th>
+                    <th scope="col">Dirección</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{e.id}}</td>
+                    <td>{{e.nombre}}</td>
+                    <td>{{e.ruc}}</td>
+                    <td>{{e.direccion}}</td>
+                    <td>
+                        <i id="permisoSuc" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
+                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
+                        </i>
+                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="empresas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+    </mat-card>
+</div>

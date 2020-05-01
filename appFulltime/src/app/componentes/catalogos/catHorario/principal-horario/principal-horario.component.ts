@@ -11,7 +11,7 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-principal-horario',
   templateUrl: './principal-horario.component.html',
   styleUrls: ['./principal-horario.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 })
 export class PrincipalHorarioComponent implements OnInit {
 
@@ -62,7 +62,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '350px' }).disableClose = true;
+    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
   }
 
   LimpiarCampos() {

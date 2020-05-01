@@ -1,16 +1,22 @@
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
+
 .barraTituloContratoE { 
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
     padding-top: 14px; 
 }
-.contratoE-tooltip { background-color : rgb(17, 182, 44); }
-#contratoE { color:rgb(17, 182, 44); font-size: 18px; }
+
+/*.contratoE-tooltip { background-color : rgb(17, 182, 44); }*/
+
+#contratoE { cursor: pointer; }
+
 #nomEmple { font-size: 13px; }

@@ -7,12 +7,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
+import { ToastrModule } from 'ngx-toastr';
 
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/empleado/registro/registro.component';
-import { MainNavComponent } from './share/main-nav/main-nav.component';
 import { ListaEmpleadosComponent } from './componentes/empleado/lista-empleados/lista-empleados.component';
 import { TitulosComponent } from './componentes/catalogos/catTitulos/titulos/titulos.component';
 import { DiscapacidadComponent } from './componentes/empleado/discapacidad/discapacidad.component';
@@ -51,7 +51,22 @@ import { RegistroContratoComponent } from './componentes/empleadoContrato/regist
 import { EmplCargosComponent } from './componentes/empleadoCargos/empl-cargos/empl-cargos.component';
 import { ListarTitulosComponent } from './componentes/catalogos/catTitulos/listar-titulos/listar-titulos.component';
 import { ListarCiudadFeriadosComponent } from './componentes/catalogos/catFeriados/listar-ciudad-feriados/listar-ciudad-feriados.component';
+import { EnroladoRelojComponent } from './componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
+import { PlanificacionComidasComponent } from './componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
+import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
+import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
+import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
+import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
+import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
+import { RegistrarPeriodoVComponent } from './componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
+import { RegistrarEmpleProcesoComponent } from './componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
+import { RegistrarVacacionesComponent } from './componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
+import { RegistroPlanHorarioComponent } from './componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
+import { RegistroDetallePlanHorarioComponent } from './componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
+import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
+import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
 import { FooterComponent } from './share/footer/footer.component';
+import { MainNavComponent } from './share/main-nav/main-nav.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -95,11 +110,22 @@ import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe
 import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
 import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
 import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
+import { FiltrarRucPipe } from './filtros/catEmpresa/filtrarRuc/filtrar-ruc.pipe';
+import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
+import { FiltroEmpresaRPipe } from './filtros/catRelojes/filtroEmpresa/filtro-empresa-r.pipe';
+import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-sucursal-r.pipe';
+import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
+import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
+import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
+import { PaginatePipe } from './pipes/paginate.pipe';
+import { CustomMatPaginatorIntl } from './pipes/paginator-es';
+
+// Seguridad
+import { AuthGuard } from "./guards/auth.guard";
 
 // material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastrModule } from 'ngx-toastr';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -127,20 +153,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { EnroladoRelojComponent } from './componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
-import { PlanificacionComidasComponent } from './componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
-import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursales/lista-sucursales.component';
-import { RegistrarNivelTitulosComponent } from './componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component';
-import { RegistrarSucursalesComponent } from './componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
-import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
-import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
-import { RegistroEmpresaComponent } from './componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
-import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
-
-import { AuthGuard } from "./guards/auth.guard";
-import { PaginatePipe } from './pipes/paginate.pipe';
-import { CustomMatPaginatorIntl } from './pipes/paginator-es';
-import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 
 @NgModule({
   declarations: [
@@ -222,8 +234,19 @@ import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrol
     RegistrarNivelTitulosComponent,
     PaginatePipe,
     DispositivosEnroladosComponent,
-
+    RegistrarPeriodoVComponent,
+    FiltroEmpresaRPipe,
+    FiltroSucursalRPipe,
+    FiltroDepartamentoRPipe,
+    RegistrarEmpleProcesoComponent,
+    RegistrarVacacionesComponent,
+    RegistroPlanHorarioComponent,
+    RegistroDetallePlanHorarioComponent,
+    ListarNivelTitulosComponent,
+    ListarEmpresasComponent,
+    FiltrarRucPipe,
   ],
+
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -265,6 +288,7 @@ import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrol
     MatTableModule,
     MatPaginatorModule
   ],
+
   providers: [
     AuthGuard,
     {
@@ -290,10 +314,13 @@ import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrol
     CiudadFeriadosService,
     CiudadService,
   ],
+
   bootstrap: [AppComponent],
+
   exports: [
     MatButtonModule, MatDialogModule, DragDropModule
-  ]
+  ],
+
 })
 export class AppModule { }
 export class CustomMaterialModule { }

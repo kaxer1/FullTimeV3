@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef } from '@angular/material/dialog';
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
@@ -31,6 +32,7 @@ export class RegistroEmpresaComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private rest: EmpresaService,
+    public dialogRef: MatDialogRef<RegistroEmpresaComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -96,10 +98,16 @@ export class RegistroEmpresaComponent implements OnInit {
       correo: form.correoForm,
     };
     this.rest.IngresarEmpresas(datosEmpresa).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
       this.LimpiarCampos();
+      this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
     }, error => {
     });
+  }
+
+  CerrarVentanaRegistroEmpresa() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
   }
 
 }

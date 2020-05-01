@@ -78,7 +78,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-primary btn-sm" (click)="InsertarPlanificacion(PlanificacionComidasForm.value)"
+    <input type="submit" class="btn btn-sm" (click)="InsertarPlanificacion(PlanificacionComidasForm.value)"
         [disabled]="!PlanificacionComidasForm.valid" value="Guardar">
-    <input type="submit" class="btn btn-danger btn-sm" (click)="CerrarRegistroPlanificacion()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="CerrarRegistroPlanificacion()" value="Salir">
 </div>
