@@ -25,6 +25,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';  
 
 @Component({
   selector: 'app-ver-empleado',
@@ -203,7 +204,46 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  // PARA LA GENERACION DE PDFs
+  AbrirVentanaVacaciones(): void {
+    this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idPerVacacion = datos;
+      console.log("idPerVaca ", this.idPerVacacion[0].id)
+      this.vistaRegistrarVacaciones.open(RegistrarVacacionesComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+    });
+  }
+
+  AbrirVentanaPlanHorario(): void {
+    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].id)
+      this.vistaRegistroPlanHorario.open(RegistroPlanHorarioComponent, { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+  }
+
+  AbrirVentanaDetallePlanHorario(): void {
+    this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idPlanHorario = datos;
+      console.log("idcargo ", this.idPlanHorario[0].id)
+      this.vistaRegistroDetallePlanHorario.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
+    });
+  }
+
+  /* 
+  ****************************************************************************************************
+  *
+  * 
+  *                               PARA LA GENERACION DE PDFs
+  * 
+  * 
+  ****************************************************************************************************
+  */ 
+
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
 
@@ -428,50 +468,57 @@ export class VerEmpleadoComponent implements OnInit {
     };
   }
 
-  // *********************************************************************
+  /* 
+  ****************************************************************************************************
+  *
+  * 
+  *                               PARA LA EXPORTACION DE ARCHIVOS EXCEL Y CSV
+  * 
+  * 
+  ****************************************************************************************************
+  */ 
 
-   exportToExcel() {
-    const ws: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
+  // DataGeneral: any = [];
+
+  // datosGenerales(){
+    // this.empleadoUno.forEach(obj1 => {
+    //   this.DataGeneral.push(obj1);
+    //   this.contratoEmpleado.forEach(obj => {
+    //     this.DataGeneral.push(obj);
+    //   });
+    //   this.discapacidadUser.forEach(obj => {
+    //     this.DataGeneral.push(obj);
+    //   });
+    //   this.relacionTituloEmpleado.forEach(obj => {
+    //     this.DataGeneral.push(obj);
+    //   });
+    // });
+    // console.log(JSON.stringify( this.DataGeneral));
+  // }
+
+  exportToExcel() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
+    const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-    xlsx.writeFile(wb, 'InfoEmpleado.xlsx');
+    xlsx.utils.book_append_sheet(wb, wse, 'perfil');
+    xlsx.utils.book_append_sheet(wb, wsc, 'contrato');
+    xlsx.utils.book_append_sheet(wb, wst, 'titulos');
+    xlsx.utils.book_append_sheet(wb, wsd, 'discapacida');
+    xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
   exportToCVS(){
-    const hoja: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
-    const ws = xlsx.utils.sheet_to_csv(hoja);
-    console.log(ws);
-    // const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
+    const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
+    const csvDataE = xlsx.utils.sheet_to_csv(wse);  
+    const csvDataC = xlsx.utils.sheet_to_csv(wsc);  
+    const csvDataD = xlsx.utils.sheet_to_csv(wsd);  
+    const csvDataT = xlsx.utils.sheet_to_csv(wst);  
+    const data: Blob = new Blob([csvDataE,csvDataC,csvDataD,csvDataT], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "EmpleadoCSV" + new Date().getTime() + '.csv');  
   }
-
-  AbrirVentanaVacaciones(): void {
-    this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion[0].id)
-      this.vistaRegistrarVacaciones.open(RegistrarVacacionesComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
-    });
-  }
-
-  AbrirVentanaPlanHorario(): void {
-    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].id)
-      this.vistaRegistroPlanHorario.open(RegistroPlanHorarioComponent, { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
-    });
-  }
-
-  AbrirVentanaDetallePlanHorario(): void {
-    this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPlanHorario = datos;
-      console.log("idcargo ", this.idPlanHorario[0].id)
-      this.vistaRegistroDetallePlanHorario.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
-    });
-  }
-
 }
