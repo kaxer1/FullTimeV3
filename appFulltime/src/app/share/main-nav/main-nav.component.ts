@@ -18,6 +18,7 @@ export class MainNavComponent implements OnInit {
 
   UserEmail: string;
   UserName: string;
+  iniciales: string;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -80,6 +81,7 @@ export class MainNavComponent implements OnInit {
       
       this.UserEmail = res[0].correo;
       this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
+      this.iniciales = res[0].nombre.split(" ")[0].slice(0,1) + res[0].apellido.split(" ")[0].slice(0,1);
     });
   }
 

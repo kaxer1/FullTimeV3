@@ -65,7 +65,7 @@ export class TipoPermisosComponent implements OnInit {
   ];
   seleccionarPermiso: string = this.permisos[0].valor;
 
-  isLinear = false;
+  isLinear = true;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;

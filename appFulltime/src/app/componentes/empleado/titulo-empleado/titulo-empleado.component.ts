@@ -82,7 +82,7 @@ export class TituloEmpleadoComponent implements OnInit {
 
   cerrarRegistro() {
     this.metodo.mostrarTit();
-    window.location.reload();
+    //window.location.reload();
   }
 
   VerificarTitulo() {

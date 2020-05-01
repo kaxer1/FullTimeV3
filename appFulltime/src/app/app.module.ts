@@ -154,6 +154,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -288,6 +289,7 @@ import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/materi
     MatPaginatorModule,
     MatDatepickerModule, 
     MatNativeDateModule,
+    MatTabsModule
   ],
 
   providers: [

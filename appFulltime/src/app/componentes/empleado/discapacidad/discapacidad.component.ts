@@ -131,7 +131,7 @@ export class DiscapacidadComponent implements OnInit {
   
   cerrarRegistro(){
     this.metodo.mostrarDis();
-    window.location.reload();
+    //window.location.reload();
   }
 
 }
