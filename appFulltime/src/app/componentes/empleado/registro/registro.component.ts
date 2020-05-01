@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ToastrService } from 'ngx-toastr'
@@ -8,13 +8,40 @@ import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import {NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { formatDate } from '@angular/common';
+
+export const PICK_FORMATS = {
+  parse: { dateInput: { day: 'numeric', month: 'numeric', year: 'numeric' } },
+  display: {
+    dateInput: 'input',
+    monthYearLabel: { year: 'numeric', month: 'numeric' },
+    dateA11yLabel: { year: 'numeric', month: 'numeric', day: 'numeric' },
+    datos: { day: 'numeric', month: 'numeric', year: 'numeric' },
+  }
+};
+
+class PickDateAdapter extends NativeDateAdapter {
+  format(date: Date, displayFormat: Object): string {
+    if (displayFormat === 'input') {
+      return formatDate(date, 'dd-MMM-yyyy', this.locale);
+    } else {
+      return date.toDateString();
+    }
+  }
+}
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss'],
   //encapsulation: ViewEncapsulation.None,
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: PICK_FORMATS },
+    { provide: DateAdapter, useClass: PickDateAdapter },
+  ]
 })
+
 export class RegistroComponent implements OnInit {
 
   empleadoGuardado: any = [];
@@ -40,6 +67,8 @@ export class RegistroComponent implements OnInit {
     private _formBuilder: FormBuilder,
     private router: Router
   ) { }
+
+  date: any;
 
   ngOnInit(): void {
     this.cargarRoles();

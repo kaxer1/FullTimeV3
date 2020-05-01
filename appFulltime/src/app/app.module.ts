@@ -82,7 +82,7 @@ import { DepartamentosService } from './servicios/catalogos/catDepartamentos/dep
 import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
-import { CiudadFeriadosService} from './servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadFeriadosService } from './servicios/ciudadFeriados/ciudad-feriados.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 
@@ -153,6 +153,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -278,15 +279,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     MatDialogModule,
     NgMaterialMultilevelMenuModule,
     MatExpansionModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     FormsModule,
     MatStepperModule,
     DragDropModule,
     MatTooltipModule,
     MatAutocompleteModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDatepickerModule, 
+    MatNativeDateModule,
   ],
 
   providers: [
@@ -318,9 +319,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   bootstrap: [AppComponent],
 
   exports: [
-    MatButtonModule, MatDialogModule, DragDropModule
+    MatButtonModule, MatDialogModule, DragDropModule,
+    MatDatepickerModule, MatNativeDateModule 
   ],
 
 })
 export class AppModule { }
 export class CustomMaterialModule { }
+export class DatePickerModule { }
