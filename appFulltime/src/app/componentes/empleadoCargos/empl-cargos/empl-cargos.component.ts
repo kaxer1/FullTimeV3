@@ -1,7 +1,9 @@
-import { Component, OnInit, Inject, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
 
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -14,6 +16,12 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
   templateUrl: './empl-cargos.component.html',
   styleUrls: ['./empl-cargos.component.css'],
   //encapsulation: ViewEncapsulation.None
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  ]
 })
 export class EmplCargosComponent implements OnInit {
 
@@ -132,6 +140,5 @@ export class EmplCargosComponent implements OnInit {
     this.dialogRef.close();
     window.location.reload();
   }
-
 
 }

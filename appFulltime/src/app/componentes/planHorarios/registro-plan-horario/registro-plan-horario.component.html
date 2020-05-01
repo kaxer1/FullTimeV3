@@ -10,22 +10,25 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Fecha de inicio de actividades</mat-label>
-                        <input matInput type="date" placeholder="Ingresar fecha de inicio"
-                            [formControl]="fechaIngresoF" required>
-                        <mat-icon id="icono" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Ingresar la fecha de inicio de actividades">
-                            date_range</mat-icon>
+                        <mat-label id="fec">Fecha inicio de actividades</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaIngresoF"
+                            required>
+                        <mat-datepicker-toggle matSuffix [for]="picker" matSuffix id="icono" matSuffix
+                            matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Fecha fin de actividades</mat-label>
-                        <input matInput type="date" placeholder="Ingresar fecha de finalización" [formControl]="fechaSalidaF" required>
-                        <mat-icon id="icono" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Ingresar la fecha de finalización de actividades">
-                            event</mat-icon>
+                        <mat-label id="fec">Fecha fin de actividades</mat-label>
+                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaSalidaF"
+                            required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" matSuffix id="icono" matSuffix
+                            matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de finalización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col">

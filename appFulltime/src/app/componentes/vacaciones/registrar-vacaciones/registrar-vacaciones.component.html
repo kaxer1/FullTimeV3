@@ -10,27 +10,35 @@
                 <div class="col-sm">
                     <mat-form-field>
                         <mat-label>Fecha de Inicio de Vacaciones</mat-label>
-                        <input matInput type="date" [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31"
+                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicio"
+                            min="1950-01-31" max="2050-01-31" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker" matSuffix id="cargoE"
+                            matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la fecha en la que sale a tomar vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label id="fecVaca">Fecha fin de Vacaciones</mat-label>
+                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinal"
                             required>
-                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar la fecha en la que sale a tomar vacaciones">
-                            help_outline</mat-icon>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE"
+                            matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de finalización de vacaciones tomadas. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label id="fecVaca">Fecha de Finalización de Vacaciones</mat-label>
-                        <input matInput type="date" [formControl]="fechaFinal" required>
-                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de finalización de vacaciones tomadas">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Fecha de Ingreso al Trabajo</mat-label>
-                        <input matInput type="date" [formControl]="fechaIngreso" required>
-                        <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar la fecha en la que se incorpora nuevamente al trabajo">
-                            help_outline</mat-icon>
+                        <mat-label id="fecVaca">Fecha ingreso al Trabajo</mat-label>
+                        <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" [formControl]="fechaIngreso"
+                            required>
+                        <mat-datepicker-toggle matSuffix [for]="picker3" id="cargoE"
+                            matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la fecha en la que se incorpora nuevamente al trabajo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker3></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-sm">
@@ -79,8 +87,7 @@
                     <section>
                         <mat-label>Legalizado* </mat-label>
                         <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si las vacaciones han sido legalizadas">
+                            matTooltipPosition="right" matTooltip="Indicar si las vacaciones han sido legalizadas">
                             help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="legalizadoF" required
                             [value]="legalizadoF.value">

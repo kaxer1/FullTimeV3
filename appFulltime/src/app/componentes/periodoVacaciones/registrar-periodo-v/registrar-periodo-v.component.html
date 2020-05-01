@@ -43,22 +43,24 @@
                 </div>
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Fecha de inicio de período</mat-label>
-                        <input matInput type="date" placeholder="Ingresar fecha de ingreso" [formControl]="fechaInicioF"
+                        <mat-label id="fec">Fecha de inicio de período</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
                             required>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Ingresar la fecha de inicio de período de vacaciones">
-                            date_range</mat-icon>
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
+                            matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de inicio de período de vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Fecha de finalización de período</mat-label>
-                        <input matInput type="date" placeholder="Ingresar fecha de salida" [formControl]="fechaFinF">
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Ingresar la fecha de finalización de período de vacaciones">
-                            event</mat-icon>
+                        <mat-label id="fec">Fecha de fin de período</mat-label>
+                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinF">
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE"
+                            matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar la fecha de finalización de período de vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col">

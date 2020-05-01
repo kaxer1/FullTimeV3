@@ -31,10 +31,13 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Fecha Actual</mat-label>
-                        <input matInput type="date" placeholder="Ej: Usuario" formControlName="fechaForm" required>
-                        <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                            matTooltipPosition="right" matTooltip="Ingresar fecha en la que se registra la planificación">
-                            date_range</mat-icon>
+                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" formControlName="fechaForm"
+                            required>
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="planComida"
+                            matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar fecha en la que se registra la planificación. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col">
@@ -43,18 +46,21 @@
                         <input matInput placeholder="Ejm: 1" formControlName="observacionForm"
                             (keypress)="IngresarSoloLetras($event)" required>
                         <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                            matTooltipPosition="right" matTooltip="Ingresar una indicación de la planificación de almuerzo">
+                            matTooltipPosition="right"
+                            matTooltip="Ingresar una indicación de la planificación de almuerzo">
                             help_outline</mat-icon>
                         <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label>Fecha de planificación</mat-label>
-                        <input matInput type="date" placeholder="Ejm: 1" formControlName="fechaPlanificacionForm"
-                            required>
-                        <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                            matTooltipPosition="right" matTooltip="Ingresar fecha en la que se va a asistir al almuerzo">
-                            event</mat-icon>
+                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                            formControlName="fechaPlanificacionForm" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="planComida"
+                            matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar fecha en la que se va a asistir al almuerzo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
