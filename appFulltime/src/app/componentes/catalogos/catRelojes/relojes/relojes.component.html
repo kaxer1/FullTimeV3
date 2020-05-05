@@ -38,7 +38,7 @@
                             matTooltip="Indicar en que departamento se encuentra el dispositivo">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idDepartamentoF" required>
-                            <mat-option *ngFor="let d of departamento" [value]="d.id">{{d.nombre}}</mat-option>
+                            <mat-option *ngFor="let d of departamento" [value]="d.id" (click)="ObtenerNombre(RelojesForm.value)">{{d.nombre}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

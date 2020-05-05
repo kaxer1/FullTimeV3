@@ -38,6 +38,10 @@ import VACACIONES__RUTAS from './rutas/vacaciones/vacacionesRutas';
 import EMPLEADO_PROCESO_RUTAS from './rutas/empleado/empleadoProcesos/empleProcesosRutas';
 import PLAN_HORARIO_RUTAS from './rutas/horarios/planHorario/planHorarioRutas';
 import DETALLE_PLAN_HORARIO_RUTAS from './rutas/horarios/detallePlanHorario/detallePlanHorarioRutas';
+import AUTORIZA_DEPARTAMENTO_RUTAS from './rutas/autorizaDepartamento/autorizaDepartamentoRutas';
+import EMPLEADO_HORARIOS_RUTAS from './rutas/horarios/empleadoHorarios/empleadoHorariosRutas';
+import PERMISOS_RUTAS from './rutas/permisos/permisosRutas';
+import DETALLE_CATALOGO_HORARIO_RUTAS from './rutas/horarios/detalleCatHorario/detalleCatHorarioRutas';
 
 class Server {
 
@@ -62,7 +66,7 @@ class Server {
         this.app.use('/rol', ROLES_RUTAS);
         this.app.use('/login', LOGIN_RUTA);
 
-        //Empleado
+        // Empleado
         this.app.use('/empleado', EMPLEADO_RUTAS);
         this.app.use('/contratoEmpleado', CONTRATO_EMPLEADO_RUTAS);
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
@@ -70,14 +74,22 @@ class Server {
         this.app.use('/vacaciones', VACACIONES__RUTAS);
         this.app.use('/empleadoProcesos', EMPLEADO_PROCESO_RUTAS);
 
-        //Almuerzo
+        // Autorizaciones
+        this.app.use('/autorizaDepartamento', AUTORIZA_DEPARTAMENTO_RUTAS);
+
+        // Permisos
+        this.app.use('/empleadoPermiso', PERMISOS_RUTAS);
+
+        // Almuerzo
         this.app.use('/planComidas', PLAN_COMIDAS_RUTAS);
 
-        //Horarios
+        // Horarios
         this.app.use('/planHorario', PLAN_HORARIO_RUTAS);
         this.app.use('/detallePlanHorario', DETALLE_PLAN_HORARIO_RUTAS);
+        this.app.use('/empleadoHorario', EMPLEADO_HORARIOS_RUTAS);
+        this.app.use('/detalleHorario', DETALLE_CATALOGO_HORARIO_RUTAS);
 
-        //Enrolados
+        // Enrolados
         this.app.use('/enrolados', ENROLADO_RUTA);
         this.app.use('/relojes', RELOJES_RUTA);
         this.app.use('/enroladosRelojes', ENROLADO_RELOJ_RUTAS);

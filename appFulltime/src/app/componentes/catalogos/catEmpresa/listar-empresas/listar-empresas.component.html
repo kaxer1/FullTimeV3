@@ -26,7 +26,8 @@
                         <div class="col">
                             <mat-form-field>
                                 <mat-label>RUC</mat-label>
-                                <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa"
+                                <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa" maxlength="13"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
                                     [(ngModel)]="filtroRucEmpresa">
                                 <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>

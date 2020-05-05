@@ -142,7 +142,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   ObtenerNombre(id: number) {
     this.selectPadre
-    this.rest.getOneDepartamentoRest(id).subscribe(datos => {
+    this.rest.EncontrarUnDepartamento(id).subscribe(datos => {
       this.selectPadre = datos[0].nombre
     }, error => {
       this.toastr.info('Descripción ingresada no coincide con los registros')
@@ -225,7 +225,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   ValidarCamposModificar() {
     this.idD = this.descripcionD.id;
-    this.rest.getOneDepartamentoRest(parseInt(this.idD)).subscribe(res => {
+    this.rest.EncontrarUnDepartamento(parseInt(this.idD)).subscribe(res => {
       this.departamentoModificar = res[0];
       this.editarDepartamento = true;
       this.nuevoDepartamentoForm.setValue({
