@@ -18,4 +18,8 @@ export class PlanComidasService {
     return this.http.post(`${this.API_URL}/planComidas/`, datos);
   }
 
+  obtenerPlanComidaPorIdEmpleado(id_empleado: number){
+    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/${id_empleado}`)
+  }
+
 }

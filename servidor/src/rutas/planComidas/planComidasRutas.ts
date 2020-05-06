@@ -11,6 +11,7 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', PLAN_COMIDAS_CONTROLADOR.ListarPlanComidas);
+        this.router.get('/infoComida/:id_empleado', PLAN_COMIDAS_CONTROLADOR.EncontrarPlanComidaPorIdEmpleado);
         this.router.post('/', PLAN_COMIDAS_CONTROLADOR.CrearPlanComidas);
 
     }

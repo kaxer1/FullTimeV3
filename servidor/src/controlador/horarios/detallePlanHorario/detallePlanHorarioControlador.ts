@@ -19,6 +19,15 @@ class DetallePlanHorarioControlador {
         res.json({ message: 'Detalle Plan Horario Registrado' });
     }
 
+    public async EncontrarPlanHoraDetallesPorIdPlanHorario(req: Request, res: Response): Promise<any> {
+        const { id_plan_horario } = req.params;
+        const HORARIO_CARGO = await pool.query('SELECT p.id, p.fecha, p.id_plan_horario, p.tipo_dia, h.nombre AS horarios FROM plan_hora_detalles AS p, cg_horarios AS h WHERE p.id_plan_horario = $1 AND p.id_cg_horarios = h.id ', [id_plan_horario]);
+        if (HORARIO_CARGO.rowCount > 0) {
+          return res.json(HORARIO_CARGO.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
+
 }
 
 export const DETALLE_PLAN_HORARIO_CONTROLADOR = new DetallePlanHorarioControlador();

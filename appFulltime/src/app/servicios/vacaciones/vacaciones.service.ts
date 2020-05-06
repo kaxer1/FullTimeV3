@@ -18,4 +18,8 @@ export class VacacionesService {
     return this.http.post(`${this.API_URL}/vacaciones`, datos);
   }
 
+  ObtenerVacacionesPorIdPeriodo(id_peri_perido: number){
+    return this.http.get<any>(`${this.API_URL}/vacaciones/${id_peri_perido}`)
+  }
+
 }

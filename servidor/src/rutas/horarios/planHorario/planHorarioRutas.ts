@@ -13,6 +13,7 @@ class PlanHorarioRutas {
         this.router.get('/', PLAN_HORARIO_CONTROLADOR.ListarPlanHorario);
         this.router.post('/', PLAN_HORARIO_CONTROLADOR.CrearPlanHorario);
         this.router.get('/buscar/:id_empleado', PLAN_HORARIO_CONTROLADOR.EncontrarIdPlanHorario);
+        this.router.get('/infoPlan/:id_cargo', PLAN_HORARIO_CONTROLADOR.EncontrarPlanHorarioPorIdCargo);
     }
 }
 

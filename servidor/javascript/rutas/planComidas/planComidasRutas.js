@@ -12,6 +12,7 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.get('/', planComidasControlador_1.default.ListarPlanComidas);
+        this.router.get('/infoComida/:id_empleado', planComidasControlador_1.default.EncontrarPlanComidaPorIdEmpleado);
         this.router.post('/', planComidasControlador_1.default.CrearPlanComidas);
     }
 }

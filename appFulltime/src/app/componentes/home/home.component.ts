@@ -1,15 +1,28 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import { EChartOption } from 'echarts';
+declare const require: any;
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit{
+
+  // variables caja 1
+
+  options: any;
+  updateOptions: any;
+
+  private oneDay = 24 * 3600 * 1000;
+  private now: Date;
+  private value: number ;
+  private data: any[];
+  private timer: any;
 
   fecha: string;
   // estes es para la grafica de pie
@@ -127,6 +140,7 @@ export class HomeComponent implements OnInit {
     var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
     var f=new Date();
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+    this.cajaUno();
   }
 
    // events y codigo del pie
@@ -212,4 +226,140 @@ export class HomeComponent implements OnInit {
     this.lineChartLabels[2] = ['1st Line', '2nd Line'];
     // this.chart.update();
   }
+
+
+  // Metodo para construir grafico de la caja 1
+  cajaUno(){
+    // generate some random testing data:
+    this.data = [];
+    this.now = new Date(1997, 9, 3);
+    this.value = Math.random() * 1000;
+
+    for (let i = 0; i < 1000; i++) {
+      this.data.push(this.randomData());
+    }
+
+    // initialize chart options:
+    this.options = {
+      tooltip: {
+        trigger: 'axis',
+        formatter: (params) => {
+          params = params[0];
+          const date = new Date(params.name);
+          return date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear() + ' : ' + params.value[1];
+        },
+        axisPointer: {
+          animation: false
+        }
+      },
+      xAxis: {
+        type: 'time',
+        splitLine: {
+          show: false
+        }
+      },
+      yAxis: {
+        type: 'value',
+        boundaryGap: [0, '100%'],
+        splitLine: {
+          show: true
+        }
+      },
+      series: [{
+        name: 'Mocking Data',
+        type: 'line',
+        showSymbol: false,
+        hoverAnimation: false,
+        data: this.data
+      }]
+    };
+
+    // Mock dynamic data:
+    this.timer = setInterval(() => {
+      for (let i = 0; i < 5; i++) {
+        this.data.shift();
+        this.data.push(this.randomData());
+      }
+
+      // update series data:
+      this.updateOptions = {
+        series: [{
+          data: this.data
+        }]
+      };
+    }, 1000);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timer);
+  }
+
+  randomData() {
+    this.now = new Date(this.now.getTime() + this.oneDay);
+    this.value = this.value + Math.random() * 21 - 10;
+    return {
+      name: this.now.toString(),
+      value: [
+        [this.now.getFullYear(), this.now.getMonth() + 1, this.now.getDate()].join('/'),
+        Math.round(this.value)
+      ]
+    };
+  }
+
+
+  // Caja 2
+  optionsBarras = {
+    color: ['#3398DB'],
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow'
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        axisTick: {
+          alignWithLabel: true
+        }
+      }
+    ],
+    yAxis: [{
+      type: 'value'
+    }],
+    series: [{
+      name: 'Counters',
+      type: 'bar',
+      barWidth: '60%',
+      data: [10, 52, 200, 334, 390, 330, 220]
+    }]
+  };
+
+  initOpts = {
+    renderer: 'svg',
+    width: 300,
+    height: 300
+  };
+
+  // caja 1 fila 2
+  optionsFila2 = {
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [{
+      data: [120, 932, 901, 934, 1290, 1330, 1320],
+      type: 'line'
+    }]
+  };
 }

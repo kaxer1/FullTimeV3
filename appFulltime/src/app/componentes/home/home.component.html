@@ -24,17 +24,32 @@
   <br>
 <!-- cajas de los graficos pequeños-->
   <div class="row">
-    <div class="col-sm">Caja1</div>
-    <div class="col-sm">Caja2</div>
-    <div class="col-sm">Caja3</div>
-    <div class="col-sm">Caja4</div>
+    <div class="col-sm">
+      <!-- caja 1 -->
+      <mat-card class="example-card mat-elevation-z8">
+        <div echarts [options]="options" [merge]="updateOptions" class="demo-chart"></div>
+      </mat-card>
+    </div>
+    <div class="col-sm">
+      <mat-card class="example-card mat-elevation-z8">
+        <echarts [initOpts]="initOpts" [options]="optionsBarras"></echarts>
+      </mat-card>
+    </div>
+    <!-- <div class="col-sm">Caja3</div>
+    <div class="col-sm">Caja4</div> -->
   </div>
   <br>
   <div class="row">
-    <div class="col-sm">Caja1</div>
-    <div class="col-sm">Caja2</div>
-    <div class="col-sm">Caja3</div>
-    <div class="col-sm">Caja4</div>
+    <div class="col-sm">
+      <mat-card class="example-card mat-elevation-z8">
+        <div echarts [options]="optionsFila2"></div>
+      </mat-card>
+    </div>
+    <div class="col-sm">
+      <div echarts [options]="options" class="demo-chart"></div>
+    </div>
+    <!-- <div class="col-sm">Caja3</div>
+    <div class="col-sm">Caja4</div> -->
   </div>
   <br>
   <!-- caja de los graficos grandes -->

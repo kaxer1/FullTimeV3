@@ -9,6 +9,9 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
+import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
+import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
+import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
@@ -26,6 +29,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';  
+import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -36,7 +40,7 @@ export class VerEmpleadoComponent implements OnInit {
   empleadoUno: any = [];
   idEmpleado: string;
   editar: string = '';
-  fecha: any = [];
+  fechaNacimiento: any = [];
   mostrarDiscapacidad = true;
   mostrarTitulo = true;
   btnDisc = 'Añadir';
@@ -50,7 +54,13 @@ export class VerEmpleadoComponent implements OnInit {
   auxRestTitulo: any = [];
   
   idContrato: any = [];
+  contratoEmpleadoRegimen: any = [];
   contratoEmpleado: any = [];
+  fechaContratoIngreso: string;
+  fechaContratoSalida: string;
+
+  fechaCargoInicio: string;
+  fechaCargoFinal: string;
 
   logo: any;
   idCargo: any = [];
@@ -64,6 +74,10 @@ export class VerEmpleadoComponent implements OnInit {
     public restCargo: EmplCargosService,
     public restPerV: PeriodoVacacionesService,
     public restPlanH: PlanHorarioService,
+    public restVacaciones: VacacionesService,
+    public restPlanHoraDetalle: DetallePlanHorarioService,
+    public restEmpleadoProcesos: EmpleadoProcesosService,
+    public restPlanComidas: PlanComidasService,
     public vistaRegistrarContrato: MatDialog,
     public vistaRegistrarPlanificacion: MatDialog,
     public vistaRegistrarCargoEmpeado: MatDialog,
@@ -86,6 +100,7 @@ export class VerEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
+    this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
   onUploadFinish(event) {
@@ -98,7 +113,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       // sacar la fecha del JSON 
       var cadena1 = data[0]['fec_nacimiento'];
-      this.fecha = cadena1.split("T")[0];
+      this.fechaNacimiento = cadena1.split("T")[0];
     })
   }
 
@@ -119,9 +134,84 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   // metodo para obtener el contrato de un empleado con su respectivo regimen laboral
+  idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen(){
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
+      this.contratoEmpleadoRegimen = res;
+    });
+    this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
+      this.contratoEmpleado.map(obj => {
+        this.idContratoEmpleado = obj.id;
+        this.fechaContratoIngreso = obj.fec_ingreso.split("T")[0];
+        if(obj.fec_salida === null){
+          this.fechaContratoSalida = '';
+        } else {
+          this.fechaContratoSalida = obj.fec_salida.split("T")[0];
+        }
+        this.obtenerCargoEmpleado();
+        this.obtenerPeriodoVacaciones();
+      });
+    });
+  }
+
+  cargoEmpleado: any;
+  obtenerCargoEmpleado(){
+    this.restCargo.getInfoCargoEmpleadoRest(this.idContratoEmpleado).subscribe(res => {
+      this.cargoEmpleado = res;
+      this.cargoEmpleado.map(obj => {
+        this.obtenerPlanHorarios(obj.id);
+        this.obtenerEmpleadoProcesos(obj.id);
+      });
+    })
+  }
+
+  peridoVacaciones: any;
+  obtenerPeriodoVacaciones(){
+    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContratoEmpleado).subscribe(res => {
+      this.peridoVacaciones = res;
+      this.peridoVacaciones.map(obj => {
+        this.obtenerVacaciones(obj.id);
+      });
+    })
+  }
+
+  vacaciones: any = [];
+  obtenerVacaciones(id_peri_vacaciones: number){
+    this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
+      this.vacaciones = res;
+    });
+  }
+
+  planHorario: any;
+  obtenerPlanHorarios(idEmpleadoCargo: number){
+    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
+      this.planHorario = res;
+      this.planHorario.map(obj => {
+        this.obtenerPlanHoraDetalle(obj.id);
+      })
+    });
+  }
+
+  planHoraDetalle: any;
+  obtenerPlanHoraDetalle(id_plan_horario: number){
+    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
+      this.planHoraDetalle = res;
+    });
+  }
+
+  empleadoProcesos: any;
+  obtenerEmpleadoProcesos(idEmpleadoCargo: number){
+    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
+      this.empleadoProcesos = res
+    });
+  }
+
+  planComidas: any;
+  obtenerPlanComidasEmpleado(id_empleado: number){
+    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+      this.planComidas = res
+      console.log(res);
     })
   }
 
@@ -283,7 +373,7 @@ export class VerEmpleadoComponent implements OnInit {
               style: 'name'
             },
             {
-              text: 'Fecha Nacimiento: ' + this.fecha
+              text: 'Fecha Nacimiento: ' + this.fechaNacimiento
             },
             {
               text: 'Corre Electronico: ' + this.empleadoUno[0].correo,
@@ -399,7 +489,7 @@ export class VerEmpleadoComponent implements OnInit {
             style: 'tableHeader'
           }
           ],
-          ...this.contratoEmpleado.map(obj => {
+          ...this.contratoEmpleadoRegimen.map(obj => {
             const ingreso = obj.fec_ingreso.split("T")[0];
             if(obj.fec_salida === null){
               const salida = '';
@@ -477,33 +567,15 @@ export class VerEmpleadoComponent implements OnInit {
   ****************************************************************************************************
   *
   * 
-  *                               PARA LA EXPORTACION DE ARCHIVOS EXCEL Y CSV
+  *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL Y CSV
   * 
   * 
   ****************************************************************************************************
   */ 
 
-  // DataGeneral: any = [];
-
-  // datosGenerales(){
-    // this.empleadoUno.forEach(obj1 => {
-    //   this.DataGeneral.push(obj1);
-    //   this.contratoEmpleado.forEach(obj => {
-    //     this.DataGeneral.push(obj);
-    //   });
-    //   this.discapacidadUser.forEach(obj => {
-    //     this.DataGeneral.push(obj);
-    //   });
-    //   this.relacionTituloEmpleado.forEach(obj => {
-    //     this.DataGeneral.push(obj);
-    //   });
-    // });
-    // console.log(JSON.stringify( this.DataGeneral));
-  // }
-
   exportToExcel() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
-    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
     const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
@@ -516,7 +588,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   exportToCVS(){
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
-    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
     const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
     const csvDataE = xlsx.utils.sheet_to_csv(wse);  

@@ -32,6 +32,15 @@ class EmpleadoCargosControlador {
     res.status(404).json({ text: 'Registro no encontrado' });
   }
 
+  public async EncontrarInfoCargoEmpleado(req: Request, res: Response): Promise<any> {
+    const { id_empl_contrato } = req.params;
+    const unEmplCargp = await pool.query('SELECT ec.id, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, s.nombre AS sucursal, d.nombre AS departamento FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d WHERE ec.id_empl_contrato = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id', [id_empl_contrato]);
+    if (unEmplCargp.rowCount > 0) {
+      return res.json(unEmplCargp.rows)
+    }
+    res.status(404).json({ text: 'Cargo del empleado no encontrado' });
+  }
+
 }
 
 export const EMPLEADO_CARGO_CONTROLADOR = new EmpleadoCargosControlador();

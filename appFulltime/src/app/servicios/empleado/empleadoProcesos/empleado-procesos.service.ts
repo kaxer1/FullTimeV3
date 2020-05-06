@@ -17,5 +17,9 @@ export class EmpleadoProcesosService {
   RegistrarEmpleProcesos(datos: any){
     return this.http.post(`${this.API_URL}/empleadoProcesos`, datos);
   }
+
+  ObtenerProcesoPorIdCargo(id_empl_cargo: number){
+    return this.http.get<any>(`${this.API_URL}/empleadoProcesos/infoProceso/${id_empl_cargo}`);
+  }
   
 }

@@ -11,6 +11,7 @@ class DetallePlanHorarioRutas {
 
     configuracion(): void {
         this.router.get('/', DETALLE_PLAN_HORARIO_CONTROLADOR.ListarDetallePlanHorario);
+        this.router.get('/infoPlan/:id_plan_horario', DETALLE_PLAN_HORARIO_CONTROLADOR.EncontrarPlanHoraDetallesPorIdPlanHorario);
         this.router.post('/', DETALLE_PLAN_HORARIO_CONTROLADOR.CrearDetallePlanHorario);
     }
 }
