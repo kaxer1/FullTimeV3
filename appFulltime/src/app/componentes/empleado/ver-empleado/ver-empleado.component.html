@@ -68,205 +68,223 @@
                     <!-- <div style="padding-bottom: 35px; padding-top: 35px;">
                         <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos>
                     </div> -->
-            </div>
-            <br>
-            <div class="col-md">
-                <mat-card class="mat-elevation-z8">
-                    <!-- <div class="container">
+                </div>
+                <br>
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <!-- <div class="container">
                         <div class="row">
                             <div class="col"> -->
-                                <mat-grid-list cols="2" rowHeight="3:1">
-                                    <mat-grid-tile>
-                                        <button type="submit" [routerLink]="['/empleado']" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">keyboard_backspace</i><span>Atrás</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('open')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector"> 
-                                            <i class="material-icons">picture_as_pdf</i><span>Abrir PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('download')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">cloud_download</i><span>Descargar PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('print')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">print</i><span>Imprimir PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="exportToExcel()" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons fas fa-file-excel"></i><span>Exportar a Excel</span>
-                                        </button> 
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="exportToCVS()" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons fas fa-file-csv"></i><span>Exportar a CSV</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                </mat-grid-list>
-                            <!-- </div>
+                        <mat-grid-list cols="2" rowHeight="3:1">
+                            <mat-grid-tile>
+                                <button type="submit" [routerLink]="['/empleado']"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">keyboard_backspace</i><span>Atrás</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('open')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">picture_as_pdf</i><span>Abrir PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('download')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">cloud_download</i><span>Descargar PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('print')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">print</i><span>Imprimir PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="exportToExcel()"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons fas fa-file-excel"></i><span>Exportar a Excel</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="exportToCVS()"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons fas fa-file-csv"></i><span>Exportar a CSV</span>
+                                </button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <!-- </div>
                         </div>
                     </div> -->
-                    <!-- <div class="form-group">
+                        <!-- <div class="form-group">
                         <label class="h4 mb-3" for="">Show your picture in Resume</label>
                         <input type="file" class="form-control-file" (change)="fileChanged($event)">
                     </div> -->
-                </mat-card>
-            </div>
-        </div>
-    </div>
-    </mat-tab>
-  
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">school</mat-icon>
-        Asignaciones
-      </ng-template>
-      <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-        <div class="row">
-            <div class="col-md">
-                <mat-card class="mat-elevation-z8">
-                    <div class="barraTitulo2">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col" style="text-align: right;">
-                                    <h5>Títulos</h5>
-                                </div>
-                                <div class="col" style="text-align: left;">
-                                    <button type="submit" class="btn btn-outline-light btn-sm"
-                                        (click)="mostrarTit()">{{btnTitulo}}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <mat-card-content>
-                        <div class="container" style="padding-top: 15px;" *ngFor="let rte of relacionTituloEmpleado">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Observaciones:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{rte.observaciones}}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Nombre:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{rte.nombre}}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Nivel:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{rte.nivel}}</label>
-                                </div>
-                            </div>
-                            <mat-divider></mat-divider>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-                <div style="padding-bottom: 35px; padding-top: 35px;">
-                    <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
-                </div>
-            </div>
-            <div class="col-md">
-                <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
-                    <div class="barraTitulo1">
-                        <div class="container">
-                            <div class="row" style="text-align: center;">
-                                <div class="col">
-                                    <h5>Discapacidad</h5>
-                                </div>
-                                <div class="col">
-                                    <button type="submit" class="btn btn-outline-light btn-sm" [disabled]="!btnHabilitado"
-                                        (click)="mostrarDis()">{{btnDisc}}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <mat-card-content>
-                        <div class="container" style="padding-top: 15px;" *ngFor="let d of discapacidadUser">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Carnet Conadis:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{d.carn_conadis}}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Tipo:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{d.tipo}}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <label class="col-sm col-form-label">Porcentaje:</label>
-                                </div>
-                                <div class="col">
-                                    <label class="col col-form-label">{{d.porcentaje}} %</label>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-                <div style="padding-bottom: 35px; padding-top: 35px;">
-                    <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
-                    </app-discapacidad>
+                    </mat-card>
                 </div>
             </div>
         </div>
-      </div>
     </mat-tab>
-  
+
     <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">settings</mat-icon>
-        Registros Adiciones
-      </ng-template>
-  
-      <div class="container">
-          <div class="row">
-            <div class="col">
-                <button type="submit" id="boton" (click)="AbrirVentanaCrearContrato()" class="btn">Contrato Empleado
-                </button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos Empleado</button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación Almuerzos
-                </button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaPerVacaciones()" class="btn">Período de Vacaciones
-                </button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaVacaciones()" class="btn">Vacaciones</button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaPlanHorario()" class="btn">Planificación Horario
-                </button>
-                <br>
-                <button type="submit" id="boton" (click)="AbrirVentanaDetallePlanHorario()" class="btn">Detalle Planificación Horario
-                </button>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">school</mat-icon>
+            Asignaciones
+        </ng-template>
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo2">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: right;">
+                                        <h5>Títulos</h5>
+                                    </div>
+                                    <div class="col" style="text-align: left;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="mostrarTit()">{{btnTitulo}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" style="padding-top: 15px;"
+                                *ngFor="let rte of relacionTituloEmpleado">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Observaciones:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{rte.observaciones}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Nombre:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{rte.nombre}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Nivel:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{rte.nivel}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <div style="padding-bottom: 35px; padding-top: 35px;">
+                        <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
+                        <div class="barraTitulo1">
+                            <div class="container">
+                                <div class="row" style="text-align: center;">
+                                    <div class="col">
+                                        <h5>Discapacidad</h5>
+                                    </div>
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            [disabled]="!btnHabilitado" (click)="mostrarDis()">{{btnDisc}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" style="padding-top: 15px;" *ngFor="let d of discapacidadUser">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Carnet Conadis:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{d.carn_conadis}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Tipo:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{d.tipo}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Porcentaje:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{d.porcentaje}} %</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <div style="padding-bottom: 35px; padding-top: 35px;">
+                        <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
+                        </app-discapacidad>
+                    </div>
+                </div>
             </div>
-          </div>
-      </div>
+        </div>
+    </mat-tab>
+
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Registros Adiciones
+        </ng-template>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <button type="submit" id="boton" (click)="AbrirVentanaCrearContrato()" class="btn">Contrato Empleado
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos
+                        Empleado</button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación
+                        Almuerzos
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaPerVacaciones()" class="btn">Período de
+                        Vacaciones
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaVacaciones()" class="btn">Vacaciones</button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaPlanHorario()" class="btn">Planificación
+                        Horario
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaDetallePlanHorario()" class="btn">Detalle
+                        Planificación Horario
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaAutorizar()" class="btn">Autorizar
+                        Departamento
+                    </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaPermiso()" class="btn">Permisos
+                    </button>
+                </div>
+            </div>
+        </div>
     </mat-tab>
 </mat-tab-group>
-
-
-
-
-
-
-    

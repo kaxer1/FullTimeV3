@@ -155,6 +155,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
+import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 
 @NgModule({
   declarations: [
@@ -247,6 +249,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     ListarNivelTitulosComponent,
     ListarEmpresasComponent,
     FiltrarRucPipe,
+    RegistroAutorizacionDepaComponent,
+    RegistroEmpleadoPermisoComponent,
   ],
 
   imports: [
