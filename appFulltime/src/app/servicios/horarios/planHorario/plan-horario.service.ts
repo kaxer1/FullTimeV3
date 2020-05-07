@@ -23,5 +23,9 @@ export class PlanHorarioService {
   BuscarIDPlanHorario(id: number){
     return this.http.get(`${this.API_URL}/planHorario/buscar/${id}`);
   }
+  
+  ObtenerPlanHorarioPorIdCargo(id: number){
+    return this.http.get<any>(`${this.API_URL}/planHorario/infoPlan/${id}`);
+  }
 
 }

@@ -15,7 +15,9 @@ import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
-
+import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
+import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
+import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
@@ -26,6 +28,8 @@ import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/r
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
+import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -37,7 +41,7 @@ export class VerEmpleadoComponent implements OnInit {
   empleadoUno: any = [];
   idEmpleado: string;
   editar: string = '';
-  fecha: any = [];
+  fechaNacimiento: any = [];
   mostrarDiscapacidad = true;
   mostrarTitulo = true;
   btnDisc = 'Añadir';
@@ -51,7 +55,13 @@ export class VerEmpleadoComponent implements OnInit {
   auxRestTitulo: any = [];
 
   idContrato: any = [];
+  contratoEmpleadoRegimen: any = [];
   contratoEmpleado: any = [];
+  fechaContratoIngreso: string;
+  fechaContratoSalida: string;
+
+  fechaCargoInicio: string;
+  fechaCargoFinal: string;
 
   logo: any;
   idCargo: any = [];
@@ -66,6 +76,10 @@ export class VerEmpleadoComponent implements OnInit {
     public restPerV: PeriodoVacacionesService,
     public restPlanH: PlanHorarioService,
     public vistaRegistrarDatos: MatDialog,
+    public restVacaciones: VacacionesService,
+    public restPlanHoraDetalle: DetallePlanHorarioService,
+    public restEmpleadoProcesos: EmpleadoProcesosService,
+    public restPlanComidas: PlanComidasService,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService
@@ -80,6 +94,7 @@ export class VerEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
+    this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
   onUploadFinish(event) {
@@ -92,7 +107,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       // sacar la fecha del JSON 
       var cadena1 = data[0]['fec_nacimiento'];
-      this.fecha = cadena1.split("T")[0];
+      this.fechaNacimiento = cadena1.split("T")[0];
     })
   }
 
@@ -112,10 +127,86 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { });
   }
 
-  // Método para obtener el contrato de un empleado con su respectivo regimen laboral
-  obtenerContratoEmpleadoRegimen() {
+
+  // metodo para obtener el contrato de un empleado con su respectivo regimen laboral
+  idContratoEmpleado: number;
+  obtenerContratoEmpleadoRegimen(){
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
+      this.contratoEmpleadoRegimen = res;
+    });
+    this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
+      this.contratoEmpleado.map(obj => {
+        this.idContratoEmpleado = obj.id;
+        this.fechaContratoIngreso = obj.fec_ingreso.split("T")[0];
+        if(obj.fec_salida === null){
+          this.fechaContratoSalida = '';
+        } else {
+          this.fechaContratoSalida = obj.fec_salida.split("T")[0];
+        }
+        this.obtenerCargoEmpleado();
+        this.obtenerPeriodoVacaciones();
+      });
+    });
+  }
+
+  cargoEmpleado: any;
+  obtenerCargoEmpleado(){
+    this.restCargo.getInfoCargoEmpleadoRest(this.idContratoEmpleado).subscribe(res => {
+      this.cargoEmpleado = res;
+      this.cargoEmpleado.map(obj => {
+        this.obtenerPlanHorarios(obj.id);
+        this.obtenerEmpleadoProcesos(obj.id);
+      });
+    })
+  }
+
+  peridoVacaciones: any;
+  obtenerPeriodoVacaciones(){
+    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContratoEmpleado).subscribe(res => {
+      this.peridoVacaciones = res;
+      this.peridoVacaciones.map(obj => {
+        this.obtenerVacaciones(obj.id);
+      });
+    })
+  }
+
+  vacaciones: any = [];
+  obtenerVacaciones(id_peri_vacaciones: number){
+    this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
+      this.vacaciones = res;
+    });
+  }
+
+  planHorario: any;
+  obtenerPlanHorarios(idEmpleadoCargo: number){
+    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
+      this.planHorario = res;
+      this.planHorario.map(obj => {
+        this.obtenerPlanHoraDetalle(obj.id);
+      })
+    });
+  }
+
+  planHoraDetalle: any;
+  obtenerPlanHoraDetalle(id_plan_horario: number){
+    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
+      this.planHoraDetalle = res;
+    });
+  }
+
+  empleadoProcesos: any;
+  obtenerEmpleadoProcesos(idEmpleadoCargo: number){
+    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
+      this.empleadoProcesos = res
+    });
+  }
+
+  planComidas: any;
+  obtenerPlanComidasEmpleado(id_empleado: number){
+    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+      this.planComidas = res
+      console.log(res);
     })
   }
 
@@ -255,6 +346,16 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  AbrirVentanaEmplHorario(): void {
+    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].id)
+      this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent, { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+  }
+
   /* 
   ****************************************************************************************************
   *
@@ -304,7 +405,7 @@ export class VerEmpleadoComponent implements OnInit {
               style: 'name'
             },
             {
-              text: 'Fecha Nacimiento: ' + this.fecha
+              text: 'Fecha Nacimiento: ' + this.fechaNacimiento
             },
             {
               text: 'Corre Electronico: ' + this.empleadoUno[0].correo,
@@ -420,7 +521,7 @@ export class VerEmpleadoComponent implements OnInit {
             style: 'tableHeader'
           }
           ],
-          ...this.contratoEmpleado.map(obj => {
+          ...this.contratoEmpleadoRegimen.map(obj => {
             const ingreso = obj.fec_ingreso.split("T")[0];
             if (obj.fec_salida === null) {
               const salida = '';
@@ -498,7 +599,7 @@ export class VerEmpleadoComponent implements OnInit {
   ****************************************************************************************************
   *
   * 
-  *                               PARA LA EXPORTACION DE ARCHIVOS EXCEL Y CSV
+  *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL Y CSV
   * 
   * 
   ****************************************************************************************************
@@ -524,7 +625,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   exportToExcel() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
-    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
     const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
@@ -537,7 +638,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   exportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
-    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleado);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
     const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
     const csvDataE = xlsx.utils.sheet_to_csv(wse);

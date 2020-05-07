@@ -20,4 +20,8 @@ export class DetallePlanHorarioService {
     return this.http.post(`${this.API_URL}/detallePlanHorario`, datos);
   }
 
+  ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario: number){
+    return this.http.get<any>(`${this.API_URL}/detallePlanHorario/infoPlan/${id_plan_horario}`);
+  }
+
 }

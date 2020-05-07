@@ -19,6 +19,16 @@ class EmpleadoProcesoControlador {
     res.json({ message: 'Procesos del empleado guardados con éxito' });
   }
 
+  public async EncontrarProcesoPorIdCargo(req: Request, res: Response): Promise<any> {
+    const { id_empl_cargo } = req.params;
+    const HORARIO_CARGO = await pool.query('SELECT ep.id, ep.id_empl_cargo, ep.fec_inicio, ep.fec_final, cp.nombre AS proceso FROM empl_procesos AS ep, cg_procesos AS cp WHERE ep.id_empl_cargo = $1 AND ep.id = cp.id', [id_empl_cargo]);
+    if (HORARIO_CARGO.rowCount > 0) {
+      return res.json(HORARIO_CARGO.rows)
+    }
+    res.status(404).json({ text: 'Registro no encontrado' });
+  }
+
+
 }
 
 export const EMPLEADO_PROCESO_CONTROLADOR = new EmpleadoProcesoControlador();

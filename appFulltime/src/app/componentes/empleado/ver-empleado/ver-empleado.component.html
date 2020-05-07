@@ -1,5 +1,6 @@
 <br>
 <mat-tab-group>
+    <!-- INFORMACION OFICIAL DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">person_pin</mat-icon>
@@ -59,22 +60,16 @@
                                         <label class="col-sm col-form-label">Fecha de Nacimiento:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{fecha}}</label>
+                                        <label class="col col-form-label">{{fechaNacimiento}}</label>
                                     </div>
                                 </div>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <!-- <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-empl-cargos [idEmploy]="idEmpleado"></app-empl-cargos>
-                    </div> -->
                 </div>
                 <br>
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8">
-                        <!-- <div class="container">
-                        <div class="row">
-                            <div class="col"> -->
                         <mat-grid-list cols="2" rowHeight="3:1">
                             <mat-grid-tile>
                                 <button type="submit" [routerLink]="['/empleado']"
@@ -119,9 +114,6 @@
                                 </button>
                             </mat-grid-tile>
                         </mat-grid-list>
-                        <!-- </div>
-                        </div>
-                    </div> -->
                         <!-- <div class="form-group">
                         <label class="h4 mb-3" for="">Show your picture in Resume</label>
                         <input type="file" class="form-control-file" (change)="fileChanged($event)">
@@ -132,6 +124,7 @@
         </div>
     </mat-tab>
 
+    <!-- DISCAPACIDAD Y TITULO DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">school</mat-icon>
@@ -242,10 +235,11 @@
         </div>
     </mat-tab>
 
+    <!-- BOTONES DE REGISTRO CON PANTALLA EMERGENTE -->
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">settings</mat-icon>
-            Registros Adiciones
+            Registros Adicionales
         </ng-template>
 
         <div class="container">
@@ -283,8 +277,502 @@
                     <br>
                     <button type="submit" id="boton" (click)="AbrirVentanaPermiso()" class="btn">Permisos
                     </button>
+                    <br>
+                    <button type="submit" id="boton" (click)="AbrirVentanaEmplHorario()" class="btn">Horario Empleado
+                    </button>
                 </div>
             </div>
         </div>
     </mat-tab>
+
+    <!-- CONTRATO DEL EMPLEADO Y CARGO DEL EMPLEADO -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Contrato y Cargo
+        </ng-template>
+
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Contrato del Empleado</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let ce of contratoEmpleado" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Código:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{ce.id}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Regimen:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{ce.descripcion}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{fechaContratoIngreso}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Salida:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{fechaContratoSalida}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Controla Asistencia:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="ce.asis_controla == true">Si</label>
+                                        <label class="col col-form-label" *ngIf="ce.asis_controla == false">No</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Controla Vacaciones:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="ce.vaca_controla == true">Si</label>
+                                        <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Cargo del Empleado</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Código:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.id}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Sucursal:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.sucursal}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Departamento:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.departamento}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Sueldo:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.sueldo}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Horas de Trabajo:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.hora_trabaja}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- PERIODO DE VACACIONES DEL EMPLEADO Y VACACIONES DEL EMPLEADO -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Vacaciones
+        </ng-template>
+
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Periodo de Vacaciones</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let p of peridoVacaciones" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Descripción:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.descripcion}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Día Vacación:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_vacacion}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Día Antiguedad:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Día Perdido:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_perdido}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Estado:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.estado}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Vacaciones</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Día Libre:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.dia_libre}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Día Laborable:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.dia_laborable}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Legalizado:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.legalizado}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Estado:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.estado}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- PLANIFICACION DE HORARIOS DEL EMPLEADO Y DETALLE PLANIFICACION HORARIO -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Horarios
+        </ng-template>
+
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Planificación Horario</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let p of planHorario" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Detalle planificación Horario</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let ph of planHoraDetalle" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{ph.fecha.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Tipo Día:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 1">Libre</label>
+                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 2">Feriado</label>
+                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 3">Normal</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Horarios:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{ph.horarios}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- PROCESOS DEL EMPLEADO Y PLANIFICACION DE ALMUERZO -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Procesos y Almuerzo
+        </ng-template>
+
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Procesos del empleado</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let e of empleadoProcesos" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Proceso:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{e.proceso}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{e.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <h5>Plan de comidas del empleado</h5>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.fecha.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Fecha Solicita:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Hora Inicio:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.hora_inicio}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Hora Fin:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.hora_fin}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Nombre:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.nombre}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Observación:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{pc.observacion}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Precio Plato:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">$ {{pc.valor}}</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
 </mat-tab-group>

@@ -42,6 +42,16 @@ class ContratoEmpleadoControlador {
             res.status(404).json({ text: 'Registro no encontrado' });
         });
     }
+    EncontrarContratoIdEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const CONTRATO = yield database_1.default.query('SELECT ec.id, ec.id_empleado, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 AND ec.id_regimen = cr.id', [id_empleado]);
+            if (CONTRATO.rowCount > 0) {
+                return res.json(CONTRATO.rows);
+            }
+            res.status(404).json({ text: 'Registro no encontrado' });
+        });
+    }
     EncontrarContratoEmpleadoRegimen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;

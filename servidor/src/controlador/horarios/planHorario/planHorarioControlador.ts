@@ -26,7 +26,16 @@ class PlanHorarioControlador {
           return res.json(HORARIO.rows)
         }
         res.status(404).json({ text: 'Registro no encontrado' });
-      }
+    }
+
+    public async EncontrarPlanHorarioPorIdCargo(req: Request, res: Response): Promise<any> {
+        const { id_cargo } = req.params;
+        const HORARIO_CARGO = await pool.query('SELECT * FROM plan_horarios AS p WHERE p.id_cargo = $1', [id_cargo]);
+        if (HORARIO_CARGO.rowCount > 0) {
+          return res.json(HORARIO_CARGO.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
 
 }
 

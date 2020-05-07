@@ -12,7 +12,8 @@ class DepartamentoRutas {
     configuracion(): void {
         this.router.get('/', CONTRATO_EMPLEADO_CONTROLADOR.ListarContratos);
         this.router.get('/:id_empleado', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarIdContrato);
-        this.router.get('/contrato/:id_empleado', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarContratoEmpleadoRegimen);
+        this.router.get('/contrato/:id_empleado', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarContratoIdEmpleado);
+        this.router.get('/contratoRegimen/:id_empleado', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarContratoEmpleadoRegimen);
         this.router.post('/', CONTRATO_EMPLEADO_CONTROLADOR.CrearContrato);
     }
 }

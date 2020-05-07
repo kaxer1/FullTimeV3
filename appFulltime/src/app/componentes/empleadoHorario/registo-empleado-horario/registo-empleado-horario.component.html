@@ -1,0 +1,96 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="empleHorario">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Horario del Empleado</h5>
+</div>
+<!-- Formulario Completo -->
+<form [formGroup]="EmpleadoHorarioForm">
+    <mat-card-content>
+        <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="row">
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Seleccionar Horario</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de países del continente seleccionado">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="horarioF" required>
+                            <mat-option *ngFor="let h of horarios" [value]="h.id">
+                                {{h.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha de Inicio</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
+                            min="1950-01-31" max="2050-01-31" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker" id="icono" matTooltipClass="icono-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de ingreso del empleado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Fecha de Finalización</mat-label>
+                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
+                            required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="icono" matTooltipClass="icono-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de finalización del cargo del empelado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Estado</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar cual es el estado del permiso">
+                            help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="estadoF">
+                            <mat-option value=1>Activo</mat-option>
+                            <mat-option value=2>Inactivo</mat-option>
+                            <mat-option value=3>Suspendido</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm" style="text-align: left;">
+                    <mat-label>Seleccionar días libres</mat-label>
+                    <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar cual es el sueldo del empleado">
+                        help_outline</mat-icon>
+                    <div class="container" style="text-align: center;">
+                        <div class="row">
+                            <div class="col-sm" style="text-align: left;">
+                                <br>
+                                <mat-checkbox [formControl]="lunesF" [(ngModel)]="lunes">Lunes</mat-checkbox>
+                                <br>
+                                <mat-checkbox [formControl]="martesF" [(ngModel)]="martes">Martes</mat-checkbox>
+                                <br>
+                                <mat-checkbox [formControl]="miercolesF" [(ngModel)]="miercoles">Miércoles
+                                </mat-checkbox>
+                                <br>
+                                <mat-checkbox [formControl]="juevesF" [(ngModel)]="jueves">Jueves</mat-checkbox>
+                            </div>
+                            <div class="col-sm" style="text-align: left;">
+                                <br>
+                                <mat-checkbox [formControl]="viernesF" [(ngModel)]="viernes">Viernes</mat-checkbox>
+                                <br>
+                                <mat-checkbox [formControl]="sabadoF" [(ngModel)]="sabado">Sábado</mat-checkbox>
+                                <br>
+                                <mat-checkbox [formControl]="domingoF" [(ngModel)]="domingo">Domingo</mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <button type="submit" class="btn btn-sm" (click)="ValidarFechas(EmpleadoHorarioForm.value)"
+        [disabled]="!EmpleadoHorarioForm.valid">Guardar</button>
+    <button type="submit" class="btn btn-sm" (click)="CerrarVentanaEmpleadoHorario()">Salir</button>
+</div>

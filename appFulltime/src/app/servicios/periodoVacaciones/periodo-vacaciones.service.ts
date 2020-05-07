@@ -26,4 +26,8 @@ export class PeriodoVacacionesService {
     return this.http.get(`${this.API_URL}/perVacacion/buscar/${id}`);
   }
 
+  getInfoPeriodoVacacionesPorIdContrato(id_empl_contrato: number){
+    return this.http.get<any>(`${this.API_URL}/perVacacion/infoPeriodo/${id_empl_contrato}`);
+  }
+
 }

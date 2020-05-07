@@ -28,6 +28,15 @@ class PeriodoVacacionControlador {
         res.status(404).json({ text: 'Registro no encontrado' });
     }
 
+    public async EncontrarPerVacacionesPorIdContrato(req: Request, res: Response): Promise<any> {
+        const { id_empl_contrato } = req.params;
+        const PERIODO_VACACIONES = await pool.query('SELECT * FROM peri_vacaciones AS p WHERE p.id_empl_contrato = $1', [id_empl_contrato]);
+        if (PERIODO_VACACIONES.rowCount > 0) {
+            return res.json(PERIODO_VACACIONES.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
+
 }
 
 const PERIODO_VACACION_CONTROLADOR = new PeriodoVacacionControlador();

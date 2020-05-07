@@ -12,6 +12,7 @@ class SucursalRutas {
     }
     configuracion() {
         this.router.get('/', vacacionesControlador_1.default.ListarVacaciones);
+        this.router.get('/:id', vacacionesControlador_1.default.VacacionesIdPeriodo);
         this.router.post('/', vacacionesControlador_1.default.CrearVacaciones);
     }
 }

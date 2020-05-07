@@ -19,6 +19,17 @@ class VacacionesControlador {
     res.json({ message: 'Vacaciones guardadas con éxito' });
   }
 
+  public async VacacionesIdPeriodo(req: Request, res: Response) {
+    const { id } = req.params;
+    const VACACIONES = await pool.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1', [id]);
+    if (VACACIONES.rowCount > 0) {
+      return res.json(VACACIONES.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
 }
 
 export const VACACIONES_CONTROLADOR = new VacacionesControlador();

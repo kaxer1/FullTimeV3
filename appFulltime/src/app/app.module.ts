@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
@@ -65,6 +66,9 @@ import { RegistroPlanHorarioComponent } from './componentes/planHorarios/registr
 import { RegistroDetallePlanHorarioComponent } from './componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
+import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
+import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { RegistoEmpleadoHorarioComponent } from './componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 
@@ -153,10 +157,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
-import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 
 @NgModule({
   declarations: [
@@ -251,6 +252,7 @@ import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos
     FiltrarRucPipe,
     RegistroAutorizacionDepaComponent,
     RegistroEmpleadoPermisoComponent,
+    RegistoEmpleadoHorarioComponent,
   ],
 
   imports: [
@@ -291,11 +293,12 @@ import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos
     MatAutocompleteModule,
     MatTableModule,
     MatPaginatorModule,
-    MatDatepickerModule, 
+    MatDatepickerModule,
     MatNativeDateModule,
-    MatTabsModule
-  ],
+    MatTabsModule,
+    NgxEchartsModule
 
+  ],
   providers: [
     AuthGuard,
     {
@@ -326,7 +329,7 @@ import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos
 
   exports: [
     MatButtonModule, MatDialogModule, DragDropModule,
-    MatDatepickerModule, MatNativeDateModule 
+    MatDatepickerModule, MatNativeDateModule
   ],
 
 })

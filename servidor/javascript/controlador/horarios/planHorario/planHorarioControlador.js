@@ -42,6 +42,16 @@ class PlanHorarioControlador {
             res.status(404).json({ text: 'Registro no encontrado' });
         });
     }
+    EncontrarPlanHorarioPorIdCargo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_cargo } = req.params;
+            const HORARIO_CARGO = yield database_1.default.query('SELECT * FROM plan_horarios AS p WHERE p.id_cargo = $1', [id_cargo]);
+            if (HORARIO_CARGO.rowCount > 0) {
+                return res.json(HORARIO_CARGO.rows);
+            }
+            res.status(404).json({ text: 'Registro no encontrado' });
+        });
+    }
 }
 exports.PLAN_HORARIO_CONTROLADOR = new PlanHorarioControlador();
 exports.default = exports.PLAN_HORARIO_CONTROLADOR;
