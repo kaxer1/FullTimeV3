@@ -30,6 +30,7 @@ import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizac
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
+import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -354,6 +355,10 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
+  }
+
+  AbrirVentanaCatHorario(): void {
+      this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { ventana: true } }).disableClose = true;
   }
 
   /* 

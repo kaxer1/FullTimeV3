@@ -158,6 +158,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
 @NgModule({
   declarations: [
@@ -253,6 +254,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     RegistroAutorizacionDepaComponent,
     RegistroEmpleadoPermisoComponent,
     RegistoEmpleadoHorarioComponent,
+    DetalleCatHorarioComponent,
   ],
 
   imports: [

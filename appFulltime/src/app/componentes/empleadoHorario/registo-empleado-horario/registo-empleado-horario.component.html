@@ -11,7 +11,7 @@
                     <mat-form-field>
                         <mat-label>Seleccionar Horario</mat-label>
                         <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                            matTooltip="Lista de países del continente seleccionado">
+                            matTooltip="Lista de horarios cargados en el sistema">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
                             <mat-option *ngFor="let h of horarios" [value]="h.id">
@@ -26,7 +26,7 @@
                             min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker" id="icono" matTooltipClass="icono-tooltip"
                             matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de ingreso del empleado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Indicar la fecha de inicio de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
@@ -37,7 +37,7 @@
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="icono" matTooltipClass="icono-tooltip"
                             matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de finalización del cargo del empelado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Indicar la fecha de finalización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
@@ -45,7 +45,7 @@
                     <mat-form-field>
                         <mat-label>Estado</mat-label>
                         <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar cual es el estado del permiso">
+                            matTooltip="Indicar cual es el estado del empleado">
                             help_outline
                         </mat-icon>
                         <mat-select [formControl]="estadoF">
@@ -58,7 +58,7 @@
                 <div class="col-sm" style="text-align: left;">
                     <mat-label>Seleccionar días libres</mat-label>
                     <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar cual es el sueldo del empleado">
+                        matTooltip="Indicar si existen días libres en el horario de trabajo">
                         help_outline</mat-icon>
                     <div class="container" style="text-align: center;">
                         <div class="row">
