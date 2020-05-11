@@ -67,6 +67,13 @@ class SucursalControlador {
             }
         });
     }
+    ActualizarSucursal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, id_ciudad, id_empresa, id } = req.body;
+            yield database_1.default.query('UPDATE sucursales SET nombre = $1, id_ciudad = $2, id_empresa = $3 WHERE id = $4', [nombre, id_ciudad, id_empresa, id]);
+            res.json({ message: 'Sucursal actualizada exitosamente' });
+        });
+    }
 }
 exports.SUCURSAL_CONTROLADOR = new SucursalControlador();
 exports.default = exports.SUCURSAL_CONTROLADOR;

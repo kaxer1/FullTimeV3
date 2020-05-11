@@ -44,12 +44,18 @@ class SucursalControlador {
   public async ObtenerUltimoId(req: Request, res: Response): Promise<any> {
     const SUCURSAL = await pool.query('SELECT MAX(id) FROM sucursales');
     if (SUCURSAL.rowCount > 0) {
-        return res.json(SUCURSAL.rows)
+      return res.json(SUCURSAL.rows)
     }
     else {
-        return res.status(404).json({ text: 'No se encuentran registros' });
+      return res.status(404).json({ text: 'No se encuentran registros' });
     }
-}
+  }
+
+  public async ActualizarSucursal(req: Request, res: Response): Promise<void> {
+    const { nombre, id_ciudad, id_empresa, id } = req.body;
+    await pool.query('UPDATE sucursales SET nombre = $1, id_ciudad = $2, id_empresa = $3 WHERE id = $4', [nombre, id_ciudad, id_empresa, id]);
+    res.json({ message: 'Sucursal actualizada exitosamente' });
+  }
 
 }
 

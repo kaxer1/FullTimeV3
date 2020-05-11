@@ -15,6 +15,7 @@ class SucursalRutas {
         this.router.get('/buscar/nombreSuc/:id_empresa', SUCURSAL_CONTROLADOR.ObtenerSucursalEmpresa);
         this.router.post('/', SUCURSAL_CONTROLADOR.CrearSucursal);
         this.router.get('/ultimoId', SUCURSAL_CONTROLADOR.ObtenerUltimoId);
+        this.router.put('/', SUCURSAL_CONTROLADOR.ActualizarSucursal);
 
     }
 }

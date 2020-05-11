@@ -33,5 +33,9 @@ export class SucursalService {
     return this.http.get(`${this.API_URL}/sucursales/buscar/nombreSuc/${id_empresa}`);
   }
 
+  ActualizarSucursal(datos: any) {
+    return this.http.put(`${this.API_URL}/sucursales`, datos);
+  }
+
 
 }
