@@ -54,4 +54,12 @@ export class EmpleadoService {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)
   }
 
+  subirImagen(formData, idEmpleado: number) {
+    return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)  
+  }
+
+  obtenerImagen(imagen: string){
+    return this.http.get<any>(`${this.API_URI}/empleado/img/${imagen}`)
+  }
+
 }

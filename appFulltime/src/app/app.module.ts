@@ -82,7 +82,7 @@ import { DepartamentosService } from './servicios/catalogos/catDepartamentos/dep
 import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
-import { CiudadFeriadosService} from './servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadFeriadosService } from './servicios/ciudadFeriados/ciudad-feriados.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 
@@ -153,8 +153,12 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
+import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 
 @NgModule({
   declarations: [
@@ -247,6 +251,9 @@ import { NgxEchartsModule } from 'ngx-echarts';
     ListarNivelTitulosComponent,
     ListarEmpresasComponent,
     FiltrarRucPipe,
+    RegistroAutorizacionDepaComponent,
+    RegistroEmpleadoPermisoComponent,
+    NotiAutorizacionesComponent,
   ],
 
   imports: [
@@ -280,8 +287,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     MatDialogModule,
     NgMaterialMultilevelMenuModule,
     MatExpansionModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     FormsModule,
     MatStepperModule,
     DragDropModule,
@@ -290,7 +295,10 @@ import { NgxEchartsModule } from 'ngx-echarts';
     MatTableModule,
     MatPaginatorModule,
     MatTabsModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    MatDatepickerModule, 
+    MatNativeDateModule,
+    MatTabsModule
   ],
   providers: [
     AuthGuard,
@@ -321,9 +329,11 @@ import { NgxEchartsModule } from 'ngx-echarts';
   bootstrap: [AppComponent],
 
   exports: [
-    MatButtonModule, MatDialogModule, DragDropModule
+    MatButtonModule, MatDialogModule, DragDropModule,
+    MatDatepickerModule, MatNativeDateModule 
   ],
 
 })
 export class AppModule { }
 export class CustomMaterialModule { }
+export class DatePickerModule { }

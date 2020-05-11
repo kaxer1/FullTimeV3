@@ -1,7 +1,11 @@
-img { width: 52%; background: white; margin-top: 10px; margin-bottom: 10px;}
+#logo { width: 52%; background: white; margin-top: 10px; margin-bottom: 10px;}
 
-.avatar {background-color: rgb(126, 126, 126); border-radius: 100%; margin-top: 10px; margin-bottom: 10px;}
-.iniciales {color: white; font-weight: bold;}
+/* .avatar {background-color: rgb(126, 126, 126); border-radius: 100%; margin-top: 10px; margin-bottom: 10px;} */
+#avatar { border-radius: 100%; height: 45px; width: 45px; background-color: rgb(126, 126, 126); margin-left: 10px; margin-top: 8px;}
+
+#avatarImagen { border-radius: 100%; height: 45px; width: 45px;}
+
+.iniciales {color: white; font-weight: bold; font-size: 20px; margin-bottom: 10px;}
 
 .uno {background: white; margin-bottom: 15px; text-align: center;}
 

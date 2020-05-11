@@ -42,6 +42,11 @@ const vacacionesRutas_1 = __importDefault(require("./rutas/vacaciones/vacaciones
 const empleProcesosRutas_1 = __importDefault(require("./rutas/empleado/empleadoProcesos/empleProcesosRutas"));
 const planHorarioRutas_1 = __importDefault(require("./rutas/horarios/planHorario/planHorarioRutas"));
 const detallePlanHorarioRutas_1 = __importDefault(require("./rutas/horarios/detallePlanHorario/detallePlanHorarioRutas"));
+const autorizaDepartamentoRutas_1 = __importDefault(require("./rutas/autorizaDepartamento/autorizaDepartamentoRutas"));
+const empleadoHorariosRutas_1 = __importDefault(require("./rutas/horarios/empleadoHorarios/empleadoHorariosRutas"));
+const permisosRutas_1 = __importDefault(require("./rutas/permisos/permisosRutas"));
+const detalleCatHorarioRutas_1 = __importDefault(require("./rutas/horarios/detalleCatHorario/detalleCatHorarioRutas"));
+const catNotiAutorizacionesRutas_1 = __importDefault(require("./rutas/catalogos/catNotiAutorizacionesRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -54,24 +59,31 @@ class Server {
         this.app.use(cors_1.default());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
+        this.app.use(express_1.default.raw({ type: 'image/*', limit: '1mb' }));
     }
     rutas() {
         this.app.use('/', indexRutas_1.default);
         this.app.use('/rol', catRolesRutas_1.default);
         this.app.use('/login', loginRuta_1.default);
-        //Empleado
+        // Empleado
         this.app.use('/empleado', empleadoRutas_1.default);
         this.app.use('/contratoEmpleado', contratoEmpleadoRutas_1.default);
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
         this.app.use('/perVacacion', periodoVacacionRutas_1.default);
         this.app.use('/vacaciones', vacacionesRutas_1.default);
         this.app.use('/empleadoProcesos', empleProcesosRutas_1.default);
-        //Almuerzo
+        // Autorizaciones
+        this.app.use('/autorizaDepartamento', autorizaDepartamentoRutas_1.default);
+        // Permisos
+        this.app.use('/empleadoPermiso', permisosRutas_1.default);
+        // Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
-        //Horarios
+        // Horarios
         this.app.use('/planHorario', planHorarioRutas_1.default);
         this.app.use('/detallePlanHorario', detallePlanHorarioRutas_1.default);
-        //Enrolados
+        this.app.use('/empleadoHorario', empleadoHorariosRutas_1.default);
+        this.app.use('/detalleHorario', detalleCatHorarioRutas_1.default);
+        // Enrolados
         this.app.use('/enrolados', catEnroladoRutas_1.default);
         this.app.use('/relojes', catRelojesRuta_1.default);
         this.app.use('/enroladosRelojes', enroladoRelojRutas_1.default);
@@ -97,6 +109,7 @@ class Server {
         this.app.use('/sucursales', sucursalRutas_1.default);
         this.app.use('/nacionalidades', nacionalidadRutas_1.default);
         this.app.use('/nivel-titulo', nivelTituloRutas_1.default);
+        this.app.use('/noti-autorizaciones', catNotiAutorizacionesRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

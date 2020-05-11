@@ -1,7 +1,12 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
@@ -12,30 +17,27 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
+import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
-import { ScriptService } from 'src/app/servicios/empleado/script.service';
-
 import { RegistrarPeriodoVComponent } from 'src/app/componentes/periodoVacaciones/registrar-periodo-v/registrar-periodo-v.component';
 import { RegistrarEmpleProcesoComponent } from 'src/app/componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
-
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';  
-import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
+import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
+import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-ver-empleado',
   templateUrl: './ver-empleado.component.html',
   styleUrls: ['./ver-empleado.component.css']
 })
+
 export class VerEmpleadoComponent implements OnInit {
   empleadoUno: any = [];
   idEmpleado: string;
@@ -46,13 +48,13 @@ export class VerEmpleadoComponent implements OnInit {
   btnDisc = 'Añadir';
   btnTitulo = 'Añadir';
   discapacidadUser: any = [];
-  
+
   btnHabilitado = true;
   barraDis = false;
-  
+
   relacionTituloEmpleado: any = [];
   auxRestTitulo: any = [];
-  
+
   idContrato: any = [];
   contratoEmpleadoRegimen: any = [];
   contratoEmpleado: any = [];
@@ -86,6 +88,7 @@ export class VerEmpleadoComponent implements OnInit {
     public vistaRegistrarVacaciones: MatDialog,
     public vistaRegistroPlanHorario: MatDialog,
     public vistaRegistroDetallePlanHorario: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService
@@ -103,21 +106,39 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
-  onUploadFinish(event) {
-    console.log(event);
-  }
+  // onUploadFinish(event) {
+  //   console.log(event);
+  // }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
+  urlImagen: any;
+  iniciales: any;
+  mostrarImagen: boolean = false;
+  mostrarIniciales: boolean = false;
+  textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
-      // sacar la fecha del JSON 
-      var cadena1 = data[0]['fec_nacimiento'];
-      this.fechaNacimiento = cadena1.split("T")[0];
+      console.log(this.empleadoUno);
+      this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
+      if ( data[0]['imagen'] != null){
+        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.mostrarImagen = true;
+        this.mostrarIniciales = false;
+        this.textoBoton = 'Editar Foto';
+      } else {
+        this.iniciales = data[0].nombre.split(" ")[0].slice(0,1) + data[0].apellido.split(" ")[0].slice(0,1);
+        this.mostrarIniciales = true
+        this.mostrarImagen = false;
+        this.textoBoton = 'Subir Foto';
+      }
+      this.restEmpleado.obtenerImagen(data[0]['imagen']).subscribe(res => {
+        console.log(res);
+      })
     })
   }
 
-  // metodo para obtener a los empleados que tengan alguna discapacidad asignada
+  // Método para obtener a los empleados que tengan alguna discapacidad asignada
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
       this.discapacidadUser = data;
@@ -125,7 +146,7 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { });
   }
 
-  // metodo para obtener los titulos de un empleado a traves de la tabla EMPL_TITULOS que conecta a la tabla EMPLEADOS con CG_TITULOS 
+  // Método para obtener los titulos de un empleado a traves de la tabla EMPL_TITULOS que conecta a la tabla EMPLEADOS con CG_TITULOS 
   obtenerTituloEmpleado(idEmployTitu: any) {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
@@ -211,12 +232,11 @@ export class VerEmpleadoComponent implements OnInit {
   obtenerPlanComidasEmpleado(id_empleado: number){
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
-      console.log(res);
     })
   }
 
-  // El metodo controla que solo se habilite el boton si no existe un registro de discapacidad, 
-  // caso contrario se deshabilita para que no permita mas registros de discapacidad al mismo usuario.
+  // El Método controla que solo se habilite el botón si no existe un registro de discapacidad, 
+  // caso contrario se deshabilita para que no permita más registros de discapacidad al mismo usuario.
   habilitarBtn() {
     if (this.discapacidadUser.length == 0) {
       this.btnHabilitado = true;
@@ -227,7 +247,7 @@ export class VerEmpleadoComponent implements OnInit {
     }
   }
 
-  // logica de boton para mostrar componente del registro de discapacidad
+  // Lógica de botón para mostrar componente del registro de discapacidad
   mostrarDis() {
     if (this.btnDisc != 'Editar') {
       if (this.mostrarDiscapacidad == true) {
@@ -243,7 +263,7 @@ export class VerEmpleadoComponent implements OnInit {
     }
   }
 
-  // logica de boton para mostrar componente del registro y asignacion de titulo al usuario.
+  // Lógica de botón para mostrar componente del registro y asignación de título al usuario.
   mostrarTit() {
     if (this.mostrarTitulo == true) {
       this.mostrarTitulo = false;
@@ -256,19 +276,19 @@ export class VerEmpleadoComponent implements OnInit {
 
   // Ventana para ingresar contrato del empleado
   AbrirVentanaCrearContrato(): void {
-    this.vistaRegistrarContrato.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
   }
 
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarPlanificacion.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
+    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).disableClose = true;
   }
 
   AbrirVentanaCargo(): void {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
       console.log("idcargo ", this.idContrato[0].id)
-      this.vistaRegistrarCargoEmpeado.open(EmplCargosComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(EmplCargosComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
@@ -278,7 +298,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
       console.log("idcargo ", this.idContrato[0].id)
-      this.vistaRegistrarPerVacaciones.open(RegistrarPeriodoVComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
@@ -288,7 +308,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idCargo = datos;
       console.log("idcargo ", this.idCargo[0].id)
-      this.vistaRegistrarEmpleProcesos.open(RegistrarEmpleProcesoComponent, { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(RegistrarEmpleProcesoComponent, { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
@@ -298,7 +318,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPerVacacion = datos;
       console.log("idPerVaca ", this.idPerVacacion[0].id)
-      this.vistaRegistrarVacaciones.open(RegistrarVacacionesComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(RegistrarVacacionesComponent, { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
     });
@@ -308,7 +328,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idCargo = datos;
       console.log("idcargo ", this.idCargo[0].id)
-      this.vistaRegistroPlanHorario.open(RegistroPlanHorarioComponent, { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(RegistroPlanHorarioComponent, { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
@@ -318,9 +338,36 @@ export class VerEmpleadoComponent implements OnInit {
     this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPlanHorario = datos;
       console.log("idcargo ", this.idPlanHorario[0].id)
-      this.vistaRegistroDetallePlanHorario.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
+      this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
+    });
+  }
+
+  // Abrir ventana para determinar si el empleado autoriza dentro del departamento
+  AbrirVentanaAutorizar(): void {
+    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].id)
+      this.vistaRegistrarDatos.open(RegistroAutorizacionDepaComponent, { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+  }
+
+  AbrirVentanaPermiso(): void {
+    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idContrato ", this.idContrato[0].id)
+      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idPerVacacion = datos;
+        console.log("idPerVaca ", this.idPerVacacion[0].id)
+        this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent, { width: '1200px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
+      }, error => {
+        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      });
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
   }
 
@@ -332,7 +379,7 @@ export class VerEmpleadoComponent implements OnInit {
   * 
   * 
   ****************************************************************************************************
-  */ 
+  */
 
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
@@ -350,11 +397,11 @@ export class VerEmpleadoComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('profile', this.empleadoUno);
     return {
-      header: function(currentPage, pageCount, pageSize) {
+      header: function (currentPage, pageCount, pageSize) {
         // you can apply any logic and return any valid pdfmake element
         return [
           { text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
-          { canvas: [ { type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 } ] }
+          { canvas: [{ type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 }] }
         ]
       },
       content: [
@@ -407,37 +454,37 @@ export class VerEmpleadoComponent implements OnInit {
       ],
       info: {
         title: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido + '_PERFIL',
-        author: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido ,
+        author: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido,
         subject: 'Perfil',
         keywords: 'Perfil, Empleado',
       },
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            margin: [0, 20, 0, 10],
-            decoration: 'underline'
-          },
-          name: {
-            fontSize: 16,
-            bold: true
-          },
-          jobTitle: {
-            fontSize: 14,
-            bold: true,
-            italics: true
-          },
-          sign: {
-            margin: [0, 50, 0, 10],
-            alignment: 'right',
-            italics: true
-          },
-          tableHeader: {
-            bold: true,
-            alignment: 'center',
-            fillColor: '#6495ED'
-          }
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        sign: {
+          margin: [0, 50, 0, 10],
+          alignment: 'right',
+          italics: true
+        },
+        tableHeader: {
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
         }
+      }
     };
   }
 
@@ -491,7 +538,7 @@ export class VerEmpleadoComponent implements OnInit {
           ],
           ...this.contratoEmpleadoRegimen.map(obj => {
             const ingreso = obj.fec_ingreso.split("T")[0];
-            if(obj.fec_salida === null){
+            if (obj.fec_salida === null) {
               const salida = '';
               return [obj.descripcion, obj.dia_anio_vacacion, ingreso, salida];
             } else {
@@ -504,7 +551,7 @@ export class VerEmpleadoComponent implements OnInit {
     };
 
   }
-  
+
   presentarDataPDFdiscapacidadEmpleado() {
     return {
       table: {
@@ -530,17 +577,18 @@ export class VerEmpleadoComponent implements OnInit {
       }
     };
   }
-  
-  presentarDataPDFplanComidas(){
+
+  presentarDataPDFplanComidas() {
 
   }
 
   logoEmplesa() {
+    this.getBase64();
     if (this.logo) {
       return {
         image: this.logo,
         width: 110,
-        alignment : 'right'
+        alignment: 'right'
       };
     }
     return null;
@@ -548,12 +596,12 @@ export class VerEmpleadoComponent implements OnInit {
 
   fileChanged(e) {
     const file = e.target.files[0];
-    this.getBase64(file);
+    this.getBase64();
   }
 
-  getBase64(file) {
+  getBase64() {
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(this.urlImagen);
     reader.onload = () => {
       // console.log(reader.result);
       this.logo = reader.result as string;
@@ -571,7 +619,7 @@ export class VerEmpleadoComponent implements OnInit {
   * 
   * 
   ****************************************************************************************************
-  */ 
+  */
 
   exportToExcel() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
@@ -586,16 +634,48 @@ export class VerEmpleadoComponent implements OnInit {
     xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
-  exportToCVS(){
+  exportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
     const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
     const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.discapacidadUser);
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relacionTituloEmpleado);
-    const csvDataE = xlsx.utils.sheet_to_csv(wse);  
-    const csvDataC = xlsx.utils.sheet_to_csv(wsc);  
-    const csvDataD = xlsx.utils.sheet_to_csv(wsd);  
-    const csvDataT = xlsx.utils.sheet_to_csv(wst);  
-    const data: Blob = new Blob([csvDataE,csvDataC,csvDataD,csvDataT], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadoCSV" + new Date().getTime() + '.csv');  
+    const csvDataE = xlsx.utils.sheet_to_csv(wse);
+    const csvDataC = xlsx.utils.sheet_to_csv(wsc);
+    const csvDataD = xlsx.utils.sheet_to_csv(wsd);
+    const csvDataT = xlsx.utils.sheet_to_csv(wst);
+    const data: Blob = new Blob([csvDataE, csvDataC, csvDataD, csvDataT], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "EmpleadoCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* 
+  ****************************************************************************************************
+  *
+  * 
+  *                               PARA LA SUBIR LA IMAGEN DEL EMPLEADO
+  * 
+  * 
+  ****************************************************************************************************
+  */
+  nameFile: string;
+  archivoSubido: Array < File > ;
+  archivoForm = new FormControl('');
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.plantilla();
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      console.log(this.archivoSubido[i], this.archivoSubido[i].name)
+      formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'imagen subida.');
+      this.verEmpleado(this.idEmpleado)
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
   }
 }

@@ -1,20 +1,30 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr'
-import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
-import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss'],
   //encapsulation: ViewEncapsulation.None,
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  ]
 })
+
 export class RegistroComponent implements OnInit {
 
   empleadoGuardado: any = [];
@@ -24,7 +34,7 @@ export class RegistroComponent implements OnInit {
 
   private idNacionalidad: number;
 
-  isLinear = false;
+  isLinear = true;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
@@ -38,8 +48,11 @@ export class RegistroComponent implements OnInit {
     private rol: RolesService,
     private user: UsuarioService,
     private _formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+
   ) { }
+
+  date: any;
 
   ngOnInit(): void {
     this.cargarRoles();

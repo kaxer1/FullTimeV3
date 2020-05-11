@@ -19,6 +19,9 @@ export class MainNavComponent implements OnInit {
   UserEmail: string;
   UserName: string;
   iniciales: string;
+  urlImagen: any;
+  mostrarImagen: boolean = false;
+  mostrarIniciales: boolean = false;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -81,7 +84,15 @@ export class MainNavComponent implements OnInit {
       
       this.UserEmail = res[0].correo;
       this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
-      this.iniciales = res[0].nombre.split(" ")[0].slice(0,1) + res[0].apellido.split(" ")[0].slice(0,1);
+      if ( res[0]['imagen'] != null){
+        this.urlImagen = 'http://localhost:3000/empleado/img/' + res[0]['imagen'];
+        this.mostrarImagen = true;
+        this.mostrarIniciales = false;
+      } else {
+        this.iniciales = res[0].nombre.split(" ")[0].slice(0,1) + res[0].apellido.split(" ")[0].slice(0,1);
+        this.mostrarIniciales = true
+        this.mostrarImagen = false;
+      }
     });
   }
 

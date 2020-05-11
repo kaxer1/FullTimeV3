@@ -38,7 +38,7 @@ export class DepartamentosService {
     return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data)
   }
 
-  getOneDepartamentoRest(id:number){
+  EncontrarUnDepartamento(id:number){
     return this.http.get(`${this.API_URL}/departamento/${id}`);
   }
 

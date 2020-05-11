@@ -163,21 +163,21 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
-    }, error => {
-    });
-    //Obtener ultimo ID para regitrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
-    this.restSucursal.EncontrarUltimoId().subscribe(datos => {
-      this.ultimoId = datos;
-      console.log("id sucursal: ", this.ultimoId[0].max);
-      let datosDepartamentos = {
-        nombre: 'Ninguno',
-        nivel: 0,
-        depa_padre: null,
-        id_sucursal: this.ultimoId[0].max
-      };
-      console.log("insertar departamento: ", datosDepartamentos);
-      this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
-        this.ultimoId = [];
+      //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
+      this.restSucursal.EncontrarUltimoId().subscribe(datos => {
+        this.ultimoId = datos;
+        console.log("id sucursal: ", this.ultimoId[0].max);
+        let datosDepartamentos = {
+          nombre: 'Ninguno',
+          nivel: 0,
+          depa_padre: null,
+          id_sucursal: this.ultimoId[0].max
+        };
+        console.log("insertar departamento: ", datosDepartamentos);
+        this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+          this.ultimoId = [];
+        });
+      }, error => {
       });
     }, error => {
     });

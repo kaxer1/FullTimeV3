@@ -19,7 +19,8 @@
                     <br>
                     <mat-form-field>
                         <mat-label>RUC</mat-label>
-                        <input matInput placeholder="Ingresar marca" [formControl]="rucF"
+                        <input matInput placeholder="Ingresar marca" [formControl]="rucF" maxlength="13"
+                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar el RUC de la Empresa">

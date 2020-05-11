@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../../database';
+import fs from 'fs';
+const path = require("path");
 
 class EmpleadoControlador {
 
@@ -18,6 +20,13 @@ class EmpleadoControlador {
     res.status(404).json({ text: 'El empleado no ha sido encontrado' });
   }
 
+  public async getImagen(req: Request, res: Response): Promise<any> {
+    console.log('este es el parametro: ' + req.params.imagen );
+    const imagen = req.params.imagen;
+    let filePath = `servidor\\imagenesEmpleados\\${imagen}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
+  }
+
   public async create(req: Request, res: Response): Promise<void> {
     const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad} = req.body;
     await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
@@ -25,6 +34,26 @@ class EmpleadoControlador {
     const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
     const idEmployGuardado = oneEmpley.rows[0].id;
     res.json({ message: 'Empleado guardado', id: idEmployGuardado});
+  }
+
+  public async crearImagenEmpleado(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let imagen = list.image[0].path.split("\\")[1];
+    let id = req.url.split("/")[1]
+
+    const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
+    if (unEmpleado.rowCount > 0) {
+      unEmpleado.rows.map(obj => {
+        if (obj.imagen != null){
+          console.log(obj.imagen);
+          let filePath = `servidor\\imagenesEmpleados\\${obj.imagen}`;
+          let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+          fs.unlinkSync(direccionCompleta);
+        } 
+      });
+      await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
+      res.json({ message: 'Imagen Actualizada'});
+    }
   }
 
   public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {

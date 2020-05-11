@@ -63,7 +63,7 @@ class DepartamentoControlador {
             const { id } = req.params;
             const DEPARTAMENTO = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE id = $1', [id]);
             if (DEPARTAMENTO.rowCount > 0) {
-                return res.json(DEPARTAMENTO.rows);
+                return res.json(DEPARTAMENTO.rows[0]);
             }
             res.status(404).json({ text: 'El departamento no ha sido encontrado' });
         });

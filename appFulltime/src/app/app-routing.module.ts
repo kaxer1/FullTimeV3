@@ -36,6 +36,7 @@ import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursa
 import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
+import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 
 import { AuthGuard } from "./guards/auth.guard";
 
@@ -77,6 +78,7 @@ const routes: Routes = [
   { path: 'nivelTitulos', component: ListarNivelTitulosComponent, canActivate: [AuthGuard]},
   { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard] },
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard]},
+  { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard]},
 
 ];
 

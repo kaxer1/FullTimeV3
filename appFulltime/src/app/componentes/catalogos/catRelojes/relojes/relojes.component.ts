@@ -19,6 +19,7 @@ export class RelojesComponent implements OnInit {
   empresas: any = [];
   sucursales: any = [];
   departamento: any = [];
+  nomDepartamento: any = [];
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -94,6 +95,18 @@ export class RelojesComponent implements OnInit {
     });
   }
 
+  ObtenerNombre(form) {
+    this.nomDepartamento = [];
+    this.restCatDepartamento.EncontrarUnDepartamento(form.idDepartamentoForm).subscribe(datos => {
+      this.nomDepartamento = datos;
+      console.log(this.nomDepartamento.nombre)
+      if (this.nomDepartamento.nombre === 'Ninguno') {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro')
+      }
+    }, error => {
+      this.toastr.info('Descripción ingresada no coincide con los registros')
+    });
+  }
 
   InsertarReloj(form) {
     let datosReloj = {
@@ -111,13 +124,21 @@ export class RelojesComponent implements OnInit {
       id_sucursal: form.idSucursalForm,
       id_departamento: form.idDepartamentoForm
     };
+    this.nomDepartamento = [];
+    this.restCatDepartamento.EncontrarUnDepartamento(form.idDepartamentoForm).subscribe(datos => {
+      this.nomDepartamento = datos;
+      console.log(this.nomDepartamento.nombre)
+      if (this.nomDepartamento.nombre === 'Ninguno') {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro')
+      }
+      else {
+        this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {
+          this.LimpiarCampos();
+          this.toastr.success('Operación Exitosa', 'Dispositivo registrado')
+        }, error => { });
+      }
+    }, error => { });
 
-    this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {
-      this.LimpiarCampos();
-      this.toastr.success('Operación Exitosa', 'Dispositivo registrado')
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Dispositivo no pudo ser registrado')
-    });
   }
 
   ObtenerMensajeErrorNombreRequerido() {

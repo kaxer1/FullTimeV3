@@ -26,7 +26,8 @@
                                 <div class="col-sm">
                                     <mat-form-field>
                                         <mat-label>Ingresar CI o pasaporte</mat-label>
-                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula"
+                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
                                         <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                         </mat-error>

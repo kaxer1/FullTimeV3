@@ -56,11 +56,11 @@
                                 <br>
                                 <mat-form-field class="example-full-width">
                                     <mat-label>Fecha de nacimiento</mat-label>
-                                    <input matInput [matDatepicker]="picker" placeholder="mm/dd/aaaa"
+                                    <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
                                         formControlName="fechaForm" required>
-                                    <mat-datepicker-toggle matSuffix [for]="picker" id="icono_emple"
+                                    <mat-datepicker-toggle  matSuffix [for]="picker" id="icono_emple"
                                         matTooltipClass="empleadoR-tooltip" matTooltipPosition="right"
-                                        matTooltip="Seleccione la fecha de nacimiento dando click en el icono de calendario o puede escribir la fecha con el formato  mes/dia/año. Ejemplo: 1/31/1997">
+                                        matTooltip="Seleccione la fecha de nacimiento dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                                     </mat-datepicker-toggle>
                                     <mat-datepicker touchUi #picker></mat-datepicker>
                                 </mat-form-field>

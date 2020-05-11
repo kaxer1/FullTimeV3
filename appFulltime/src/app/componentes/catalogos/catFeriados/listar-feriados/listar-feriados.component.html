@@ -45,19 +45,19 @@
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="container">
-                    <form  method="post" enctype="multipart/form-data">
-                        <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file" 
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
-                        <label for="file" class="btn-2" >Subir Feriados</label>
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2">Subir Feriados</label>
                     </form>
-                <!-- <div class="input-group">
+                    <!-- <div class="input-group">
                     <div class="custom-file">
                     
                         <label class="custom-file-label" for="inputGroupFile01" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                         matTooltip="Seleccionar una plantilla de registro de feriados ubicada en la carpeta plantilla">Elegir un archivo</label>
                     </div>
                 </div> -->
-                <!-- <div class="input-group-prepend">
+                    <!-- <div class="input-group-prepend">
                     <span class="material-icons input-group-text upload" (click)="plantilla()"
                         id="btnUpload" matSuffix matTooltipClass="editar-tooltip" matTooltipPosition="right"
                         matTooltip="Registrar Feriados por medio del uso de plantilla seleccionada">cloud_upload </span>
@@ -83,7 +83,7 @@
             <tbody>
                 <tr
                     *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
-                    <td style="font-size: 14px;">{{f.descripcion}}</td>
+                    <td id="desc" style="font-size: 14px;">{{f.descripcion}}</td>
                     <td style="font-size: 12px;">{{f.fecha}}</td>
                     <td style="font-size: 12px;">{{f.fec_recuperacion}}</td>
                     <td>
