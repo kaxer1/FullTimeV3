@@ -13,7 +13,16 @@ class NivelTituloControlador {
     if (unNivelTitulo.rowCount > 0) {
       return res.json(unNivelTitulo.rows)
     }
-    res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+    res.status(404).json({ text: 'Registro no encontrado' });
+  }
+
+  public async ObtenerNivelNombre(req: Request, res: Response): Promise<any> {
+    const { nombre } = req.params;
+    const unNivelTitulo = await pool.query('SELECT * FROM nivel_titulo WHERE nombre = $1', [nombre]);
+    if (unNivelTitulo.rowCount > 0) {
+      return res.json(unNivelTitulo.rows)
+    }
+    res.status(404).json({ text: 'Registro no encontrado' });
   }
 
   public async create(req: Request, res: Response): Promise<void> {

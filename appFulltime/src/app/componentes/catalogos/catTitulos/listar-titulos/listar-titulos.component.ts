@@ -2,12 +2,12 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { TitulosComponent } from '../titulos/titulos.component'
+import { EditarTitulosComponent } from '../editar-titulos/editar-titulos.component'
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-titulos',
@@ -38,7 +38,7 @@ export class ListarTitulosComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
-    public vistaRegistrarTitulo: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     public rest: TituloService,
     public restNivelTitulos: NivelTitulosService,
     private toastr: ToastrService,
@@ -60,7 +60,7 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTitulo(): void {
-    this.vistaRegistrarTitulo.open(TitulosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(TitulosComponent, { width: '400px' }).disableClose = true;
   }
 
   LimpiarCampos() {
@@ -101,5 +101,11 @@ export class ListarTitulosComponent implements OnInit {
       this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
       return false;
     }
+  }
+
+  AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 }

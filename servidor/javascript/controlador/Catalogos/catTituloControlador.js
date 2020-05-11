@@ -35,9 +35,16 @@ class TituloControlador {
             const { nombre, id_nivel } = req.body;
             yield database_1.default.query('INSERT INTO cg_titulos ( nombre, id_nivel ) VALUES ($1, $2)', [nombre, id_nivel]);
             console.log(req.body);
-            res.json({ message: 'Titulo guardado' });
+            res.json({ message: 'Título guardado' });
+        });
+    }
+    ActualizarTitulo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, id_nivel, id } = req.body;
+            yield database_1.default.query('UPDATE cg_titulos SET nombre = $1, id_nivel = $2 WHERE id = $3', [nombre, id_nivel, id]);
+            res.json({ message: 'Título actualizado exitosamente' });
         });
     }
 }
-exports.tituloControlador = new TituloControlador();
-exports.default = exports.tituloControlador;
+exports.TITULO_CONTROLADOR = new TituloControlador();
+exports.default = exports.TITULO_CONTROLADOR;

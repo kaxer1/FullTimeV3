@@ -1,46 +1,53 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
 @Component({
-  selector: 'app-titulos',
-  templateUrl: './titulos.component.html',
-  styleUrls: ['./titulos.component.css'],
+  selector: 'app-editar-titulos',
+  templateUrl: './editar-titulos.component.html',
+  styleUrls: ['./editar-titulos.component.css']
 })
-export class TitulosComponent implements OnInit {
+export class EditarTitulosComponent implements OnInit {
 
   // Control de los campos del formulario
-  nombre = new FormControl('',[Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]  );
-  nivel = new FormControl('', Validators.required)
+  nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
+  nivelF = new FormControl('', Validators.required)
 
   // asignar los campos en un formulario en grupo
   public nuevoTituloForm = new FormGroup({
     tituloNombreForm: this.nombre,
-    tituloNivelForm: this.nivel,
+    tituloNivelForm: this.nivelF,
   });
 
   // Arreglo de niveles existentes
   niveles: any = [];
+  idNivel: any = [];
+  selectNivel: any;
 
   constructor(
     private rest: TituloService,
     private restNivelTitulo: NivelTitulosService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<TitulosComponent>,
+    public dialogRef: MatDialogRef<EditarTitulosComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
   }
 
   ngOnInit(): void {
     this.obtenerNivelesTitulo();
+    this.ImprimirDatos();
   }
 
-  obtenerNivelesTitulo(){
+  obtenerNivelesTitulo() {
+    this.niveles = [];
     this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
       this.niveles = res;
+      //this.niveles[this.niveles.length] = { nombre: "Seleccionar" };
+      this.selectNivel = this.niveles[this.niveles.length - 1].nombre;
     });
   }
 
@@ -73,14 +80,29 @@ export class TitulosComponent implements OnInit {
 
   InsertarTitulo(form) {
     let dataTitulo = {
+      id: this.data.id,
       nombre: form.tituloNombreForm,
       id_nivel: form.tituloNivelForm,
     };
-    this.rest.postTituloRest(dataTitulo).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Título guardado');
+    this.rest.ActualizarUnTitulo(dataTitulo).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Título actualizado');
       this.LimpiarCampos();
     }, error => {
-    });;
+    });
+  }
+
+  ImprimirDatos() {
+    this.idNivel = [];
+    console.log("nivel_nombre", this.data.nivel);
+    this.restNivelTitulo.BuscarNivelNombre(this.data.nivel).subscribe(datos => {
+      this.idNivel = datos;
+      this.nuevoTituloForm.setValue({
+        tituloNombreForm: this.data.nombre,
+        tituloNivelForm: this.data.nivel
+      })
+      this.selectNivel = this.idNivel[0].id;
+      console.log("nivel_id", this.idNivel[0].id, this.idNivel[0].nombre, "otro datos", this.selectNivel);
+    })
   }
 
   LimpiarCampos() {

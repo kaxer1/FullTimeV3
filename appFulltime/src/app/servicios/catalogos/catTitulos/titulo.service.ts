@@ -11,7 +11,8 @@ export class TituloService {
     private http: HttpClient
   ) { }
 
-  // catalogo de titulos
+  // Catálogo de títulos
+
   getOneTituloRest(id: number){
     return this.http.get(`${this.TITULO_URL}/titulo/${id}`);
   }
@@ -23,6 +24,10 @@ export class TituloService {
   postTituloRest(data: any){
     console.log(data); 
     return this.http.post(`${this.TITULO_URL}/titulo`, data);
+  }
+
+  ActualizarUnTitulo(datos:any){
+    return this.http.put(`${this.TITULO_URL}/titulo`, datos);
   }
 
 }

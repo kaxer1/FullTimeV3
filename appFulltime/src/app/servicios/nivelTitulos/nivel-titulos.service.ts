@@ -12,17 +12,21 @@ export class NivelTitulosService {
     private http: HttpClient
   ) { }
 
-   // Niveles de titulos
-   getOneNivelTituloRest(id: number){
+  // Niveles de titulos
+  getOneNivelTituloRest(id: number) {
     return this.http.get<any>(`${this.NIVEL_TITULO_URL}/nivel-titulo/${id}`);
   }
 
-  getNivelesTituloRest(){
+  getNivelesTituloRest() {
     return this.http.get<any>(`${this.NIVEL_TITULO_URL}/nivel-titulo/`);
   }
 
-  postNivelTituloRest(data: any){
-    console.log(data); 
+  postNivelTituloRest(data: any) {
+    console.log(data);
     return this.http.post(`${this.NIVEL_TITULO_URL}/nivel-titulo`, data);
+  }
+
+  BuscarNivelNombre(nombre: string) {
+    return this.http.get<any>(`${this.NIVEL_TITULO_URL}/nivel-titulo/buscar/${nombre}`);
   }
 }
