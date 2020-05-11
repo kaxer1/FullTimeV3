@@ -17,7 +17,11 @@ export class TipoComidasService {
     return this.http.post(`${this.API_URL}/tipoComidas`, datos);
   }
 
-  ConsultarTipoComida(){
+  ConsultarTipoComida() {
     return this.http.get(`${this.API_URL}/tipoComidas`);
+  }
+
+  ActualizarUnAlmuerzo(datos: any) {
+    return this.http.put(`${this.API_URL}/tipoComidas`, datos);
   }
 }

@@ -162,6 +162,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/editar-titulos/editar-titulos.component';
 import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component';
+import { EditarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
 
 @NgModule({
   declarations: [
@@ -261,6 +262,7 @@ import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-ni
     NotiAutorizacionesComponent,
     EditarTitulosComponent,
     EditarNivelTituloComponent,
+    EditarTipoComidasComponent,
 
   ],
 

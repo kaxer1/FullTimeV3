@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 
 @Component({
-  selector: 'app-tipo-comidas',
-  templateUrl: './tipo-comidas.component.html',
-  styleUrls: ['./tipo-comidas.component.css'],
+  selector: 'app-editar-tipo-comidas',
+  templateUrl: './editar-tipo-comidas.component.html',
+  styleUrls: ['./editar-tipo-comidas.component.css']
 })
-
-export class TipoComidasComponent implements OnInit {
+export class EditarTipoComidasComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -28,24 +27,35 @@ export class TipoComidasComponent implements OnInit {
   constructor(
     private rest: TipoComidasService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<TipoComidasComponent>,
+    public dialogRef: MatDialogRef<EditarTipoComidasComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
+    this.ImprimirDatos();
   }
 
   InsertarTipoComida(form) {
     let datosTipoComida = {
+      id: this.data.id,
       nombre: form.nombreForm,
       valor: form.valorForm,
       observacion: form.observacionForm
     };
-    this.rest.CrearNuevoTipoComida(datosTipoComida).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Tipo de comida registrado')
-      this.LimpiarCampos();
+    this.rest.ActualizarUnAlmuerzo(datosTipoComida).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Tipo de comida actualizado')
+      this.CerrarVentanaRegistroTipoComidas();
     }, error => {
       this.toastr.error('Operación Fallida', 'Tipo de comida no se pudo registrar')
     });
+  }
+
+  ImprimirDatos() {
+    this.TipoComidaForm.setValue({
+      nombreForm: this.data.nombre,
+      valorForm: this.data.valor,
+      observacionForm: this.data.observacion
+    })
   }
 
   IngresarNumeroDecimal(evt) {

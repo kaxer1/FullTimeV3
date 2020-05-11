@@ -52,13 +52,13 @@
                     <td id="fila">$ {{comida.valor}}</td>
                     <td id="centrar">{{comida.observacion}}</td>
                     <td id="centrar">
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
+                            matTooltip="Editar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                         <i class="far fa-trash-alt" matSuffix matTooltipClass="comidasL-tooltip"
                             matTooltipPosition="right" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

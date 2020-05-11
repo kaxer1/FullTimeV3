@@ -44,6 +44,13 @@ class TipoComidasControlador {
             res.json({ message: 'Tipo de comida registrada' });
         });
     }
+    ActualizarComida(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, valor, observacion, id } = req.body;
+            yield database_1.default.query('UPDATE cg_tipo_comidas SET nombre = $1, valor = $2, observacion = $3 WHERE id = $4', [nombre, valor, observacion, id]);
+            res.json({ message: 'Feriado actualizado exitosamente' });
+        });
+    }
 }
 const TIPO_COMIDAS_CONTROLADOR = new TipoComidasControlador();
 exports.default = TIPO_COMIDAS_CONTROLADOR;

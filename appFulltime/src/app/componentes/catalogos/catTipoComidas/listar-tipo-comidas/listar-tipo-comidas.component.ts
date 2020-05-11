@@ -2,11 +2,11 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
-import { PageEvent } from '@angular/material/paginator';
-
+import { EditarTipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -37,7 +37,7 @@ export class ListarTipoComidasComponent implements OnInit {
   constructor(
     private rest: TipoComidasService,
     public router: Router,
-    public vistaRegistrarTipoComida: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -58,7 +58,13 @@ export class ListarTipoComidasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTipoComidas(): void {
-    this.vistaRegistrarTipoComida.open(TipoComidasComponent, { width: '350px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(TipoComidasComponent, { width: '350px' }).disableClose = true;
+  }
+
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarTipoComidasComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampos() {
