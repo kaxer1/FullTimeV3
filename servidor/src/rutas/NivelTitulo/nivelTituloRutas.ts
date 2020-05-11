@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import nivelTituloControlador from '../../controlador/nivelTitulo/nivelTituloControlador';
+import NIVEL_TITULO_CONTROLADOR from '../../controlador/nivelTitulo/nivelTituloControlador';
 
 
 class NivelTituloRutas {
@@ -11,13 +11,14 @@ class NivelTituloRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', nivelTituloControlador.list);
-        this.router.get('/:id', nivelTituloControlador.getOne);
-        this.router.post('/', nivelTituloControlador.create);
-        this.router.get('/buscar/:nombre', nivelTituloControlador.ObtenerNivelNombre);
+        this.router.get('/', NIVEL_TITULO_CONTROLADOR.list);
+        this.router.get('/:id', NIVEL_TITULO_CONTROLADOR.getOne);
+        this.router.post('/', NIVEL_TITULO_CONTROLADOR.create);
+        this.router.get('/buscar/:nombre', NIVEL_TITULO_CONTROLADOR.ObtenerNivelNombre);
+        this.router.put('/', NIVEL_TITULO_CONTROLADOR.ActualizarNivelTitulo);
     }
 }
 
-const nivelTituloRutas = new NivelTituloRutas();
+const NIVEL_TITULO_RUTAS = new NivelTituloRutas();
 
-export default nivelTituloRutas.router;
+export default NIVEL_TITULO_RUTAS.router;

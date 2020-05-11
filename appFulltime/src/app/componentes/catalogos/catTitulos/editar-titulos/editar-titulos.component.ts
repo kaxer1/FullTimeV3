@@ -86,7 +86,7 @@ export class EditarTitulosComponent implements OnInit {
     };
     this.rest.ActualizarUnTitulo(dataTitulo).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Título actualizado');
-      this.LimpiarCampos();
+      this.CerrarVentanaRegistroTitulo();
     }, error => {
     });
   }

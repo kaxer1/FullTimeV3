@@ -47,6 +47,13 @@ class NivelTituloControlador {
             res.json({ message: 'Nivel del Titulo guardado' });
         });
     }
+    ActualizarNivelTitulo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, id } = req.body;
+            yield database_1.default.query('UPDATE nivel_titulo SET nombre = $1 WHERE id = $2', [nombre, id]);
+            res.json({ message: 'Nivel de Título actualizado exitosamente' });
+        });
+    }
 }
-exports.nivelTituloControlador = new NivelTituloControlador();
-exports.default = exports.nivelTituloControlador;
+exports.NIVEL_TITULO_CONTROLADOR = new NivelTituloControlador();
+exports.default = exports.NIVEL_TITULO_CONTROLADOR;

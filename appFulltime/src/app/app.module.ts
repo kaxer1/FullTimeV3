@@ -161,6 +161,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/editar-titulos/editar-titulos.component';
+import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component';
 
 @NgModule({
   declarations: [
@@ -259,6 +260,7 @@ import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/edita
     DetalleCatHorarioComponent,
     NotiAutorizacionesComponent,
     EditarTitulosComponent,
+    EditarNivelTituloComponent,
 
   ],
 

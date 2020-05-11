@@ -108,4 +108,5 @@ export class ListarTitulosComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
     //console.log(datosSeleccionados.fecha);
   }
+  
 }
