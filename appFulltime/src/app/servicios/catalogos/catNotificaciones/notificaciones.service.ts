@@ -12,9 +12,11 @@ export class NotificacionesService {
   ) { }
 
   // catalogo de notificaciones
+  getNotificacionesRest(){
+    return this.http.get(`${this.NOTIFICACIONES_URL}/notificaciones`);
+  }
 
   postNotificacionesRest(data: any){
-    console.log(data);
-      return this.http.post(`${this.NOTIFICACIONES_URL}/notificaciones`, data);
+    return this.http.post(`${this.NOTIFICACIONES_URL}/notificaciones`, data);
   }
 }

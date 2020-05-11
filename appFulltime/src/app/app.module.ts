@@ -69,6 +69,8 @@ import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/list
 import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { RegistoEmpleadoHorarioComponent } from './componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
+import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
+import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 
@@ -158,7 +160,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
 @NgModule({
   declarations: [
@@ -255,6 +256,8 @@ import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/d
     RegistroEmpleadoPermisoComponent,
     RegistoEmpleadoHorarioComponent,
     DetalleCatHorarioComponent,
+    NotiAutorizacionesComponent,
+
   ],
 
   imports: [
@@ -295,10 +298,11 @@ import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/d
     MatAutocompleteModule,
     MatTableModule,
     MatPaginatorModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatTabsModule,
-    NgxEchartsModule
+    NgxEchartsModule,
+    MatDatepickerModule, 
+    MatNativeDateModule,
+    MatTabsModule
 
   ],
   providers: [

@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const empleadoControlador_1 = __importDefault(require("../../../controlador/empleado/empleadoRegistro/empleadoControlador"));
 const jwt = require('jsonwebtoken');
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart({
+    uploadDir: './imagenesEmpleados',
+});
 class EmpleadoRutas {
     constructor() {
         this.router = express_1.Router();
@@ -14,7 +18,9 @@ class EmpleadoRutas {
     configuracion() {
         this.router.get('/', this.verifyToken, empleadoControlador_1.default.list);
         this.router.get('/:id', this.verifyToken, empleadoControlador_1.default.getOne);
+        this.router.get('/img/:imagen', empleadoControlador_1.default.getImagen);
         this.router.post('/', this.verifyToken, empleadoControlador_1.default.create);
+        this.router.put('/:id_empleado/uploadImage', [this.verifyToken, multipartMiddleware], empleadoControlador_1.default.crearImagenEmpleado);
         this.router.get('/emplTitulos/:id_empleado', this.verifyToken, empleadoControlador_1.default.getTitulosDelEmpleado);
         this.router.post('/emplTitulos/', this.verifyToken, empleadoControlador_1.default.createEmpleadoTitulos);
     }

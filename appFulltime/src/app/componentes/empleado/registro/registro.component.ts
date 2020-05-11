@@ -34,7 +34,7 @@ export class RegistroComponent implements OnInit {
 
   private idNacionalidad: number;
 
-  isLinear = false;
+  isLinear = true;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;

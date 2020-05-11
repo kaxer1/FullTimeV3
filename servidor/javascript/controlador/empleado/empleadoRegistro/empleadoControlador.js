@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../../database"));
+const fs_1 = __importDefault(require("fs"));
+const path = require("path");
 class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -31,6 +33,14 @@ class EmpleadoControlador {
             res.status(404).json({ text: 'El empleado no ha sido encontrado' });
         });
     }
+    getImagen(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log('este es el parametro: ' + req.params.imagen);
+            const imagen = req.params.imagen;
+            let filePath = `servidor\\imagenesEmpleados\\${imagen}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad } = req.body;
@@ -39,6 +49,26 @@ class EmpleadoControlador {
             const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
             const idEmployGuardado = oneEmpley.rows[0].id;
             res.json({ message: 'Empleado guardado', id: idEmployGuardado });
+        });
+    }
+    crearImagenEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let imagen = list.image[0].path.split("\\")[1];
+            let id = req.url.split("/")[1];
+            const unEmpleado = yield database_1.default.query('SELECT * FROM empleados WHERE id = $1', [id]);
+            if (unEmpleado.rowCount > 0) {
+                unEmpleado.rows.map(obj => {
+                    if (obj.imagen != null) {
+                        console.log(obj.imagen);
+                        let filePath = `servidor\\imagenesEmpleados\\${obj.imagen}`;
+                        let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+                        fs_1.default.unlinkSync(direccionCompleta);
+                    }
+                });
+                yield database_1.default.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
+                res.json({ message: 'Imagen Actualizada' });
+            }
         });
     }
     createEmpleadoTitulos(req, res) {

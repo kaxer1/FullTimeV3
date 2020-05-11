@@ -46,6 +46,7 @@ const autorizaDepartamentoRutas_1 = __importDefault(require("./rutas/autorizaDep
 const empleadoHorariosRutas_1 = __importDefault(require("./rutas/horarios/empleadoHorarios/empleadoHorariosRutas"));
 const permisosRutas_1 = __importDefault(require("./rutas/permisos/permisosRutas"));
 const detalleCatHorarioRutas_1 = __importDefault(require("./rutas/horarios/detalleCatHorario/detalleCatHorarioRutas"));
+const catNotiAutorizacionesRutas_1 = __importDefault(require("./rutas/catalogos/catNotiAutorizacionesRutas"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -58,6 +59,7 @@ class Server {
         this.app.use(cors_1.default());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
+        this.app.use(express_1.default.raw({ type: 'image/*', limit: '1mb' }));
     }
     rutas() {
         this.app.use('/', indexRutas_1.default);
@@ -107,6 +109,7 @@ class Server {
         this.app.use('/sucursales', sucursalRutas_1.default);
         this.app.use('/nacionalidades', nacionalidadRutas_1.default);
         this.app.use('/nivel-titulo', nivelTituloRutas_1.default);
+        this.app.use('/noti-autorizaciones', catNotiAutorizacionesRutas_1.default);
     }
     start() {
         this.app.listen(this.app.get('puerto'), () => {

@@ -58,13 +58,13 @@ class FeriadosControlador {
     
         plantilla.forEach(async (data: any) => {
             const { fecha, descripcion, fec_recuperacion } = data;
-
             if(fecha != undefined){
                 await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
             } else {
               res.json({error: 'plantilla equivocada'});
             }
-          });
+        });
+        
         res.json({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
     }

@@ -3,6 +3,12 @@ import EMPLEADO_CONTROLADOR from '../../../controlador/empleado/empleadoRegistro
 
 const jwt = require('jsonwebtoken');
 
+const multipart = require('connect-multiparty');  
+
+const multipartMiddleware = multipart({  
+    uploadDir: './imagenesEmpleados',
+});
+
 class EmpleadoRutas {
     public router: Router = Router();
 
@@ -14,7 +20,9 @@ class EmpleadoRutas {
     configuracion(): void {
         this.router.get('/', this.verifyToken, EMPLEADO_CONTROLADOR.list);
         this.router.get('/:id', this.verifyToken, EMPLEADO_CONTROLADOR.getOne);
+        this.router.get('/img/:imagen', EMPLEADO_CONTROLADOR.getImagen);
         this.router.post('/', this.verifyToken, EMPLEADO_CONTROLADOR.create);
+        this.router.put('/:id_empleado/uploadImage', [this.verifyToken, multipartMiddleware], EMPLEADO_CONTROLADOR.crearImagenEmpleado);
         this.router.get('/emplTitulos/:id_empleado', this.verifyToken, EMPLEADO_CONTROLADOR.getTitulosDelEmpleado);
         this.router.post('/emplTitulos/', this.verifyToken, EMPLEADO_CONTROLADOR.createEmpleadoTitulos);
     }

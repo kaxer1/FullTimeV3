@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl } from '@angular/forms';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -14,10 +15,12 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
-import { ScriptService } from 'src/app/servicios/empleado/script.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
+import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
+
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { EmplCargosComponent } from 'src/app/componentes/empleadoCargos/empl-cargos/empl-cargos.component';
@@ -28,7 +31,6 @@ import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/r
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
-import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
@@ -98,17 +100,35 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
-  onUploadFinish(event) {
-    console.log(event);
-  }
+  // onUploadFinish(event) {
+  //   console.log(event);
+  // }
 
   // Método para ver la información del empleado 
+  urlImagen: any;
+  iniciales: any;
+  mostrarImagen: boolean = false;
+  mostrarIniciales: boolean = false;
+  textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
-      // sacar la fecha del JSON 
-      var cadena1 = data[0]['fec_nacimiento'];
-      this.fechaNacimiento = cadena1.split("T")[0];
+      console.log(this.empleadoUno);
+      this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
+      if ( data[0]['imagen'] != null){
+        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.mostrarImagen = true;
+        this.mostrarIniciales = false;
+        this.textoBoton = 'Editar Foto';
+      } else {
+        this.iniciales = data[0].nombre.split(" ")[0].slice(0,1) + data[0].apellido.split(" ")[0].slice(0,1);
+        this.mostrarIniciales = true
+        this.mostrarImagen = false;
+        this.textoBoton = 'Subir Foto';
+      }
+      this.restEmpleado.obtenerImagen(data[0]['imagen']).subscribe(res => {
+        console.log(res);
+      })
     })
   }
 
@@ -127,7 +147,6 @@ export class VerEmpleadoComponent implements OnInit {
       this.relacionTituloEmpleado = data;
     }, error => { });
   }
-
 
   // metodo para obtener el contrato de un empleado con su respectivo regimen laboral
   idContratoEmpleado: number;
@@ -207,7 +226,6 @@ export class VerEmpleadoComponent implements OnInit {
   obtenerPlanComidasEmpleado(id_empleado: number){
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
-      console.log(res);
     })
   }
 
@@ -573,6 +591,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   logoEmplesa() {
+    this.getBase64();
     if (this.logo) {
       return {
         image: this.logo,
@@ -585,12 +604,12 @@ export class VerEmpleadoComponent implements OnInit {
 
   fileChanged(e) {
     const file = e.target.files[0];
-    this.getBase64(file);
+    this.getBase64();
   }
 
-  getBase64(file) {
+  getBase64() {
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(this.urlImagen);
     reader.onload = () => {
       // console.log(reader.result);
       this.logo = reader.result as string;
@@ -609,24 +628,6 @@ export class VerEmpleadoComponent implements OnInit {
   * 
   ****************************************************************************************************
   */
-
-  // DataGeneral: any = [];
-
-  // datosGenerales(){
-  // this.empleadoUno.forEach(obj1 => {
-  //   this.DataGeneral.push(obj1);
-  //   this.contratoEmpleado.forEach(obj => {
-  //     this.DataGeneral.push(obj);
-  //   });
-  //   this.discapacidadUser.forEach(obj => {
-  //     this.DataGeneral.push(obj);
-  //   });
-  //   this.relacionTituloEmpleado.forEach(obj => {
-  //     this.DataGeneral.push(obj);
-  //   });
-  // });
-  // console.log(JSON.stringify( this.DataGeneral));
-  // }
 
   exportToExcel() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
@@ -652,5 +653,37 @@ export class VerEmpleadoComponent implements OnInit {
     const csvDataT = xlsx.utils.sheet_to_csv(wst);
     const data: Blob = new Blob([csvDataE, csvDataC, csvDataD, csvDataT], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "EmpleadoCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* 
+  ****************************************************************************************************
+  *
+  * 
+  *                               PARA LA SUBIR LA IMAGEN DEL EMPLEADO
+  * 
+  * 
+  ****************************************************************************************************
+  */
+  nameFile: string;
+  archivoSubido: Array < File > ;
+  archivoForm = new FormControl('');
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.plantilla();
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      console.log(this.archivoSubido[i], this.archivoSubido[i].name)
+      formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'imagen subida.');
+      this.verEmpleado(this.idEmpleado)
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
   }
 }
