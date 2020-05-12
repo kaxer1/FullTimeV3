@@ -39,6 +39,7 @@ import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrol
 import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 
 import { AuthGuard } from "./guards/auth.guard";
+import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -79,6 +80,7 @@ const routes: Routes = [
   { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard] },
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard]},
   { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard]},
+  { path: 'autorizaciones', component: AutorizacionesComponent, canActivate: [AuthGuard]},
 
 ];
 

@@ -18,8 +18,7 @@ const path = require("path");
 class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body.userId + ' este es del listar empleado');
-            const empleado = yield database_1.default.query('SELECT * FROM empleados');
+            const empleado = yield database_1.default.query('SELECT * FROM empleados ORDER BY id');
             res.json(empleado.rows);
         });
     }

@@ -159,6 +159,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
+import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 
 @NgModule({
   declarations: [
@@ -254,6 +255,7 @@ import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAuto
     RegistroAutorizacionDepaComponent,
     RegistroEmpleadoPermisoComponent,
     NotiAutorizacionesComponent,
+    AutorizacionesComponent,
   ],
 
   imports: [

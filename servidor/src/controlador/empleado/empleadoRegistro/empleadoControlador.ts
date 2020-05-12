@@ -6,8 +6,7 @@ const path = require("path");
 class EmpleadoControlador {
 
   public async list(req: Request, res: Response) {
-    console.log(req.body.userId + ' este es del listar empleado');
-    const empleado = await pool.query('SELECT * FROM empleados');
+    const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
     res.json(empleado.rows);
   }
 
