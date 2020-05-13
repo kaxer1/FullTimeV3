@@ -14,24 +14,26 @@ export class ProcesoService {
 
   // catalogo de Procesos
 
-  getProcesosRest(){
-   
+  getProcesosRest() {
+
     return this.http.get(`${this.API_URL}/proceso`);
-    
+
   }
 
-  getOneProcesoRest(id:number){
+  getOneProcesoRest(id: number) {
     return this.http.get(`${this.API_URL}/proceso/${id}`);
   }
-  
-  postProcesoRest(data: any){
-   
+
+  postProcesoRest(data: any) {
     return this.http.post(`${this.API_URL}/proceso`, data);
   }
 
-  getIdProcesoPadre(procesoPadre: string){
+  getIdProcesoPadre(procesoPadre: string) {
     return this.http.get(`${this.API_URL}/proceso/busqueda/${procesoPadre}`);
   }
-  
+
+  ActualizarUnProceso(datos: any) {
+    return this.http.put(`${this.API_URL}/proceso`, datos);
+  }
 
 }

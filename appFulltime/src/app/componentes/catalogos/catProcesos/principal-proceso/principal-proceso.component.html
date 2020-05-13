@@ -80,15 +80,15 @@
                     <td>{{proceso.nivel}}</td>
                     <td>{{proceso.proc_padre}}</td>
                     <td>
-                        <i class="far fa-trash-alt" style="color:red; margin-right: 15px;" id="iprocesoL" matSuffix
-                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                            matTooltip="Eliminar registro">
-                            <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" style="color:green;" id="iprocesoL" matSuffix
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(proceso)" style="color:green;" id="iprocesoL" matSuffix
                             matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar los datos generales del registro">
                             <p>Editar</p>
+                        </i>
+                        <i class="far fa-trash-alt" style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Eliminar registro">
+                            <p>Eliminar</p>
                         </i>
                     </td>
                 </tr>

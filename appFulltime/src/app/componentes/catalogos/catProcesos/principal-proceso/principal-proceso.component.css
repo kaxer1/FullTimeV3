@@ -12,6 +12,7 @@ td { padding-top: 10px; text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px;
 }
+
 #iprocesoL { cursor: pointer; }
 /*.procesoL-tooltip { background-color : rgb(114, 43, 2); }*/
 #resulProceso { 
@@ -22,6 +23,7 @@ td { padding-top: 10px; text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
 #proS { font-size: 15px;}
 
 table {width: 100%;}

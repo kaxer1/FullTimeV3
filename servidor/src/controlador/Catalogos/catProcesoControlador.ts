@@ -2,44 +2,48 @@ import { Request, Response } from 'express';
 import pool from '../../database';
 
 class ProcesoControlador {
-    public async list(req: Request, res: Response) {
-      const Sin_proc_padre = await pool.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL');
-      const Con_proc_padre = await pool.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id');
-      Sin_proc_padre.rows.forEach(obj => {
-        Con_proc_padre.rows.push(obj);
-      })
-      res.json(Con_proc_padre.rows);
-    }
-  
-    public async getOne(req: Request, res: Response): Promise<any> {
-      const { id } = req.params;
-      const unaProvincia = await pool.query('SELECT * FROM cg_procesos WHERE id = $1', [id]);
-      if (unaProvincia.rowCount > 0) {
-        return res.json(unaProvincia.rows)
-      }
-      res.status(404).json({ text: 'El proceso no ha sido encontrado' });
-    }
-  
-    public async create(req: Request, res: Response): Promise<void> {
-      const { nombre, nivel, proc_padre } = req.body;
-      await pool.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre,nivel,proc_padre]);
-      console.log(req.body);
-      res.json({ message: 'El departamento ha sido guardado en éxito' });
-    }
-    
-    public async getIdByNombre(req: Request, res: Response): Promise<any>{
-      const  {nombre} = req.params;
-      const unIdProceso = await pool.query('SELECT id FROM cg_procesos WHERE nombre = $1', [nombre]);
-      if (unIdProceso !=null) {
-        return res.json(unIdProceso.rows);
-      }
-      res.status(404).json({ text: 'El proceso no ha sido encontrado' });
-    }
-  
-
-  
+  public async list(req: Request, res: Response) {
+    const Sin_proc_padre = await pool.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL');
+    const Con_proc_padre = await pool.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id');
+    Sin_proc_padre.rows.forEach(obj => {
+      Con_proc_padre.rows.push(obj);
+    })
+    res.json(Con_proc_padre.rows);
   }
-  
-  export const PROCESOS_CONTROLADOR = new ProcesoControlador();
-  
-  export default PROCESOS_CONTROLADOR;
+
+  public async getOne(req: Request, res: Response): Promise<any> {
+    const { id } = req.params;
+    const unaProvincia = await pool.query('SELECT * FROM cg_procesos WHERE id = $1', [id]);
+    if (unaProvincia.rowCount > 0) {
+      return res.json(unaProvincia.rows)
+    }
+    res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+  }
+
+  public async create(req: Request, res: Response): Promise<void> {
+    const { nombre, nivel, proc_padre } = req.body;
+    await pool.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre, nivel, proc_padre]);
+    console.log(req.body);
+    res.json({ message: 'El departamento ha sido guardado en éxito' });
+  }
+
+  public async getIdByNombre(req: Request, res: Response): Promise<any> {
+    const { nombre } = req.params;
+    const unIdProceso = await pool.query('SELECT id FROM cg_procesos WHERE nombre = $1', [nombre]);
+    if (unIdProceso != null) {
+      return res.json(unIdProceso.rows);
+    }
+    res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+  }
+
+  public async ActualizarProceso(req: Request, res: Response): Promise<void> {
+    const { nombre, nivel, proc_padre, id } = req.body;
+    await pool.query('UPDATE cg_procesos SET nombre = $1, nivel = $2, proc_padre = $3 WHERE id = $4', [nombre, nivel, proc_padre, id]);
+    res.json({ message: 'El proceso actualizado exitosamente' });
+  }
+
+}
+
+export const PROCESOS_CONTROLADOR = new ProcesoControlador();
+
+export default PROCESOS_CONTROLADOR;

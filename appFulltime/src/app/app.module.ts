@@ -165,6 +165,7 @@ import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-ni
 import { EditarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
 import { EditarEmpresaComponent } from './componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
 import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursal/editar-sucursal.component';
+import { EditarCatProcesosComponent } from './componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 
 @NgModule({
   declarations: [
@@ -267,6 +268,7 @@ import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursa
     EditarTipoComidasComponent,
     EditarEmpresaComponent,
     EditarSucursalComponent,
+    EditarCatProcesosComponent,
 
   ],
 

@@ -12,7 +12,7 @@ export class PadrePipe implements PipeTransform {
     const resultadoProceso = [];
 
     for(const proceso of value){
-      if(proceso.proc_padre.toLowerCase().indexOf(arg.toLowerCase()) > -1){
+      if(proceso.proc_padre && proceso.proc_padre.toLowerCase().indexOf(arg.toLowerCase()) > -1){
         resultadoProceso.push(proceso);
       };
     };
