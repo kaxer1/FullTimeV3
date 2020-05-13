@@ -1,10 +1,8 @@
-/*.empre-tooltip { background-color : rgb(0, 102, 128); }*/
-
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
 #empre { cursor: pointer; }
 
-.tituloEmpresaR { 
+.empresaEdit { 
     font-size: 25px; 
     text-align: center; 
     background: rgb(52,65,84); 

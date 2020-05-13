@@ -1,5 +1,5 @@
 <mat-icon id="movilidad">open_with</mat-icon>
-<div class="tituloEmpresaR">
+<div class="empresaEdit">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Empresa</span>
 </div>
 <form [formGroup]="RegistroEmpresaForm">
@@ -11,7 +11,7 @@
                         <mat-label>Nombre de la Empresa</mat-label>
                         <input matInput placeholder="Nombre del empre" [formControl]="nombreF" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar nombre de la nueva Empresa">
+                            matTooltip="Modificar nombre de la Empresa">
                             help_outline</mat-icon>
                         <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                         <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
@@ -23,7 +23,7 @@
                             oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             (keypress)="IngresarSoloNumeros($event)" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar el RUC de la Empresa">
+                            matTooltip="Modificar el RUC de la Empresa">
                             help_outline
                         </mat-icon>
                         <mat-error *ngIf="rucF.invalid">{{ObtenerMensajeErrorRucRequerido()}}</mat-error>
@@ -36,7 +36,7 @@
                             oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar número de contacto de la Empresa">
+                            matTooltip="Modificar número de contacto de la Empresa">
                             help_outline</mat-icon>
                         <mat-error *ngIf="telefonoF.invalid">{{ObtenerMensajeErrorTelefonoRequerido()}}
                         </mat-error>
@@ -46,7 +46,7 @@
                         <mat-label>Dirección</mat-label>
                         <input matInput placeholder="Ingresar modelo" [formControl]="direccionF" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar dirección de ubicación de la Empresa">
+                            matTooltip="Modificar dirección de ubicación de la Empresa">
                             help_outline
                         </mat-icon>
                         <mat-error *ngIf="direccionF.invalid">{{ObtenerMensajeErrorDireccionRequerido()}}
@@ -59,7 +59,7 @@
                         <mat-label>Correo</mat-label>
                         <input matInput placeholder="Ingresar serie" [formControl]="correoF" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar correo electrónico de la Empresa">
+                            matTooltip="Modificar correo electrónico de la Empresa">
                             help_outline
                         </mat-icon>
                         <mat-error *ngIf="correoF.invalid">{{ObtenerMensajeErrorCorreoRequerido()}}</mat-error>
@@ -74,15 +74,21 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm" style="text-align: left;">
-                                        <mat-radio-button (click)="CambiarNombrePublica()" value="1" id="pub">
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombrePublica()"
+                                            value="1" id="pub">
                                             Pública
                                         </mat-radio-button>
                                         <br>
-                                        <mat-radio-button (click)="CambiarNombrePrivada()" value="2" id="pri">
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombrePrivada()"
+                                            value="2" id="pri">
                                             Privada
                                         </mat-radio-button>
                                         <br>
-                                        <mat-radio-button (click)="CambiarNombreOng()" value="3" id="ong">ONG
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec3" [checked]="selec3"
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombreOng()" value="3"
+                                            id="ong">ONG
                                         </mat-radio-button>
                                     </div>
                                 </div>
@@ -95,7 +101,7 @@
                         <input matInput placeholder="Ingresar nombre" [formControl]="representanteF" required
                             style="visibility:hidden" id="repre">
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar el nombre del representante de la empresa">
+                            matTooltip="Modificar el nombre del representante de la empresa">
                             help_outline
                         </mat-icon>
                         <mat-error *ngIf="representanteF.invalid">{{ObtenerMensajeErrorRepre()}}

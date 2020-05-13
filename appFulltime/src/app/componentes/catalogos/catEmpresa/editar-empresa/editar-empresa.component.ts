@@ -1,19 +1,21 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
-  selector: 'app-registro-empresa',
-  templateUrl: './registro-empresa.component.html',
-  styleUrls: ['./registro-empresa.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  selector: 'app-editar-empresa',
+  templateUrl: './editar-empresa.component.html',
+  styleUrls: ['./editar-empresa.component.css']
 })
-export class RegistroEmpresaComponent implements OnInit {
+export class EditarEmpresaComponent implements OnInit {
 
   valor = '';
+  selec1 = false;
+  selec2 = false;
+  selec3 = false;
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -38,10 +40,12 @@ export class RegistroEmpresaComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private rest: EmpresaService,
-    public dialogRef: MatDialogRef<RegistroEmpresaComponent>,
+    public dialogRef: MatDialogRef<EditarEmpresaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
+    this.ImprimirDatos();
   }
 
   ObtenerMensajeErrorNombreRequerido() {
@@ -81,6 +85,31 @@ export class RegistroEmpresaComponent implements OnInit {
     return this.representanteF.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
+  ImprimirDatos() {
+    
+    if (this.data.tipo_empresa === 1) {
+      this.selec1 = true;
+      this.CambiarNombrePublica();
+    }
+    else if (this.data.tipo_empresa === 2) {
+      this.selec2 = true;
+      this.CambiarNombrePrivada();
+    }
+    else {
+      this.selec3 = true;
+      this.CambiarNombreOng();
+    }
+    this.RegistroEmpresaForm.patchValue({
+      nombreForm: this.data.nombre,
+      rucForm: this.data.ruc,
+      telefonoForm: this.data.telefono,
+      direccionForm: this.data.direccion,
+      correoForm: this.data.correo,
+      tipoForm: this.data.tipo_empresa,
+      representanteForm: this.data.representante
+    })
+  }
+
   IngresarSoloNumeros(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
@@ -104,6 +133,7 @@ export class RegistroEmpresaComponent implements OnInit {
 
   InsertarEmpresa(form) {
     let datosEmpresa = {
+      id: this.data.id,
       nombre: form.nombreForm,
       ruc: form.rucForm,
       direccion: form.direccionForm,
@@ -112,9 +142,9 @@ export class RegistroEmpresaComponent implements OnInit {
       tipo_empresa: form.tipoForm,
       representante: form.representanteForm
     };
-    this.rest.IngresarEmpresas(datosEmpresa).subscribe(response => {
-      this.LimpiarCampos();
-      this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
+    this.rest.ActualizarEmpresa(datosEmpresa).subscribe(response => {
+      this.CerrarVentanaRegistroEmpresa();
+      this.toastr.success('Operación Exitosa', 'Datos de Empresa actualizados')
     }, error => {
     });
   }
@@ -125,6 +155,7 @@ export class RegistroEmpresaComponent implements OnInit {
       //this.toastr.info('Ingresar número de días para presentar justificación')
       this.valor = 'Máxima Autoridad'
     }
+
   }
 
   CambiarNombrePrivada() {
@@ -149,5 +180,6 @@ export class RegistroEmpresaComponent implements OnInit {
     window.location.reload();
     this.valor = '';
   }
+
 
 }

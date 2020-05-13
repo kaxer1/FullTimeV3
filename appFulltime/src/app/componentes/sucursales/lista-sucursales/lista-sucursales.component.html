@@ -78,15 +78,15 @@
                     <td>{{s.nombre}}</td>
                     <td>{{s.descripcion}}</td>
                     <td>
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                         <i id="permisoSuc" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

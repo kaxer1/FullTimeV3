@@ -163,6 +163,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/editar-titulos/editar-titulos.component';
 import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component';
 import { EditarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
+import { EditarEmpresaComponent } from './componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
+import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursal/editar-sucursal.component';
 
 @NgModule({
   declarations: [
@@ -263,6 +265,8 @@ import { EditarTipoComidasComponent } from './componentes/catalogos/catTipoComid
     EditarTitulosComponent,
     EditarNivelTituloComponent,
     EditarTipoComidasComponent,
+    EditarEmpresaComponent,
+    EditarSucursalComponent,
 
   ],
 

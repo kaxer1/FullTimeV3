@@ -5,8 +5,8 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 
 import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
+import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-
 
 @Component({
   selector: 'app-listar-empresas',
@@ -35,7 +35,7 @@ export class ListarEmpresasComponent implements OnInit {
   constructor(
     private rest: EmpresaService,
     private toastr: ToastrService,
-    public vistaRegistrarEmpresa: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -54,7 +54,13 @@ export class ListarEmpresasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarEmpresa() {
-    this.vistaRegistrarEmpresa.open(RegistroEmpresaComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroEmpresaComponent, { width: '600px' }).disableClose = true;
+  }
+
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampoBuscar() {
