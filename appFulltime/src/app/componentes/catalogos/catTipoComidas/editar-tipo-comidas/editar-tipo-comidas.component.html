@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="tituloComidaR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar nuevo tipo de Comida</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar tipo de Comida</span>
 </div>
 <br>
 <!-- Formulario Completo -->
@@ -41,5 +41,5 @@
 <mat-card-actions style="text-align: center">
     <input type="submit" class="btn btn-sm" [disabled]="!TipoComidaForm.valid"
         (click)="InsertarTipoComida(TipoComidaForm.value)" value="Guardar">
-    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTipoComidas()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="Salir()" value="Salir">
 </mat-card-actions>

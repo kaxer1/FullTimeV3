@@ -53,8 +53,7 @@
                         </mat-error>
                         <mat-error *ngIf="direccionF.invalid">Ingresar una dirección válida</mat-error>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label>Correo</mat-label>
                         <input matInput placeholder="Ingresar serie" [formControl]="correoF" required>
@@ -65,6 +64,8 @@
                         <mat-error *ngIf="correoF.invalid">{{ObtenerMensajeErrorCorreoRequerido()}}</mat-error>
                         <mat-error *ngIf="correoF.invalid">Ingresar un correo electrónico válido</mat-error>
                     </mat-form-field>
+                </div>
+                <div class="col">
                     <div class="col-sm" style="text-align: left;">
                         <mat-radio-group aria-label="Select an option" [formControl]="tipoF" required>
                             <label>Tipo de Empresa *</label>
@@ -74,21 +75,39 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm" style="text-align: left;">
-                                        <mat-radio-button (click)="CambiarNombrePublica()" value="1" id="pub">
+                                        <mat-radio-button (click)="CambiarNombrePublica()" value="Pública">
                                             Pública
                                         </mat-radio-button>
                                         <br>
-                                        <mat-radio-button (click)="CambiarNombrePrivada()" value="2" id="pri">
+                                        <mat-radio-button (click)="CambiarNombrePrivada()" value="Privada">
                                             Privada
                                         </mat-radio-button>
                                         <br>
-                                        <mat-radio-button (click)="CambiarNombreOng()" value="3" id="ong">ONG
+                                        <mat-radio-button (click)="CambiarNombreOng()" value="ONG">ONG
+                                        </mat-radio-button>
+                                        <br>
+                                        <mat-radio-button (click)="CambiarNombreNatural()" value="Persona Natural">
+                                            Persona Natural
+                                        </mat-radio-button>
+                                        <br>
+                                        <mat-radio-button (click)="CambiarNombreOtro()" value="Otro">Otro
                                         </mat-radio-button>
                                     </div>
                                 </div>
                             </div>
                         </mat-radio-group>
                     </div>
+                    <mat-form-field>
+                        <mat-label>Tipo de Empresa</mat-label>
+                        <input matInput placeholder="Ingresar nombre" [formControl]="otroF"
+                            style="visibility:hidden" id="otro">
+                        <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar el nombre del tipo de empresa">
+                            help_outline
+                        </mat-icon>
+                        <mat-error *ngIf="otroF.invalid">Ingresar un nombre válido</mat-error>
+                    </mat-form-field>
+                    <br>
                     <mat-form-field>
                         <mat-label ngDefaultControl [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">{{valor}}
                         </mat-label>

@@ -23,6 +23,7 @@ export class RegistroEmpresaComponent implements OnInit {
   telefonoF = new FormControl('', [Validators.required]);
   tipoF = new FormControl('', [Validators.required]);
   representanteF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
+  otroF = new FormControl('', [Validators.minLength(3)]);
 
   // Asignación de validaciones a inputs del formulario
   public RegistroEmpresaForm = new FormGroup({
@@ -32,7 +33,8 @@ export class RegistroEmpresaComponent implements OnInit {
     direccionForm: this.direccionF,
     correoForm: this.correoF,
     tipoForm: this.tipoF,
-    representanteForm: this.representanteF
+    representanteForm: this.representanteF,
+    otroForm: this.otroF
   });
 
   constructor(
@@ -112,35 +114,76 @@ export class RegistroEmpresaComponent implements OnInit {
       tipo_empresa: form.tipoForm,
       representante: form.representanteForm
     };
-    this.rest.IngresarEmpresas(datosEmpresa).subscribe(response => {
+    this.VerificarOtroTipo(form, datosEmpresa);
+  }
+
+  GuardarDatos(datos){
+    this.rest.IngresarEmpresas(datos).subscribe(response => {
       this.LimpiarCampos();
       this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
     }, error => {
     });
   }
 
-  CambiarNombrePublica() {
-    if ((<HTMLInputElement>document.getElementById('pub')).value = '1') {
-      (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
-      //this.toastr.info('Ingresar número de días para presentar justificación')
-      this.valor = 'Máxima Autoridad'
+  VerificarOtroTipo(form, datos) {
+    if (form.tipoForm === 'Otro') {
+      if (form.otroForm != '') {
+        datos.tipo_empresa = form.otroForm;
+        this.GuardarDatos(datos);
+      }
+      else {
+        this.toastr.info('Ingrese el nombre del tipo de empresa')
+      }
     }
+    else {
+      this.GuardarDatos(datos);
+    }
+  }
+
+  CambiarNombrePublica() {
+    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
+    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.valor = 'Máxima Autoridad'
+    this.RegistroEmpresaForm.patchValue({
+      otroForm: ''
+    })
   }
 
   CambiarNombrePrivada() {
-    if ((<HTMLInputElement>document.getElementById('pri')).value = '2') {
-      (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
-      //this.toastr.info('Ingresar número de días para presentar justificación')
-      this.valor = 'Representante Legal'
-    }
+    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
+    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.valor = 'Representante Legal'
+    this.RegistroEmpresaForm.patchValue({
+      otroForm: ''
+    })
   }
 
   CambiarNombreOng() {
-    if ((<HTMLInputElement>document.getElementById('ong')).value = '3') {
-      (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
-      //this.toastr.info('Ingresar número de días para presentar justificación')
-      this.valor = 'Representante Legal'
-    }
+    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
+    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.valor = 'Representante Legal'
+    this.RegistroEmpresaForm.patchValue({
+      otroForm: ''
+    })
+  }
+
+  CambiarNombreNatural() {
+    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
+    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.valor = 'Representante Legal'
+    this.RegistroEmpresaForm.patchValue({
+      otroForm: ''
+    })
+  }
+
+  CambiarNombreOtro() {
+    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'visible';
+    this.toastr.info('Ingresar el nombre del tipo de empresa')
+    this.valor = 'Representante Legal'
+    this.RegistroEmpresaForm.patchValue({
+      otroForm: ''
+    })
   }
 
   CerrarVentanaRegistroEmpresa() {

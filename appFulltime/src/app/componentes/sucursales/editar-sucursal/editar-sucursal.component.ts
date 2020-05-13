@@ -225,6 +225,11 @@ export class EditarSucursalComponent implements OnInit {
     window.location.reload();
   }
 
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+  }
+
   ObtenerMensajeErrorNombre() {
     if (this.nombre.hasError('required')) {
       return 'Campo Obligatorio';

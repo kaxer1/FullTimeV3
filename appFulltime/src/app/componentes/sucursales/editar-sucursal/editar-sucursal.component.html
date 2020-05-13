@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="tituloSucursalR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Sucursal</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Datos Sucursal</span>
 </div>
 <br>
 <form [formGroup]="nuevaSucursalForm">
@@ -91,5 +91,5 @@
 <div style="text-align: center;">
     <input type="submit" class="btn btn-sm" (click)="InsertarSucursal(nuevaSucursalForm.value)"
         [disabled]="!nuevaSucursalForm.valid" value="Guardar">
-    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroSucursal()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="Salir()" value="Salir">
 </div>

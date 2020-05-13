@@ -114,4 +114,9 @@ export class EditarTitulosComponent implements OnInit {
     window.location.reload();
   }
 
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+  }
+
 }

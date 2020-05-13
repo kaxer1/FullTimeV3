@@ -56,6 +56,7 @@
                 <tr style="text-align: center;">
                     <th scope="col">Id</th>
                     <th scope="col">Empresa</th>
+                    <th scope="col">Tipo</th>
                     <th scope="col">Representante</th>
                     <th scope="col">RUC</th>
                     <th scope="col">Dirección</th>
@@ -67,6 +68,7 @@
                     *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
                     <td>{{e.id}}</td>
                     <td>{{e.nombre}}</td>
+                    <td>{{e.tipo_empresa}}</td>
                     <td>{{e.representante}}</td>
                     <td>{{e.ruc}}</td>
                     <td>{{e.direccion}}</td>

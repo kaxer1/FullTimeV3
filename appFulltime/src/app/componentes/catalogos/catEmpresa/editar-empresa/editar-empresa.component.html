@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="empresaEdit">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Empresa</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Datos Empresa</span>
 </div>
 <form [formGroup]="RegistroEmpresaForm">
     <mat-card-content>
@@ -53,8 +53,7 @@
                         </mat-error>
                         <mat-error *ngIf="direccionF.invalid">Ingresar una dirección válida</mat-error>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label>Correo</mat-label>
                         <input matInput placeholder="Ingresar serie" [formControl]="correoF" required>
@@ -65,6 +64,8 @@
                         <mat-error *ngIf="correoF.invalid">{{ObtenerMensajeErrorCorreoRequerido()}}</mat-error>
                         <mat-error *ngIf="correoF.invalid">Ingresar un correo electrónico válido</mat-error>
                     </mat-form-field>
+                </div>
+                <div class="col">
                     <div class="col-sm" style="text-align: left;">
                         <mat-radio-group aria-label="Select an option" [formControl]="tipoF" required>
                             <label>Tipo de Empresa *</label>
@@ -76,25 +77,46 @@
                                     <div class="col-sm" style="text-align: left;">
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
                                             [ngModelOptions]="{standalone: true}" (click)="CambiarNombrePublica()"
-                                            value="1" id="pub">
+                                            value="Pública">
                                             Pública
                                         </mat-radio-button>
                                         <br>
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
                                             [ngModelOptions]="{standalone: true}" (click)="CambiarNombrePrivada()"
-                                            value="2" id="pri">
+                                            value="Privada">
                                             Privada
                                         </mat-radio-button>
                                         <br>
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec3" [checked]="selec3"
-                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombreOng()" value="3"
-                                            id="ong">ONG
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombreOng()"
+                                            value="ONG">ONG
+                                        </mat-radio-button>
+                                        <br>
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec4" [checked]="selec4"
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombreNatural()"
+                                            value="Persona Natural">Persona Natural
+                                        </mat-radio-button>
+                                        <br>
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec5" [checked]="selec5"
+                                            [ngModelOptions]="{standalone: true}" (click)="CambiarNombreOtro()"
+                                            value="Otro">Otro
                                         </mat-radio-button>
                                     </div>
                                 </div>
                             </div>
                         </mat-radio-group>
                     </div>
+                    <mat-form-field>
+                        <mat-label>Tipo de Empresa</mat-label>
+                        <input matInput placeholder="Ingresar nombre" [formControl]="otroF" style="visibility:hidden"
+                            id="otro">
+                        <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar el nombre del tipo de empresa">
+                            help_outline
+                        </mat-icon>
+                        <mat-error *ngIf="otroF.invalid">Ingresar un nombre válido</mat-error>
+                    </mat-form-field>
+                    <br>
                     <mat-form-field>
                         <mat-label ngDefaultControl [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">{{valor}}
                         </mat-label>
@@ -115,5 +137,5 @@
 <mat-card-actions style="text-align: center">
     <input type="submit" class="btn btn-sm" [disabled]="!RegistroEmpresaForm.valid" value="Guardar"
         (click)="InsertarEmpresa(RegistroEmpresaForm.value)">
-    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroEmpresa()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="Salir()" value="Salir">
 </mat-card-actions>
