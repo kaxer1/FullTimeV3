@@ -1,6 +1,6 @@
 <br>
 <mat-tab-group>
-    
+
     <!-- INFORMACION OFICIAL DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
@@ -22,14 +22,15 @@
                                             <img src="{{urlImagen}}" alt="" id="avatarImagen">
                                         </div>
                                         <div mat-card-avatar id="avatar" *ngIf="mostrarIniciales">
-                                            <span class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
+                                            <span
+                                                class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
                                         </div>
                                     </div>
                                     <div class="col-md d-flex align-items-center justify-content-center">
-                                        <form  method="post" enctype="multipart/form-data">
-                                            <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file" 
-                                            accept="image/png, image/jpeg"> 
-                                            <label for="file" class="btn-2" >{{textoBoton}}</label>
+                                        <form method="post" enctype="multipart/form-data">
+                                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm"
+                                                id="file" accept="image/png, image/jpeg">
+                                            <label for="file" class="btn-2">{{textoBoton}}</label>
                                         </form>
                                     </div>
                                 </div>
@@ -88,48 +89,60 @@
                 <br>
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8">
-                                <mat-grid-list cols="2" rowHeight="3:1">
-                                    <mat-grid-tile>
-                                        <button type="submit" [routerLink]="['/empleado']" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">keyboard_backspace</i><span>Atrás</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('open')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector"> 
-                                            <i class="material-icons">picture_as_pdf</i><span>Abrir PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('download')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">cloud_download</i><span>Descargar PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="generarPdf('print')" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons">print</i><span>Imprimir PDF</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="exportToExcel()" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons fas fa-file-excel"></i><span>Exportar a Excel</span>
-                                        </button> 
-                                    </mat-grid-tile>
-                                    <mat-grid-tile>
-                                        <button (click)="exportToCVS()" class="btn btn-block d-flex align-items-center justify-content-center" id="Selector">
-                                            <i class="material-icons fas fa-file-csv"></i><span>Exportar a CSV</span>
-                                        </button>
-                                    </mat-grid-tile>
-                                </mat-grid-list>
-                    <!-- <div class="form-group">
+                        <mat-grid-list cols="2" rowHeight="3:1">
+                            <mat-grid-tile>
+                                <button type="submit" [routerLink]="['/empleado']"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">keyboard_backspace</i><span>Atrás</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('open')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">picture_as_pdf</i><span>Abrir PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('download')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">cloud_download</i><span>Descargar PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="generarPdf('print')"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons">print</i><span>Imprimir PDF</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="exportToExcel()"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons fas fa-file-excel"></i><span>Exportar a Excel</span>
+                                </button>
+                            </mat-grid-tile>
+                            <mat-grid-tile>
+                                <button (click)="exportToCVS()"
+                                    class="btn btn-block d-flex align-items-center justify-content-center"
+                                    id="Selector">
+                                    <i class="material-icons fas fa-file-csv"></i><span>Exportar a CSV</span>
+                                </button>
+                            </mat-grid-tile>
+                        </mat-grid-list>
+                        <!-- <div class="form-group">
                         <label class="h4 mb-3" for="">Show your picture in Resume</label>
                         <input type="file" class="form-control-file" (change)="fileChanged($event)">
                     </div> -->
-                </mat-card>
+                    </mat-card>
                 </div>
             </div>
         </div>
     </mat-tab>
-  
+
     <!-- DISCAPACIDAD Y TITULO DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
@@ -255,9 +268,6 @@
                     <br>
                     <button type="submit" id="boton" (click)="AbrirVentanaCargo()" class="btn">Cargo Empleado</button>
                     <br>
-                    <button type="submit" id="boton" (click)="AbrirVentanaProcesos()" class="btn">Procesos
-                        Empleado</button>
-                    <br>
                     <button type="submit" id="boton" (click)="AbrirVentanaPlanificacion()" class="btn">Planificación
                         Almuerzos
                     </button>
@@ -286,7 +296,7 @@
                     <button type="submit" id="boton" (click)="AbrirVentanaEmplHorario()" class="btn">Horario Empleado
                     </button>
                     <br>
-                    <button type="submit" id="boton" (click)="AbrirVentanaCatHorario()" class="btn">Detalle Horario 
+                    <button type="submit" id="boton" (click)="AbrirVentanaCatHorario()" class="btn">Detalle Horario
                     </button>
                 </div>
             </div>
@@ -296,10 +306,10 @@
     <!-- CONTRATO DEL EMPLEADO Y CARGO DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">settings</mat-icon>
-          Contrato y Cargo
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Contrato y Cargo
         </ng-template>
-    
+
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
                 <div class="col-md">
@@ -438,10 +448,10 @@
     <!-- PERIODO DE VACACIONES DEL EMPLEADO Y VACACIONES DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">settings</mat-icon>
-          Vacaciones
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Vacaciones
         </ng-template>
-    
+
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
                 <div class="col-md">
@@ -588,10 +598,10 @@
     <!-- PLANIFICACION DE HORARIOS DEL EMPLEADO Y DETALLE PLANIFICACION HORARIO -->
     <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">settings</mat-icon>
-          Horarios
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Horarios
         </ng-template>
-    
+
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
                 <div class="col-md">
@@ -668,16 +678,25 @@
     <!-- PROCESOS DEL EMPLEADO Y PLANIFICACION DE ALMUERZO -->
     <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="example-tab-icon">settings</mat-icon>
-          Procesos y Almuerzo
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Procesos y Almuerzo
         </ng-template>
-    
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8">
                         <div class="barraTitulo">
-                            <h5>Procesos del empleado</h5>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: right;">
+                                        <h5>Procesos del empleado</h5>
+                                    </div>
+                                    <div class="col" style="text-align: right;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaProcesos()">Añadir</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <mat-card-content>
                             <div class="container" *ngFor="let e of empleadoProcesos" style="padding-top: 15px;">
@@ -704,6 +723,13 @@
                                     <div class="col">
                                         <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
                                     </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix matTooltipPosition="right"
+                                        matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
                                 </div>
                                 <mat-divider></mat-divider>
                             </div>

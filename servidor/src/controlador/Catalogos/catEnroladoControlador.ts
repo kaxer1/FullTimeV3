@@ -30,13 +30,15 @@ class EnroladoControlador {
     res.json({ message: 'Se ha añadido correctamente al catálogo enrolados' });
   }
 
-  public async ObtenerIdEnroladoNombre(req: Request, res: Response): Promise<any> {
-    const { nombre } = req.params;
-    const ENROLADOS = await pool.query('SELECT id FROM cg_enrolados WHERE nombre = $1', [nombre]);
-    if (ENROLADOS != null) {
+  public async ObtenerRegistroEnrolado(req: Request, res: Response): Promise<any> {
+    const { id_usuario } = req.params;
+    const ENROLADOS = await pool.query('SELECT id FROM cg_enrolados WHERE id_usuario = $1', [id_usuario]);
+    if (ENROLADOS.rowCount > 0) {
       return res.json(ENROLADOS.rows);
     }
-    res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
+    else {
+      return res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
+    }
   }
 
   public async ObtenerUltimoId(req: Request, res: Response) {
@@ -47,6 +49,12 @@ class EnroladoControlador {
     else {
       return res.status(404).json({ text: 'No se encuentran registros' });
     }
+  }
+
+  public async ActualizarEnrolado(req: Request, res: Response): Promise<void> {
+    const { id_usuario, nombre, contrasenia, activo, finger, data_finger, id } = req.body;
+    await pool.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6 WHERE id = $7', [id_usuario, nombre, contrasenia, activo, finger, data_finger, id]);
+    res.json({ message: 'Usuario Enrolado actualizado exitosamente' });
   }
 
 }

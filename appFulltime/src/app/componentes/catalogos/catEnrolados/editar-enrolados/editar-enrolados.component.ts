@@ -1,20 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 @Component({
-  selector: 'app-registro-enrolados',
-  templateUrl: './registro-enrolados.component.html',
-  styleUrls: ['./registro-enrolados.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  selector: 'app-editar-enrolados',
+  templateUrl: './editar-enrolados.component.html',
+  styleUrls: ['./editar-enrolados.component.css']
 })
 
-export class RegistroEnroladosComponent implements OnInit {
+export class EditarEnroladosComponent implements OnInit {
 
   id_usuario = new FormControl('', Validators.required);
   nombre = new FormControl('', [Validators.required, Validators.pattern('[A-Z a-z0-9]*')]);
@@ -32,6 +31,10 @@ export class RegistroEnroladosComponent implements OnInit {
   hide = true;
   public idUsuario: number;
 
+  // Selección
+  selec1 = false;
+  selec2 = false;
+
   // asignar los campos en un formulario en grupo
   public nuevoEnroladoForm = new FormGroup({
     enroladoId_UsuarioForm: this.id_usuario,
@@ -47,16 +50,36 @@ export class RegistroEnroladosComponent implements OnInit {
     private toastr: ToastrService,
     private restUsuario: UsuarioService,
     private router: Router,
-    public dialogRef: MatDialogRef<RegistroEnroladosComponent>,
+    public dialogRef: MatDialogRef<EditarEnroladosComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
 
   ) { }
 
   ngOnInit(): void {
     this.getUsuarios();
+    this.ImprimirDatos();
+  }
+
+  ImprimirDatos() {
+    this.nuevoEnroladoForm.patchValue({
+      enroladoId_UsuarioForm: parseInt(this.data.datosEnrolado.id_usuario),
+      enroladoNombreForm: this.data.datosEnrolado.nombre,
+      enroladoContraseniaForm: this.data.datosEnrolado.contrasenia,
+      enroladoActivoForm: this.data.datosEnrolado.activo,
+      enroladoFingerForm: this.data.datosEnrolado.finger,
+      enroladoData_FingerForm: this.data.datosEnrolado.data_finger
+    })
+    if (this.data.datosEnrolado.activo === true) {
+      this.selec1 = true;
+    }
+    else {
+      this.selec2 = true;
+    }
   }
 
   insertarEnrolado(form) {
     let dataEnrolado = {
+      id: this.data.datosEnrolado.id,
       id_usuario: form.enroladoId_UsuarioForm,
       nombre: form.enroladoNombreForm,
       contrasenia: form.enroladoContraseniaForm,
@@ -64,27 +87,14 @@ export class RegistroEnroladosComponent implements OnInit {
       finger: form.enroladoFingerForm,
       data_finger: form.enroladoData_FingerForm
     };
-    this.rest.postEnroladosRest(dataEnrolado).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Enrolado con éxito');
-      this.rest.BuscarUltimoId().subscribe(response => {
-        this.idUltimoEnrolado = response;
-        console.log(this.idUltimoEnrolado);
+    this.rest.ActualizarUnEnrolado(dataEnrolado).subscribe(response => {
+      this.toastr.success('Operacion Exitosa', ' Datos de Usuario Enrolado actualizados');
+        console.log(this.data.datosEnrolado.id);
         this.limpiarCampos();
         this.dialogRef.close();
-        this.router.navigate(['/enroladoDispositivo/', this.idUltimoEnrolado[0].max]);
-      }, error => { });
+        this.router.navigate(['/enroladoDispositivo/', this.data.datosEnrolado.id]);
     }, error => {
       console.log(error);
-    });
-  }
-
-  VerificarDuplicidad(form) {
-    this.usuariosEnrolados = [];
-    this.rest.BuscarRegistroUsuario(form.enroladoId_UsuarioForm).subscribe(datos => {
-      this.usuariosEnrolados = datos;
-      this.toastr.info('Se le recuerda que el usuario ya fue enrolado')
-    }, error => {
-      this.insertarEnrolado(form);
     });
   }
 
@@ -132,7 +142,6 @@ export class RegistroEnroladosComponent implements OnInit {
   cerrarVentanaRegistroEnrolado() {
     this.limpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   obtenerMensajeErrorNombre() {

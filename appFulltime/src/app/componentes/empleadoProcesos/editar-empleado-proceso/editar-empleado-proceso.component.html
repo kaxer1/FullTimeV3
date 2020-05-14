@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="procesoE">
-    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Procesos del Empleado</h5>
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Procesos del Empleado</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="EmpleProcesoForm">
@@ -35,7 +35,7 @@
                             min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker" id="cargoE" matTooltipClass="cargoE-tooltip"
                             matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de inicio de período del proceso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Modificar la fecha de inicio de período del proceso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
@@ -46,7 +46,7 @@
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE" matTooltipClass="cargoE-tooltip"
                             matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de finalización de período del proceso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            matTooltip="Modificar la fecha de finalización de período del proceso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
@@ -57,6 +57,6 @@
 </form>
 <div style="text-align: center;">
     <button type="submit" class="btn btn-sm" (click)="ValidarDatosProeso(EmpleProcesoForm.value)"
-        [disabled]="!EmpleProcesoForm.valid"> Guardar </button>
-    <button type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroProceso()"> Salir </button>
+        [disabled]="!EmpleProcesoForm.valid">Guardar</button>
+    <button type="submit" class="btn btn-sm" (click)="Salir()">Salir</button>
 </div>

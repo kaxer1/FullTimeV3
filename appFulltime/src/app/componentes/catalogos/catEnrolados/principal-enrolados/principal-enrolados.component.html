@@ -70,7 +70,7 @@
                 <tr style="text-align: center;">
                     <th scope="col">Id Usuario</th>
                     <th scope="col">Nombre</th>
-                    <th scope="col">Activo</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">Finger</th>
                     <th scope="col">Acción</th>
                 </tr>
@@ -88,14 +88,14 @@
                             (click)="AbrirVentanaAsignarReloj(enrolado)">
                             <p>Dispositivo</p>
                         </i>
-                        <i matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
-                            <p>Editar</p>
-                        </i>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
                             matTooltip="Ver datos generales del empleado enrolado" class="fas fa-eye" id="verEnrolado"
                             [routerLink]="['/enroladoDispositivo/', enrolado.id]">
                             <p>Ver</p>
+                        </i>
+                        <i (click)="AbrirVentanaEditar(enrolado)" matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                            <p>Editar</p>
                         </i>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
                             matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">

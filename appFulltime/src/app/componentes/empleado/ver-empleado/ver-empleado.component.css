@@ -24,7 +24,9 @@
 
 .col-sm { font-weight: bold;}
 
-#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px; width:200px; }mat-divider { background: rgba(131, 131, 131, 0.609);}
+#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px; width:200px; }
+
+mat-divider { background: rgba(131, 131, 131, 0.609);}
 
 .material-icons {margin-right: 8px;}
 
@@ -52,6 +54,10 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 #avatarImagen { border-radius: 100%; height: 100px; width: 100px; }
 
 .iniciales {color: white; font-weight: bold; font-size: 60px; }
+
+#edit { color:green; margin-right: 20px; cursor: pointer;}
+
+p { font-size: x-small; }
 
 [type="file"] {
     height: 0;

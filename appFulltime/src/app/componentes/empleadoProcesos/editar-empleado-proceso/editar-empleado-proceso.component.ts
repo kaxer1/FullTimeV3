@@ -10,17 +10,18 @@ import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProc
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 
 @Component({
-  selector: 'app-registrar-emple-proceso',
-  templateUrl: './registrar-emple-proceso.component.html',
-  styleUrls: ['./registrar-emple-proceso.component.css'],
+  selector: 'app-editar-empleado-proceso',
+  templateUrl: './editar-empleado-proceso.component.html',
+  styleUrls: ['./editar-empleado-proceso.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  ] 
 })
-export class RegistrarEmpleProcesoComponent implements OnInit {
+
+export class EditarEmpleadoProcesoComponent implements OnInit {
 
   empleados: any = [];
   procesos: any = [];
@@ -42,13 +43,14 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
     private restP: EmpleadoProcesosService,
     private restPro: ProcesoService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<RegistrarEmpleProcesoComponent>,
-    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
+    public dialogRef: MatDialogRef<EditarEmpleadoProcesoComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
+    this.ObtenerEmpleados(this.data.idEmpleado);
     this.ObtenerProcesos();
+    this.ImprimirDatos();
   }
 
   // metodo para ver la informacion del empleado 
@@ -70,6 +72,14 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
     });
   }
 
+  ImprimirDatos(){
+    this.EmpleProcesoForm.patchValue({
+      fecInicioForm: this.data.datosProcesos.fec_inicio,
+      fecFinalForm: this.data.datosProcesos.fec_final,
+      idProcesoForm: this.data.datosProcesos.id
+    })
+  }
+
   ValidarDatosProeso(form) {
     if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm)) {
       this.InsertarProceso(form);
@@ -81,13 +91,15 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
 
   InsertarProceso(form) {
     let datosProceso = {
-      id_empl_cargo: this.datoEmpleado.idCargo,
+      id_p: this.data.datosProcesos.id_p,
+      id_empl_cargo: this.data.idCargo,
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
       id: form.idProcesoForm
     };
-    this.restP.RegistrarEmpleProcesos(datosProceso).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Período de Procesos del Empleado registrados')
+    console.log("datos cambiados", datosProceso);
+    this.restP.ActualizarUnProceso(datosProceso).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Proceso del Empleado actualizado')
       this.CerrarVentanaRegistroProceso();
     }, error => {
       this.toastr.error('Operación Fallida', 'Registro Inválido')
@@ -102,6 +114,11 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
     this.LimpiarCampos();
     this.dialogRef.close();
     window.location.reload();
+  }
+
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
   }
 
 }
