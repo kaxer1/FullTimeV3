@@ -14,9 +14,15 @@ class EmpresaControlador {
     }
 
     public async CrearEmpresa(req: Request, res: Response): Promise<void> {
-        const { nombre, ruc, direccion, telefono, correo } = req.body;
-        await pool.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo ) VALUES ($1, $2, $3, $4, $5)', [nombre, ruc, direccion, telefono, correo]);
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante } = req.body;
+        await pool.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante  ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante]);
         res.json({ message: 'La Empresa se registró con éxito' });
+    }
+
+    public async ActualizarEmpresa(req: Request, res: Response): Promise<void> {
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5 tipo_empresa = $6, representante = $7 WHERE id = $8', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id]);
+        res.json({ message: 'Empresa actualizada exitosamente' });
     }
 
 }

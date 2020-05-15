@@ -21,10 +21,13 @@ class EmpleadoRutas {
         this.router.get('/', this.verifyToken, EMPLEADO_CONTROLADOR.list);
         this.router.get('/:id', this.verifyToken, EMPLEADO_CONTROLADOR.getOne);
         this.router.get('/img/:imagen', EMPLEADO_CONTROLADOR.getImagen);
-        this.router.post('/', this.verifyToken, EMPLEADO_CONTROLADOR.create);
-        this.router.put('/:id_empleado/uploadImage', [this.verifyToken, multipartMiddleware], EMPLEADO_CONTROLADOR.crearImagenEmpleado);
         this.router.get('/emplTitulos/:id_empleado', this.verifyToken, EMPLEADO_CONTROLADOR.getTitulosDelEmpleado);
+        this.router.put('/:id/usuario', this.verifyToken, EMPLEADO_CONTROLADOR.editar);
+        this.router.put('/:id_empleado/uploadImage', [this.verifyToken, multipartMiddleware], EMPLEADO_CONTROLADOR.crearImagenEmpleado);
+        this.router.put('/:id_empleado_titulo/titulo', this.verifyToken, EMPLEADO_CONTROLADOR.editarTituloDelEmpleado);
+        this.router.post('/', this.verifyToken, EMPLEADO_CONTROLADOR.create);
         this.router.post('/emplTitulos/', this.verifyToken, EMPLEADO_CONTROLADOR.createEmpleadoTitulos);
+        this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, EMPLEADO_CONTROLADOR.eliminarTituloDelEmpleado);
     }
 
     verifyToken(req: Request, res: Response, next: NextFunction) {

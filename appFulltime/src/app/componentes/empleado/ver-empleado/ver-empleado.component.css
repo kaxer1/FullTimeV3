@@ -1,27 +1,69 @@
-.barraTitulo { text-align: center; background: rgb(17, 157, 182); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px; }
-.barraTitulo1 { text-align: center; background: rgb(81, 19, 182); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px; }
-.barraTitulo2 { text-align: center; background: rgb(19, 117, 182); color: white; border-radius: 25px; padding-top: 14px; padding-bottom: 6px; }
+.barraTitulo { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
+.barraTitulo1 { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
+.barraTitulo2 { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
 .col-sm { font-weight: bold;}
-#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px; width:200px; }
+
+#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
+
 mat-divider { background: rgba(131, 131, 131, 0.609);}
-#derecha { float: right; }
-#navegacion { margin-right: 15px; }
-#planCom { margin-right: 15px; background: rgb(240, 5, 122); border-radius: 30px; color: white }
-#cargo { margin-right: 15px; background: rgb(4, 156, 136); border-radius: 30px; color: white }
+
 .material-icons {margin-right: 8px;}
+
 #boton:hover { background-color: rgba(75, 75, 75, 0.609);}
+
+#botonActualizar { margin-left: 15px; background-color: rgb(80,87,97); color: white;}
+
+a {color: white;}
+
+p { font-size: x-small; }
+
+.fas { color:white; cursor: pointer;}
+
+.far { color:white; cursor: pointer;}
+
 mat-tab-group {
     background: rgb(232,232,232);
     background: radial-gradient(circle, rgba(232,232,232,0.8883928571428571) 0%, rgba(249,249,249,1) 100%);
 }
-#Selector {color: white; padding: 7% 25%;}
-mat-grid-tile {background-color: rgb(80,87,97);}
-mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609);}
 
-#avatar { border-radius: 100%; height: 100px; width: 100px; background-color: rgb(126, 126, 126); margin-bottom: 10px;}
-#avatarImagen { border-radius: 100%; height: 100px; width: 100px;}
-.iniciales {color: white; font-weight: bold; font-size: 60px;}
+#Selector {color: white; padding: 7% 25%; }
 
+mat-grid-tile {background-color: rgb(80,87,97); }
+
+mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
+
+#avatar { 
+    border-radius: 100%; 
+    height: 100px; 
+    width: 100px; 
+    background-color: rgb(126, 126, 126); 
+    margin-bottom: 10px;
+}
+
+#avatarImagen { border-radius: 100%; height: 100px; width: 100px; }
+
+.iniciales {color: white; font-weight: bold; font-size: 60px; }
 
 [type="file"] {
     height: 0;

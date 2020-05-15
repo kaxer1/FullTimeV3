@@ -23,4 +23,8 @@ export class EmpresaService {
     return this.http.post(`${this.API_URL}/empresas`, datos);
   }
 
+  ActualizarEmpresa(datos: any) {
+    return this.http.put(`${this.API_URL}/empresas`, datos);
+  }
+
 }

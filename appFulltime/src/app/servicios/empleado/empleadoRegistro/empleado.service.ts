@@ -22,6 +22,10 @@ export class EmpleadoService {
   postEmpleadoRest(data: any){
     return this.http.post(`${this.API_URI}/empleado`, data);
   }
+  
+  putEmpleadoRest(data: any, id: number){
+    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data);
+  }
 
   // Servicio para insertar el empleado con sus respectivos titulos
   postEmpleadoTitulos(data: any){
@@ -30,6 +34,14 @@ export class EmpleadoService {
 
   getEmpleadoTituloRest(id: number){
     return this.http.get(`${this.API_URI}/empleado/emplTitulos/${id}`);
+  }
+
+  putEmpleadoTituloRest(id: number, data: any){
+    return this.http.put(`${this.API_URI}/empleado/${id}/titulo`, data);
+  }
+
+  deleteEmpleadoTituloRest(id: number){
+    return this.http.delete(`${this.API_URI}/empleado/eliminar/titulo/${id}`);
   }
 
   // Servicio para insertar contrato del empleado
@@ -54,12 +66,13 @@ export class EmpleadoService {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)
   }
 
+  // servicios para subir las imagenes
   subirImagen(formData, idEmpleado: number) {
     return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)  
   }
 
-  obtenerImagen(imagen: string){
-    return this.http.get<any>(`${this.API_URI}/empleado/img/${imagen}`)
-  }
+  // obtenerImagen(imagen: string){
+  //   return this.http.get<any>(`${this.API_URI}/empleado/img/${imagen}`)
+  // }
 
 }

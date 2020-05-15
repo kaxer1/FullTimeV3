@@ -24,10 +24,16 @@ class DiscapacidadControlador {
   }
 
   public async update(req: Request, res: Response): Promise<void> {
-    const { id_empleado} = req.params;
+    const id_empleado = req.params.id_empleado;
     const { carn_conadis, porcentaje, tipo } = req.body;
     await pool.query('UPDATE cg_discapacidades SET carn_conadis = $1, porcentaje = $2, tipo = $3 WHERE id_empleado = $4', [carn_conadis, porcentaje, tipo, id_empleado]);
     res.json({ message: 'Discapacidad actualizada exitosamente' });
+  }
+
+  public async deleteDiscapacidad(req: Request, res: Response): Promise<void> {
+    const id_empleado = req.params.id_empleado;
+    await pool.query('DELETE FROM cg_discapacidades WHERE id = $1', [id_empleado]);
+    res.json({ message: 'Registro eliminado' });
   }
 
 }

@@ -11,6 +11,7 @@ class DepartamentoRutas {
     configuracion(): void {
         this.router.get('/', EMPRESA_CONTROLADOR.ListarEmpresa);
         this.router.post('/', EMPRESA_CONTROLADOR.CrearEmpresa);
+        this.router.put('/', EMPRESA_CONTROLADOR.ActualizarEmpresa);
     }
 }
 

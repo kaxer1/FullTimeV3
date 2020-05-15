@@ -33,7 +33,8 @@
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaNivelTitulo()">Crear Nivel de Título
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaNivelTitulo()">Crear Nivel
+                        de Título
                         Profesional
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
@@ -59,13 +60,13 @@
                     *ngFor="let t of nivelTitulos | filtrosNombres: filtradoNombre |  paginate:tamanio_pagina:numero_pagina">
                     <td>{{t.nombre}}</td>
                     <td>
+                        <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                            matTooltip="Editar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                         <i class="far fa-trash-alt" matSuffix matTooltipClass="tituloL-tooltip"
                             matTooltipPosition="right" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

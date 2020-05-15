@@ -14,7 +14,7 @@
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
-                                    <mat-label>Ingresa tu contraseña</mat-label>
+                                    <mat-label>Ingresa tu Contraseña</mat-label>
                                     <input matInput [type]="hide ? 'password' : 'text'" [formControl]="pass" required>
                                     <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                                         [attr.aria-pressed]="hide">
@@ -24,7 +24,7 @@
                                 </mat-form-field>
                             </form>
                             <div class="caja1">
-                                <a href="#" class="verde">Olvidó su contraseña?</a>
+                                <a [routerLink]="['/olvidar-contrasenia']" class="verde">Olvidó su contraseña?</a>
                             </div>
                             <div style="margin: auto;">
                                 <button type="submit" class="btn btn-lg btn-block" (click)="ValidarUsuario(validarCredencialesF.value)"
@@ -41,3 +41,4 @@
         </div>
     </div>
 </header>
+<app-footer></app-footer>

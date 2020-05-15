@@ -13,7 +13,7 @@ class TipoComidasRuta {
         this.router.get('/', TIPO_COMIDAS_CONTROLADOR.ListarTipoComidas);
         this.router.get('/:id', TIPO_COMIDAS_CONTROLADOR.ListarUnTipoComida);
         this.router.post('/', TIPO_COMIDAS_CONTROLADOR.CrearTipoComidas);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.put('/', TIPO_COMIDAS_CONTROLADOR.ActualizarComida);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

@@ -8,7 +8,7 @@ import ROLES_RUTAS from './rutas/catalogos/catRolesRutas';
 import EMPLEADO_RUTAS from './rutas/empleado/empleadoRegistro/empleadoRutas';
 import LOGIN_RUTA from './rutas/login/loginRuta';
 import DISCAPACIDAD_RUTAS from './rutas/empleado/empleadoDiscapacidad/discapacidadRutas';
-import TITULO_RUTA from './rutas/catalogos/catTituloRutas';
+import TITULO_RUTAS from './rutas/catalogos/catTituloRutas';
 import REGIMEN_RUTA from './rutas/catalogos/catRegimenRuta';
 import FERIADOS_RUTA from './rutas/catalogos/catFeriadosRuta';
 import TIPO_COMIDAS_RUTA from './rutas/catalogos/catTipoComidasRuta';
@@ -61,7 +61,7 @@ class Server {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(express.raw({ type: 'image/*', limit:'1mb' }));
+        this.app.use(express.raw({ type: 'image/*', limit:'1Mb' }));
     }
 
     rutas(): void {
@@ -98,7 +98,7 @@ class Server {
         this.app.use('/enroladosRelojes', ENROLADO_RELOJ_RUTAS);
 
         //Redireccionamiento a páginas que contienen catálogos
-        this.app.use('/titulo', TITULO_RUTA);
+        this.app.use('/titulo', TITULO_RUTAS);
         this.app.use('/discapacidad', DISCAPACIDAD_RUTAS);
         this.app.use('/empresas', EMPRESA_RUTAS);
         this.app.use('/regimenLaboral', REGIMEN_RUTA);

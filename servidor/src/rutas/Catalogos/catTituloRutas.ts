@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import tituloControlador from '../../controlador/catalogos/catTituloControlador';
+import TITULO_CONTROLADOR from '../../controlador/catalogos/catTituloControlador';
 
 
 class TituloRutas {
@@ -11,12 +11,13 @@ class TituloRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', tituloControlador.list);
-        this.router.get('/:id', tituloControlador.getOne);
-        this.router.post('/', tituloControlador.create);
+        this.router.get('/', TITULO_CONTROLADOR.list);
+        this.router.get('/:id', TITULO_CONTROLADOR.getOne);
+        this.router.post('/', TITULO_CONTROLADOR.create);
+        this.router.put('/', TITULO_CONTROLADOR.ActualizarTitulo);
     }
 }
 
-const tituloRutas = new TituloRutas();
+const TITULO_RUTAS = new TituloRutas();
 
-export default tituloRutas.router;
+export default TITULO_RUTAS.router;

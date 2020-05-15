@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 
 import { RegistrarNivelTitulosComponent } from 'src/app/componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component'
+import { EditarNivelTituloComponent } from 'src/app/componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component'
+
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
 
@@ -32,7 +34,7 @@ export class ListarNivelTitulosComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
-    public vistaRegistrarNivelTitulo: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     public restNivelTitulos: NivelTitulosService,
     private toastr: ToastrService,
   ) { }
@@ -54,7 +56,7 @@ export class ListarNivelTitulosComponent implements OnInit {
   }
 
   AbrirVentanaNivelTitulo(): void {
-    this.vistaRegistrarNivelTitulo.open(RegistrarNivelTitulosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarNivelTitulosComponent, { width: '400px' }).disableClose = true;
   }
 
   LimpiarCampos() {
@@ -88,6 +90,12 @@ export class ListarNivelTitulosComponent implements OnInit {
       this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
       return false;
     }
+  }
+
+  AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarNivelTituloComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 
 }

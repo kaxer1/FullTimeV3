@@ -1,0 +1,45 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloComidaR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar nuevo tipo de Comida</span>
+</div>
+<br>
+<!-- Formulario Completo -->
+<form [formGroup]="TipoComidaForm">
+    <mat-card-content>
+        <div class="container" style="text-align: center">
+            <mat-form-field>
+                <mat-label>Tipo de Comida</mat-label>
+                <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
+                <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar nombre del platillo de comida">
+                    help_outline</mat-icon>
+                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
+                <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Valor</mat-label>
+                <input matInput placeholder="Ingresar valor del plato" [formControl]="valorF"
+                    (keypress)="IngresarNumeroDecimal($event)" required>
+                <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar el costo de este platillo">
+                    help_outline</mat-icon>
+                <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}</mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Ingresar una observación" [formControl]="observacionF">
+                <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar la observación de este platillo">
+                    help_outline</mat-icon>
+                <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
+            </mat-form-field>
+        </div>
+    </mat-card-content>
+</form>
+<mat-card-actions style="text-align: center">
+    <input type="submit" class="btn btn-sm" [disabled]="!TipoComidaForm.valid"
+        (click)="InsertarTipoComida(TipoComidaForm.value)" value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTipoComidas()" value="Salir">
+</mat-card-actions>

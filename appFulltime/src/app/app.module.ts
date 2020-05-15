@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
@@ -65,8 +66,21 @@ import { RegistroPlanHorarioComponent } from './componentes/planHorarios/registr
 import { RegistroDetallePlanHorarioComponent } from './componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
+import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
+import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { RegistoEmpleadoHorarioComponent } from './componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
+import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
+import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
+import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
+import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/editar-titulos/editar-titulos.component';
+import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component';
+import { EditarTipoComidasComponent } from './componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
+import { EditarEmpleadoComponent } from './componentes/empleado/EditarEmpleado/editar-empleado/editar-empleado.component';
+import { EditarTituloComponent } from './componentes/empleado/EditarTituloEmpleado/editar-titulo/editar-titulo.component';
+import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
+import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -153,13 +167,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS} from '@angular/material/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { NgxEchartsModule } from 'ngx-echarts';
-import { RegistroAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
-import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
-import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
-import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
+
+
 
 @NgModule({
   declarations: [
@@ -254,8 +264,17 @@ import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaci
     FiltrarRucPipe,
     RegistroAutorizacionDepaComponent,
     RegistroEmpleadoPermisoComponent,
+    RegistoEmpleadoHorarioComponent,
+    DetalleCatHorarioComponent,
     NotiAutorizacionesComponent,
     AutorizacionesComponent,
+    EditarTitulosComponent,
+    EditarNivelTituloComponent,
+    EditarTipoComidasComponent,
+    EditarEmpleadoComponent,
+    EditarTituloComponent,
+    OlvidarContraseniaComponent,
+    ConfirmarContraseniaComponent
   ],
 
   imports: [
@@ -301,6 +320,7 @@ import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaci
     MatDatepickerModule, 
     MatNativeDateModule,
     MatTabsModule
+
   ],
   providers: [
     AuthGuard,
@@ -332,7 +352,7 @@ import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaci
 
   exports: [
     MatButtonModule, MatDialogModule, DragDropModule,
-    MatDatepickerModule, MatNativeDateModule 
+    MatDatepickerModule, MatNativeDateModule
   ],
 
 })

@@ -40,6 +40,8 @@ import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAuto
 
 import { AuthGuard } from "./guards/auth.guard";
 import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
+import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
+import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -81,6 +83,8 @@ const routes: Routes = [
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard]},
   { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard]},
   { path: 'autorizaciones', component: AutorizacionesComponent, canActivate: [AuthGuard]},
+  { path: 'olvidar-contrasenia', component: OlvidarContraseniaComponent},
+  { path: 'confirmar-contrasenia/:token', component: ConfirmarContraseniaComponent},
 
 ];
 

@@ -14,7 +14,6 @@ export class DiscapacidadService {
 
   // Catalogo de discapacidad
   postDiscapacidadRest(data: any){
-    // console.log(data);
     return this.http.post(`${this.Discapacidad_URL}/discapacidad`, data);
   }
 
@@ -25,4 +24,9 @@ export class DiscapacidadService {
   putDiscapacidadUsuarioRest(id: number, data: any){
     return this.http.put(`${this.Discapacidad_URL}/discapacidad/${id}`, data);
   }
+
+  deleteDiscapacidadUsuarioRest(id: number){
+    return this.http.delete(`${this.Discapacidad_URL}/discapacidad/eliminar/${id}`);
+  }
+
 }

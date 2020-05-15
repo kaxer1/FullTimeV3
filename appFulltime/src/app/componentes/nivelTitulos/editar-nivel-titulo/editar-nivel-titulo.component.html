@@ -1,0 +1,23 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Nivel de Título Profesional</span>
+</div>
+<form [formGroup]="nuevoNivelTituloForm">
+    <div class="container" style="text-align: center;">
+        <mat-form-field>
+            <mat-label>Nuevo Nivel de Título</mat-label>
+            <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"
+                (keypress)="IngresarSoloLetras($event)" required>
+            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                matTooltip="Ingresar nombre del nievel de un título profesional">
+                help_outline</mat-icon>
+            <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+        </mat-form-field>
+    </div>
+</form>
+<br>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-sm" (click)="InsertarNivelTitulo(nuevoNivelTituloForm.value)"
+        [disabled]="!nuevoNivelTituloForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
+</div>

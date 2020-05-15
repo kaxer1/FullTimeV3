@@ -13,7 +13,16 @@ class NivelTituloControlador {
     if (unNivelTitulo.rowCount > 0) {
       return res.json(unNivelTitulo.rows)
     }
-    res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+    res.status(404).json({ text: 'Registro no encontrado' });
+  }
+
+  public async ObtenerNivelNombre(req: Request, res: Response): Promise<any> {
+    const { nombre } = req.params;
+    const unNivelTitulo = await pool.query('SELECT * FROM nivel_titulo WHERE nombre = $1', [nombre]);
+    if (unNivelTitulo.rowCount > 0) {
+      return res.json(unNivelTitulo.rows)
+    }
+    res.status(404).json({ text: 'Registro no encontrado' });
   }
 
   public async create(req: Request, res: Response): Promise<void> {
@@ -22,8 +31,14 @@ class NivelTituloControlador {
     res.json({ message: 'Nivel del Titulo guardado' });
   }
 
+  public async ActualizarNivelTitulo(req: Request, res: Response): Promise<void> {
+    const { nombre, id } = req.body;
+    await pool.query('UPDATE nivel_titulo SET nombre = $1 WHERE id = $2', [nombre, id]);
+    res.json({ message: 'Nivel de Título actualizado exitosamente' });
+  }
+
 }
 
-export const nivelTituloControlador = new NivelTituloControlador();
+export const NIVEL_TITULO_CONTROLADOR = new NivelTituloControlador();
 
-export default nivelTituloControlador;
+export default NIVEL_TITULO_CONTROLADOR;

@@ -60,7 +60,7 @@ class Server {
         this.app.use(cors_1.default());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
-        this.app.use(express_1.default.raw({ type: 'image/*', limit: '1mb' }));
+        this.app.use(express_1.default.raw({ type: 'image/*', limit: '1Mb' }));
     }
     rutas() {
         this.app.use('/', indexRutas_1.default);

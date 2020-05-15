@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl } from '@angular/forms';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -30,7 +31,8 @@ import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/r
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
-import { FormControl } from '@angular/forms';
+import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
+import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -69,6 +71,9 @@ export class VerEmpleadoComponent implements OnInit {
   idPerVacacion: any = [];
   idPlanHorario: any = [];
 
+  ruta: string;
+  rutaTitulo: string;
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -76,26 +81,20 @@ export class VerEmpleadoComponent implements OnInit {
     public restCargo: EmplCargosService,
     public restPerV: PeriodoVacacionesService,
     public restPlanH: PlanHorarioService,
+    public vistaRegistrarDatos: MatDialog,
     public restVacaciones: VacacionesService,
     public restPlanHoraDetalle: DetallePlanHorarioService,
     public restEmpleadoProcesos: EmpleadoProcesosService,
     public restPlanComidas: PlanComidasService,
-    public vistaRegistrarContrato: MatDialog,
-    public vistaRegistrarPlanificacion: MatDialog,
-    public vistaRegistrarCargoEmpeado: MatDialog,
-    public vistaRegistrarPerVacaciones: MatDialog,
-    public vistaRegistrarEmpleProcesos: MatDialog,
-    public vistaRegistrarVacaciones: MatDialog,
-    public vistaRegistroPlanHorario: MatDialog,
-    public vistaRegistroDetallePlanHorario: MatDialog,
-    public vistaRegistrarDatos: MatDialog,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService
   ) {
-    var cadena = this.router.url;
+    var cadena = this.router.url.split('#')[0];
+    this.ruta = 'http://localhost:4200' + cadena + '#editar';
+    this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
     this.idEmpleado = cadena.split("/")[2];
-    this.obtenerTituloEmpleado(this.idEmpleado);
+    this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
     this.scriptService.load('pdfMake', 'vfsFonts');
   }
@@ -106,6 +105,15 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
+  btnActualizar: boolean = true;
+  verRegistroEdicion(value: boolean) {
+    this.btnActualizar = value;
+  }
+  
+  btnActualizarTitulo: boolean = true;
+  verTituloEdicion(value: boolean) {
+    this.btnActualizarTitulo = value;
+  }
   // onUploadFinish(event) {
   //   console.log(event);
   // }
@@ -117,9 +125,9 @@ export class VerEmpleadoComponent implements OnInit {
   mostrarIniciales: boolean = false;
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
+    this.empleadoUno = [];
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
-      console.log(this.empleadoUno);
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if ( data[0]['imagen'] != null){
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
@@ -132,22 +140,25 @@ export class VerEmpleadoComponent implements OnInit {
         this.mostrarImagen = false;
         this.textoBoton = 'Subir Foto';
       }
-      this.restEmpleado.obtenerImagen(data[0]['imagen']).subscribe(res => {
-        console.log(res);
-      })
     })
+  }
+
+  idSelect: number;
+  ObtenerIdTituloSeleccionado(idTituloEmpleado: number){
+    this.idSelect = idTituloEmpleado;
   }
 
   // Método para obtener a los empleados que tengan alguna discapacidad asignada
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
+    this.discapacidadUser = [];
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
       this.discapacidadUser = data;
       this.habilitarBtn();
-    }, error => { });
+    }, error => { console.log("no registro") });
   }
 
   // Método para obtener los titulos de un empleado a traves de la tabla EMPL_TITULOS que conecta a la tabla EMPLEADOS con CG_TITULOS 
-  obtenerTituloEmpleado(idEmployTitu: any) {
+  obtenerTituloEmpleado(idEmployTitu: number) {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
       this.relacionTituloEmpleado = data;
@@ -233,6 +244,21 @@ export class VerEmpleadoComponent implements OnInit {
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
     })
+  }
+
+  // Eliminar registro de discapacidad
+  eliminarDiscapacidad(id_discapacidad: number){
+    this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
+      this.obtenerDiscapacidadEmpleado(this.idEmpleado);
+    })
+  };
+
+  eliminarTituloEmpleado(id: number){
+    this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
+      this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
+    });
   }
 
   // El Método controla que solo se habilite el botón si no existe un registro de discapacidad, 
@@ -369,6 +395,20 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
+  }
+
+  AbrirVentanaEmplHorario(): void {
+    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].id)
+      this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent, { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+  }
+
+  AbrirVentanaCatHorario(): void {
+      this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { ventana: true } }).disableClose = true;
   }
 
   /* 

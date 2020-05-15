@@ -13,6 +13,7 @@ class DepartamentoRutas {
     configuracion() {
         this.router.get('/', catEmpresaControlador_1.default.ListarEmpresa);
         this.router.post('/', catEmpresaControlador_1.default.CrearEmpresa);
+        this.router.put('/', catEmpresaControlador_1.default.ActualizarEmpresa);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

@@ -1,17 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 
-
 @Component({
   selector: 'app-tipo-comidas',
   templateUrl: './tipo-comidas.component.html',
   styleUrls: ['./tipo-comidas.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
+
 export class TipoComidasComponent implements OnInit {
 
   // Control de campos y validaciones del formulario

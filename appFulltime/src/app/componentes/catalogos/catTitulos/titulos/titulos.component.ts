@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -10,7 +10,6 @@ import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulo
   selector: 'app-titulos',
   templateUrl: './titulos.component.html',
   styleUrls: ['./titulos.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 export class TitulosComponent implements OnInit {
 

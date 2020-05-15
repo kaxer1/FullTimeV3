@@ -1,0 +1,98 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="detalleHorario">
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Detalle Horarios</h5>
+</div>
+<!-- Formulario Completo -->
+<form [formGroup]="DetalleHorarioForm">
+    <mat-card-content>
+        <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="row">
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Seleccionar Horario</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de horarios cargados en el sistema">
+                            help_outline</mat-icon>
+                        <mat-select [formControl]="horarioF" required>
+                            <mat-option *ngFor="let h of horarios" [value]="h.id">
+                                {{h.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Orden</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar el orden del horario">
+                            help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="ordenF" required>
+                            <mat-option value=1>1</mat-option>
+                            <mat-option value=2>2</mat-option>
+                            <mat-option value=3>3</mat-option>
+                            <mat-option value=4>4</mat-option>
+                            <mat-option value=5>5</mat-option>
+                            <mat-option value=6>6</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Tipo de Acción</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la acción del orden de horario">
+                            help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="accionF" required>
+                            <mat-option value=1>E</mat-option>
+                            <mat-option value=2>S</mat-option>
+                            <mat-option value=3>S/A</mat-option>
+                            <mat-option value=4>E/A</mat-option>
+                            <mat-option value=5>S/P</mat-option>
+                            <mat-option value=6>E/P</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm">
+                    <mat-form-field>
+                        <mat-label>Hora</mat-label>
+                        <input type="time" matInput placeholder="Ej: 60" [formControl]="horaF"
+                            (keypress)="IngresarSoloNumeros($event)" required>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar la hora de referencia">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Minutos de espera</mat-label>
+                        <input type="time" matInput placeholder="Ej: 60" [formControl]="minEsperaF"
+                            (keypress)="IngresarSoloNumeros($event)">
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar los minutos de espera para ingresar">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <div class="container" style="text-align: left;">
+                        <mat-label>Tipo de horario</mat-label>
+                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar si el horario es Nocturno">
+                            help_outline</mat-icon>
+                        <div class="container" style="text-align: center;">
+                            <div class="row">
+                                <div class="col-sm" style="text-align: left;">
+                                    <br>
+                                    <mat-checkbox [formControl]="tipoF" [(ngModel)]="nocturno">Nocturno</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<div style="text-align: center;">
+    <button type="submit" class="btn btn-sm" (click)="InsertarDetalleHorario(DetalleHorarioForm.value)"
+        [disabled]="!DetalleHorarioForm.valid">Guardar</button>
+    <button type="submit" class="btn btn-sm" (click)="CerrarVentanaDetalleHorario()">Salir</button>
+</div>

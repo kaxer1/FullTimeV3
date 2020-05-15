@@ -4,9 +4,9 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; } 
 
-.fas { color:green; margin-left: 20px; cursor: pointer; }
+.fas { color:green; cursor: pointer; }
 
-.far { color:red; cursor: pointer;}
+.far { color:red; cursor: pointer; margin-left: 20px;}
 
 /*.tituloL-tooltip { background: #4622aa; }*/
 

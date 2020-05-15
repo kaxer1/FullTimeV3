@@ -1,0 +1,35 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloR">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Título Profesional</span>
+</div>
+<form [formGroup]="nuevoTituloForm">
+    <div class="container" style="text-align: center;">
+        <mat-form-field>
+            <mat-label>Nuevo Título</mat-label>
+            <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"
+                (keypress)="IngresarSoloLetras($event)" required>
+            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                matTooltip="Modificar nombre del título profesional">
+                help_outline</mat-icon>
+            <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Seleccionar Nivel</mat-label>
+            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                matTooltip="Seleccionar el tipo de nivel que tiene el título profesional">
+                help_outline</mat-icon>
+            <mat-select [formControl]="nivelF" [(ngModel)]="selectNivel" required>
+                <mat-option *ngFor="let n of niveles" [value]="n.id">
+                    {{n.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>
+<br>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-sm" (click)="InsertarTitulo(nuevoTituloForm.value)"
+        [disabled]="!nuevoTituloForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
+</div>
