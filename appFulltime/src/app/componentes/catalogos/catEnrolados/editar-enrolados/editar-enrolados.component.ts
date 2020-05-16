@@ -92,7 +92,11 @@ export class EditarEnroladosComponent implements OnInit {
         console.log(this.data.datosEnrolado.id);
         this.limpiarCampos();
         this.dialogRef.close();
-        this.router.navigate(['/enroladoDispositivo/', this.data.datosEnrolado.id]);
+        if(this.data.actualizar === true){
+          window.location.reload();
+        } else {
+          this.router.navigate(['/enroladoDispositivo/', this.data.datosEnrolado.id]);
+        }
     }, error => {
       console.log(error);
     });

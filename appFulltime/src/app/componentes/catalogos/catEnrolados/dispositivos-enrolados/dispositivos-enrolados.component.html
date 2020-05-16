@@ -37,6 +37,12 @@
                         <label id="datosF" class="col-sm col-form-label">{{dE.finger}}</label>
                     </div>
                 </div>
+                <div style="text-align: right;">
+                    <i (click)="AbrirVentanaEditar(dE)" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        matTooltip="Modificar dispositivo en el que esta enrolado el usuario" class="fas fa-edit">
+                        <p>Editar</p>
+                    </i>
+                </div>
             </div>
         </mat-card-content>
     </mat-card>

@@ -101,6 +101,10 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
+  variable(){
+    var prueba = 'Jenny'
+  }
+
   // onUploadFinish(event) {
   //   console.log(event);
   // }
