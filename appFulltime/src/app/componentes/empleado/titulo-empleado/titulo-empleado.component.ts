@@ -52,7 +52,7 @@ export class TituloEmpleadoComponent implements OnInit {
     this.restEmpleado.postEmpleadoTitulos(dataTituloEmpleado).subscribe(data => {
       this.toastr.success('Operacion Exitosa', 'Titulo asignado al empleado');
       this.limpiarCampos();
-      this.metodo.obtenerTituloEmpleado(this.idEmploy);
+      this.metodo.obtenerTituloEmpleado(parseInt(this.idEmploy));
     });
   }
 

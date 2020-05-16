@@ -10,6 +10,8 @@ class LoginRuta {
 
     configuracion(): void {
         this.router.post('/', LOGIN_CONTROLADOR.ValidarCredenciales);
+        this.router.post('/recuperar-contrasenia/', LOGIN_CONTROLADOR.RestablecerContrasenia);
+        this.router.post('/cambiar-contrasenia/', LOGIN_CONTROLADOR.CambiarContrasenia);
     }
 
 }
