@@ -37,7 +37,7 @@
     "echarts": "^4.7.0",
     "echarts-gl": "^1.1.1",
     "file-saver": "^2.0.2",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.1",
     "ng-material-multilevel-menu": "^4.11.3",
     "ng2-charts": "^2.3.0",
     "ngx-echarts": "^4.2.2",
