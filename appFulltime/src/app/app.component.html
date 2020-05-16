@@ -1,7 +1,10 @@
+<app-login *ngIf="!removerLogin()"></app-login>
+<app-confirmar-contrasenia *ngIf="!removerConfirmet()"></app-confirmar-contrasenia>
+<app-olvidar-contrasenia *ngIf="!removerForget()"></app-olvidar-contrasenia>
+<app-main-nav *ngIf="!removerMain()"></app-main-nav>
+<!-- <app-main-nav *ngIf="loginServices.loggedIn()"></app-main-nav> -->
 
-<app-login *ngIf="removerLogin()"></app-login>
-<app-main-nav *ngIf="removerMenu()"></app-main-nav>
-<app-footer *ngIf="removerLogin()"></app-footer>
+
 
 
     

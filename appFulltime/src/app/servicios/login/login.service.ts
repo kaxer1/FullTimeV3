@@ -32,4 +32,12 @@ export class LoginService {
     localStorage.removeItem('empleado');
     this.router.navigate(['/']);
   }
+
+  forgetPassword(data: any){
+    return this.http.post(`${this.API_URI}/login/recuperar-contrasenia/`, data)
+  }
+
+  changePassword(data: any){
+    return this.http.post(`${this.API_URI}/login/cambiar-contrasenia`, data)
+  }
 }

@@ -67,14 +67,12 @@ export class NotiAutorizacionesComponent implements OnInit {
 
   obtenerCargo(){
     this.restCargoEmpleado.getEmpleadoCargosRest().subscribe(res => {
-      console.log(res);
       this.cargo = res;
     });
   }
 
   obtenerNotificacion(){
     this.restNotificaciones.getNotificacionesRest().subscribe(res => {
-      console.log(res);
       this.notificacion = res;
     });
   }

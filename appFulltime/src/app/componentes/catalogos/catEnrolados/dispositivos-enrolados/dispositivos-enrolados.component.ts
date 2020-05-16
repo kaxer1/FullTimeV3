@@ -6,7 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { EnroladosRelojesService } from 'src/app/servicios/enroladosRelojes/enrolados-relojes.service';
 import { EnroladoRelojComponent } from 'src/app/componentes/catalogos/catEnrolados/enrolado-reloj/enrolado-reloj.component';
-
+import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
 
 @Component({
   selector: 'app-dispositivos-enrolados',
@@ -29,7 +29,7 @@ export class DispositivosEnroladosComponent implements OnInit {
     public router: Router,
     private rest: EnroladoService,
     private restE: EnroladosRelojesService,
-    public vistaAsignarReloj: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
@@ -64,8 +64,14 @@ export class DispositivosEnroladosComponent implements OnInit {
 
   AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaAsignarReloj.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: true } }).disableClose = true;
     console.log(datosSeleccionados.nombre);
   }
+
+    // Ventana para editar datos
+    AbrirVentanaEditar(datosSeleccionados: any): void {
+      console.log(datosSeleccionados);
+      this.vistaRegistrarDatos.open(EditarEnroladosComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: true} }).disableClose = true;
+    }
 
 }

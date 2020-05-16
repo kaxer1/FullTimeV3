@@ -54,6 +54,7 @@ export class DiscapacidadComponent implements OnInit {
     this.editarFormulario();
   }
 
+  texto: string = 'Anadir'
   editarFormulario(){
     if(this.editar == 'editar'){
       this.rest.getDiscapacidadUsuarioRest(parseInt(this.idEmploy)).subscribe(data => {
@@ -61,6 +62,7 @@ export class DiscapacidadComponent implements OnInit {
         this.carnet.setValue(this.userDiscapacidad[0].carn_conadis);
         this.porcentaje.setValue(this.userDiscapacidad[0].porcentaje);
         this.tipo.setValue(this.userDiscapacidad[0].tipo);
+        this.texto = 'Editar'
       });
     }
   }
@@ -107,6 +109,7 @@ export class DiscapacidadComponent implements OnInit {
         this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
         this.limpiarCampos();
         this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
+        this.texto = 'Añadir';
       }, error => { });
 
     } else {

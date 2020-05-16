@@ -24,13 +24,23 @@
 
 .col-sm { font-weight: bold;}
 
-#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px; width:200px; }
+#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
 
 mat-divider { background: rgba(131, 131, 131, 0.609);}
 
 .material-icons {margin-right: 8px;}
 
 #boton:hover { background-color: rgba(75, 75, 75, 0.609);}
+
+#botonActualizar { margin-left: 15px; background-color: rgb(80,87,97); color: white;}
+
+a {color: white;}
+
+p { font-size: x-small; }
+
+.fas { color:white; cursor: pointer;}
+
+.far { color:white; cursor: pointer;}
 
 mat-tab-group {
     background: rgb(232,232,232);

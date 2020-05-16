@@ -82,6 +82,7 @@
                                         <label class="col col-form-label">{{fechaNacimiento}}</label>
                                     </div>
                                 </div>
+                                <a href="{{ruta}}" mat-button type="submit" id="botonActualizar" class="btn" (click)="verRegistroEdicion(false)" [disabled]="!btnActualizar">Actualizar información</a>
                             </div>
                         </mat-card-content>
                     </mat-card>
@@ -141,6 +142,8 @@
                 </div>
             </div>
         </div>
+        <app-editar-empleado *ngIf="!btnActualizar" id="editar"></app-editar-empleado>
+        <br><br>
     </mat-tab>
 
     <!-- DISCAPACIDAD Y TITULO DEL EMPLEADO -->
@@ -167,8 +170,7 @@
                             </div>
                         </div>
                         <mat-card-content>
-                            <div class="container" style="padding-top: 15px;"
-                                *ngFor="let rte of relacionTituloEmpleado">
+                            <div class="container" style="padding-top: 15px;" *ngFor="let rte of relacionTituloEmpleado">
                                 <div class="row">
                                     <div class="col">
                                         <label class="col-sm col-form-label">Observaciones:</label>
@@ -193,12 +195,29 @@
                                         <label class="col col-form-label">{{rte.nivel}}</label>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col d-flex align-items-center justify-content-center">
+                                        <a href="{{rutaTitulo}}"  mat-button type="submit" id="botonActualizar" class="btn" matSuffix matTooltipPosition="right"
+                                        matTooltip="Editar los datos generales de este registro" (click)="verTituloEdicion(false); ObtenerIdTituloSeleccionado(rte.id)" [disabled]="!btnActualizarTitulo">
+                                            <i class="fas fa-edit"></i>
+                                            Editar
+                                        </a>
+                                    </div>
+                                    <div class="col d-flex align-items-center justify-content-center">
+                                        <button mat-button type="submit" id="botonActualizar" class="btn" matSuffix matTooltipPosition="right" 
+                                            matTooltip="Eliminar este registro" (click)="eliminarTituloEmpleado(rte.id)">
+                                            <i class="far fa-trash-alt" ></i>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </div> <br>
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
                     <div style="padding-bottom: 35px; padding-top: 35px;">
                         <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
+                        <app-editar-titulo *ngIf="!btnActualizarTitulo" [idEmpleado]="idEmpleado" [idSelect]="idSelect" id="editarTitulo"></app-editar-titulo>
                     </div>
                 </div>
                 <div class="col-md">
@@ -241,6 +260,13 @@
                                     <div class="col">
                                         <label class="col col-form-label">{{d.porcentaje}} %</label>
                                     </div>
+                                </div>
+                                <div class="col d-flex align-items-center justify-content-center">
+                                    <button mat-button type="submit" id="botonActualizar" class="btn" (click)="eliminarDiscapacidad(d.id)" matSuffix matTooltipPosition="right"
+                                        matTooltip="Eliminar registro">
+                                        <i class="far fa-trash-alt"></i>
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         </mat-card-content>
