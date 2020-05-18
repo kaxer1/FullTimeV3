@@ -249,15 +249,17 @@ export class VerEmpleadoComponent implements OnInit {
   // Eliminar registro de discapacidad
   eliminarDiscapacidad(id_discapacidad: number){
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
+      this.btnDisc = 'Añadir';
+      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
     })
   };
 
   eliminarTituloEmpleado(id: number){
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
       this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
+      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
+      this.habilitarBtn();
     });
   }
 

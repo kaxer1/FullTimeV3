@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const CryptoJS = require("crypto-js");
 const jwt = require('jsonwebtoken');
-const email = 'kevincuray41@gmail.com';
-const pass = '2134Lamboclak';
+const email = '';
+const pass = '';
 var nodemailer = require('nodemailer');
 var smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
