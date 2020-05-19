@@ -297,7 +297,7 @@ export class VerEmpleadoComponent implements OnInit {
   mostrarTit() {
     if (this.mostrarTitulo == true) {
       this.mostrarTitulo = false;
-      this.btnTitulo = 'No Añadir'
+      this.btnTitulo = 'Cerrar'
     } else {
       this.mostrarTitulo = true;
       this.btnTitulo = 'Añadir'
