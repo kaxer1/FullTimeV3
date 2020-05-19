@@ -33,6 +33,7 @@ import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizac
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
+import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -114,6 +115,7 @@ export class VerEmpleadoComponent implements OnInit {
   verTituloEdicion(value: boolean) {
     this.btnActualizarTitulo = value;
   }
+
   // onUploadFinish(event) {
   //   console.log(event);
   // }
@@ -129,13 +131,13 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
-      if ( data[0]['imagen'] != null){
+      if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
       } else {
-        this.iniciales = data[0].nombre.split(" ")[0].slice(0,1) + data[0].apellido.split(" ")[0].slice(0,1);
+        this.iniciales = data[0].nombre.split(" ")[0].slice(0, 1) + data[0].apellido.split(" ")[0].slice(0, 1);
         this.mostrarIniciales = true
         this.mostrarImagen = false;
         this.textoBoton = 'Subir Foto';
@@ -167,7 +169,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   // metodo para obtener el contrato de un empleado con su respectivo regimen laboral
   idContratoEmpleado: number;
-  obtenerContratoEmpleadoRegimen(){
+  obtenerContratoEmpleadoRegimen() {
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleadoRegimen = res;
     });
@@ -176,7 +178,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.contratoEmpleado.map(obj => {
         this.idContratoEmpleado = obj.id;
         this.fechaContratoIngreso = obj.fec_ingreso.split("T")[0];
-        if(obj.fec_salida === null){
+        if (obj.fec_salida === null) {
           this.fechaContratoSalida = '';
         } else {
           this.fechaContratoSalida = obj.fec_salida.split("T")[0];
@@ -188,7 +190,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   cargoEmpleado: any;
-  obtenerCargoEmpleado(){
+  obtenerCargoEmpleado() {
     this.restCargo.getInfoCargoEmpleadoRest(this.idContratoEmpleado).subscribe(res => {
       this.cargoEmpleado = res;
       this.cargoEmpleado.map(obj => {
@@ -199,7 +201,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   peridoVacaciones: any;
-  obtenerPeriodoVacaciones(){
+  obtenerPeriodoVacaciones() {
     this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContratoEmpleado).subscribe(res => {
       this.peridoVacaciones = res;
       this.peridoVacaciones.map(obj => {
@@ -209,14 +211,14 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   vacaciones: any = [];
-  obtenerVacaciones(id_peri_vacaciones: number){
+  obtenerVacaciones(id_peri_vacaciones: number) {
     this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
       this.vacaciones = res;
     });
   }
 
   planHorario: any;
-  obtenerPlanHorarios(idEmpleadoCargo: number){
+  obtenerPlanHorarios(idEmpleadoCargo: number) {
     this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
       this.planHorario = res;
       this.planHorario.map(obj => {
@@ -226,21 +228,21 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   planHoraDetalle: any;
-  obtenerPlanHoraDetalle(id_plan_horario: number){
+  obtenerPlanHoraDetalle(id_plan_horario: number) {
     this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
       this.planHoraDetalle = res;
     });
   }
 
   empleadoProcesos: any;
-  obtenerEmpleadoProcesos(idEmpleadoCargo: number){
+  obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
     this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
       this.empleadoProcesos = res
     });
   }
 
   planComidas: any;
-  obtenerPlanComidasEmpleado(id_empleado: number){
+  obtenerPlanComidasEmpleado(id_empleado: number) {
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
     })
@@ -383,6 +385,7 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  // Ventana para registra permisos del empleado
   AbrirVentanaPermiso(): void {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
@@ -410,7 +413,23 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   AbrirVentanaCatHorario(): void {
-      this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { ventana: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { ventana: true } }).disableClose = true;
+  }
+
+  // Ventana Para editar Procesoso del empleado
+  AbrirVentanaEditarProceso(datoSeleccionado: any): void {
+    this.restCargo.BuscarIDCargo(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].id)
+      console.log(datoSeleccionado);
+      this.vistaRegistrarDatos.open(EditarEmpleadoProcesoComponent,
+        { width: '400px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].id, datosProcesos: datoSeleccionado } }).disableClose = true;
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+
+
+
   }
 
   /* 
@@ -699,14 +718,14 @@ export class VerEmpleadoComponent implements OnInit {
   ****************************************************************************************************
   */
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
   archivoForm = new FormControl('');
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.plantilla();
   }
-  
+
   plantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {

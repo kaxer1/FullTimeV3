@@ -13,7 +13,8 @@ class ProcesoRutas {
         this.router.get('/', PROCESO_CONTROLADOR.list);
         this.router.get('/busqueda/:nombre', PROCESO_CONTROLADOR.getIdByNombre);
         this.router.get('/:id',  PROCESO_CONTROLADOR.getOne);
-        this.router.post('/', PROCESO_CONTROLADOR.create);    
+        this.router.post('/', PROCESO_CONTROLADOR.create);
+        this.router.put('/', PROCESO_CONTROLADOR.ActualizarProceso);    
     }
 }
 

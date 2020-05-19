@@ -17,6 +17,7 @@ export class ConfirmarContraseniaComponent implements OnInit {
   token: string;
   NuevaContrasenia = new FormControl('', Validators.maxLength(12));
   ConfirmarContrasenia = new FormControl('', Validators.maxLength(12));
+  mensaje: any = [];
 
   public cambiarContraseniaForm = new FormGroup({
     nPass: this.NuevaContrasenia,
@@ -38,7 +39,7 @@ export class ConfirmarContraseniaComponent implements OnInit {
 
   compararContrasenia(form){
     if (form.nPass != form.cPass){
-      this.toastr.error('Incorrecto', 'las constrasenias no coinciden');
+      this.toastr.error('Incorrecto', 'Las constrasenias no coinciden');
     }
   }
 
@@ -53,7 +54,14 @@ export class ConfirmarContraseniaComponent implements OnInit {
       contrasena: clave
     }
     this.restLogin.changePassword(data).subscribe(res => {
-      this.router.navigate(['/login']);
+      this.mensaje = res;
+      if (this.mensaje.expiro === 'si') {
+        this.router.navigate(['/olvidar-contrasenia']);
+        this.toastr.error(this.mensaje.message, 'Ups algo a salido mal' );
+      } else {
+        this.router.navigate(['/login']);
+        this.toastr.success('Operación exitosa', this.mensaje.message);
+      }
     });
   }
 

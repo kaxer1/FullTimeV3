@@ -60,6 +60,18 @@ class ProvinciaControlador {
             }
         });
     }
+    ObtenerProvincia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const UNA_PROVINCIA = yield database_1.default.query('SELECT * FROM cg_provincias WHERE id = $1', [id]);
+            if (UNA_PROVINCIA.rowCount > 0) {
+                return res.json(UNA_PROVINCIA.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+            }
+        });
+    }
     ObtenerIdProvincia(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.params;
@@ -69,6 +81,29 @@ class ProvinciaControlador {
             }
             else {
                 return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+            }
+        });
+    }
+    ObtenerPais(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const PAIS = yield database_1.default.query('SELECT * FROM cg_paises WHERE id = $1', [id]);
+            if (PAIS.rowCount > 0) {
+                return res.json(PAIS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+            }
+        });
+    }
+    ListarTodoPais(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PAIS = yield database_1.default.query('SELECT *FROM cg_paises');
+            if (PAIS.rowCount > 0) {
+                return res.json(PAIS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }

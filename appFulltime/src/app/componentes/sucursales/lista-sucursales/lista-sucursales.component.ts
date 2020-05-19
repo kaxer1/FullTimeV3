@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+
+import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
+import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-sucursal/editar-sucursal.component';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
 @Component({
   selector: 'app-lista-sucursales',
@@ -37,7 +39,7 @@ export class ListaSucursalesComponent implements OnInit {
   constructor(
     private rest: SucursalService,
     private toastr: ToastrService,
-    public vistaRegistrarSucursal: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +58,13 @@ export class ListaSucursalesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarSucursal(){
-    this.vistaRegistrarSucursal.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
+  }
+
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarSucursalComponent, { width: '900px', data: datosSeleccionados }).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampoBuscar(){

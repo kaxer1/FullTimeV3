@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
-import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { FormControl, Validators } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 
 import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.component';
-import { FormControl, Validators } from '@angular/forms';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
+import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 
 @Component({
   selector: 'app-principal-proceso',
@@ -31,7 +31,7 @@ export class PrincipalProcesoComponent implements OnInit {
   constructor(
     private rest: ProcesoService,
     private toastr: ToastrService,
-    public vistaRegistrarProceso: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   // items de paginacion de la tabla
@@ -100,7 +100,13 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProceso(){
-    this.vistaRegistrarProceso.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
+  }
+
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarCatProcesosComponent, { width: '450px', data: {datosP: datosSeleccionados, lista: true }}).disableClose = true;
+    //console.log(datosSeleccionados.fecha);
   }
 
   IngresarSoloNumeros(evt) {
@@ -119,4 +125,5 @@ export class PrincipalProcesoComponent implements OnInit {
       return false;
     }
   }
+
 }

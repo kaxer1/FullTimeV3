@@ -45,6 +45,17 @@ class ProvinciaControlador {
       }
     }
 
+    public async ObtenerProvincia(req: Request, res: Response): Promise<any> {
+      const { id } = req.params;
+      const UNA_PROVINCIA = await pool.query('SELECT * FROM cg_provincias WHERE id = $1', [id]);
+      if (UNA_PROVINCIA.rowCount > 0) {
+        return res.json(UNA_PROVINCIA.rows)
+      }
+      else {
+        return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+      }
+    }
+
     public async ObtenerIdProvincia(req: Request, res: Response): Promise<any> {
       const { nombre } = req.params;
       const UNA_PROVINCIA = await pool.query('SELECT * FROM cg_provincias WHERE nombre = $1', [nombre]);
@@ -53,6 +64,27 @@ class ProvinciaControlador {
       }
       else {
         return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+      }
+    }
+
+    public async ObtenerPais(req: Request, res: Response): Promise<any> {
+      const { id } = req.params;
+      const PAIS = await pool.query('SELECT * FROM cg_paises WHERE id = $1', [id]);
+      if (PAIS.rowCount > 0) {
+        return res.json(PAIS.rows)
+      }
+      else {
+        return res.status(404).json({ text: 'La provincia no ha sido encontrada' });
+      }
+    }
+
+    public async ListarTodoPais(req: Request, res: Response) {
+      const PAIS = await pool.query('SELECT *FROM cg_paises');
+      if (PAIS.rowCount > 0) {
+        return res.json(PAIS.rows)
+      }
+      else {
+        return res.status(404).json({ text: 'No se encuentran registros' });
       }
     }
   

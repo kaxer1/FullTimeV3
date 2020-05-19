@@ -46,7 +46,6 @@ export class EditarTitulosComponent implements OnInit {
     this.niveles = [];
     this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
       this.niveles = res;
-      //this.niveles[this.niveles.length] = { nombre: "Seleccionar" };
       this.selectNivel = this.niveles[this.niveles.length - 1].nombre;
     });
   }
@@ -113,6 +112,11 @@ export class EditarTitulosComponent implements OnInit {
     this.LimpiarCampos();
     this.dialogRef.close();
     window.location.reload();
+  }
+
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
   }
 
 }

@@ -9,12 +9,12 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Seleccione usuario *</mat-label>
+                        <mat-label>Seleccione usuario</mat-label>
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                            matTooltip="Búsqueda de Régimen Laboral por la descripción">
+                            matTooltip="Lista de Usuarios del Sistema">
                             help_outline</mat-icon>
-                        <mat-select formControlName="enroladoId_UsuarioForm">
-                            <mat-option *ngFor="let u of usuarios" [value]="u.usuario">
+                        <mat-select formControlName="enroladoId_UsuarioForm" required>
+                            <mat-option *ngFor="let u of usuarios" [value]="u.id">
                                 {{u.usuario}}
                             </mat-option>
                         </mat-select>
@@ -35,20 +35,6 @@
                             maxlength="10"
                             oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                             formControlName="enroladoContraseniaForm" required>
-                        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                            [attr.aria-pressed]="hide">
-                            <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                                matTooltip="Ocultar o mostrar la contraseña ingresada">
-                                {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                        </button>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Confirmar Contraseña</mat-label>
-                        <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
-                            maxlength="10"
-                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            required>
                         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                             [attr.aria-pressed]="hide">
                             <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
@@ -99,7 +85,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-sm" (click)="insertarEnrolado(nuevoEnroladoForm.value)"
+    <input type="submit" class="btn btn-sm" (click)="VerificarDuplicidad(nuevoEnroladoForm.value)"
         [disabled]="!nuevoEnroladoForm.valid" value="Guardar">
     <input type="submit" class="btn btn-sm" (click)="cerrarVentanaRegistroEnrolado()" value="Salir">
 </div>

@@ -52,6 +52,13 @@ class ProcesoControlador {
             res.status(404).json({ text: 'El proceso no ha sido encontrado' });
         });
     }
+    ActualizarProceso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, nivel, proc_padre, id } = req.body;
+            yield database_1.default.query('UPDATE cg_procesos SET nombre = $1, nivel = $2, proc_padre = $3 WHERE id = $4', [nombre, nivel, proc_padre, id]);
+            res.json({ message: 'El proceso actualizado exitosamente' });
+        });
+    }
 }
 exports.PROCESOS_CONTROLADOR = new ProcesoControlador();
 exports.default = exports.PROCESOS_CONTROLADOR;

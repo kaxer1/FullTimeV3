@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="tituloR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Título Profesional</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Título Profesional</span>
 </div>
 <form [formGroup]="nuevoTituloForm">
     <div class="container" style="text-align: center;">
@@ -31,5 +31,5 @@
 <div style="text-align: center;">
     <input type="submit" class="btn btn-sm" (click)="InsertarTitulo(nuevoTituloForm.value)"
         [disabled]="!nuevoTituloForm.valid" value="Guardar">
-    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroTitulo()" value="Salir">
+    <input type="submit" class="btn btn-sm" (click)="Salir()" value="Salir">
 </div>

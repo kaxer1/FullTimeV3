@@ -1,0 +1,17 @@
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+#empre { cursor: pointer; }
+
+.empresaEdit { 
+    font-size: 25px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white;  
+    padding-top: 10px; 
+}
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}

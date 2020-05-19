@@ -20,6 +20,14 @@ export class ProvinciaService {
   BuscarUnaProvincia(id_pais: number){
     return this.http.get(`${this.API_URL}/provincia/${id_pais}`);
   }
+
+  BuscarUnaProvinciaId(id: number){
+    return this.http.get(`${this.API_URL}/provincia/buscar/${id}`);
+  }
+
+  BuscarPaisId(id: number){
+    return this.http.get(`${this.API_URL}/provincia/buscar/pais/${id}`);
+  }
   
   postProvinciaRest(data: any){
     return this.http.post(`${this.API_URL}/provincia`, data);
@@ -35,6 +43,10 @@ export class ProvinciaService {
 
   BuscarPais(continente: string){
     return this.http.get(`${this.API_URL}/provincia/pais/${continente}`);
+  }
+
+  BuscarTodosPaises(){
+    return this.http.get(`${this.API_URL}/provincia/paises`);
   }
 
 }

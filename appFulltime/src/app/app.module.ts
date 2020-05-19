@@ -81,6 +81,11 @@ import { EditarEmpleadoComponent } from './componentes/empleado/EditarEmpleado/e
 import { EditarTituloComponent } from './componentes/empleado/EditarTituloEmpleado/editar-titulo/editar-titulo.component';
 import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
 import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
+import { EditarEmpresaComponent } from './componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
+import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursal/editar-sucursal.component';
+import { EditarCatProcesosComponent } from './componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
+import { EditarEmpleadoProcesoComponent } from './componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
+import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -168,8 +173,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
-
-
 
 @NgModule({
   declarations: [
@@ -271,10 +274,16 @@ import { MatTabsModule } from '@angular/material/tabs';
     EditarTitulosComponent,
     EditarNivelTituloComponent,
     EditarTipoComidasComponent,
+    EditarEmpresaComponent,
+    EditarSucursalComponent,
+    EditarCatProcesosComponent,
+    EditarEmpleadoProcesoComponent,
+    EditarEnroladosComponent,
     EditarEmpleadoComponent,
     EditarTituloComponent,
     OlvidarContraseniaComponent,
     ConfirmarContraseniaComponent
+
   ],
 
   imports: [

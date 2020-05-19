@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 
 @Component({
   selector: 'app-listar-ciudad-feriados',
@@ -28,7 +29,7 @@ export class ListarCiudadFeriadosComponent implements OnInit {
     public router: Router,
     private rest: FeriadosService,
     private restF: CiudadFeriadosService,
-    public vistaAsignarCiudad: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
@@ -71,7 +72,13 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaAsignarCiudad(datosSeleccionados): void {
-    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true } }).disableClose = true;
+  }
+
+  AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true} }).disableClose = true;
+    console.log(datosSeleccionados.fecha);
   }
 
 }

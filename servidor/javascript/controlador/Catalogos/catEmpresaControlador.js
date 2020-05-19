@@ -35,7 +35,7 @@ class EmpresaControlador {
     ActualizarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id } = req.body;
-            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5 tipo_empresa = $6, representante = $7 WHERE id = $8', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id]);
+            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7 WHERE id = $8', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id]);
             res.json({ message: 'Empresa actualizada exitosamente' });
         });
     }

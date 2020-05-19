@@ -13,6 +13,7 @@ class DepartamentoRutas {
         this.router.get('/', EMPLEADO_PROCESO_CONTROLADOR.ListarEmpleProcesos);
         this.router.get('/infoProceso/:id_empl_cargo', EMPLEADO_PROCESO_CONTROLADOR.EncontrarProcesoPorIdCargo);
         this.router.post('/', EMPLEADO_PROCESO_CONTROLADOR.CrearEmpleProcesos);
+        this.router.put('/', EMPLEADO_PROCESO_CONTROLADOR.ActualizarProcesoEmpleado);
     }
 }
 

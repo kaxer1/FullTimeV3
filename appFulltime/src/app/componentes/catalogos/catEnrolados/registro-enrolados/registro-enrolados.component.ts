@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
   styleUrls: ['./registro-enrolados.component.css'],
   //encapsulation: ViewEncapsulation.None
 })
+
 export class RegistroEnroladosComponent implements OnInit {
 
   id_usuario = new FormControl('', Validators.required);
@@ -24,6 +25,9 @@ export class RegistroEnroladosComponent implements OnInit {
 
   usuarios: any = [];
   idUltimoEnrolado: any = [];
+
+  // verificar Duplicidad
+  usuariosEnrolados: any = [];
 
   hide = true;
   public idUsuario: number;
@@ -52,32 +56,35 @@ export class RegistroEnroladosComponent implements OnInit {
   }
 
   insertarEnrolado(form) {
-    this.restUsuario.getIdByUsuarioRest(form.enroladoId_UsuarioForm).subscribe(response => {
-      this.idUsuario = response[0].id;
-      let dataEnrolado = {
-        id_usuario: this.idUsuario,
-        nombre: form.enroladoNombreForm,
-        contrasenia: form.enroladoContraseniaForm,
-        activo: form.enroladoActivoForm,
-        finger: form.enroladoFingerForm,
-        data_finger: form.enroladoData_FingerForm
-      };
-      this.rest.postEnroladosRest(dataEnrolado).subscribe(response => {
-        this.toastr.success('Operacion Exitosa', 'Enrolado con éxito');
-        this.rest.BuscarUltimoId().subscribe(response => {
-          this.idUltimoEnrolado = response;
-          console.log(this.idUltimoEnrolado);
-          this.limpiarCampos();
-          this.dialogRef.close();
-          this.router.navigate(['/enroladoDispositivo/', this.idUltimoEnrolado[0].max]);
-        }, error => { });
-
-      }, error => {
-        console.log(error);
-      });
-
+    let dataEnrolado = {
+      id_usuario: form.enroladoId_UsuarioForm,
+      nombre: form.enroladoNombreForm,
+      contrasenia: form.enroladoContraseniaForm,
+      activo: form.enroladoActivoForm,
+      finger: form.enroladoFingerForm,
+      data_finger: form.enroladoData_FingerForm
+    };
+    this.rest.postEnroladosRest(dataEnrolado).subscribe(response => {
+      this.toastr.success('Operacion Exitosa', 'Enrolado con éxito');
+      this.rest.BuscarUltimoId().subscribe(response => {
+        this.idUltimoEnrolado = response;
+        console.log(this.idUltimoEnrolado);
+        this.limpiarCampos();
+        this.dialogRef.close();
+        this.router.navigate(['/enroladoDispositivo/', this.idUltimoEnrolado[0].max]);
+      }, error => { });
     }, error => {
       console.log(error);
+    });
+  }
+
+  VerificarDuplicidad(form) {
+    this.usuariosEnrolados = [];
+    this.rest.BuscarRegistroUsuario(form.enroladoId_UsuarioForm).subscribe(datos => {
+      this.usuariosEnrolados = datos;
+      this.toastr.info('Se le recuerda que el usuario ya fue enrolado')
+    }, error => {
+      this.insertarEnrolado(form);
     });
   }
 
@@ -135,20 +142,12 @@ export class RegistroEnroladosComponent implements OnInit {
     return this.nombre.hasError('pattern') ? 'No ingresar números' : '';
   }
 
-  getIdUsuario(usuario: string) {
-    this.restUsuario.getIdByUsuarioRest(usuario).subscribe(response => {
-      this.idUsuario = response[0].id;
-    }, error => {
-      console.log(error);
-    });
-  }
-
   getUsuarios() {
     this.usuarios = [];
     this.restUsuario.getUsuariosRest().subscribe(data => {
-      this.usuarios = data
+      this.usuarios = data;
+      console.log(this.usuarios)
     })
   }
-
 
 }

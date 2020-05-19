@@ -44,14 +44,16 @@ class EnroladoControlador {
             res.json({ message: 'Se ha añadido correctamente al catálogo enrolados' });
         });
     }
-    ObtenerIdEnroladoNombre(req, res) {
+    ObtenerRegistroEnrolado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.params;
-            const ENROLADOS = yield database_1.default.query('SELECT id FROM cg_enrolados WHERE nombre = $1', [nombre]);
-            if (ENROLADOS != null) {
+            const { id_usuario } = req.params;
+            const ENROLADOS = yield database_1.default.query('SELECT id FROM cg_enrolados WHERE id_usuario = $1', [id_usuario]);
+            if (ENROLADOS.rowCount > 0) {
                 return res.json(ENROLADOS.rows);
             }
-            res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
+            else {
+                return res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
+            }
         });
     }
     ObtenerUltimoId(req, res) {
@@ -63,6 +65,13 @@ class EnroladoControlador {
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
             }
+        });
+    }
+    ActualizarEnrolado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_usuario, nombre, contrasenia, activo, finger, data_finger, id } = req.body;
+            yield database_1.default.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6 WHERE id = $7', [id_usuario, nombre, contrasenia, activo, finger, data_finger, id]);
+            res.json({ message: 'Usuario Enrolado actualizado exitosamente' });
         });
     }
 }

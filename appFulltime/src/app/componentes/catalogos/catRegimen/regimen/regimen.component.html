@@ -10,11 +10,11 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Seleccionar Régimen Laboral *</mat-label>
+                        <mat-label>Seleccionar Régimen Laboral</mat-label>
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                             matTooltip="Seleccionar uno de los Régimen establecidos">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="regimenF" [(ngModel)]="seleccionarRegimen">
+                        <mat-select [formControl]="regimenF" [(ngModel)]="seleccionarRegimen" required>
                             <mat-option *ngFor="let rL of regimen" [value]="rL.nombre"
                                 (click)="ActivarDescativarNombre(RegimenForm.value)">
                                 {{rL.valor}}

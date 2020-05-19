@@ -84,5 +84,9 @@ export class EditarNivelTituloComponent implements OnInit {
     window.location.reload();
   }
 
-
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+  }
+  
 }
