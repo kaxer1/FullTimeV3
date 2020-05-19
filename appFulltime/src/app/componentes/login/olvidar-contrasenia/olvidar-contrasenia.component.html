@@ -18,8 +18,11 @@
                             </form>
                             <br>
                             <div style="margin: auto;">
-                                <button type="submit" class="btn btn-lg btn-block" (click)="EnviarCorreoConfirmacion(olvidarContraseniaF.value)"
+                                <button type="submit" class="btn btn-lg btn-block verde" (click)="EnviarCorreoConfirmacion(olvidarContraseniaF.value)"
                                     [disabled]="!olvidarContraseniaF.valid">Enviar</button>
+                            </div>
+                            <div style="margin: auto;">
+                                <button type="submit" class="btn btn-lg btn-block rojo" (click)="Cancelar();">Cancelar</button>
                             </div>
                         </mat-card>                            
                     </div>

@@ -42,6 +42,7 @@ export class EditarTituloComponent implements OnInit {
 
   setTitulos: any = [];
   ObtenerTituloSeleccionado(){
+    this.setTitulos = []
     this.rest.getEmpleadoTituloRest(this.idEmpleado).subscribe(res => {
       this.setTitulos = res;
       this.setTitulos.map(obj => {
@@ -59,6 +60,7 @@ export class EditarTituloComponent implements OnInit {
       id_titulo: form.idTituloForm,
     }
     this.rest.putEmpleadoTituloRest(this.idSelect , dataTituloEmpleado).subscribe(data => {
+      this.verEmpleado.obtenerTituloEmpleado(this.idEmpleado);
       this.toastr.success('Actualización Exitosa', 'Titulo asignado al empleado');
     });
   }
@@ -92,9 +94,7 @@ export class EditarTituloComponent implements OnInit {
   VerificarTitulo() {
     window.open("https://www.senescyt.gob.ec/web/guest/consultas", "_blank");
   }
-
-  guardar(){this.verEmpleado.obtenerTituloEmpleado(this.idEmpleado);}
-
+  
   cancelar(){this.verEmpleado.verTituloEdicion(true);}
 
 }

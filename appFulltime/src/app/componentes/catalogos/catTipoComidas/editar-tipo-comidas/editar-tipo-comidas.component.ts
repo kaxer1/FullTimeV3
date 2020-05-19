@@ -39,7 +39,7 @@ export class EditarTipoComidasComponent implements OnInit {
     let datosTipoComida = {
       id: this.data.id,
       nombre: form.nombreForm,
-      valor: form.valorForm.toFixed(2),
+      valor: form.valorForm,
       observacion: form.observacionForm
     };
     this.rest.ActualizarUnAlmuerzo(datosTipoComida).subscribe(response => {

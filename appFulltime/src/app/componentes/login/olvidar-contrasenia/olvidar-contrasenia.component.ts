@@ -32,20 +32,27 @@ export class OlvidarContraseniaComponent implements OnInit {
       return 'No es un correo electrónico';
     }
   }
+  respuesta: any = [];
 
   EnviarCorreoConfirmacion(form) {
     let dataPass = {
       correo: form.usuarioF
     }
     this.rest.forgetPassword(dataPass).subscribe(res => {
-      this.toastr.success('Operción Exitosa', 'Solicitud enviada Revisar su correo electrónico');
-      this.router.navigate(['/login']);
-      console.log(res);
+      this.respuesta = res;
+      if (this.respuesta.mail === 'si') {
+        this.toastr.success('Operción Exitosa', 'Solicitud enviada Revisar su correo electrónico');
+        this.router.navigate(['/login']);
+      }
     }, error => {
       console.log(error);
       this.toastr.error('Operción Incorrecta', 'El correo no consta en los registros');
       this.correo.reset();
     })
+  }
+
+  Cancelar() {
+    this.router.navigate(['/login']);
   }
 
 }

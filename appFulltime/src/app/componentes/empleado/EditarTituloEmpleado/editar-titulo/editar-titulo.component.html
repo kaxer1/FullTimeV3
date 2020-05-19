@@ -32,7 +32,7 @@
     </form>
     <div style="text-align: center;">
         <button mat-button type="submit" class="btn"
-            (click)="ActualizarTituloEmpleado(editarTituloEmpleadoForm.value); cancelar(); guardar()" [disabled]="!editarTituloEmpleadoForm.valid">
+            (click)="ActualizarTituloEmpleado(editarTituloEmpleadoForm.value); cancelar();" [disabled]="!editarTituloEmpleadoForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right"
                 matTooltip="Guardar registro">save</span>
         </button>

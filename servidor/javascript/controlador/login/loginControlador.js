@@ -43,10 +43,15 @@ class LoginControlador {
         return __awaiter(this, void 0, void 0, function* () {
             var token = req.body.token;
             var contrasena = req.body.contrasena;
-            const payload = jwt.verify(token, 'llaveEmail');
-            const id_empleado = payload._id;
-            yield database_1.default.query('UPDATE usuarios SET contrasena = $2 WHERE id_empleado = $1 ', [id_empleado, contrasena]);
-            res.json({ message: "Contraseña Actualizada" });
+            try {
+                const payload = jwt.verify(token, 'llaveEmail');
+                const id_empleado = payload._id;
+                yield database_1.default.query('UPDATE usuarios SET contrasena = $2 WHERE id_empleado = $1 ', [id_empleado, contrasena]);
+                res.json({ expiro: 'no', message: "Contraseña Actualizada, Intente ingresar con la nueva contraseña" });
+            }
+            catch (error) {
+                res.json({ expiro: 'si', message: "Tiempo para cambiar la contraseña expirado, vuelva a intentarlo" });
+            }
         });
     }
     RestablecerContrasenia(req, res) {
@@ -55,8 +60,7 @@ class LoginControlador {
             const correoValido = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.correo, u.usuario, u.contrasena FROM empleados AS e, usuarios AS u WHERE correo = $1 AND u.id_empleado = e.id', [correo]);
             if (correoValido.rows[0] == undefined)
                 return res.status(401).send('Correo no valido para el usuario');
-            const token = jwt.sign({ _id: correoValido.rows[0].id }, 'llaveEmail');
-            console.log(token);
+            const token = jwt.sign({ _id: correoValido.rows[0].id }, 'llaveEmail', { expiresIn: 60 * 3 });
             var url = 'http://localhost:4200/confirmar-contrasenia';
             var data = {
                 to: correoValido.rows[0].correo,
@@ -78,7 +82,7 @@ class LoginControlador {
                     console.log('Email sent: ' + info.response);
                 }
             }));
-            res.json({ message: token });
+            res.json({ mail: 'si', message: 'Mail enviado' });
         });
     }
 }

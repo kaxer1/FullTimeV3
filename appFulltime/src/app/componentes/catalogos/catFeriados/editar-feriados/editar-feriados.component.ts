@@ -48,7 +48,7 @@ export class EditarFeriadosComponent implements OnInit {
 
   ActualizarFeriados(form) {
     let datosFeriado = {
-      id: this.data.id,
+      id: this.data.datosFeriado.id,
       fecha: form.fechaForm,
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
@@ -60,7 +60,11 @@ export class EditarFeriadosComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Feriado Actualizado')
       this.LimpiarCampos();
       this.dialogRef.close();
-      this.router.navigate(['/verFeriados/', datosFeriado.id]);
+      if(this.data.actualizar === true){
+        window.location.reload();
+      } else {
+        this.router.navigate(['/verFeriados/', datosFeriado.id]);
+      }
     }, error => {
       this.toastr.error('Operación Fallida', 'Feriado no se pudo registrar')
     });
@@ -80,14 +84,13 @@ export class EditarFeriadosComponent implements OnInit {
   CerrarVentanaEditarFeriado() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   ImprimirDatos() {
     this.EditarFeriadosForm.setValue({
-      descripcionForm: this.data.descripcion,
-      fechaForm: this.data.fecha,
-      fechaRecuperacionForm: this.data.fec_recuperacion
+      descripcionForm: this.data.datosFeriado.descripcion,
+      fechaForm: this.data.datosFeriado.fecha,
+      fechaRecuperacionForm: this.data.datosFeriado.fec_recuperacion
     })
   }
 

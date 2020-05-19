@@ -76,7 +76,7 @@ export class ListarFeriadosComponent implements OnInit {
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true} }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 
