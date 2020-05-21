@@ -82,9 +82,17 @@
                                         <label class="col col-form-label">{{fechaNacimiento}}</label>
                                     </div>
                                 </div>
-                                <a href="{{ruta}}" mat-button type="submit" id="botonActualizar" class="btn"
-                                    (click)="verRegistroEdicion(false)" [disabled]="!btnActualizar">Actualizar
-                                    información</a>
+
+                                <div style="text-align: right;">
+                                    <i class="fas fa-edit" id="edit" matSuffix matTooltipPosition="right"
+                                        matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>
+                                            <a href="{{ruta}}" mat-button type="submit"
+                                                (click)="verRegistroEdicion(false)" [disabled]="!btnActualizar">Editar
+                                            </a></p>
+                                    </i>
+                                </div>
                             </div>
                         </mat-card-content>
                     </mat-card>

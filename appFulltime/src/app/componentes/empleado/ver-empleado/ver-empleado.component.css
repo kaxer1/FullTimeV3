@@ -34,7 +34,7 @@ mat-divider { background: rgba(131, 131, 131, 0.609);}
 
 #botonActualizar { margin-left: 15px; background-color: rgb(80,87,97); color: white;}
 
-a {color: white;}
+a { font-size: x-small; } 
 
 p { font-size: x-small; }
 
