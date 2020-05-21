@@ -87,7 +87,6 @@ export class ListaEmpleadosComponent implements OnInit {
   getEmpleados(){
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
-      // console.log(data);
       this.empleado = data
     })
   }
@@ -104,5 +103,44 @@ export class ListaEmpleadosComponent implements OnInit {
     this.cedula.reset();
     this.nombre.reset();
     this.apellido.reset();
+  }
+
+  /**
+   * Metodos y variables para subir plantilla
+   */
+
+  nameFile: string;
+  archivoSubido: Array < File > ;
+  archivoForm = new FormControl('', Validators.required);
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems =  this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0,9);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'empleados') {
+        this.plantilla();
+      } else {
+        this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.subirArchivoExcel(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
+      this.getEmpleados();
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
   }
 }

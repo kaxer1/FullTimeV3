@@ -26,6 +26,10 @@ export class EmpleadoService {
   putEmpleadoRest(data: any, id: number){
     return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data);
   }
+  
+  subirArchivoExcel(formData) {
+    return this.http.post(`${this.API_URI}/empleado/plantillaExcel/`, formData);
+  }
 
   // Servicio para insertar el empleado con sus respectivos titulos
   postEmpleadoTitulos(data: any){

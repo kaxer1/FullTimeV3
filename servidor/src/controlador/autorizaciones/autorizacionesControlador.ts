@@ -26,7 +26,6 @@ class AutorizacionesControlador {
     public async CrearAutorizacion(req: Request, res: Response): Promise<any> {
         const { id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento} = req.body;
         await pool.query('INSERT INTO autorizaciones ( id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento]);
-        console.log(req.body);
         res.json({ message: 'Autorizacion guardado'});
     }
 

@@ -20,4 +20,8 @@ export class RelojesService {
   ConsultarRelojes(){
     return this.http.get(`${this.API_URL}/relojes`);
   }
+
+  subirArchivoExcel(formData) {
+    return this.http.post(`${this.API_URL}/relojes/plantillaExcel/`, formData);
+  }
 }
