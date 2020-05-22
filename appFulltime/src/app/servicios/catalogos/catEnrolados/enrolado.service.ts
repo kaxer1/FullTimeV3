@@ -39,4 +39,8 @@ export class EnroladoService {
     return this.http.put(`${this.API_URL}/enrolados`, datos);
   }
 
+  subirArchivoExcel(formData) {
+    return this.http.post(`${this.API_URL}/enrolados/plantillaExcel/`, formData);
+  }
+
 }

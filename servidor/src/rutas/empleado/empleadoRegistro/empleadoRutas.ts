@@ -9,6 +9,10 @@ const multipartMiddleware = multipart({
     uploadDir: './imagenesEmpleados',
 });
 
+const multipartMiddlewarePlantilla = multipart({  
+    uploadDir: './plantillas',
+});
+
 class EmpleadoRutas {
     public router: Router = Router();
 
@@ -27,6 +31,7 @@ class EmpleadoRutas {
         this.router.put('/:id_empleado_titulo/titulo', this.verifyToken, EMPLEADO_CONTROLADOR.editarTituloDelEmpleado);
         this.router.post('/', this.verifyToken, EMPLEADO_CONTROLADOR.create);
         this.router.post('/emplTitulos/', this.verifyToken, EMPLEADO_CONTROLADOR.createEmpleadoTitulos);
+        this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], EMPLEADO_CONTROLADOR.CargaPlantillaEmpleadoUsuario);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, EMPLEADO_CONTROLADOR.eliminarTituloDelEmpleado);
     }
 

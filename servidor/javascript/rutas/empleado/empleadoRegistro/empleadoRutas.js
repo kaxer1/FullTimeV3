@@ -10,6 +10,9 @@ const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
     uploadDir: './imagenesEmpleados',
 });
+const multipartMiddlewarePlantilla = multipart({
+    uploadDir: './plantillas',
+});
 class EmpleadoRutas {
     constructor() {
         this.router = express_1.Router();
@@ -25,6 +28,7 @@ class EmpleadoRutas {
         this.router.put('/:id_empleado_titulo/titulo', this.verifyToken, empleadoControlador_1.default.editarTituloDelEmpleado);
         this.router.post('/', this.verifyToken, empleadoControlador_1.default.create);
         this.router.post('/emplTitulos/', this.verifyToken, empleadoControlador_1.default.createEmpleadoTitulos);
+        this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargaPlantillaEmpleadoUsuario);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, empleadoControlador_1.default.eliminarTituloDelEmpleado);
     }
     verifyToken(req, res, next) {

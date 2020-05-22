@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import excel from 'xlsx';
+import fs from 'fs';
 
 class EnroladoControlador {
 
@@ -55,6 +57,28 @@ class EnroladoControlador {
     const { id_usuario, nombre, contrasenia, activo, finger, data_finger, id } = req.body;
     await pool.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6 WHERE id = $7', [id_usuario, nombre, contrasenia, activo, finger, data_finger, id]);
     res.json({ message: 'Usuario Enrolado actualizado exitosamente' });
+  }
+
+  public async CargaPlantillaEnrolado(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1]; 
+    var filePath = `./plantillas/${filename}`
+
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+    plantilla.forEach(async (data: any) => {
+      const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = data;
+      if(id_usuario != undefined){
+        await pool.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
+      } else {
+        res.json({error: 'plantilla equivocada'});
+      }
+    });
+    
+    res.json({ message: 'La plantilla a sido receptada' });
+    fs.unlinkSync(filePath);
   }
 
 }

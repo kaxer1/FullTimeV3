@@ -104,4 +104,42 @@ export class ListarRelojesComponent implements OnInit {
     this.ObtenerReloj();
   }
 
+  /**
+   * Metodos y variables para subir plantilla
+   */
+
+  nameFile: string;
+  archivoSubido: Array < File > ;
+  archivoForm = new FormControl('', Validators.required);
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems =  this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0,7);
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'relojes') {
+        this.plantilla();
+      } else {
+        this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.subirArchivoExcel(formData).subscribe(res => {
+      this.ObtenerReloj();
+      this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.');
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
+  }
+
 }

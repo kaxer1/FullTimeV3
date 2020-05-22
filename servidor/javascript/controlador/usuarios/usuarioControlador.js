@@ -42,7 +42,6 @@ class UsuarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
             yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
-            console.log(req.body);
             res.json({ message: 'Usuario Guardado' });
         });
     }

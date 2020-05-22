@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import pool from '../../../database';
-import fs from 'fs';
 const path = require("path");
+import excel from 'xlsx';
+import fs from 'fs';
+import { Md5 } from 'ts-md5';
 
 class EmpleadoControlador {
 
@@ -67,6 +69,49 @@ class EmpleadoControlador {
       });
     }
   }
+
+  public async CargaPlantillaEmpleadoUsuario(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1]; 
+    var filePath = `./plantillas/${filename}`
+
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+
+    plantilla.forEach(async (data: any) => {
+
+        // realiza un capital letter a los nombres y apellidos
+        let nombres = data.nombre.split(' ');
+        let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+        let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+        const nombre = name1 + ' ' + name2;
+
+        let apellidos = data.apellido.split(' ');
+        let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+        let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+        const apellido = lastname1 + ' ' + lastname2;
+
+        // encriptar contraseña
+        const md5 = new Md5();
+        const contrasena = md5.appendStr(data.contrasena).end();
+
+        const { cedula, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, usuario, estado_user, id_rol, app_habilita} = data;
+        
+        if(cedula != undefined){
+          await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
+          const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
+          const id_empleado = oneEmpley.rows[0].id;
+          await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
+        } else {
+          res.json({error: 'plantilla equivocada'});
+        }
+    });
+    
+    res.json({ message: 'La plantilla a sido receptada' });
+    fs.unlinkSync(filePath);
+}
 
   public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {
     const { observacion, id_empleado, id_titulo } = req.body;

@@ -40,7 +40,6 @@ class AutorizacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento } = req.body;
             yield database_1.default.query('INSERT INTO autorizaciones ( id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento]);
-            console.log(req.body);
             res.json({ message: 'Autorizacion guardado' });
         });
     }

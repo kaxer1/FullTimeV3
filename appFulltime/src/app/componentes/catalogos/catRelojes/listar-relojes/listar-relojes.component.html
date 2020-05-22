@@ -1,9 +1,9 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <div class="barraTituloReloj">
-        <span>DISPOSITIVOS</span>
-    </div>
     <div class="row">
-        <div class="col">
+        <div class="col-md">
+            <div class="barraTituloReloj">
+                <span>DISPOSITIVOS</span>
+            </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRelojesForm">
@@ -101,6 +101,20 @@
                         value="Crear nuevo Dispositivo">
                     <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
                 </mat-card-actions>
+            </mat-card>
+        </div>
+        <div class="col-md">
+            <div class="barraTituloReloj">
+                <span>REGISTRO MULTIPLE DE DISPOSITIVOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2">Subir relojes</label>
+                    </form>
+                </div>
             </mat-card>
         </div>
     </div>

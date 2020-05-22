@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl} from '@angular/forms';
+import { FormControl, Validators} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 
@@ -124,6 +124,45 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.nombre.reset();
     this.activo.reset();
     this.finger.reset();
+  }
+
+  /**
+   * Metodos y variables para subir plantilla
+   */
+
+  nameFile: string;
+  archivoSubido: Array < File > ;
+  archivoForm = new FormControl('', Validators.required);
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems =  this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0,8);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'enrolado') {
+        this.plantilla();
+      } else {
+        this.toastr.error('Solo se acepta Enrolados', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+  
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.subirArchivoExcel(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Enrolados importada.');
+      this.getEnrolados();
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
   }
     
 }

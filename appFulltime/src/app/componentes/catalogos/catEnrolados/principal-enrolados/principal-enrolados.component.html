@@ -1,6 +1,6 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col">
+        <div class="col-md">
             <div class="TituloEnrolado">
                 <span>EMPLEADOS ENROLADOS</span>
             </div>
@@ -56,6 +56,20 @@
                         empleado
                     </button>
                     <input type="submit" class="btn btn-sm" (click)="limpiarCampos()" value="Cancelar">
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-md">
+            <div class="TituloEnrolado">
+                <span>REGISTRO MULTIPLE DE ENROLADOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2">Subir Enrolados</label>
+                    </form>
                 </div>
             </mat-card>
         </div>
