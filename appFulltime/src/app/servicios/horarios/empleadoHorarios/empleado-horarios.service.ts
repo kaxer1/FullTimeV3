@@ -23,4 +23,8 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario`, datos);
   }
 
+  SubirArchivoExcel(formData, id) {
+    return this.http.post(`${this.API_URL}/empleadoHorario/upload/${id}`, formData)  
+  }
+
 }

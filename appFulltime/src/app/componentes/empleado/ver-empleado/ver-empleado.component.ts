@@ -20,6 +20,8 @@ import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePla
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
+import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
@@ -42,6 +44,7 @@ import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProc
 })
 
 export class VerEmpleadoComponent implements OnInit {
+
   empleadoUno: any = [];
   idEmpleado: string;
   editar: string = '';
@@ -87,6 +90,8 @@ export class VerEmpleadoComponent implements OnInit {
     public restPlanHoraDetalle: DetallePlanHorarioService,
     public restEmpleadoProcesos: EmpleadoProcesosService,
     public restPlanComidas: PlanComidasService,
+    public restEmpleHorario: EmpleadoHorariosService,
+    public restPermiso: PermisosService,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService
@@ -104,13 +109,14 @@ export class VerEmpleadoComponent implements OnInit {
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+    this.obtenerPermisos(parseInt(this.idEmpleado))
   }
 
   btnActualizar: boolean = true;
   verRegistroEdicion(value: boolean) {
     this.btnActualizar = value;
   }
-  
+
   btnActualizarTitulo: boolean = true;
   verTituloEdicion(value: boolean) {
     this.btnActualizarTitulo = value;
@@ -146,7 +152,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   idSelect: number;
-  ObtenerIdTituloSeleccionado(idTituloEmpleado: number){
+  ObtenerIdTituloSeleccionado(idTituloEmpleado: number) {
     this.idSelect = idTituloEmpleado;
   }
 
@@ -248,8 +254,36 @@ export class VerEmpleadoComponent implements OnInit {
     })
   }
 
+  permisosEmpleado: any;
+  permisosTotales: any;
+  cont = 0;
+  obtenerPermisos(id_empleado: number) {
+    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idContrato ", this.idContrato[0].id);
+      for (let i = 0; i <= this.idContrato.length - 1; i++) {
+        this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
+          this.permisosEmpleado = datos;
+          if (this.permisosEmpleado.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.permisosTotales = datos
+              this.cont++;
+            }
+            else {
+              this.permisosTotales = this.permisosTotales.concat(datos);
+              console.log("Datos Permisos" + i + '', this.permisosTotales)
+            }
+          }
+        })
+      }
+    });
+  }
+
   // Eliminar registro de discapacidad
-  eliminarDiscapacidad(id_discapacidad: number){
+  eliminarDiscapacidad(id_discapacidad: number) {
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
       this.btnDisc = 'Añadir';
@@ -257,7 +291,7 @@ export class VerEmpleadoComponent implements OnInit {
     })
   };
 
-  eliminarTituloEmpleado(id: number){
+  eliminarTituloEmpleado(id: number) {
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
       this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
       this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
@@ -739,4 +773,43 @@ export class VerEmpleadoComponent implements OnInit {
       this.nameFile = '';
     });
   }
+
+  /* CARGAR HORARIOS DEL EMPLEADO */
+  nameFileHorario: string;
+  archivoSubidoHorario: Array<File>;
+  archivoHorarioForm = new FormControl('');
+
+  fileChangeHorario(element) {
+    this.archivoSubidoHorario = element.target.files;
+    this.nameFileHorario = this.archivoSubidoHorario[0].name;
+    let arrayItems = this.nameFileHorario.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 8);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'horarios') {
+        this.plantillaHorario();
+      } else {
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantillaHorario() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubidoHorario.length; i++) {
+      formData.append("uploads[]", this.archivoSubidoHorario[i], this.archivoSubidoHorario[i].name);
+      console.log("toda la data", formData)
+    }
+    this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      // this.ObtenerHorarios();
+      this.archivoHorarioForm.reset();
+      this.nameFileHorario = '';
+    });
+  }
+
 }
+

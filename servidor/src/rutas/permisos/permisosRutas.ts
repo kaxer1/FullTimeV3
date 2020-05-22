@@ -11,6 +11,8 @@ class PermisosRutas {
     configuracion(): void {
         this.router.get('/', PERMISOS_CONTROLADOR.ListarPermisos);
         this.router.post('/', PERMISOS_CONTROLADOR.CrearPermisos);
+        this.router.get('/numPermiso/:id_empleado',  PERMISOS_CONTROLADOR.ObtenerNumPermiso);
+        this.router.get('/permisoContrato/:id_empl_contrato',  PERMISOS_CONTROLADOR.ObtenerPermisoContrato);
     }
 }
 

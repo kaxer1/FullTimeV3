@@ -65,7 +65,7 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 .iniciales {color: white; font-weight: bold; font-size: 60px; }
 
-#edit { color:green; margin-right: 20px; cursor: pointer;}
+#edit { color:green; margin-right: 20px; cursor: pointer; font-size: 15px;}
 
 p { font-size: x-small; }
 

@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../../database';
+import excel from 'xlsx';
+import fs from 'fs';
 
 class EmpleadoHorariosControlador {
 
@@ -19,8 +21,51 @@ class EmpleadoHorariosControlador {
         res.json({ message: 'El horario del empleado se registró con éxito' });
     }
 
+    public async CrearHorarioEmpleadoPlantilla(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+        plantilla.forEach(async (data: any) => {
+            const { id } = req.params;
+            var { fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nom_horario, estado } = data;
+
+            const id_cargo = await pool.query('SELECT ec.id FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
+            var id_empl_cargo = id_cargo.rows[0]['id'];
+            //console.log("Jid_cargo", id_empl_cargo);
+            //console.log("fecha", fec_inicio);
+            var nombre = nom_horario;
+            //console.log(nom_horario)
+            const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+            var id_horarios = idHorario.rows[0]['id'];
+            //console.log("Jid_horario", id_horarios)
+
+            var id_hora = 1;
+            //console.log("Jid_hora", id_hora)
+
+            //console.log(estado.split("-")[0])
+
+            if (estado != undefined) {
+                await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
+                console.log("carga exitosa");
+            }
+            else {
+                res.json({ error: 'plantilla equivocada' });
+            }
+        });
+
+        res.json({ message: 'La plantilla a sido receptada' });
+        fs.unlinkSync(filePath);
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();
 
 export default EMPLEADO_HORARIOS_CONTROLADOR;
+

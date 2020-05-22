@@ -2,11 +2,18 @@
 <div class="permisoEmpleado">
     <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Solicitar Permiso</h5>
 </div>
-<br>
 <!-- Formulario Completo -->
 <form [formGroup]="PermisoForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px; text-align: center;">
+            <mat-form-field>
+                <mat-label>N° Permiso</mat-label>
+                <input matInput placeholder="Ej: Número del permiso"
+                     [formControl]="numeroPermisoF" readonly="readonly">
+                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Número de permiso solicitado">
+                    help_outline</mat-icon>
+            </mat-form-field>
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
@@ -14,7 +21,8 @@
                         <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de Tipos de Permisos existentes">help_outline</mat-icon>
                         <mat-select [formControl]="idPermisoF" required>
-                            <mat-option *ngFor="let per of tipoPermisos" [value]="per.id">
+                            <mat-option *ngFor="let per of tipoPermisos" (click)="ImprimirDatos(PermisoForm.value)"
+                                [value]="per.id">
                                 {{per.descripcion}}
                             </mat-option>
                         </mat-select>
@@ -43,12 +51,12 @@
                 </div>
                 <div class="col-sm">
                     <mat-form-field>
-                        <mat-label>Solicitar permiso por:</mat-label>
+                        <mat-label id=solP>Solicitud de permiso por:</mat-label>
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="solicitarF" required>
-                            <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
+                        <mat-select [formControl]="solicitarF" required [disabled]="true">
+                            <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor" 
                                 (click)="ActivarDiasHoras(PermisoForm.value)">
                                 {{dh.nombre}}
                             </mat-option>
@@ -75,7 +83,7 @@
                 </div>
                 <div class="col-sm">
                     <mat-form-field>
-                        <mat-label>Fecha de Inicio</mat-label>
+                        <mat-label>Fecha de Salida</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
                             min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
@@ -86,7 +94,7 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Fecha de Finalización</mat-label>
+                        <mat-label>Fecha de Ingreso</mat-label>
                         <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
@@ -99,7 +107,7 @@
                     <mat-form-field>
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
                         <input matInput placeholder="Días libres" [formControl]="diaLibreF"
-                            (keypress)="IngresarSoloNumeros($event)">
+                            (keypress)="IngresarSoloNumeros($event)" style="visibility:hidden" id="Dlibres">
                         <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">
                             help_outline</mat-icon>
@@ -132,10 +140,12 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm">
-                                        <mat-radio-button value="true">Si</mat-radio-button>
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
+                                            [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
                                     </div>
                                     <div class="col-sm">
-                                        <mat-radio-button value="false">No</mat-radio-button>
+                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
+                                            [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +157,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <button type="submit" class="btn btn-sm" (click)="InsertarPermiso(PermisoForm.value)"
+    <button type="submit" class="btn btn-sm" (click)="RegistrarPermiso(PermisoForm.value)"
         [disabled]="!PermisoForm.valid"> Guardar </button>
     <button type="submit" class="btn btn-sm" (click)="CerrarVentanaPermiso()"> Salir </button>
 </div>
