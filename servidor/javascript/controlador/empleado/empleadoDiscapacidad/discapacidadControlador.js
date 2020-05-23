@@ -23,7 +23,7 @@ class DiscapacidadControlador {
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
+            const unaDiscapacidad = yield database_1.default.query('SELECT * FROM VistaNombreDiscapacidad WHERE id_empleado = $1', [id_empleado]);
             if (unaDiscapacidad.rowCount > 0) {
                 return res.json(unaDiscapacidad.rows);
             }
@@ -53,6 +53,57 @@ class DiscapacidadControlador {
             res.json({ message: 'Registro eliminado' });
         });
     }
+    /* TIPO DISCAPACIDAD */
+    ListarTipoD(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const TIPO_DISCAPACIDAD = yield database_1.default.query('SELECT * FROM tipo_discapacidad');
+            if (TIPO_DISCAPACIDAD.rowCount > 0) {
+                return res.json(TIPO_DISCAPACIDAD.rows);
+            }
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    ObtenerUnTipoD(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const TIPO_DISCAPACIDAD = yield database_1.default.query('SELECT * FROM tipo_discapacidad WHERE id = $1', [id]);
+            if (TIPO_DISCAPACIDAD.rowCount > 0) {
+                return res.json(TIPO_DISCAPACIDAD.rows);
+            }
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    ActualizarTipoD(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params;
+            const { nombre } = req.body;
+            yield database_1.default.query('UPDATE tipo_discapacidad SET nombre = $1 WHERE id = $2', [nombre, id]);
+            res.json({ message: 'Tipo de Discapacidad actualizado exitosamente' });
+        });
+    }
+    CrearTipoD(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.body;
+            yield database_1.default.query('INSERT INTO tipo_discapacidad (nombre) VALUES ($1)', [nombre]);
+            console.log(req.body);
+            res.json({ message: 'Registro guardado' });
+        });
+    }
+    ObtenerUltimoIdTD(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const TIPO_DISCAPACIDAD = yield database_1.default.query('SELECT MAX(id) FROM tipo_discapacidad');
+            if (TIPO_DISCAPACIDAD.rowCount > 0) {
+                return res.json(TIPO_DISCAPACIDAD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
-exports.discapacidadControlador = new DiscapacidadControlador();
-exports.default = exports.discapacidadControlador;
+exports.DISCAPACIDAD_CONTROLADOR = new DiscapacidadControlador();
+exports.default = exports.DISCAPACIDAD_CONTROLADOR;

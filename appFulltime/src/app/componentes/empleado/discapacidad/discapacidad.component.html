@@ -34,9 +34,9 @@
                                 matTooltip="Seleccione el tipo de discapacidad que posee el empleado">
                                 help_outline
                             </mat-icon>
-                            <mat-select [formControl]="tipo" required>
-                                <mat-option *ngFor="let d of discapacidades" [value]="d.value">
-                                    {{d.viewValue}}
+                            <mat-select [formControl]="tipo" [(ngModel)]="seleccionarTipo" required>
+                                <mat-option *ngFor="let td of tipoDiscapacidad" [value]="td.id" (click)="ActivarDesactivarNombre(nuevoCarnetForm.value)">
+                                    {{td.nombre}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -44,8 +44,21 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <mat-form-field>
+                            <mat-label>Nuevo Tipo</mat-label>
+                            <input matInput placeholder="Ej: Descripcion del tipo de permiso"
+                                (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm" id="nombreTD"
+                                style="visibility:hidden">
+                            <mat-icon id="icono" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar nombre del nuevo tipo de discapacidad">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <mat-label>Porcentaje de discapacidad *</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                             matTooltip="Indique el valor porcentual de discapacidad que posee el empleado">
                             help_outline
                         </mat-icon>

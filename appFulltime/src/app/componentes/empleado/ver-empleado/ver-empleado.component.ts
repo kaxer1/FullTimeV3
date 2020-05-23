@@ -322,8 +322,13 @@ export class VerEmpleadoComponent implements OnInit {
         this.btnDisc = 'Añadir';
       }
     } else {
-      this.mostrarDiscapacidad = false;
-      this.editar = 'editar';
+      if (this.mostrarDiscapacidad == false) {
+        this.mostrarDiscapacidad = true;
+        this.editar = 'editar';
+      } else {
+        this.mostrarDiscapacidad = false;
+        this.editar = 'editar';
+      }
     }
   }
 

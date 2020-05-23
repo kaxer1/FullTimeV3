@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import pool from '../../../database';
 
 class DiscapacidadControlador {
+
   public async list(req: Request, res: Response) {
     const discapacidad = await pool.query('SELECT * FROM cg_discapacidades');
     res.json(discapacidad.rows);
@@ -9,7 +10,7 @@ class DiscapacidadControlador {
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id_empleado } = req.params;
-    const unaDiscapacidad = await pool.query('SELECT * FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
+    const unaDiscapacidad = await pool.query('SELECT * FROM VistaNombreDiscapacidad WHERE id_empleado = $1', [id_empleado]);
     if (unaDiscapacidad.rowCount > 0) {
       return res.json(unaDiscapacidad.rows)
     }
@@ -20,7 +21,7 @@ class DiscapacidadControlador {
     const { id_empleado, carn_conadis, porcentaje, tipo } = req.body;
     await pool.query('INSERT INTO cg_discapacidades ( id_empleado, carn_conadis, porcentaje, tipo) VALUES ($1, $2, $3, $4)', [id_empleado, carn_conadis, porcentaje, tipo]);
     console.log(req.body);
-    res.json({ message: 'Discapacidad guardada'});
+    res.json({ message: 'Discapacidad guardada' });
   }
 
   public async update(req: Request, res: Response): Promise<void> {
@@ -36,8 +37,56 @@ class DiscapacidadControlador {
     res.json({ message: 'Registro eliminado' });
   }
 
+
+  /* TIPO DISCAPACIDAD */
+
+  public async ListarTipoD(req: Request, res: Response) {
+    const TIPO_DISCAPACIDAD = await pool.query('SELECT * FROM tipo_discapacidad');
+    if (TIPO_DISCAPACIDAD.rowCount > 0) {
+      return res.json(TIPO_DISCAPACIDAD.rows)
+    } 
+    else {
+      res.status(404).json({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async ObtenerUnTipoD(req: Request, res: Response): Promise<any> {
+    const { id } = req.params;
+    const TIPO_DISCAPACIDAD = await pool.query('SELECT * FROM tipo_discapacidad WHERE id = $1', [id]);
+    if (TIPO_DISCAPACIDAD.rowCount > 0) {
+      return res.json(TIPO_DISCAPACIDAD.rows)
+    } 
+    else {
+      res.status(404).json({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async ActualizarTipoD(req: Request, res: Response): Promise<void> {
+    const id = req.params;
+    const { nombre } = req.body;
+    await pool.query('UPDATE tipo_discapacidad SET nombre = $1 WHERE id = $2', [nombre, id]);
+    res.json({ message: 'Tipo de Discapacidad actualizado exitosamente' });
+  }
+
+  public async CrearTipoD(req: Request, res: Response): Promise<void> {
+    const { nombre } = req.body;
+    await pool.query('INSERT INTO tipo_discapacidad (nombre) VALUES ($1)', [nombre]);
+    console.log(req.body);
+    res.json({ message: 'Registro guardado' });
+  }
+
+  public async ObtenerUltimoIdTD(req: Request, res: Response) {
+    const TIPO_DISCAPACIDAD = await pool.query('SELECT MAX(id) FROM tipo_discapacidad');
+    if (TIPO_DISCAPACIDAD.rowCount > 0) {
+        return res.json(TIPO_DISCAPACIDAD.rows)
+    }
+    else {
+        return res.status(404).json({ text: 'No se encuentran registros' });
+    }
 }
 
-export const discapacidadControlador = new DiscapacidadControlador();
+}
 
-export default discapacidadControlador;
+export const DISCAPACIDAD_CONTROLADOR = new DiscapacidadControlador();
+
+export default DISCAPACIDAD_CONTROLADOR;

@@ -207,13 +207,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col d-flex align-items-center justify-content-center">
-                                        <a href="{{rutaTitulo}}" mat-button type="submit" id="botonActualizar"
-                                            class="btn" matSuffix matTooltipPosition="right"
+                                        <a href="{{rutaTitulo}}" mat-button type="submit" class="btn" matSuffix
+                                            matTooltipPosition="right"
                                             matTooltip="Editar los datos generales de este registro"
                                             (click)="verTituloEdicion(false); ObtenerIdTituloSeleccionado(rte.id)"
                                             [disabled]="!btnActualizarTitulo">
-                                            <i class="fas fa-edit"></i>
-                                            Editar
+                                            <i class="fas fa-edit" id="edit">
+                                                <p>Editar</p>
+                                            </i>
                                         </a>
                                     </div>
                                     <div class="col d-flex align-items-center justify-content-center">
@@ -265,7 +266,7 @@
                                         <label class="col-sm col-form-label">Tipo:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{d.tipo}}</label>
+                                        <label class="col col-form-label">{{d.nom_tipo}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
