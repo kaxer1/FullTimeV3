@@ -29,7 +29,9 @@ class PermisosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion } = req.body;
             yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion]);
-            res.json({ message: 'Permiso se registró con éxito' });
+            const ultimo = yield database_1.default.query('SELECT id FROM permisos WHERE fec_creacion = $1,  id_tipo_permiso = $2, id_empl_contrato = $3,', [fec_creacion, id_tipo_permiso, id_empl_contrato,]);
+            console.log(ultimo.rows[0]);
+            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0] });
         });
     }
     getDoc(req, res) {
@@ -42,6 +44,7 @@ class PermisosControlador {
     guardarDocumentoPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
+            console.log(list);
             // let imagen = list.image[0].path.split("\\")[1];
             // let id = req.params.id_empleado
             // const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
