@@ -37,11 +37,12 @@ import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/list
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
 import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
-
-import { AuthGuard } from "./guards/auth.guard";
 import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
 import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
+import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
+
+import { AuthGuard } from "./guards/auth.guard";
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -85,6 +86,7 @@ const routes: Routes = [
   { path: 'autorizaciones', component: AutorizacionesComponent, canActivate: [AuthGuard]},
   { path: 'olvidar-contrasenia', component: OlvidarContraseniaComponent},
   { path: 'confirmar-contrasenia/:token', component: ConfirmarContraseniaComponent},
+  { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard]},
 
 ];
 

@@ -27,7 +27,28 @@ class UsuarioControlador {
             if (unUsuario.rowCount > 0) {
                 return res.json(unUsuario.rows);
             }
-            res.status(404).json({ text: 'No se ha encontrado el usuario' });
+            else {
+                res.status(404).json({ text: 'No se ha encontrado el usuario' });
+            }
+        });
+    }
+    ObtenerDatosUsuario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const UN_USUARIO = yield database_1.default.query('SELECT * FROM usuarios WHERE id_empleado = $1', [id_empleado]);
+            if (UN_USUARIO.rowCount > 0) {
+                return res.json(UN_USUARIO.rows);
+            }
+            else {
+                res.status(404).json({ text: 'No se ha encontrado el usuario' });
+            }
+        });
+    }
+    CambiarPasswordUsuario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { contrasena, id_empleado } = req.body;
+            const UN_USUARIO = yield database_1.default.query('UPDATE usuarios SET contrasena = $1 WHERE id_empleado = $2', [contrasena, id_empleado]);
+            res.json({ message: 'Registro actualizado exitosamente' });
         });
     }
     // public async getIdByUsuario(req: Request, res: Response): Promise<any>{

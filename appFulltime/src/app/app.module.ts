@@ -178,6 +178,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
+import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 
 @NgModule({
   declarations: [
@@ -291,6 +293,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     MetodosComponent,
     EditarContratoComponent,
     EditarCargoComponent,
+    DatosEmpleadoComponent,
+    CambiarContrasenaComponent,
 
   ],
 

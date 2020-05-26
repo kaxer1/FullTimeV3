@@ -8,14 +8,32 @@ class UsuarioControlador {
   }
 
 
-  public async getIdByUsuario(req: Request, res: Response): Promise<any>{
-    const  {usuario} = req.params;
+  public async getIdByUsuario(req: Request, res: Response): Promise<any> {
+    const { usuario } = req.params;
     const unUsuario = await pool.query('SELECT id FROM usuarios WHERE usuario = $1', [usuario]);
     if (unUsuario.rowCount > 0) {
       return res.json(unUsuario.rows);
     }
-  
-    res.status(404).json({ text: 'No se ha encontrado el usuario' });
+    else {
+      res.status(404).json({ text: 'No se ha encontrado el usuario' });
+    }
+  }
+
+  public async ObtenerDatosUsuario(req: Request, res: Response): Promise<any> {
+    const { id_empleado } = req.params;
+    const UN_USUARIO = await pool.query('SELECT * FROM usuarios WHERE id_empleado = $1', [id_empleado]);
+    if (UN_USUARIO.rowCount > 0) {
+      return res.json(UN_USUARIO.rows);
+    }
+    else {
+      res.status(404).json({ text: 'No se ha encontrado el usuario' });
+    }
+  }
+
+  public async CambiarPasswordUsuario(req: Request, res: Response): Promise<any> {
+    const { contrasena, id_empleado } = req.body;
+    const UN_USUARIO = await pool.query('UPDATE usuarios SET contrasena = $1 WHERE id_empleado = $2', [contrasena, id_empleado]);
+    res.json({ message: 'Registro actualizado exitosamente' });
   }
 
   // public async getIdByUsuario(req: Request, res: Response): Promise<any>{
@@ -24,14 +42,14 @@ class UsuarioControlador {
   //   if (unUsuario.rowCount > 0) {
   //     return res.json(unUsuario.rows);
   //   }
-  
+
   //   res.status(404).json({ text: 'No se ha encontrado el usuario' });
   // }
 
   public async create(req: Request, res: Response): Promise<void> {
     const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
     await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
-    res.json({ message: 'Usuario Guardado'});
+    res.json({ message: 'Usuario Guardado' });
   }
 
 }

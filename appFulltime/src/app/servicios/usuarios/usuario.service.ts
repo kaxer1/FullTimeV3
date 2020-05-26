@@ -14,16 +14,24 @@ export class UsuarioService {
 
   // catalogo de usuarios
 
-  getUsuariosRest(){
+  getUsuariosRest() {
     return this.http.get(`${this.API_URL}/usuarios`);
   }
 
-  getIdByUsuarioRest(usuario:string){
+  getIdByUsuarioRest(usuario: string) {
     return this.http.get(`${this.API_URL}/usuarios/busqueda/${usuario}`);
   }
 
-  postUsuarioRest(data: any){
+  postUsuarioRest(data: any) {
     return this.http.post(`${this.API_URL}/usuarios`, data);
   }
-  
+
+  BuscarDatosUser(id: number) {
+    return this.http.get(`${this.API_URL}/usuarios/datos/${id}`);
+  }
+
+  ActualizarPassword(data: any) {
+    return this.http.put(`${this.API_URL}/usuarios`, data);
+  }
+
 }
