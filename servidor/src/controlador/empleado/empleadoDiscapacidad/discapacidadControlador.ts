@@ -4,8 +4,13 @@ import pool from '../../../database';
 class DiscapacidadControlador {
 
   public async list(req: Request, res: Response) {
-    const discapacidad = await pool.query('SELECT * FROM cg_discapacidades');
-    res.json(discapacidad.rows);
+    const DISCAPACIDAD = await pool.query('SELECT * FROM cg_discapacidades');
+    if (DISCAPACIDAD.rowCount > 0) {
+      return res.json(DISCAPACIDAD.rows)
+    }
+    else {
+      res.status(404).json({ text: 'Discapacidad no encontrada' });
+    }
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
@@ -14,7 +19,9 @@ class DiscapacidadControlador {
     if (unaDiscapacidad.rowCount > 0) {
       return res.json(unaDiscapacidad.rows)
     }
-    res.status(404).json({ text: 'Discapacidad no encontrada' });
+    else {
+      res.status(404).json({ text: 'Discapacidad no encontrada' });
+    }
   }
 
   public async create(req: Request, res: Response): Promise<void> {

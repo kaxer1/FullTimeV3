@@ -18,7 +18,7 @@ import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
     { provide: MAT_DATE_LOCALE, useValue: 'es' },
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ] 
+  ]
 })
 
 export class EditarEmpleadoProcesoComponent implements OnInit {
@@ -72,7 +72,7 @@ export class EditarEmpleadoProcesoComponent implements OnInit {
     });
   }
 
-  ImprimirDatos(){
+  ImprimirDatos() {
     this.EmpleProcesoForm.patchValue({
       fecInicioForm: this.data.datosProcesos.fec_inicio,
       fecFinalForm: this.data.datosProcesos.fec_final,
@@ -92,7 +92,7 @@ export class EditarEmpleadoProcesoComponent implements OnInit {
   InsertarProceso(form) {
     let datosProceso = {
       id_p: this.data.datosProcesos.id_p,
-      id_empl_cargo: this.data.idCargo,
+      id_empl_cargo: this.data.datosProcesos.id_empl_cargo,
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
       id: form.idProcesoForm

@@ -16,8 +16,13 @@ const database_1 = __importDefault(require("../../../database"));
 class DiscapacidadControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const discapacidad = yield database_1.default.query('SELECT * FROM cg_discapacidades');
-            res.json(discapacidad.rows);
+            const DISCAPACIDAD = yield database_1.default.query('SELECT * FROM cg_discapacidades');
+            if (DISCAPACIDAD.rowCount > 0) {
+                return res.json(DISCAPACIDAD.rows);
+            }
+            else {
+                res.status(404).json({ text: 'Discapacidad no encontrada' });
+            }
         });
     }
     getOne(req, res) {
@@ -27,7 +32,9 @@ class DiscapacidadControlador {
             if (unaDiscapacidad.rowCount > 0) {
                 return res.json(unaDiscapacidad.rows);
             }
-            res.status(404).json({ text: 'Discapacidad no encontrada' });
+            else {
+                res.status(404).json({ text: 'Discapacidad no encontrada' });
+            }
         });
     }
     create(req, res) {

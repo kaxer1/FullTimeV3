@@ -34,7 +34,7 @@
                                 matTooltip="Seleccione el tipo de discapacidad que posee el empleado">
                                 help_outline
                             </mat-icon>
-                            <mat-select [formControl]="tipo" [(ngModel)]="seleccionarTipo" required>
+                            <mat-select [formControl]="tipo" required>
                                 <mat-option *ngFor="let td of tipoDiscapacidad" [value]="td.id" (click)="ActivarDesactivarNombre(nuevoCarnetForm.value)">
                                     {{td.nombre}}
                                 </mat-option>

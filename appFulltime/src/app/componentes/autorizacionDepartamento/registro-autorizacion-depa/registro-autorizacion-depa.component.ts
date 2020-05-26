@@ -111,7 +111,7 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
   CerrarVentanaAutorizar() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
 }

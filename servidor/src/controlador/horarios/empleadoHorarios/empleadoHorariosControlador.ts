@@ -21,6 +21,17 @@ class EmpleadoHorariosControlador {
         res.json({ message: 'El horario del empleado se registró con éxito' });
     }
 
+    public async ListarHorarioCargo(req: Request, res: Response) {
+        const { id_empl_cargo } = req.params;
+        const HORARIOS = await pool.query('SELECT * FROM VistaHorarioEmpleado WHERE id_empl_cargo = $1', [id_empl_cargo]);
+        if (HORARIOS.rowCount > 0) {
+            return res.json(HORARIOS.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
+    }
+
     public async CrearHorarioEmpleadoPlantilla(req: Request, res: Response): Promise<void> {
         let list: any = req.files;
         let cadena = list.uploads[0].path;
@@ -34,31 +45,15 @@ class EmpleadoHorariosControlador {
         plantilla.forEach(async (data: any) => {
             const { id } = req.params;
             var { fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nom_horario, estado } = data;
-
-            const id_cargo = await pool.query('SELECT ec.id FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
-            var id_empl_cargo = id_cargo.rows[0]['id'];
-            //console.log("Jid_cargo", id_empl_cargo);
-            //console.log("fecha", fec_inicio);
+            const id_cargo = await pool.query('SELECT MAX(ec.id) FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
+            var id_empl_cargo = id_cargo.rows[0]['max'];;
             var nombre = nom_horario;
-            //console.log(nom_horario)
             const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
             var id_horarios = idHorario.rows[0]['id'];
-            //console.log("Jid_horario", id_horarios)
-
             var id_hora = 1;
-            //console.log("Jid_hora", id_hora)
-
-            //console.log(estado.split("-")[0])
-
-            if (estado != undefined) {
-                await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
-                console.log("carga exitosa");
-            }
-            else {
-                res.json({ error: 'plantilla equivocada' });
-            }
+            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
+            console.log("carga exitosa");
         });
-
         res.json({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
     }

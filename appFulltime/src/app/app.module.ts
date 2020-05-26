@@ -102,6 +102,8 @@ import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-per
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
 import { CiudadFeriadosService } from './servicios/ciudadFeriados/ciudad-feriados.service';
+import { EmpleadoHorariosService } from './servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargos.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 
@@ -173,6 +175,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MetodosComponent } from './componentes/metodos/metodos.component';
 
 @NgModule({
   declarations: [
@@ -282,7 +285,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     EditarEmpleadoComponent,
     EditarTituloComponent,
     OlvidarContraseniaComponent,
-    ConfirmarContraseniaComponent
+    ConfirmarContraseniaComponent,
+    MetodosComponent
 
   ],
 
@@ -355,6 +359,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     DepartamentosService,
     CiudadFeriadosService,
     CiudadService,
+    EmpleadoHorariosService,
+    EmplCargosService,
+
   ],
 
   bootstrap: [AppComponent],

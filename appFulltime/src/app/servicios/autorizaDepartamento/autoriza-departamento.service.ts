@@ -23,4 +23,8 @@ export class AutorizaDepartamentoService {
     return this.http.post(`${this.API_URL}/autorizaDepartamento`, datos);
   }
 
+  BuscarAutoridadCargo(id: any) {
+    return this.http.get(`${this.API_URL}/autorizaDepartamento/autoriza/${id}`);
+  }
+
 }

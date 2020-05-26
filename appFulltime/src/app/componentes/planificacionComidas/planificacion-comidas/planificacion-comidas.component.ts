@@ -126,7 +126,7 @@ export class PlanificacionComidasComponent implements OnInit {
   CerrarRegistroPlanificacion() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
   LimpiarCampos() {

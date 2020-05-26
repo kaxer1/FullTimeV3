@@ -34,7 +34,6 @@ class EmpleadoProcesoControlador {
     res.json({ message: 'Proceso actualizado exitosamente' });
 }
 
-
 }
 
 export const EMPLEADO_PROCESO_CONTROLADOR = new EmpleadoProcesoControlador();

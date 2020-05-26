@@ -17,6 +17,7 @@ class EmpleadoHorariosRutas {
     configuracion() {
         this.router.get('/', empleadoHorariosControlador_1.default.ListarEmpleadoHorarios);
         this.router.post('/', empleadoHorariosControlador_1.default.CrearEmpleadoHorarios);
+        this.router.get('/horarioCargo/:id_empl_cargo', empleadoHorariosControlador_1.default.ListarHorarioCargo);
         this.router.post('/upload/:id', multipartMiddleware, empleadoHorariosControlador_1.default.CrearHorarioEmpleadoPlantilla);
     }
 }

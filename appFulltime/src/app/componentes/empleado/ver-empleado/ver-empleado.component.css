@@ -22,6 +22,15 @@
     padding-bottom: 6px; 
 }
 
+#resulHorario { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
 .col-sm { font-weight: bold;}
 
 #boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
@@ -68,6 +77,12 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 #edit { color:green; margin-right: 20px; cursor: pointer; font-size: 15px;}
 
 p { font-size: x-small; }
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
+table { width: 100%; font-size: 14px; }
+
+td { padding-top: 10px; text-align: center; }
 
 [type="file"] {
     height: 0;

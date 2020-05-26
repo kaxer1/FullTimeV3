@@ -27,4 +27,8 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario/upload/${id}`, formData)  
   }
 
+  BuscarHorarioCargo(id: any) {
+    return this.http.get(`${this.API_URL}/empleadoHorario/horarioCargo/${id}`);
+  }
+
 }

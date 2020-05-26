@@ -13,6 +13,7 @@ class DepartamentoRutas {
     configuracion() {
         this.router.get('/', autorizaDepartamentoControlador_1.default.ListarAutorizaDepartamento);
         this.router.post('/', autorizaDepartamentoControlador_1.default.CrearAutorizaDepartamento);
+        this.router.get('/autoriza/:id_empl_cargo', autorizaDepartamentoControlador_1.default.EncontrarAutorizacionCargo);
     }
 }
 const AUTORIZA_DEPARTAMENTO_RUTAS = new DepartamentoRutas();

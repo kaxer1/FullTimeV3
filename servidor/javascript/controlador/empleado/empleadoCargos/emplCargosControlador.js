@@ -45,7 +45,21 @@ class EmpleadoCargosControlador {
             if (CARGO.rowCount > 0) {
                 return res.json(CARGO.rows);
             }
-            res.status(404).json({ text: 'Registro no encontrado' });
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    EncontrarIdCargoActual(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const CARGO = yield database_1.default.query('SELECT MAX(e_cargo.id) FROM empl_cargos AS e_cargo, empl_contratos AS contrato_e, empleados AS e WHERE contrato_e.id_empleado = e.id AND e_cargo.id_empl_contrato = contrato_e.id AND e.id = $1', [id_empleado]);
+            if (CARGO.rowCount > 0) {
+                return res.json(CARGO.rows);
+            }
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
         });
     }
     EncontrarInfoCargoEmpleado(req, res) {
