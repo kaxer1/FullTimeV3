@@ -41,15 +41,11 @@ mat-divider { background: rgba(131, 131, 131, 0.609);}
 
 #boton:hover { background-color: rgba(75, 75, 75, 0.609);}
 
-#botonActualizar { margin-left: 15px; background-color: rgb(80,87,97); color: white;}
-
-a { font-size: x-small; } 
-
 p { font-size: x-small; }
 
-.fas { color:white; cursor: pointer;}
+.fas {cursor: pointer;}
 
-.far { color:white; cursor: pointer;}
+.far {cursor: pointer;}
 
 mat-tab-group {
     background: rgb(232,232,232);
@@ -74,9 +70,13 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 .iniciales {color: white; font-weight: bold; font-size: 60px; }
 
-#edit { color:green; margin-right: 20px; cursor: pointer; font-size: 15px;}
+
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px;}
 
 p { font-size: x-small; }
+
+#delete { color:red; margin-right: 5px; cursor: pointer;}
+
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 

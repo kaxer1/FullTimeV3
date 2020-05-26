@@ -151,6 +151,13 @@
                             </div>
                         </mat-radio-group>
                     </section>
+                    <br>
+                    <div class="container">
+                        <form  method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file"> 
+                            <label for="file" class="btn-2" >Subir Documento</label>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

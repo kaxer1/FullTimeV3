@@ -53,6 +53,14 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/contratoEmpleado`, datos);
   }
 
+  ObtenerUnContrato(id: number) {
+    return this.http.get(`${this.API_URI}/contratoEmpleado/${id}/get`);
+  }
+
+  ActualizarContratoEmpleado(id: number, id_empleado: number, data: any){
+    return this.http.put(`${this.API_URI}/contratoEmpleado/${id_empleado}/${id}/actualizar/`, data);
+  }
+
   BuscarIDContrato(id: number){
     return this.http.get(`${this.API_URI}/contratoEmpleado/${id}`);
   }
@@ -64,6 +72,7 @@ export class EmpleadoService {
   BuscarContratoEmpleadoRegimen(id: number){
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contratoRegimen/${id}`);
   }
+  
   
   // servicio para obtener la lista de las nacionalidades
   getListaNacionalidades(){

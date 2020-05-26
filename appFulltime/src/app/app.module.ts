@@ -86,6 +86,9 @@ import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursa
 import { EditarCatProcesosComponent } from './componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { EditarEmpleadoProcesoComponent } from './componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
+import { MetodosComponent } from './componentes/metodos/metodos.component';
+import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
+import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -175,7 +178,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MetodosComponent } from './componentes/metodos/metodos.component';
 
 @NgModule({
   declarations: [
@@ -286,7 +288,9 @@ import { MetodosComponent } from './componentes/metodos/metodos.component';
     EditarTituloComponent,
     OlvidarContraseniaComponent,
     ConfirmarContraseniaComponent,
-    MetodosComponent
+    MetodosComponent,
+    EditarContratoComponent,
+    EditarCargoComponent,
 
   ],
 

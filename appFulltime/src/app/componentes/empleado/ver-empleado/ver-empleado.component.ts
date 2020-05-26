@@ -1,4 +1,4 @@
-import { Component, OnInit, Injectable } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -79,6 +79,8 @@ export class VerEmpleadoComponent implements OnInit {
 
   ruta: string;
   rutaTitulo: string;
+  rutaContrato: string;
+  rutaCargo: string;
 
   /* Items de paginación de la tabla */
   tamanio_pagina: number = 5;
@@ -110,6 +112,8 @@ export class VerEmpleadoComponent implements OnInit {
     var cadena = this.router.url.split('#')[0];
     this.ruta = 'http://localhost:4200' + cadena + '#editar';
     this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
+    this.rutaContrato = 'http://localhost:4200' + cadena + '#editarContrato';
+    this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
@@ -143,6 +147,16 @@ export class VerEmpleadoComponent implements OnInit {
   btnActualizarTitulo: boolean = true;
   verTituloEdicion(value: boolean) {
     this.btnActualizarTitulo = value;
+  }
+
+  btnActualizarContrato: boolean = true;
+  verContratoEdicion(value: boolean) {
+    this.btnActualizarContrato = value;
+  }
+
+  btnActualizarCargo: boolean = true;
+  verCargoEdicion(value: boolean) {
+    this.btnActualizarCargo = value;
   }
 
   // onUploadFinish(event) {
@@ -180,13 +194,23 @@ export class VerEmpleadoComponent implements OnInit {
     this.idSelect = idTituloEmpleado;
   }
 
-  /* Método para obtener datos de discapacidad */
+  idSelectContrato: number;
+  ObtenerIdContratoSeleccionado(idContratoEmpleado: number){
+    this.idSelectContrato = idContratoEmpleado;
+  }
+
+  idSelectCargo: number;
+  ObtenerIdCargoSeleccionado(idCargoEmpleado: number){
+    this.idSelectCargo = idCargoEmpleado;
+  }
+
+ /* Método para obtener datos de discapacidad */
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.discapacidadUser = [];
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
       this.discapacidadUser = data;
       this.habilitarBtn();
-    }, error => { console.log("no registro") });
+    }, error => { console.log("") });
   }
 
   /* Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
@@ -195,57 +219,53 @@ export class VerEmpleadoComponent implements OnInit {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
       this.relacionTituloEmpleado = data;
-    }, error => { });
+    }, error => {console.log("")});
   }
+
 
   /* Método para obtener el contrato de un empleado con su respectivo régimen laboral */
   idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen() {
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleadoRegimen = res;
-    });
+    }, error => {console.log("")});
     this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
-      this.contratoEmpleado.map(obj => {
-        this.idContratoEmpleado = obj.id;
-        this.fechaContratoIngreso = obj.fec_ingreso.split("T")[0];
-        if (obj.fec_salida === null) {
-          this.fechaContratoSalida = '';
-        } else {
-          this.fechaContratoSalida = obj.fec_salida.split("T")[0];
-        }
-        this.obtenerCargoEmpleado();
-        this.obtenerPeriodoVacaciones();
+      this.contratoEmpleado.forEach(obj => {
+        this.obtenerCargoEmpleado(obj.id);
+        this.obtenerPeriodoVacaciones(obj.id);
       });
-    });
+    }, error => {console.log("")});
   }
 
-  cargoEmpleado: any;
-  obtenerCargoEmpleado() {
-    this.restCargo.getInfoCargoEmpleadoRest(this.idContratoEmpleado).subscribe(res => {
-      this.cargoEmpleado = res;
-      this.cargoEmpleado.map(obj => {
+  cargoEmpleado: any = [];
+  obtenerCargoEmpleado(idContratoEmpleado: number) {
+    this.cargoEmpleado = [];
+    this.restCargo.getInfoCargoEmpleadoRest(idContratoEmpleado).subscribe(res => {     
+      console.log(this.cargoEmpleado);
+      this.cargoEmpleado.push(res);
+      this.cargoEmpleado.forEach(obj => {
         this.obtenerPlanHorarios(obj.id);
         this.obtenerEmpleadoProcesos(obj.id);
       });
-    })
+    }, error => {console.log("")});
   }
 
-  peridoVacaciones: any;
-  obtenerPeriodoVacaciones() {
-    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContratoEmpleado).subscribe(res => {
+  peridoVacaciones: any = [];
+  obtenerPeriodoVacaciones(idContratoEmpleado: number) {
+    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(idContratoEmpleado).subscribe(res => {
       this.peridoVacaciones = res;
       this.peridoVacaciones.map(obj => {
         this.obtenerVacaciones(obj.id);
       });
-    })
+    }, error => {console.log("")});
   }
 
   vacaciones: any = [];
   obtenerVacaciones(id_peri_vacaciones: number) {
     this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
       this.vacaciones = res;
-    });
+    }, error => {console.log("")});
   }
 
   planHorario: any;
@@ -255,21 +275,21 @@ export class VerEmpleadoComponent implements OnInit {
       this.planHorario.map(obj => {
         this.obtenerPlanHoraDetalle(obj.id);
       })
-    });
+    }, error => {console.log("")});
   }
 
   planHoraDetalle: any;
   obtenerPlanHoraDetalle(id_plan_horario: number) {
     this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
       this.planHoraDetalle = res;
-    });
+    }, error => {console.log("")});
   }
 
   empleadoProcesos: any;
   obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
     this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
       this.empleadoProcesos = res
-    });
+    }, error => {console.log("")});
   }
 
   planComidas: any;
@@ -277,7 +297,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.planComidas = [];
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
-    })
+    }, error => {console.log("")});
   }
 
   /* Método para imprimir datos del permiso */
@@ -616,7 +636,7 @@ export class VerEmpleadoComponent implements OnInit {
         ]
       },
       content: [
-        this.logoEmplesa(),
+        // this.logoEmplesa(),
         {
           text: 'Perfil Empleado',
           bold: true,

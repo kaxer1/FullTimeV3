@@ -1,0 +1,82 @@
+<mat-card class="mat-elevation-z8">
+    <div class="barraTituloContratoE">
+        <h5>Editar Contrato del Empleado</h5>
+    </div>
+    <br>
+    <form [formGroup]="ContratoForm">
+        <mat-card-content>
+            <div class="container" style="text-align: center">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Seleccionar Régimen</mat-label>
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Seleccionar Régimen Laboral con el cual va a prestar sus servicios el empleado">
+                                help_outline</mat-icon>
+                            <mat-select [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen" required>
+                                <mat-option *ngFor="let regimen of regimenLaboral" [value]="regimen.id">
+                                    {{regimen.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Fecha de ingreso</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaIngresoF"
+                                required>
+                            <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
+                                matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar la fecha de ingreso del empleado a la empresa. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha de salida</mat-label>
+                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaSalidaF">
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE"
+                                matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar la fecha estimada de salida del empleado, en caso de conocerla. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <section>
+                            <mat-label>Controlar Vacaciones *</mat-label>
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
+                                help_outline</mat-icon>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF" required>
+                                <mat-radio-button [value]="true">Si</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                        <br>
+                        <section>
+                            <mat-label>Controlar Asistencia *</mat-label>
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                                help_outline</mat-icon>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF" required>
+                                <mat-radio-button [value]="true">Si</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </form>
+    <div style="text-align: center">
+        <mat-card-actions style="text-align: center">
+            <input type="submit" class="btn btn-sm" [disabled]="!ContratoForm.valid"
+                (click)="ValidarDatosContrato(ContratoForm.value)" value="Guardar">
+            <input type="submit" (click)="cancelar()" class="btn btn-sm" value="Cancelar">
+        </mat-card-actions>
+    </div>
+</mat-card>

@@ -328,4 +328,32 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     return this.descripcionF.hasError('required') ? 'Campo Obligatorio' : '';
   }
 
+  /**
+   * 
+   * Subida de archivo
+   * 
+   * 
+   */
+
+  archivoForm = new FormControl('');
+  nameFile: string;
+  archivoSubido: Array < File > ;
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    console.log(element.target.files);
+  }
+  
+  SubirRespaldo() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.restP.SubirArchivoRespaldo(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
+  }
+
 }

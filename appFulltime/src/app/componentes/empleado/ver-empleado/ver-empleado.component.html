@@ -205,8 +205,8 @@
                                         <label class="col col-form-label">{{rte.nivel}}</label>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col d-flex align-items-center justify-content-center">
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col" style="text-align: right;">
                                         <a href="{{rutaTitulo}}" mat-button type="submit" class="btn" matSuffix
                                             matTooltipPosition="right"
                                             matTooltip="Editar los datos generales de este registro"
@@ -216,16 +216,14 @@
                                                 <p>Editar</p>
                                             </i>
                                         </a>
+                                        <a mat-button type="submit" (click)="eliminarTituloEmpleado(rte.id)">
+                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
+                                                matTooltip="Eliminar este registro">
+                                                <p>Eliminar</p>
+                                            </i>
+                                        </a>
                                     </div>
-                                    <div class="col d-flex align-items-center justify-content-center">
-                                        <button mat-button type="submit" id="botonActualizar" class="btn" matSuffix
-                                            matTooltipPosition="right" matTooltip="Eliminar este registro"
-                                            (click)="eliminarTituloEmpleado(rte.id)">
-                                            <i class="far fa-trash-alt"></i>
-                                            Eliminar
-                                        </button>
-                                    </div>
-                                </div> <br>
+                                </div>
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
@@ -237,7 +235,7 @@
                     </div>
                 </div>
                 <div class="col-md">
-                    <mat-card class="mat-elevation-z8" style="padding-bottom: 35px;">
+                    <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
                         <div class="barraTitulo1">
                             <div class="container">
                                 <div class="row" style="text-align: center;">
@@ -277,13 +275,15 @@
                                         <label class="col col-form-label">{{d.porcentaje}} %</label>
                                     </div>
                                 </div>
-                                <div class="col d-flex align-items-center justify-content-center">
-                                    <button mat-button type="submit" id="botonActualizar" class="btn"
-                                        (click)="eliminarDiscapacidad(d.id)" matSuffix matTooltipPosition="right"
-                                        matTooltip="Eliminar registro">
-                                        <i class="far fa-trash-alt"></i>
-                                        Eliminar
-                                    </button>
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col" style="text-align: right;">
+                                        <a mat-button type="submit" (click)="eliminarDiscapacidad(d.id)" matSuffix>
+                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
+                                                matTooltip="Eliminar registro">
+                                                <p>Eliminar</p>
+                                            </i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </mat-card-content>
@@ -360,7 +360,7 @@
                                         <label class="col-sm col-form-label">Fecha Ingreso:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{fechaContratoIngreso}}</label>
+                                        <label class="col col-form-label">{{ce.fec_ingreso.split("T")[0]}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -368,7 +368,10 @@
                                         <label class="col-sm col-form-label">Fecha Salida:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{fechaContratoSalida}}</label>
+                                        <label class="col col-form-label" *ngIf="ce.fec_salida === null ">Sin
+                                            fecha</label>
+                                        <label class="col col-form-label"
+                                            *ngIf="ce.fec_salida != null ">{{ce.fec_salida.split("T")[0]}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -389,9 +392,32 @@
                                         <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                                     </div>
                                 </div>
+                                <div class="col" style="text-align: right;">
+                                    <a href="{{rutaContrato}}" mat-button type="submit"
+                                        (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
+                                        [disabled]="!btnActualizarContrato">
+                                        <i class="fas fa-edit" matTooltipPosition="right" id="edit"
+                                            matTooltip="Modificar los datos generales de este registro">
+                                            <p>Editar</p>
+                                        </i>
+                                    </a>
+                                </div>
+                                <!-- <div class="col d-flex align-items-center justify-content-center">
+                                    <a mat-button type="submit" (click)="eliminarContratoEmpleado(ce.id)">
+                                        <i class="far fa-trash-alt"  matTooltipPosition="right" id="delete"
+                                            matTooltip="Eliminar este registro">
+                                            <p>Eliminar</p>
+                                        </i>
+                                    </a>
+                                </div> -->
+                                <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
+                    <div style="padding-bottom: 35px; padding-top: 35px;">
+                        <app-editar-contrato *ngIf="!btnActualizarContrato" [idEmpleado]="idEmpleado"
+                            [idSelectContrato]="idSelectContrato" id="editarContrato"></app-editar-contrato>
+                    </div>
                 </div>
 
                 <div class="col-md">
@@ -467,9 +493,24 @@
                                         <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
                                     </div>
                                 </div>
+                                <div class="col" style="text-align: right;">
+                                    <a href="{{rutaCargo}}" mat-button type="submit"
+                                        (click)="verCargoEdicion(false); ObtenerIdCargoSeleccionado(c.id)"
+                                        [disabled]="!btnActualizarCargo">
+                                        <i class="fas fa-edit" matTooltipPosition="right" id="edit"
+                                            matTooltip="Modificar los datos generales de este registro">
+                                            <p>Editar</p>
+                                        </i>
+                                    </a>
+                                </div>
+                                <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
+                    <div style="padding-bottom: 35px; padding-top: 35px;">
+                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo" id="editarCargo">
+                        </app-editar-cargo>
+                    </div>
                 </div>
             </div>
         </div>
