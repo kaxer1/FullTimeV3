@@ -22,4 +22,9 @@ export class PermisosService {
     return this.http.post(`${this.API_URL}/empleadoPermiso`, datos);
   }
 
+  SubirArchivoRespaldo(formData) {
+    return this.http.post(this.API_URL + '/empleadoPermiso/upload', formData)  
+  }
+
+
 }

@@ -25,6 +25,18 @@ class ContratoEmpleadoControlador {
             }
         });
     }
+    ObtenerUnContrato(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const CONTRATOS = yield database_1.default.query('SELECT * FROM empl_contratos WHERE id = $1', [id]);
+            if (CONTRATOS.rowCount > 0) {
+                return res.json(CONTRATOS.rows[0]);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearContrato(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen } = req.body;
@@ -45,7 +57,7 @@ class ContratoEmpleadoControlador {
     EncontrarContratoIdEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const CONTRATO = yield database_1.default.query('SELECT ec.id, ec.id_empleado, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 AND ec.id_regimen = cr.id', [id_empleado]);
+            const CONTRATO = yield database_1.default.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 AND ec.id_regimen = cr.id', [id_empleado]);
             if (CONTRATO.rowCount > 0) {
                 return res.json(CONTRATO.rows);
             }
@@ -60,6 +72,14 @@ class ContratoEmpleadoControlador {
                 return res.json(CONTRATO_EMPLEADO_REGIMEN.rows);
             }
             res.status(404).json({ text: 'Registro no encontrado' });
+        });
+    }
+    EditarContrato(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado, id } = req.params;
+            const { fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen } = req.body;
+            yield database_1.default.query('UPDATE empl_contratos SET fec_ingreso = $1, fec_salida = $2, vaca_controla = $3, asis_controla = $4, id_regimen = $5  WHERE id_empleado = $6 AND id = $7', [fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, id_empleado, id]);
+            res.json({ message: 'Contrato del empleado actualizada exitosamente' });
         });
     }
 }

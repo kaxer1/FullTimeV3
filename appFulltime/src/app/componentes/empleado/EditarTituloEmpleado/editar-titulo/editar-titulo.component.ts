@@ -15,7 +15,6 @@ export class EditarTituloComponent implements OnInit {
 
   @Input() idSelect: number;
   @Input() idEmpleado: number;
-  // idEmpleado: string;
 
   cgTitulos: any = [];
 

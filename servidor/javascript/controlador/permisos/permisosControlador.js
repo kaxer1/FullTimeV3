@@ -32,6 +32,41 @@ class PermisosControlador {
             res.json({ message: 'Permiso se registró con éxito' });
         });
     }
+    getDoc(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const imagen = req.params.imagen;
+            let filePath = `servidor\\docRespaldosPermisos\\${imagen}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
+    guardarDocumentoPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            // let imagen = list.image[0].path.split("\\")[1];
+            // let id = req.params.id_empleado
+            // const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
+            // if (unEmpleado.rowCount > 0) {
+            //   unEmpleado.rows.map(async (obj) => {
+            //     if (obj.imagen != null ){
+            //       try {
+            //         console.log(obj.imagen);
+            //         let filePath = `servidor\\imagenesEmpleados\\${obj.imagen}`;
+            //         let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+            //         fs.unlinkSync(direccionCompleta);
+            //         await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
+            //         res.json({ message: 'Imagen Actualizada'});
+            //       } catch (error) {
+            //         await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
+            //         res.json({ message: 'Imagen Actualizada'});
+            //       }
+            //     } else {
+            //       await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
+            //       res.json({ message: 'Imagen Actualizada'});
+            //     }
+            //   });
+            // }
+        });
+    }
 }
 exports.PERMISOS_CONTROLADOR = new PermisosControlador();
 exports.default = exports.PERMISOS_CONTROLADOR;
