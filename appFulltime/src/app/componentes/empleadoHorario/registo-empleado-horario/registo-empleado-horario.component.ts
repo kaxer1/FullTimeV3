@@ -1,13 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
-
 
 @Component({
   selector: 'app-registo-empleado-horario',
@@ -20,7 +19,10 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class RegistoEmpleadoHorarioComponent implements OnInit {
+
+  dataItem: any;
 
   lunes = false;
   martes = false;
@@ -64,7 +66,9 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistoEmpleadoHorarioComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
-  ) { }
+  ) {
+    this.dataItem = 4;
+  }
 
   ngOnInit(): void {
     this.BuscarHorarios();
@@ -78,16 +82,16 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   }
 
   ValidarFechas(form) {
-      if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
-        this.InsertarEmpleadoHorario(form);
-      }
-      else {
-        this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades')
-      }
+    if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
+      this.InsertarEmpleadoHorario(form);
+    }
+    else {
+      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades')
+    }
   }
 
   InsertarEmpleadoHorario(form) {
-    let datosempleH= {
+    let datosempleH = {
       id_empl_cargo: this.datoEmpleado.idCargo,
       id_hora: 0,
       fec_inicio: form.fechaInicioForm,
@@ -116,8 +120,8 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
 
   CerrarVentanaEmpleadoHorario() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close(this.dataItem);
+    //window.location.reload();
   }
 
 }

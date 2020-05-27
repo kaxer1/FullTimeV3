@@ -29,4 +29,26 @@ export class DiscapacidadService {
     return this.http.delete(`${this.Discapacidad_URL}/discapacidad/eliminar/${id}`);
   }
 
+  // TIPO DE DISCAPACIDAD
+
+  InsertarTipoD(data: any){
+    return this.http.post(`${this.Discapacidad_URL}/discapacidad/buscarTipo`, data);
+  }
+
+  BuscarTipoD(id: number){
+    return this.http.get(`${this.Discapacidad_URL}/discapacidad/buscarTipo/tipo/${id}`);
+  }
+
+  ListarTiposD(){
+    return this.http.get(`${this.Discapacidad_URL}/discapacidad/buscarTipo/tipo`);
+  }
+
+  ActualizarTipoD(id: number, data: any){
+    return this.http.put(`${this.Discapacidad_URL}/discapacidad/buscarTipo/${id}`, data);
+  }
+
+  ConsultarUltimoIdTD(){
+    return this.http.get(`${this.Discapacidad_URL}/discapacidad/buscarTipo/ultimoId`);
+  }
+
 }

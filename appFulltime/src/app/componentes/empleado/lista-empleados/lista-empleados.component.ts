@@ -5,6 +5,11 @@ import { ToastrService } from 'ngx-toastr';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PageEvent } from '@angular/material/paginator';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as xml from 'xml-js';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -15,6 +20,7 @@ import { PageEvent } from '@angular/material/paginator';
 export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
+  nacionalidades: any = [];
   displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
   
   codigo = new FormControl('');
@@ -40,6 +46,7 @@ export class ListaEmpleadosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmpleados();
+    this.obtenerNacionalidades();
   }
 
   ManejarPagina(e: PageEvent){
@@ -87,7 +94,7 @@ export class ListaEmpleadosComponent implements OnInit {
   getEmpleados(){
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
-      this.empleado = data
+      this.empleado = data;
     })
   }
 
@@ -105,6 +112,11 @@ export class ListaEmpleadosComponent implements OnInit {
     this.apellido.reset();
   }
 
+  obtenerNacionalidades() {
+    this.rest.getListaNacionalidades().subscribe(res => {
+      this.nacionalidades = res;
+    });
+  }
   /**
    * Metodos y variables para subir plantilla
    */
@@ -143,4 +155,145 @@ export class ListaEmpleadosComponent implements OnInit {
       this.nameFile = '';
     });
   }
+
+  /**
+   * 
+   * METODOS PARA PDF
+   * 
+   */
+
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Empleados', this.empleado);
+    return {
+      pageOrientation: 'landscape', 
+      content: [
+        {
+          text: 'Empleados',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFEmpleados(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 10,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 8
+        }
+      }
+    };
+  }
+
+  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
+  GeneroSelect: any = ['Masculino','Femenino'];
+  EstadoSelect: any = ['Activo','Inactivo'];
+  presentarDataPDFEmpleados() {
+    return {
+      table: {
+        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        body: [
+          [
+            {text: 'Id', style: 'tableHeader'},
+            {text: 'Nombre', style: 'tableHeader'},
+            {text: 'Apellido', style: 'tableHeader'},
+            {text: 'Cedula', style: 'tableHeader'},
+            {text: 'Fecha Nacimiento', style: 'tableHeader'},
+            {text: 'Correo', style: 'tableHeader'},
+            {text: 'Correo Alternativo', style: 'tableHeader'},
+            {text: 'Género', style: 'tableHeader'},
+            {text: 'Estado Civil', style: 'tableHeader'},
+            {text: 'Domicilio', style: 'tableHeader'},
+            {text: 'Teléfono', style: 'tableHeader'},
+            {text: 'Estado', style: 'tableHeader'},
+            {text: 'Nacionalidad', style: 'tableHeader'},
+          ],
+          ...this.empleado.map(obj => {
+            var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+            var genero = this.GeneroSelect[obj.genero - 1];
+            var estado = this.EstadoSelect[obj.estado - 1];
+            let nacionalidad;
+            this.nacionalidades.forEach(element => {
+              if (obj.id_nacionalidad == element.id) {
+                nacionalidad = element.nombre;
+              }
+            });
+            return [
+              {text: obj.id, style: 'itemsTable'}, 
+              {text: obj.nombre, style: 'itemsTable'}, 
+              {text: obj.apellido, style: 'itemsTable'}, 
+              {text: obj.cedula, style: 'itemsTable'}, 
+              {text: obj.fec_nacimiento.split("T")[0], style: 'itemsTable'},
+              {text: obj.correo, style: 'itemsTable'}, 
+              {text: obj.mail_alternativo, style: 'itemsTable'}, 
+              {text: genero, style: 'itemsTable'}, 
+              {text: estadoCivil, style: 'itemsTable'}, 
+              {text: obj.domicilio, style: 'itemsTable'}, 
+              {text: obj.telefono, style: 'itemsTable'}, 
+              {text: estado, style: 'itemsTable'}, 
+              {text: nacionalidad, style: 'itemsTable'} 
+            ];
+          })
+        ]
+      }
+    };
+  }
+  
+
+  /**
+   * 
+   * METODO PARA EXPORTAR A EXCEL
+   * 
+   */
+
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'empleados');
+    xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
+  }
+
+  exportToXML() {
+    // var json = JSON.stringify(this.empleado[0])
+    var json = '{"name":{"_text":"Ali"},"age":{"_text":"30"}}';
+    console.log(json);
+    var options = {compact: true, textFn: (val, elementName) => {return elementName === 'age'}};
+    var result = xml.json2xml(json, options);
+    console.log(result);
+  }
+
+   
 }

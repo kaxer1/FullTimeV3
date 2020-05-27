@@ -16,7 +16,13 @@ class DiscapacidadRutas {
         this.router.post('/', discapacidadControlador_1.default.create);
         this.router.put('/:id_empleado', discapacidadControlador_1.default.update);
         this.router.delete('/eliminar/:id_empleado', discapacidadControlador_1.default.deleteDiscapacidad);
+        // TIPO DISCAPACIDAD
+        this.router.get('/buscarTipo/tipo', discapacidadControlador_1.default.ListarTipoD);
+        this.router.get('/buscarTipo/tipo/:id', discapacidadControlador_1.default.ObtenerUnTipoD);
+        this.router.post('/buscarTipo', discapacidadControlador_1.default.CrearTipoD);
+        this.router.put('/buscarTipo/:id', discapacidadControlador_1.default.ActualizarTipoD);
+        this.router.get('/buscarTipo/ultimoId', discapacidadControlador_1.default.ObtenerUltimoIdTD);
     }
 }
-const discapacidadRutas = new DiscapacidadRutas();
-exports.default = discapacidadRutas.router;
+const DISCAPACIDAD_RUTAS = new DiscapacidadRutas();
+exports.default = DISCAPACIDAD_RUTAS.router;

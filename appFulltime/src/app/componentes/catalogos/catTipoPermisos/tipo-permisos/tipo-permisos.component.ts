@@ -88,7 +88,6 @@ export class TipoPermisosComponent implements OnInit {
       diasHorasForm: ['', Validators.required]
     });
     this.segundoFormGroup = this._formBuilder.group({
-      almuIncluirForm: ['', Validators.required],
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
       correoForm: ['', Validators.required],

@@ -30,9 +30,12 @@ export class EmplCargosService {
     return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/${id}`);
   }
 
+  BuscarIDCargoActual(id: number){
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/cargoActual/${id}`);
+  }
+
   ActualizarContratoEmpleado(id: number, id_empl_contrato: number, data: any){
     return this.http.put(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/${id_empl_contrato}/${id}/actualizar/`, data);
   }
-
 
 }

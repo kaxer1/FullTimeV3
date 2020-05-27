@@ -27,47 +27,51 @@ class PermisosControlador {
     }
     CrearPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion } = req.body;
-            yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion]);
-            const ultimo = yield database_1.default.query('SELECT id FROM permisos WHERE fec_creacion = $1,  id_tipo_permiso = $2, id_empl_contrato = $3,', [fec_creacion, id_tipo_permiso, id_empl_contrato,]);
-            console.log(ultimo.rows[0]);
-            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0] });
+            const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso } = req.body;
+            yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso]);
+            const ultimo = yield database_1.default.query('SELECT id FROM permisos WHERE fec_creacion = $1 AND  id_tipo_permiso = $2 AND id_empl_contrato = $3', [fec_creacion, id_tipo_permiso, id_empl_contrato]);
+            console.log(ultimo.rows[0].id);
+            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id });
+        });
+    }
+    ObtenerNumPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const NUMERO_PERMISO = yield database_1.default.query('SELECT MAX(p.num_permiso) FROM permisos AS p, empl_contratos AS ec, empleados AS e WHERE p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND e.id = $1', [id_empleado]);
+            if (NUMERO_PERMISO.rowCount > 0) {
+                return res.json(NUMERO_PERMISO.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' }).end;
+            }
+        });
+    }
+    ObtenerPermisoContrato(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id_empl_contrato } = req.params;
+                const PERMISO = yield database_1.default.query('SELECT * FROM VistaNombrePermiso  WHERE id_empl_contrato = $1', [id_empl_contrato]);
+                return res.json(PERMISO.rows);
+            }
+            catch (error) {
+                return res.json(null);
+            }
         });
     }
     getDoc(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const imagen = req.params.imagen;
-            let filePath = `servidor\\docRespaldosPermisos\\${imagen}`;
+            const docs = req.params.docs;
+            let filePath = `servidor\\docRespaldosPermisos\\${docs}`;
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
     guardarDocumentoPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
-            console.log(list);
-            // let imagen = list.image[0].path.split("\\")[1];
-            // let id = req.params.id_empleado
-            // const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
-            // if (unEmpleado.rowCount > 0) {
-            //   unEmpleado.rows.map(async (obj) => {
-            //     if (obj.imagen != null ){
-            //       try {
-            //         console.log(obj.imagen);
-            //         let filePath = `servidor\\imagenesEmpleados\\${obj.imagen}`;
-            //         let direccionCompleta = __dirname.split("servidor")[0] + filePath;
-            //         fs.unlinkSync(direccionCompleta);
-            //         await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            //         res.json({ message: 'Imagen Actualizada'});
-            //       } catch (error) {
-            //         await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            //         res.json({ message: 'Imagen Actualizada'});
-            //       }
-            //     } else {
-            //       await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            //       res.json({ message: 'Imagen Actualizada'});
-            //     }
-            //   });
-            // }
+            let doc = list.uploads[0].path.split("\\")[1];
+            let id = req.params.id;
+            yield database_1.default.query('UPDATE permisos SET documento = $2 WHERE id = $1', [id, doc]);
+            res.json({ message: 'Documento Actualizado' });
         });
     }
 }

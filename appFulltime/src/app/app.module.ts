@@ -86,6 +86,9 @@ import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursa
 import { EditarCatProcesosComponent } from './componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { EditarEmpleadoProcesoComponent } from './componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
+import { MetodosComponent } from './componentes/metodos/metodos.component';
+import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
+import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -102,6 +105,8 @@ import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-per
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
 import { CiudadFeriadosService } from './servicios/ciudadFeriados/ciudad-feriados.service';
+import { EmpleadoHorariosService } from './servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargos.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 
@@ -173,8 +178,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
-import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
-import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
 
 @NgModule({
   declarations: [
@@ -285,8 +288,9 @@ import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar
     EditarTituloComponent,
     OlvidarContraseniaComponent,
     ConfirmarContraseniaComponent,
+    MetodosComponent,
     EditarContratoComponent,
-    EditarCargoComponent
+    EditarCargoComponent,
 
   ],
 
@@ -359,6 +363,9 @@ import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar
     DepartamentosService,
     CiudadFeriadosService,
     CiudadService,
+    EmpleadoHorariosService,
+    EmplCargosService,
+
   ],
 
   bootstrap: [AppComponent],

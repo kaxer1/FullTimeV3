@@ -19,6 +19,8 @@
 
 #letras { font-size: 14px; }
 
+#solP { font-size: 13px; }
+
 [type="file"] {
     height: 0;
     overflow: hidden;
@@ -71,3 +73,4 @@
 [type="file"] + label.btn-2:hover::before {
     right: 80%
 }
+

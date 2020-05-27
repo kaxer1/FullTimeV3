@@ -23,7 +23,15 @@ export class PermisosService {
   }
 
   SubirArchivoRespaldo(formData, id: number) {
-    return this.http.post(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)  
+    return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)  
+  }
+
+  BuscarNumPermiso(id: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/numPermiso/${id}`);
+  }
+
+  BuscarPermisoContrato(id: any) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/permisoContrato/${id}`);
   }
 
 

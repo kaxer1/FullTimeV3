@@ -16,8 +16,10 @@ class PermisosRutas {
     configuracion(): void {
         this.router.get('/', PERMISOS_CONTROLADOR.ListarPermisos);
         this.router.post('/', PERMISOS_CONTROLADOR.CrearPermisos);
+        this.router.get('/documentos/:docs', PERMISOS_CONTROLADOR.getDoc);
+        this.router.get('/numPermiso/:id_empleado',  PERMISOS_CONTROLADOR.ObtenerNumPermiso);
+        this.router.get('/permisoContrato/:id_empl_contrato',  PERMISOS_CONTROLADOR.ObtenerPermisoContrato);
         this.router.put('/:id/documento', multipartMiddleware, PERMISOS_CONTROLADOR.guardarDocumentoPermiso);
-
     }
 }
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import discapacidadControlador from '../../../controlador/empleado/empleadoDiscapacidad/discapacidadControlador';
+import DISCAPACIDAD_CONTROLADOR from '../../../controlador/empleado/empleadoDiscapacidad/discapacidadControlador';
 
 class DiscapacidadRutas {
     public router: Router = Router();
@@ -11,14 +11,21 @@ class DiscapacidadRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', discapacidadControlador.list);
-        this.router.get('/:id_empleado', discapacidadControlador.getOne);
-        this.router.post('/', discapacidadControlador.create);
-        this.router.put('/:id_empleado', discapacidadControlador.update);
-        this.router.delete('/eliminar/:id_empleado', discapacidadControlador.deleteDiscapacidad);
+        this.router.get('/', DISCAPACIDAD_CONTROLADOR.list);
+        this.router.get('/:id_empleado', DISCAPACIDAD_CONTROLADOR.getOne);
+        this.router.post('/', DISCAPACIDAD_CONTROLADOR.create);
+        this.router.put('/:id_empleado', DISCAPACIDAD_CONTROLADOR.update);
+        this.router.delete('/eliminar/:id_empleado', DISCAPACIDAD_CONTROLADOR.deleteDiscapacidad);
+
+        // TIPO DISCAPACIDAD
+        this.router.get('/buscarTipo/tipo', DISCAPACIDAD_CONTROLADOR.ListarTipoD);
+        this.router.get('/buscarTipo/tipo/:id', DISCAPACIDAD_CONTROLADOR.ObtenerUnTipoD);
+        this.router.post('/buscarTipo', DISCAPACIDAD_CONTROLADOR.CrearTipoD);
+        this.router.put('/buscarTipo/:id', DISCAPACIDAD_CONTROLADOR.ActualizarTipoD);
+        this.router.get('/buscarTipo/ultimoId', DISCAPACIDAD_CONTROLADOR.ObtenerUltimoIdTD);
     }
 }
 
-const discapacidadRutas = new DiscapacidadRutas();
+const DISCAPACIDAD_RUTAS = new DiscapacidadRutas();
 
-export default discapacidadRutas.router;
+export default DISCAPACIDAD_RUTAS.router;

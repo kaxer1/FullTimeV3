@@ -11,6 +11,7 @@ class DepartamentoRutas {
     configuracion(): void {
         this.router.get('/', AUTORIZA_DEPARTAMENTO_CONTROLADOR.ListarAutorizaDepartamento);
         this.router.post('/', AUTORIZA_DEPARTAMENTO_CONTROLADOR.CrearAutorizaDepartamento);
+        this.router.get('/autoriza/:id_empl_cargo', AUTORIZA_DEPARTAMENTO_CONTROLADOR.EncontrarAutorizacionCargo);
     }
 }
 
