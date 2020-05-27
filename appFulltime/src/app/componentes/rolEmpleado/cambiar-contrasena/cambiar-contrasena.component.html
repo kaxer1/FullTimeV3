@@ -4,40 +4,40 @@
     <form [formGroup]="cambiarContraseniaForm">
         <mat-form-field>
             <mat-label>Contraseña Actual</mat-label>
-            <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+            <input matInput placeholder="máximo 10 caracteres" [type]="hide1 ? 'password' : 'text'" maxlength="10"
                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 formControlName="aPass" required>
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide1">
                 <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                     matTooltip="Ocultar o mostrar la contraseña ingresada">
-                    {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    {{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Nueva Contraseña</mat-label>
-            <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+            <input matInput placeholder="máximo 10 caracteres" [type]="hide2 ? 'password' : 'text'" maxlength="10"
                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 formControlName="nPass" required>
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide2">
                 <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                     matTooltip="Ocultar o mostrar la contraseña ingresada">
-                    {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    {{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label>Confirmar Contraseña</mat-label>
-            <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'" maxlength="10"
+            <input matInput placeholder="máximo 10 caracteres" [type]="hide3 ? 'password' : 'text'" maxlength="10"
                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                 formControlName="cPass" required>
-            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
+            <button mat-icon-button matSuffix (click)="hide3 = !hide3" [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide3">
                 <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                     matTooltip="Ocultar o mostrar la contraseña ingresada">
-                    {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    {{hide3 ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
         <br>

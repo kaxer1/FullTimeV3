@@ -15,7 +15,9 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 })
 export class CambiarContrasenaComponent implements OnInit {
 
-  hide = true;
+  hide1 = true;
+  hide2 = true;
+  hide3 = true;
   usuario: string;
   ActualContrasena = new FormControl('', Validators.maxLength(12));
   NuevaContrasenia = new FormControl('', Validators.maxLength(12));

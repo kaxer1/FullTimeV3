@@ -15,7 +15,7 @@ import { LoginService } from '../../servicios/login/login.service';
 export class LoginComponent implements OnInit {
 
   title = 'login';
-  hide = true;
+  hide1 = true;
   url: string;
 
   // Almacenamiento datos usuario ingresado
