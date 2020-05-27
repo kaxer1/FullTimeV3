@@ -298,10 +298,14 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     }
   }
 
+  idPermisoRes: any;
   GuardarDatos(datos) {
     this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Permiso registrado');
       this.LimpiarCampos();
+      this.idPermisoRes = res;
+      console.log(this.idPermisoRes.id);
+      this.SubirRespaldo(this.idPermisoRes.id)
       this.ImprimirNumeroPermiso();
     });
   }
@@ -327,7 +331,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
    * 
    * Subida de archivo
    * 
-   * 
    */
 
   archivoForm = new FormControl('');
@@ -339,12 +342,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     console.log(element.target.files);
   }
 
-  SubirRespaldo() {
+  SubirRespaldo(id: number) {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.restP.SubirArchivoRespaldo(formData).subscribe(res => {
+    this.restP.SubirArchivoRespaldo(formData, id).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Documento subido con exito');
       this.archivoForm.reset();
       this.nameFile = '';

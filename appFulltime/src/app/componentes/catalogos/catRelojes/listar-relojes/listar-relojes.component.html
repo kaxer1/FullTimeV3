@@ -164,5 +164,13 @@
         <mat-paginator [length]="relojes.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
+        <div class="d-flex">
+            <button (click)="generarPdf('download')" class="btn">
+                <i class="material-icons">picture_as_pdf</i>
+            </button>
+            <button (click)="exportToExcel()" class="btn">
+                <i class="material-icons fas fa-file-excel"></i>
+            </button>
+        </div>
     </mat-card>
 </div>

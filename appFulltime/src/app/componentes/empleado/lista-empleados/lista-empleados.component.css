@@ -1,10 +1,14 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn-sm { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
 
 p { font-size: x-small; }
 
 #ver { color: indianred; cursor: pointer; }
 
 #iemple { cursor: pointer; }
+
+.fa-file-excel {font-size: 20px;}
+
+.fa-file-code {font-size: 20px;}
 
 .tituloEmpleados { 
     font-size: 20px; 

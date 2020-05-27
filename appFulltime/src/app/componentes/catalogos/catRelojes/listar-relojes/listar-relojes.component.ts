@@ -8,6 +8,11 @@ import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.s
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
 import { PageEvent } from '@angular/material/paginator';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+
 @Component({
   selector: 'app-listar-relojes',
   templateUrl: './listar-relojes.component.html',
@@ -140,6 +145,125 @@ export class ListarRelojesComponent implements OnInit {
       this.archivoForm.reset();
       this.nameFile = '';
     });
+  }
+
+  /**
+   * 
+   * GENERACION DE PDF
+   * 
+   */
+
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Dispositivos', this.relojes);
+    return {
+      pageOrientation: 'landscape', 
+      content: [
+        {
+          text: 'Dispositivos ',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFRelojes(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 11,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 9
+        }
+      }
+    };
+  }
+
+  presentarDataPDFRelojes() {
+    return {
+      table: {
+        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        body: [
+          [
+            {text: 'Id', style: 'tableHeader'},
+            {text: 'Nombre', style: 'tableHeader'},
+            {text: 'IP', style: 'tableHeader'},
+            {text: 'Puerto', style: 'tableHeader'},
+            {text: 'Marca', style: 'tableHeader'},
+            {text: 'Modelo', style: 'tableHeader'},
+            {text: 'Serie', style: 'tableHeader'},
+            {text: 'ID Fabricante', style: 'tableHeader'},
+            {text: 'Fabricante', style: 'tableHeader'},
+            {text: 'Mac', style: 'tableHeader'},
+            {text: 'Departamento', style: 'tableHeader'},
+            {text: 'Sucursal', style: 'tableHeader'},
+            {text: 'Empresa', style: 'tableHeader'},
+            {text: 'Ciudad', style: 'tableHeader'}
+          ],
+          ...this.relojes.map(obj => {
+            return [
+              {text: obj.id, style: 'itemsTable'}, 
+              {text: obj.nombre, style: 'itemsTable'}, 
+              {text: obj.ip, style: 'itemsTable'}, 
+              {text: obj.puerto, style: 'itemsTable'}, 
+              {text: obj.marca, style: 'itemsTable'},
+              {text: obj.modelo, style: 'itemsTable'}, 
+              {text: obj.serie, style: 'itemsTable'}, 
+              {text: obj.id_fabricacion, style: 'itemsTable'}, 
+              {text: obj.fabricante, style: 'itemsTable'}, 
+              {text: obj.mac, style: 'itemsTable'}, 
+              {text: obj.nomdepar, style: 'itemsTable'}, 
+              {text: obj.nomsucursal, style: 'itemsTable'}, 
+              {text: obj.nomempresa, style: 'itemsTable'}, 
+              {text: obj.nomciudad, style: 'itemsTable'}
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /**
+   * 
+   * METODO PARA EXPORTAR A EXCEL
+   * 
+   */
+
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relojes);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'relojes');
+    xlsx.writeFile(wb, "RelojesEXCEL" + new Date().getTime() + '.xlsx');
   }
 
 }

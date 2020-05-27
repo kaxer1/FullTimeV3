@@ -1,4 +1,4 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn-sm { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
 
 p { font-size: x-small; }
 
@@ -6,9 +6,11 @@ p { font-size: x-small; }
 
 #fila { padding-top: 10px; margin-left: 50px; }
 
-.fas { color:green; margin-left: 20px; cursor: pointer; }
+.fa-edit { color:green; margin-left: 20px; cursor: pointer; }
 
-.far { color:red; cursor: pointer; margin-left: 20px; }
+.fa-trash-alt { color:red; cursor: pointer; margin-left: 20px; }
+
+.fa-file-excel {font-size: 20px;}
 
 #iComidasL { cursor: pointer; }
 

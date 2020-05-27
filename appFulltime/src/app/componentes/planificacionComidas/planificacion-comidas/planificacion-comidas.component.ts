@@ -46,6 +46,8 @@ export class PlanificacionComidasComponent implements OnInit {
   tipoComidas: any = [];
   empleados: any = [];
 
+  FechaActual: any;
+
   constructor(
     private toastr: ToastrService,
     private rest: TipoComidasService,
@@ -54,8 +56,18 @@ export class PlanificacionComidasComponent implements OnInit {
     public dialogRef: MatDialogRef<PlanificacionComidasComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
   ) { }
-
+  
   ngOnInit(): void {
+    var f = new Date();
+    if (f.getMonth() < 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } else if(f.getMonth() >= 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if(f.getMonth() < 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if(f.getMonth() >= 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } 
     this.ObtenerPlatosComidas();
     this.ObtenerEmpleados(this.datoEmpleado);
   }
@@ -95,6 +107,7 @@ export class PlanificacionComidasComponent implements OnInit {
       console.log(this.empleados)
       this.PlanificacionComidasForm.patchValue({
         idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
+        fechaForm: this.FechaActual
       })
     })
   }

@@ -22,6 +22,10 @@ export class PermisosService {
     return this.http.post(`${this.API_URL}/empleadoPermiso`, datos);
   }
 
+  SubirArchivoRespaldo(formData, id: number) {
+    return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)  
+  }
+
   BuscarNumPermiso(id: number) {
     return this.http.get(`${this.API_URL}/empleadoPermiso/numPermiso/${id}`);
   }
@@ -30,8 +34,5 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/permisoContrato/${id}`);
   }
 
-  SubirArchivoRespaldo(formData) {
-    return this.http.post(this.API_URL + '/empleadoPermiso/upload', formData)  
-  }
 
 }
