@@ -40,6 +40,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   selec2 = false;
   Tdias = 0;
   Thoras;
+  num: number;
 
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
@@ -53,7 +54,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   diaLibreF = new FormControl('');
   estadoF = new FormControl('');
   legalizarF = new FormControl('', [Validators.required]);
-  numeroPermisoF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -68,7 +68,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     diaLibreForm: this.diaLibreF,
     estadoForm: this.estadoF,
     legalizarForm: this.legalizarF,
-    numeroPermisoForm: this.numeroPermisoF
   });
 
   constructor(
@@ -96,14 +95,10 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.restP.BuscarNumPermiso(this.datoEmpleado.idEmpleado).subscribe(datos => {
       this.datoNumPermiso = datos;
       if (this.datoNumPermiso[0].max === null) {
-        this.PermisoForm.patchValue({
-          numeroPermisoForm: 1,
-        })
+        this.num = 1;
       }
       else {
-        this.PermisoForm.patchValue({
-          numeroPermisoForm: this.datoNumPermiso[0].max + 1,
-        })
+        this.num = this.datoNumPermiso[0].max + 1;
       }
       console.log("numPermiso", this.datoNumPermiso[0].max)
     })
@@ -247,7 +242,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       id_empl_contrato: this.datoEmpleado.idContrato,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
       hora_numero: form.horasForm,
-      num_permiso: form.numeroPermisoForm
+      num_permiso: this.num
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);
@@ -340,7 +335,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   archivoForm = new FormControl('');
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
 
   fileChange(element) {
     this.archivoSubido = element.target.files;

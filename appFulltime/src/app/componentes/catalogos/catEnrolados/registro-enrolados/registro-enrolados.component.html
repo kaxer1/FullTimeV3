@@ -2,22 +2,23 @@
 <div class="tituloEnrolar">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Enrolar a un Empleado</span>
 </div>
-<br>
+
 <form [formGroup]="nuevoEnroladoForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
             <div class="row">
                 <div class="col">
-                    <mat-form-field>
-                        <mat-label>Seleccione usuario</mat-label>
+                    <mat-form-field class="example-full-width">
+                        <input type="text" placeholder="Seleccionar usuario" aria-label="Number" matInput
+                            formControlName="enroladoId_UsuarioForm" [matAutocomplete]="auto">
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de Usuarios del Sistema">
-                            help_outline</mat-icon>
-                        <mat-select formControlName="enroladoId_UsuarioForm" required>
-                            <mat-option *ngFor="let u of usuarios" [value]="u.id">
-                                {{u.usuario}}
+                            search</mat-icon>
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptions | async" [value]="option.usuario">
+                                {{option.usuario}}
                             </mat-option>
-                        </mat-select>
+                        </mat-autocomplete>
                     </mat-form-field>
                     <br>
                     <mat-form-field>

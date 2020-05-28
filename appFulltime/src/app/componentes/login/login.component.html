@@ -15,10 +15,10 @@
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Ingresa tu Contraseña</mat-label>
-                                    <input matInput [type]="hide ? 'password' : 'text'" [formControl]="pass" required>
-                                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                                        [attr.aria-pressed]="hide">
-                                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    <input matInput [type]="hide1 ? 'password' : 'text'" [formControl]="pass" required>
+                                    <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'"
+                                        [attr.aria-pressed]="hide1">
+                                        <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
                                     </button>
                                     <mat-error *ngIf="pass.invalid">{{ObtenerMensajeCampoContraseniaError()}}</mat-error>
                                 </mat-form-field>

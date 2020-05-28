@@ -1,19 +1,11 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="permisoEmpleado">
-    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Solicitar Permiso</h5>
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" [(ngModel)]="num">Solicitud de Permiso N° {{num}}</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="PermisoForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px; text-align: center;">
-            <mat-form-field>
-                <mat-label>N° Permiso</mat-label>
-                <input matInput placeholder="Ej: Número del permiso"
-                     [formControl]="numeroPermisoF" readonly="readonly">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Número de permiso solicitado">
-                    help_outline</mat-icon>
-            </mat-form-field>
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
@@ -56,7 +48,7 @@
                             matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
                             help_outline</mat-icon>
                         <mat-select [formControl]="solicitarF" required [disabled]="true">
-                            <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor" 
+                            <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
                                 (click)="ActivarDiasHoras(PermisoForm.value)">
                                 {{dh.nombre}}
                             </mat-option>
@@ -136,26 +128,17 @@
                                 help_outline
                             </mat-icon>
                             <br>
-                            <br>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
-                                            [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
-                                    </div>
-                                    <div class="col-sm">
-                                        <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
-                                            [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
-                                    </div>
-                                </div>
-                            </div>
+                            <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
+                                [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
+                            <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
+                                [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
                         </mat-radio-group>
                     </section>
                     <br>
                     <div class="container">
-                        <form  method="post" enctype="multipart/form-data">
-                            <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file"> 
-                            <label for="file" class="btn-2" >Subir Documento</label>
+                        <form method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                            <label for="file" class="btn-2">Subir Certificado</label>
                         </form>
                     </div>
                 </div>

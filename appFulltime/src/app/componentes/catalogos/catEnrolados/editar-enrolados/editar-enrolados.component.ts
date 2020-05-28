@@ -29,7 +29,6 @@ export class EditarEnroladosComponent implements OnInit {
   usuariosEnrolados: any = [];
 
   hide = true;
-  public idUsuario: number;
 
   // Selección
   selec1 = false;

@@ -3,6 +3,9 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map, shareReplay, startWith } from 'rxjs/operators';
 
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
@@ -25,12 +28,20 @@ export class RegistroEnroladosComponent implements OnInit {
 
   usuarios: any = [];
   idUltimoEnrolado: any = [];
+  idUser: any = [];
 
   // verificar Duplicidad
   usuariosEnrolados: any = [];
 
   hide = true;
-  public idUsuario: number;
+
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+    .pipe(
+      map(result => result.matches),
+      shareReplay()
+    );
+
+  filteredOptions: Observable<string[]>;
 
   // asignar los campos en un formulario en grupo
   public nuevoEnroladoForm = new FormGroup({
@@ -43,6 +54,7 @@ export class RegistroEnroladosComponent implements OnInit {
   });
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private rest: EnroladoService,
     private toastr: ToastrService,
     private restUsuario: UsuarioService,
@@ -53,11 +65,22 @@ export class RegistroEnroladosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsuarios();
+    this.filteredOptions = this.id_usuario.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
   }
 
-  insertarEnrolado(form) {
+  private _filter(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.usuarios.filter(usuarios => usuarios.usuario.toLowerCase().includes(filterValue));
+    }
+  }
+
+  insertarEnrolado(form, id_user) {
     let dataEnrolado = {
-      id_usuario: form.enroladoId_UsuarioForm,
+      id_usuario: id_user,
       nombre: form.enroladoNombreForm,
       contrasenia: form.enroladoContraseniaForm,
       activo: form.enroladoActivoForm,
@@ -79,12 +102,19 @@ export class RegistroEnroladosComponent implements OnInit {
   }
 
   VerificarDuplicidad(form) {
-    this.usuariosEnrolados = [];
-    this.rest.BuscarRegistroUsuario(form.enroladoId_UsuarioForm).subscribe(datos => {
-      this.usuariosEnrolados = datos;
-      this.toastr.info('Se le recuerda que el usuario ya fue enrolado')
+    this.idUser = [];
+    this.restUsuario.getIdByUsuarioRest(form.enroladoId_UsuarioForm).subscribe(datos => {
+      this.idUser = datos;
+      this.usuariosEnrolados = [];
+      console.log("id_user", this.idUser[0].id)
+      this.rest.BuscarRegistroUsuario(this.idUser[0].id).subscribe(datos => {
+        this.usuariosEnrolados = datos;
+        this.toastr.info('Se le recuerda que el usuario ya fue enrolado')
+      }, error => {
+        this.insertarEnrolado(form, this.idUser[0].id);
+      });
     }, error => {
-      this.insertarEnrolado(form);
+      this.toastr.info('Registro no encontrado')
     });
   }
 

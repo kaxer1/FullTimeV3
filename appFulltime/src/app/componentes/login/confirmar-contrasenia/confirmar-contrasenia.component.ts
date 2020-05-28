@@ -13,7 +13,8 @@ import { Md5 } from 'ts-md5';
 })
 export class ConfirmarContraseniaComponent implements OnInit {
 
-  hide = true;
+  hide1 = true;
+  hide2 = true;
   token: string;
   NuevaContrasenia = new FormControl('', Validators.maxLength(12));
   ConfirmarContrasenia = new FormControl('', Validators.maxLength(12));

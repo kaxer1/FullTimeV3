@@ -1,5 +1,5 @@
 <br>
-<mat-tab-group [(selectedIndex)]=selectedIndex>
+<mat-tab-group>
 
     <!-- INFORMACION OFICIAL DEL EMPLEADO -->
     <mat-tab>
@@ -84,15 +84,9 @@
                                 </div>
                             </div>
                         </mat-card-content>
-                        <div style="text-align: right;">
-                            <a href="{{ruta}}" mat-button type="submit" (click)="verRegistroEdicion(false)"
-                                [disabled]="!btnActualizar">
-                                <i class="fas fa-edit" id="edit" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
-                                    matTooltip="Modificar los datos generales de este registro">
-                                    <p>Editar</p>
-                                </i>
-                            </a>
+                        <div class="col" style="text-align: right;">
+                            <button type="submit" class="btn" id="boton" (click)="CambiarContrasena()">Modificar
+                                Contraseña</button>
                         </div>
                     </mat-card>
                 </div>
@@ -151,7 +145,6 @@
                 </div>
             </div>
         </div>
-        <app-editar-empleado *ngIf="!btnActualizar" id="editar"></app-editar-empleado>
         <br><br>
     </mat-tab>
 
@@ -168,12 +161,8 @@
                         <div class="barraTitulo2">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: right;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Títulos</h5>
-                                    </div>
-                                    <div class="col" style="text-align: left;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="mostrarTit()">{{btnTitulo}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -205,34 +194,10 @@
                                         <label class="col col-form-label">{{rte.nivel}}</label>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 5px;">
-                                    <div class="col" style="text-align: right;">
-                                        <a href="{{rutaTitulo}}" mat-button type="submit" class="btn" matSuffix
-                                            matTooltipPosition="right"
-                                            matTooltip="Editar los datos generales de este registro"
-                                            (click)="verTituloEdicion(false); ObtenerIdTituloSeleccionado(rte.id)"
-                                            [disabled]="!btnActualizarTitulo">
-                                            <i class="fas fa-edit" id="edit">
-                                                <p>Editar</p>
-                                            </i>
-                                        </a>
-                                        <a mat-button type="submit" (click)="eliminarTituloEmpleado(rte.id)">
-                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
-                                                matTooltip="Eliminar este registro">
-                                                <p>Eliminar</p>
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-titulo-empleado [idEmploy]="idEmpleado" *ngIf="!mostrarTitulo"></app-titulo-empleado>
-                        <app-editar-titulo *ngIf="!btnActualizarTitulo" [idEmpleado]="idEmpleado" [idSelect]="idSelect"
-                            id="editarTitulo"></app-editar-titulo>
-                    </div>
                 </div>
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
@@ -241,10 +206,6 @@
                                 <div class="row" style="text-align: center;">
                                     <div class="col">
                                         <h5>Discapacidad</h5>
-                                    </div>
-                                    <div class="col">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            [disabled]="!btnHabilitado" (click)="mostrarDis()">{{btnDisc}}</button>
                                     </div>
                                 </div>
                             </div>
@@ -275,39 +236,9 @@
                                         <label class="col col-form-label">{{d.porcentaje}} %</label>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 5px;">
-                                    <div class="col" style="text-align: right;">
-                                        <a mat-button type="submit" (click)="eliminarDiscapacidad(d.id)" matSuffix>
-                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
-                                                matTooltip="Eliminar registro">
-                                                <p>Eliminar</p>
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
-                        </app-discapacidad>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">settings</mat-icon>
-            Registros Adicionales
-        </ng-template>
-
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <button type="submit" id="boton" (click)="AbrirVentanaCatHorario()" class="btn">Detalle Horario
-                    </button>
                 </div>
             </div>
         </div>
@@ -327,12 +258,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Contrato del Empleado</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaCrearContrato()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -392,32 +319,10 @@
                                         <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                                     </div>
                                 </div>
-                                <div class="col" style="text-align: right;">
-                                    <a href="{{rutaContrato}}" mat-button type="submit"
-                                        (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
-                                        [disabled]="!btnActualizarContrato">
-                                        <i class="fas fa-edit" matTooltipPosition="right" id="edit"
-                                            matTooltip="Modificar los datos generales de este registro">
-                                            <p>Editar</p>
-                                        </i>
-                                    </a>
-                                </div>
-                                <!-- <div class="col d-flex align-items-center justify-content-center">
-                                    <a mat-button type="submit" (click)="eliminarContratoEmpleado(ce.id)">
-                                        <i class="far fa-trash-alt"  matTooltipPosition="right" id="delete"
-                                            matTooltip="Eliminar este registro">
-                                            <p>Eliminar</p>
-                                        </i>
-                                    </a>
-                                </div> -->
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-editar-contrato *ngIf="!btnActualizarContrato" [idEmpleado]="idEmpleado"
-                            [idSelectContrato]="idSelectContrato" id="editarContrato"></app-editar-contrato>
-                    </div>
                 </div>
 
                 <div class="col-md">
@@ -425,12 +330,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Cargo del Empleado</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaCargo()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -493,24 +394,10 @@
                                         <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
                                     </div>
                                 </div>
-                                <div class="col" style="text-align: right;">
-                                    <a href="{{rutaCargo}}" mat-button type="submit"
-                                        (click)="verCargoEdicion(false); ObtenerIdCargoSeleccionado(c.id)"
-                                        [disabled]="!btnActualizarCargo">
-                                        <i class="fas fa-edit" matTooltipPosition="right" id="edit"
-                                            matTooltip="Modificar los datos generales de este registro">
-                                            <p>Editar</p>
-                                        </i>
-                                    </a>
-                                </div>
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>
-                    <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo" id="editarCargo">
-                        </app-editar-cargo>
-                    </div>
                 </div>
             </div>
         </div>
@@ -523,74 +410,45 @@
             Horario
         </ng-template>
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-            <div class="row">
-                <div class="col-sm">
-                    <div class="barraTitulo">
-                        <h5>Horarios del Empleado</h5>
-                    </div>
-                    <mat-card class="example-card mat-elevation-z9" id="carta1">
-                        <mat-card-actions style="text-align: center">
-                            <button type="submit" class="btn btn-sm" id="boton"
-                                (click)="AbrirVentanaEmplHorario()">Añadir</button>
-                        </mat-card-actions>
-                    </mat-card>
-                </div>
-                <div class="col-md">
-                    <div class="barraTitulo">
-                        <h5>Carga múltiple de horarios</h5>
-                    </div>
-                    <mat-card class="example-card mat-elevation-z9" id="carta1">
-                        <div class="container">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChangeHorario($event)" type="file"
-                                    [formControl]="archivoHorarioForm" id="file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file" class="btn-2">Subir Horario</label>
-                            </form>
-                        </div>
-                    </mat-card>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="container table-responsive" style="padding-bottom: 50px;">
-            <div id="resulHorario">Lista de Horarios</div>
-            <mat-card class="mat-elevation-z8">
-                <table class="table table-hover table-sm ">
-                    <thead class="thead-light">
-                        <tr style="text-align: center;">
-                            <th scope="col">Horario</th>
-                            <th scope="col">Inicio</th>
-                            <th scope="col">Final</th>
-                            <th scope="col">Lu</th>
-                            <th scope="col">Mar</th>
-                            <th scope="col">Mi</th>
-                            <th scope="col">Ju</th>
-                            <th scope="col">Vi</th>
-                            <th scope="col">Sa</th>
-                            <th scope="col">Do</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let h of horariosEmpleadoTotales | paginate:tamanio_pagina:numero_pagina">
-                            <td>{{h.nom_horario}}</td>
-                            <td>{{h.fec_inicio.split("T")[0]}}</td>
-                            <td>{{h.fec_final.split("T")[0]}}</td>
-                            <td *ngIf="h.lunes == true">Libre</td>
-                            <td *ngIf="h.lunes == false">Normal</td>
-                            <td *ngIf="h.martes == true">Libre</td>
-                            <td *ngIf="h.martes == false">Normal</td>
-                            <td *ngIf="h.miercoles == true">Libre</td>
-                            <td *ngIf="h.miercoles == false">Normal</td>
-                            <td *ngIf="h.jueves == true">Libre</td>
-                            <td *ngIf="h.jueves == false">Normal</td>
-                            <td *ngIf="h.viernes == true">Libre</td>
-                            <td *ngIf="h.viernes == false">Normal</td>
-                            <td *ngIf="h.sabado == true">Libre</td>
-                            <td *ngIf="h.sabado == false">Normal</td>
-                            <td *ngIf="h.domingo == true">Libre</td>
-                            <td *ngIf="h.domingo == false">Normal</td>
-                            <!--  <td>
+            <br>
+            <div class="container table-responsive" style="padding-bottom: 50px;">
+                <div id="resulHorario">Horarios del Empleado</div>
+                <mat-card class="mat-elevation-z8">
+                    <table class="table table-hover table-sm ">
+                        <thead class="thead-light">
+                            <tr style="text-align: center;">
+                                <th scope="col">Horario</th>
+                                <th scope="col">Inicio</th>
+                                <th scope="col">Final</th>
+                                <th scope="col">Lu</th>
+                                <th scope="col">Mar</th>
+                                <th scope="col">Mi</th>
+                                <th scope="col">Ju</th>
+                                <th scope="col">Vi</th>
+                                <th scope="col">Sa</th>
+                                <th scope="col">Do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let h of horariosEmpleadoTotales | paginate:tamanio_pagina:numero_pagina">
+                                <td>{{h.nom_horario}}</td>
+                                <td>{{h.fec_inicio.split("T")[0]}}</td>
+                                <td>{{h.fec_final.split("T")[0]}}</td>
+                                <td *ngIf="h.lunes == true">Libre</td>
+                                <td *ngIf="h.lunes == false">Normal</td>
+                                <td *ngIf="h.martes == true">Libre</td>
+                                <td *ngIf="h.martes == false">Normal</td>
+                                <td *ngIf="h.miercoles == true">Libre</td>
+                                <td *ngIf="h.miercoles == false">Normal</td>
+                                <td *ngIf="h.jueves == true">Libre</td>
+                                <td *ngIf="h.jueves == false">Normal</td>
+                                <td *ngIf="h.viernes == true">Libre</td>
+                                <td *ngIf="h.viernes == false">Normal</td>
+                                <td *ngIf="h.sabado == true">Libre</td>
+                                <td *ngIf="h.sabado == false">Normal</td>
+                                <td *ngIf="h.domingo == true">Libre</td>
+                                <td *ngIf="h.domingo == false">Normal</td>
+                                <!--  <td>
                                 <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                                     <p>Eliminar</p>
@@ -602,13 +460,15 @@
 
                                 </i>
                             </td>-->
-                        </tr>
-                    </tbody>
-                </table>
-                <mat-paginator [length]="horariosEmpleadoTotales.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-                </mat-paginator>
-            </mat-card>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <mat-paginator [length]="horariosEmpleadoTotales.length" [pageSize]="tamanio_pagina"
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </mat-card>
+            </div>
         </div>
     </mat-tab>
 
@@ -626,12 +486,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Periodo de Vacaciones</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaPerVacaciones()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -708,7 +564,7 @@
                                     <div class="col" style="text-align: left;">
                                         <h5>Vacaciones</h5>
                                     </div>
-                                    <div class="col" style="text-align: right;">
+                                    <div class="col" style="text-align: center;">
                                         <button type="submit" class="btn btn-outline-light btn-sm"
                                             (click)="AbrirVentanaVacaciones()">Añadir</button>
                                     </div>
@@ -796,12 +652,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Planificación Horario</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaPlanHorario()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -835,12 +687,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Detalle de Horario</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaDetallePlanHorario()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -895,12 +743,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: right;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Procesos del empleado</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaProcesos()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -931,13 +775,6 @@
                                         <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
                                     </div>
                                 </div>
-                                <div style="text-align: right;">
-                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                        matTooltip="Modificar los datos generales de este registro">
-                                        <p>Editar</p>
-                                    </i>
-                                </div>
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
@@ -949,13 +786,13 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: left;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Planificación Comidas</h5>
                                     </div>
-                                    <div class="col" style="text-align: right;">
+                                    <!--  <div class="col" style="text-align: right;">
                                         <button type="submit" class="btn btn-outline-light btn-sm"
                                             (click)="AbrirVentanaPlanificacion()">Añadir</button>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -1039,12 +876,8 @@
                         <div class="barraTitulo">
                             <div class="container">
                                 <div class="row">
-                                    <div class="col" style="text-align: right;">
+                                    <div class="col" style="text-align: center;">
                                         <h5>Autorizaciones</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaAutorizar()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
@@ -1069,13 +902,6 @@
                                         <label class="col col-form-label" *ngIf="autoD.estado == false">No</label>
                                     </div>
                                 </div>
-                                <!--  <div style="text-align: right;">
-                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                        matTooltip="Modificar los datos generales de este registro">
-                                        <p>Editar</p>
-                                    </i>
-                                </div>-->
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>

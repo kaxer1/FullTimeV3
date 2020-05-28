@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import { saveAs } from "file-saver";
 
 @Injectable({
   providedIn: 'root'
@@ -84,8 +85,11 @@ export class EmpleadoService {
     return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)  
   }
 
-  // obtenerImagen(imagen: string){
-  //   return this.http.get<any>(`${this.API_URI}/empleado/img/${imagen}`)
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URI}/empleado/xmlDownload`, data);
+  }
+  // verXML(name: string){
+  //   return this.http.get<any>(`${this.API_URI}/empleado/download/${name}`)
   // }
 
 }
