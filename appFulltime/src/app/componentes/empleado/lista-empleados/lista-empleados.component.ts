@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -11,7 +12,8 @@ import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { PageEvent } from '@angular/material/paginator';
+
+
 
 
 @Component({
@@ -289,13 +291,49 @@ export class ListaEmpleadosComponent implements OnInit {
     xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
+  urlxml: string;
+  data: any = [];
   exportToXML() {
-    // var json = JSON.stringify(this.empleado[0])
-    var json = '{"name":{"_text":"Ali"},"age":{"_text":"30"}}';
-    console.log(json);
-    var options = {compact: true, textFn: (val, elementName) => {return elementName === 'age'}};
-    var result = xml.json2xml(json, options);
-    console.log(result);
+    var objeto;
+    var arregloEmpleado = [];
+    this.empleado.forEach(obj => {
+      var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+      var genero = this.GeneroSelect[obj.genero - 1];
+      var estado = this.EstadoSelect[obj.estado - 1];
+      let nacionalidad;
+      this.nacionalidades.forEach(element => {
+        if (obj.id_nacionalidad == element.id) {
+          nacionalidad = element.nombre;
+        }
+      });
+
+      objeto = {
+        "empleado": {
+          '@id': obj.id,
+          "cedula": obj.cedula,
+          "apellido": obj.apellido,
+          "nombre": obj.nombre,
+          "estadoCivil": estadoCivil,
+          "genero": genero,
+          "correo": obj.correo,
+          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
+          "estado": estado,
+          "correoAlternativo": obj.mail_alternativo,
+          "domicilio": obj.domicilio,
+          "telefono": obj.telefono,
+          "nacionalidad": nacionalidad,
+          "imagen": obj.imagen
+        }
+      }
+      arregloEmpleado.push(objeto)
+    });
+    
+    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
+      this.data = res;
+      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+    
   }
 
   /****************************************************************************************************** 

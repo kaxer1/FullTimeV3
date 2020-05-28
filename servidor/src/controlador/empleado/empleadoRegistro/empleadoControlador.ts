@@ -4,6 +4,7 @@ const path = require("path");
 import excel from 'xlsx';
 import fs from 'fs';
 import { Md5 } from 'ts-md5';
+const builder = require('xmlbuilder');
 
 class EmpleadoControlador {
 
@@ -20,7 +21,7 @@ class EmpleadoControlador {
     }
     res.status(404).json({ text: 'El empleado no ha sido encontrado' });
   }
-
+  
   public async getImagen(req: Request, res: Response): Promise<any> {
     const imagen = req.params.imagen;
     let filePath = `servidor\\imagenesEmpleados\\${imagen}`
@@ -138,7 +139,26 @@ class EmpleadoControlador {
     if (unEmpleadoTitulo.rowCount > 0) {
       return res.json(unEmpleadoTitulo.rows)
     }
-    res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
+    res.status(404).json({ text: 'El empleado no tiene titulos asignados'});
+  }
+
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true});
+    console.log(req.body.userName);
+    let filename = "Empleado-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function(err) {
+      if(err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.json({ text: 'XML creado', name: filename});
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
 }

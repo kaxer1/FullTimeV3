@@ -22,11 +22,13 @@ class EmpleadoRutas {
         this.router.get('/', this.verifyToken, empleadoControlador_1.default.list);
         this.router.get('/:id', this.verifyToken, empleadoControlador_1.default.getOne);
         this.router.get('/img/:imagen', empleadoControlador_1.default.getImagen);
+        this.router.get('/download/:nameXML', empleadoControlador_1.default.downloadXML);
         this.router.get('/emplTitulos/:id_empleado', this.verifyToken, empleadoControlador_1.default.getTitulosDelEmpleado);
         this.router.put('/:id/usuario', this.verifyToken, empleadoControlador_1.default.editar);
         this.router.put('/:id_empleado/uploadImage', [this.verifyToken, multipartMiddleware], empleadoControlador_1.default.crearImagenEmpleado);
         this.router.put('/:id_empleado_titulo/titulo', this.verifyToken, empleadoControlador_1.default.editarTituloDelEmpleado);
         this.router.post('/', this.verifyToken, empleadoControlador_1.default.create);
+        this.router.post('/xmlDownload/', this.verifyToken, empleadoControlador_1.default.FileXML);
         this.router.post('/emplTitulos/', this.verifyToken, empleadoControlador_1.default.createEmpleadoTitulos);
         this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargaPlantillaEmpleadoUsuario);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, empleadoControlador_1.default.eliminarTituloDelEmpleado);
@@ -47,6 +49,7 @@ class EmpleadoRutas {
         const payload = jwt.verify(token, 'llaveSecreta');
         // cuando se extrae los datos se guarda en una propiedad req.userId para q las demas funciones puedan utilizar ese id 
         req.body.userId = payload._id;
+        req.body.userName = payload._userName;
         next();
     }
 }
