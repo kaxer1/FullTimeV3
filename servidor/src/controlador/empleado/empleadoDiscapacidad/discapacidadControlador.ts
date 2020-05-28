@@ -40,7 +40,7 @@ class DiscapacidadControlador {
 
   public async deleteDiscapacidad(req: Request, res: Response): Promise<void> {
     const id_empleado = req.params.id_empleado;
-    await pool.query('DELETE FROM cg_discapacidades WHERE id = $1', [id_empleado]);
+    await pool.query('DELETE FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
     res.json({ message: 'Registro eliminado' });
   }
 

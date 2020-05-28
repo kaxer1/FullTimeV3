@@ -10,6 +10,7 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', EMPRESA_CONTROLADOR.ListarEmpresa);
+        this.router.get('/buscar/:nombre', EMPRESA_CONTROLADOR.ListarUnaEmpresa);
         this.router.post('/', EMPRESA_CONTROLADOR.CrearEmpresa);
         this.router.put('/', EMPRESA_CONTROLADOR.ActualizarEmpresa);
     }

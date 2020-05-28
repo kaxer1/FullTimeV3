@@ -72,16 +72,16 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button type="submit" class="btn btn-primary btn-lg" (click)="insertarCarnet(nuevoCarnetForm.value)"
+        <button type="submit" class="btn" (click)="insertarCarnet(nuevoCarnetForm.value)"
             [disabled]="!nuevoCarnetForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Guardar registro">save</span>
         </button>
-        <button type="submit" class="btn btn-info btn-lg" (click)="limpiarCampos()">
+        <button type="submit" class="btn" (click)="limpiarCampos()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Borrar datos ingresados">backspace</span>
         </button>
-        <button type="submit" class="btn btn-danger btn-lg" (click)="cerrarRegistro()">
+        <button type="submit" class="btn" (click)="cerrarRegistro()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Cancelar registro">close</span>
         </button>

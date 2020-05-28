@@ -27,4 +27,8 @@ export class EmpresaService {
     return this.http.put(`${this.API_URL}/empresas`, datos);
   }
 
+  ConsultarUnaEmpresa(nombre: string) {
+    return this.http.get(`${this.API_URL}/empresas/buscar/${nombre}`);
+  }
+
 }

@@ -31,20 +31,21 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button id="botonTitulo" type="submit" class="btn btn-primary btn-xs"
+        <button type="submit" class="btn"
             (click)="insertarTituloEmpleado(nuevoTituloEmpleadoForm.value)" [disabled]="!nuevoTituloEmpleadoForm.valid">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Guardar registro">save</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-info btn-xs" (click)="limpiarCampos()">
+        <button type="submit" class="btn" (click)="limpiarCampos()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Borrar datos ingresados">backspace</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-danger btn-xs" (click)="cerrarRegistro()">
+        <button type="submit" class="btn" (click)="cerrarRegistro()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Cancelar registro">close</span>
         </button>
-        <button id="botonTitulo" type="submit" class="btn btn-success btn-xs" (click)="VerificarTitulo()">
+
+        <button type="submit" class="btn" (click)="VerificarTitulo()">
             <span class="material-icons alinear" matSuffix matTooltipPosition="right" matTooltipClass="color-tooltip"
                 matTooltip="Verificar título profesional del empleado antes de registrarlo">insert_link</span>
         </button>

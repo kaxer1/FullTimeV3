@@ -16,8 +16,13 @@ const database_1 = __importDefault(require("../../database"));
 class UsuarioControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield database_1.default.query('SELECT * FROM usuarios');
-            res.json(user.rows);
+            const USUARIOS = yield database_1.default.query('SELECT * FROM usuarios');
+            if (USUARIOS.rowCount > 0) {
+                return res.json(USUARIOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
     getIdByUsuario(req, res) {
@@ -41,6 +46,17 @@ class UsuarioControlador {
             }
             else {
                 res.status(404).json({ text: 'No se ha encontrado el usuario' });
+            }
+        });
+    }
+    ListarUsuriosNoEnrolados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const USUARIOS = yield database_1.default.query('SELECT u.id, u.usuario, ce.id_usuario FROM usuarios AS u LEFT JOIN cg_enrolados AS ce ON u.id = ce.id_usuario WHERE ce.id_usuario IS null');
+            if (USUARIOS.rowCount > 0) {
+                return res.json(USUARIOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
             }
         });
     }

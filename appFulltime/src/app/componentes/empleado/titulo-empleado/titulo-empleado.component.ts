@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -9,7 +9,6 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
   selector: 'app-titulo-empleado',
   templateUrl: './titulo-empleado.component.html',
   styleUrls: ['./titulo-empleado.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 export class TituloEmpleadoComponent implements OnInit {
 

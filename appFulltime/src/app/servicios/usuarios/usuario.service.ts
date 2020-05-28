@@ -18,6 +18,10 @@ export class UsuarioService {
     return this.http.get(`${this.API_URL}/usuarios`);
   }
 
+  BuscarUsersNoEnrolados() {
+    return this.http.get(`${this.API_URL}/usuarios/noEnrolados`);
+  }
+
   getIdByUsuarioRest(usuario: string) {
     return this.http.get(`${this.API_URL}/usuarios/busqueda/${usuario}`);
   }

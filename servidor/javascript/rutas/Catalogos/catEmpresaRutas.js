@@ -12,6 +12,7 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.get('/', catEmpresaControlador_1.default.ListarEmpresa);
+        this.router.get('/buscar/:nombre', catEmpresaControlador_1.default.ListarUnaEmpresa);
         this.router.post('/', catEmpresaControlador_1.default.CrearEmpresa);
         this.router.put('/', catEmpresaControlador_1.default.ActualizarEmpresa);
     }

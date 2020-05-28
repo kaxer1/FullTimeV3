@@ -3,13 +3,16 @@ import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { PageEvent } from '@angular/material/paginator';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as xml from 'xml-js';
+import * as FileSaver from 'file-saver';
+
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { PageEvent } from '@angular/material/paginator';
+
 
 @Component({
   selector: 'app-lista-empleados',
@@ -295,5 +298,15 @@ export class ListaEmpleadosComponent implements OnInit {
     console.log(result);
   }
 
-   
+  /****************************************************************************************************** 
+   * MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
+    const csvDataC = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
+  }
+
 }

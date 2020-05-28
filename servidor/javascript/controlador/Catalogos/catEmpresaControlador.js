@@ -25,6 +25,18 @@ class EmpresaControlador {
             }
         });
     }
+    ListarUnaEmpresa(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa WHERE nombre = $1', [nombre]);
+            if (EMPRESA.rowCount > 0) {
+                return res.json(EMPRESA.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante } = req.body;

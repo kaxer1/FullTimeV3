@@ -48,7 +48,7 @@
                     <mat-form-field>
                         <mat-label id="anio">Vacaciones: Días por año</mat-label>
                         <input matInput placeholder="Días por año" [formControl]="diaAnioVacacionF"
-                            (keypress)="IngresarSoloNumeros($event)" (click)="LimpiarDiasMeses()" required>
+                            (keypress)="IngresarSoloNumeros($event)" (click)="LimpiarMeses()" required>
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar cuantos días de vacación se concederan al empleado al cumplir un año de servicio">
                             help_outline</mat-icon>
@@ -57,8 +57,8 @@
                         </mat-error>
                     </mat-form-field>
                     <br>
-                    <input type="checkbox" (click)="CalcularDiasMeses(RegimenForm.value)" id="activo" unchecked="false">
-                    <label> Calcular días por mes</label>
+                    <input style="margin-right: 10px;" type="checkbox" (click)="CalcularDiasMeses(RegimenForm.value)" id="activo" unchecked="false">
+                    <label style="margin-right: 35px;"> Calcular días por mes</label>
                     <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                         matTooltip="Dar click para realizar cálculo de días de vacación por mes que se concederan al empleado al cumplir un año de servicio">
                         help_outline</mat-icon>

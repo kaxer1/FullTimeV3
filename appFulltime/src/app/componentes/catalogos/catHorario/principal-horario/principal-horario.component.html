@@ -35,10 +35,10 @@
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="container">
-                    <form  method="post" enctype="multipart/form-data">
-                        <input (change)="fileChange($event)"  type="file" [formControl]="archivoForm" id="file" 
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
-                        <label for="file" class="btn-2" >Subir Horaio</label>
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2">Subir Horaio</label>
                     </form>
                 </div>
             </mat-card>
@@ -66,8 +66,10 @@
                     <td>{{horario.nombre}}</td>
                     <td>{{horario.min_almuerzo}}</td>
                     <td>{{horario.hora_trabajo}}</td>
-                    <td>{{horario.flexible}}</td>
-                    <td>{{horario.por_horas}}</td>
+                    <td *ngIf="horario.flexible == true">Sí</td>
+                    <td *ngIf="horario.flexible == false">No</td>
+                    <td *ngIf="horario.por_horas == true">Sí</td>
+                    <td *ngIf="horario.por_horas == false">No</td>
                     <td>
                         <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
@@ -86,5 +88,19 @@
         <mat-paginator [length]="horarios.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
+        <div style="text-align: right;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato CSV">
+                <p>CSV</p>
+            </i>
+        </div>
     </mat-card>
 </div>

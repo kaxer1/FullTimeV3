@@ -1,6 +1,6 @@
 mat-slider { width: 190px; }
 
-.btn { border-radius: 100%; margin-left: 15px; }
+.btn { background-color: rgb(80,87,97); color: white; margin-top: 5px; margin-left: 15px; }
 
 .barraTitulo { 
     text-align: center; 

@@ -10,6 +10,6 @@
 
 /*.color-tooltip { background: #2c6ec5; }*/
 
-#botonTitulo { margin-left: 10px; border-radius: 100%; }
+.btn { background-color: rgb(80,87,97); color: white; margin-top: 5px; margin-left: 15px; }
 
 #icono { cursor: pointer; }

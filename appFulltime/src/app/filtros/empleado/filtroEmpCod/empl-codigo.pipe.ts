@@ -5,18 +5,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class EmplCodigoPipe implements PipeTransform {
 
-  transform(value: any, arg: number): any {
-
-    if(arg === null || arg === undefined) return value;
-
-    const resultadoEmpleado = [];
-
-    for(const empleado of value){
-      if(empleado.id == arg){
-        resultadoEmpleado.push(empleado);
-      };
+  transform(value: any, arg: any): any {
+    if (arg === '' || arg === undefined || arg.length < 1) return value;
+    const RESULTADO_BUSQUEDAS = [];
+    for (const resultados of value) {
+      if (resultados.id && resultados.id == arg) {
+        RESULTADO_BUSQUEDAS.push(resultados);
+      }
     };
-    return resultadoEmpleado;
+    return RESULTADO_BUSQUEDAS;
   }
 
 }

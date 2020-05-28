@@ -14,32 +14,41 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 class RolesControlador {
-    list(req, res) {
+    ListarRoles(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const roles = yield database_1.default.query('SELECT * FROM cg_roles');
-            //res.json({text: 'Describe prueba'});
-            res.json(roles.rows);
+            const ROL = yield database_1.default.query('SELECT * FROM cg_roles');
+            if (ROL.rowCount > 0) {
+                return res.json(ROL.rows);
+            }
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
         });
     }
-    getOne(req, res) {
+    ObtnenerUnRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const rol = yield database_1.default.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
-            // console.log(rol);
-            if (rol.rowCount > 0) {
-                return res.json(rol.rows);
+            const ROL = yield database_1.default.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
+            if (ROL.rowCount > 0) {
+                return res.json(ROL.rows);
             }
-            //res.json({message: 'Rol encontrado'});
-            //res.json({text: 'Esta es una prueba ' + req.params.id});
-            res.status(404).json({ text: 'El rol no ha sido encontrado' });
+            else {
+                res.status(404).json({ text: 'Registro no encontrado' });
+            }
         });
     }
-    create(req, res) {
+    CrearRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.body;
             yield database_1.default.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
-            //console.log(req.body);
             res.json({ message: 'Rol guardado' });
+        });
+    }
+    ActualizarRol(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, id } = req.body;
+            yield database_1.default.query('UPDATE cg_roles SET nombre = $1 WHERE id = $2', [nombre, id]);
+            res.json({ message: 'Registro Actualizado' });
         });
     }
 }

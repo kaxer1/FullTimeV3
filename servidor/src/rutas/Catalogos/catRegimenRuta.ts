@@ -13,7 +13,7 @@ class RegimenRuta {
         this.router.get('/', REGIMEN_CONTROLADOR.ListarRegimen);
         this.router.get('/:id', REGIMEN_CONTROLADOR.ListarUnRegimen);
         this.router.post('/', REGIMEN_CONTROLADOR.CrearRegimen);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.put('/', REGIMEN_CONTROLADOR.ActualizarRegimen);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

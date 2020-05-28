@@ -56,7 +56,7 @@ class DiscapacidadControlador {
     deleteDiscapacidad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id_empleado = req.params.id_empleado;
-            yield database_1.default.query('DELETE FROM cg_discapacidades WHERE id = $1', [id_empleado]);
+            yield database_1.default.query('DELETE FROM cg_discapacidades WHERE id_empleado = $1', [id_empleado]);
             res.json({ message: 'Registro eliminado' });
         });
     }

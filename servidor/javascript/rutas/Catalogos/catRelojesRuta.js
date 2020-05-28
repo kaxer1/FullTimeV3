@@ -19,7 +19,7 @@ class RelojesRuta {
         this.router.get('/:id', catRelojesControlador_1.default.ListarUnReloj);
         this.router.post('/', catRelojesControlador_1.default.CrearRelojes);
         this.router.post('/plantillaExcel/', multipartMiddlewarePlantilla, catRelojesControlador_1.default.CargaPlantillaRelojes);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.put('/', catRelojesControlador_1.default.ActualizarReloj);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

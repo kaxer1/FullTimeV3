@@ -4,31 +4,36 @@ import pool from '../../database';
 
 
 class RolesControlador {
-  
-  public async list(req: Request, res: Response) {
-    const roles = await pool.query('SELECT * FROM cg_roles');
-    //res.json({text: 'Describe prueba'});
-    res.json(roles.rows);
-  }
 
-  public async getOne(req: Request, res: Response): Promise<any> {
-    const { id } = req.params;
-    const rol = await pool.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
-    // console.log(rol);
-    if (rol.rowCount > 0) {
-      return res.json(rol.rows)
+  public async ListarRoles(req: Request, res: Response) {
+    const ROL = await pool.query('SELECT * FROM cg_roles');
+    if (ROL.rowCount > 0) {
+      return res.json(ROL.rows)
+    } else {
+      res.status(404).json({ text: 'Registro no encontrado' });
     }
-    //res.json({message: 'Rol encontrado'});
-    //res.json({text: 'Esta es una prueba ' + req.params.id});
-    res.status(404).json({ text: 'El rol no ha sido encontrado' });
   }
 
-  public async create(req: Request, res: Response): Promise<void> {
+  public async ObtnenerUnRol(req: Request, res: Response): Promise<any> {
+    const { id } = req.params;
+    const ROL = await pool.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
+    if (ROL.rowCount > 0) {
+      return res.json(ROL.rows)
+    } else {
+      res.status(404).json({ text: 'Registro no encontrado' });
+    }
+  }
 
+  public async CrearRol(req: Request, res: Response): Promise<void> {
     const { nombre } = req.body;
     await pool.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
-    //console.log(req.body);
     res.json({ message: 'Rol guardado' });
+  }
+
+  public async ActualizarRol(req: Request, res: Response): Promise<void> {
+    const { nombre, id } = req.body;
+    await pool.query('UPDATE cg_roles SET nombre = $1 WHERE id = $2', [nombre, id]);
+    res.json({ message: 'Registro Actualizado' });
   }
 
   // public async update(req: Request, res: Response): Promise<void> {

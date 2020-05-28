@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
-import { PageEvent } from '@angular/material/paginator';
+import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-listar-relojes',
@@ -56,7 +58,7 @@ export class ListarRelojesComponent implements OnInit {
   constructor(
     private rest: RelojesService,
     public router: Router,
-    public vistaRegistrarRelojes: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
   ) { }
 
@@ -64,7 +66,7 @@ export class ListarRelojesComponent implements OnInit {
     this.ObtenerReloj();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -93,10 +95,6 @@ export class ListarRelojesComponent implements OnInit {
     }
   }
 
-  AbrirVentanaRegistrarReloj(): void {
-    this.vistaRegistrarRelojes.open(RelojesComponent, { width: '1200px' }).disableClose = true;
-  }
-
   LimpiarCampos() {
     this.BuscarRelojesForm.setValue({
       nombreForm: '',
@@ -109,20 +107,35 @@ export class ListarRelojesComponent implements OnInit {
     this.ObtenerReloj();
   }
 
-  /**
-   * Metodos y variables para subir plantilla
-   */
+  /*************************************************************************************
+   * VENTANAS PARA REGISTRAR Y EDITAR DATOS DE UN DISPOSITIVO
+   * ***********************************************************************************/
+
+  /* Ventana para editar datos de dispositivo seleccionado */
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarRelojComponent, { width: '1200px', data: { datosReloj: datosSeleccionados, actualizar: true } }).disableClose = true;
+  }
+
+  /** Ventana para registrar datos de un nuevo dispositivo */
+  AbrirVentanaRegistrarReloj(): void {
+    this.vistaRegistrarDatos.open(RelojesComponent, { width: '1200px' }).disableClose = true;
+  }
+
+  /*************************************************************************************
+   * MÉTODOS Y VARIABLES PARA SUBIR PLANTILLAS
+   * ***********************************************************************************/
 
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
-    let arrayItems =  this.nameFile.split(".");
+    let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0,7);
+    let itemName = arrayItems[0].slice(0, 7);
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'relojes') {
         this.plantilla();
@@ -133,7 +146,7 @@ export class ListarRelojesComponent implements OnInit {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
     }
   }
-  
+
   plantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
@@ -147,11 +160,9 @@ export class ListarRelojesComponent implements OnInit {
     });
   }
 
-  /**
-   * 
-   * GENERACION DE PDF
-   * 
-   */
+  /*************************************************************************************
+   * GENERACIÓN DE PDFs 
+   *************************************************************************************/
 
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
@@ -160,7 +171,6 @@ export class ListarRelojesComponent implements OnInit {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
 
@@ -169,7 +179,7 @@ export class ListarRelojesComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Dispositivos', this.relojes);
     return {
-      pageOrientation: 'landscape', 
+      pageOrientation: 'landscape',
       content: [
         {
           text: 'Dispositivos ',
@@ -212,40 +222,40 @@ export class ListarRelojesComponent implements OnInit {
   presentarDataPDFRelojes() {
     return {
       table: {
-        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
           [
-            {text: 'Id', style: 'tableHeader'},
-            {text: 'Nombre', style: 'tableHeader'},
-            {text: 'IP', style: 'tableHeader'},
-            {text: 'Puerto', style: 'tableHeader'},
-            {text: 'Marca', style: 'tableHeader'},
-            {text: 'Modelo', style: 'tableHeader'},
-            {text: 'Serie', style: 'tableHeader'},
-            {text: 'ID Fabricante', style: 'tableHeader'},
-            {text: 'Fabricante', style: 'tableHeader'},
-            {text: 'Mac', style: 'tableHeader'},
-            {text: 'Departamento', style: 'tableHeader'},
-            {text: 'Sucursal', style: 'tableHeader'},
-            {text: 'Empresa', style: 'tableHeader'},
-            {text: 'Ciudad', style: 'tableHeader'}
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+            { text: 'IP', style: 'tableHeader' },
+            { text: 'Puerto', style: 'tableHeader' },
+            { text: 'Marca', style: 'tableHeader' },
+            { text: 'Modelo', style: 'tableHeader' },
+            { text: 'Serie', style: 'tableHeader' },
+            { text: 'ID Fabricante', style: 'tableHeader' },
+            { text: 'Fabricante', style: 'tableHeader' },
+            { text: 'Mac', style: 'tableHeader' },
+            { text: 'Departamento', style: 'tableHeader' },
+            { text: 'Sucursal', style: 'tableHeader' },
+            { text: 'Empresa', style: 'tableHeader' },
+            { text: 'Ciudad', style: 'tableHeader' }
           ],
           ...this.relojes.map(obj => {
             return [
-              {text: obj.id, style: 'itemsTable'}, 
-              {text: obj.nombre, style: 'itemsTable'}, 
-              {text: obj.ip, style: 'itemsTable'}, 
-              {text: obj.puerto, style: 'itemsTable'}, 
-              {text: obj.marca, style: 'itemsTable'},
-              {text: obj.modelo, style: 'itemsTable'}, 
-              {text: obj.serie, style: 'itemsTable'}, 
-              {text: obj.id_fabricacion, style: 'itemsTable'}, 
-              {text: obj.fabricante, style: 'itemsTable'}, 
-              {text: obj.mac, style: 'itemsTable'}, 
-              {text: obj.nomdepar, style: 'itemsTable'}, 
-              {text: obj.nomsucursal, style: 'itemsTable'}, 
-              {text: obj.nomempresa, style: 'itemsTable'}, 
-              {text: obj.nomciudad, style: 'itemsTable'}
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.ip, style: 'itemsTable' },
+              { text: obj.puerto, style: 'itemsTable' },
+              { text: obj.marca, style: 'itemsTable' },
+              { text: obj.modelo, style: 'itemsTable' },
+              { text: obj.serie, style: 'itemsTable' },
+              { text: obj.id_fabricacion, style: 'itemsTable' },
+              { text: obj.fabricante, style: 'itemsTable' },
+              { text: obj.mac, style: 'itemsTable' },
+              { text: obj.nomdepar, style: 'itemsTable' },
+              { text: obj.nomsucursal, style: 'itemsTable' },
+              { text: obj.nomempresa, style: 'itemsTable' },
+              { text: obj.nomciudad, style: 'itemsTable' }
             ];
           })
         ]
@@ -253,17 +263,26 @@ export class ListarRelojesComponent implements OnInit {
     };
   }
 
-  /**
-   * 
-   * METODO PARA EXPORTAR A EXCEL
-   * 
-   */
+  /*************************************************************************************
+   * GENERACIÓN DE EXCEL 
+   *************************************************************************************/
 
   exportToExcel() {
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relojes);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wsr, 'relojes');
     xlsx.writeFile(wb, "RelojesEXCEL" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   * MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.relojes);
+    const csvDataR = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataR], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "DispositivosCSV" + new Date().getTime() + '.csv');
   }
 
 }

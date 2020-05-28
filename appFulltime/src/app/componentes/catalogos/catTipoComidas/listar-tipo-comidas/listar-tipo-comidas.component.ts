@@ -12,6 +12,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -48,8 +49,8 @@ export class ListarTipoComidasComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerTipoComidas();
   }
-  
-  ManejarPagina(e: PageEvent){
+
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -101,7 +102,7 @@ export class ListarTipoComidasComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Comidas', this.tipoComidas);
     return {
-      pageOrientation: 'landscape', 
+      pageOrientation: 'landscape',
       content: [
         {
           text: 'Comidas',
@@ -144,20 +145,20 @@ export class ListarTipoComidasComponent implements OnInit {
   presentarDataPDFAlmuerzos() {
     return {
       table: {
-        widths: ['auto','auto','auto','auto'],
+        widths: ['auto', 'auto', 'auto', 'auto'],
         body: [
           [
-            {text: 'Id', style: 'tableHeader'},
-            {text: 'Nombre', style: 'tableHeader'},
-            {text: 'Observación', style: 'tableHeader'},
-            {text: 'Valor', style: 'tableHeader'}
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+            { text: 'Observación', style: 'tableHeader' },
+            { text: 'Valor', style: 'tableHeader' }
           ],
           ...this.tipoComidas.map(obj => {
             return [
-              {text: obj.id, style: 'itemsTable'}, 
-              {text: obj.nombre, style: 'itemsTable'}, 
-              {text: obj.observacion, style: 'itemsTable'}, 
-              {text: '$ ' + obj.valor, style: 'itemsTable'}
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.observacion, style: 'itemsTable' },
+              { text: '$ ' + obj.valor, style: 'itemsTable' }
             ];
           })
         ]
@@ -176,6 +177,17 @@ export class ListarTipoComidasComponent implements OnInit {
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wsr, 'TiposComidas');
     xlsx.writeFile(wb, "Comidas" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   * MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "CatHorarioCSV" + new Date().getTime() + '.csv');
   }
 
 }

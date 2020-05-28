@@ -61,7 +61,7 @@
         </div>
         <div class="col-md">
             <div class="TituloEnrolado">
-                <span>REGISTRO MULTIPLE DE ENROLADOS</span>
+                <span>REGISTRO MÚLTIPLE DE ENROLADOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="container">
@@ -94,7 +94,8 @@
                     *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
                     <td>{{enrolado.id_usuario}}</td>
                     <td>{{enrolado.nombre}}</td>
-                    <td>{{enrolado.activo}}</td>
+                    <td *ngIf="enrolado.activo == true">Activo</td>
+                    <td *ngIf="enrolado.activo == false">Inactivo</td>
                     <td>{{enrolado.finger}}</td>
                     <td>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
@@ -107,8 +108,9 @@
                             [routerLink]="['/enroladoDispositivo/', enrolado.id]">
                             <p>Ver</p>
                         </i>
-                        <i (click)="AbrirVentanaEditar(enrolado)" matSuffix matTooltipClass=" enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                        <i (click)="AbrirVentanaEditar(enrolado)" matSuffix matTooltipClass=" enrolado-tooltip"
+                            matTooltipPosition="right" matTooltip="Modificar datos generales del empleado enrolado"
+                            class="fas fa-edit">
                             <p>Editar</p>
                         </i>
                         <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"

@@ -10,10 +10,10 @@ class PruebasRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', ROLES_CONTROLADOR.list);
-        this.router.get('/:id', ROLES_CONTROLADOR.getOne);
-        this.router.post('/', ROLES_CONTROLADOR.create);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.get('/', ROLES_CONTROLADOR.ListarRoles);
+        this.router.get('/:id', ROLES_CONTROLADOR.ObtnenerUnRol);
+        this.router.post('/', ROLES_CONTROLADOR.CrearRol);
+        this.router.put('/', ROLES_CONTROLADOR.ActualizarRol);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }
