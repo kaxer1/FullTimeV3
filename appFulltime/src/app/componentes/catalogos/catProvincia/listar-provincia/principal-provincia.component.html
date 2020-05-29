@@ -72,7 +72,7 @@
                     <td>{{prov.pais}}</td>
                     <td>{{prov.nombre}}</td>
                     <td>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                        <i (click)="ConfirmarDelete(prov)" class="far fa-trash-alt" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
                         </i>

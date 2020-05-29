@@ -113,8 +113,9 @@
                             class="fas fa-edit">
                             <p>Editar</p>
                         </i>
-                        <i matSuffix matTooltipClass="enrolado-tooltip" matTooltipPosition="right"
-                            matTooltip="Eliminar registro de empleado enrolado" class="far fa-trash-alt">
+                        <i (click)="ConfirmarDelete(enrolado)" matSuffix matTooltipClass="enrolado-tooltip"
+                            matTooltipPosition="right" matTooltip="Eliminar registro de empleado enrolado"
+                            class="far fa-trash-alt">
                             <p>Eliminar</p>
                         </i>
                     </td>

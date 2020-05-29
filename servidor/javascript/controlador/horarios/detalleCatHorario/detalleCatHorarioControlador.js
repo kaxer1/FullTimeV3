@@ -32,6 +32,18 @@ class DetalleCatalogoHorarioControlador {
             res.json({ message: 'Detalle de Horario se registró con éxito' });
         });
     }
+    ListarUnDetalleHorario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_horario } = req.params;
+            const HORARIO = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [id_horario]);
+            if (HORARIO.rowCount > 0) {
+                return res.json(HORARIO.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.DETALLE_CATALOGO_HORARIO_CONTROLADOR = new DetalleCatalogoHorarioControlador();
 exports.default = exports.DETALLE_CATALOGO_HORARIO_CONTROLADOR;

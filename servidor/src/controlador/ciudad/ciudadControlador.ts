@@ -40,6 +40,12 @@ class CiudadControlador {
         res.json({ message: 'Ciudad Registrada' });
     }
 
+    public async EliminarCiudad(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM ciudades WHERE id = $1', [id]);
+        res.json({ message: 'Registro eliminado' });
+    }
+
 }
 
 export const CIUDAD_CONTROLADOR = new CiudadControlador();

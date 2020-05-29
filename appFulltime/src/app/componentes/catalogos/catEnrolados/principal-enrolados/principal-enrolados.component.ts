@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { FormControl, Validators} from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
 import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.component';
-import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
+import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
+import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
 
 
 interface buscarActivo {
@@ -21,6 +23,7 @@ interface buscarActivo {
   styleUrls: ['./principal-enrolados.component.css'],
   //encapsulation: ViewEncapsulation.None
 })
+
 export class PrincipalEnroladosComponent implements OnInit {
 
   enrolados: any = [];
@@ -28,11 +31,13 @@ export class PrincipalEnroladosComponent implements OnInit {
   nombre = new FormControl('');
   activo = new FormControl('');
   finger = new FormControl('');
- 
+
   filtroIdUser: number;
   filtroEnrNombre = '';
   filtroActivo: boolean;
   filtroFinger: number;
+
+  confirmacion = false;
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -48,13 +53,14 @@ export class PrincipalEnroladosComponent implements OnInit {
     private rest: EnroladoService,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.getEnrolados();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -66,20 +72,46 @@ export class PrincipalEnroladosComponent implements OnInit {
     });
   }
 
-  AbrirVentanaRegistrarEnrolado(){
+  AbrirVentanaRegistrarEnrolado() {
     this.vistaRegistrarDatos.open(RegistroEnroladosComponent, { width: '600px' }).disableClose = true;
   }
 
   AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false} }).disableClose = true;
+    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false } }).disableClose = true;
     console.log(datosSeleccionados.nombre);
   }
 
   // Ventana para editar datos
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarEnroladosComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false} }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarEnroladosComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false } }).disableClose = true;
+  }
+
+
+  /* **********************************************************************************
+   * ELIMAR REGISTRO ENROLADO Y ENROLADOS-DISPOSITIVO 
+   * **********************************************************************************/
+
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_enrolado: number) {
+    //console.log("probando id", id_enrolado)
+    this.rest.EliminarRegistro(id_enrolado).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.getEnrolados();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos): void {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/enrolados']);
+        }
+      });
   }
 
   IngresarSoloLetras(e) {
@@ -119,7 +151,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     }
   }
 
-  limpiarCampos(){
+  limpiarCampos() {
     this.idUser.reset();
     this.nombre.reset();
     this.activo.reset();
@@ -131,15 +163,15 @@ export class PrincipalEnroladosComponent implements OnInit {
    */
 
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
-    let arrayItems =  this.nameFile.split(".");
+    let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0,8);
+    let itemName = arrayItems[0].slice(0, 8);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'enrolado') {
@@ -151,7 +183,7 @@ export class PrincipalEnroladosComponent implements OnInit {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
     }
   }
-  
+
   plantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
@@ -164,5 +196,5 @@ export class PrincipalEnroladosComponent implements OnInit {
       this.nameFile = '';
     });
   }
-    
+
 }

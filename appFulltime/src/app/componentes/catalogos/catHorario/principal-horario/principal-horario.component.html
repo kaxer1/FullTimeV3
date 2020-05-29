@@ -38,7 +38,7 @@
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2">Subir Horaio</label>
+                        <label for="file" class="btn-2">Subir Horario</label>
                     </form>
                 </div>
             </mat-card>
@@ -71,15 +71,24 @@
                     <td *ngIf="horario.por_horas == true">Sí</td>
                     <td *ngIf="horario.por_horas == false">No</td>
                     <td>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Asignar ciudad en la que rige este feriado" class="far fa-list-alt" id="detalleH"
+                           (click)="AbrirRegistraDetalle(horario)" >
+                            <p>Detalle</p>
+                        </i>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                            [routerLink]="['/verHorario/', horario.id]">
+                            <p>Ver</p>
                         </i>
                         <i class="fas fa-edit" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
-
+                        </i>
+                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
                         </i>
                     </td>
                 </tr>

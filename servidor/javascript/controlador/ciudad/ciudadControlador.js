@@ -55,6 +55,13 @@ class CiudadControlador {
             res.json({ message: 'Ciudad Registrada' });
         });
     }
+    EliminarCiudad(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM ciudades WHERE id = $1', [id]);
+            res.json({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.CIUDAD_CONTROLADOR = new CiudadControlador();
 exports.default = exports.CIUDAD_CONTROLADOR;

@@ -14,6 +14,7 @@ class CiudadRutas {
         this.router.get('/listaCiudad', CIUDAD_CONTROLADOR.ListarCiudades);
         this.router.get('/:id', CIUDAD_CONTROLADOR.ConsularUnaCiudad);
         this.router.post('/', CIUDAD_CONTROLADOR.CrearCiudad);
+        this.router.delete('/eliminar/:id', CIUDAD_CONTROLADOR.EliminarCiudad);
     }
 }
 

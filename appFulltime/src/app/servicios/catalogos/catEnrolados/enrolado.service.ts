@@ -39,6 +39,10 @@ export class EnroladoService {
     return this.http.put(`${this.API_URL}/enrolados`, datos);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/enrolados/eliminar/${id}`);
+  }
+
   subirArchivoExcel(formData) {
     return this.http.post(`${this.API_URL}/enrolados/plantillaExcel/`, formData);
   }

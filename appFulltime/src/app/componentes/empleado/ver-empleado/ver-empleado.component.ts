@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
@@ -38,6 +38,7 @@ import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPe
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
+import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -195,16 +196,16 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   idSelectContrato: number;
-  ObtenerIdContratoSeleccionado(idContratoEmpleado: number){
+  ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
     this.idSelectContrato = idContratoEmpleado;
   }
 
   idSelectCargo: number;
-  ObtenerIdCargoSeleccionado(idCargoEmpleado: number){
+  ObtenerIdCargoSeleccionado(idCargoEmpleado: number) {
     this.idSelectCargo = idCargoEmpleado;
   }
 
- /* Método para obtener datos de discapacidad */
+  /* Método para obtener datos de discapacidad */
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.discapacidadUser = [];
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
@@ -219,7 +220,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
       this.relacionTituloEmpleado = data;
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
 
@@ -228,27 +229,27 @@ export class VerEmpleadoComponent implements OnInit {
   obtenerContratoEmpleadoRegimen() {
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleadoRegimen = res;
-    }, error => {console.log("")});
+    }, error => { console.log("") });
     this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
       this.contratoEmpleado.forEach(obj => {
         this.obtenerCargoEmpleado(obj.id);
         this.obtenerPeriodoVacaciones(obj.id);
       });
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   cargoEmpleado: any = [];
   obtenerCargoEmpleado(idContratoEmpleado: number) {
     this.cargoEmpleado = [];
-    this.restCargo.getInfoCargoEmpleadoRest(idContratoEmpleado).subscribe(res => {     
+    this.restCargo.getInfoCargoEmpleadoRest(idContratoEmpleado).subscribe(res => {
       console.log(this.cargoEmpleado);
       this.cargoEmpleado.push(res);
       this.cargoEmpleado.forEach(obj => {
         this.obtenerPlanHorarios(obj.id);
         this.obtenerEmpleadoProcesos(obj.id);
       });
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   peridoVacaciones: any = [];
@@ -258,14 +259,14 @@ export class VerEmpleadoComponent implements OnInit {
       this.peridoVacaciones.map(obj => {
         this.obtenerVacaciones(obj.id);
       });
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   vacaciones: any = [];
   obtenerVacaciones(id_peri_vacaciones: number) {
     this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
       this.vacaciones = res;
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   planHorario: any;
@@ -275,21 +276,21 @@ export class VerEmpleadoComponent implements OnInit {
       this.planHorario.map(obj => {
         this.obtenerPlanHoraDetalle(obj.id);
       })
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   planHoraDetalle: any;
   obtenerPlanHoraDetalle(id_plan_horario: number) {
     this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
       this.planHoraDetalle = res;
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   empleadoProcesos: any;
   obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
     this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
       this.empleadoProcesos = res
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   planComidas: any;
@@ -297,7 +298,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.planComidas = [];
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res
-    }, error => {console.log("")});
+    }, error => { console.log("") });
   }
 
   /* Método para imprimir datos del permiso */
@@ -401,6 +402,18 @@ export class VerEmpleadoComponent implements OnInit {
     })
   };
 
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteDiscapacidad(id: number) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.eliminarDiscapacidad(id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
   /* Eliminar registro de título */
   eliminarTituloEmpleado(id: number) {
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
@@ -409,6 +422,19 @@ export class VerEmpleadoComponent implements OnInit {
       this.habilitarBtn();
     });
   }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteTitulo(id: number) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.eliminarTituloEmpleado(id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
 
   /* Este Método controla que se habilite el botón si no existe un registro de discapacidad, 
    * si hay registro se habilita para actualizar este registro. */

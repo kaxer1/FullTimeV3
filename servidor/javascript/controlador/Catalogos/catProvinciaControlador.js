@@ -114,6 +114,13 @@ class ProvinciaControlador {
             res.json({ message: 'La provincia ha sido guardada con éxito' });
         });
     }
+    EliminarProvincia(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_provincias WHERE id = $1', [id]);
+            res.json({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.PROVINCIA_CONTROLADOR = new ProvinciaControlador();
 exports.default = exports.PROVINCIA_CONTROLADOR;

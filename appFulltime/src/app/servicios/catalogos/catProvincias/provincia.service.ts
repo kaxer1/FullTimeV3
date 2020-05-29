@@ -49,5 +49,9 @@ export class ProvinciaService {
     return this.http.get(`${this.API_URL}/provincia/paises`);
   }
 
+  EliminarProvincia(id: number){
+    return this.http.delete(`${this.API_URL}/provincia/eliminar/${id}`);
+  }
+
 }
 

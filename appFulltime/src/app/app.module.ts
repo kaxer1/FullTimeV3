@@ -183,6 +183,8 @@ import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-co
 import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
 import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
 import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
+import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
 
 @NgModule({
   declarations: [
@@ -301,6 +303,8 @@ import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/edita
     EditarRelojComponent,
     EditarRolComponent,
     EditarRegimenComponent,
+    PlanificacionMultipleComponent,
+    VerHorarioDetalleComponent,
 
   ],
 

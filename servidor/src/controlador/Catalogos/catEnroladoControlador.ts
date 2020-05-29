@@ -59,24 +59,30 @@ class EnroladoControlador {
     res.json({ message: 'Usuario Enrolado actualizado exitosamente' });
   }
 
+  public async EliminarEnrolado(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_enrolados WHERE id = $1', [id]);
+    res.json({ message: 'Registro eliminado' });
+  }
+
   public async CargaPlantillaEnrolado(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
-    let filename = cadena.split("\\")[1]; 
+    let filename = cadena.split("\\")[1];
     var filePath = `./plantillas/${filename}`
 
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames;
-    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
     plantilla.forEach(async (data: any) => {
       const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = data;
-      if(id_usuario != undefined){
+      if (id_usuario != undefined) {
         await pool.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
       } else {
-        res.json({error: 'plantilla equivocada'});
+        res.json({ error: 'plantilla equivocada' });
       }
     });
-    
+
     res.json({ message: 'La plantilla a sido receptada' });
     fs.unlinkSync(filePath);
   }

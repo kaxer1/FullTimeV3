@@ -11,6 +11,7 @@ import * as FileSaver from 'file-saver';
 
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
+import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 
 @Component({
   selector: 'app-principal-horario',
@@ -46,7 +47,7 @@ export class PrincipalHorarioComponent implements OnInit {
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
-    public vistaRegistrarHorario: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +68,13 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+  }
+
+  AbrirRegistraDetalle(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false} }).disableClose = true;
+    console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampos() {

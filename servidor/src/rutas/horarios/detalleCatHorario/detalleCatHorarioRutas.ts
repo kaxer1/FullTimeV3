@@ -11,6 +11,7 @@ class PermisosRutas {
     configuracion(): void {
         this.router.get('/', DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarDetalleHorarios);
         this.router.post('/', DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearDetalleHorarios);
+        this.router.get('/:id_horario', DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarUnDetalleHorario);
     }
 }
 

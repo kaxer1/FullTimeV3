@@ -81,14 +81,14 @@
                             <p>Ciudad</p>
                         </i>
                         <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                            matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
-                            (click)="AbrirVentanaEditarFeriado(f)">
-                            <p>Editar</p>
-                        </i>
-                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
                             matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
                             [routerLink]="['/verFeriados/', f.id]">
                             <p>Ver</p>
+                        </i>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
+                            (click)="AbrirVentanaEditarFeriado(f)">
+                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

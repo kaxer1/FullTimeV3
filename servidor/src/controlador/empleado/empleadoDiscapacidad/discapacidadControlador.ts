@@ -44,7 +44,6 @@ class DiscapacidadControlador {
     res.json({ message: 'Registro eliminado' });
   }
 
-
   /* TIPO DISCAPACIDAD */
 
   public async ListarTipoD(req: Request, res: Response) {

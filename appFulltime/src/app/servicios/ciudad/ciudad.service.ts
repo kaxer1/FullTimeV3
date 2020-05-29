@@ -30,4 +30,8 @@ export class CiudadService {
     return this.http.post(`${this.API_URL}/ciudades`, data);
   }
 
+  EliminarCiudad(id: number){
+    return this.http.delete(`${this.API_URL}/ciudades/eliminar/${id}`);
+  }
+
 }
