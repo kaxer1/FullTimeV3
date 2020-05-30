@@ -27,15 +27,14 @@
                         <mat-error *ngIf="descripcionF.invalid">Ingrese una descripción válida</mat-error>
                     </mat-form-field>
                     <br>
+                    <label style="margin-right: 40px;">Vacaciones usadas *</label>
+                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                    matTooltipPosition="right"
+                    matTooltip="Indicación de que el empleado hizo uso de sus vacaciones">
+                    help_outline</mat-icon>
                     <section>
-                        <mat-label>Días de vacaciones usados*</mat-label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicación de que el empleado hizo uso de sus vacaciones">
-                            help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="estadoF" required
                             [value]="estadoF.value">
-                            <br>
                             <mat-radio-button value=1>Si</mat-radio-button>
                             <mat-radio-button value=2>No</mat-radio-button>
                         </mat-radio-group>

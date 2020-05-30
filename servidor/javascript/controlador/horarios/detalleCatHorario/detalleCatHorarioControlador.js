@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../../database"));
+const xlsx_1 = __importDefault(require("xlsx"));
+const fs_1 = __importDefault(require("fs"));
 class DetalleCatalogoHorarioControlador {
     ListarDetalleHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,6 +44,39 @@ class DetalleCatalogoHorarioControlador {
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
             }
+        });
+    }
+    CrearHorarioDetallePlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                var { nombre_horario, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
+                console.log("datos", data);
+                //console.log("datos", data);
+                //console.log("almuerzo", min_almuerzo);
+                var nombre = nombre_horario;
+                console.log("datos", nombre);
+                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+                var id_horario = idHorario.rows[0]['id'];
+                console.log("horarios", idHorario.rows);
+                if (minutos_espera != undefined) {
+                    //console.log("datos", data);
+                    //console.log("almuerzo", min_almuerzo);
+                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+                }
+                else {
+                    minutos_espera = '00:00';
+                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+                }
+            }));
+            res.json({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
         });
     }
 }

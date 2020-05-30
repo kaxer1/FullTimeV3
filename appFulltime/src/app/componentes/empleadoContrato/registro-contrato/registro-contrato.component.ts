@@ -121,7 +121,7 @@ export class RegistroContratoComponent implements OnInit {
   CerrarVentanaRegistroContrato() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
 }

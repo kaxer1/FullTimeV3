@@ -133,6 +133,8 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPermisos(parseInt(this.idEmpleado))
     this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+    this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
+    this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
@@ -160,11 +162,12 @@ export class VerEmpleadoComponent implements OnInit {
     this.btnActualizarCargo = value;
   }
 
-  // onUploadFinish(event) {
-  //   console.log(event);
-  // }
-
-  /* Método para ver la información del empleado */
+  /* 
+   * ***************************************************************************************************
+   *                               ABRIR VENTANAS PARA REGISTRAR DATOS DEL EMPLEADO
+   * ***************************************************************************************************
+  */
+  /** Método para ver la información del empleado */
   urlImagen: any;
   iniciales: any;
   mostrarImagen: boolean = false;
@@ -189,7 +192,7 @@ export class VerEmpleadoComponent implements OnInit {
     })
   }
 
-  /* Método para mostrar datos del título del empleado */
+  /** Método para mostrar datos del título del empleado */
   idSelect: number;
   ObtenerIdTituloSeleccionado(idTituloEmpleado: number) {
     this.idSelect = idTituloEmpleado;
@@ -205,7 +208,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.idSelectCargo = idCargoEmpleado;
   }
 
-  /* Método para obtener datos de discapacidad */
+  /** Método para obtener datos de discapacidad */
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.discapacidadUser = [];
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
@@ -214,8 +217,8 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-  /* Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
-   * que conecta a la tabla EMPLEADOS con CG_TITULOS */
+  /** Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
+    * que conecta a la tabla EMPLEADOS con CG_TITULOS */
   obtenerTituloEmpleado(idEmployTitu: number) {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
@@ -224,7 +227,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
 
-  /* Método para obtener el contrato de un empleado con su respectivo régimen laboral */
+  /** Método para obtener el contrato de un empleado con su respectivo régimen laboral */
   idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen() {
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
@@ -233,23 +236,40 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
       this.contratoEmpleado.forEach(obj => {
-        this.obtenerCargoEmpleado(obj.id);
         this.obtenerPeriodoVacaciones(obj.id);
       });
     }, error => { console.log("") });
   }
 
+  /** Método para obtener los datos del cargo del empleado */
   cargoEmpleado: any = [];
-  obtenerCargoEmpleado(idContratoEmpleado: number) {
+  cargosTotalesEmpleado: any = [];
+  obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
-    this.restCargo.getInfoCargoEmpleadoRest(idContratoEmpleado).subscribe(res => {
-      console.log(this.cargoEmpleado);
-      this.cargoEmpleado.push(res);
-      this.cargoEmpleado.forEach(obj => {
-        this.obtenerPlanHorarios(obj.id);
-        this.obtenerEmpleadoProcesos(obj.id);
-      });
-    }, error => { console.log("") });
+    this.cargosTotalesEmpleado = [];
+    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+      this.idContrato = datos;
+      for (let i = 0; i <= this.idContrato.length - 1; i++) {
+        console.log("idContratoProbandoJenny", this.idContrato[i].id);
+        this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[i]['id']).subscribe(datos => {
+          this.cargoEmpleado = datos;
+          console.log("jenny datos", this.cargoEmpleado)
+          if (this.cargoEmpleado.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.cargosTotalesEmpleado = datos
+              this.cont++;
+            }
+            else {
+              this.cargosTotalesEmpleado = this.cargosTotalesEmpleado.concat(datos);
+              console.log("Datos Cargos " + i + '', this.cargosTotalesEmpleado)
+            }
+          }
+        });
+      }
+    });
   }
 
   peridoVacaciones: any = [];
@@ -286,12 +306,42 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-  empleadoProcesos: any;
-  obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
-    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
-      this.empleadoProcesos = res
-    }, error => { console.log("") });
+  /** Método para mostrar datos de los procesos del empleado */
+  buscarProcesos: any = [];
+  empleadoProcesos: any = [];
+  obtenerEmpleadoProcesos(id_empleado: number) {
+    this.buscarProcesos = [];
+    this.empleadoProcesos = [];
+    this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idCargo Procesos", this.idCargo[0].id);
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
+          this.buscarProcesos = datos;
+          if (this.buscarProcesos.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.empleadoProcesos = datos
+              this.cont++;
+            }
+            else {
+              this.empleadoProcesos = this.empleadoProcesos.concat(datos);
+              console.log("Datos procesos" + i + '', this.empleadoProcesos)
+            }
+          }
+        })
+      }
+    });
   }
+
+  /* obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
+     this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
+       this.empleadoProcesos = res
+     }, error => {console.log("")});
+   }*/
+
 
   planComidas: any;
   obtenerPlanComidasEmpleado(id_empleado: number) {
@@ -480,52 +530,57 @@ export class VerEmpleadoComponent implements OnInit {
     }
   }
 
+  /* 
+   ****************************************************************************************************
+   *                               ABRIR VENTANAS PARA REGISTRAR DATOS DEL EMPLEADO
+   ****************************************************************************************************
+  */
   /* Ventana para ingresar contrato del empleado*/
   AbrirVentanaCrearContrato(): void {
-    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).disableClose = true;
-  }
-
-  /* Ventana para ingresar planificación de comidas */
-  AbrirVentanaPlanificacion(): void {
-    console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).afterClosed().subscribe(item => {
-      this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
-    });
+    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).
+      afterClosed().subscribe(item => {
+        this.obtenerContratoEmpleadoRegimen();
+      });
   }
 
   /* Ventana para ingresar cargo del empleado */
   AbrirVentanaCargo(): void {
-    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+    this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ", this.idContrato[0].id)
+      console.log("idcargo ", this.idContrato[0].max)
       this.vistaRegistrarDatos.open(EmplCargosComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } }).
+        afterClosed().subscribe(item => {
+          this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
+        });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+    });
+  }
+
+  /* Ventana para registrar horario */
+  AbrirVentanaEmplHorario(): void {
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].max)
+      this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
+          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+        });
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 
   /* Ventana para ingresar período de vacaciones */
   AbrirVentanaPerVacaciones(): void {
-    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+    this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ", this.idContrato[0].id)
+      console.log("idcargo ", this.idContrato[0].max)
       this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id } }).disableClose = true;
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
-    });
-  }
-
-  /* Ventana para ingresar procesos del empleado */
-  AbrirVentanaProcesos(): void {
-    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].max)
-      this.vistaRegistrarDatos.open(RegistrarEmpleProcesoComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).disableClose = true;
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 
@@ -567,6 +622,29 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  /* Ventana para ingresar planificación de comidas */
+  AbrirVentanaPlanificacion(): void {
+    console.log(this.idEmpleado);
+    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado })
+      .afterClosed().subscribe(item => {
+        this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+      });
+  }
+
+  /* Ventana para ingresar procesos del empleado */
+  AbrirVentanaProcesos(): void {
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idcargo ", this.idCargo[0].max)
+      this.vistaRegistrarDatos.open(RegistrarEmpleProcesoComponent,
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
+          this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+        });
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
+  }
+
   /* Ventana para registrar autorizaciones de diferentes departamentos */
   AbrirVentanaAutorizar(): void {
     this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
@@ -583,16 +661,16 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* Ventana para registrar permisos del empleado */
   AbrirVentanaPermiso(): void {
-    this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
+    this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id)
+      console.log("idContrato ", this.idContrato[0].max)
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id)
         this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
           {
             width: '1200px',
-            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id, idPerVacacion: this.idPerVacacion[0].id }
+            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max, idPerVacacion: this.idPerVacacion[0].id }
           }).afterClosed().subscribe(item => {
             this.obtenerPermisos(parseInt(this.idEmpleado));
           });
@@ -604,24 +682,11 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  /* Ventana para registrar horario */
-  AbrirVentanaEmplHorario(): void {
-    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].max)
-      this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
-          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-        });
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
-    });
-  }
-
-  AbrirVentanaCatHorario(): void {
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { ventana: true } }).disableClose = true;
-  }
-
+  /* 
+   * ***************************************************************************************************
+   *                               VENTANA PARA EDITAR DATOS
+   * ***************************************************************************************************
+  */
   /* Ventana para editar procesos del empleado */
   AbrirVentanaEditarProceso(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
@@ -631,17 +696,11 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* 
   ****************************************************************************************************
-  *
-  * 
   *                               PARA LA GENERACION DE PDFs
-  * 
-  * 
   ****************************************************************************************************
   */
-
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
-
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -649,7 +708,6 @@ export class VerEmpleadoComponent implements OnInit {
 
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
   }
 
   getDocumentDefinicion() {
@@ -871,11 +929,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* 
   ****************************************************************************************************
-  *
-  * 
-  *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL Y CSV
-  * 
-  * 
+  *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
   ****************************************************************************************************
   */
 
@@ -892,6 +946,11 @@ export class VerEmpleadoComponent implements OnInit {
     xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS CSV
+   * ***************************************************************************************************
+  */
+
   exportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleadoUno);
     const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.contratoEmpleadoRegimen);
@@ -907,11 +966,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* 
   ****************************************************************************************************
-  *
-  * 
   *                               PARA LA SUBIR LA IMAGEN DEL EMPLEADO
-  * 
-  * 
   ****************************************************************************************************
   */
   nameFile: string;
@@ -937,7 +992,9 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  /* CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA*/
+  /* ****************************************************************************************************
+   *                               CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA
+   * ****************************************************************************************************/
   nameFileHorario: string;
   archivoSubidoHorario: Array<File>;
   archivoHorarioForm = new FormControl('');

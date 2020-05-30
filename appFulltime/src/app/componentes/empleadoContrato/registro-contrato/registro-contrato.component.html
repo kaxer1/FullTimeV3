@@ -54,29 +54,25 @@
                     </mat-form-field>
                 </div>
                 <div class="col">
+                    <label style="margin-right: 62px;">Controlar Vacaciones *</label>
+                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
+                        help_outline</mat-icon>
                     <section>
-                        <mat-label>Controlar Vacaciones *</mat-label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
-                            help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
                             required [value]="controlVacacionesF.value">
-                            <br>
                             <mat-radio-button value="true">Si</mat-radio-button>
                             <mat-radio-button value="false">No</mat-radio-button>
                         </mat-radio-group>
                     </section>
-                    <br>
+                    <label style="margin-right: 72px;">Controlar Asistencia *</label>
+                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                    matTooltipPosition="right"
+                    matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                    help_outline</mat-icon>
                     <section>
-                        <mat-label>Controlar Asistencia *</mat-label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
-                            help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
                             required [value]="controlAsistenciaF.value">
-                            <br>
                             <mat-radio-button value="true">Si</mat-radio-button>
                             <mat-radio-button value="false">No</mat-radio-button>
                         </mat-radio-group>

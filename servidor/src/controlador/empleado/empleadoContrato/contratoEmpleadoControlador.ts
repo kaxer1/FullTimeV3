@@ -40,6 +40,15 @@ class ContratoEmpleadoControlador {
         res.status(404).json({ text: 'Registro no encontrado' });
     }
 
+    public async EncontrarIdContratoActual(req: Request, res: Response): Promise<any> {
+        const { id_empleado } = req.params;
+        const CONTRATO = await pool.query('SELECT MAX(ec.id) FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1', [id_empleado]);
+        if (CONTRATO.rowCount > 0) {
+            return res.json(CONTRATO.rows)
+        }
+        res.status(404).json({ text: 'Registro no encontrado' });
+    }
+
     public async EncontrarContratoIdEmpleado(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
         const CONTRATO = await pool.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 AND ec.id_regimen = cr.id', [id_empleado]);

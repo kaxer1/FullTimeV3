@@ -1,6 +1,7 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="permisoEmpleado">
-    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" [(ngModel)]="num">Solicitud de Permiso N° {{num}}</h5>
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" [(ngModel)]="num">Solicitud de Permiso N°
+        {{num}}</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="PermisoForm">
@@ -120,14 +121,13 @@
                         </mat-select>
                     </mat-form-field>
                     <br>
+                    <label style="margin-right: 35px;">Permiso Legalizado *</label>
+                    <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si el permiso debe ser legalizado">
+                        help_outline
+                    </mat-icon>
                     <section class="example-section">
                         <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required>
-                            <label>Permiso Legalizado * </label>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
-                                matTooltipPosition="right" matTooltip="Indicar si el permiso debe ser legalizado">
-                                help_outline
-                            </mat-icon>
-                            <br>
                             <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
                                 [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
                             <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"

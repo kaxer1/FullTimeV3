@@ -30,4 +30,8 @@ export class HorarioService {
     return this.http.post(this.API_URL + '/horario/upload', formData)  
   }
 
+  CargarHorariosDetalles(formData) {
+    return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)  
+  }
+
 }

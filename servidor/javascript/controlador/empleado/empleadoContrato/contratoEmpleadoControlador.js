@@ -54,6 +54,16 @@ class ContratoEmpleadoControlador {
             res.status(404).json({ text: 'Registro no encontrado' });
         });
     }
+    EncontrarIdContratoActual(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const CONTRATO = yield database_1.default.query('SELECT MAX(ec.id) FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1', [id_empleado]);
+            if (CONTRATO.rowCount > 0) {
+                return res.json(CONTRATO.rows);
+            }
+            res.status(404).json({ text: 'Registro no encontrado' });
+        });
+    }
     EncontrarContratoIdEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;

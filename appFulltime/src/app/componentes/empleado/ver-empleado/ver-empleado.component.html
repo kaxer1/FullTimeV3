@@ -297,22 +297,6 @@
         </div>
     </mat-tab>
 
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">settings</mat-icon>
-            Registros Adicionales
-        </ng-template>
-
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <button type="submit" id="boton" (click)="AbrirVentanaCatHorario()" class="btn">Detalle Horario
-                    </button>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-
     <!-- CONTRATO DEL EMPLEADO Y CARGO DEL EMPLEADO -->
     <mat-tab>
         <ng-template mat-tab-label>
@@ -436,7 +420,7 @@
                             </div>
                         </div>
                         <mat-card-content>
-                            <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
+                            <div class="container" *ngFor="let c of cargosTotalesEmpleado" style="padding-top: 15px;">
                                 <div class="row">
                                     <div class="col">
                                         <label class="col-sm col-form-label">Código:</label>

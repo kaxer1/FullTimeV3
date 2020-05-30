@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../../database';
+import excel from 'xlsx';
+import fs from 'fs';
 
 class DetalleCatalogoHorarioControlador {
 
@@ -16,7 +18,7 @@ class DetalleCatalogoHorarioControlador {
     public async CrearDetalleHorarios(req: Request, res: Response): Promise<void> {
         const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion } = req.body;
         await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion]);
-        res.json({ message: 'Detalle de Horario se registró con éxito'});
+        res.json({ message: 'Detalle de Horario se registró con éxito' });
     }
 
     public async ListarUnDetalleHorario(req: Request, res: Response): Promise<any> {
@@ -28,6 +30,39 @@ class DetalleCatalogoHorarioControlador {
         else {
             return res.status(404).json({ text: 'No se encuentran registros' });
         }
+    }
+
+    public async CrearHorarioDetallePlantilla(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+        plantilla.forEach(async (data: any) => {
+            var { nombre_horario, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
+            console.log("datos", data)
+            //console.log("datos", data);
+            //console.log("almuerzo", min_almuerzo);
+            var nombre = nombre_horario;
+            console.log("datos", nombre);
+            const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+            var id_horario = idHorario.rows[0]['id'];
+            console.log("horarios", idHorario.rows)
+            if (minutos_espera != undefined) {
+                //console.log("datos", data);
+                //console.log("almuerzo", min_almuerzo);
+                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+            } else {
+                minutos_espera = '00:00';
+                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+            }
+        });
+        res.json({ message: 'La plantilla a sido receptada' });
+        fs.unlinkSync(filePath);
     }
 
 }

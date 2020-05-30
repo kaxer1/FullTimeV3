@@ -1,5 +1,10 @@
 import { Router } from 'express';
 import DETALLE_CATALOGO_HORARIO_CONTROLADOR from '../../../controlador/horarios/detalleCatHorario/detalleCatHorarioControlador';
+const multipart = require('connect-multiparty');  
+
+const multipartMiddleware = multipart({  
+    uploadDir: './plantillas',
+});
 
 class PermisosRutas {
     public router: Router = Router();
@@ -12,6 +17,7 @@ class PermisosRutas {
         this.router.get('/', DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarDetalleHorarios);
         this.router.post('/', DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearDetalleHorarios);
         this.router.get('/:id_horario', DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarUnDetalleHorario);
+        this.router.post('/upload', multipartMiddleware, DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearHorarioDetallePlantilla);
     }
 }
 

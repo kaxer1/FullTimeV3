@@ -100,3 +100,6 @@ table { width: 100%; font-size: 14px; }
 [type="file"] + label.btn-2:hover::before {
     right: 80%
 }
+
+#lista { font-family: "Poppins", sans-serif; font-size: 15px;}
+

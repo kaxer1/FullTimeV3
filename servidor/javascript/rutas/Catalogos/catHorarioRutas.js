@@ -19,6 +19,7 @@ class HorarioRutas {
         this.router.get('/:id', catHorarioControlador_1.default.ObtenerUnHorario);
         this.router.post('/', catHorarioControlador_1.default.CrearHorario);
         this.router.post('/upload', multipartMiddleware, catHorarioControlador_1.default.CrearHorarioPlantilla);
+        this.router.post('/cargaMultiple/upload', multipartMiddleware, catHorarioControlador_1.default.CrearHorarioyDetallePlantilla);
     }
 }
 const HORARIO_RUTAS = new HorarioRutas();
