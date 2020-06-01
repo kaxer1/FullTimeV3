@@ -4,7 +4,7 @@ img { width: 100%};
 
 .pantalla { margin: auto;}
 
-.btn-block { border-radius: 5px; width: 230px; background-color: rgb(80,87,97); color: white; margin-left: 15px;}
+.btn { border-radius: 5px; margin-left: 15px; background-color: rgb(80,87,97); color: white;}
 
 mat-card { width: 300px; border-style: groove; border-radius: 25px; text-align: center; margin: auto; padding-bottom: 25px; padding-top: 25px; }
 
