@@ -102,20 +102,22 @@ export class DatosEmpleadoComponent implements OnInit {
     this.obtenerPermisos(parseInt(this.idEmpleado))
     this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+    this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
+    this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+    this.obtenerVacaciones(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
-
-  /* 
-  ****************************************************************************************************
-  *                               LECTURA DE DATOS
-  ****************************************************************************************************
+/* 
+   * ***************************************************************************************************
+   *                               MÉTODO PARA MOSTRAR DATOS
+   * ***************************************************************************************************
   */
-
-  /* Método para ver la información del empleado */
+  /** Método para ver la información del empleado */
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.empleadoUno = [];
@@ -136,7 +138,7 @@ export class DatosEmpleadoComponent implements OnInit {
     })
   }
 
-  /* Método para obtener datos de discapacidad */
+  /** Método para obtener datos de discapacidad */
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.discapacidadUser = [];
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
@@ -144,8 +146,8 @@ export class DatosEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-  /* Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
-   * que conecta a la tabla EMPLEADOS con CG_TITULOS */
+  /** Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
+    * que conecta a la tabla EMPLEADOS con CG_TITULOS */
   obtenerTituloEmpleado(idEmployTitu: number) {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
@@ -153,7 +155,7 @@ export class DatosEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-  /* Método para obtener el contrato de un empleado con su respectivo régimen laboral */
+  /** Método para obtener el contrato de un empleado con su respectivo régimen laboral */
   idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen() {
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
@@ -161,87 +163,44 @@ export class DatosEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
     this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
-      this.contratoEmpleado.forEach(obj => {
-        this.obtenerCargoEmpleado(obj.id);
-        this.obtenerPeriodoVacaciones(obj.id);
-      });
     }, error => { console.log("") });
   }
 
-  /* Métodos para obtener el cargo del empleado */
+  /** Método para obtener los datos del cargo del empleado */
   cargoEmpleado: any = [];
-  obtenerCargoEmpleado(idContratoEmpleado: number) {
+  cargosTotalesEmpleado: any = [];
+  obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
-    this.restCargo.getInfoCargoEmpleadoRest(idContratoEmpleado).subscribe(res => {
-      console.log(this.cargoEmpleado);
-      this.cargoEmpleado.push(res);
-      this.cargoEmpleado.forEach(obj => {
-        this.obtenerPlanHorarios(obj.id);
-        this.obtenerEmpleadoProcesos(obj.id);
-      });
-    }, error => { console.log("") });
-  }
-
-  /* Método para obtener datos del periodo de vacacones */
-  peridoVacaciones: any = [];
-  obtenerPeriodoVacaciones(idContratoEmpleado: number) {
-    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(idContratoEmpleado).subscribe(res => {
-      this.peridoVacaciones = res;
-      this.peridoVacaciones.map(obj => {
-        this.obtenerVacaciones(obj.id);
-      });
-    }, error => { console.log("") });
-  }
-
-  /* Metodo para obtener datos de vacaciones */
-  vacaciones: any = [];
-  obtenerVacaciones(id_peri_vacaciones: number) {
-    this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
-      this.vacaciones = res;
-    }, error => { console.log("") });
-  }
-
-  /* Método para mostrar los datos de la planificación de horarios */
-  planHorario: any;
-  obtenerPlanHorarios(idEmpleadoCargo: number) {
-    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
-      this.planHorario = res;
-      this.planHorario.map(obj => {
-        this.obtenerPlanHoraDetalle(obj.id);
-      })
-    }, error => { console.log("") });
-  }
-
-  /* Método para mostrar datos del detalle de horarios */
-  planHoraDetalle: any;
-  obtenerPlanHoraDetalle(id_plan_horario: number) {
-    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
-      this.planHoraDetalle = res;
-    }, error => { console.log("") });
-  }
-
-  /* Método para mostrar datos de procesos del empleado */
-  empleadoProcesos: any;
-  obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
-    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
-      this.empleadoProcesos = res
-    }, error => { console.log("") });
-  }
-
-  /* Método para mostrar planificación de comidas */
-  planComidas: any;
-  obtenerPlanComidasEmpleado(id_empleado: number) {
-    this.planComidas = [];
-    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
-      this.planComidas = res
-    }, error => { console.log("") });
+    this.cargosTotalesEmpleado = [];
+    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+      this.idContrato = datos;
+      for (let i = 0; i <= this.idContrato.length - 1; i++) {
+        console.log("idContratoProbandoJenny", this.idContrato[i].id);
+        this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[i]['id']).subscribe(datos => {
+          this.cargoEmpleado = datos;
+          console.log("jenny datos", this.cargoEmpleado)
+          if (this.cargoEmpleado.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.cargosTotalesEmpleado = datos
+              this.cont++;
+            }
+            else {
+              this.cargosTotalesEmpleado = this.cargosTotalesEmpleado.concat(datos);
+              console.log("Datos Cargos " + i + '', this.cargosTotalesEmpleado)
+            }
+          }
+        });
+      }
+    });
   }
 
   /* Método para imprimir datos del permiso */
   permisosEmpleado: any;
   permisosTotales: any;
   obtenerPermisos(id_empleado: number) {
-    this.cont = 0;
     this.permisosEmpleado = [];
     this.permisosTotales = [];
     this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
@@ -268,13 +227,109 @@ export class DatosEmpleadoComponent implements OnInit {
     });
   }
 
+  vacaciones: any = [];
+  obtenerVacaciones(id_empleado: number) {
+    this.restPerV.BuscarIDPerVacaciones(id_empleado).subscribe(datos => {
+      this.idPerVacacion = datos;
+      console.log("idPerVaca ", this.idPerVacacion[0].id);
+      this.restVacaciones.ObtenerVacacionesPorIdPeriodo(this.idPerVacacion[0].id).subscribe(res => {
+        this.vacaciones = res;
+      }, error => { console.log("") });
+    }, error => { });
+  }
+
+  planHorario: any;
+  obtenerPlanHorarios(idEmpleadoCargo: number) {
+    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
+      this.planHorario = res;
+      this.planHorario.map(obj => {
+        this.obtenerPlanHoraDetalle(obj.id);
+      })
+    }, error => { console.log("") });
+  }
+
+  planHoraDetalle: any;
+  obtenerPlanHoraDetalle(id_plan_horario: number) {
+    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
+      this.planHoraDetalle = res;
+    }, error => { console.log("") });
+  }
+
+  /** Método para mostrar datos de los procesos del empleado */
+  buscarProcesos: any = [];
+  empleadoProcesos: any = [];
+  obtenerEmpleadoProcesos(id_empleado: number) {
+    this.buscarProcesos = [];
+    this.empleadoProcesos = [];
+    this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      console.log("idCargo Procesos", this.idCargo[0].id);
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
+          this.buscarProcesos = datos;
+          if (this.buscarProcesos.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.empleadoProcesos = datos
+              this.cont++;
+            }
+            else {
+              this.empleadoProcesos = this.empleadoProcesos.concat(datos);
+              console.log("Datos procesos" + i + '', this.empleadoProcesos)
+            }
+          }
+        })
+      }
+    });
+  }
+
+  /** Método para mostrar datos de planificación de almuerzos */
+  planComidas: any;
+  obtenerPlanComidasEmpleado(id_empleado: number) {
+    this.planComidas = [];
+    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+      this.planComidas = res
+    }, error => { console.log("") });
+  }
+
+  /* Método para imprimir datos del periodo de vacaciones */
+  buscarPeriodosVacaciones: any;
+  peridoVacaciones: any;
+  obtenerPeriodoVacaciones(id_empleado: number) {
+    this.buscarPeriodosVacaciones = [];
+    this.peridoVacaciones = [];
+    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idContrato ", this.idContrato[0].id);
+      for (let i = 0; i <= this.idContrato.length - 1; i++) {
+        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
+          this.buscarPeriodosVacaciones = datos;
+          if (this.buscarPeriodosVacaciones.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.peridoVacaciones = datos
+              this.cont++;
+            }
+            else {
+              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
+              console.log("Datos Periodo Vacaciones" + i + '', this.peridoVacaciones)
+            }
+          }
+        })
+      }
+    });
+  }
+
   /* Método para mostrar datos de autoridad departamentos */
   autorizacionEmpleado: any;
   autorizacionesTotales: any;
   ObtenerAutorizaciones(id_empleado: number) {
     this.autorizacionEmpleado = [];
     this.autorizacionesTotales = [];
-    this.cont = 0;
     this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
       this.idCargo = datos;
       console.log("idCargo ", this.idCargo[0].id);
@@ -305,7 +360,6 @@ export class DatosEmpleadoComponent implements OnInit {
   ObtenerHorariosEmpleado(id_empleado: number) {
     this.horariosEmpleado = [];
     this.horariosEmpleadoTotales = [];
-    this.cont = 0;
     this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
       this.idCargo = datos;
       console.log("idCargo ", this.idCargo[0].id);
@@ -329,6 +383,8 @@ export class DatosEmpleadoComponent implements OnInit {
       }
     });
   }
+
+
 
   /* 
   ****************************************************************************************************
