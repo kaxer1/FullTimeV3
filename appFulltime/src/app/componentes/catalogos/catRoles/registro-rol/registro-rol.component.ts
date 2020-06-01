@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -17,12 +17,12 @@ export class RegistroRolComponent implements OnInit {
   public nuevoRolForm = new FormGroup({
     descripcionForm: this.descripcion
   });
-  
+
   constructor(
     public rest: RolesService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroRolComponent>,
-  ) { 
+  ) {
     this.nuevoRolForm.setValue({
       descripcionForm: '',
     });
@@ -38,21 +38,21 @@ export class RegistroRolComponent implements OnInit {
     }
   }
 
-  limpiarCampos(){
+  limpiarCampos() {
     this.nuevoRolForm.reset();
   }
 
-  insertarRol(form){
-    let dataRol= {
+  insertarRol(form) {
+    let dataRol = {
       nombre: form.descripcionForm,
     };
 
     this.rest.postRoles(dataRol).subscribe(response => {
-      console.log(response);  
+      console.log(response);
       this.toastr.success('Operacion Exitosa', 'Rol guardado');
       this.limpiarCampos();
-    },error => {
-        console.log(error);
+    }, error => {
+      console.log(error);
     });
   }
 

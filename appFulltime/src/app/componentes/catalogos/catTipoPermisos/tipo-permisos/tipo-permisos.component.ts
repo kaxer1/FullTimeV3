@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 
+
 interface TipoDescuentos {
   value: string;
   viewValue: string;
@@ -73,7 +74,7 @@ export class TipoPermisosComponent implements OnInit {
   constructor(
     private rest: TipoPermisosService,
     private toastr: ToastrService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void {

@@ -46,6 +46,13 @@ class RelojesControlador {
             res.json({ message: 'Reloj Guardado' });
         });
     }
+    ActualizarReloj(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento, id } = req.body;
+            yield database_1.default.query('UPDATE cg_relojes SET nombre = $1, ip = $2, puerto = $3, contrasenia = $4, marca = $5, modelo = $6, serie = $7, id_fabricacion = $8, fabricante = $9, mac = $10, tien_funciones = $11, id_sucursal = $12, id_departamento = $13 WHERE id = $14', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento, id]);
+            res.json({ message: 'Registro Actualizado' });
+        });
+    }
     CargaPlantillaRelojes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;

@@ -393,6 +393,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* Eliminar registro de discapacidad */
   eliminarDiscapacidad(id_discapacidad: number) {
+    console.log("id_dicacapacidad", id_discapacidad)
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
       this.btnDisc = 'Añadir';

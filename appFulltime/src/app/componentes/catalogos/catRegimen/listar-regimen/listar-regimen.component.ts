@@ -3,10 +3,12 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
-import { PageEvent } from '@angular/material/paginator';
+import { EditarRegimenComponent } from 'src/app/componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+
 
 @Component({
   selector: 'app-listar-regimen',
@@ -27,7 +29,7 @@ export class ListarRegimenComponent implements OnInit {
 
   // Almacenamiento de datos consultados  
   regimen: any = [];
-  filtroRegimenLaboral= '';
+  filtroRegimenLaboral = '';
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -37,15 +39,15 @@ export class ListarRegimenComponent implements OnInit {
   constructor(
     private rest: RegimenService,
     public router: Router,
-    public vistaRegistrarRegimen: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
-  ) {  }
+  ) { }
 
   ngOnInit(): void {
     this.ObtenerRegimen();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -56,10 +58,6 @@ export class ListarRegimenComponent implements OnInit {
     this.rest.ConsultarRegimen().subscribe(datos => {
       this.regimen = datos;
     })
-  }
-
-  AbrirVentanaRegistrarRegimen(): void {
-    this.vistaRegistrarRegimen.open(RegimenComponent, { width: '900px'}).disableClose = true;
   }
 
   LimpiarCampos() {
@@ -93,5 +91,20 @@ export class ListarRegimenComponent implements OnInit {
     if (this.descripcionF.hasError('pattern')) {
       return 'Indispensable ingresar dos letras';
     }
+  }
+
+  /*************************************************************************************
+   * VENTANAS PARA REGISTRAR Y EDITAR DATOS DE UN RÉGIMEN LABORAL
+   ***********************************************************************************/
+
+  /* Ventana para editar datos del régimen laboral seleccionado */
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarRegimenComponent, { width: '900px', data: { datosRegimen: datosSeleccionados, actualizar: true } }).disableClose = true;
+  }
+
+  /** Ventana para registrar datos de un nuevo régimen laboral */
+  AbrirVentanaRegistrarRegimen(): void {
+    this.vistaRegistrarDatos.open(RegimenComponent, { width: '900px' }).disableClose = true;
   }
 }

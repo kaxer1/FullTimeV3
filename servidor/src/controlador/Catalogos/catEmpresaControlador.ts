@@ -13,6 +13,17 @@ class EmpresaControlador {
         }
     }
 
+    public async ListarUnaEmpresa(req: Request, res: Response) {
+        const { nombre } = req.params;
+        const EMPRESA = await pool.query('SELECT * FROM cg_empresa WHERE nombre = $1', [nombre]);
+        if (EMPRESA.rowCount > 0) {
+            return res.json(EMPRESA.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
+    }
+
     public async CrearEmpresa(req: Request, res: Response): Promise<void> {
         const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante } = req.body;
         await pool.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante  ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante]);

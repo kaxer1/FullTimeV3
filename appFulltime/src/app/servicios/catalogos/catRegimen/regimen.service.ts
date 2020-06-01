@@ -17,7 +17,15 @@ export class RegimenService {
     return this.http.post(`${this.API_URL}/regimenLaboral`, datos);
   }
 
-  ConsultarRegimen(){
+  ConsultarRegimen() {
     return this.http.get(`${this.API_URL}/regimenLaboral`);
+  }
+
+  ConsultarUnRegimen(id: number) {
+    return this.http.get(`${this.API_URL}/regimenLaboral/${id}`);
+  }
+
+  ActualizarRegimen(datos: any) {
+    return this.http.put(`${this.API_URL}/regimenLaboral`, datos);
   }
 }

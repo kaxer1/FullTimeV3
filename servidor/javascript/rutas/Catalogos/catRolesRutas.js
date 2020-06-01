@@ -11,10 +11,10 @@ class PruebasRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', catRolesControlador_1.default.list);
-        this.router.get('/:id', catRolesControlador_1.default.getOne);
-        this.router.post('/', catRolesControlador_1.default.create);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.get('/', catRolesControlador_1.default.ListarRoles);
+        this.router.get('/:id', catRolesControlador_1.default.ObtnenerUnRol);
+        this.router.post('/', catRolesControlador_1.default.CrearRol);
+        this.router.put('/', catRolesControlador_1.default.ActualizarRol);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

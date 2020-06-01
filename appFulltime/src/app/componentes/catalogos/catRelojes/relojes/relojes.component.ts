@@ -28,7 +28,7 @@ export class RelojesComponent implements OnInit {
   contraseniaF = new FormControl('', [Validators.minLength(4)]);
   marcaF = new FormControl('', [Validators.minLength(4)]);
   modeloF = new FormControl('', [Validators.minLength(4)]);
-  serieF = new FormControl('', Validators.pattern('[0-9]{0,3}'));
+  serieF = new FormControl('', Validators.minLength(6));
   idFabricacionF = new FormControl('', [Validators.minLength(4)]);
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);
@@ -159,12 +159,6 @@ export class RelojesComponent implements OnInit {
       return 'Ingresar 4 números';
     }
     return this.puertoF.hasError('required') ? 'Campo Obligatorio' : '';
-  }
-
-  ObtenerMensajeErrorSerie() {
-    if (this.serieF.hasError('pattern')) {
-      return 'Ingresar tres números';
-    }
   }
 
   IngresarIp(evt) {

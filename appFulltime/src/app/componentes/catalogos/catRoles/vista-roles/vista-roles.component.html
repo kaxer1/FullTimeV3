@@ -23,7 +23,8 @@
                     </div>
                 </mat-card-content>
                 <div style="text-align: center;">
-                    <button mat-button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear nuevo Rol
+                    <button mat-button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear nuevo
+                        Rol
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="limpiarCampoBuscar()">Cancelar
                     </button>
@@ -51,6 +52,11 @@
                             matTooltip="Agregar funciones a este Rol" class="fas fa-grip-horizontal" id="funtion"
                             [routerLink]="['/seleccionarPermisos/', rol.id]">
                             <p>Funciones</p>
+                        </i>
+                        <i matSuffix (click)="AbrirVentanaEditar(rol)" matTooltipClass="enrolado-tooltip"
+                            matTooltipPosition="right" id="editar"
+                            matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

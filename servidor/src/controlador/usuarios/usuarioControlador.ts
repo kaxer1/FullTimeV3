@@ -3,8 +3,13 @@ import pool from '../../database';
 
 class UsuarioControlador {
   public async list(req: Request, res: Response) {
-    const user = await pool.query('SELECT * FROM usuarios');
-    res.json(user.rows);
+    const USUARIOS = await pool.query('SELECT * FROM usuarios');
+    if (USUARIOS.rowCount > 0) {
+      return res.json(USUARIOS.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
   }
 
 
@@ -27,6 +32,16 @@ class UsuarioControlador {
     }
     else {
       res.status(404).json({ text: 'No se ha encontrado el usuario' });
+    }
+  }
+
+  public async ListarUsuriosNoEnrolados(req: Request, res: Response) {
+    const USUARIOS = await pool.query('SELECT u.id, u.usuario, ce.id_usuario FROM usuarios AS u LEFT JOIN cg_enrolados AS ce ON u.id = ce.id_usuario WHERE ce.id_usuario IS null');
+    if (USUARIOS.rowCount > 0) {
+      return res.json(USUARIOS.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
     }
   }
 

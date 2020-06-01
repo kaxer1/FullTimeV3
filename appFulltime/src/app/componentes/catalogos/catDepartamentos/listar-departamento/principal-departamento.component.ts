@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
+import { EditarDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
 
 
 @Component({
@@ -70,7 +71,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
-    const DIALOG_REF = this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent,
+    const DIALOG_REF = this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
       { width: '300px', data: departamento });
       DIALOG_REF.disableClose = true;
   }

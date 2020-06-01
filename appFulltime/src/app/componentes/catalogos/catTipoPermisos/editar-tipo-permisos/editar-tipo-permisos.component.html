@@ -1,0 +1,390 @@
+<mat-icon id="movilidad">open_with</mat-icon> 
+<span id="cerrar" class="material-icons" (click)="CerrarVentanaEditarTipoPermiso()">
+    close
+</span>
+<div class="barraTitulo">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Editar Departamento</span>
+</div>
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+    <mat-step [stepControl]="primeroFormGroup">
+        <form [formGroup]="primeroFormGroup">
+            <ng-template matStepLabel>
+                <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip"
+                    matTooltipPosition="right" matTooltip="Sección 1: Información General">person_add
+                </mat-icon>
+            </ng-template>
+            <div class="titulo_permisoR">
+                <span>Información General</span>
+            </div>
+            <br>
+            <div class="subtitulo_permisoR">
+                <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en
+                    Siguiente
+                    para continuar.</span>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Seleccionar Tipo de Permiso</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right" matTooltip="Seleccionar nombre del nuevo permiso">
+                                help_outline</mat-icon>
+                            <mat-select formControlName="descripcionForm" [(ngModel)]="seleccionarPermiso" required>
+                                <mat-option *ngFor="let permiso of permisos" [value]="permiso.valor"
+                                    (click)="ActivarDesactivarNombre(primeroFormGroup.value)">
+                                    {{permiso.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br *ngIf="!HabilitarDescrip">
+                        <mat-form-field *ngIf="!HabilitarDescrip">
+                            <mat-label>Descripción</mat-label>
+                            <input matInput placeholder="Ej: Descripcion del tipo de permiso"
+                                (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm" [ngStyle]="estilo">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right" matTooltip="Ingresar nombre del nuevo permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <br>
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">El permiso incluye Almuerzo * </label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso incluye almuerzo">
+                                        help_outline</mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="almuIncluirForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Solicitar permiso por:</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
+                                help_outline</mat-icon>
+                            <mat-select formControlName="diasHorasForm" [(ngModel)]="selectDiasHoras" required>
+                                <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
+                                    (click)="ActivarDiasHoras(primeroFormGroup.value)">
+                                    {{dh.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field *ngIf="!HabilitarDias">
+                            <mat-label>Días máximos de permiso</mat-label>
+                            <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
+                                formControlName="numDiaMaximoForm" [ngStyle]="estiloDias">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar número de días máximos de permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="!HabilitarHoras">
+                            <mat-label>Horas y minutos de permiso</mat-label>
+                            <input matInput type="time" placeholder="Ej: 4"
+                                (keypress)="IngresarSoloNumeros($event)" formControlName="numHoraMaximoForm"
+                                [ngStyle]="estiloHoras">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar número de horas y minutos máximos de permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label id="emple_solicitar">Empleado podrá solicitar</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Seleccionar si el empleado puede solicitar permiso">
+                                help_outline</mat-icon>
+                            <mat-select formControlName="acceEmpleadoForm" [(ngModel)]="selectAccess" required>
+                                <mat-option *ngFor="let sol of solicitudes" [value]="sol.valor">
+                                    {{sol.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Días para solicitar permiso</mat-label>
+                            <input matInput placeholder="Ej: 2" (keypress)="IngresarSoloNumeros($event)"
+                                formControlName="numDiaIngresoForm" required>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar números de días para solicitar permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <div>
+            <button mat-button matStepperNext class="btn">Siguiente</button>
+            <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-danger">Salir</button>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="segundoFormGroup">
+        <form [formGroup]="segundoFormGroup">
+            <ng-template matStepLabel>
+                <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip"
+                    matTooltipPosition="right" matTooltip="Sección 2: Efectos del Permiso">person_add
+                </mat-icon>
+            </ng-template>
+            <div class="titulo_permisoR">
+                <span>Efectos del Permiso</span>
+            </div>
+            <br>
+            <div class="subtitulo_permisoR">
+                <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en Siguiente para continuar.</span>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Permiso afecta a vacaciones *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso afecta a vacaciones">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="vacaAfectaForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                        <br>
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Acumular permisos en el año *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si los días o horas del permiso son acumulables en el año">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="anioAcumulaForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-sm">
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Activar notificación por Correo *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso se notificará por correo">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="correoForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                        <br>
+                        <mat-form-field>
+                            <mat-label id="selec">Seleccionar tipo descuento</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Seleccionar si el permmiso tendrá descuento">help_outline
+                            </mat-icon>
+                            <mat-select formControlName="tipoDescuentoForm" [(ngModel)]="selectTipoDescuento" required>
+                                <mat-option *ngFor="let d of descuentos" [value]="d.value">
+                                    {{d.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm">
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Se podrá Actualizar permiso *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso podrá ser actualizado">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="actualizarForm"required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                        <br>
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Permiso podrá ser Eliminado *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso podrá ser eliminado">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="eliminarForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <div>
+            <button mat-button matStepperPrevious class="btn">Atrás</button>
+            <button mat-button matStepperNext class="btn">Siguiente</button>
+            <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-danger">Salir</button>
+        </div>
+    </mat-step>
+    <mat-step [stepControl]="terceroFormGroup">
+        <form [formGroup]="terceroFormGroup">
+            <ng-template matStepLabel>
+                <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip"
+                    matTooltipPosition="right" matTooltip="Sección 3: Condiciones del Permiso">person_add
+                </mat-icon>
+            </ng-template>
+            <div class="titulo_permisoR">
+                <span>Condiciones del Permiso</span>
+            </div>
+            <br>
+            <div class="subtitulo_permisoR">
+                <span>Por favor llenar todos los campos obligatorios ( * ) del formulario y dar click en
+                    Guardar.</span>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Permiso debe ser Preautorizado *</label>
+                                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso debe ser preautorizado">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="preautorizarForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                        <br>
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Permiso debe ser Autorizado *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso debe ser autorizado">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="autorizarForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-sm">
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Permiso debe ser Legalizado *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso debe ser legalizado">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                    <mat-radio-group aria-label="Select an option" formControlName="legalizarForm" required>
+                                        <mat-radio-button [value]="true">Si</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+                        </section>
+                        <br>
+                        <section class="example-section">
+                            <div class="container">
+                                <div class="row">
+                                    <label id="letraRadius">Restrición por fecha *</label>
+                                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                        matTooltip="Seleccionar si el permiso tendrá alguna restrición por la fecha">help_outline
+                                    </mat-icon>
+                                </div>
+                                <div class="row">
+                                        <mat-radio-group aria-label="Select an option" formControlName="fecValidarForm" required>
+                                            <mat-radio-button [value]="true">Si</mat-radio-button>
+                                            <mat-radio-button [value]="false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+                        </section>
+                    </div>
+                    <div class="col-sm">
+                        <section class="example-section">
+                                <div class="container">
+                                    <div class="row">
+                                        <label id="letraRadius">Permiso requiere Justificación *</label>
+                                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                            matTooltip="Seleccionar si el permiso debe ser justificacdo">help_outline
+                                        </mat-icon>
+                                    </div>
+                                    <div class="row">
+                                        <mat-radio-group aria-label="Select an option" formControlName="geneJustificacionForm" required>
+                                            <mat-radio-button (click)="ActivarJustificacionSet(true)" [value]="true" id="si">Si</mat-radio-button>
+                                            <mat-radio-button (click)="ActivarJustificacionSet(false)" [value]="false" id="no">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+                        </section>
+                        <br>
+                        <mat-form-field *ngIf="!HabilitarJustificacion">
+                            <mat-label>Días para justificar</mat-label>
+                            <input matInput placeholder="Ej: 2" (keypress)="IngresarSoloNumeros($event)"
+                                formControlName="numDiaJustificaForm" [ngStyle]="estiloJustificacion" id="diasJustificar">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar el número de días que tendrá el empleado para justificar">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div>
+                <button mat-button matStepperPrevious class="btn">Atrás</button>
+                <input mat-button type="submit" class="btn"
+                    (click)="ModificarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
+                     value="Guardar">
+                <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn">Salir</button>
+            </div>
+        </form>
+    </mat-step>
+</mat-horizontal-stepper>
+    

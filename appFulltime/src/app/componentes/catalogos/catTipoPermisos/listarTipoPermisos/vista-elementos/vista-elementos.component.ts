@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PageEvent } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
+import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
 
 @Component({
   selector: 'app-vista-elementos',
@@ -30,7 +32,8 @@ export class VistaElementosComponent implements OnInit {
   });
 
   constructor(
-    private rest: TipoPermisosService
+    private rest: TipoPermisosService,
+    public vistaTipoPermiso: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -54,6 +57,12 @@ export class VistaElementosComponent implements OnInit {
       nombreForm: '',
     });
     this.ObtenerTipoPermiso();
+  }
+
+  AbrirVentanaEditarTipoPermisos(tipoPermiso: any): void {
+    const DIALOG_REF = this.vistaTipoPermiso.open(EditarTipoPermisosComponent,
+      { width: '900px', data: tipoPermiso });
+      DIALOG_REF.disableClose = true;
   }
 
 }

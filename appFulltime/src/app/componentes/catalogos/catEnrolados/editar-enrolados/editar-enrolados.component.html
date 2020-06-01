@@ -62,20 +62,19 @@
                             help_outline</mat-icon>
                     </mat-form-field>
                     <br>
+                    <label style="margin-right: 72px;">Estado: Activo *</label>
+                    <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                        matTooltip="Modificar el estado del enpleado enrolado">
+                        help_outline</mat-icon>
                     <section class="example-section">
                         <mat-radio-group aria-label="Select an option" formControlName="enroladoActivoForm" required>
-                            <mat-label>Activo *</mat-label>
-                            <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
-                                matTooltip="Modificar el estado del enpleado enrolado">
-                                help_outline</mat-icon>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-sm">
-                                        <br>
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
-                                        [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
+                                            [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
-                                        [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
+                                            [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
                                     </div>
                                 </div>
                             </div>

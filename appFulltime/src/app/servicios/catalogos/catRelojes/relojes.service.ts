@@ -17,8 +17,16 @@ export class RelojesService {
     return this.http.post(`${this.API_URL}/relojes`, datos);
   }
 
-  ConsultarRelojes(){
+  ConsultarRelojes() {
     return this.http.get(`${this.API_URL}/relojes`);
+  }
+
+  ConsultarUnReloj(id: number) {
+    return this.http.get(`${this.API_URL}/relojes/${id}`);
+  }
+
+  ActualizarDispositivo(datos: any) {
+    return this.http.put(`${this.API_URL}/relojes`, datos);
   }
 
   subirArchivoExcel(formData) {

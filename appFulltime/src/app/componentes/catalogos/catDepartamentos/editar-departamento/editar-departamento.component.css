@@ -1,0 +1,19 @@
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+
+#ayuda { cursor: pointer; }
+
+.barraTituloRegDepa { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+}
+
+#depSup { font-size: 14px; }

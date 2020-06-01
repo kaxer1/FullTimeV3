@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import RELOJES_CONTROLADOR from '../../controlador/catalogos/catRelojesControlador';
-const multipart = require('connect-multiparty'); 
+const multipart = require('connect-multiparty');
 
-const multipartMiddlewarePlantilla = multipart({  
+const multipartMiddlewarePlantilla = multipart({
     uploadDir: './plantillas',
 });
 
@@ -19,7 +19,7 @@ class RelojesRuta {
         this.router.get('/:id', RELOJES_CONTROLADOR.ListarUnReloj);
         this.router.post('/', RELOJES_CONTROLADOR.CrearRelojes);
         this.router.post('/plantillaExcel/', multipartMiddlewarePlantilla, RELOJES_CONTROLADOR.CargaPlantillaRelojes);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.put('/', RELOJES_CONTROLADOR.ActualizarReloj);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

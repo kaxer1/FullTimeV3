@@ -4,7 +4,7 @@ import pool from '../../database';
 class DepartamentoControlador {
 
   public async ListarDepartamentos(req: Request, res: Response) {
-    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
     if (DEPARTAMENTOS.rowCount > 0) {
       return res.json(DEPARTAMENTOS.rows)
     }
@@ -69,9 +69,9 @@ class DepartamentoControlador {
 
   public async ActualizarDepartamento(req: Request, res: Response): Promise<any> {
     const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    const { id } = req.params;
+    const id  = req.params.id;
+    console.log(id);
     await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-    console.log(pool.query);
     res.json({ message: 'El departamento ha sido modificado con éxito' });
   }
 

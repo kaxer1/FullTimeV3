@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="barraTituloRelojR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registra Nuevo Dispositivo</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Nuevo Dispositivo</span>
 </div>
 <br>
 <!-- Formulario Completo -->
@@ -38,9 +38,28 @@
                             matTooltip="Indicar en que departamento se encuentra el dispositivo">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idDepartamentoF" required>
-                            <mat-option *ngFor="let d of departamento" [value]="d.id" (click)="ObtenerNombre(RelojesForm.value)">{{d.nombre}}</mat-option>
+                            <mat-option *ngFor="let d of departamento" [value]="d.id"
+                                (click)="ObtenerNombre(RelojesForm.value)">{{d.nombre}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <br>
+                    <label style="margin-right: 58px;">Tiene funciones *</label>
+                    <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip"
+                        matTooltipPosition="right" matTooltip="El dispositivo tiene o no funciones">
+                        help_outline
+                    </mat-icon>
+                    <section style="text-align: center">
+                        <mat-radio-group aria-label="Select an option" formControlName="funcionesForm" required>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-sm">
+                                        <mat-radio-button value="true">Si</mat-radio-button>
+                                        <mat-radio-button value="false">No</mat-radio-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-radio-group>
+                    </section>
                 </div>
                 <div class="col">
                     <mat-form-field>
@@ -72,24 +91,6 @@
                             help_outline</mat-icon>
                         <mat-error *ngIf="puertoF.invalid">{{ObtenerMensajeErrorPuerto()}}</mat-error>
                     </mat-form-field>
-                    <br>
-                    <section style="text-align: center">
-                        <mat-radio-group aria-label="Select an option" formControlName="funcionesForm" required>
-                            <label id="reloj">Dispositivo tiene funciones *</label>
-                            <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip"
-                                matTooltipPosition="right" matTooltip="El dispositivo tiene o no funciones">
-                                help_outline
-                            </mat-icon>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <mat-radio-button value="true">Si</mat-radio-button>
-                                        <mat-radio-button value="false">No</mat-radio-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </mat-radio-group>
-                    </section>
                 </div>
                 <div class="col">
                     <mat-form-field>
@@ -118,7 +119,8 @@
                         </mat-icon>
                         <mat-error *ngIf="modeloF.invalid">Ingresar un modelo válido</mat-error>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Serie</mat-label>
                         <input matInput placeholder="Ingresar serie" [formControl]="serieF"
@@ -126,10 +128,9 @@
                         <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip"
                             matTooltipPosition="right" matTooltip="Ingresar la serie del dispositivo">help_outline
                         </mat-icon>
-                        <mat-error *ngIf="serieF.invalid">{{ObtenerMensajeErrorSerie()}}</mat-error>
+                        <mat-error *ngIf="serieF.invalid">Ingresar una serie válida</mat-error>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label>ID de fabricación</mat-label>
                         <input matInput placeholder="Ingresar id fabricación" [formControl]="idFabricacionF">

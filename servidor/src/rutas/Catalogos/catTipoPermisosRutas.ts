@@ -13,6 +13,7 @@ class TipoPermisosRutas {
         this.router.get('/', tipoPermisosControlador.list);
         this.router.get('/:id', tipoPermisosControlador.getOne);
         this.router.post('/', tipoPermisosControlador.create);
+        this.router.put('/editar/:id', tipoPermisosControlador.editar);
     }
 }
 

@@ -174,7 +174,7 @@ export class RegistroEnroladosComponent implements OnInit {
 
   getUsuarios() {
     this.usuarios = [];
-    this.restUsuario.getUsuariosRest().subscribe(data => {
+    this.restUsuario.BuscarUsersNoEnrolados().subscribe(data => {
       this.usuarios = data;
       console.log(this.usuarios)
     })

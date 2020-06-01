@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
     ListarDepartamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
             if (DEPARTAMENTOS.rowCount > 0) {
                 return res.json(DEPARTAMENTOS.rows);
             }
@@ -88,9 +88,9 @@ class DepartamentoControlador {
     ActualizarDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-            const { id } = req.params;
+            const id = req.params.id;
+            console.log(id);
             yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-            console.log(database_1.default.query);
             res.json({ message: 'El departamento ha sido modificado con éxito' });
         });
     }

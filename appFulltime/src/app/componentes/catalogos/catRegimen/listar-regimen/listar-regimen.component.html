@@ -25,7 +25,8 @@
                     </mat-card-content>
                 </form>
                 <mat-card-actions style="text-align: center">
-                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarRegimen()">Crear nuevo Régimen Laboral
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarRegimen()">Crear
+                        nuevo Régimen Laboral
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
                     </button>
@@ -63,13 +64,14 @@
                     <td>{{regimenL.max_dia_acumulacion}}</td>
                     <td>{{regimenL.dia_libr_anio_vacacion}}</td>
                     <td>
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(regimenL)" matSuffix
+                            matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
+                            matTooltip="Editar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                         <i class="far fa-trash-alt" matSuffix matTooltipClass="regimenL-tooltip"
                             matTooltipPosition="right" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>

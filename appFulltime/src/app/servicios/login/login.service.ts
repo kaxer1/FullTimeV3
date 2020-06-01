@@ -25,6 +25,14 @@ export class LoginService {
     return localStorage.getItem('token');
   }
 
+  getRol() {
+    let rol = parseInt(localStorage.getItem('rol'));
+    if(rol === 1){ 
+      return true;//Admin
+    }
+    return false;//Empleado
+  }
+
   logout(){
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');

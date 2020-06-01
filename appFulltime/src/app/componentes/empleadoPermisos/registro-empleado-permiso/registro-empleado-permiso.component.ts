@@ -341,7 +341,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.archivoSubido = element.target.files;
     console.log(element.target.files);
   }
-  
+
   SubirRespaldo(id: number) {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {

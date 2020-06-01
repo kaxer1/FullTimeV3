@@ -199,7 +199,7 @@ export class RegimenComponent implements OnInit {
       }
     }
     else {
-      this.LimpiarDiasMeses();
+      this.LimpiarMeses();
     }
   }
 
@@ -294,6 +294,13 @@ export class RegimenComponent implements OnInit {
     this.RegimenForm.patchValue({
       diaMesVacacionForm: '',
       descripcionForm: '',
+    });
+    (<HTMLInputElement>document.getElementById('activo')).checked = false;
+  }
+
+  LimpiarMeses() {
+    this.RegimenForm.patchValue({
+      diaMesVacacionForm: '',
     });
     (<HTMLInputElement>document.getElementById('activo')).checked = false;
   }

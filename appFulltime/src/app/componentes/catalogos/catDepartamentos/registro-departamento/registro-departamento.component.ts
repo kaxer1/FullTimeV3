@@ -65,16 +65,11 @@ export class RegistroDepartamentoComponent implements OnInit {
     private restE: EmpresaService,
     private restS: SucursalService,
     private toastr: ToastrService,
-    private router: Router,
-    private activeRoute: ActivatedRoute,
     public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
     @Inject(MAT_DIALOG_DATA) public descripcionD: any) { }
 
   ngOnInit(): void {
     this.BuscarEmpresas();
-    if (this.descripcionD) {
-      this.ValidarCamposModificar();
-    }
   }
 
   BuscarEmpresas() {
@@ -185,57 +180,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
     return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
   }
-
-  ModificarDepartamento(form) {
-    var departamentoPadreId
-    var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
-    console.log(form.departamentoDepartamentoPadreForm);
-    if (departamentoPadreNombre == 'Ninguna' || departamentoPadreNombre == null) {
-      let datadepartamento = {
-        nombre: form.departamentoNombreForm,
-        nivel: form.departamentoNivelForm,
-        depa_padre: null
-      };
-      this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
-        .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-          this.router.navigate(['/', 'departamento']);
-        }, error => {
-          console.log(error);
-        });
-    } else {
-      this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
-        departamentoPadreId = data[0].id;
-        let datadepartamento = {
-          nombre: form.departamentoNombreForm,
-          nivel: form.departamentoNivelForm,
-          depa_padre: departamentoPadreId
-        };
-        this.rest.updateDepartamento(this.activeRoute.snapshot.params.id, datadepartamento)
-          .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-
-            this.router.navigate(['/', 'departamento']);
-          }, error => {
-            console.log(error);
-          });
-      })
-    }
-  }
-
-  ValidarCamposModificar() {
-    this.idD = this.descripcionD.id;
-    this.rest.EncontrarUnDepartamento(parseInt(this.idD)).subscribe(res => {
-      this.departamentoModificar = res[0];
-      this.editarDepartamento = true;
-      this.nuevoDepartamentoForm.setValue({
-        departamentoNombreForm: this.departamentoModificar.nombre,
-        departamentoNivelForm: this.departamentoModificar.nivel,
-        departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
-      })
-      this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
-      this.ObtenerNombre(this.departamentoModificar.depa_padre);
-    }, err => { })
-  }
+  
 }
 

@@ -180,6 +180,11 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
 import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
+import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
+import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
+import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
 
 @NgModule({
   declarations: [
@@ -295,6 +300,11 @@ import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-co
     EditarCargoComponent,
     DatosEmpleadoComponent,
     CambiarContrasenaComponent,
+    EditarRelojComponent,
+    EditarRolComponent,
+    EditarRegimenComponent,
+    EditarDepartamentoComponent,
+    EditarTipoPermisosComponent,
 
   ],
 

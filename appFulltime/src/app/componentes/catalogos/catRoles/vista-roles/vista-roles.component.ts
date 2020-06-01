@@ -1,11 +1,12 @@
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
 
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/registro-rol/registro-rol.component';
-import { PageEvent } from '@angular/material/paginator';
+import { EditarRolComponent } from 'src/app/componentes/catalogos/catRoles/editar-rol/editar-rol.component';
 
 @Component({
   selector: 'app-vista-roles',
@@ -28,15 +29,15 @@ export class VistaRolesComponent implements OnInit {
   constructor(
     private rest: RolesService,
     private toastr: ToastrService,
-    public vistaRegistrarRol: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) {
     this.obtenerRoles();
   }
 
-  ngOnInit() {  
+  ngOnInit() {
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -61,19 +62,28 @@ export class VistaRolesComponent implements OnInit {
     }
   }
 
-  obtenerRoles(){
+  obtenerRoles() {
     this.rest.getRoles().subscribe(res => {
-        this.roles = res;
-      },
+      this.roles = res;
+    },
       err => console.error(err)
     );
   }
 
-  AbrirVentanaRegistrarRol(){
-    this.vistaRegistrarRol.open(RegistroRolComponent, { width: '400px' }).disableClose = true;
+  /*****************************************************************************
+   * VENTANA PARA REGISTRAR Y EDITAR DATOS
+   *****************************************************************************/
+
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
-  limpiarCampoBuscar(){
+  AbrirVentanaRegistrarRol() {
+    this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).disableClose = true;
+  }
+
+  limpiarCampoBuscar() {
     this.buscarDescripcion.reset();
   }
 }

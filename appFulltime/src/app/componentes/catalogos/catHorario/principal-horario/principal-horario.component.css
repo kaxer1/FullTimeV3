@@ -1,4 +1,10 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn-sm { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+#pdf { color:red; font-size: 20px; text-align: center; }
+
+#excel { color:green; font-size: 20px; text-align: center; }
+
+#csv { color:blue; font-size: 20px; text-align: center; }
 
 p { font-size: x-small; }
 

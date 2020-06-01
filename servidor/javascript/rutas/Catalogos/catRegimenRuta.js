@@ -14,7 +14,7 @@ class RegimenRuta {
         this.router.get('/', catRegimenControlador_1.default.ListarRegimen);
         this.router.get('/:id', catRegimenControlador_1.default.ListarUnRegimen);
         this.router.post('/', catRegimenControlador_1.default.CrearRegimen);
-        // this.router.put('/:id', pruebaControlador.update);
+        this.router.put('/', catRegimenControlador_1.default.ActualizarRegimen);
         // this.router.delete('/:id', pruebaControlador.delete);
     }
 }

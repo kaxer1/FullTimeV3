@@ -25,4 +25,8 @@ export class TipoPermisosService {
   postTipoPermisoRest(data: any){
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data);
   }
+
+  putTipoPermisoRest(id:number, data: any){
+    return this.http.put(`${this.TIPO_PERMISOS_URL}/tipoPermisos/editar/${id}`, data);
+  }
 }

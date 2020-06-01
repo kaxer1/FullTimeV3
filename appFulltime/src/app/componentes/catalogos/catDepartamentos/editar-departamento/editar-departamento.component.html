@@ -1,0 +1,78 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="barraTituloRegDepa">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Editar Departamento</span>
+</div>
+<br>
+<form [formGroup]="nuevoDepartamentoForm">
+    <mat-card-content>
+        <div style="text-align: center">
+            <div class="row">
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Seleccionar Empresa</mat-label>
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                            matTooltip="Lista de Empresas">help_outline</mat-icon>
+                        <mat-select [formControl]="idEmpresaF" required>
+                            <mat-option *ngFor="let empre of empresas" [value]="empre.id"
+                                (click)="FiltrarSucursales(nuevoDepartamentoForm.value)">
+                                {{empre.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Seleccionar Sucursal</mat-label>
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                            matTooltip="Lista de Sucursales que pertenecen a la Empresa seleccionada">help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="idSucursalF" required>
+                            <mat-option *ngFor="let suc of sucursales" [value]="suc.id" (click)="ObtenerDepartamentos(nuevoDepartamentoForm.value)" >
+                                {{suc.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col">
+                    <mat-form-field>
+                        <mat-label>Departamento</mat-label>
+                        <input matInput placeholder="Ej: Contabilidad" [formControl]="nombre"
+                            (keypress)="IngresarSoloLetras($event)" [(ngModel)]="nombreD" required>
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                            matTooltip="Ingresar nombre del nuevo departamento">help_outline</mat-icon>
+                        <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Nivel</mat-label>
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                            matTooltip="Seleccionar niveles del departamento">help_outline</mat-icon>
+                        <mat-select [formControl]="nivel" [(ngModel)]="selectNivel" required>
+                            <mat-option *ngFor="let n of niveles" [value]="n.nombre">
+                                {{n.valor}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label id="depSup">Departamento Superior</mat-label>
+                        <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
+                            matTooltip="Seleccionar Departamento Superior del nuevo departamento">help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre">
+                            <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
+                                {{departamento.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</form>
+<mat-card-actions style="text-align: center">
+    <input type="submit" class="btn btn-sm" [disabled]="!nuevoDepartamentoForm.valid"
+        (click)="ModificarDepartamento(nuevoDepartamentoForm.value)"
+        value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroDepartamento()" value="Salir">
+</mat-card-actions>

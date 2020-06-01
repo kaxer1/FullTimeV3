@@ -72,7 +72,7 @@
 </form>
 <mat-card-actions style="text-align: center">
     <input type="submit" class="btn btn-sm" [disabled]=" !nuevoDepartamentoForm.valid"
-        (click)="editarDepartamento? ModificarDepartamento(nuevoDepartamentoForm.value) : InsertarDepartamento(nuevoDepartamentoForm.value)"
+        (click)="InsertarDepartamento(nuevoDepartamentoForm.value)"
         value="Guardar">
     <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroDepartamento()" value="Salir">
 </mat-card-actions>

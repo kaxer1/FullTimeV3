@@ -43,6 +43,7 @@ import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-con
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
 
 import { AuthGuard } from "./guards/auth.guard";
+import { RolGuard } from './guards/rol.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},

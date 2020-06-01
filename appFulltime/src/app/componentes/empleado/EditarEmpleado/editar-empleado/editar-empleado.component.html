@@ -1,7 +1,7 @@
 <div class="container" style="padding-top: 15px;">
     <mat-card class="example-card mat-elevation-z8">
         <div class="barraTitulo">
-            <span>Editar datos del Empleado</span>
+            <span>Modificar Datos del Empleado</span>
         </div>
         <mat-horizontal-stepper [linear]="isLinear" #stepper>
             <mat-step [stepControl]="primeroFormGroup">
@@ -28,7 +28,8 @@
                                         formControlName="nombreForm" (keypress)="IngresarSoloLetras($event)" required>
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
-                                        matTooltip="Es obligatorio ingresar los dos nombres del nuevo empleado">help_outline</mat-icon>
+                                        matTooltip="Es obligatorio ingresar los dos nombres del nuevo empleado">
+                                        help_outline</mat-icon>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
@@ -37,7 +38,8 @@
                                         formControlName="apellidoForm" (keypress)="IngresarSoloLetras($event)" required>
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
-                                        matTooltip="Es obligatorio ingresar los dos apellidos del nuevo empleado">help_outline
+                                        matTooltip="Es obligatorio ingresar los dos apellidos del nuevo empleado">
+                                        help_outline
                                     </mat-icon>
                                 </mat-form-field>
                             </div>
@@ -58,7 +60,7 @@
                                     <mat-label>Fecha de nacimiento</mat-label>
                                     <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
                                         formControlName="fechaForm" required>
-                                    <mat-datepicker-toggle  matSuffix [for]="picker" id="icono_emple"
+                                    <mat-datepicker-toggle matSuffix [for]="picker" id="icono_emple"
                                         matTooltipClass="empleadoR-tooltip" matTooltipPosition="right"
                                         matTooltip="Seleccione la fecha de nacimiento dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                                     </mat-datepicker-toggle>
@@ -89,7 +91,7 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>  
+                    <button mat-button matStepperNext class="btn">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
