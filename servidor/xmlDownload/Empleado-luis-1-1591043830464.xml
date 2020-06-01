@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<root>
+  <empleado id="27">
+    <cedula>1722128905</cedula>
+    <apellido>Tipan Villegas</apellido>
+    <nombre>Jenny Patricia</nombre>
+    <estadoCivil>Soltero/a</estadoCivil>
+    <genero>Masculino</genero>
+    <correo>jentipan7@gmail.com</correo>
+    <fechaNacimiento>1992-04-05</fechaNacimiento>
+    <estado>Activo</estado>
+    <domicilio>Solanda</domicilio>
+    <telefono>0983253991</telefono>
+    <nacionalidad>Afgana</nacionalidad>
+  </empleado>
+  <empleado id="28">
+    <cedula>1236589456</cedula>
+    <apellido>Mendes Perez</apellido>
+    <nombre>Ana Luisa</nombre>
+    <estadoCivil>Soltero/a</estadoCivil>
+    <genero>Femenino</genero>
+    <correo>ana@hotmail.com</correo>
+    <fechaNacimiento>1992-06-04</fechaNacimiento>
+    <estado>Activo</estado>
+    <domicilio>Solanda</domicilio>
+    <telefono>0236589665</telefono>
+    <nacionalidad>Ecuatoriana</nacionalidad>
+  </empleado>
+  <empleado id="29">
+    <cedula>1236985632</cedula>
+    <apellido>Perez Alvarez</apellido>
+    <nombre>Carlos Andres</nombre>
+    <estadoCivil>Soltero/a</estadoCivil>
+    <genero>Masculino</genero>
+    <correo>carlos@hotmail.com</correo>
+    <fechaNacimiento>2020-06-05</fechaNacimiento>
+    <estado>Activo</estado>
+    <domicilio>Santa Rita</domicilio>
+    <telefono>0985622365</telefono>
+    <nacionalidad>Ecuatoriano</nacionalidad>
+  </empleado>
+</root>
