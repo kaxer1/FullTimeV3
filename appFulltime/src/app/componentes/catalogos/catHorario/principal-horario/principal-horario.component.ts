@@ -92,9 +92,10 @@ export class PrincipalHorarioComponent implements OnInit {
 
   AbrirVentanaEditarHorario(horario: any): void {
     const DIALOG_REF = this.vistaRegistrarDatos.open(EditarHorarioComponent,
-      { width: '300px', data: horario });
+      { width: '600px', data: horario });
       DIALOG_REF.disableClose = true;
   }
+
   /****************************************************************************************************** 
    * PLANTILLA CARGAR SOLO HORARIOS
    ******************************************************************************************************/

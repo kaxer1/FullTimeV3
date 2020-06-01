@@ -99,6 +99,6 @@ export class ListarNivelTitulosComponent implements OnInit {
   }
 
   AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
-    this.vistaRegistrarDatos.open(EliminarNivelTitulosComponent, { width: '350px', data: dataObjDelete}).disableClose = true;
+    this.vistaRegistrarDatos.open(EliminarNivelTitulosComponent, { width: '400px', data: dataObjDelete}).disableClose = true;
   }
 }

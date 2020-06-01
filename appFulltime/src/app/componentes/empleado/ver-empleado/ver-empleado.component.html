@@ -529,7 +529,9 @@
                                 <input (change)="fileChangeHorario($event)" type="file"
                                     [formControl]="archivoHorarioForm" id="file"
                                     accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file" class="btn-2">Subir Horario</label>
+                                <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip"
+                                matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir Horario</label>
                             </form>
                         </div>
                     </mat-card>

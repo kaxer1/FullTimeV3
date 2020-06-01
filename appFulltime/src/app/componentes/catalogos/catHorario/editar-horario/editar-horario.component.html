@@ -43,16 +43,15 @@
                         </mat-form-field>
                     </div>
                     <div class="col">
+                        <label style="margin-right: 95px;">Horario Flexible *</label>
+                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                            matTooltip="El horario flexible indica que se controlará entrada y salida">
+                            help_outline</mat-icon>
                         <section>
                             <div class="container">
                                 <div class="row">
-                                    <label id="letra">Horario Flexible *</label>
-                                    <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                        matTooltip="El horario flexible indica que se controlará entrada y salida">
-                                        help_outline</mat-icon>
-                                </div>
-                                <div class="row">
-                                    <mat-radio-group required aria-label="select an option" [formControl]="flexible" required [value]="flexible.value">
+                                    <mat-radio-group required aria-label="select an option" [formControl]="flexible"
+                                        required [value]="flexible.value">
                                         <mat-radio-button class="example-match" [value]="true">Si </mat-radio-button>
                                         <mat-radio-button class="example-match" [value]="false">No </mat-radio-button>
                                     </mat-radio-group>
@@ -60,16 +59,15 @@
                             </div>
                         </section>
                         <br>
+                        <label style="margin-right: 68px;">Horario por Horas *</label>
+                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                            matTooltip="El horario por horas indica que se labora en un rango de horas">
+                            help_outline</mat-icon>
                         <section>
                             <div class="container">
                                 <div class="row">
-                                    <label id="letra">Horario por Horas *</label>
-                                    <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                        matTooltip="El horario por horas indica que se labora en un rango de horas">
-                                        help_outline</mat-icon>
-                                </div>
-                                <div class="row">
-                                    <mat-radio-group aria-label="Select an option" [formControl]="porHoras" [value]="porHoras.value">
+                                    <mat-radio-group aria-label="Select an option" [formControl]="porHoras"
+                                        [value]="porHoras.value">
                                         <mat-radio-button class="example-match" [value]="true">Si</mat-radio-button>
                                         <mat-radio-button class="example-match" [value]="false">No</mat-radio-button>
                                     </mat-radio-group>

@@ -76,7 +76,7 @@ export class PrincipalProvinciaComponent implements OnInit {
   Eliminar(id_prov: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarProvincia(id_prov).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.toastr.error('Registro eliminado');
       this.ListarProvincias();
     });
   }

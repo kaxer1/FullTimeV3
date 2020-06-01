@@ -111,7 +111,7 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
-    this.vistaRegistrarDatos.open(EliminarProcesosComponent, { width: '350px', data: dataObjDelete}).disableClose = true;
+    this.vistaRegistrarDatos.open(EliminarProcesosComponent, { width: '400px', data: dataObjDelete}).disableClose = true;
   }
 
   IngresarSoloNumeros(evt) {

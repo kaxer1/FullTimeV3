@@ -88,8 +88,7 @@ export class VerEmpleadoComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-  actualizar = 0;
-  selectedIndex = 0;
+  selectedIndex: number;
 
   /** Contador */
   cont = 0;
@@ -126,10 +125,8 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.actualizar == 4) {
-      this.selectedIndex = this.actualizar;
-    } else {
-      this.selectedIndex = 0;
+    if (true) {
+      this.selectedIndex = 3;
     }
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
@@ -467,7 +464,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
       this.btnDisc = 'Añadir';
-      this.toastr.success('Operación Exitosa', 'Discapacidad Eliminada');
+      this.toastr.error('Registro eliminado');
     })
   };
 
@@ -487,7 +484,7 @@ export class VerEmpleadoComponent implements OnInit {
   eliminarTituloEmpleado(id: number) {
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
       this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
-      this.toastr.success('Operación Exitosa', 'Título Profesional Eliminado');
+      this.toastr.error('Registro eliminado');
       this.habilitarBtn();
     });
   }
@@ -1031,21 +1028,26 @@ export class VerEmpleadoComponent implements OnInit {
   archivoHorarioForm = new FormControl('');
 
   fileChangeHorario(element) {
-    this.archivoSubidoHorario = element.target.files;
-    this.nameFileHorario = this.archivoSubidoHorario[0].name;
-    let arrayItems = this.nameFileHorario.split(".");
-    let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 8);
-    console.log(itemName.toLowerCase());
-    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'empleado') {
-        this.plantillaHorario();
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      this.archivoSubidoHorario = element.target.files;
+      this.nameFileHorario = this.archivoSubidoHorario[0].name;
+      let arrayItems = this.nameFileHorario.split(".");
+      let itemExtencion = arrayItems[arrayItems.length - 1];
+      let itemName = arrayItems[0].slice(0, 50);
+      console.log(itemName.toLowerCase());
+      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+        if (itemName.toLowerCase() == 'horario empleado') {
+          this.plantillaHorario();
+        } else {
+          this.toastr.error('Plantilla seleccionada incorrecta');
+        }
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta');
+        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-    }
+    }, error => {
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+    });
   }
 
   plantillaHorario() {
@@ -1056,8 +1058,7 @@ export class VerEmpleadoComponent implements OnInit {
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
-      window.location.reload();
-      this.actualizar = 4;
+      window.location.reload(true);
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });

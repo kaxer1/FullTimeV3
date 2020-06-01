@@ -34,7 +34,6 @@ export class RegistroProcesoComponent implements OnInit {
 
   // Arreglo de niveles existentes
   niveles: Nivel[] = [
-    { valor: '0', nombre: '0' },
     { valor: '1', nombre: '1' },
     { valor: '2', nombre: '2' },
     { valor: '3', nombre: '3' },

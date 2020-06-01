@@ -44,9 +44,16 @@ class ContratoEmpleadoControlador {
         const { id_empleado } = req.params;
         const CONTRATO = await pool.query('SELECT MAX(ec.id) FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1', [id_empleado]);
         if (CONTRATO.rowCount > 0) {
-            return res.json(CONTRATO.rows)
-        }
-        res.status(404).json({ text: 'Registro no encontrado' });
+            if(CONTRATO.rows[0]['max'] != null){
+              return res.json(CONTRATO.rows)
+            }
+            else {
+              res.status(404).json({ text: 'Registro no encontrado' });
+            }
+          }
+          else {
+            res.status(404).json({ text: 'Registro no encontrado' });
+          }
     }
 
     public async EncontrarContratoIdEmpleado(req: Request, res: Response): Promise<any> {

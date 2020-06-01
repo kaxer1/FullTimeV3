@@ -6,3 +6,11 @@
     display: table-cell;
     margin-right: 8px;
 }
+
+.btn { margin-left: 15px; }
+
+#cancelar { background-color: rgb(80,87,97); color: white; }
+
+p { font-size: 13px; }
+
+#mensaje { font-size: 14px; text-align: center; }
