@@ -72,7 +72,7 @@ export class ListarCiudadComponent implements OnInit {
   Eliminar(id_ciu: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarCiudad(id_ciu).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.toastr.error('Registro eliminado');
       this.ListarCiudades();
     });
   }

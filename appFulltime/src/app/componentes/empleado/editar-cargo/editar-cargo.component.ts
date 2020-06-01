@@ -15,6 +15,7 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 export class EditarCargoComponent implements OnInit {
 
   @Input() idSelectCargo: number;
+  @Input() idEmploy: string;
 
   cargo: any = [];
   departamento: any = [];
@@ -148,7 +149,7 @@ export class EditarCargoComponent implements OnInit {
       hora_trabaja: form.horaTrabajaForm
     }
     this.restEmplCargos.ActualizarContratoEmpleado(this.idSelectCargo, this.id_empl_contrato, dataEmpleadoCargo).subscribe(res => {
-      this.verEmpleado.obtenerContratoEmpleadoRegimen();
+      this.verEmpleado.obtenerCargoEmpleado(parseInt(this.idEmploy));
       this.cancelar()
       this.toastr.success('Operación Exitosa', 'Cargo del empleado Actualizado');
     });

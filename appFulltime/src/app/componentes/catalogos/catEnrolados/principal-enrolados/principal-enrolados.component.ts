@@ -97,7 +97,7 @@ export class PrincipalEnroladosComponent implements OnInit {
   Eliminar(id_enrolado: number) {
     //console.log("probando id", id_enrolado)
     this.rest.EliminarRegistro(id_enrolado).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.toastr.error('Registro eliminado');
       this.getEnrolados();
     });
   }
@@ -192,6 +192,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Enrolados importada.');
       this.getEnrolados();
+      window.location.reload();
       this.archivoForm.reset();
       this.nameFile = '';
     });

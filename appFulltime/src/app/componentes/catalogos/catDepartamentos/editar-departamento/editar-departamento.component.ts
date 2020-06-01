@@ -3,7 +3,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
@@ -46,7 +46,6 @@ export class EditarDepartamentoComponent implements OnInit {
 
   // Arreglo de niveles existentes
   niveles: Nivel[] = [
-    { valor: '0', nombre: '0' },
     { valor: '1', nombre: '1' },
     { valor: '2', nombre: '2' },
     { valor: '3', nombre: '3' },
@@ -84,7 +83,8 @@ export class EditarDepartamentoComponent implements OnInit {
       this.rest.updateDepartamento(this.descripcionD.id, datadepartamento)
         .subscribe(response => {
           this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-          this.router.navigate(['/', 'departamento']);
+          window.location.reload();
+          this.dialogRef.close();
         }, error => {
           console.log(error);
         });
@@ -100,7 +100,8 @@ export class EditarDepartamentoComponent implements OnInit {
         this.rest.updateDepartamento(this.descripcionD.id, datadepartamento)
           .subscribe(response => {
             this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-            this.router.navigate(['/', 'departamento']);
+            window.location.reload();
+            this.dialogRef.close();
           }, error => {
             console.log(error);
           });
@@ -111,7 +112,7 @@ export class EditarDepartamentoComponent implements OnInit {
   CerrarVentanaRegistroDepartamento() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
   LimpiarCampos() {
@@ -131,7 +132,7 @@ export class EditarDepartamentoComponent implements OnInit {
         departamentoNivelForm: this.departamentoModificar.nivel,
         departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
       })
-      this.selectNivel = this.niveles[this.departamentoModificar.nivel].valor
+      this.selectNivel = this.niveles[this.departamentoModificar.nivel-1].valor
       this.ObtenerNombre(this.departamentoModificar.depa_padre);
     }, err => { })
   }

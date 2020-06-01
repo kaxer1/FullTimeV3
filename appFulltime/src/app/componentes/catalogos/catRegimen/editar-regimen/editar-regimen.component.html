@@ -11,12 +11,10 @@
                 <div class="col">
                     <mat-form-field>
                         <mat-label>Régimen Laboral</mat-label>
-                        <input matInput placeholder="Nombre Régimen" [formControl]="descripcionF"
-                            (keypress)="IngresarSoloLetras($event)">
+                        <input matInput placeholder="Nombre Régimen" [formControl]="descripcionF" readonly="readonly">
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar un nuevo nombre de Régimen Laboral">
+                            matTooltip="Nombre del Régimen Laboral">
                             help_outline</mat-icon>
-                        <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>

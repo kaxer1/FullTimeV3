@@ -72,7 +72,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
     const DIALOG_REF = this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
-      { width: '300px', data: departamento });
+      { width: '600px', data: departamento });
       DIALOG_REF.disableClose = true;
   }
 

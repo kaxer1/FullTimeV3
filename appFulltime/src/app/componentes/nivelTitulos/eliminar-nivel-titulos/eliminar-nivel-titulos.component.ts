@@ -21,7 +21,7 @@ export class EliminarNivelTitulosComponent implements OnInit {
 
   eliminarRegistro() {
     this.restNivelTitulos.deleteNivelTituloRest(this.data.id).subscribe(res => {
-      this.toastr.error("Operación Exitosa", "Registro eliminado");
+      this.toastr.error("Registro eliminado");
       this.dialogRef.close();
       window.location.reload();
     });

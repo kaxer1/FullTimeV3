@@ -59,16 +59,16 @@
                     <td style="padding-top: 10px;text-align: center;">{{tp.actualizar}}</td>
                     <td style="padding-top: 10px;text-align: center;">{{tp.legalizar}}</td>
                     <td style="padding-top: 10px;text-align: center;">
+                        <i id="permiso" class="fas fa-edit" style="color:green; margin-right: 15px;" matSuffix matTooltipPosition="right"
+                        matTooltipClass="departamento-tooltip"
+                        (click)="AbrirVentanaEditarTipoPermisos(tp)"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
                         <i id="permiso" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i id="permiso" class="fas fa-edit" style="color:green;" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            (click)="AbrirVentanaEditarTipoPermisos(tp)"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
                         </i>
                     </td>
                 </tr>
