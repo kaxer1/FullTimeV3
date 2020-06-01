@@ -153,9 +153,10 @@ export class ListaEmpleadosComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
       this.getEmpleados();
-      this.archivoForm.reset();
-      this.nameFile = '';
+      window.location.reload();
     });
+    this.archivoForm.reset();
+    this.nameFile = '';
   }
 
   /**

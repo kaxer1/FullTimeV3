@@ -39,6 +39,7 @@ import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHor
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -108,7 +109,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restEmpleHorario: EmpleadoHorariosService,
     public restPermiso: PermisosService,
     public restAutoridad: AutorizaDepartamentoService,
-    //public item: RegistoEmpleadoHorarioComponent,
+    public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService
@@ -200,6 +201,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.Main.urlImagen = this.urlImagen;
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';

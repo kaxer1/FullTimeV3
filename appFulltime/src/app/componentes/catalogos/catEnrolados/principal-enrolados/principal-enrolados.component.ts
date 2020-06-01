@@ -192,6 +192,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Enrolados importada.');
       this.getEnrolados();
+      window.location.reload();
       this.archivoForm.reset();
       this.nameFile = '';
     });
