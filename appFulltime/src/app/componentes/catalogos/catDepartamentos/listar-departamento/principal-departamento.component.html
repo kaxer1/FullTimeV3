@@ -103,15 +103,15 @@
                     <td>{{departamento.nivel}}</td>
                     <td>{{departamento.departamento_padre}}</td>
                     <td>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
                         <i class="fas fa-edit" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro"
                             (click)="AbrirVentanaEditarDepartamento(departamento)">
                             <p>Editar</p>
+                        </i>
+                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
                         </i>
                     </td>
                 </tr>

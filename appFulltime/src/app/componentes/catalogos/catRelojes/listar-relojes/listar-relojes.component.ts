@@ -154,6 +154,7 @@ export class ListarRelojesComponent implements OnInit {
     }
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.ObtenerReloj();
+      window.location.reload();
       this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.');
       this.archivoForm.reset();
       this.nameFile = '';

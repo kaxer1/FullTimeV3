@@ -85,6 +85,7 @@ export class EditarDepartamentoComponent implements OnInit {
         .subscribe(response => {
           this.toastr.success('Operacion Exitosa', 'Departamento modificado');
           this.router.navigate(['/', 'departamento']);
+          this.dialogRef.close();
         }, error => {
           console.log(error);
         });
@@ -101,6 +102,7 @@ export class EditarDepartamentoComponent implements OnInit {
           .subscribe(response => {
             this.toastr.success('Operacion Exitosa', 'Departamento modificado');
             this.router.navigate(['/', 'departamento']);
+            this.dialogRef.close();
           }, error => {
             console.log(error);
           });
