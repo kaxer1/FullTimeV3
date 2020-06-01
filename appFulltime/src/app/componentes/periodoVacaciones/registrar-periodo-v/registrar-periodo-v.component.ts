@@ -115,7 +115,7 @@ export class RegistrarPeriodoVComponent implements OnInit {
   CerrarVentanaRegistroPerVacaciones() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
   ObtenerMensajeErrorNombre() {

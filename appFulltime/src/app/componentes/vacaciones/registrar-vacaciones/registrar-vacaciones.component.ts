@@ -102,7 +102,7 @@ export class RegistrarVacacionesComponent implements OnInit {
   CerrarVentanaRegistroVacaciones() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
   IngresarSoloNumeros(evt) {

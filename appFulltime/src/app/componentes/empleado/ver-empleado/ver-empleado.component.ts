@@ -90,6 +90,9 @@ export class VerEmpleadoComponent implements OnInit {
   actualizar = 0;
   selectedIndex = 0;
 
+  /** Contador */
+  cont = 0;
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -135,6 +138,8 @@ export class VerEmpleadoComponent implements OnInit {
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+    this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+    this.obtenerVacaciones(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
@@ -162,9 +167,24 @@ export class VerEmpleadoComponent implements OnInit {
     this.btnActualizarCargo = value;
   }
 
+  idSelect: number;
+  ObtenerIdTituloSeleccionado(idTituloEmpleado: number) {
+    this.idSelect = idTituloEmpleado;
+  }
+
+  idSelectContrato: number;
+  ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
+    this.idSelectContrato = idContratoEmpleado;
+  }
+
+  idSelectCargo: number;
+  ObtenerIdCargoSeleccionado(idCargoEmpleado: number) {
+    this.idSelectCargo = idCargoEmpleado;
+  }
+
   /* 
    * ***************************************************************************************************
-   *                               ABRIR VENTANAS PARA REGISTRAR DATOS DEL EMPLEADO
+   *                               MÉTODO PARA MOSTRAR DATOS
    * ***************************************************************************************************
   */
   /** Método para ver la información del empleado */
@@ -192,22 +212,6 @@ export class VerEmpleadoComponent implements OnInit {
     })
   }
 
-  /** Método para mostrar datos del título del empleado */
-  idSelect: number;
-  ObtenerIdTituloSeleccionado(idTituloEmpleado: number) {
-    this.idSelect = idTituloEmpleado;
-  }
-
-  idSelectContrato: number;
-  ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
-    this.idSelectContrato = idContratoEmpleado;
-  }
-
-  idSelectCargo: number;
-  ObtenerIdCargoSeleccionado(idCargoEmpleado: number) {
-    this.idSelectCargo = idCargoEmpleado;
-  }
-
   /** Método para obtener datos de discapacidad */
   obtenerDiscapacidadEmpleado(idEmployDisca: any) {
     this.discapacidadUser = [];
@@ -226,7 +230,6 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-
   /** Método para obtener el contrato de un empleado con su respectivo régimen laboral */
   idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen() {
@@ -235,9 +238,6 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
     this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoEmpleado = res;
-      this.contratoEmpleado.forEach(obj => {
-        this.obtenerPeriodoVacaciones(obj.id);
-      });
     }, error => { console.log("") });
   }
 
@@ -272,21 +272,45 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  peridoVacaciones: any = [];
-  obtenerPeriodoVacaciones(idContratoEmpleado: number) {
-    this.restPerV.getInfoPeriodoVacacionesPorIdContrato(idContratoEmpleado).subscribe(res => {
-      this.peridoVacaciones = res;
-      this.peridoVacaciones.map(obj => {
-        this.obtenerVacaciones(obj.id);
-      });
-    }, error => { console.log("") });
+  /* Método para imprimir datos del permiso */
+  permisosEmpleado: any;
+  permisosTotales: any;
+  obtenerPermisos(id_empleado: number) {
+    this.permisosEmpleado = [];
+    this.permisosTotales = [];
+    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+      this.idContrato = datos;
+      console.log("idContrato ", this.idContrato[0].id);
+      for (let i = 0; i <= this.idContrato.length - 1; i++) {
+        this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
+          this.permisosEmpleado = datos;
+          if (this.permisosEmpleado.length === 0) {
+            console.log("No se encuentran registros")
+          }
+          else {
+            if (this.cont === 0) {
+              this.permisosTotales = datos
+              this.cont++;
+            }
+            else {
+              this.permisosTotales = this.permisosTotales.concat(datos);
+              console.log("Datos Permisos" + i + '', this.permisosTotales)
+            }
+          }
+        })
+      }
+    });
   }
 
   vacaciones: any = [];
-  obtenerVacaciones(id_peri_vacaciones: number) {
-    this.restVacaciones.ObtenerVacacionesPorIdPeriodo(id_peri_vacaciones).subscribe(res => {
-      this.vacaciones = res;
-    }, error => { console.log("") });
+  obtenerVacaciones(id_empleado: number) {
+    this.restPerV.BuscarIDPerVacaciones(id_empleado).subscribe(datos => {
+      this.idPerVacacion = datos;
+      console.log("idPerVaca ", this.idPerVacacion[0].id);
+      this.restVacaciones.ObtenerVacacionesPorIdPeriodo(this.idPerVacacion[0].id).subscribe(res => {
+        this.vacaciones = res;
+      }, error => { console.log("") });
+    }, error => { });
   }
 
   planHorario: any;
@@ -336,13 +360,7 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  /* obtenerEmpleadoProcesos(idEmpleadoCargo: number) {
-     this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(idEmpleadoCargo).subscribe(res => {
-       this.empleadoProcesos = res
-     }, error => {console.log("")});
-   }*/
-
-
+  /** Método para mostrar datos de planificación de almuerzos */
   planComidas: any;
   obtenerPlanComidasEmpleado(id_empleado: number) {
     this.planComidas = [];
@@ -351,30 +369,29 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { console.log("") });
   }
 
-  /* Método para imprimir datos del permiso */
-  permisosEmpleado: any;
-  permisosTotales: any;
-  cont = 0;
-  obtenerPermisos(id_empleado: number) {
-    this.permisosEmpleado = [];
-    this.permisosTotales = [];
+  /* Método para imprimir datos del periodo de vacaciones */
+  buscarPeriodosVacaciones: any;
+  peridoVacaciones: any;
+  obtenerPeriodoVacaciones(id_empleado: number) {
+    this.buscarPeriodosVacaciones = [];
+    this.peridoVacaciones = [];
     this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
       this.idContrato = datos;
       console.log("idContrato ", this.idContrato[0].id);
       for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.permisosEmpleado = datos;
-          if (this.permisosEmpleado.length === 0) {
+        this.restPerV.getInfoPeriodoVacacionesPorIdContrato(this.idContrato[i]['id']).subscribe(datos => {
+          this.buscarPeriodosVacaciones = datos;
+          if (this.buscarPeriodosVacaciones.length === 0) {
             console.log("No se encuentran registros")
           }
           else {
             if (this.cont === 0) {
-              this.permisosTotales = datos
+              this.peridoVacaciones = datos
               this.cont++;
             }
             else {
-              this.permisosTotales = this.permisosTotales.concat(datos);
-              console.log("Datos Permisos" + i + '', this.permisosTotales)
+              this.peridoVacaciones = this.peridoVacaciones.concat(datos);
+              console.log("Datos Periodo Vacaciones" + i + '', this.peridoVacaciones)
             }
           }
         })
@@ -576,9 +593,18 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaPerVacaciones(): void {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ", this.idContrato[0].max)
-      this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } }).disableClose = true;
+      console.log("idcargo ", this.idContrato[0].max);
+      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idPerVacacion = datos;
+        console.log("idPerVaca ", this.idPerVacacion[0].id);
+        this.toastr.info('El empleado ya tiene registrado un periodo de vacaciones y este se actualiza automáticamente')
+      }, error => {
+        this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent,
+          { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } })
+          .afterClosed().subscribe(item => {
+            this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+          });
+      });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
     });
@@ -590,7 +616,10 @@ export class VerEmpleadoComponent implements OnInit {
       this.idPerVacacion = datos;
       console.log("idPerVaca ", this.idPerVacacion[0].id)
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } })
+        .afterClosed().subscribe(item => {
+          this.obtenerVacaciones(parseInt(this.idEmpleado));
+        });
     }, error => {
       this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
     });
