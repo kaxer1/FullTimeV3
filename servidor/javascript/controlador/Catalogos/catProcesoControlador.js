@@ -59,6 +59,21 @@ class ProcesoControlador {
             res.json({ message: 'El proceso actualizado exitosamente' });
         });
     }
+    EliminarProceso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const proc_padre = req.params.id;
+            const id = req.params.id;
+            const procesos = yield database_1.default.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
+            console.log(procesos.rows.length);
+            if (procesos.rows.length === 0) {
+                yield database_1.default.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+                res.json({ message: 'Registro eliminado' });
+            }
+            else {
+                res.json(procesos.rows);
+            }
+        });
+    }
 }
 exports.PROCESOS_CONTROLADOR = new ProcesoControlador();
 exports.default = exports.PROCESOS_CONTROLADOR;

@@ -42,6 +42,19 @@ class ProcesoControlador {
     res.json({ message: 'El proceso actualizado exitosamente' });
   }
 
+  public async EliminarProceso(req: Request, res: Response): Promise<void> {
+    const proc_padre = req.params.id;
+    const id = req.params.id;
+    const procesos = await pool.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
+    console.log(procesos.rows.length)
+    if(procesos.rows.length === 0) {
+      await pool.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+      res.json({ message: 'Registro eliminado' });
+    } else {
+      res.json(procesos.rows);
+    }
+  }
+
 }
 
 export const PROCESOS_CONTROLADOR = new ProcesoControlador();

@@ -1,0 +1,27 @@
+.example-match { margin: 0 15px; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+.label-theme { font-size: 15px; }
+
+#hora { font-size: x-small; }
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+
+.tituloHorarioR { 
+    font-size: 20px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+}
+
+#iHor { cursor: pointer; }
+
+#cerrar { cursor: pointer; color: red;}
+
+#letra { font-size: 14px; } 

@@ -320,6 +320,6 @@ export class EditarTipoPermisosComponent implements OnInit {
 
   CerrarVentanaEditarTipoPermiso() {
     this.dialogRef.close();
-    // window.location.reload();
+    window.location.reload();
   }
 }

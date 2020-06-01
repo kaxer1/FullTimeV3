@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class NivelTituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const titulo = yield database_1.default.query('SELECT * FROM nivel_titulo');
+            const titulo = yield database_1.default.query('SELECT * FROM nivel_titulo ORDER BY id');
             res.json(titulo.rows);
         });
     }
@@ -52,6 +52,14 @@ class NivelTituloControlador {
             const { nombre, id } = req.body;
             yield database_1.default.query('UPDATE nivel_titulo SET nombre = $1 WHERE id = $2', [nombre, id]);
             res.json({ message: 'Nivel de Título actualizado exitosamente' });
+        });
+    }
+    EliminarNivelTitulo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            console.log(id);
+            yield database_1.default.query('DELETE FROM nivel_titulo WHERE id = $1', [id]);
+            res.json({ message: 'Registro eliminado' });
         });
     }
 }

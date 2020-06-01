@@ -138,7 +138,7 @@ export class EmplCargosComponent implements OnInit {
   CerrarVentanaRegistroCargo() {
     this.limpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
 }

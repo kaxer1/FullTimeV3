@@ -1,0 +1,27 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-md">
+            <div class="tituloHorarioL">
+                <span>CARGA MÚLTIPLE DE HORARIOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangeHorario($event)" type="file" [formControl]="archivoHorarioForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2">Cargar Horarios</label>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-sm">
+            <div class="tituloHorarioL">
+                <span>DESCARGAR PLANTILLA</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+
+            </mat-card>
+        </div>
+    </div>
+</div>
+

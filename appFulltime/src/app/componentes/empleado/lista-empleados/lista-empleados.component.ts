@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -11,8 +12,6 @@ import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { PageEvent } from '@angular/material/paginator';
-
 
 @Component({
   selector: 'app-lista-empleados',

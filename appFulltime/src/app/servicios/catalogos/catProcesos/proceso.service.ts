@@ -15,9 +15,7 @@ export class ProcesoService {
   // catalogo de Procesos
 
   getProcesosRest() {
-
     return this.http.get(`${this.API_URL}/proceso`);
-
   }
 
   getOneProcesoRest(id: number) {
@@ -26,6 +24,10 @@ export class ProcesoService {
 
   postProcesoRest(data: any) {
     return this.http.post(`${this.API_URL}/proceso`, data);
+  }
+
+  deleteProcesoRest(id: number){
+    return this.http.delete(`${this.API_URL}/proceso/eliminar/${id}`);
   }
 
   getIdProcesoPadre(procesoPadre: string) {

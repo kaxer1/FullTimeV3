@@ -23,6 +23,7 @@ class EnroladoRutas {
         this.router.get('/busqueda/:id_usuario', this.verifyToken, catEnroladoControlador_1.default.ObtenerRegistroEnrolado);
         this.router.get('/buscar/ultimoId', this.verifyToken, catEnroladoControlador_1.default.ObtenerUltimoId);
         this.router.put('/', this.verifyToken, catEnroladoControlador_1.default.ActualizarEnrolado);
+        this.router.delete('/eliminar/:id', catEnroladoControlador_1.default.EliminarEnrolado);
     }
     verifyToken(req, res, next) {
         if (!req.headers.authorization) {

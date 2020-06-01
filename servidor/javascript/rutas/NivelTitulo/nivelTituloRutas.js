@@ -16,6 +16,7 @@ class NivelTituloRutas {
         this.router.post('/', nivelTituloControlador_1.default.create);
         this.router.get('/buscar/:nombre', nivelTituloControlador_1.default.ObtenerNivelNombre);
         this.router.put('/', nivelTituloControlador_1.default.ActualizarNivelTitulo);
+        this.router.delete('/eliminar/:id', nivelTituloControlador_1.default.EliminarNivelTitulo);
     }
 }
 const NIVEL_TITULO_RUTAS = new NivelTituloRutas();

@@ -26,6 +26,10 @@ export class NivelTitulosService {
     return this.http.post(`${this.NIVEL_TITULO_URL}/nivel-titulo`, data);
   }
 
+  deleteNivelTituloRest(id: number){
+    return this.http.delete(`${this.NIVEL_TITULO_URL}/nivel-titulo/eliminar/${id}`);
+  }
+
   BuscarNivelNombre(nombre: string) {
     return this.http.get<any>(`${this.NIVEL_TITULO_URL}/nivel-titulo/buscar/${nombre}`);
   }

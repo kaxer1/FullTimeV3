@@ -185,6 +185,11 @@ import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/
 import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
 import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
 import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
+import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
+import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
+import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
+import { EliminarNivelTitulosComponent } from './componentes/nivelTitulos/eliminar-nivel-titulos/eliminar-nivel-titulos.component';
+import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/eliminar-procesos/eliminar-procesos.component';
 
 @NgModule({
   declarations: [
@@ -305,6 +310,11 @@ import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPerm
     EditarRegimenComponent,
     EditarDepartamentoComponent,
     EditarTipoPermisosComponent,
+    PlanificacionMultipleComponent,
+    VerHorarioDetalleComponent,
+    EditarHorarioComponent,
+    EliminarNivelTitulosComponent,
+    EliminarProcesosComponent,
 
   ],
 

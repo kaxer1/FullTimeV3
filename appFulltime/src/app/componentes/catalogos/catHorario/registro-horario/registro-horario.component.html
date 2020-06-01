@@ -41,12 +41,11 @@
                         </mat-form-field>
                     </div>
                     <div class="col">
+                        <label style="margin-right: 95px;">Horario Flexible *</label>
+                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                            matTooltip="El horario flexible indica que se controlará entrada y salida">
+                            help_outline</mat-icon>
                         <section>
-                            <mat-label class="label-theme">Flexible *</mat-label>
-                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                matTooltip="El horario flexible indica que se controlará entrada y salida">
-                                help_outline</mat-icon>
-                            <br>
                             <mat-radio-group required aria-label="select an option" [formControl]="flexible" required
                                 [value]="flexible.value">
                                 <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
@@ -54,12 +53,11 @@
                             </mat-radio-group>
                         </section>
                         <br>
+                        <label style="margin-right: 68px;">Horario por Horas *</label>
+                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                            matTooltip="El horario por horas indica que se labora en un rango de horas">
+                            help_outline</mat-icon>
                         <section>
-                            <label class="label-theme">Por Horas *</label>
-                            <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                matTooltip="El horario por horas indica que se labora en un rango de horas">
-                                help_outline</mat-icon>
-                            <br>
                             <mat-radio-group aria-label="Select an option" [formControl]="porHoras"
                                 [value]="porHoras.value">
                                 <mat-radio-button class="example-match" value="true">Si</mat-radio-button>

@@ -10,7 +10,11 @@ import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
+import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
+import { EditarHorarioComponent } from '../editar-horario/editar-horario.component';
 
 @Component({
   selector: 'app-principal-horario',
@@ -28,7 +32,9 @@ export class PrincipalHorarioComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
   nombreHorarioF = new FormControl('', [Validators.minLength(2)]);
-  archivoForm = new FormControl('');
+  archivo1Form = new FormControl('');
+  archivo2Form = new FormControl('');
+  archivo3Form = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public buscarHorarioForm = new FormGroup({
@@ -45,8 +51,9 @@ export class PrincipalHorarioComponent implements OnInit {
 
   constructor(
     private rest: HorarioService,
+    private restD: DetalleCatHorariosService,
     private toastr: ToastrService,
-    public vistaRegistrarHorario: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -67,7 +74,13 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarHorario.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+  }
+
+  AbrirRegistraDetalle(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).disableClose = true;
+    console.log(datosSeleccionados.fecha);
   }
 
   LimpiarCampos() {
@@ -77,16 +90,25 @@ export class PrincipalHorarioComponent implements OnInit {
     this.ObtenerHorarios();
   }
 
-  fileChange(element) {
+  AbrirVentanaEditarHorario(horario: any): void {
+    const DIALOG_REF = this.vistaRegistrarDatos.open(EditarHorarioComponent,
+      { width: '300px', data: horario });
+      DIALOG_REF.disableClose = true;
+  }
+  /****************************************************************************************************** 
+   * PLANTILLA CARGAR SOLO HORARIOS
+   ******************************************************************************************************/
+
+  fileChangeCatalogoHorario(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 8);
-    console.log(itemName.toLowerCase());
+    let itemName = arrayItems[0].slice(0, 50);
+    console.log("funcion horario", itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'horarios') {
-        this.plantilla();
+      if (itemName.toLowerCase() == 'catalogo horarios') {
+        this.plantillaHorario();
       } else {
         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
       }
@@ -95,7 +117,7 @@ export class PrincipalHorarioComponent implements OnInit {
     }
   }
 
-  plantilla() {
+  plantillaHorario() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
@@ -103,8 +125,80 @@ export class PrincipalHorarioComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
       this.ObtenerHorarios();
-      this.archivoForm.reset();
+      this.archivo1Form.reset();
       this.nameFile = '';
+      window.location.reload();
+    });
+  }
+
+  /* ***************************************************************************************************** 
+   * PLANTILLA CARGAR SOLO DETALLES
+   * *****************************************************************************************************/
+  nameFileDetalle: string;
+  archivoSubidoDetalle: Array<File>;
+  fileChangeDetalle(element) {
+    this.archivoSubidoDetalle = element.target.files;
+    this.nameFileDetalle = this.archivoSubidoDetalle[0].name;
+    let arrayItems = this.nameFileDetalle.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 50);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'detalles horarios') {
+        this.plantillaDetalle();
+      } else {
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantillaDetalle() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubidoDetalle.length; i++) {
+      formData.append("uploads[]", this.archivoSubidoDetalle[i], this.archivoSubidoDetalle[i].name);
+    }
+    this.restD.subirArchivoExcel(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Detalle de Horario importada.');
+      this.archivo2Form.reset();
+      this.nameFileDetalle = '';
+    });
+  }
+
+  /* ***************************************************************************************************** 
+   * PLANTILLA CARGAR SOLO DETALLES
+   * *****************************************************************************************************/
+  nameFileHorarioDetalle: string;
+  archivoSubidoDetalleHorario: Array<File>;
+  fileChangeDetalleHorario(element) {
+    this.archivoSubidoDetalleHorario = element.target.files;
+    this.nameFileHorarioDetalle = this.archivoSubidoDetalleHorario[0].name;
+    let arrayItems = this.nameFileHorarioDetalle.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 50);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'horarios y detalles') {
+        this.plantillaDetalleHorario();
+      } else {
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantillaDetalleHorario() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubidoDetalleHorario.length; i++) {
+      formData.append("uploads[]", this.archivoSubidoDetalleHorario[i], this.archivoSubidoDetalleHorario[i].name);
+    }
+    this.rest.CargarHorariosDetalles(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horarios importada.');
+      this.archivo3Form.reset();
+      this.nameFileHorarioDetalle = '';
+      window.location.reload();
     });
   }
 

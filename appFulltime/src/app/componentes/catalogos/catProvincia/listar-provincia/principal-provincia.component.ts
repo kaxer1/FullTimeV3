@@ -2,10 +2,13 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
 
 import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
 import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
-import { PageEvent } from '@angular/material/paginator';
+import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+
 
 @Component({
   selector: 'app-principal-provincia',
@@ -26,6 +29,8 @@ export class PrincipalProvinciaComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  confirmacion = false;
+
   // Control de campos y validaciones del formulario
   paisF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
   provinciaF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
@@ -38,15 +43,16 @@ export class PrincipalProvinciaComponent implements OnInit {
 
   constructor(
     public rest: ProvinciaService,
-    public vistaRegistrarProvincia: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.ListarProvincias();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -59,7 +65,32 @@ export class PrincipalProvinciaComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProvincia() {
-    this.vistaRegistrarProvincia.open(RegistroProvinciaComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroProvinciaComponent, { width: '400px' }).disableClose = true;
+  }
+
+  /* **********************************************************************************
+   * ELIMAR REGISTRO ENROLADO Y ENROLADOS-DISPOSITIVO 
+   * **********************************************************************************/
+
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_prov: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarProvincia(id_prov).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.ListarProvincias();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/enrolados']);
+        }
+      });
   }
 
   IngresarSoloLetras(e) {

@@ -7,6 +7,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.component';
 import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
+import { EliminarProcesosComponent } from "../eliminar-procesos/eliminar-procesos.component";
 
 @Component({
   selector: 'app-principal-proceso',
@@ -107,6 +108,10 @@ export class PrincipalProcesoComponent implements OnInit {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarCatProcesosComponent, { width: '450px', data: {datosP: datosSeleccionados, lista: true }}).disableClose = true;
     //console.log(datosSeleccionados.fecha);
+  }
+
+  AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
+    this.vistaRegistrarDatos.open(EliminarProcesosComponent, { width: '350px', data: dataObjDelete}).disableClose = true;
   }
 
   IngresarSoloNumeros(evt) {

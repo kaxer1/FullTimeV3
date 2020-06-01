@@ -84,15 +84,13 @@
                         </mat-select>
                     </mat-form-field>
                     <br>
+                    <label style="margin-right: 95px;">Legalizado *</label>
+                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                    matTooltipPosition="right" matTooltip="Indicar si las vacaciones han sido legalizadas">
+                    help_outline</mat-icon>
                     <section>
-                        <mat-label>Legalizado* </mat-label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right" matTooltip="Indicar si las vacaciones han sido legalizadas">
-                            help_outline</mat-icon>
                         <mat-radio-group required aria-label="select an option" [formControl]="legalizadoF" required
                             [value]="legalizadoF.value">
-                            <br>
-                            <br>
                             <mat-radio-button value="true">Si</mat-radio-button>
                             <mat-radio-button value="false">No</mat-radio-button>
                         </mat-radio-group>

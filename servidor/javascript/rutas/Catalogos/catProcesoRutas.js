@@ -16,6 +16,7 @@ class ProcesoRutas {
         this.router.get('/:id', catProcesoControlador_1.default.getOne);
         this.router.post('/', catProcesoControlador_1.default.create);
         this.router.put('/', catProcesoControlador_1.default.ActualizarProceso);
+        this.router.delete('/eliminar/:id', catProcesoControlador_1.default.EliminarProceso);
     }
 }
 const PROCESO_RUTAS = new ProcesoRutas();

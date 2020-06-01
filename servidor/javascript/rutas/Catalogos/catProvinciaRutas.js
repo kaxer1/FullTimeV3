@@ -20,6 +20,7 @@ class ProvinciaRutas {
         this.router.get('/buscar/:id', catProvinciaControlador_1.default.ObtenerProvincia);
         this.router.get('/buscar/pais/:id', catProvinciaControlador_1.default.ObtenerPais);
         this.router.post('/', catProvinciaControlador_1.default.CrearProvincia);
+        this.router.delete('/eliminar/:id', catProvinciaControlador_1.default.EliminarProvincia);
     }
 }
 const PROVINCIA_RUTAS = new ProvinciaRutas();

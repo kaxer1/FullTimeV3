@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 
 import { RegistrarNivelTitulosComponent } from 'src/app/componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component'
 import { EditarNivelTituloComponent } from 'src/app/componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component'
+import { EliminarNivelTitulosComponent } from '../eliminar-nivel-titulos/eliminar-nivel-titulos.component'
 
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
@@ -95,7 +96,9 @@ export class ListarNivelTitulosComponent implements OnInit {
   AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarNivelTituloComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
-    //console.log(datosSeleccionados.fecha);
   }
 
+  AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
+    this.vistaRegistrarDatos.open(EliminarNivelTitulosComponent, { width: '350px', data: dataObjDelete}).disableClose = true;
+  }
 }

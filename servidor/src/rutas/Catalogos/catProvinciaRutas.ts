@@ -19,6 +19,7 @@ class ProvinciaRutas {
         this.router.get('/buscar/:id',  PROVINCIA_CONTROLADOR.ObtenerProvincia);
         this.router.get('/buscar/pais/:id',  PROVINCIA_CONTROLADOR.ObtenerPais);
         this.router.post('/',  PROVINCIA_CONTROLADOR.CrearProvincia);
+        this.router.delete('/eliminar/:id', PROVINCIA_CONTROLADOR.EliminarProvincia);
     }
 }
 

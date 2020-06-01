@@ -33,8 +33,7 @@ export class RegistroHorarioComponent implements OnInit {
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<RegistroHorarioComponent>,
-
+    public dialogRef: MatDialogRef<RegistroHorarioComponent>
   ) { }
 
   ngOnInit(): void {
@@ -56,7 +55,7 @@ export class RegistroHorarioComponent implements OnInit {
       this.LimpiarCampos();
     }, error => {
       this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
-    });;
+    });
   }
 
   IngresarNumeroDecimal(evt) {

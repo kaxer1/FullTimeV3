@@ -41,6 +41,8 @@ import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaci
 import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
 import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
+import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
+import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
 
 import { AuthGuard } from "./guards/auth.guard";
 import { RolGuard } from './guards/rol.guard';
@@ -88,7 +90,8 @@ const routes: Routes = [
   { path: 'olvidar-contrasenia', component: OlvidarContraseniaComponent},
   { path: 'confirmar-contrasenia/:token', component: ConfirmarContraseniaComponent},
   { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard]},
-
+  { path: 'planificacion', component: PlanificacionMultipleComponent, canActivate: [AuthGuard]},
+  { path: 'verHorario/:id', component: VerHorarioDetalleComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

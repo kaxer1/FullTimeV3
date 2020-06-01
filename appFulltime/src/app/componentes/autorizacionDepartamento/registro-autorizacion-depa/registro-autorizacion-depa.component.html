@@ -52,13 +52,11 @@
                         </mat-select>
                     </mat-form-field>
                     <br>
+                    <label style="margin-right: 110px;">Autoriza *</label>
+                    <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip" matTooltipPosition="right"
+                    matTooltip="Indicar si el empleado será quien autorice dentro del departamento seleccionado">
+                    help_outline</mat-icon>
                     <section>
-                        <mat-label class="label-theme">Autoriza *</mat-label>
-                        <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar si el empleado será quien autorice dentro del departamento seleccionado">
-                            help_outline</mat-icon>
-                        <br>
-                        <br>
                         <mat-radio-group required aria-label="select an option" [formControl]="autorizarF" required
                             [value]="autorizarF.value">
                             <mat-radio-button class="example-match" value="true">Si</mat-radio-button>

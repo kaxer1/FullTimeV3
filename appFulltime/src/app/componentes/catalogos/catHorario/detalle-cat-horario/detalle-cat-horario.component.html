@@ -9,18 +9,6 @@
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
-                        <mat-label>Seleccionar Horario</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                            matTooltip="Lista de horarios cargados en el sistema">
-                            help_outline</mat-icon>
-                        <mat-select [formControl]="horarioF" required>
-                            <mat-option *ngFor="let h of horarios" [value]="h.id">
-                                {{h.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
                         <mat-label>Orden</mat-label>
                         <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar el orden del horario">
@@ -31,8 +19,6 @@
                             <mat-option value=2>2</mat-option>
                             <mat-option value=3>3</mat-option>
                             <mat-option value=4>4</mat-option>
-                            <mat-option value=5>5</mat-option>
-                            <mat-option value=6>6</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <br>
@@ -47,8 +33,6 @@
                             <mat-option value=2>S</mat-option>
                             <mat-option value=3>S/A</mat-option>
                             <mat-option value=4>E/A</mat-option>
-                            <mat-option value=5>S/P</mat-option>
-                            <mat-option value=6>E/P</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -71,21 +55,11 @@
                             help_outline</mat-icon>
                     </mat-form-field>
                     <br>
-                    <div class="container" style="text-align: left;">
-                        <mat-label>Tipo de horario</mat-label>
-                        <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si el horario es Nocturno">
-                            help_outline</mat-icon>
-                        <div class="container" style="text-align: center;">
-                            <div class="row">
-                                <div class="col-sm" style="text-align: left;">
-                                    <br>
-                                    <mat-checkbox [formControl]="tipoF" [(ngModel)]="nocturno">Nocturno</mat-checkbox>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <mat-checkbox style="margin-right: 22px;" [formControl]="tipoF" [(ngModel)]="nocturno">Horario Nocturno *
+                    </mat-checkbox>
+                    <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si el horario es Nocturno">
+                        help_outline</mat-icon>
                 </div>
             </div>
         </div>

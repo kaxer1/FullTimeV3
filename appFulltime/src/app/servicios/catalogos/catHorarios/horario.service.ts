@@ -26,8 +26,16 @@ export class HorarioService {
     return this.http.post(`${this.API_URL}/horario`, data);
   } 
 
+  putHorarioRest(id:number, data: any){
+    return this.http.put(`${this.API_URL}/horario/editar/${id}`, data);
+  }
+
   subirArchivoExcel(formData) {
     return this.http.post(this.API_URL + '/horario/upload', formData)  
+  }
+
+  CargarHorariosDetalles(formData) {
+    return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)  
   }
 
 }

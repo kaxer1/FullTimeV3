@@ -216,7 +216,7 @@
                                                 <p>Editar</p>
                                             </i>
                                         </a>
-                                        <a mat-button type="submit" (click)="eliminarTituloEmpleado(rte.id)">
+                                        <a mat-button type="submit" (click)="ConfirmarDeleteTitulo(rte.id)">
                                             <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
                                                 matTooltip="Eliminar este registro">
                                                 <p>Eliminar</p>
@@ -277,7 +277,7 @@
                                 </div>
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
-                                        <a mat-button type="submit" (click)="eliminarDiscapacidad(d.id_empleado)" matSuffix>
+                                        <a mat-button type="submit" (click)="ConfirmarDeleteDiscapacidad(d.id_empleado)" matSuffix>
                                             <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
                                                 matTooltip="Eliminar registro">
                                                 <p>Eliminar</p>
@@ -292,22 +292,6 @@
                         <app-discapacidad [idEmploy]="idEmpleado" [editar]="editar" *ngIf="!mostrarDiscapacidad">
                         </app-discapacidad>
                     </div>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-
-    <mat-tab>
-        <ng-template mat-tab-label>
-            <mat-icon class="example-tab-icon">settings</mat-icon>
-            Registros Adicionales
-        </ng-template>
-
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <button type="submit" id="boton" (click)="AbrirVentanaCatHorario()" class="btn">Detalle Horario
-                    </button>
                 </div>
             </div>
         </div>
@@ -436,7 +420,7 @@
                             </div>
                         </div>
                         <mat-card-content>
-                            <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
+                            <div class="container" *ngFor="let c of cargosTotalesEmpleado" style="padding-top: 15px;">
                                 <div class="row">
                                     <div class="col">
                                         <label class="col-sm col-form-label">Código:</label>

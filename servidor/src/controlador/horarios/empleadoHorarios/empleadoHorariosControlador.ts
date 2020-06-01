@@ -58,6 +58,31 @@ class EmpleadoHorariosControlador {
         fs.unlinkSync(filePath);
     }
 
+    public async CargarMultiplesHorariosEmpleadosPlantilla(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+        plantilla.forEach(async (data: any) => {
+            var { cedula, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nom_horario, estado } = data;
+            const id_cargo = await pool.query('SELECT MAX(ecargo.id) FROM empl_cargos AS ecargo, empl_contratos AS econtrato, empleados AS e WHERE econtrato.id_empleado = e.id AND ecargo.id_empl_contrato = econtrato.id AND e.cedula = $1', [cedula]);
+            var id_empl_cargo = id_cargo.rows[0]['max'];;
+            var nombre = nom_horario;
+            const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+            var id_horarios = idHorario.rows[0]['id'];
+            var id_hora = 1;
+            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
+            console.log("carga exitosa");
+        });
+        res.json({ message: 'La plantilla a sido receptada' });
+        fs.unlinkSync(filePath);
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();

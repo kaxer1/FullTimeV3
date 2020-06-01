@@ -71,7 +71,7 @@
                     <td>{{ciudad.nombre}}</td>
                     <td>{{ciudad.descripcion}}</td>
                     <td>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                        <i (click)="ConfirmarDelete(ciudad)" class="far fa-trash-alt" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
                         </i>

@@ -2,10 +2,12 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
 import { RegistrarCiudadComponent } from 'src/app/componentes/ciudades/registrar-ciudad/registrar-ciudad.component'
-import { PageEvent } from '@angular/material/paginator';
+import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
 
 @Component({
   selector: 'app-listar-ciudad',
@@ -37,17 +39,18 @@ export class ListarCiudadComponent implements OnInit {
 
   constructor(
     public rest: CiudadService,
-    public vistaRegistrarCiudad: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.ListarCiudades();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
-    this.numero_pagina = e.pageIndex + 1;    
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   ListarCiudades() {
@@ -58,7 +61,32 @@ export class ListarCiudadComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarCiudad() {
-    this.vistaRegistrarCiudad.open(RegistrarCiudadComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarCiudadComponent, { width: '600px' }).disableClose = true;
+  }
+
+  /* **********************************************************************************
+   * ELIMAR REGISTRO ENROLADO Y ENROLADOS-DISPOSITIVO 
+   * **********************************************************************************/
+
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_ciu: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarCiudad(id_ciu).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Registro eliminado');
+      this.ListarCiudades();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/listarCiudades']);
+        }
+      });
   }
 
   IngresarSoloLetras(e) {

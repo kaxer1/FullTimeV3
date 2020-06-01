@@ -1,6 +1,7 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
         <div class="col-sm">
+            <!--  <br><br><br><br> -->
             <div class="tituloHorarioL">
                 <span>HORARIOS</span>
             </div>
@@ -34,13 +35,39 @@
                 <span>CARGA MÚLTIPLE DE HORARIOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <p id="lista">- Horarios</p>
                 <div class="container">
                     <form method="post" enctype="multipart/form-data">
-                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                        <input (change)="fileChangeCatalogoHorario($event)" type="file" [formControl]="archivo1Form"
+                            id="file1"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2">Subir Horaio</label>
+                        <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios">Cargar
+                            Horarios</label>
                     </form>
                 </div>
+                <p id="lista">- Detalles de Horarios</p>
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form" id="file2"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios">Cargar
+                            Detalles</label>
+                    </form>
+                </div>
+                <!-- <p id="lista">- Horarios y Detalles</p>
+                 <div class="container" >
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangeDetalleHorario($event)" type="file" [formControl]="archivo3Form" id="file3"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file3" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Detalles y Horarios">Horarios-Detalles</label>
+                    </form>
+                </div>-->
             </mat-card>
         </div>
     </div>
@@ -71,15 +98,24 @@
                     <td *ngIf="horario.por_horas == true">Sí</td>
                     <td *ngIf="horario.por_horas == false">No</td>
                     <td>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Asignar ciudad en la que rige este feriado" class="far fa-list-alt"
+                            id="detalleH" (click)="AbrirRegistraDetalle(horario)">
+                            <p>Detalle</p>
+                        </i>
+                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                            [routerLink]="['/verHorario/', horario.id]">
+                            <p>Ver</p>
+                        </i>
+                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip" (click)="AbrirVentanaEditarHorario(horario)"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                         <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-
                         </i>
                     </td>
                 </tr>

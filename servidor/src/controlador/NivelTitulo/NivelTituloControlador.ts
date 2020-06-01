@@ -3,7 +3,7 @@ import pool from '../../database';
 
 class NivelTituloControlador {
   public async list(req: Request, res: Response) {
-    const titulo = await pool.query('SELECT * FROM nivel_titulo');
+    const titulo = await pool.query('SELECT * FROM nivel_titulo ORDER BY id');
     res.json(titulo.rows);
   }
 
@@ -35,6 +35,13 @@ class NivelTituloControlador {
     const { nombre, id } = req.body;
     await pool.query('UPDATE nivel_titulo SET nombre = $1 WHERE id = $2', [nombre, id]);
     res.json({ message: 'Nivel de Título actualizado exitosamente' });
+  }
+
+  public async EliminarNivelTitulo(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    console.log(id);
+    await pool.query('DELETE FROM nivel_titulo WHERE id = $1', [id]);
+    res.json({ message: 'Registro eliminado' });
   }
 
 }

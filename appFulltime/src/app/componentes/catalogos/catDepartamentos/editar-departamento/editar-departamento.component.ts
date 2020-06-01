@@ -3,7 +3,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router} from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
@@ -61,7 +61,6 @@ export class EditarDepartamentoComponent implements OnInit {
     private restS: SucursalService,
     private toastr: ToastrService,
     private router: Router,
-    private activeRoute: ActivatedRoute,
     public dialogRef: MatDialogRef<EditarDepartamentoComponent>,
     @Inject(MAT_DIALOG_DATA) public descripcionD: any
   ) { }

@@ -93,6 +93,12 @@ class ProvinciaControlador {
       await pool.query('INSERT INTO cg_provincias (nombre, id_pais) VALUES ($1, $2)', [nombre, id_pais]);
       res.json({ message: 'La provincia ha sido guardada con éxito' });
     }
+
+    public async EliminarProvincia(req: Request, res: Response): Promise<void> {
+      const id  = req.params.id;
+      await pool.query('DELETE FROM cg_provincias WHERE id = $1', [id]);
+      res.json({ message: 'Registro eliminado' });
+    }
   }
   
   export const PROVINCIA_CONTROLADOR = new ProvinciaControlador();

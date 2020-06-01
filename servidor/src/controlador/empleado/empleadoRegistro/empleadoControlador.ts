@@ -21,7 +21,7 @@ class EmpleadoControlador {
     }
     res.status(404).json({ text: 'El empleado no ha sido encontrado' });
   }
-
+  
   public async getImagen(req: Request, res: Response): Promise<any> {
     const imagen = req.params.imagen;
     let filePath = `servidor\\imagenesEmpleados\\${imagen}`

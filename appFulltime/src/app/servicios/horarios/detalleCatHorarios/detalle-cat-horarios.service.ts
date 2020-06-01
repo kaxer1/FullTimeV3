@@ -21,5 +21,13 @@ export class DetalleCatHorariosService {
   IngresarDetalleHorarios(datos: any) {
     return this.http.post(`${this.API_URL}/detalleHorario`, datos);
   }
+
+  ConsultarUnDetalleHorario(id: number) {
+    return this.http.get(`${this.API_URL}/detalleHorario/${id}`);
+  }
+
+  subirArchivoExcel(formData) {
+    return this.http.post(this.API_URL + '/detalleHorario/upload', formData)  
+  }
   
 }

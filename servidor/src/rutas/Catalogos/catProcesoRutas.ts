@@ -14,7 +14,8 @@ class ProcesoRutas {
         this.router.get('/busqueda/:nombre', PROCESO_CONTROLADOR.getIdByNombre);
         this.router.get('/:id',  PROCESO_CONTROLADOR.getOne);
         this.router.post('/', PROCESO_CONTROLADOR.create);
-        this.router.put('/', PROCESO_CONTROLADOR.ActualizarProceso);    
+        this.router.put('/', PROCESO_CONTROLADOR.ActualizarProceso);  
+        this.router.delete('/eliminar/:id', PROCESO_CONTROLADOR.EliminarProceso);
     }
 }
 

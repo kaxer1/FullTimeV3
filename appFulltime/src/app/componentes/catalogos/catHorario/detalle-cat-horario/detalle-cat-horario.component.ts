@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
@@ -15,9 +16,7 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 export class DetalleCatHorarioComponent implements OnInit {
 
   nocturno = false;
-  horarios: any = [];
 
-  horarioF = new FormControl('', [Validators.required]);
   ordenF = new FormControl('', [Validators.required]);
   accionF = new FormControl('', [Validators.required]);
   horaF = new FormControl('', [Validators.required]);
@@ -26,7 +25,6 @@ export class DetalleCatHorarioComponent implements OnInit {
 
   // Asignación de validaciones a inputs del formulario
   public DetalleHorarioForm = new FormGroup({
-    horarioForm: this.horarioF,
     ordenForm: this.ordenF,
     accionForm: this.accionF,
     horaForm: this.horaF,
@@ -38,19 +36,13 @@ export class DetalleCatHorarioComponent implements OnInit {
     public rest: DetalleCatHorariosService,
     public restH: HorarioService,
     private toastr: ToastrService,
+    private router: Router,
     public dialogRef: MatDialogRef<DetalleCatHorarioComponent>,
-    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.BuscarHorarios();
-  }
 
-  BuscarHorarios() {
-    this.horarios = [];
-    this.restH.getHorariosRest().subscribe(datos => {
-      this.horarios = datos;
-    })
   }
 
   ValidarMinEspera(form, datos) {
@@ -65,7 +57,7 @@ export class DetalleCatHorarioComponent implements OnInit {
       hora: form.horaForm,
       minu_espera: form.minEsperaForm,
       nocturno: form.tipoForm,
-      id_horario: form.horarioForm,
+      id_horario: this.data.datosHorario.id,
       tipo_accion: form.accionForm,
     };
     console.log(datosDetalleH);
@@ -74,6 +66,13 @@ export class DetalleCatHorarioComponent implements OnInit {
     this.rest.IngresarDetalleHorarios(datosDetalleH).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado')
       this.LimpiarCampos();
+      if(this.data.actualizar === true){
+        this.LimpiarCampos();
+      }
+      else {
+       this.dialogRef.close();
+       this.router.navigate(['/verHorario/', this.data.datosHorario.id]);
+      }  
     }, error => {
     });
   }
@@ -102,7 +101,7 @@ export class DetalleCatHorarioComponent implements OnInit {
   CerrarVentanaDetalleHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
 }
