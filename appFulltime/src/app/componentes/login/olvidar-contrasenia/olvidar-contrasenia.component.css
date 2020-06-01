@@ -4,9 +4,8 @@ img { width: 100%};
 
 .pantalla { margin: auto;}
 
-.verde { border-radius: 15px; width: 230px; background-color: rgb(23, 173, 9); color: white; margin-left: 15px;}
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white;}
 
-.rojo { border-radius: 15px; width: 230px; background-color: rgb(212, 10, 20); color: white; margin-left: 15px; margin-top: 15px;}
 
 mat-card { width: 300px; border-style: groove; border-radius: 25px; text-align: center; margin: auto; padding-bottom: 25px; padding-top: 25px; }
 

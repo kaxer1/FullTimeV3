@@ -77,9 +77,15 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('usuario', datos.usuario);
         localStorage.setItem('rol', datos.rol);
         localStorage.setItem('empleado', datos.empleado);
-        
         this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
-        this.router.navigate(['/home'])
+
+        if (datos.rol === 1) { // Admin
+          this.router.navigate(['/home'])
+        }
+        if (datos.rol === 2) { //Empleado
+          this.router.navigate(['/datosEmpleado']);
+        }
+        
       }
     }, error => {
 
