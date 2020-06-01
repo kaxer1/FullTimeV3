@@ -26,6 +26,14 @@ export class LoginService {
   }
 
   getRol() {
+    return parseInt(localStorage.getItem('rol'));//Empleado
+  }
+
+  loggedRol() {
+    return !!localStorage.getItem('rol');
+  }
+
+  getRolMenu() {
     let rol = parseInt(localStorage.getItem('rol'));
     if(rol === 1){ 
       return true;//Admin

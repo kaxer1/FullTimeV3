@@ -8,9 +8,9 @@
       <img src="../../../assets/imagenes/logo/logoAdmin.png" id="logo">
     </div>
 
-    <!-- lista de opcines del menu -->
+    <!-- MENU PARA ADMINISTRADORES -->
 
-    <mat-accordion>
+    <mat-accordion *ngIf="loginService.getRolMenu()">
       <!-- administración -->
       <mat-expansion-panel class="menus acordeon">
         <mat-expansion-panel-header class="selec1">
@@ -172,14 +172,27 @@
           <a mat-list-item [routerLink]="['/proceso']" class="texcol">
             <span matLine>Crear Proceso</span>
           </a>
-          <a mat-list-item [routerLink]="['/datosEmpleado']" class="texcol">
-            <span matLine>Datos Empleado</span>
-          </a>
         </mat-nav-list>
       </mat-expansion-panel>
 
     </mat-accordion>
 
+    <!-- MENU PARA EMPLEADOS -->
+    <mat-accordion *ngIf="!loginService.getRolMenu()">
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Acción de Personal</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/datosEmpleado']" class="texcol">
+            <span matLine>Datos Empleado</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-sidenav>
 
   <mat-sidenav-content class="degradado">
