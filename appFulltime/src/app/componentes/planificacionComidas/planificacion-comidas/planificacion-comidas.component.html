@@ -9,18 +9,6 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field>
-                        <mat-label id="selecAlmuerzo">Seleccionar Almuerzo *</mat-label>
-                        <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                            matTooltipPosition="right" matTooltip="Lista de platos de comida existentes">
-                            help_outline</mat-icon>
-                        <mat-select formControlName="idComidaForm">
-                            <mat-option *ngFor="let comidas of tipoComidas" [value]="comidas.id">
-                                {{comidas.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
                         <mat-label>Empleado</mat-label>
                         <input id="nomEmpleado" matInput placeholder="Ejm: 1" formControlName="idEmpleadoForm"
                             (keypress)="IngresarSoloLetras($event)" readonly="readonly" required>
@@ -38,6 +26,18 @@
                             matTooltip="Ingresar fecha en la que se registra la planificación. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label id="selecAlmuerzo">Seleccionar Almuerzo *</mat-label>
+                        <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                            matTooltipPosition="right" matTooltip="Lista de platos de comida existentes">
+                            help_outline</mat-icon>
+                        <mat-select formControlName="idComidaForm">
+                            <mat-option *ngFor="let comidas of tipoComidas" [value]="comidas.id">
+                                {{comidas.nombre}}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="col">

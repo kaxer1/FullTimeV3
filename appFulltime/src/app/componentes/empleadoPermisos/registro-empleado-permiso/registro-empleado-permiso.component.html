@@ -10,6 +10,17 @@
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
+                        <mat-label>Fecha de Creación</mat-label>
+                        <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecCreacionF"
+                            min="1950-01-31" max="2050-01-31" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
                         <mat-label>Seleccionar Permiso</mat-label>
                         <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de Tipos de Permisos existentes">help_outline</mat-icon>
@@ -19,17 +30,6 @@
                                 {{per.descripcion}}
                             </mat-option>
                         </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Fecha de Creación</mat-label>
-                        <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecCreacionF"
-                            min="1950-01-31" max="2050-01-31" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker1></mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
@@ -113,7 +113,7 @@
                             matTooltip="Indicar cual es el estado del permiso">
                             help_outline
                         </mat-icon>
-                        <mat-select [formControl]="estadoF">
+                        <mat-select [formControl]="estadoF" [disabled]="true">
                             <mat-option value="Pendiente">Pendiente</mat-option>
                             <mat-option value="Rechazado">Rechazado</mat-option>
                             <mat-option value="Aceptado">Aceptado</mat-option>

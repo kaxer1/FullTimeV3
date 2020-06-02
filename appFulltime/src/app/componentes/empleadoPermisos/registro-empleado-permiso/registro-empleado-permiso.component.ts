@@ -42,6 +42,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   Thoras;
   num: number;
 
+  FechaActual: any;
+
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
   fecCreacionF = new FormControl('', [Validators.required]);
@@ -79,6 +81,20 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    var f = new Date();
+    if (f.getMonth() < 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+    }
+    this.PermisoForm.patchValue({
+      fecCreacionForm: this.FechaActual,
+      estadoForm: 'Pendiente'
+    });
     this.ObtenerTiposPermiso();
     this.ImprimirNumeroPermiso();
   }
@@ -111,6 +127,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
       //console.log("permiso", this.datosPermiso[0]);
+      // if(this.datosPermiso[0].acce_empleado === 1){
       if (this.datosPermiso[0].num_dia_maximo === 0) {
         (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
         (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
@@ -147,6 +164,11 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
           legalizarForm: this.datosPermiso[0].legalizar
         });
       }
+      /*}
+        else {
+        this.toastr.info('El permiso debe ser solicitado por su respectivo Jefe');
+        }*/
+
     })
   }
 
