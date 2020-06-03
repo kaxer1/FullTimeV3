@@ -125,9 +125,9 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (true) {
-      this.selectedIndex = 3;
-    }
+    // if (true) {
+    //   this.selectedIndex = 3;
+    // }
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -198,7 +198,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
-        this.Main.urlImagen = this.urlImagen;
+        // this.Main.urlImagen = this.urlImagen;
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
