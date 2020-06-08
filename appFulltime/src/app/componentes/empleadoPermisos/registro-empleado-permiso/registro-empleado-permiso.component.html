@@ -77,7 +77,7 @@
                 <div class="col-sm">
                     <mat-form-field>
                         <mat-label>Fecha de Salida</mat-label>
-                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF"
+                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" 
                             min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
@@ -88,8 +88,8 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Fecha de Ingreso</mat-label>
-                        <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" [formControl]="fechaFinalF"
-                            required>
+                        <input matInput [matDatepicker]="picker3" (dateInput)="validarFechaIngreso($event, PermisoForm.value)"
+                            placeholder="dd/mm/aaaa" [formControl]="fechaFinalF" required>
                         <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -136,10 +136,15 @@
                     </section>
                     <br>
                     <div class="container">
-                        <form method="post" enctype="multipart/form-data">
-                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
-                            <label for="file" class="btn-2">Subir Certificado</label>
-                        </form>
+                        <div class="row">
+                            <form method="post" enctype="multipart/form-data">
+                                <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                                <label for="file" class="btn-2">Subir Certificado</label>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <input type="text" placeholder="Ningún archivo seleccionado" [value]="name" class="form-control" style="width: 230px;">
+                        </div>
                     </div>
                 </div>
             </div>

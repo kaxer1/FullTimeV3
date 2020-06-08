@@ -25,6 +25,18 @@ class PermisosControlador {
             }
         });
     }
+    ObtenerUnPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const PERMISOS = yield database_1.default.query('SELECT * FROM permisos WHERE id = $1', [id]);
+            if (PERMISOS.rowCount > 0) {
+                return res.json(PERMISOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso } = req.body;
@@ -50,7 +62,7 @@ class PermisosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id_empl_contrato } = req.params;
-                const PERMISO = yield database_1.default.query('SELECT * FROM VistaNombrePermiso  WHERE id_empl_contrato = $1', [id_empl_contrato]);
+                const PERMISO = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.fec_inicio, p.fec_final, p.descripcion, p.dia, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, p.id_empl_contrato, p.id_peri_vacacion, p.hora_numero, p.num_permiso, p.documento, cp.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS cp  WHERE p.id_empl_contrato = $1 AND p.id_tipo_permiso = cp.id', [id_empl_contrato]);
                 return res.json(PERMISO.rows);
             }
             catch (error) {

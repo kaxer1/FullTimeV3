@@ -22,6 +22,10 @@ export class PermisosService {
     return this.http.post(`${this.API_URL}/empleadoPermiso`, datos);
   }
 
+  ObtenerUnPermiso(id: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/${id}`)  
+  }
+
   SubirArchivoRespaldo(formData, id: number) {
     return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)  
   }

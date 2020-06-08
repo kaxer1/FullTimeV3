@@ -16,6 +16,7 @@ class PermisosRutas {
     }
     configuracion() {
         this.router.get('/', permisosControlador_1.default.ListarPermisos);
+        this.router.get('/:id', permisosControlador_1.default.ObtenerUnPermiso);
         this.router.post('/', permisosControlador_1.default.CrearPermisos);
         this.router.get('/documentos/:docs', permisosControlador_1.default.getDoc);
         this.router.get('/numPermiso/:id_empleado', permisosControlador_1.default.ObtenerNumPermiso);

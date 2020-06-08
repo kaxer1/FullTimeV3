@@ -48,6 +48,7 @@ export class VistaElementosComponent implements OnInit {
   ObtenerTipoPermiso() {
     this.rest.getTipoPermisoRest().subscribe(datos => {
       this.tipoPermiso = datos;
+      console.log(this.tipoPermiso);
     }, error => {
     });
   }

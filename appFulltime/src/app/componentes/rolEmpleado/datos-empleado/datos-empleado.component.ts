@@ -123,6 +123,7 @@ export class DatosEmpleadoComponent implements OnInit {
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.empleadoUno = [];
+    let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
@@ -130,8 +131,10 @@ export class DatosEmpleadoComponent implements OnInit {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
-        this.Main.urlImagen = this.urlImagen;
         this.textoBoton = 'Editar Foto';
+        if (idEmpleadoActivo === idemploy){
+          this.Main.urlImagen = this.urlImagen;
+        }
       } else {
         this.iniciales = data[0].nombre.split(" ")[0].slice(0, 1) + data[0].apellido.split(" ")[0].slice(0, 1);
         this.mostrarIniciales = true
@@ -208,10 +211,11 @@ export class DatosEmpleadoComponent implements OnInit {
     this.permisosTotales = [];
     this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id);
+      // console.log("idContrato ", this.idContrato[0].id);
       for (let i = 0; i <= this.idContrato.length - 1; i++) {
         this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
           this.permisosEmpleado = datos;
+          console.log(this.permisosTotales);
           if (this.permisosEmpleado.length === 0) {
             console.log("No se encuentran registros")
           }

@@ -12,6 +12,7 @@ class TipoPermisosRutas {
     }
     configuracion() {
         this.router.get('/', catTipoPermisosControlador_1.default.list);
+        this.router.get('/acceso/:acce_empleado', catTipoPermisosControlador_1.default.listAccess);
         this.router.get('/:id', catTipoPermisosControlador_1.default.getOne);
         this.router.post('/', catTipoPermisosControlador_1.default.create);
         this.router.put('/editar/:id', catTipoPermisosControlador_1.default.editar);

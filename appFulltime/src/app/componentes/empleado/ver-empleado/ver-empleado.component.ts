@@ -193,12 +193,15 @@ export class VerEmpleadoComponent implements OnInit {
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.empleadoUno = [];
+    let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
-        // this.Main.urlImagen = this.urlImagen;
+        if (idEmpleadoActivo === idemploy){
+          this.Main.urlImagen = this.urlImagen;
+        }
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';

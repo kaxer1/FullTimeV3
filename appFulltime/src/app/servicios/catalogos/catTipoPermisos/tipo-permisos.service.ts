@@ -18,6 +18,10 @@ export class TipoPermisosService {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos`);
   }
 
+  getListAccesoTipoPermisoRest(access:number){
+    return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/acceso/${access}`);
+  }
+
   getOneTipoPermisoRest(id:number){
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/${id}`);
   }
