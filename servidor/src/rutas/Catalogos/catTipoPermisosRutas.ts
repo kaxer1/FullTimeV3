@@ -5,7 +5,6 @@ class TipoPermisosRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
@@ -16,6 +15,7 @@ class TipoPermisosRutas {
         this.router.put('/editar/:id', TIPO_PERMISOS_CONTROLADOR.editar);
         this.router.post('/xmlDownload/', TIPO_PERMISOS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', TIPO_PERMISOS_CONTROLADOR.downloadXML);
+        this.router.get('/acceso/:acce_empleado', TIPO_PERMISOS_CONTROLADOR.listAccess);
     }
 }
 

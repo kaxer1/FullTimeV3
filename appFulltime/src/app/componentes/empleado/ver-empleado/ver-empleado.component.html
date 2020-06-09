@@ -122,10 +122,10 @@
                                 </button>
                             </mat-grid-tile>
                             <mat-grid-tile>
-                                <button (click)="generarPdf('print')"
+                                <button (click)="exportToXML()"
                                     class="btn btn-block d-flex align-items-center justify-content-center"
                                     id="Selector">
-                                    <i class="material-icons">print</i><span>Imprimir PDF</span>
+                                    <i class="material-icons fas fa-file-code"></i><span>Exportar a XML</span>
                                 </button>
                             </mat-grid-tile>
                             <mat-grid-tile>
@@ -1139,6 +1139,14 @@
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{pt.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Documento:</label>
+                                    </div>
+                                    <div class="col">
+                                        <a href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}" target="_blank">ver</a>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>

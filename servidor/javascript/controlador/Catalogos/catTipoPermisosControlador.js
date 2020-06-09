@@ -22,6 +22,13 @@ class TipoPermisosControlador {
             res.jsonp(rolPermisos.rows);
         });
     }
+    listAccess(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const acce_empleado = req.params.acce_empleado;
+            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY id', [acce_empleado]);
+            res.json(rolPermisos.rows);
+        });
+    }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;

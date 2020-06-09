@@ -190,12 +190,15 @@ export class VerEmpleadoComponent implements OnInit {
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.empleadoUno = [];
+    let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
-        this.Main.urlImagen = this.urlImagen;
+        if (idEmpleadoActivo === idemploy){
+          this.Main.urlImagen = this.urlImagen;
+        }
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
@@ -1063,6 +1066,7 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+
   /* ***************************************************************************************************** 
    *                                        PLANTILLA VACIA DE HORARIOS UN EMPLEADO
    * *****************************************************************************************************/
@@ -1084,6 +1088,64 @@ export class VerEmpleadoComponent implements OnInit {
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wsr, 'Empleado Horario');
     xlsx.writeFile(wb, "Horario Empleado" + '.xlsx');
+  }
+
+  /* ***************************************************************************************************** 
+   *                              MÉTODO PARA IMPRIMIR EN XML
+   * *****************************************************************************************************/
+  nacionalidades: any = [];
+  obtenerNacionalidades() {
+    this.restEmpleado.getListaNacionalidades().subscribe(res => {
+      this.nacionalidades = res;
+    });
+  }
+
+  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
+  GeneroSelect: any = ['Masculino','Femenino'];
+  EstadoSelect: any = ['Activo','Inactivo'];
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloEmpleado = [];
+    this.empleadoUno.forEach(obj => {
+      var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+      var genero = this.GeneroSelect[obj.genero - 1];
+      var estado = this.EstadoSelect[obj.estado - 1];
+      let nacionalidad;
+      this.nacionalidades.forEach(element => {
+        if (obj.id_nacionalidad == element.id) {
+          nacionalidad = element.nombre;
+        }
+      });
+
+      objeto = {
+        "empleado": {
+          '@id': obj.id,
+          "cedula": obj.cedula,
+          "apellido": obj.apellido,
+          "nombre": obj.nombre,
+          "estadoCivil": estadoCivil,
+          "genero": genero,
+          "correo": obj.correo,
+          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
+          "estado": estado,
+          "correoAlternativo": obj.mail_alternativo,
+          "domicilio": obj.domicilio,
+          "telefono": obj.telefono,
+          "nacionalidad": nacionalidad,
+          "imagen": obj.imagen
+        }
+      }
+      arregloEmpleado.push(objeto)
+    });
+    
+    this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
+      this.data = res;
+      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
   }
 
 }

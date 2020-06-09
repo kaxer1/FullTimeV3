@@ -97,6 +97,10 @@ import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/e
 import { MetodosComponent } from './componentes/metodoEliminar/metodos.component';
 import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
 import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
+import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/editar-empleado-permiso/editar-empleado-permiso.component';
+import { HomeEmpleadoComponent } from './componentes/rolEmpleado/home-empleado/home-empleado.component';
+import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
+
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
 
@@ -312,7 +316,9 @@ import { MatTabsModule } from '@angular/material/tabs';
     PlanificacionMultipleComponent,
     VerHorarioDetalleComponent,
     EditarHorarioComponent,
-
+    EditarEmpleadoPermisoComponent,
+    HomeEmpleadoComponent,
+    ListarEmpleadoPermisoComponent,
   ],
 
   imports: [

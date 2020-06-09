@@ -25,6 +25,29 @@ class PermisosControlador {
             }
         });
     }
+    ListarEstadosPermisos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC');
+            if (PERMISOS.rowCount > 0) {
+                return res.json(PERMISOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ObtenerUnPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const PERMISOS = yield database_1.default.query('SELECT * FROM permisos WHERE id = $1', [id]);
+            if (PERMISOS.rowCount > 0) {
+                return res.json(PERMISOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso } = req.body;
@@ -72,6 +95,14 @@ class PermisosControlador {
             let id = req.params.id;
             yield database_1.default.query('UPDATE permisos SET documento = $2 WHERE id = $1', [id, doc]);
             res.jsonp({ message: 'Documento Actualizado' });
+        });
+    }
+    ActualizarEstado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { estado } = req.body;
+            yield database_1.default.query('UPDATE permisos SET estado = $1 WHERE id = $2', [estado, id]);
+            res.json({ message: 'Estado de permiso actualizado exitosamente' });
         });
     }
 }

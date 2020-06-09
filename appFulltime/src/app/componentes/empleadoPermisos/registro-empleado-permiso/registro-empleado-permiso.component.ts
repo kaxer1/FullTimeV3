@@ -7,6 +7,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
 
 interface opcionesDiasHoras {
   valor: string;
@@ -56,6 +57,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   diaLibreF = new FormControl('');
   estadoF = new FormControl('');
   legalizarF = new FormControl('', [Validators.required]);
+  nombreCertificadoF = new FormControl('',Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -70,12 +72,14 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     diaLibreForm: this.diaLibreF,
     estadoForm: this.estadoF,
     legalizarForm: this.legalizarF,
+    nombreCertificadoForm: this.nombreCertificadoF
   });
 
   constructor(
     private restTipoP: TipoPermisosService,
     private restP: PermisosService,
     private toastr: ToastrService,
+    private loginServise: LoginService,
     public dialogRef: MatDialogRef<RegistroEmpleadoPermisoComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
   ) { }
@@ -101,9 +105,16 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   ObtenerTiposPermiso() {
     this.tipoPermisos = [];
-    this.restTipoP.getTipoPermisoRest().subscribe(datos => {
-      this.tipoPermisos = datos;
-    })
+    let rol = this.loginServise.getRol();
+    if ( rol >= 2){
+      this.restTipoP.getListAccesoTipoPermisoRest(1).subscribe(res => {
+        this.tipoPermisos = res;
+      });
+    } else {
+      this.restTipoP.getTipoPermisoRest().subscribe(datos => {
+        this.tipoPermisos = datos;
+      });
+    }
   }
 
   ImprimirNumeroPermiso() {
@@ -118,6 +129,33 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       }
       console.log("numPermiso", this.datoNumPermiso[0].max)
     })
+  }
+  
+  dSalida: number = 0;
+  validarFechaSalida(event) {
+    this.dSalida = event.value._i.date;
+    console.log(this.dSalida);
+    console.log(event);
+  }
+
+  dIngreso: number = 0;
+  validarFechaIngreso(event, form) {
+    this.dIngreso = event.value._i.date;
+    console.log(form);
+    console.log(form.solicitarForm);
+    if (form.solicitarForm === "Días"){
+      const resta = this.dIngreso - this.dSalida;
+      console.log(resta);
+      if (resta != form.diasForm) {
+        this.toastr.error('El día de ingreso no puede superar o ser menor los dias permitidos, de acuerdo a los días de permiso', 'Día de ingreso incorrecto');
+        this.PermisoForm.patchValue({ fechaFinalForm: ''});
+      }
+    } else {
+      if (this.dSalida != this.dIngreso) {
+        this.toastr.error('El permiso solo permite en horas, y debe ingresar el mismo día en el que sale', 'Día de ingreso incorrecto');
+        this.PermisoForm.patchValue({ fechaFinalForm: ''});
+      }
+    }
   }
 
   ImprimirDatos(form) {
@@ -361,7 +399,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
-    console.log(element.target.files);
+    const name = this.archivoSubido[0].name;
+    console.log(this.archivoSubido[0].name);
+    this.PermisoForm.patchValue({nombreCertificadoForm: name});
   }
 
   SubirRespaldo(id: number) {

@@ -287,7 +287,6 @@ export class ListaEmpleadosComponent implements OnInit {
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
    * ****************************************************************************************************/
-
   urlxml: string;
   data: any = [];
   exportToXML() {

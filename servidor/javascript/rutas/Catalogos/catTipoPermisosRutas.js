@@ -17,6 +17,7 @@ class TipoPermisosRutas {
         this.router.put('/editar/:id', catTipoPermisosControlador_1.default.editar);
         this.router.post('/xmlDownload/', catTipoPermisosControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catTipoPermisosControlador_1.default.downloadXML);
+        this.router.get('/acceso/:acce_empleado', catTipoPermisosControlador_1.default.listAccess);
     }
 }
 const TIPO_PERMISOS_RUTAS = new TipoPermisosRutas();

@@ -1,0 +1,114 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <!-- caja del titulo -->
+      <div class="row">
+        <div class="col-sm"style="text-align: center;">
+          <span class="text-titulo">Estadísticas Empleado</span>
+        </div>
+        <div class="col-sm" style="margin-top: 3px; text-align: center;">
+          <span class="text-titulo-fecha">{{fecha}}</span>
+        </div>
+        <div class="col-sm">
+          <div class="btn-group btn-group-toggle" data-toggle="buttons" style="float: right; margin-top: 5px;">
+            <label class="btn btn-warning btn-sm">
+              <input type="radio" name="options" id="option1"> Diario
+            </label>
+            <label class="btn btn-primary btn-sm">
+              <input type="radio" name="options" id="option2"> Semanal
+            </label>
+            <label class="btn btn-danger btn-sm">
+              <input type="radio" name="options" id="option3"> Anual
+            </label>
+          </div>
+        </div>
+      </div>
+      <br>
+    <!-- cajas de los graficos pequeños-->
+      <div class="row">
+        <div class="col-sm">
+          <!-- caja 1 -->
+          <mat-card class="example-card mat-elevation-z8">
+            <div echarts [options]="options" [merge]="updateOptions" class="demo-chart"></div>
+          </mat-card>
+        </div>
+        <div class="col-sm">
+          <mat-card class="example-card mat-elevation-z8">
+            <echarts [initOpts]="initOpts" [options]="optionsBarras"></echarts>
+          </mat-card>
+        </div>
+        <!-- <div class="col-sm">Caja3</div>
+        <div class="col-sm">Caja4</div> -->
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-sm">
+          <mat-card class="example-card mat-elevation-z8">
+            <div echarts [options]="optionsFila2"></div>
+          </mat-card>
+        </div>
+        <div class="col-sm">
+          <div echarts [options]="options" class="demo-chart"></div>
+        </div>
+        <!-- <div class="col-sm">Caja3</div>
+        <div class="col-sm">Caja4</div> -->
+      </div>
+      <br>
+      <!-- caja de los graficos grandes -->
+      <div class="row">
+        <div class="col-md">
+          <mat-card class="example-card mat-elevation-z8">
+            <div class="chart">
+              <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+                [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
+              </canvas>
+            </div>
+            <!-- <div> -->
+              <!-- <button mat-button mat-raised-button color="primary" (click)="pieChartLegend=!pieChartLegend">Toggle
+                Legend</button>
+              <button mat-button mat-raised-button color="primary" (click)="changeLabels()">Change Labels</button>
+              <button mat-button mat-raised-button color="primary" (click)="addSlice()">Add Slice</button>
+              <button mat-button mat-raised-button color="primary" (click)="removeSlice()">Remove Slice</button>
+              <button mat-button mat-raised-button color="primary" (click)="changeLegendPosition()">Change Legend
+                Position</button> -->
+            <!-- </div> -->
+          </mat-card>
+        </div>
+        <div class="col-md">
+          <mat-card class="example-card mat-elevation-z8">
+      
+            <div class="flex">
+              <div class="flex-item">
+                <div style="display: block;">
+                  <canvas baseChart width="600" height="600"
+                  [datasets]="lineChartData"
+                  [labels]="lineChartLabels"
+                  [options]="lineChartOptions"
+                  [colors]="lineChartColors"
+                  [legend]="lineChartLegend"
+                  [chartType]="lineChartType"
+                  [plugins]="lineChartPlugins"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"></canvas>
+                </div>
+              </div>
+              <!-- <div class="flex-item">
+                <table class="table table-responsive table-condensed">
+                  <tr>
+                    <th *ngFor="let label of lineChartLabels">{{label}}</th>
+                  </tr>
+                  <tr *ngFor="let d of lineChartData; let i=index" [class]="'line-'+i">
+                    <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+                  </tr>
+                </table>
+                <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
+                <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
+                <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
+                <button mat-button mat-raised-button color="primary" (click)="hideOne()">Toggle Series B</button>
+                <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
+              </div> -->
+            </div>
+          </mat-card>
+        </div>
+      </div>
+      
+    </div>
+    
