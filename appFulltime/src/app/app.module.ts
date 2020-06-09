@@ -190,6 +190,9 @@ import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/v
 import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
 import { EliminarNivelTitulosComponent } from './componentes/nivelTitulos/eliminar-nivel-titulos/eliminar-nivel-titulos.component';
 import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/eliminar-procesos/eliminar-procesos.component';
+import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/editar-empleado-permiso/editar-empleado-permiso.component';
+import { HomeEmpleadoComponent } from './componentes/rolEmpleado/home-empleado/home-empleado.component';
+import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
 
 @NgModule({
   declarations: [
@@ -315,6 +318,9 @@ import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/e
     EditarHorarioComponent,
     EliminarNivelTitulosComponent,
     EliminarProcesosComponent,
+    EditarEmpleadoPermisoComponent,
+    HomeEmpleadoComponent,
+    ListarEmpleadoPermisoComponent,
 
   ],
 

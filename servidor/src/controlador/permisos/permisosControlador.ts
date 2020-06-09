@@ -13,6 +13,16 @@ class PermisosControlador {
         }
     }
 
+    public async ListarEstadosPermisos(req: Request, res: Response) {
+        const PERMISOS = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC');
+        if (PERMISOS.rowCount > 0) {
+            return res.json(PERMISOS.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
+    }
+
     public async ObtenerUnPermiso(req: Request, res: Response) {
         const id = req.params.id;
         const PERMISOS = await pool.query('SELECT * FROM permisos WHERE id = $1',[id]);
@@ -67,6 +77,13 @@ class PermisosControlador {
         await pool.query('UPDATE permisos SET documento = $2 WHERE id = $1', [id, doc]);
         res.json({ message: 'Documento Actualizado'});
     }
+
+    public async ActualizarEstado(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        const { estado } = req.body;
+        await pool.query('UPDATE permisos SET estado = $1 WHERE id = $2', [estado, id]);
+        res.json({ message: 'Estado de permiso actualizado exitosamente' });
+      }
 }
 
 export const PERMISOS_CONTROLADOR = new PermisosControlador();

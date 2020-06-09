@@ -755,4 +755,65 @@ export class DatosEmpleadoComponent implements OnInit {
   }
 
 
+   /**
+   * 
+   * METODO PARA EXPORTAR A XML
+   * 
+   */
+
+  nacionalidades: any = [];
+  obtenerNacionalidades() {
+    this.restEmpleado.getListaNacionalidades().subscribe(res => {
+      this.nacionalidades = res;
+    });
+  }
+
+  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
+  GeneroSelect: any = ['Masculino','Femenino'];
+  EstadoSelect: any = ['Activo','Inactivo'];
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloEmpleado = [];
+    this.empleadoUno.forEach(obj => {
+      var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+      var genero = this.GeneroSelect[obj.genero - 1];
+      var estado = this.EstadoSelect[obj.estado - 1];
+      let nacionalidad;
+      this.nacionalidades.forEach(element => {
+        if (obj.id_nacionalidad == element.id) {
+          nacionalidad = element.nombre;
+        }
+      });
+
+      objeto = {
+        "empleado": {
+          '@id': obj.id,
+          "cedula": obj.cedula,
+          "apellido": obj.apellido,
+          "nombre": obj.nombre,
+          "estadoCivil": estadoCivil,
+          "genero": genero,
+          "correo": obj.correo,
+          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
+          "estado": estado,
+          "correoAlternativo": obj.mail_alternativo,
+          "domicilio": obj.domicilio,
+          "telefono": obj.telefono,
+          "nacionalidad": nacionalidad,
+          "imagen": obj.imagen
+        }
+      }
+      arregloEmpleado.push(objeto)
+    });
+    
+    this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
+      this.data = res;
+      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
 }

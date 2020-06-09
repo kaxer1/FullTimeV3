@@ -57,6 +57,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   diaLibreF = new FormControl('');
   estadoF = new FormControl('');
   legalizarF = new FormControl('', [Validators.required]);
+  nombreCertificadoF = new FormControl('',Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -71,6 +72,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     diaLibreForm: this.diaLibreF,
     estadoForm: this.estadoF,
     legalizarForm: this.legalizarF,
+    nombreCertificadoForm: this.nombreCertificadoF
   });
 
   constructor(
@@ -394,12 +396,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   archivoForm = new FormControl('');
   nameFile: string;
   archivoSubido: Array<File>;
-  name: string = '';
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
-    console.log(element.target.files);
-    this.name = this.archivoSubido[0].name;
+    const name = this.archivoSubido[0].name;
+    console.log(this.archivoSubido[0].name);
+    this.PermisoForm.patchValue({nombreCertificadoForm: name});
   }
 
   SubirRespaldo(id: number) {

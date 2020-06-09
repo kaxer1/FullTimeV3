@@ -289,6 +289,12 @@ export class ListaEmpleadosComponent implements OnInit {
     xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
+  /**
+   * 
+   * METODO PARA EXPORTAR A XML
+   * 
+   */
+
   urlxml: string;
   data: any = [];
   exportToXML() {

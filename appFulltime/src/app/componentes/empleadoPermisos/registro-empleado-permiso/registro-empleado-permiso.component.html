@@ -12,7 +12,7 @@
                     <mat-form-field>
                         <mat-label>Fecha de Creación</mat-label>
                         <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecCreacionF"
-                            min="1950-01-31" max="2050-01-31" required>
+                            min="1950-01-31" max="2050-01-31" required [disabled]="true">
                         <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -143,7 +143,7 @@
                             </form>
                         </div>
                         <div class="row">
-                            <input type="text" placeholder="Ningún archivo seleccionado" [value]="name" class="form-control" style="width: 230px;">
+                            <input type="text" placeholder="Ningún archivo seleccionado" class="form-control" style="width: 230px;" [formControl]="nombreCertificadoF">
                         </div>
                     </div>
                 </div>
