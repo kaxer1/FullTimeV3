@@ -20,10 +20,10 @@ class DetalleCatalogoHorarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const HORARIO = yield database_1.default.query('SELECT * FROM deta_horarios');
             if (HORARIO.rowCount > 0) {
-                return res.json(HORARIO.rows);
+                return res.jsonp(HORARIO.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -31,7 +31,7 @@ class DetalleCatalogoHorarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion } = req.body;
             yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion]);
-            res.json({ message: 'Detalle de Horario se registró con éxito' });
+            res.jsonp({ message: 'Detalle de Horario se registró con éxito' });
         });
     }
     ListarUnDetalleHorario(req, res) {
@@ -39,10 +39,10 @@ class DetalleCatalogoHorarioControlador {
             const { id_horario } = req.params;
             const HORARIO = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [id_horario]);
             if (HORARIO.rowCount > 0) {
-                return res.json(HORARIO.rows);
+                return res.jsonp(HORARIO.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -75,7 +75,7 @@ class DetalleCatalogoHorarioControlador {
                     yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }

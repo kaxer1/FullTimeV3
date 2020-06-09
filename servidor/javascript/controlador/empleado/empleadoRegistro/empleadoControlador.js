@@ -22,7 +22,7 @@ class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const empleado = yield database_1.default.query('SELECT * FROM empleados ORDER BY id');
-            res.json(empleado.rows);
+            res.jsonp(empleado.rows);
         });
     }
     getOne(req, res) {
@@ -30,9 +30,9 @@ class EmpleadoControlador {
             const { id } = req.params;
             const unEmpleado = yield database_1.default.query('SELECT * FROM empleados WHERE id = $1', [id]);
             if (unEmpleado.rowCount > 0) {
-                return res.json(unEmpleado.rows);
+                return res.jsonp(unEmpleado.rows);
             }
-            res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+            res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
         });
     }
     getImagen(req, res) {
@@ -48,7 +48,7 @@ class EmpleadoControlador {
             yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
             const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
             const idEmployGuardado = oneEmpley.rows[0].id;
-            res.json({ message: 'Empleado guardado', id: idEmployGuardado });
+            res.jsonp({ message: 'Empleado guardado', id: idEmployGuardado });
         });
     }
     editar(req, res) {
@@ -56,7 +56,7 @@ class EmpleadoControlador {
             const id = req.params.id;
             const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad } = req.body;
             yield database_1.default.query('UPDATE empleados SET cedula = $2, apellido = $3, nombre = $4, esta_civil = $5, genero = $6, correo = $7, fec_nacimiento = $8, estado = $9, mail_alternativo = $10, domicilio = $11, telefono = $12, id_nacionalidad = $13 WHERE id = $1 ', [id, cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
-            res.json({ message: 'Empleado Actualizado' });
+            res.jsonp({ message: 'Empleado Actualizado' });
         });
     }
     crearImagenEmpleado(req, res) {
@@ -74,16 +74,16 @@ class EmpleadoControlador {
                             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
                             fs_1.default.unlinkSync(direccionCompleta);
                             yield database_1.default.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-                            res.json({ message: 'Imagen Actualizada' });
+                            res.jsonp({ message: 'Imagen Actualizada' });
                         }
                         catch (error) {
                             yield database_1.default.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-                            res.json({ message: 'Imagen Actualizada' });
+                            res.jsonp({ message: 'Imagen Actualizada' });
                         }
                     }
                     else {
                         yield database_1.default.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-                        res.json({ message: 'Imagen Actualizada' });
+                        res.jsonp({ message: 'Imagen Actualizada' });
                     }
                 }));
             }
@@ -119,10 +119,10 @@ class EmpleadoControlador {
                     yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
                 }
                 else {
-                    res.json({ error: 'plantilla equivocada' });
+                    res.jsonp({ error: 'plantilla equivocada' });
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -130,7 +130,7 @@ class EmpleadoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { observacion, id_empleado, id_titulo } = req.body;
             yield database_1.default.query('INSERT INTO empl_titulos ( observacion, id_empleado, id_titulo ) VALUES ($1, $2, $3)', [observacion, id_empleado, id_titulo]);
-            res.json({ message: 'Titulo del empleado Guardado' });
+            res.jsonp({ message: 'Titulo del empleado Guardado' });
         });
     }
     editarTituloDelEmpleado(req, res) {
@@ -138,14 +138,14 @@ class EmpleadoControlador {
             const id = req.params.id_empleado_titulo;
             const { observacion, id_titulo } = req.body;
             yield database_1.default.query('UPDATE empl_titulos SET observacion = $1, id_titulo = $2 WHERE id = $3 ', [observacion, id_titulo, id]);
-            res.json({ message: 'Titulo del empleado Actualizado' });
+            res.jsonp({ message: 'Titulo del empleado Actualizado' });
         });
     }
     eliminarTituloDelEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_empleado_titulo;
             yield database_1.default.query('DELETE FROM empl_titulos WHERE id = $1', [id]);
-            res.json({ message: 'Registro eliminado' });
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
     getTitulosDelEmpleado(req, res) {
@@ -153,9 +153,9 @@ class EmpleadoControlador {
             const { id_empleado } = req.params;
             const unEmpleadoTitulo = yield database_1.default.query('SELECT et.id, et.observacion As observaciones, et.id_titulo, et.id_empleado, ct.nombre, nt.nombre as nivel FROM empl_titulos AS et, cg_titulos AS ct, nivel_titulo AS nt WHERE et.id_empleado = $1 and et.id_titulo = ct.id and ct.id_nivel = nt.id ORDER BY id', [id_empleado]);
             if (unEmpleadoTitulo.rowCount > 0) {
-                return res.json(unEmpleadoTitulo.rows);
+                return res.jsonp(unEmpleadoTitulo.rows);
             }
-            res.status(404).json({ text: 'El empleado no tiene titulos asignados' });
+            res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
         });
     }
     FileXML(req, res) {
@@ -169,7 +169,7 @@ class EmpleadoControlador {
                 }
                 console.log("Archivo guardado");
             });
-            res.json({ text: 'XML creado', name: filename });
+            res.jsonp({ text: 'XML creado', name: filename });
         });
     }
     downloadXML(req, res) {

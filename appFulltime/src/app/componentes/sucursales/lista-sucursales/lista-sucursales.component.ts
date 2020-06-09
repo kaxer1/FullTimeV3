@@ -4,6 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
 import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-sucursal/editar-sucursal.component';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
@@ -95,5 +101,139 @@ export class ListaSucursalesComponent implements OnInit {
       return false;
     }
   }
+
+  /****************************************************************************************************** 
+   *                                         MÉTODO PARA EXPORTAR A PDF
+   ******************************************************************************************************/
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Sucursales', this.sucursales);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Lista de Sucursales',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFSucursales(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 12,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 10
+        }
+      }
+    };
+  }
+
+  presentarDataPDFSucursales() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Empresa', style: 'tableHeader' },
+            { text: 'Sucursal', style: 'tableHeader' },
+            { text: 'Ciudad', style: 'tableHeader' }
+          ],
+          ...this.sucursales.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nomempresa, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.descripcion, style: 'itemsTable' }
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.sucursales);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Sucursales');
+    xlsx.writeFile(wb, "Sucursales" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.sucursales);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "SucursalesCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+ *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+ * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloSucursales = [];
+    this.sucursales.forEach(obj => {
+      objeto = {
+        "sucursal": {
+          '@id': obj.id,
+          "empresa": obj.nomempresa,
+          "sucursal": obj.nombre,
+          "ciudad": obj.descripcion,
+        }
+      }
+      arregloSucursales.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloSucursales).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/sucursales/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
 
 }

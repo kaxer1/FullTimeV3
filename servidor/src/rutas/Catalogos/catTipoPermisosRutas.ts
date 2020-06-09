@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import tipoPermisosControlador from '../../controlador/catalogos/catTipoPermisosControlador';
+import TIPO_PERMISOS_CONTROLADOR from '../../controlador/catalogos/catTipoPermisosControlador';
 
 class TipoPermisosRutas {
     public router: Router = Router();
@@ -10,13 +10,15 @@ class TipoPermisosRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', tipoPermisosControlador.list);
-        this.router.get('/:id', tipoPermisosControlador.getOne);
-        this.router.post('/', tipoPermisosControlador.create);
-        this.router.put('/editar/:id', tipoPermisosControlador.editar);
+        this.router.get('/', TIPO_PERMISOS_CONTROLADOR.list);
+        this.router.get('/:id', TIPO_PERMISOS_CONTROLADOR.getOne);
+        this.router.post('/', TIPO_PERMISOS_CONTROLADOR.create);
+        this.router.put('/editar/:id', TIPO_PERMISOS_CONTROLADOR.editar);
+        this.router.post('/xmlDownload/', TIPO_PERMISOS_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', TIPO_PERMISOS_CONTROLADOR.downloadXML);
     }
 }
 
-const tipoPermisosRutas = new TipoPermisosRutas();
+const TIPO_PERMISOS_RUTAS = new TipoPermisosRutas();
 
-export default tipoPermisosRutas.router;
+export default TIPO_PERMISOS_RUTAS.router;

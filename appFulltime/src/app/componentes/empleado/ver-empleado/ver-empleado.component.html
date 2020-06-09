@@ -277,7 +277,8 @@
                                 </div>
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
-                                        <a mat-button type="submit" (click)="ConfirmarDeleteDiscapacidad(d.id_empleado)" matSuffix>
+                                        <a mat-button type="submit" (click)="ConfirmarDeleteDiscapacidad(d.id_empleado)"
+                                            matSuffix>
                                             <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
                                                 matTooltip="Eliminar registro">
                                                 <p>Eliminar</p>
@@ -492,7 +493,8 @@
                         </mat-card-content>
                     </mat-card>
                     <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo" [idEmploy]="idEmpleado" id="editarCargo">
+                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo"
+                            [idEmploy]="idEmpleado" id="editarCargo">
                         </app-editar-cargo>
                     </div>
                 </div>
@@ -525,14 +527,28 @@
                     </div>
                     <mat-card class="example-card mat-elevation-z9" id="carta1">
                         <div class="container">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChangeHorario($event)" type="file"
-                                    [formControl]="archivoHorarioForm" id="file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir Horario</label>
-                            </form>
+                            <div class="row">
+                                <div class="col-md" style="width: 700px;">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input (change)="fileChangeHorario($event)" type="file"
+                                            [formControl]="archivoHorarioForm" id="file"
+                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                        <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="departamento-tooltip"
+                                            matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir
+                                            Horario</label>
+                                    </form>
+                                </div>
+                                <div class="col-md">
+                                    <button (click)="DescargarPlantillaHorario()" mat-button type="submit"
+                                        id="descargar" class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="Presionar para descargar Plantilla para carga multiple de horarios del empleado">
+                                        <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
+                                        Empleado
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </mat-card>
                 </div>

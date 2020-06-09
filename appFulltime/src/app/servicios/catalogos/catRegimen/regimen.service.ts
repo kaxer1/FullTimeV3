@@ -28,4 +28,8 @@ export class RegimenService {
   ActualizarRegimen(datos: any) {
     return this.http.put(`${this.API_URL}/regimenLaboral`, datos);
   }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/regimenLaboral/xmlDownload`, data);
+  }
 }

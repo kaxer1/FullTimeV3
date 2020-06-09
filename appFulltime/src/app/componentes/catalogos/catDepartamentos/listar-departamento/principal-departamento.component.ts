@@ -4,6 +4,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { EditarDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
@@ -24,6 +30,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
   filtroEmpresaSuc = '';
   filtroDeparPadre = '';
   departamentos: any = [];
+  prueba: any = [];
 
   // Control de campos y validaciones del formulario
   departamentoF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
@@ -54,7 +61,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     this.ListaDepartamentos();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1
   }
@@ -73,7 +80,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
   AbrirVentanaEditarDepartamento(departamento: any): void {
     const DIALOG_REF = this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
       { width: '600px', data: departamento });
-      DIALOG_REF.disableClose = true;
+    DIALOG_REF.disableClose = true;
   }
 
   LimpiarCampos() {
@@ -84,7 +91,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
       buscarEmpresaForm: ''
     });
     this.ListaDepartamentos();
-    
+
   }
 
   ObtenerMensajeDepartamentoLetras() {
@@ -117,6 +124,145 @@ export class PrincipalDepartamentoComponent implements OnInit {
       this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
       return false;
     }
+  }
+
+  /****************************************************************************************************** 
+   *                                         MÉTODO PARA EXPORTAR A PDF
+   ******************************************************************************************************/
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Departamentos', this.departamentos);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Lista de Departamentos',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFDepartamentos(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 12,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 10
+        }
+      }
+    };
+  }
+
+  presentarDataPDFDepartamentos() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Empresa', style: 'tableHeader' },
+            { text: 'Sucursal', style: 'tableHeader' },
+            { text: 'Departamento', style: 'tableHeader' },
+            { text: 'Nivel', style: 'tableHeader' },
+            { text: 'Departamento Superior', style: 'tableHeader' }
+          ],
+          ...this.departamentos.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nomempresa, style: 'itemsTable' },
+              { text: obj.nomsucursal, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.nivel, style: 'itemsTable' },
+              { text: obj.departamento_padre, style: 'itemsTable' }
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.departamentos);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Departamentos');
+    xlsx.writeFile(wb, "Departamentos" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.departamentos);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "DepartamentosCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+ *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+ * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloDepartamentos = [];
+    this.departamentos.forEach(obj => {
+      objeto = {
+        "departamento": {
+          '@id': obj.id,
+          "empresa": obj.nomempresa,
+          "sucursal": obj.nomsucursal,
+          "departamento": obj.nombre,
+          "nivel": obj.nivel,
+          "departamento_superior": obj.departamento_padre,
+        }
+      }
+      arregloDepartamentos.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloDepartamentos).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
   }
 
 }

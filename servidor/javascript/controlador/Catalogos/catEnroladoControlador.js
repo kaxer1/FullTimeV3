@@ -15,15 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 class EnroladoControlador {
     ListarEnrolados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const ENROLADOS = yield database_1.default.query('SELECT * FROM cg_enrolados');
             if (ENROLADOS.rowCount > 0) {
-                return res.json(ENROLADOS.rows);
+                return res.jsonp(ENROLADOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -32,10 +33,10 @@ class EnroladoControlador {
             const { id } = req.params;
             const ENROLADOS = yield database_1.default.query('SELECT * FROM cg_enrolados WHERE id = $1', [id]);
             if (ENROLADOS.rowCount > 0) {
-                return res.json(ENROLADOS.rows);
+                return res.jsonp(ENROLADOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -43,7 +44,7 @@ class EnroladoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = req.body;
             yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
-            res.json({ message: 'Se ha añadido correctamente al catálogo enrolados' });
+            res.jsonp({ message: 'Se ha añadido correctamente al catálogo enrolados' });
         });
     }
     ObtenerRegistroEnrolado(req, res) {
@@ -51,10 +52,10 @@ class EnroladoControlador {
             const { id_usuario } = req.params;
             const ENROLADOS = yield database_1.default.query('SELECT id FROM cg_enrolados WHERE id_usuario = $1', [id_usuario]);
             if (ENROLADOS.rowCount > 0) {
-                return res.json(ENROLADOS.rows);
+                return res.jsonp(ENROLADOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se ha encontrado en el catálogo enrolados' });
+                return res.status(404).jsonp({ text: 'No se ha encontrado en el catálogo enrolados' });
             }
         });
     }
@@ -62,10 +63,10 @@ class EnroladoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const ENROLADOS = yield database_1.default.query('SELECT MAX(id) FROM cg_enrolados');
             if (ENROLADOS.rowCount > 0) {
-                return res.json(ENROLADOS.rows);
+                return res.jsonp(ENROLADOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -73,14 +74,14 @@ class EnroladoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_usuario, nombre, contrasenia, activo, finger, data_finger, id } = req.body;
             yield database_1.default.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6 WHERE id = $7', [id_usuario, nombre, contrasenia, activo, finger, data_finger, id]);
-            res.json({ message: 'Usuario Enrolado actualizado exitosamente' });
+            res.jsonp({ message: 'Usuario Enrolado actualizado exitosamente' });
         });
     }
     EliminarEnrolado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM cg_enrolados WHERE id = $1', [id]);
-            res.json({ message: 'Registro eliminado' });
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
     CargaPlantillaEnrolado(req, res) {
@@ -98,11 +99,32 @@ class EnroladoControlador {
                     yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
                 }
                 else {
-                    res.json({ error: 'plantilla equivocada' });
+                    res.jsonp({ error: 'plantilla equivocada' });
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Enrolados-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
 }

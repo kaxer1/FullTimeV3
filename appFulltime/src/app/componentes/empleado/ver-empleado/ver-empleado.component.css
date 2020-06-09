@@ -135,3 +135,24 @@ td { padding-top: 10px; text-align: center; }
 [type="file"] + label.btn-2:hover::before {
     right: 80%
 }
+
+#descargar:hover { 
+    font-weight: bold; 
+    font-size: 16px; 
+    font-family: "Poppins", sans-serif; 
+    border-radius: 5px; 
+    height: 55px; 
+    background-color: rgb(38, 218, 15); 
+    color: white;
+}
+
+#descargar { 
+    font-weight: bold; 
+    font-size: 16px; 
+    font-family: "Poppins", sans-serif; 
+    border-radius: 5px; 
+    height: 55px; 
+    background-color: #93a3c7; 
+    overflow: hidden;
+    color: white;
+}

@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import TIPO_COMIDAS_CONTROLADOR from '../../controlador/catalogos/catTipoComidasControlador';
 
+const multipart = require('connect-multiparty');  
+
+const multipartMiddleware = multipart({  
+    uploadDir: './plantillas',
+});
+
 class TipoComidasRuta {
     public router: Router = Router();
 
@@ -15,6 +21,9 @@ class TipoComidasRuta {
         this.router.post('/', TIPO_COMIDAS_CONTROLADOR.CrearTipoComidas);
         this.router.put('/', TIPO_COMIDAS_CONTROLADOR.ActualizarComida);
         // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.post('/xmlDownload/', TIPO_COMIDAS_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', TIPO_COMIDAS_CONTROLADOR.downloadXML);
+        this.router.post('/upload', multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidasPlantilla);
     }
 }
 

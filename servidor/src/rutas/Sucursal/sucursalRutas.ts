@@ -16,7 +16,8 @@ class SucursalRutas {
         this.router.post('/', SUCURSAL_CONTROLADOR.CrearSucursal);
         this.router.get('/ultimoId', SUCURSAL_CONTROLADOR.ObtenerUltimoId);
         this.router.put('/', SUCURSAL_CONTROLADOR.ActualizarSucursal);
-
+        this.router.post('/xmlDownload/', SUCURSAL_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', SUCURSAL_CONTROLADOR.downloadXML);
     }
 }
 

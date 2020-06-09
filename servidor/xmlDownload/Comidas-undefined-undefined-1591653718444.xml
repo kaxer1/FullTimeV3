@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<root>
+  <roles id="4">
+    <nombre>Arroz y papas</nombre>
+    <observacion>Postre gelatina</observacion>
+    <valor>2.75</valor>
+  </roles>
+  <roles id="2">
+    <nombre>Combo 1</nombre>
+    <observacion>Con postre</observacion>
+    <valor>2.5</valor>
+  </roles>
+  <roles id="3">
+    <nombre>Combo 2</nombre>
+    <observacion>Incluye papas</observacion>
+    <valor>2.25</valor>
+  </roles>
+  <roles id="1">
+    <nombre>Pescado Frito</nombre>
+    <observacion>Con yuca</observacion>
+    <valor>2.55</valor>
+  </roles>
+</root>

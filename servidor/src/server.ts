@@ -62,7 +62,7 @@ class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.raw({ type: 'image/*', limit:'1Mb' }));
-    }
+   }
 
     rutas(): void {
         this.app.use('/', indexRutas);

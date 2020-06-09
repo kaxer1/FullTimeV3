@@ -37,4 +37,8 @@ export class FeriadosService {
     return this.http.post(this.API_URL + '/feriados/upload', formData)  
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/feriados/xmlDownload`, data);
+  }
+
 }

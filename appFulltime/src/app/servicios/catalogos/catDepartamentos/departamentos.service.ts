@@ -46,4 +46,8 @@ export class DepartamentosService {
     return this.http.get(`${this.API_URL}/departamento/buscarDepa/${id}`);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/departamento/xmlDownload`, data);
+  }
+
 }

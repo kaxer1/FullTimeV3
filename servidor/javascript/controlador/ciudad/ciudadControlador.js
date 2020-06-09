@@ -18,10 +18,10 @@ class CiudadControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const CIUDAD = yield database_1.default.query('SELECT * FROM VistaNombreProvincia ORDER BY nombre, descripcion ASC');
             if (CIUDAD.rowCount > 0) {
-                return res.json(CIUDAD.rows);
+                return res.jsonp(CIUDAD.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -29,10 +29,10 @@ class CiudadControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades');
             if (CIUDAD.rowCount > 0) {
-                return res.json(CIUDAD.rows);
+                return res.jsonp(CIUDAD.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -41,10 +41,10 @@ class CiudadControlador {
             const { id } = req.params;
             const CIUDAD = yield database_1.default.query('SELECT * FROM ciudades WHERE id = $1', [id]);
             if (CIUDAD.rowCount > 0) {
-                return res.json(CIUDAD.rows);
+                return res.jsonp(CIUDAD.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -52,14 +52,14 @@ class CiudadControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_provincia, descripcion } = req.body;
             yield database_1.default.query('INSERT INTO ciudades ( id_provincia, descripcion ) VALUES ($1, $2)', [id_provincia, descripcion]);
-            res.json({ message: 'Ciudad Registrada' });
+            res.jsonp({ message: 'Ciudad Registrada' });
         });
     }
     EliminarCiudad(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM ciudades WHERE id = $1', [id]);
-            res.json({ message: 'Registro eliminado' });
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
 }

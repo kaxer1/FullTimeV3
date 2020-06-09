@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<root>
+  <proceso id="4">
+    <nombre>Financiero</nombre>
+    <nivel>1</nivel>
+    <proceso_superior>Administracion</proceso_superior>
+  </proceso>
+  <proceso id="6">
+    <nombre>Cartera</nombre>
+    <nivel>3</nivel>
+    <proceso_superior>Financiero</proceso_superior>
+  </proceso>
+  <proceso id="18">
+    <nombre>Sistemas</nombre>
+    <nivel>5</nivel>
+    <proceso_superior>Marketing</proceso_superior>
+  </proceso>
+  <proceso id="17">
+    <nombre>Marketing</nombre>
+    <nivel>3</nivel>
+    <proceso_superior>Financiero</proceso_superior>
+  </proceso>
+</root>

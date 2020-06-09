@@ -14,19 +14,23 @@ export class TipoPermisosService {
 
   // catalogo de TIPO PERMISOS
 
-  getTipoPermisoRest(){
+  getTipoPermisoRest() {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos`);
   }
 
-  getOneTipoPermisoRest(id:number){
+  getOneTipoPermisoRest(id: number) {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/${id}`);
   }
-  
-  postTipoPermisoRest(data: any){
+
+  postTipoPermisoRest(data: any) {
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data);
   }
 
-  putTipoPermisoRest(id:number, data: any){
+  putTipoPermisoRest(id: number, data: any) {
     return this.http.put(`${this.TIPO_PERMISOS_URL}/tipoPermisos/editar/${id}`, data);
+  }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos/xmlDownload`, data);
   }
 }

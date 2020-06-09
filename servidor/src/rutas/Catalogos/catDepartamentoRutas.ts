@@ -12,11 +12,13 @@ class DepartamentoRutas {
         this.router.get('/', DEPARTAMENTO_CONTROLADOR.ListarDepartamentos);
         this.router.get('/nombreDepartamento', DEPARTAMENTO_CONTROLADOR.ListarNombreDepartamentos);
         this.router.get('/idDepartamento/:nombre', DEPARTAMENTO_CONTROLADOR.ListarIdDepartamentoNombre);
-        this.router.get('/:id',  DEPARTAMENTO_CONTROLADOR.ObtenerUnDepartamento);
-        this.router.get('/buscarDepa/:id_sucursal',  DEPARTAMENTO_CONTROLADOR.ObtenerDepartamentosSucursal);
+        this.router.get('/:id', DEPARTAMENTO_CONTROLADOR.ObtenerUnDepartamento);
+        this.router.get('/buscarDepa/:id_sucursal', DEPARTAMENTO_CONTROLADOR.ObtenerDepartamentosSucursal);
         this.router.post('/', DEPARTAMENTO_CONTROLADOR.CrearDepartamento);
         this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.ObtenerIdDepartamento);
-        this.router.put('/:id', DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento)
+        this.router.put('/:id', DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento);
+        this.router.post('/xmlDownload/', DEPARTAMENTO_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', DEPARTAMENTO_CONTROLADOR.downloadXML);
     }
 }
 

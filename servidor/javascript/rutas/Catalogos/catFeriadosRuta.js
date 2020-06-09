@@ -21,6 +21,8 @@ class FeriadosRuta {
         this.router.post('/', catFeriadosControlador_1.default.CrearFeriados);
         this.router.post('/upload', multipartMiddleware, catFeriadosControlador_1.default.CrearFeriadoPlantilla);
         this.router.put('/', catFeriadosControlador_1.default.ActualizarFeriado);
+        this.router.post('/xmlDownload/', catFeriadosControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catFeriadosControlador_1.default.downloadXML);
     }
 }
 const FERIADOS_RUTA = new FeriadosRuta();

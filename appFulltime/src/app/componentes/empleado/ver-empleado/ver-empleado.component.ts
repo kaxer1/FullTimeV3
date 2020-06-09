@@ -36,9 +36,8 @@ import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detalle
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
-import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
-import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 
 @Component({
@@ -92,6 +91,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /** Contador */
   cont = 0;
+  actualizar: boolean;
 
   constructor(
     public restTitulo: TituloService,
@@ -125,9 +125,6 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (true) {
-      this.selectedIndex = 3;
-    }
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -1058,10 +1055,35 @@ export class VerEmpleadoComponent implements OnInit {
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
-      window.location.reload(true);
+      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+      //this.actualizar = false;
+      //window.location.reload(this.actualizar);
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });
+  }
+
+  /* ***************************************************************************************************** 
+   *                                        PLANTILLA VACIA DE HORARIOS UN EMPLEADO
+   * *****************************************************************************************************/
+  DescargarPlantillaHorario() {
+    var datosHorario = [{
+      fec_inicio: 'Eliminar Fila: 05/04/2020 Nota: Inicio de actividades /formato de celda tipo Text',
+      fec_final: '05/05/2020 Nota: Fin de actividades / formato de celda tipo Text',
+      lunes: ' true o false Nota: Indicar días libres',
+      martes: 'true o false',
+      miercoles: 'true o false',
+      jueves: 'true o false',
+      viernes: 'true o false',
+      sabado: 'true o false',
+      domingo: 'true o false',
+      nom_horario: 'horario1',
+      estado: '1-Activo/2-Inactivo/3-Suspendido'
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Empleado Horario');
+    xlsx.writeFile(wb, "Horario Empleado" + '.xlsx');
   }
 
 }

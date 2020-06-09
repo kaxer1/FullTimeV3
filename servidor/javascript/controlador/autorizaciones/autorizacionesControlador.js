@@ -18,10 +18,10 @@ class AutorizacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const AUTORIZACIONES = yield database_1.default.query('SELECT * FROM autorizaciones ORDER BY id');
             if (AUTORIZACIONES.rowCount > 0) {
-                return res.json(AUTORIZACIONES.rows);
+                return res.jsonp(AUTORIZACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -29,10 +29,10 @@ class AutorizacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const AUTORIZACIONES = yield database_1.default.query('SELECT * FROM autorizaciones');
             if (AUTORIZACIONES.rowCount > 0) {
-                return res.json(AUTORIZACIONES.rows);
+                return res.jsonp(AUTORIZACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -40,7 +40,7 @@ class AutorizacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento } = req.body;
             yield database_1.default.query('INSERT INTO autorizaciones ( id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento]);
-            res.json({ message: 'Autorizacion guardado' });
+            res.jsonp({ message: 'Autorizacion guardado' });
         });
     }
 }

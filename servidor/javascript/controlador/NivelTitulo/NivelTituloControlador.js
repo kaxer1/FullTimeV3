@@ -17,7 +17,7 @@ class NivelTituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const titulo = yield database_1.default.query('SELECT * FROM nivel_titulo ORDER BY id');
-            res.json(titulo.rows);
+            res.jsonp(titulo.rows);
         });
     }
     getOne(req, res) {
@@ -25,9 +25,9 @@ class NivelTituloControlador {
             const { id } = req.params;
             const unNivelTitulo = yield database_1.default.query('SELECT * FROM nivel_titulo WHERE id = $1', [id]);
             if (unNivelTitulo.rowCount > 0) {
-                return res.json(unNivelTitulo.rows);
+                return res.jsonp(unNivelTitulo.rows);
             }
-            res.status(404).json({ text: 'Registro no encontrado' });
+            res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
     ObtenerNivelNombre(req, res) {
@@ -35,23 +35,23 @@ class NivelTituloControlador {
             const { nombre } = req.params;
             const unNivelTitulo = yield database_1.default.query('SELECT * FROM nivel_titulo WHERE nombre = $1', [nombre]);
             if (unNivelTitulo.rowCount > 0) {
-                return res.json(unNivelTitulo.rows);
+                return res.jsonp(unNivelTitulo.rows);
             }
-            res.status(404).json({ text: 'Registro no encontrado' });
+            res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.body;
             yield database_1.default.query('INSERT INTO nivel_titulo ( nombre ) VALUES ($1)', [nombre]);
-            res.json({ message: 'Nivel del Titulo guardado' });
+            res.jsonp({ message: 'Nivel del Titulo guardado' });
         });
     }
     ActualizarNivelTitulo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, id } = req.body;
             yield database_1.default.query('UPDATE nivel_titulo SET nombre = $1 WHERE id = $2', [nombre, id]);
-            res.json({ message: 'Nivel de Título actualizado exitosamente' });
+            res.jsonp({ message: 'Nivel de Título actualizado exitosamente' });
         });
     }
     EliminarNivelTitulo(req, res) {
@@ -59,7 +59,7 @@ class NivelTituloControlador {
             const id = req.params.id;
             console.log(id);
             yield database_1.default.query('DELETE FROM nivel_titulo WHERE id = $1', [id]);
-            res.json({ message: 'Registro eliminado' });
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
 }

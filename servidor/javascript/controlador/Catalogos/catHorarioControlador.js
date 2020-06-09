@@ -15,15 +15,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 class HorarioControlador {
     ListarHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios ORDER BY id');
             if (HORARIOS.rowCount > 0) {
-                return res.json(HORARIOS.rows);
+                return res.jsonp(HORARIOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -32,10 +33,10 @@ class HorarioControlador {
             const { id } = req.params;
             const UN_HORARIO = yield database_1.default.query('SELECT * FROM cg_horarios WHERE id = $1', [id]);
             if (UN_HORARIO.rowCount > 0) {
-                return res.json(UN_HORARIO.rows);
+                return res.jsonp(UN_HORARIO.rows);
             }
             else {
-                res.status(404).json({ text: 'No se encuentran registros' });
+                res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -45,7 +46,7 @@ class HorarioControlador {
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
             yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-            res.json({ message: 'El horario ha sido registrado' });
+            res.jsonp({ message: 'El horario ha sido registrado' });
         });
     }
     CrearHorarioPlantilla(req, res) {
@@ -71,7 +72,7 @@ class HorarioControlador {
                     yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -123,7 +124,7 @@ class HorarioControlador {
                     yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -132,7 +133,28 @@ class HorarioControlador {
             const id = req.params.id;
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, id]);
-            res.json({ message: 'Tipo Permiso Actualizado' });
+            res.jsonp({ message: 'Tipo Permiso Actualizado' });
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Horarios-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
 }

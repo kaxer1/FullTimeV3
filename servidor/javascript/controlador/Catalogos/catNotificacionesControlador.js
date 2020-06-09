@@ -18,10 +18,10 @@ class NotificacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const NOTIFICACIONES = yield database_1.default.query('SELECT * FROM cg_notificaciones');
             if (NOTIFICACIONES.rowCount > 0) {
-                return res.json(NOTIFICACIONES.rows);
+                return res.jsonp(NOTIFICACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -30,10 +30,10 @@ class NotificacionesControlador {
             const { id } = req.params;
             const NOTIFICACIONES = yield database_1.default.query('SELECT * FROM cg_notificaciones WHERE id = $1', [id]);
             if (NOTIFICACIONES.rowCount > 0) {
-                return res.json(NOTIFICACIONES.rows);
+                return res.jsonp(NOTIFICACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -41,7 +41,7 @@ class NotificacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { tipo, nivel, id_departamento, id_tipo_permiso } = req.body;
             yield database_1.default.query('INSERT INTO cg_notificaciones ( tipo, nivel, id_departamento, id_tipo_permiso ) VALUES ($1, $2, $3, $4)', [tipo, nivel, id_departamento, id_tipo_permiso]);
-            res.json({ message: 'Notificación guardada' });
+            res.jsonp({ message: 'Notificación guardada' });
         });
     }
 }

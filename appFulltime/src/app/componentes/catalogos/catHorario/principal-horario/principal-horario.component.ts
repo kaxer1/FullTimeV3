@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -93,7 +94,7 @@ export class PrincipalHorarioComponent implements OnInit {
   AbrirVentanaEditarHorario(horario: any): void {
     const DIALOG_REF = this.vistaRegistrarDatos.open(EditarHorarioComponent,
       { width: '600px', data: horario });
-      DIALOG_REF.disableClose = true;
+    DIALOG_REF.disableClose = true;
   }
 
   /****************************************************************************************************** 
@@ -168,39 +169,76 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   /* ***************************************************************************************************** 
-   * PLANTILLA CARGAR SOLO DETALLES
+   * PLANTILLA CARGAR HORARIO Y DETALLES
    * *****************************************************************************************************/
-  nameFileHorarioDetalle: string;
-  archivoSubidoDetalleHorario: Array<File>;
-  fileChangeDetalleHorario(element) {
-    this.archivoSubidoDetalleHorario = element.target.files;
-    this.nameFileHorarioDetalle = this.archivoSubidoDetalleHorario[0].name;
-    let arrayItems = this.nameFileHorarioDetalle.split(".");
-    let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 50);
-    console.log(itemName.toLowerCase());
-    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'horarios y detalles') {
-        this.plantillaDetalleHorario();
-      } else {
-        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
-      }
-    } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-    }
+  /* nameFileHorarioDetalle: string;
+   archivoSubidoDetalleHorario: Array<File>;
+   fileChangeDetalleHorario(element) {
+     this.archivoSubidoDetalleHorario = element.target.files;
+     this.nameFileHorarioDetalle = this.archivoSubidoDetalleHorario[0].name;
+     let arrayItems = this.nameFileHorarioDetalle.split(".");
+     let itemExtencion = arrayItems[arrayItems.length - 1];
+     let itemName = arrayItems[0].slice(0, 50);
+     console.log(itemName.toLowerCase());
+     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+       if (itemName.toLowerCase() == 'horarios y detalles') {
+         this.plantillaDetalleHorario();
+       } else {
+         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+       }
+     } else {
+       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+     }
+   }
+ 
+   plantillaDetalleHorario() {
+     let formData = new FormData();
+     for (var i = 0; i < this.archivoSubidoDetalleHorario.length; i++) {
+       formData.append("uploads[]", this.archivoSubidoDetalleHorario[i], this.archivoSubidoDetalleHorario[i].name);
+     }
+     this.rest.CargarHorariosDetalles(formData).subscribe(res => {
+       this.toastr.success('Operación Exitosa', 'Plantilla de Horarios importada.');
+       this.archivo3Form.reset();
+       this.nameFileHorarioDetalle = '';
+       window.location.reload();
+     });
+   }*/
+
+  /* ***************************************************************************************************** 
+   * PLANTILLA VACIA DE HORARIOS
+   * *****************************************************************************************************/
+  DescargarPlantillaHorario() {
+    var datosHorario = [{
+      nombre_horario: 'Eliminar esta Fila: horario1',
+      minutos_almuerzo: 60,
+      hora_trabajo: 8,
+      flexible: 'true o false',
+      por_horas: 'true o false'
+    }];
+    //this.prueba = datosDepartamento;
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
+    //console.log('Revisando', this.prueba)
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'CatalogoHorario');
+    xlsx.writeFile(wb, "Catalogo Horarios" + '.xlsx');
   }
 
-  plantillaDetalleHorario() {
-    let formData = new FormData();
-    for (var i = 0; i < this.archivoSubidoDetalleHorario.length; i++) {
-      formData.append("uploads[]", this.archivoSubidoDetalleHorario[i], this.archivoSubidoDetalleHorario[i].name);
-    }
-    this.rest.CargarHorariosDetalles(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horarios importada.');
-      this.archivo3Form.reset();
-      this.nameFileHorarioDetalle = '';
-      window.location.reload();
-    });
+  /* ***************************************************************************************************** 
+   * PLANTILLA VACIA DE DETALLES
+   * *****************************************************************************************************/
+  DescargarPlantillaDetalles() {
+    var datosHorario = [{
+      nombre_horario: 'Eliminar esta Fila: horario1',
+      orden: 1,
+      hora: '9:00 Nota: formato de celda tipo Text' ,
+      nocturno: 'true o false',
+      tipo_accion: '1-Entrada/2-Salida/3-S.Almuerzo/4-E.Almuerzo',
+      minutos_espera: '0:10 Nota: formato de celda tipo Text'
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'DetalleHorario');
+    xlsx.writeFile(wb, "Detalles Horarios" + '.xlsx');
   }
 
   /****************************************************************************************************** 
@@ -311,6 +349,37 @@ export class PrincipalHorarioComponent implements OnInit {
     const csvDataH = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "CatHorarioCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+*                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+* ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloHorarios = [];
+    this.horarios.forEach(obj => {
+      objeto = {
+        "horario": {
+          '@id': obj.id,
+          "nombre": obj.nombre,
+          "min_almuerzo": obj.min_almuerzo,
+          "hora_trabajo": obj.hora_trabajo,
+          "flexible": obj.flexible,
+          "por_horas": obj.por_horas,
+        }
+      }
+      arregloHorarios.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloHorarios).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/horario/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
   }
 
 }

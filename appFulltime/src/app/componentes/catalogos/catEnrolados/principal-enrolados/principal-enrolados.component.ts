@@ -5,11 +5,17 @@ import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
 import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.component';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
-import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 
 interface buscarActivo {
@@ -174,7 +180,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     let itemName = arrayItems[0].slice(0, 8);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'enrolado') {
+      if (itemName.toLowerCase() == 'enrolados') {
         this.plantilla();
       } else {
         this.toastr.error('Solo se acepta Enrolados', 'Plantilla seleccionada incorrecta');
@@ -196,6 +202,165 @@ export class PrincipalEnroladosComponent implements OnInit {
       this.archivoForm.reset();
       this.nameFile = '';
     });
+  }
+
+   /****************************************************************************************************** 
+   *                                         MÉTODO PARA EXPORTAR A PDF
+   ******************************************************************************************************/
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Enrolados', this.enrolados);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Lista de Usuarios Enrolados',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFEnrolados(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 12,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 10,
+          alignment: 'center',
+        }
+      }
+    };
+  }
+
+  EstadoSelect: any = ['Si', 'No'];
+  presentarDataPDFEnrolados() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+           // { text: 'Contraseña', style: 'tableHeader' },
+            { text: 'Activo', style: 'tableHeader' },
+            { text: 'Finger', style: 'tableHeader' },
+            { text: 'Data Finger', style: 'tableHeader' }
+          ],
+          ...this.enrolados.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              //{ text: obj.contrasenia, style: 'itemsTable' },
+              { text: obj.activo, style: 'itemsTable' },
+              { text: obj.finger, style: 'itemsTable' },
+              { text: obj.data_finger, style: 'itemsTable' }
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.enrolados);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Departamentos');
+    xlsx.writeFile(wb, "Departamentos" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.enrolados);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "DepartamentosCSV" + new Date().getTime() + '.csv');
+  }
+
+/* ****************************************************************************************************
+ *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+ * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloEnrolados = [];
+    this.enrolados.forEach(obj => {
+      objeto = {
+        "usuario_enrolado": {
+          '@id': obj.id,
+          "nombre": obj.nombre,
+         // "contrasenia": obj.contrasenia,
+          "activo": obj.activo,
+          "finger": obj.finger,
+          "data_finger": obj.data_finger,
+        }
+      }
+      arregloEnrolados.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloEnrolados).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/enrolados/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
+  /* ***************************************************************************************************** 
+   *                               PLANTILLA VACIA DE ENROLADOS
+   * *****************************************************************************************************/
+  DescargarPlantillasEnrolados() {
+    var datosEnrolados= [{
+      id_usuario: 'Eliminar esta Fila: nombre de usuario: jenny',
+      nombre: 'jenny',
+      contrasenia: '12546 Nota: Esta celda debe tener formato text' ,
+      activo: 'true o false',
+      finger: 5,
+      data_finger: '125dcse2225'
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEnrolados);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Enrolados');
+    xlsx.writeFile(wb, "Enrolados" + '.xlsx');
   }
 
 }
