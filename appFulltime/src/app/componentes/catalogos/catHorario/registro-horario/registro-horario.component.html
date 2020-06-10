@@ -32,10 +32,11 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Horas de Trabajo</mat-label>
-                            <input type="number" matInput placeholder="Ej: 8.2 " [formControl]="horaTrabajo" required
+                            <input matInput placeholder="Ej: 8:10 " [formControl]="horaTrabajo" required
                                 (keypress)="IngresarNumeroDecimal($event)">
                             <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                matTooltip="Indicar las horas de trabajo. Las horas que se podrá ingresar deben ser menor a 10 horas y puede llevar hasta un decimal">
+                                matTooltip="Indicar el número de horas de trabajo. 
+                                En caso de que sean horas y minutos ingresar de esta manera 10 : 35">
                                 help_outline</mat-icon>
                             <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
                         </mat-form-field>

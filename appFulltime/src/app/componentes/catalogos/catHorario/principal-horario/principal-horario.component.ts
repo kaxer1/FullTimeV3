@@ -211,7 +211,7 @@ export class PrincipalHorarioComponent implements OnInit {
     var datosHorario = [{
       nombre_horario: 'Eliminar esta Fila: horario1',
       minutos_almuerzo: 60,
-      hora_trabajo: 8,
+      hora_trabajo: 'Numero de horas 9 (En caso de ser horas y minutos 9:15) Nota: Esta celda debe estar en formato Text',
       flexible: 'true o false',
       por_horas: 'true o false'
     }];
