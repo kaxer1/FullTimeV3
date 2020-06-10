@@ -27,8 +27,8 @@ export class RelojesComponent implements OnInit {
   puertoF = new FormControl('', [Validators.required, Validators.pattern('[0-9]{4}')]);
   contraseniaF = new FormControl('', [Validators.minLength(4)]);
   marcaF = new FormControl('', [Validators.minLength(4)]);
-  modeloF = new FormControl('', [Validators.minLength(4)]);
-  serieF = new FormControl('', Validators.minLength(6));
+  modeloF = new FormControl('', [Validators.minLength(3)]);
+  serieF = new FormControl('', Validators.minLength(4));
   idFabricacionF = new FormControl('', [Validators.minLength(4)]);
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);

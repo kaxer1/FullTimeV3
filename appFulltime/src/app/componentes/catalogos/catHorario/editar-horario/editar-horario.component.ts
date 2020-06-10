@@ -14,7 +14,7 @@ import { PrincipalHorarioComponent } from '../principal-horario/principal-horari
 export class EditarHorarioComponent implements OnInit {
 
   // Validaciones para el formulario
-  nombre = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9](.[0-9])?$")]);
   flexible = new FormControl('', Validators.required);
