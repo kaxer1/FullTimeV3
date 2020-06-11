@@ -52,6 +52,13 @@ class PeriodoVacacionControlador {
             res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
+    ActualizarPeriodo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, id } = req.body;
+            yield database_1.default.query('UPDATE peri_vacaciones SET id_empl_contrato = $1, descripcion = $2, dia_vacacion = $3 , dia_antiguedad = $4, estado = $5, fec_inicio = $6, fec_final = $7, dia_perdido = $8 WHERE id = $9', [id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, id]);
+            res.jsonp({ message: 'Registro Actualizado exitosamente' });
+        });
+    }
 }
 const PERIODO_VACACION_CONTROLADOR = new PeriodoVacacionControlador();
 exports.default = PERIODO_VACACION_CONTROLADOR;

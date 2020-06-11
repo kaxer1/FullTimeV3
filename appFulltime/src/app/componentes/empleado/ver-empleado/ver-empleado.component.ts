@@ -37,6 +37,7 @@ import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizac
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
+import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 
@@ -196,7 +197,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
-        if (idEmpleadoActivo === idemploy){
+        if (idEmpleadoActivo === idemploy) {
           this.Main.urlImagen = this.urlImagen;
         }
         this.mostrarImagen = true;
@@ -719,7 +720,20 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaEditarProceso(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarEmpleadoProcesoComponent,
-      { width: '400px', data: { idEmpleado: this.idEmpleado, datosProcesos: datoSeleccionado } }).disableClose = true;
+      { width: '400px', data: { idEmpleado: this.idEmpleado, datosProcesos: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+      });
+  }
+
+  /* Ventana para editar procesos del empleado */
+  AbrirEditarPeriodoVacaciones(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarPeriodoVacacionesComponent,
+      { width: '900px', data: { idEmpleado: this.idEmpleado, datosPeriodo: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+      });
   }
 
   /* 
@@ -1100,9 +1114,9 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
-  GeneroSelect: any = ['Masculino','Femenino'];
-  EstadoSelect: any = ['Activo','Inactivo'];
+  EstadoCivilSelect: any = ['Soltero/a', 'Unión de Hecho', 'Casado/a', 'Divorciado/a', 'Viudo/a'];
+  GeneroSelect: any = ['Masculino', 'Femenino'];
+  EstadoSelect: any = ['Activo', 'Inactivo'];
 
   urlxml: string;
   data: any = [];
@@ -1140,7 +1154,7 @@ export class VerEmpleadoComponent implements OnInit {
       }
       arregloEmpleado.push(objeto)
     });
-    
+
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
       this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;

@@ -302,7 +302,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       id_empl_contrato: this.datoEmpleado.idContrato,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
       hora_numero: form.horasForm,
-      num_permiso: this.num
+      num_permiso: this.num,
+      docu_nombre: form.nombreCertificadoForm
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);

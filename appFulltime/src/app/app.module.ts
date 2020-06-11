@@ -193,6 +193,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 
 @NgModule({
   declarations: [
@@ -319,6 +320,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     EditarEmpleadoPermisoComponent,
     HomeEmpleadoComponent,
     ListarEmpleadoPermisoComponent,
+    EditarPeriodoVacacionesComponent,
   ],
 
   imports: [

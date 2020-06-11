@@ -2,16 +2,17 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 
+
 @Component({
-  selector: 'app-registrar-periodo-v',
-  templateUrl: './registrar-periodo-v.component.html',
-  styleUrls: ['./registrar-periodo-v.component.css'],
+  selector: 'app-editar-periodo-vacaciones',
+  templateUrl: './editar-periodo-vacaciones.component.html',
+  styleUrls: ['./editar-periodo-vacaciones.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -19,11 +20,13 @@ import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/pe
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
-
-export class RegistrarPeriodoVComponent implements OnInit {
+export class EditarPeriodoVacacionesComponent implements OnInit {
 
   // Datos del empleado
   empleados: any = [];
+  periodoDatos: any = [];
+  selec1 = false;
+  selec2 = false;
 
   // Control de campos y validaciones del formulario
   nombreEmpleadoF = new FormControl('', [Validators.required]);
@@ -51,17 +54,18 @@ export class RegistrarPeriodoVComponent implements OnInit {
     private rest: EmpleadoService,
     private restV: PeriodoVacacionesService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<RegistrarPeriodoVComponent>,
-    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
+    public dialogRef: MatDialogRef<EditarPeriodoVacacionesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
+    this.ObtenerEmpleados(this.data.idEmpleado);
     this.PerVacacionesForm.patchValue({
       diaVacacionForm: 0,
       diaAntiguedadForm: 0,
       diaPerdidoForm: 0
-    })
+    });
+    this.ImprimirDatos();
   }
 
   // Método para ver la información del empleado 
@@ -76,13 +80,32 @@ export class RegistrarPeriodoVComponent implements OnInit {
     })
   }
 
+  ImprimirDatos() {
+    this.PerVacacionesForm.patchValue({
+      descripcionForm: this.data.datosPeriodo.descripcion,
+      diaVacacionForm: this.data.datosPeriodo.dia_vacacion,
+      diaAntiguedadForm: this.data.datosPeriodo.dia_antiguedad,
+      estadoForm: this.data.datosPeriodo.estado,
+      fechaFinForm: this.data.datosPeriodo.fec_final,
+      fechaInicioForm: this.data.datosPeriodo.fec_inicio,
+      diaPerdidoForm: this.data.datosPeriodo.dia_perdido
+    });
+    console.log("estado", this.data.datosPeriodo.estado)
+    if (this.data.datosPeriodo.estado === 1) {
+      this.selec1 = true;
+    }
+    else {
+      this.selec2 = true;
+    }
+  }
+
   ValidarDatosPerVacacion(form) {
     if (form.fechaFinForm === '') {
       form.fechaFinForm = null;
-      this.InsertarPerVacacion(form);
+      this.ActualizarPerVacacion(form);
     } else {
       if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinForm)) {
-        this.InsertarPerVacacion(form);
+        this.ActualizarPerVacacion(form);
       }
       else {
         this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período')
@@ -90,9 +113,10 @@ export class RegistrarPeriodoVComponent implements OnInit {
     }
   }
 
-  InsertarPerVacacion(form) {
+  ActualizarPerVacacion(form) {
     let datosPerVacaciones = {
-      id_empl_contrato: this.datoEmpleado.idContrato,
+      id: this.data.datosPeriodo.id,
+      id_empl_contrato: this.data.datosPeriodo.id_empl_contrato,
       descripcion: form.descripcionForm,
       dia_vacacion: form.diaVacacionForm,
       dia_antiguedad: form.diaAntiguedadForm,
@@ -101,11 +125,11 @@ export class RegistrarPeriodoVComponent implements OnInit {
       fec_final: form.fechaFinForm,
       dia_perdido: form.diaPerdidoForm
     };
-    this.restV.CrearPerVacaciones(datosPerVacaciones).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Período de Vacaciones registrado')
+    this.restV.ActualizarPeriodoV(datosPerVacaciones).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Período de Vacaciones actualizado')
       this.CerrarVentanaRegistroPerVacaciones();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue registrado')
+      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue actualizado')
     });
   }
 
@@ -141,5 +165,6 @@ export class RegistrarPeriodoVComponent implements OnInit {
       return false;
     }
   }
+
 
 }

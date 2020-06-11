@@ -15,6 +15,7 @@ class DepartamentoRutas {
         this.router.get('/infoPeriodo/:id_empl_contrato', periodoVacacionControlador_1.default.EncontrarPerVacacionesPorIdContrato);
         this.router.get('/buscar/:id_empleado', periodoVacacionControlador_1.default.EncontrarIdPerVacaciones);
         this.router.post('/', periodoVacacionControlador_1.default.CrearPerVacaciones);
+        this.router.put('/', periodoVacacionControlador_1.default.ActualizarPeriodo);
     }
 }
 const PERIODO_VACACION__RUTAS = new DepartamentoRutas();

@@ -70,12 +70,13 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 .iniciales {color: white; font-weight: bold; font-size: 60px; }
 
-#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px;}
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}
 
 p { font-size: x-small; }
 
-#delete { color:red; margin-right: 5px; cursor: pointer;}
+#doc { font-size: 14px; }
 
+#delete { color:red; margin-right: 5px; cursor: pointer;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 

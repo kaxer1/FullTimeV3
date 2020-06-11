@@ -1,12 +1,14 @@
-#dias { font-size: 13px; }
+#dias { font-size: 15px; }
 
-#calculo { font-size: 11px; }
+#nomEmple { font-size: 13px; }
 
-#fecVaca { font-size: 14px; }
+#fec { font-size: 14px; }
+
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
-.vacacionesE { 
+.periodoVacaciones { 
     font-size: 25px; 
     text-align: center; 
     background: rgb(52,65,84); 
@@ -20,10 +22,4 @@
     font-size: 20px;
 }
 
-#nomEmple { font-size: 13px; }
-
-.mat-radio-button ~ .mat-radio-button { margin-left: 18px; }
-
 #contratoE { cursor: pointer; }
-
-#activo { cursor: pointer; }
