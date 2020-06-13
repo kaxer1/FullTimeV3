@@ -19,9 +19,11 @@ interface Nivel {
 export class NotificacionesComponent implements OnInit {
 
   departamentos: any = [];
+  depa_filtrado: any = [];
+  noti_filtrado: any = [];
   tipoPermiso: any = [];
 
-  tipo = new FormControl('', Validators.required);
+  tipo = new FormControl('');
   nivel = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
   idTipoPermiso = new FormControl('', Validators.required);
@@ -33,14 +35,16 @@ export class NotificacionesComponent implements OnInit {
     idTipoPermisoForm: this.idTipoPermiso
   });
 
-  niveles: Nivel[] = [
-    { valor: '0'},
+  niveles: Nivel[] = [    
     { valor: '1'},
     { valor: '2'},
     { valor: '3'},
     { valor: '4'},
     { valor: '5'}
   ];
+
+  HabilitarD: boolean = false;
+  HabilitarP: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -50,21 +54,30 @@ export class NotificacionesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.ListaDepartamentos();
     this.limpiarCampos();
-    this.ObtenerTipoPermiso();
+    this.rest.getNotificacionesRest().subscribe(res => {
+      this.noti_filtrado = res;
+      console.log(res);
+    })
   }
 
   ListaDepartamentos() {
+    this.HabilitarD = true;
     this.departamentos = []
     this.restD.ConsultarDepartamentos().subscribe(datos => {
-      this.departamentos = datos
+      this.departamentos = datos;
+      // this.depa_filtrado = datos;
+      // this.depa_filtrado.forEach(obj => {
+      //   console.log(obj);
+      // });
     })
   }
 
   ObtenerTipoPermiso() {
+    this.HabilitarP = true;
     this.restP.getTipoPermisoRest().subscribe(datos => {
       this.tipoPermiso = datos;
+      console.log(this.tipoPermiso);
     }, error => {
     });
   }

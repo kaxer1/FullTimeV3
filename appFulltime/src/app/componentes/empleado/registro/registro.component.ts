@@ -58,6 +58,7 @@ export class RegistroComponent implements OnInit {
     this.cargarRoles();
     this.obtenerNacionalidades();
     this.primeroFormGroup = this._formBuilder.group({
+      codigoForm: [''],
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
       apellidoForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,64}")],
       cedulaForm: ['', Validators.required],
@@ -174,7 +175,8 @@ export class RegistroComponent implements OnInit {
       mail_alernativo: form1.correoAlternativoForm,
       domicilio: form2.domicilioForm,
       telefono: form2.telefonoForm,
-      id_nacionalidad: this.idNacionalidad
+      id_nacionalidad: this.idNacionalidad,
+      codigo: form1.codigoForm
     };
 
     console.log(dataEmpleado);

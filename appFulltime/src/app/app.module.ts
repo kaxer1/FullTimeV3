@@ -178,6 +178,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
 import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
@@ -366,8 +367,8 @@ import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/l
     NgxEchartsModule,
     MatDatepickerModule, 
     MatNativeDateModule,
-    MatTabsModule
-
+    MatTabsModule,
+    MatMenuModule
   ],
   providers: [
     AuthGuard,

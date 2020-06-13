@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const nodemailer = require("nodemailer");
 class PermisosControlador {
     ListarPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -54,6 +55,40 @@ class PermisosControlador {
             yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso]);
             const ultimo = yield database_1.default.query('SELECT id FROM permisos WHERE fec_creacion = $1 AND  id_tipo_permiso = $2 AND id_empl_contrato = $3', [fec_creacion, id_tipo_permiso, id_empl_contrato]);
             console.log(ultimo.rows[0].id);
+            const JefesDepartamentos = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s ,empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id');
+            const correoInfoPidePermiso = yield database_1.default.query('SELECT distinct e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato', [id_empl_contrato]);
+            const email = 'casapazminoV3@gmail.com';
+            const pass = 'fulltimev3';
+            let smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: email,
+                    pass: pass
+                }
+            });
+            JefesDepartamentos.rows.forEach(obj => {
+                if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal) {
+                    var url = 'http://localhost:4200/permisos-solicitados';
+                    let data = {
+                        to: obj.correo,
+                        from: email,
+                        template: 'hola',
+                        subject: 'Solicitud de permiso',
+                        html: `<p><b>${correoInfoPidePermiso.rows[0].nombre} ${correoInfoPidePermiso.rows[0].apellido}</b> con número de
+                    cédula ${correoInfoPidePermiso.rows[0].cedula} solicita autorización de permiso: </p>
+                    <a href="${url}">Ir a verificar permisos</a>`
+                    };
+                    console.log(data);
+                    smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
+                        if (error) {
+                            console.log(error);
+                        }
+                        else {
+                            console.log('Email sent: ' + info.response);
+                        }
+                    }));
+                }
+            });
             res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id });
         });
     }
