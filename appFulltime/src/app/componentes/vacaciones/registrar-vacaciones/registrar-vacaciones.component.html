@@ -10,7 +10,7 @@
                 <div class="col-sm">
                     <mat-form-field>
                         <mat-label id="fecVaca">Fecha Inicio de Vacaciones</mat-label>
-                        <input (click)="LimpiarCalculo()" matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                        <input (click)="LimpiarCalculo()" (dateInput)="LimpiarCalculo()" matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
                             [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker" matSuffix id="cargoE"
                             matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
@@ -21,7 +21,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label id="fecVaca">Fecha fin de Vacaciones</mat-label>
-                        <input (click)="LimpiarCalculo()" matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                        <input (click)="LimpiarCalculo()" (dateInput)="LimpiarCalculo()" matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
                             [formControl]="fechaFinal" required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE" matTooltipClass="cargoE-tooltip"
                             matTooltipPosition="right"

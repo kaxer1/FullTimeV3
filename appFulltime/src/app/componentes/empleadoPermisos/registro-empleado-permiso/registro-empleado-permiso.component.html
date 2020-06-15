@@ -48,7 +48,7 @@
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="solicitarF" required [disabled]="true">
+                        <mat-select [formControl]="solicitarF" required>
                             <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
                                 (click)="ActivarDiasHoras(PermisoForm.value)">
                                 {{dh.nombre}}
@@ -59,7 +59,7 @@
                     <mat-form-field>
                         <mat-label>Días de permiso</mat-label>
                         <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="diasF" style="visibility:hidden" id="dias">
+                            [formControl]="diasF" style="visibility:hidden" id="dias" (click)="LimpiarCamposFecha()">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar número de días solicitados de permiso">
                             help_outline</mat-icon>
@@ -67,18 +67,19 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Horas y minutos de permiso</mat-label>
-                        <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horasF" style="visibility:hidden" id="horas">
+                        <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)" max="7:30" 
+                            [formControl]="horasF" style="visibility:hidden" id="horas" (click)="LimpiarCamposFecha()">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar número de horas y minutos solicitados de permiso">
+                            matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
                             help_outline</mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="col-sm">
                     <mat-form-field>
                         <mat-label>Fecha de Salida</mat-label>
-                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" 
-                            min="1950-01-31" max="2050-01-31" required>
+                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" readonly
+                            placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
+                            required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha en la desea el permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -88,8 +89,9 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Fecha de Ingreso</mat-label>
-                        <input matInput [matDatepicker]="picker3" (dateInput)="validarFechaIngreso($event, PermisoForm.value)"
-                            placeholder="dd/mm/aaaa" [formControl]="fechaFinalF" required>
+                        <input matInput [matDatepicker]="picker3"
+                            (dateInput)="validarFechaIngreso($event, PermisoForm.value)" placeholder="dd/mm/aaaa"
+                            [formControl]="fechaFinalF" required readonly>
                         <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -143,7 +145,8 @@
                             </form>
                         </div>
                         <div class="row">
-                            <input type="text" placeholder="Ningún archivo seleccionado" class="form-control" style="width: 230px;" [formControl]="nombreCertificadoF">
+                            <input type="text" placeholder="Ningún archivo seleccionado" class="form-control"
+                                style="width: 230px;" [formControl]="nombreCertificadoF">
                         </div>
                     </div>
                 </div>

@@ -250,7 +250,7 @@ export class TipoPermisosComponent implements OnInit {
         datos.num_dia_maximo = 0;
       }
     }
-    else {
+    else if (form.diasHorasForm === 'Días y Horas'){
       if (datos.num_hora_maximo === '' || datos.num_dia_maximo === '') {
         this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso');
       }

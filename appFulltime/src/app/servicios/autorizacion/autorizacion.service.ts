@@ -21,7 +21,6 @@ export class AutorizacionService {
     return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}`);
   }
 
-
   postAutorizacionesRest(data: any){
     return this.http.post(`${this.AUTORIZACIONES_URL}/autorizaciones`, data);
   }
