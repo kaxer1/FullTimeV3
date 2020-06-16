@@ -144,7 +144,7 @@ export class HomeComponent implements OnInit{
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
     this.cajaUno();
 
-   /* var intval=window.setInterval(function probando(){
+   /*var intval=window.setInterval(function probando(){
        // console.log("probando programacion");
        prueba();
       },5000);

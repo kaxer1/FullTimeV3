@@ -1,1 +1,40 @@
-<p>informacion-jefe works!</p>
+<header id="home-section">
+    <div class="dark-overlay">
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="tituloHorarioL" *ngFor="let d of departamento">
+                    <span>AUTORIZAN EN EL DEPARTAMENTO DE {{d.nombre.toUpperCase()}}</span>
+                </div>
+                <div class="container" *ngFor="let a of autorizan">
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Nombre:</label>
+                        </div>
+                        <div class="col">
+                            <label class="col col-form-label">{{a.nombre}} {{a.apellido}} </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Télefono:</label>
+                        </div>
+                        <div class="col">
+                            <label class="col col-form-label">{{a.telefono}}</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Correo:</label>
+                        </div>
+                        <div class="col">
+                            <label class="col col-form-label">{{a.correo}}</label>
+                        </div>
+                    </div>
+                    <br>
+                    <mat-divider></mat-divider>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</header>

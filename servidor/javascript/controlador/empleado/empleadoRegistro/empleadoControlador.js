@@ -179,6 +179,18 @@ class EmpleadoControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
+    ObtenerDepartamentoEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_emple, id_cargo } = req.body;
+            const DEPARTAMENTO = yield database_1.default.query('SELECT *FROM VistaDepartamentoEmpleado WHERE id_emple = $1 AND id_cargo = $2', [id_emple, id_cargo]);
+            if (DEPARTAMENTO.rowCount > 0) {
+                return res.jsonp(DEPARTAMENTO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_CONTROLADOR = new EmpleadoControlador();
 exports.default = exports.EMPLEADO_CONTROLADOR;

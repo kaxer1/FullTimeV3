@@ -27,4 +27,8 @@ export class AutorizaDepartamentoService {
     return this.http.get(`${this.API_URL}/autorizaDepartamento/autoriza/${id}`);
   }
 
+  BuscarEmpleadosAutorizan(id: any) {
+    return this.http.get(`${this.API_URL}/autorizaDepartamento/empleadosAutorizan/${id}`);
+  }
+
 }
