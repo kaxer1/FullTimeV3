@@ -1,4 +1,4 @@
-import { Request, Response, text } from 'express';
+import { Request, Response, text } from 'express'
 
 import pool from '../../database';
 

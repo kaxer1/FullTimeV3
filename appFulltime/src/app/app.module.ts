@@ -89,6 +89,19 @@ import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/e
 import { MetodosComponent } from './componentes/metodos/metodos.component';
 import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
 import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
+import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
+import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
+import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
+import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
+import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
+import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
+import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
+import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
+import { EliminarNivelTitulosComponent } from './componentes/nivelTitulos/eliminar-nivel-titulos/eliminar-nivel-titulos.component';
+import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/eliminar-procesos/eliminar-procesos.component';
+
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -178,18 +191,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
-import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
-import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
-import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
-import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
-import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
-import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
-import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
-import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
-import { EliminarNivelTitulosComponent } from './componentes/nivelTitulos/eliminar-nivel-titulos/eliminar-nivel-titulos.component';
-import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/eliminar-procesos/eliminar-procesos.component';
 
 @NgModule({
   declarations: [

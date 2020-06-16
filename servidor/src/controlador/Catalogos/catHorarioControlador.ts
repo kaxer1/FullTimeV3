@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 import pool from '../../database';
 import excel from 'xlsx';
 import fs from 'fs';
