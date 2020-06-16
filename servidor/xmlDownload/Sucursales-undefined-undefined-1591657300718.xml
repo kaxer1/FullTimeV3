@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<root>
+  <sucursal id="4">
+    <empresa>Electronica Pazmiño</empresa>
+    <sucursal>Sucursal9</sucursal>
+    <ciudad>Loreto</ciudad>
+  </sucursal>
+  <sucursal id="5">
+    <empresa>Pica</empresa>
+    <sucursal>Sucursal3</sucursal>
+    <ciudad>Guayzimi</ciudad>
+  </sucursal>
+  <sucursal id="2">
+    <empresa>El Costo</empresa>
+    <sucursal>Sucursal2</sucursal>
+    <ciudad>La Libertad</ciudad>
+  </sucursal>
+</root>

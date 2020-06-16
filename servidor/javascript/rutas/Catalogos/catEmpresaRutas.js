@@ -15,6 +15,8 @@ class DepartamentoRutas {
         this.router.get('/buscar/:nombre', catEmpresaControlador_1.default.ListarUnaEmpresa);
         this.router.post('/', catEmpresaControlador_1.default.CrearEmpresa);
         this.router.put('/', catEmpresaControlador_1.default.ActualizarEmpresa);
+        this.router.post('/xmlDownload/', catEmpresaControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catEmpresaControlador_1.default.downloadXML);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

@@ -13,6 +13,8 @@ class DepartamentoRutas {
         this.router.get('/buscar/:nombre', EMPRESA_CONTROLADOR.ListarUnaEmpresa);
         this.router.post('/', EMPRESA_CONTROLADOR.CrearEmpresa);
         this.router.put('/', EMPRESA_CONTROLADOR.ActualizarEmpresa);
+        this.router.post('/xmlDownload/', EMPRESA_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', EMPRESA_CONTROLADOR.downloadXML);
     }
 }
 

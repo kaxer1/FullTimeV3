@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EliminarProcesosComponent } from './eliminar-procesos.component';
+import { EditarNotificacionComponent } from './editar-notificacion.component';
 
-describe('EliminarProcesosComponent', () => {
-  let component: EliminarProcesosComponent;
-  let fixture: ComponentFixture<EliminarProcesosComponent>;
+describe('EditarNotificacionComponent', () => {
+  let component: EditarNotificacionComponent;
+  let fixture: ComponentFixture<EditarNotificacionComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EliminarProcesosComponent ]
+      declarations: [ EditarNotificacionComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EliminarProcesosComponent);
+    fixture = TestBed.createComponent(EditarNotificacionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

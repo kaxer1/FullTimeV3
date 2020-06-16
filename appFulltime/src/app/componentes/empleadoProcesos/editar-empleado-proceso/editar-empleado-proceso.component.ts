@@ -113,7 +113,7 @@ export class EditarEmpleadoProcesoComponent implements OnInit {
   CerrarVentanaRegistroProceso() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 
   Salir() {

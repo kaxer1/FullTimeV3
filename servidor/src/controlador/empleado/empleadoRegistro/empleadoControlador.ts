@@ -10,16 +10,16 @@ class EmpleadoControlador {
 
   public async list(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
-    res.json(empleado.rows);
+    res.jsonp(empleado.rows);
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
     const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
     if (unEmpleado.rowCount > 0) {
-      return res.json(unEmpleado.rows)
+      return res.jsonp(unEmpleado.rows)
     }
-    res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+    res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
   }
   
   public async getImagen(req: Request, res: Response): Promise<any> {
@@ -33,7 +33,7 @@ class EmpleadoControlador {
     await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
     const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
     const idEmployGuardado = oneEmpley.rows[0].id;
-    res.json({ message: 'Empleado guardado', id: idEmployGuardado});
+    res.jsonp({ message: 'Empleado guardado', id: idEmployGuardado});
   }
 
   public async editar(req: Request, res: Response): Promise<void> {
@@ -58,14 +58,14 @@ class EmpleadoControlador {
             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
             fs.unlinkSync(direccionCompleta);
             await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            res.json({ message: 'Imagen Actualizada'});
+            res.jsonp({ message: 'Imagen Actualizada'});
           } catch (error) {
             await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            res.json({ message: 'Imagen Actualizada'});
+            res.jsonp({ message: 'Imagen Actualizada'});
           }
         } else {
           await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-          res.json({ message: 'Imagen Actualizada'});
+          res.jsonp({ message: 'Imagen Actualizada'});
         }
       });
     }
@@ -105,39 +105,41 @@ class EmpleadoControlador {
           const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
           const id_empleado = oneEmpley.rows[0].id;
           await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol, id_empleado, app_habilita]);
+        } else {
+          res.jsonp({error: 'plantilla equivocada'});
         }
     });
     
-    res.json({ message: 'La plantilla a sido receptada' });
+    res.jsonp({ message: 'La plantilla a sido receptada' });
     fs.unlinkSync(filePath);
 }
 
   public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {
     const { observacion, id_empleado, id_titulo } = req.body;
     await pool.query('INSERT INTO empl_titulos ( observacion, id_empleado, id_titulo ) VALUES ($1, $2, $3)', [observacion, id_empleado, id_titulo]);
-    res.json({ message: 'Titulo del empleado Guardado'});
+    res.jsonp({ message: 'Titulo del empleado Guardado'});
   }
   
   public async editarTituloDelEmpleado(req: Request, res: Response): Promise<void> {
     const id = req.params.id_empleado_titulo;
     const { observacion, id_titulo} = req.body;
     await pool.query('UPDATE empl_titulos SET observacion = $1, id_titulo = $2 WHERE id = $3 ', [observacion, id_titulo, id]);
-    res.json({ message: 'Titulo del empleado Actualizado'});
+    res.jsonp({ message: 'Titulo del empleado Actualizado'});
   }
 
   public async eliminarTituloDelEmpleado(req: Request, res: Response): Promise<void> {
     const id = req.params.id_empleado_titulo;
     await pool.query('DELETE FROM empl_titulos WHERE id = $1', [id]);
-    res.json({ message: 'Registro eliminado' });
+    res.jsonp({ message: 'Registro eliminado' });
   }
 
   public async getTitulosDelEmpleado(req: Request, res: Response): Promise<any> {
     const { id_empleado } = req.params;
     const unEmpleadoTitulo = await pool.query('SELECT et.id, et.observacion As observaciones, et.id_titulo, et.id_empleado, ct.nombre, nt.nombre as nivel FROM empl_titulos AS et, cg_titulos AS ct, nivel_titulo AS nt WHERE et.id_empleado = $1 and et.id_titulo = ct.id and ct.id_nivel = nt.id ORDER BY id', [id_empleado]);
     if (unEmpleadoTitulo.rowCount > 0) {
-      return res.json(unEmpleadoTitulo.rows)
+      return res.jsonp(unEmpleadoTitulo.rows)
     }
-    res.status(404).json({ text: 'El empleado no tiene titulos asignados'});
+    res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados'});
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
@@ -150,7 +152,7 @@ class EmpleadoControlador {
       }
       console.log("Archivo guardado");
     });
-    res.json({ text: 'XML creado', name: filename});
+    res.jsonp({ text: 'XML creado', name: filename});
   }
 
   public async downloadXML(req: Request, res: Response): Promise<any> {

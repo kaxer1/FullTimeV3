@@ -277,7 +277,8 @@
                                 </div>
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
-                                        <a mat-button type="submit" (click)="ConfirmarDeleteDiscapacidad(d.id_empleado)" matSuffix>
+                                        <a mat-button type="submit" (click)="ConfirmarDeleteDiscapacidad(d.id_empleado)"
+                                            matSuffix>
                                             <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
                                                 matTooltip="Eliminar registro">
                                                 <p>Eliminar</p>
@@ -376,7 +377,7 @@
                                         <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                                     </div>
                                 </div>
-                                <div class="col" style="text-align: right;">
+                                <div style="text-align: right;">
                                     <a href="{{rutaContrato}}" mat-button type="submit"
                                         (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
                                         [disabled]="!btnActualizarContrato">
@@ -477,7 +478,7 @@
                                         <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
                                     </div>
                                 </div>
-                                <div class="col" style="text-align: right;">
+                                <div style="text-align: right;">
                                     <a href="{{rutaCargo}}" mat-button type="submit"
                                         (click)="verCargoEdicion(false); ObtenerIdCargoSeleccionado(c.id)"
                                         [disabled]="!btnActualizarCargo">
@@ -492,7 +493,8 @@
                         </mat-card-content>
                     </mat-card>
                     <div style="padding-bottom: 35px; padding-top: 35px;">
-                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo" [idEmploy]="idEmpleado" id="editarCargo">
+                        <app-editar-cargo *ngIf="!btnActualizarCargo" [idSelectCargo]="idSelectCargo"
+                            [idEmploy]="idEmpleado" id="editarCargo">
                         </app-editar-cargo>
                     </div>
                 </div>
@@ -525,14 +527,28 @@
                     </div>
                     <mat-card class="example-card mat-elevation-z9" id="carta1">
                         <div class="container">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChangeHorario($event)" type="file"
-                                    [formControl]="archivoHorarioForm" id="file"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir Horario</label>
-                            </form>
+                            <div class="row">
+                                <div class="col-md" style="width: 700px;">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <input (change)="fileChangeHorario($event)" type="file"
+                                            [formControl]="archivoHorarioForm" id="file"
+                                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                        <label for="file" class="btn-2" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="departamento-tooltip"
+                                            matTooltip="Presionar para cargar plantilla con nombre Horario Empleado">Subir
+                                            Horario</label>
+                                    </form>
+                                </div>
+                                <div class="col-md">
+                                    <button (click)="DescargarPlantillaHorario()" mat-button type="submit"
+                                        id="descargar" class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="Presionar para descargar Plantilla para carga multiple de horarios del empleado">
+                                        <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
+                                        Empleado
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </mat-card>
                 </div>
@@ -634,39 +650,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Día Vacación:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.dia_vacacion}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Día Antiguedad:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Día Perdido:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.dia_perdido}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Estado:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.estado}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                        <label class="col-sm col-form-label">Inicio de Periodo:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
@@ -674,11 +658,51 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Final:</label>
+                                        <label class="col-sm col-form-label">Fin de Periodo:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
                                     </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Vacaciones usadas:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="p.estado == 1">Sí</label>
+                                        <label class="col col-form-label" *ngIf="p.estado == 2">No</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Días de Vacaciones:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_vacacion}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Días por Antiguedad:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Días Perdidos:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_perdido}}</label>
+                                    </div>
+                                </div>
+                                <div style="text-align: right; margin-right: 1px;">
+                                    <i (click)="AbrirEditarPeriodoVacaciones(p)" class="fas fa-edit" id="edit" matSuffix
+                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
                                 </div>
                                 <mat-divider></mat-divider>
                             </div>
@@ -705,39 +729,7 @@
                             <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Día Libre:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{v.dia_libre}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Día Laborable:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{v.dia_laborable}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Legalizado:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{v.legalizado}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Estado:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{v.estado}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                        <label class="col-sm col-form-label">Fecha de Inicio:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
@@ -753,10 +745,46 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                                        <label class="col-sm col-form-label">Fecha de Ingreso:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Días Laborables:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.dia_laborable}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Días Libres:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{v.dia_libre}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Legalizado:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="v.legalizado == true">Sí</label>
+                                        <label class="col col-form-label" *ngIf="v.legalizado == false">No</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Estado:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="v.estado == 1">Solicitado</label>
+                                        <label class="col col-form-label" *ngIf="v.estado == 2">Rechazado</label>
+                                        <label class="col col-form-label" *ngIf="v.estado == 3">Aceptado</label>
+                                        <label class="col col-form-label" *ngIf="v.estado == 4">Eliminado</label>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>
@@ -1138,7 +1166,11 @@
                                         <label class="col-sm col-form-label">Documento:</label>
                                     </div>
                                     <div class="col">
-                                        <a href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}" target="_blank">ver</a>
+                                        <a id="doc"
+                                            href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
+                                            target="_blank" matSuffix
+                                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                            matTooltip="Dar click para descargar documento">{{pt.docu_nombre}}</a>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>

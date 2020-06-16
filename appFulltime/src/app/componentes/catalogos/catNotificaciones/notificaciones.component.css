@@ -1,7 +1,5 @@
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 
-/*.notifica-tooltip { background-color : brown; }*/
-
 .tituloNotifica { 
     font-size: 20px; 
     text-align: center; 
@@ -13,3 +11,33 @@
 #selecDepa { font-size: 13px; }
 
 #notifica { cursor: pointer; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
+p { font-size: x-small; }
+
+td { padding-top: 10px; text-align: center; }
+
+#iprocesoL { cursor: pointer; font-size: x-small;}
+#resulProceso { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
+#proS { font-size: 15px;}
+
+table {width: 100%;}
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
+#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; }
+
+#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px;}
+
+#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px;}
+
+#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }

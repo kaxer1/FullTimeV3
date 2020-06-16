@@ -2,12 +2,18 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -39,7 +45,7 @@ export class ListarFeriadosComponent implements OnInit {
   pageSizeOptions = [5, 10, 20, 50];
 
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
 
   constructor(
     private rest: FeriadosService,
@@ -61,7 +67,7 @@ export class ListarFeriadosComponent implements OnInit {
         var cadena1 = this.feriados[i]['fecha'];
         var aux1 = cadena1.split("T");
         this.feriados[i]['fecha'] = aux1[0];
-        if (this.feriados[i]['fec_recuperacion'] != null){
+        if (this.feriados[i]['fec_recuperacion'] != null) {
           var cadena2 = this.feriados[i]['fec_recuperacion'];
           var aux2 = cadena2.split("T");
           this.feriados[i]['fec_recuperacion'] = aux2[0];
@@ -76,13 +82,13 @@ export class ListarFeriadosComponent implements OnInit {
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true} }).disableClose = true;
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 
   AbrirVentanaAsignarCiudad(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: false} }).disableClose = true;
+    this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: false } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 
@@ -120,7 +126,7 @@ export class ListarFeriadosComponent implements OnInit {
     }
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1
   }
@@ -128,9 +134,9 @@ export class ListarFeriadosComponent implements OnInit {
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
-    let arrayItems =  this.nameFile.split(".");
+    let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0,8);
+    let itemName = arrayItems[0].slice(0, 8);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'feriados') {
@@ -142,7 +148,7 @@ export class ListarFeriadosComponent implements OnInit {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
     }
   }
-  
+
   plantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
@@ -154,5 +160,159 @@ export class ListarFeriadosComponent implements OnInit {
       this.archivoForm.reset();
       this.nameFile = '';
     });
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
+   * ****************************************************************************************************/
+
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Feriados', this.feriados);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'FERIADOS',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFFeriados(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 10,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 8,
+          alignment: 'center',
+        },
+        itemsTableD: {
+          fontSize: 8,
+        }
+      }
+    };
+  }
+
+  presentarDataPDFFeriados() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Descripción', style: 'tableHeader' },
+            { text: 'Fecha', style: 'tableHeader' },
+            { text: 'Fecha Recuperación', style: 'tableHeader' },
+          ],
+          ...this.feriados.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.descripcion, style: 'itemsTableD' },
+              { text: obj.fecha, style: 'itemsTable' },
+              { text: obj.fec_recuperacion, style: 'itemsTable' },
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
+   * ****************************************************************************************************/
+
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.feriados);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'feriados');
+    xlsx.writeFile(wb, "FeriadosEXCEL" + new Date().getTime() + '.xlsx');
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloFeriados = [];
+    this.feriados.forEach(obj => {
+      objeto = {
+        "roles": {
+          '@id': obj.id,
+          "descripcion": obj.descripcion,
+          "fecha": obj.fecha,
+          "fec_recuperacion": obj.fec_recuperacion,
+        }
+      }
+      arregloFeriados.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloFeriados).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/feriados/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
+  /****************************************************************************************************** 
+   * MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.feriados);
+    const csvDataC = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "FeriadosCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ***************************************************************************************************** 
+   *                                PLANTILLA VACIA DE FERIADOS
+   * *****************************************************************************************************/
+  DescargarPlantillaFeriados() {
+    var datosFeriado = [{
+      fecha: 'Eliminar esta Fila: 23/02/2020 (Nota: formato de celda tipo Text)',
+      descripcion: 'Carnaval',
+      fec_recuperacion: '25/05/2020 (Nota: formato de celda tipo Text) Escribir en caso de exitir recuperacion' 
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Feriados');
+    xlsx.writeFile(wb, "Feriados" + '.xlsx');
   }
 }

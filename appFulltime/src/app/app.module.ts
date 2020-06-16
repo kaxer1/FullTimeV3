@@ -71,8 +71,16 @@ import { RegistroEmpleadoPermisoComponent } from './componentes/empleadoPermisos
 import { RegistoEmpleadoHorarioComponent } from './componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { DetalleCatHorarioComponent } from './componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
-import { FooterComponent } from './share/footer/footer.component';
-import { MainNavComponent } from './share/main-nav/main-nav.component';
+import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
+import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
+import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
+import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
+import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
+import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
+import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
+import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
 import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 import { EditarTitulosComponent } from './componentes/catalogos/catTitulos/editar-titulos/editar-titulos.component';
 import { EditarNivelTituloComponent } from './componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component';
@@ -86,9 +94,16 @@ import { EditarSucursalComponent } from './componentes/sucursales/editar-sucursa
 import { EditarCatProcesosComponent } from './componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { EditarEmpleadoProcesoComponent } from './componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { EditarEnroladosComponent } from './componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
-import { MetodosComponent } from './componentes/metodos/metodos.component';
+import { MetodosComponent } from './componentes/metodoEliminar/metodos.component';
 import { EditarContratoComponent } from './componentes/empleado/editar-contrato/editar-contrato.component';
 import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar-cargo.component';
+import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/editar-empleado-permiso/editar-empleado-permiso.component';
+import { HomeEmpleadoComponent } from './componentes/rolEmpleado/home-empleado/home-empleado.component';
+import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
+
+import { FooterComponent } from './share/footer/footer.component';
+import { MainNavComponent } from './share/main-nav/main-nav.component';
+
 
 // conexión Rest Postgresql Servicios
 import { RolesService } from './servicios/catalogos/catRoles/roles.service';
@@ -179,21 +194,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
-import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
-import { CambiarContrasenaComponent } from './componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { EditarRelojComponent } from './componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
-import { EditarRolComponent } from './componentes/catalogos/catRoles/editar-rol/editar-rol.component';
-import { EditarRegimenComponent } from './componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
-import { EditarDepartamentoComponent } from './componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
-import { EditarTipoPermisosComponent } from './componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
-import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
-import { VerHorarioDetalleComponent } from './componentes/catalogos/catHorario/ver-horario-detalle/ver-horario-detalle.component';
-import { EditarHorarioComponent } from './componentes/catalogos/catHorario/editar-horario/editar-horario.component';
-import { EliminarNivelTitulosComponent } from './componentes/nivelTitulos/eliminar-nivel-titulos/eliminar-nivel-titulos.component';
-import { EliminarProcesosComponent } from './componentes/catalogos/catProcesos/eliminar-procesos/eliminar-procesos.component';
-import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/editar-empleado-permiso/editar-empleado-permiso.component';
-import { HomeEmpleadoComponent } from './componentes/rolEmpleado/home-empleado/home-empleado.component';
-import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
+import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
+import { EditarNotificacionComponent } from './componentes/catalogos/catNotificaciones/editar-notificacion/editar-notificacion.component';
+import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
 
 @NgModule({
   declarations: [
@@ -317,12 +320,12 @@ import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/l
     PlanificacionMultipleComponent,
     VerHorarioDetalleComponent,
     EditarHorarioComponent,
-    EliminarNivelTitulosComponent,
-    EliminarProcesosComponent,
     EditarEmpleadoPermisoComponent,
     HomeEmpleadoComponent,
     ListarEmpleadoPermisoComponent,
-
+    EditarPeriodoVacacionesComponent,
+    EditarNotificacionComponent,
+    ListarNotiAutorizacionesComponent,
   ],
 
   imports: [

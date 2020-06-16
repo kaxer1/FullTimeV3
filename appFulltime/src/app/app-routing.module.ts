@@ -36,7 +36,7 @@ import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursa
 import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
-import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
+// import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
 import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
 import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
@@ -85,7 +85,7 @@ const routes: Routes = [
   { path: 'nivelTitulos', component: ListarNivelTitulosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
-  { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  // { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'autorizaciones', component: AutorizacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'planificacion', component: PlanificacionMultipleComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'verHorario/:id', component: VerHorarioDetalleComponent, canActivate: [AuthGuard], data: { roles: 1 }},

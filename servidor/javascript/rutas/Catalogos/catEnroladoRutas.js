@@ -24,6 +24,8 @@ class EnroladoRutas {
         this.router.get('/buscar/ultimoId', this.verifyToken, catEnroladoControlador_1.default.ObtenerUltimoId);
         this.router.put('/', this.verifyToken, catEnroladoControlador_1.default.ActualizarEnrolado);
         this.router.delete('/eliminar/:id', catEnroladoControlador_1.default.EliminarEnrolado);
+        this.router.post('/xmlDownload/', catEnroladoControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catEnroladoControlador_1.default.downloadXML);
     }
     verifyToken(req, res, next) {
         if (!req.headers.authorization) {

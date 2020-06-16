@@ -21,6 +21,8 @@ class RelojesRuta {
         this.router.post('/plantillaExcel/', multipartMiddlewarePlantilla, catRelojesControlador_1.default.CargaPlantillaRelojes);
         this.router.put('/', catRelojesControlador_1.default.ActualizarReloj);
         // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.post('/xmlDownload/', catRelojesControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catRelojesControlador_1.default.downloadXML);
     }
 }
 const RELOJES_RUTA = new RelojesRuta();

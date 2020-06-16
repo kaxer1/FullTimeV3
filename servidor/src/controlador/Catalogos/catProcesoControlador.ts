@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+const builder = require('xmlbuilder');
+
 import pool from '../../database';
 
 class ProcesoControlador {
@@ -8,51 +11,63 @@ class ProcesoControlador {
     Sin_proc_padre.rows.forEach(obj => {
       Con_proc_padre.rows.push(obj);
     })
-    res.json(Con_proc_padre.rows);
+    res.jsonp(Con_proc_padre.rows);
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
     const unaProvincia = await pool.query('SELECT * FROM cg_procesos WHERE id = $1', [id]);
     if (unaProvincia.rowCount > 0) {
-      return res.json(unaProvincia.rows)
+      return res.jsonp(unaProvincia.rows)
     }
-    res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+    res.status(404).jsonp({ text: 'El proceso no ha sido encontrado' });
   }
 
   public async create(req: Request, res: Response): Promise<void> {
     const { nombre, nivel, proc_padre } = req.body;
     await pool.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre, nivel, proc_padre]);
     console.log(req.body);
-    res.json({ message: 'El departamento ha sido guardado en éxito' });
+    res.jsonp({ message: 'El departamento ha sido guardado en éxito' });
   }
 
   public async getIdByNombre(req: Request, res: Response): Promise<any> {
     const { nombre } = req.params;
     const unIdProceso = await pool.query('SELECT id FROM cg_procesos WHERE nombre = $1', [nombre]);
     if (unIdProceso != null) {
-      return res.json(unIdProceso.rows);
+      return res.jsonp(unIdProceso.rows);
     }
-    res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+    res.status(404).jsonp({ text: 'El proceso no ha sido encontrado' });
   }
 
   public async ActualizarProceso(req: Request, res: Response): Promise<void> {
     const { nombre, nivel, proc_padre, id } = req.body;
     await pool.query('UPDATE cg_procesos SET nombre = $1, nivel = $2, proc_padre = $3 WHERE id = $4', [nombre, nivel, proc_padre, id]);
-    res.json({ message: 'El proceso actualizado exitosamente' });
+    res.jsonp({ message: 'El proceso actualizado exitosamente' });
   }
 
   public async EliminarProceso(req: Request, res: Response): Promise<void> {
-    const proc_padre = req.params.id;
     const id = req.params.id;
-    const procesos = await pool.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
-    console.log(procesos.rows.length)
-    if(procesos.rows.length === 0) {
-      await pool.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
-      res.json({ message: 'Registro eliminado' });
-    } else {
-      res.json(procesos.rows);
-    }
+    await pool.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+      res.jsonp({ message: 'Registro eliminado' });
+  }
+
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
+    console.log(req.body.userName);
+    let filename = "Procesos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename });
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
 }

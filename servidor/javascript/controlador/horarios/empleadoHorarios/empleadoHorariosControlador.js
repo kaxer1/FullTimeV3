@@ -20,10 +20,10 @@ class EmpleadoHorariosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const HORARIOS = yield database_1.default.query('SELECT * FROM empl_horarios');
             if (HORARIOS.rowCount > 0) {
-                return res.json(HORARIOS.rows);
+                return res.jsonp(HORARIOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -31,7 +31,7 @@ class EmpleadoHorariosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado } = req.body;
             yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado]);
-            res.json({ message: 'El horario del empleado se registró con éxito' });
+            res.jsonp({ message: 'El horario del empleado se registró con éxito' });
         });
     }
     ListarHorarioCargo(req, res) {
@@ -39,10 +39,10 @@ class EmpleadoHorariosControlador {
             const { id_empl_cargo } = req.params;
             const HORARIOS = yield database_1.default.query('SELECT * FROM VistaHorarioEmpleado WHERE id_empl_cargo = $1', [id_empl_cargo]);
             if (HORARIOS.rowCount > 0) {
-                return res.json(HORARIOS.rows);
+                return res.jsonp(HORARIOS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -68,7 +68,7 @@ class EmpleadoHorariosControlador {
                 yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
                 console.log("carga exitosa");
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -93,7 +93,7 @@ class EmpleadoHorariosControlador {
                 yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
                 console.log("carga exitosa");
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }

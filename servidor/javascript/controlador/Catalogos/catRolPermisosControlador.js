@@ -17,7 +17,7 @@ class RolPermisosControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const rolPermisos = yield database_1.default.query('SELECT * FROM cg_rol_permisos');
-            res.json(rolPermisos.rows);
+            res.jsonp(rolPermisos.rows);
         });
     }
     getOne(req, res) {
@@ -25,9 +25,9 @@ class RolPermisosControlador {
             const { id } = req.params;
             const unRolPermiso = yield database_1.default.query('SELECT * FROM cg_rol_permisos WHERE id = $1', [id]);
             if (unRolPermiso.rowCount > 0) {
-                return res.json(unRolPermiso.rows);
+                return res.jsonp(unRolPermiso.rows);
             }
-            res.status(404).json({ text: 'Rol permiso no encontrado' });
+            res.status(404).jsonp({ text: 'Rol permiso no encontrado' });
         });
     }
     create(req, res) {
@@ -38,7 +38,7 @@ class RolPermisosControlador {
             const rolPermisos = yield database_1.default.query('SELECT id FROM cg_rol_permisos');
             const ultimoDato = rolPermisos.rows.length - 1;
             const idRespuesta = rolPermisos.rows[ultimoDato].id;
-            res.json({ message: 'Rol permiso Guardado', id: idRespuesta });
+            res.jsonp({ message: 'Rol permiso Guardado', id: idRespuesta });
         });
     }
     createPermisoDenegado(req, res) {
@@ -46,7 +46,7 @@ class RolPermisosControlador {
             const { id_rol, id_permiso } = req.body;
             yield database_1.default.query('INSERT INTO rol_perm_denegado ( id_rol, id_permiso ) VALUES ($1, $2)', [id_rol, id_permiso]);
             console.log(req.body);
-            res.json({ message: 'Permiso denegado Guardado' });
+            res.jsonp({ message: 'Permiso denegado Guardado' });
         });
     }
     getPermisosUsuario(req, res) {
@@ -55,9 +55,9 @@ class RolPermisosControlador {
             const unRolPermiso = yield database_1.default.query('SELECT * FROM VistaPermisoRoles WHERE id_rol = $1', [id]);
             if (unRolPermiso.rowCount > 0) {
                 console.log(unRolPermiso.rows);
-                return res.json(unRolPermiso.rows);
+                return res.jsonp(unRolPermiso.rows);
             }
-            res.status(404).json({ text: 'El rol no tiene permisos' });
+            res.status(404).jsonp({ text: 'El rol no tiene permisos' });
         });
     }
 }

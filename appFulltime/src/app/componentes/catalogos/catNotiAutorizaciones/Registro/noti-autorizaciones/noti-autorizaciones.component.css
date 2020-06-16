@@ -1,6 +1,10 @@
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 
-/*.notifica-tooltip { background-color : brown; }*/
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
 
 .tituloNotifica { 
     font-size: 20px; 

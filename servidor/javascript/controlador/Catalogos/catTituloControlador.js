@@ -17,7 +17,7 @@ class TituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const titulo = yield database_1.default.query('SELECT ct.id, ct.nombre, nt.nombre as nivel FROM cg_titulos AS ct, nivel_titulo AS nt WHERE ct.id_nivel = nt.id');
-            res.json(titulo.rows);
+            res.jsonp(titulo.rows);
         });
     }
     getOne(req, res) {
@@ -25,9 +25,9 @@ class TituloControlador {
             const { id } = req.params;
             const unTitulo = yield database_1.default.query('SELECT * FROM cg_titulos WHERE id = $1', [id]);
             if (unTitulo.rowCount > 0) {
-                return res.json(unTitulo.rows);
+                return res.jsonp(unTitulo.rows);
             }
-            res.status(404).json({ text: 'El empleado no ha sido encontrado' });
+            res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
         });
     }
     create(req, res) {
@@ -35,14 +35,14 @@ class TituloControlador {
             const { nombre, id_nivel } = req.body;
             yield database_1.default.query('INSERT INTO cg_titulos ( nombre, id_nivel ) VALUES ($1, $2)', [nombre, id_nivel]);
             console.log(req.body);
-            res.json({ message: 'Título guardado' });
+            res.jsonp({ message: 'Título guardado' });
         });
     }
     ActualizarTitulo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, id_nivel, id } = req.body;
             yield database_1.default.query('UPDATE cg_titulos SET nombre = $1, id_nivel = $2 WHERE id = $3', [nombre, id_nivel, id]);
-            res.json({ message: 'Título actualizado exitosamente' });
+            res.jsonp({ message: 'Título actualizado exitosamente' });
         });
     }
 }

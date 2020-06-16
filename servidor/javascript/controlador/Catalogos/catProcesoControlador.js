@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class ProcesoControlador {
     list(req, res) {
@@ -21,7 +23,7 @@ class ProcesoControlador {
             Sin_proc_padre.rows.forEach(obj => {
                 Con_proc_padre.rows.push(obj);
             });
-            res.json(Con_proc_padre.rows);
+            res.jsonp(Con_proc_padre.rows);
         });
     }
     getOne(req, res) {
@@ -29,9 +31,9 @@ class ProcesoControlador {
             const { id } = req.params;
             const unaProvincia = yield database_1.default.query('SELECT * FROM cg_procesos WHERE id = $1', [id]);
             if (unaProvincia.rowCount > 0) {
-                return res.json(unaProvincia.rows);
+                return res.jsonp(unaProvincia.rows);
             }
-            res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+            res.status(404).jsonp({ text: 'El proceso no ha sido encontrado' });
         });
     }
     create(req, res) {
@@ -39,7 +41,7 @@ class ProcesoControlador {
             const { nombre, nivel, proc_padre } = req.body;
             yield database_1.default.query('INSERT INTO cg_procesos (nombre, nivel, proc_padre) VALUES ($1, $2, $3)', [nombre, nivel, proc_padre]);
             console.log(req.body);
-            res.json({ message: 'El departamento ha sido guardado en éxito' });
+            res.jsonp({ message: 'El departamento ha sido guardado en éxito' });
         });
     }
     getIdByNombre(req, res) {
@@ -47,31 +49,44 @@ class ProcesoControlador {
             const { nombre } = req.params;
             const unIdProceso = yield database_1.default.query('SELECT id FROM cg_procesos WHERE nombre = $1', [nombre]);
             if (unIdProceso != null) {
-                return res.json(unIdProceso.rows);
+                return res.jsonp(unIdProceso.rows);
             }
-            res.status(404).json({ text: 'El proceso no ha sido encontrado' });
+            res.status(404).jsonp({ text: 'El proceso no ha sido encontrado' });
         });
     }
     ActualizarProceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, nivel, proc_padre, id } = req.body;
             yield database_1.default.query('UPDATE cg_procesos SET nombre = $1, nivel = $2, proc_padre = $3 WHERE id = $4', [nombre, nivel, proc_padre, id]);
-            res.json({ message: 'El proceso actualizado exitosamente' });
+            res.jsonp({ message: 'El proceso actualizado exitosamente' });
         });
     }
     EliminarProceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const proc_padre = req.params.id;
             const id = req.params.id;
-            const procesos = yield database_1.default.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
-            console.log(procesos.rows.length);
-            if (procesos.rows.length === 0) {
-                yield database_1.default.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
-                res.json({ message: 'Registro eliminado' });
-            }
-            else {
-                res.json(procesos.rows);
-            }
+            yield database_1.default.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Procesos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
 }

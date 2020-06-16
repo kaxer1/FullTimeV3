@@ -14,6 +14,10 @@ export class EmplCargosService {
     return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos`);
   }
 
+  getListaEmpleadoCargosRest(){
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/lista-empleados`);
+  }
+
   getUnCargoRest(id: number){
     return this.http.get<any>(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/${id}`);
   }

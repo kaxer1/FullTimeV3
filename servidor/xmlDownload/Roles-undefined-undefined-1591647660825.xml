@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<root>
+  <roles id="1">
+    <nombre>Administrador</nombre>
+  </roles>
+  <roles id="3">
+    <nombre>Gerente</nombre>
+  </roles>
+  <roles id="2">
+    <nombre>Ventas</nombre>
+  </roles>
+</root>

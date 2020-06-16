@@ -47,4 +47,8 @@ export class EnroladoService {
     return this.http.post(`${this.API_URL}/enrolados/plantillaExcel/`, formData);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/enrolados/xmlDownload`, data);
+  }
+
 }

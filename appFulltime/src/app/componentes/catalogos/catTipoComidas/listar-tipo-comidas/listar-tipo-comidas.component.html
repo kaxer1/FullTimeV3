@@ -30,6 +30,28 @@
                 </mat-card-actions>
             </mat-card>
         </div>
+        <div class="col-md">
+            <div class="tituloTipoCoL">
+                <span>REGISTRO MULTIPLE DE TIPO COMIDAS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo Comidas</label>
+                    </form>
+                    <br>
+                    <button (click)="DescargarPlantillaComidas()" mat-button type="submit" id="descargar"
+                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Presionar para descargar Plantilla para carga multiple de tipos de comida">
+                        <span class="material-icons">cloud_download</span>  Descargar Plantilla Tipo Comidas
+                    </button>
+                </div>
+            </mat-card>
+        </div>
     </div>
 </div>
 <br>
@@ -52,7 +74,8 @@
                     <td id="fila">$ {{comida.valor}}</td>
                     <td id="centrar">{{comida.observacion}}</td>
                     <td id="centrar">
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
+                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
+                            matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
                             matTooltip="Editar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
@@ -79,6 +102,10 @@
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Comidas en formato CSV">
                 <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Comidas en formato XML">
+                <p>XML</p>
             </i>
         </div>
     </mat-card>

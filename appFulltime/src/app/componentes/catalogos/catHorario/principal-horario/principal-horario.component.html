@@ -37,26 +37,49 @@
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <p id="lista">- Horarios</p>
                 <div class="container">
-                    <form method="post" enctype="multipart/form-data">
-                        <input (change)="fileChangeCatalogoHorario($event)" type="file" [formControl]="archivo1Form"
-                            id="file1"
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios">Cargar
-                            Horarios</label>
-                    </form>
+                    <div class="row">
+                        <div class="col-md" style="width: 600px;">
+                            <form method="post" enctype="multipart/form-data">
+                                <input (change)="fileChangeCatalogoHorario($event)" type="file"
+                                    [formControl]="archivo1Form" id="file1"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios">Cargar
+                                    Horarios</label>
+                            </form>
+                        </div>
+                        <div class="col-md">
+                            <button (click)="DescargarPlantillaHorario()" mat-button type="submit" id="descargar"
+                                class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Presionar para descargar Plantilla para carga multiple de horarios">
+                                <span class="material-icons">cloud_download</span> Descargar Plantilla Horarios
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <p id="lista">- Detalles de Horarios</p>
                 <div class="container">
-                    <form method="post" enctype="multipart/form-data">
-                        <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form" id="file2"
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios">Cargar
-                            Detalles</label>
-                    </form>
+                    <div class="row">
+                        <div class="col-md" style="width: 600px;">
+                            <form method="post" enctype="multipart/form-data">
+                                <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form"
+                                    id="file2"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios">Cargar
+                                    Detalles</label>
+                            </form>
+                        </div>
+                        <div class="col-md">
+                            <button (click)="DescargarPlantillaDetalles()" mat-button type="submit" id="descargar"
+                            class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            matTooltip="Presionar para descargar Plantilla para carga multiple de detalle de horarios">
+                            <span class="material-icons">cloud_download</span> Descargar Plantilla Detalles
+                        </button>
+                        </div>
+                    </div>
                 </div>
                 <!-- <p id="lista">- Horarios y Detalles</p>
                  <div class="container" >
@@ -136,6 +159,10 @@
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato CSV">
                 <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato XML">
+                <p>XML</p>
             </i>
         </div>
     </mat-card>

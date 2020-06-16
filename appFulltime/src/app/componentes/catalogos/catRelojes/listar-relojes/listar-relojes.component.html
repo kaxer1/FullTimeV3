@@ -110,8 +110,17 @@
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2">Subir relojes</label>
+                        <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Dispositivos">Subir
+                            Dispositivos</label>
                     </form>
+                    <br>
+                    <button (click)="DescargarPlantillaRelojes()" mat-button type="submit" id="descargar"
+                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Presionar para descargar Plantilla para carga multiple de dispositivos">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Dispositivos
+                    </button>
                 </div>
             </mat-card>
         </div>
@@ -176,6 +185,10 @@
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato CSV">
                 <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato XML">
+                <p>XML</p>
             </i>
         </div>
     </mat-card>

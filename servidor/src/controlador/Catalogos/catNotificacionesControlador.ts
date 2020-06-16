@@ -3,12 +3,12 @@ import pool from '../../database';
 
 class NotificacionesControlador {
   public async ListarNotificaciones(req: Request, res: Response) {
-    const NOTIFICACIONES = await pool.query('SELECT * FROM cg_notificaciones');
+    const NOTIFICACIONES = await pool.query('SELECT cn.tipo, cn.nivel, cn.id, cd.nombre, ctp.descripcion, cd.id AS departamento, ctp.id AS tipo_permiso FROM cg_notificaciones AS cn, cg_departamentos AS cd, cg_tipo_permisos AS ctp WHERE cn.id_departamento = cd.id AND cn.id_tipo_permiso = ctp.id AND NOT cd.nombre = \'Ninguno\' ORDER BY id ASC');
     if (NOTIFICACIONES.rowCount > 0) {
-      return res.json(NOTIFICACIONES.rows)
+      return res.jsonp(NOTIFICACIONES.rows)
     }
     else {
-      return res.status(404).json({ text: 'No se encuentran registros' });
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
     }
   }
 
@@ -16,17 +16,17 @@ class NotificacionesControlador {
     const { id } = req.params;
     const NOTIFICACIONES = await pool.query('SELECT * FROM cg_notificaciones WHERE id = $1', [id]);
     if (NOTIFICACIONES.rowCount > 0) {
-      return res.json(NOTIFICACIONES.rows)
+      return res.jsonp(NOTIFICACIONES.rows)
     }
     else {
-      return res.status(404).json({ text: 'No se encuentran registros' });
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
     }
   }
 
   public async CrearNotificacion(req: Request, res: Response): Promise<void> {
     const { tipo, nivel, id_departamento, id_tipo_permiso } = req.body;
     await pool.query('INSERT INTO cg_notificaciones ( tipo, nivel, id_departamento, id_tipo_permiso ) VALUES ($1, $2, $3, $4)', [tipo, nivel, id_departamento, id_tipo_permiso]);
-    res.json({ message: 'Notificación guardada' });
+    res.jsonp({ message: 'Notificación guardada' });
   }
 
 }

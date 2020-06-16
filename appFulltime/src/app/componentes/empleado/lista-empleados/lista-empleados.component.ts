@@ -24,7 +24,7 @@ export class ListaEmpleadosComponent implements OnInit {
   empleado: any = [];
   nacionalidades: any = [];
   displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
-  
+
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
@@ -51,7 +51,7 @@ export class ListaEmpleadosComponent implements OnInit {
     this.obtenerNacionalidades();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -93,21 +93,21 @@ export class ListaEmpleadosComponent implements OnInit {
     }
   }
 
-  getEmpleados(){
+  getEmpleados() {
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
       this.empleado = data;
     })
   }
 
-  verEmpleado(id: any){
+  verEmpleado(id: any) {
     this.empleado = []
     this.rest.getOneEmpleadoRest(id).subscribe(data => {
       this.empleado = data;
     })
   }
 
-  limpiarCampos(){
+  limpiarCampos() {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();
@@ -124,15 +124,15 @@ export class ListaEmpleadosComponent implements OnInit {
    */
 
   nameFile: string;
-  archivoSubido: Array < File > ;
+  archivoSubido: Array<File>;
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
     this.nameFile = this.archivoSubido[0].name;
-    let arrayItems =  this.nameFile.split(".");
+    let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0,9);
+    let itemName = arrayItems[0].slice(0, 9);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'empleados') {
@@ -144,7 +144,7 @@ export class ListaEmpleadosComponent implements OnInit {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
     }
   }
-  
+
   plantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
@@ -159,11 +159,9 @@ export class ListaEmpleadosComponent implements OnInit {
     this.nameFile = '';
   }
 
-  /**
-   * 
-   * METODOS PARA PDF
-   * 
-   */
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
+   * ****************************************************************************************************/
 
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
@@ -181,7 +179,7 @@ export class ListaEmpleadosComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Empleados', this.empleado);
     return {
-      pageOrientation: 'landscape', 
+      pageOrientation: 'landscape',
       content: [
         {
           text: 'Empleados',
@@ -221,28 +219,28 @@ export class ListaEmpleadosComponent implements OnInit {
     };
   }
 
-  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
-  GeneroSelect: any = ['Masculino','Femenino'];
-  EstadoSelect: any = ['Activo','Inactivo'];
+  EstadoCivilSelect: any = ['Soltero/a', 'Unión de Hecho', 'Casado/a', 'Divorciado/a', 'Viudo/a'];
+  GeneroSelect: any = ['Masculino', 'Femenino'];
+  EstadoSelect: any = ['Activo', 'Inactivo'];
   presentarDataPDFEmpleados() {
     return {
       table: {
-        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
           [
-            {text: 'Id', style: 'tableHeader'},
-            {text: 'Nombre', style: 'tableHeader'},
-            {text: 'Apellido', style: 'tableHeader'},
-            {text: 'Cedula', style: 'tableHeader'},
-            {text: 'Fecha Nacimiento', style: 'tableHeader'},
-            {text: 'Correo', style: 'tableHeader'},
-            {text: 'Correo Alternativo', style: 'tableHeader'},
-            {text: 'Género', style: 'tableHeader'},
-            {text: 'Estado Civil', style: 'tableHeader'},
-            {text: 'Domicilio', style: 'tableHeader'},
-            {text: 'Teléfono', style: 'tableHeader'},
-            {text: 'Estado', style: 'tableHeader'},
-            {text: 'Nacionalidad', style: 'tableHeader'},
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+            { text: 'Apellido', style: 'tableHeader' },
+            { text: 'Cedula', style: 'tableHeader' },
+            { text: 'Fecha Nacimiento', style: 'tableHeader' },
+            { text: 'Correo', style: 'tableHeader' },
+            { text: 'Correo Alternativo', style: 'tableHeader' },
+            { text: 'Género', style: 'tableHeader' },
+            { text: 'Estado Civil', style: 'tableHeader' },
+            { text: 'Domicilio', style: 'tableHeader' },
+            { text: 'Teléfono', style: 'tableHeader' },
+            { text: 'Estado', style: 'tableHeader' },
+            { text: 'Nacionalidad', style: 'tableHeader' },
           ],
           ...this.empleado.map(obj => {
             var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
@@ -255,32 +253,29 @@ export class ListaEmpleadosComponent implements OnInit {
               }
             });
             return [
-              {text: obj.id, style: 'itemsTable'}, 
-              {text: obj.nombre, style: 'itemsTable'}, 
-              {text: obj.apellido, style: 'itemsTable'}, 
-              {text: obj.cedula, style: 'itemsTable'}, 
-              {text: obj.fec_nacimiento.split("T")[0], style: 'itemsTable'},
-              {text: obj.correo, style: 'itemsTable'}, 
-              {text: obj.mail_alternativo, style: 'itemsTable'}, 
-              {text: genero, style: 'itemsTable'}, 
-              {text: estadoCivil, style: 'itemsTable'}, 
-              {text: obj.domicilio, style: 'itemsTable'}, 
-              {text: obj.telefono, style: 'itemsTable'}, 
-              {text: estado, style: 'itemsTable'}, 
-              {text: nacionalidad, style: 'itemsTable'} 
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.apellido, style: 'itemsTable' },
+              { text: obj.cedula, style: 'itemsTable' },
+              { text: obj.fec_nacimiento.split("T")[0], style: 'itemsTable' },
+              { text: obj.correo, style: 'itemsTable' },
+              { text: obj.mail_alternativo, style: 'itemsTable' },
+              { text: genero, style: 'itemsTable' },
+              { text: estadoCivil, style: 'itemsTable' },
+              { text: obj.domicilio, style: 'itemsTable' },
+              { text: obj.telefono, style: 'itemsTable' },
+              { text: estado, style: 'itemsTable' },
+              { text: nacionalidad, style: 'itemsTable' }
             ];
           })
         ]
       }
     };
   }
-  
 
-  /**
-   * 
-   * METODO PARA EXPORTAR A EXCEL
-   * 
-   */
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
+   * ****************************************************************************************************/
 
   exportToExcel() {
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
@@ -289,12 +284,9 @@ export class ListaEmpleadosComponent implements OnInit {
     xlsx.writeFile(wb, "EmpleadoEXCEL" + new Date().getTime() + '.xlsx');
   }
 
-  /**
-   * 
-   * METODO PARA EXPORTAR A XML
-   * 
-   */
-
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
   urlxml: string;
   data: any = [];
   exportToXML() {
@@ -331,9 +323,11 @@ export class ListaEmpleadosComponent implements OnInit {
       }
       arregloEmpleado.push(objeto)
     });
-    
+
     this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
+      console.log(arregloEmpleado)
       this.data = res;
+      console.log("prueba-empleado", res)
       this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
