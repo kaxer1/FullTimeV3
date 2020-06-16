@@ -89,6 +89,7 @@ export class VerEmpleadoComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
   selectedIndex: number;
+  actualizacion: boolean;
 
   /** Contador */
   cont = 0;
@@ -114,10 +115,10 @@ export class VerEmpleadoComponent implements OnInit {
     private scriptService: ScriptService
   ) {
     var cadena = this.router.url.split('#')[0];
-    this.ruta = 'http://localhost:4200' + cadena + '#editar';
-    this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
-    this.rutaContrato = 'http://localhost:4200' + cadena + '#editarContrato';
-    this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
+    this.ruta = 'http://192.168.0.192:4200' + cadena + '#editar';
+    this.rutaTitulo = 'http://192.168.0.192:4200' + cadena + '#editarTitulo';
+    this.rutaContrato = 'http://192.168.0.192:4200' + cadena + '#editarContrato';
+    this.rutaCargo = 'http://192.168.0.192:4200' + cadena + '#editarCargo';
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
@@ -125,8 +126,11 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (true) {
+    if (this.actualizacion === false) {
       this.selectedIndex = 3;
+    }
+    else {
+      this.selectedIndex = 0;
     }
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
@@ -197,7 +201,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + data[0]['imagen'];
         this.Main.urlImagen = this.urlImagen;
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
@@ -1058,7 +1062,8 @@ export class VerEmpleadoComponent implements OnInit {
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
-      window.location.reload(true);
+     this.actualizacion = false;
+      window.location.reload(this.actualizacion);
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });

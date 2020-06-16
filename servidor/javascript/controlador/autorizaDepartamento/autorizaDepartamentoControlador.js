@@ -18,10 +18,10 @@ class AutorizaDepartamentoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const AUTORIZA = yield database_1.default.query('SELECT * FROM depa_autorizaciones');
             if (AUTORIZA.rowCount > 0) {
-                return res.json(AUTORIZA.rows);
+                return res.jsonp(AUTORIZA.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -29,7 +29,7 @@ class AutorizaDepartamentoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_departamento, id_empl_cargo, estado } = req.body;
             yield database_1.default.query('INSERT INTO depa_autorizaciones (id_departamento, id_empl_cargo, estado) VALUES ($1, $2, $3)', [id_departamento, id_empl_cargo, estado]);
-            res.json({ message: 'Autorización se registró con éxito' });
+            res.jsonp({ message: 'Autorización se registró con éxito' });
         });
     }
     EncontrarAutorizacionCargo(req, res) {
@@ -37,10 +37,10 @@ class AutorizaDepartamentoControlador {
             const { id_empl_cargo } = req.params;
             const AUTORIZA = yield database_1.default.query('SELECT *FROM VistaDepartamentoAutoriza WHERE id_empl_cargo= $1', [id_empl_cargo]);
             if (AUTORIZA.rowCount > 0) {
-                return res.json(AUTORIZA.rows);
+                return res.jsonp(AUTORIZA.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }

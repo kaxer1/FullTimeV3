@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AutorizacionService {
 
-  AUTORIZACIONES_URL = 'http://localhost:3000';
+  AUTORIZACIONES_URL = 'http://192.168.0.192:3001';
 
   constructor(
     private http: HttpClient

@@ -17,7 +17,7 @@ class NacionalidadControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const nacinalidad = yield database_1.default.query('SELECT * FROM nacionalidades');
-            res.json(nacinalidad.rows);
+            res.jsonp(nacinalidad.rows);
         });
     }
 }

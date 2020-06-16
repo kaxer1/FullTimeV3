@@ -328,7 +328,7 @@ export class ListaEmpleadosComponent implements OnInit {
     
     this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/empleado/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

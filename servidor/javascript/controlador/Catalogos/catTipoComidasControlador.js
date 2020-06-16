@@ -18,10 +18,10 @@ class TipoComidasControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas ORDER BY nombre, observacion ASC');
             if (TIPO_COMIDAS.rowCount > 0) {
-                return res.json(TIPO_COMIDAS.rows);
+                return res.jsonp(TIPO_COMIDAS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -30,10 +30,10 @@ class TipoComidasControlador {
             const { id } = req.params;
             const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas WHERE id = $1', [id]);
             if (TIPO_COMIDAS.rowCount > 0) {
-                return res.json(TIPO_COMIDAS.rows);
+                return res.jsonp(TIPO_COMIDAS.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -41,14 +41,14 @@ class TipoComidasControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, valor, observacion } = req.body;
             yield database_1.default.query('INSERT INTO cg_tipo_comidas (nombre, valor, observacion) VALUES ($1, $2, $3)', [nombre, valor, observacion]);
-            res.json({ message: 'Tipo de comida registrada' });
+            res.jsonp({ message: 'Tipo de comida registrada' });
         });
     }
     ActualizarComida(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, valor, observacion, id } = req.body;
             yield database_1.default.query('UPDATE cg_tipo_comidas SET nombre = $1, valor = $2, observacion = $3 WHERE id = $4', [nombre, valor, observacion, id]);
-            res.json({ message: 'Feriado actualizado exitosamente' });
+            res.jsonp({ message: 'Feriado actualizado exitosamente' });
         });
     }
 }

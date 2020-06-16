@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class NotificacionesService {
-  NOTIFICACIONES_URL = 'http://localhost:3000';
+  NOTIFICACIONES_URL = 'http://192.168.0.192:3001';
 
   constructor(
     private http: HttpClient

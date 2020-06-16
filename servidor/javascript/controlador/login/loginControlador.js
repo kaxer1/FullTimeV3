@@ -32,10 +32,10 @@ class LoginControlador {
                 const { nombre_usuario, pass } = req.body;
                 const USUARIO = yield database_1.default.query('SELECT id, usuario, id_rol, id_empleado FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
                 const token = jwt.sign({ _id: USUARIO.rows[0].id, _userName: USUARIO.rows[0].usuario }, 'llaveSecreta');
-                return res.status(200).json({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado });
+                return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado });
             }
             catch (error) {
-                return res.json({ message: 'error' });
+                return res.jsonp({ message: 'error' });
             }
         });
     }
@@ -47,10 +47,10 @@ class LoginControlador {
                 const payload = jwt.verify(token, 'llaveEmail');
                 const id_empleado = payload._id;
                 yield database_1.default.query('UPDATE usuarios SET contrasena = $2 WHERE id_empleado = $1 ', [id_empleado, contrasena]);
-                res.json({ expiro: 'no', message: "Contraseña Actualizada, Intente ingresar con la nueva contraseña" });
+                res.jsonp({ expiro: 'no', message: "Contraseña Actualizada, Intente ingresar con la nueva contraseña" });
             }
             catch (error) {
-                res.json({ expiro: 'si', message: "Tiempo para cambiar la contraseña expirado, vuelva a intentarlo" });
+                res.jsonp({ expiro: 'si', message: "Tiempo para cambiar la contraseña expirado, vuelva a intentarlo" });
             }
         });
     }
@@ -61,7 +61,7 @@ class LoginControlador {
             if (correoValido.rows[0] == undefined)
                 return res.status(401).send('Correo no valido para el usuario');
             const token = jwt.sign({ _id: correoValido.rows[0].id }, 'llaveEmail', { expiresIn: 60 * 3 });
-            var url = 'http://localhost:4200/confirmar-contrasenia';
+            var url = 'http://192.168.0.192:4200/confirmar-contrasenia';
             var data = {
                 to: correoValido.rows[0].correo,
                 from: email,
@@ -82,7 +82,7 @@ class LoginControlador {
                     console.log('Email sent: ' + info.response);
                 }
             }));
-            res.json({ mail: 'si', message: 'Mail enviado' });
+            res.jsonp({ mail: 'si', message: 'Mail enviado' });
         });
     }
 }

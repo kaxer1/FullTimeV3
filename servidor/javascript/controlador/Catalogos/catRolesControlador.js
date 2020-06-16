@@ -18,10 +18,10 @@ class RolesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const ROL = yield database_1.default.query('SELECT * FROM cg_roles');
             if (ROL.rowCount > 0) {
-                return res.json(ROL.rows);
+                return res.jsonp(ROL.rows);
             }
             else {
-                res.status(404).json({ text: 'Registro no encontrado' });
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -30,10 +30,10 @@ class RolesControlador {
             const { id } = req.params;
             const ROL = yield database_1.default.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
             if (ROL.rowCount > 0) {
-                return res.json(ROL.rows);
+                return res.jsonp(ROL.rows);
             }
             else {
-                res.status(404).json({ text: 'Registro no encontrado' });
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -41,14 +41,14 @@ class RolesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.body;
             yield database_1.default.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
-            res.json({ message: 'Rol guardado' });
+            res.jsonp({ message: 'Rol guardado' });
         });
     }
     ActualizarRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, id } = req.body;
             yield database_1.default.query('UPDATE cg_roles SET nombre = $1 WHERE id = $2', [nombre, id]);
-            res.json({ message: 'Registro Actualizado' });
+            res.jsonp({ message: 'Registro Actualizado' });
         });
     }
 }

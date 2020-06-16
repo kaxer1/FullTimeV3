@@ -127,7 +127,7 @@ export class DatosEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + data[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.Main.urlImagen = this.urlImagen;

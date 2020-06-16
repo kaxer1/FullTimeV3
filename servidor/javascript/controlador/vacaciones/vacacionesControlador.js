@@ -18,10 +18,10 @@ class VacacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const VACACIONES = yield database_1.default.query('SELECT *FROM vacaciones');
             if (VACACIONES.rowCount > 0) {
-                return res.json(VACACIONES.rows);
+                return res.jsonp(VACACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -29,7 +29,7 @@ class VacacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion } = req.body;
             yield database_1.default.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion]);
-            res.json({ message: 'Vacaciones guardadas con éxito' });
+            res.jsonp({ message: 'Vacaciones guardadas con éxito' });
         });
     }
     VacacionesIdPeriodo(req, res) {
@@ -37,10 +37,10 @@ class VacacionesControlador {
             const { id } = req.params;
             const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1', [id]);
             if (VACACIONES.rowCount > 0) {
-                return res.json(VACACIONES.rows);
+                return res.jsonp(VACACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }

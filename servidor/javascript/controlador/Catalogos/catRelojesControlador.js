@@ -20,10 +20,10 @@ class RelojesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const RELOJES = yield database_1.default.query('SELECT * FROM NombreDispositivos');
             if (RELOJES.rowCount > 0) {
-                return res.json(RELOJES.rows);
+                return res.jsonp(RELOJES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -32,10 +32,10 @@ class RelojesControlador {
             const { id } = req.params;
             const RELOJES = yield database_1.default.query('SELECT * FROM cg_relojes WHERE id = $1', [id]);
             if (RELOJES.rowCount > 0) {
-                return res.json(RELOJES.rows);
+                return res.jsonp(RELOJES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -43,14 +43,14 @@ class RelojesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento } = req.body;
             yield database_1.default.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento]);
-            res.json({ message: 'Reloj Guardado' });
+            res.jsonp({ message: 'Reloj Guardado' });
         });
     }
     ActualizarReloj(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento, id } = req.body;
             yield database_1.default.query('UPDATE cg_relojes SET nombre = $1, ip = $2, puerto = $3, contrasenia = $4, marca = $5, modelo = $6, serie = $7, id_fabricacion = $8, fabricante = $9, mac = $10, tien_funciones = $11, id_sucursal = $12, id_departamento = $13 WHERE id = $14', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento, id]);
-            res.json({ message: 'Registro Actualizado' });
+            res.jsonp({ message: 'Registro Actualizado' });
         });
     }
     CargaPlantillaRelojes(req, res) {
@@ -69,10 +69,10 @@ class RelojesControlador {
                     yield database_1.default.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento]);
                 }
                 else {
-                    res.json({ error: 'plantilla equivocada' });
+                    res.jsonp({ error: 'plantilla equivocada' });
                 }
             }));
-            res.json({ message: 'La plantilla a sido receptada' });
+            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }

@@ -5,7 +5,7 @@ class NacionalidadControlador {
   
     public async list(req: Request, res: Response) {
     const nacinalidad = await pool.query('SELECT * FROM nacionalidades');
-    res.json(nacinalidad.rows);
+    res.jsonp(nacinalidad.rows);
   }
 
 }

@@ -18,10 +18,10 @@ class PeriodoVacacionControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const VACACIONES = yield database_1.default.query('SELECT * FROM peri_vacaciones');
             if (VACACIONES.rowCount > 0) {
-                return res.json(VACACIONES.rows);
+                return res.jsonp(VACACIONES.rows);
             }
             else {
-                return res.status(404).json({ text: 'No se encuentran registros' });
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }
@@ -29,7 +29,7 @@ class PeriodoVacacionControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido } = req.body;
             yield database_1.default.query('INSERT INTO peri_vacaciones (id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido]);
-            res.json({ message: 'Período de Vacación guardado' });
+            res.jsonp({ message: 'Período de Vacación guardado' });
         });
     }
     EncontrarIdPerVacaciones(req, res) {
@@ -37,9 +37,9 @@ class PeriodoVacacionControlador {
             const { id_empleado } = req.params;
             const VACACIONES = yield database_1.default.query('SELECT pv.id FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND e.id = $1', [id_empleado]);
             if (VACACIONES.rowCount > 0) {
-                return res.json(VACACIONES.rows);
+                return res.jsonp(VACACIONES.rows);
             }
-            res.status(404).json({ text: 'Registro no encontrado' });
+            res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
     EncontrarPerVacacionesPorIdContrato(req, res) {
@@ -47,9 +47,9 @@ class PeriodoVacacionControlador {
             const { id_empl_contrato } = req.params;
             const PERIODO_VACACIONES = yield database_1.default.query('SELECT * FROM peri_vacaciones AS p WHERE p.id_empl_contrato = $1', [id_empl_contrato]);
             if (PERIODO_VACACIONES.rowCount > 0) {
-                return res.json(PERIODO_VACACIONES.rows);
+                return res.jsonp(PERIODO_VACACIONES.rows);
             }
-            res.status(404).json({ text: 'Registro no encontrado' });
+            res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
 }

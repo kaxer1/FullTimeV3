@@ -60,7 +60,6 @@ export class LoginComponent implements OnInit {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form.passwordF).end();
-    
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
       pass: clave
@@ -88,7 +87,7 @@ export class LoginComponent implements OnInit {
         
       }
     }, error => {
-
+         console.log(error.message+"%%%% error de login")
     })
   }
 

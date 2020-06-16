@@ -56,12 +56,37 @@ class Server {
     }
 
     configuracion(): void {
-        this.app.set('puerto', process.env.PORT || 3000);
+        this.app.set('puerto', process.env.PORT || 3001);
         this.app.use(morgan('dev'));
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: '*',
+            //methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
+            credentials: true
+        }));
+        //this.app.options('*', cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(express.raw({ type: 'image/*', limit:'1Mb' }));
+        this.app.use(express.raw({ type: 'image/*', limit: '1Mb' }));
+        this.app.use(function (req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            if (req.method == 'OPTIONS') {
+                res.header('Access-Control-Allow-Credentials', 'true');
+                res.header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token');
+                res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+                //return res.status(200).json({});
+                res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+                res.header('Referrer-Policy', 'origin');
+                res.header('Cache-Control: no-cache, no-store, must-revalidate');
+                res.header('Pragma: no-cache');
+                res.header('Expires: 0');
+                res.header('Authorization', 'token');
+                return res.status(200).json({});
+
+            }
+
+            next();
+        });
+
     }
 
     rutas(): void {
