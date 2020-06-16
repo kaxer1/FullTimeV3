@@ -1,118 +1,104 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <div class="row">
-        <div class="col-sm"></div>
-        <div class="col-sm">
-            <mat-card class="example-card mat-elevation-z8">
-                <div class="tituloNotifica">
-                    <span>Registrar Autorización</span>
-                </div>
-                <br>
-                <!-- Formulario Completo -->
-                <mat-card-content>
-                    <div class="container" style="text-align: center;">
-                        <form [formGroup]="nuevaAutorizacionesForm">
-                            <mat-form-field>
-                                <mat-label id="selecDepa">Id documento *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de orden">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="idDocumento">
-                                    <mat-option *ngFor="let d of idDoc" [value]="d.id">
-                                        {{d.nombre}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label id="selecDepa">Tipo de Documento *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de orden">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="TipoDocumento">
-                                    <mat-option *ngFor="let do of tipoDoc" [value]="do.id">
-                                        {{do.nombre}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label id="selecDepa">Orden *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de orden">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="orden">
-                                    <mat-option *ngFor="let o of ordenes" [value]="o.valor">
-                                        {{o.valor}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label id="selecDepa">Estados *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de estados">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="estado">
-                                    <mat-option *ngFor="let e of estados" [value]="e.id">
-                                        {{e.nombre}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Notificación *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de permisos que pudo solicitar un empleado">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="idCatNotificacion">
-                                    <mat-option *ngFor="let n of notificacion" [value]="n.id">
-                                        {{n.id}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Notificación Autorización *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="notifica-tooltip"
-                                    matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="idCatNotiAutorizacion">
-                                    <mat-option *ngFor="let na of notiAutrizaciones" [value]="na.id">
-                                        {{na.id}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label id="selecDepa">Departamento *</mat-label>
-                                <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Lista de orden">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="idDepartamento">
-                                    <mat-option *ngFor="let d of departamentos" [value]="d.id">
-                                        {{d.nombre}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </form>
-                    </div>
-                </mat-card-content>
-                <div style="text-align: center;">
-                    <input type="submit" class="btn btn-sm"
-                        (click)="insertarAutorizacion(nuevaAutorizacionesForm.value)"
-                        [disabled]="!nuevaAutorizacionesForm.valid" value="Guardar">
-                    <input type="submit" (click)="limpiarCampos()" class="btn btn-sm" value="Cancelar"
-                        style="margin-left: 15px;">
-                </div>
-            </mat-card>
-        </div>
-        <div class="col-sm"></div>
-    </div>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloNotifica">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Autorización</span>
 </div>
+<br>
+<div class="container" style="text-align: center;">
+    <form [formGroup]="nuevaAutorizacionesForm">
+        <mat-form-field>
+            <mat-label id="selecDepa">Id documento *</mat-label>
+            <input id="nomEmple" matInput placeholder="Empleado" [formControl]="idDocumento"
+                readonly="readonly" required>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de orden">
+                help_outline</mat-icon>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label id="selecDepa">Tipo de Documento *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de orden">
+                help_outline</mat-icon>
+            <mat-select [formControl]="TipoDocumento">
+                <mat-option *ngFor="let do of tipoDoc" [value]="do.id">
+                    {{do.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label id="selecDepa">Orden *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de orden">
+                help_outline</mat-icon>
+            <mat-select [formControl]="orden">
+                <mat-option *ngFor="let o of ordenes" [value]="o.valor">
+                    {{o.valor}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label id="selecDepa">Estados *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de estados">
+                help_outline</mat-icon>
+            <mat-select [formControl]="estado">
+                <mat-option *ngFor="let e of estados" [value]="e.id">
+                    {{e.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Notificación *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de permisos que pudo solicitar un empleado">
+                help_outline</mat-icon>
+            <mat-select [formControl]="idCatNotificacion">
+                <mat-option *ngFor="let n of notificacion" [value]="n.id">
+                    {{n.id}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label>Notificación Autorización *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipPosition="right"
+                matTooltipClass="notifica-tooltip"
+                matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
+                help_outline</mat-icon>
+            <mat-select [formControl]="idCatNotiAutorizacion">
+                <mat-option *ngFor="let na of notiAutrizaciones" [value]="na.id">
+                    {{na.id}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <br>
+        <mat-form-field>
+            <mat-label id="selecDepa">Departamento *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de orden">
+                help_outline</mat-icon>
+            <mat-select [formControl]="idDepartamento">
+                <mat-option *ngFor="let d of departamentos" [value]="d.id_departamento">
+                    {{d.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-sm"
+        (click)="insertarAutorizacion(nuevaAutorizacionesForm.value)"
+        [disabled]="!nuevaAutorizacionesForm.valid" value="Guardar">
+    <input type="submit" (click)="dialogRef.close()" class="btn btn-sm" value="Salir"
+        style="margin-left: 15px;">
+</div>
+        

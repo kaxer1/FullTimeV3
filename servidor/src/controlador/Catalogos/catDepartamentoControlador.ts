@@ -97,6 +97,15 @@ class DepartamentoControlador {
     res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
+  public async BuscarDepartamentoPorContrato(req: Request, res: Response) {
+    const id = req.params.id_contrato
+    const departamento = await pool.query('SELECT em.id_departamento, d.nombre FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1',[id]);
+    if (departamento.rowCount > 0) {
+      return res.json(departamento.rows)
+    } else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+}
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();

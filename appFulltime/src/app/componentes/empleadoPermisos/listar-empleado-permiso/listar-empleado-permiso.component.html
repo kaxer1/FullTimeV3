@@ -27,8 +27,12 @@
                     <td>{{e.fec_final.split('T')[0]}}</td>
                     <td><a href="http://localhost:3000/empleadoPermiso/documentos/{{e.documento}}" target="_blank">Ver</a></td>
                     <td>
+                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" id="iprocesoL" (click)="AbrirAutorizaciones(e)"
+                            matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Agrega más tipos de permisos de este departamento.">
+                            <p>Agregar</p>
+                        </i>
                         <i class="fas fa-edit" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(e)"
-                            matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>

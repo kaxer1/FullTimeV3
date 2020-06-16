@@ -1,5 +1,11 @@
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+
 .tituloNotifica { 
     font-size: 20px; 
     text-align: center; 

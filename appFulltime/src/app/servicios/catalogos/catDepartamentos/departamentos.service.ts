@@ -17,6 +17,10 @@ export class DepartamentosService {
   ConsultarDepartamentos(){
     return this.http.get(`${this.API_URL}/departamento`);
   }
+  
+  ConsultarDepartamentoPorContrato(id_contrato: number){
+    return this.http.get(`${this.API_URL}/departamento/busqueda-contrato/${id_contrato}`);
+  }
 
   ConsultarNombreDepartamentos(){
     return this.http.get(`${this.API_URL}/departamento/nombreDepartamento`);

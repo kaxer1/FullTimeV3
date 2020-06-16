@@ -18,6 +18,7 @@ class DepartamentoRutas {
         this.router.get('/buscarDepa/:id_sucursal', catDepartamentoControlador_1.default.ObtenerDepartamentosSucursal);
         this.router.post('/', catDepartamentoControlador_1.default.CrearDepartamento);
         this.router.get('/busqueda/:nombre', catDepartamentoControlador_1.default.ObtenerIdDepartamento);
+        this.router.get('/busqueda-contrato/:id_contrato', catDepartamentoControlador_1.default.BuscarDepartamentoPorContrato);
         this.router.put('/:id', catDepartamentoControlador_1.default.ActualizarDepartamento);
         this.router.post('/xmlDownload/', catDepartamentoControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catDepartamentoControlador_1.default.downloadXML);
