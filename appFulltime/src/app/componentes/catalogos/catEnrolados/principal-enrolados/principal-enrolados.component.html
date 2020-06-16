@@ -92,6 +92,7 @@
                 <tr style="text-align: center;">
                     <th scope="col">Id Usuario</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col">Código</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Finger</th>
                     <th scope="col">Acción</th>
@@ -102,6 +103,7 @@
                     *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
                     <td>{{enrolado.id_usuario}}</td>
                     <td>{{enrolado.nombre}}</td>
+                    <td>{{enrolado.codigo}}</td>
                     <td *ngIf="enrolado.activo == true">Activo</td>
                     <td *ngIf="enrolado.activo == false">Inactivo</td>
                     <td>{{enrolado.finger}}</td>

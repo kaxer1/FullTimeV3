@@ -97,7 +97,7 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
-      <!-- Descarga -->
+      <!-- Notificaciones -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec2">
           <mat-panel-title class="item">
@@ -120,6 +120,9 @@
           </a>
           <a mat-list-item [routerLink]="['/autorizaciones']" class="texcol">
             <span matLine>Autorizaciones</span>
+          </a>
+          <a mat-list-item [routerLink]="['/pedirHoraExtra']" class="texcol">
+            <span matLine>Solicitar Hora Extra</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -159,6 +162,30 @@
           </a>
           <a mat-list-item [routerLink]="['/planificacion']" class="texcol">
             <span matLine>Planificación Múltiple</span>
+          </a>
+          <a mat-list-item [routerLink]="['/timbres']" class="texcol">
+            <span matLine>Timbres</span>
+          </a>
+          <a mat-list-item [routerLink]="['/calcularHoraExtra']" class="texcol">
+            <span matLine>Calcular Hora Extra</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Timbres -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec9">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">fingerprint</mat-icon>
+            <span class="item-menu">Timbres</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/timbres']" class="texcol">
+            <span matLine>Timbres</span>
+          </a>
+          <a mat-list-item [routerLink]="['/asistencia']" class="texcol">
+            <span matLine>Asistencia</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -208,12 +235,12 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
-        <div id="avatar" *ngIf="mostrarImagen">
-          <img src="{{urlImagen}}" alt="" id="avatarImagen">
-        </div>
-        <div id="avatar" *ngIf="mostrarIniciales">
-          <span class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
-        </div>
+      <div id="avatar" *ngIf="mostrarImagen">
+        <img src="{{urlImagen}}" alt="" id="avatarImagen">
+      </div>
+      <div id="avatar" *ngIf="mostrarIniciales">
+        <span class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
+      </div>
 
       <div class="dos">
         <div class="card border-0" style="background-color: transparent; margin-top: auto;">

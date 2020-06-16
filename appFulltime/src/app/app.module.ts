@@ -194,6 +194,11 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
+import { RegistrarTimbreComponent } from './componentes/timbres/registrar-timbre/registrar-timbre.component';
+import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar-asistencia/registrar-asistencia.component';
+import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
+import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
+import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
 
 @NgModule({
   declarations: [
@@ -321,6 +326,11 @@ import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacacione
     HomeEmpleadoComponent,
     ListarEmpleadoPermisoComponent,
     EditarPeriodoVacacionesComponent,
+    RegistrarTimbreComponent,
+    RegistrarAsistenciaComponent,
+    PedidoHoraExtraComponent,
+    CalculoHoraExtraComponent,
+    InformacionJefeComponent,
   ],
 
   imports: [

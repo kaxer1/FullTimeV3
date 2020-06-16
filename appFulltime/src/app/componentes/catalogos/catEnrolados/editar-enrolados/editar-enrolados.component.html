@@ -21,14 +21,23 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Ingresar Nombre</mat-label>
-                        <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm"
-                            (keypress)="IngresarSoloLetras($event)" required>
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Ej: Usuario" formControlName="enroladoNombreForm" readonly
+                             required>
                         <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar nombre del usuario enrolado">
                             help_outline</mat-icon>
                     </mat-form-field>
                     <br>
+                    <mat-form-field>
+                        <mat-label>Código</mat-label>
+                        <input matInput placeholder="Ej: Usuario" formControlName="codigoForm" required readonly>
+                        <mat-icon id="iEnrol" matSuffix matTooltipClass="enrol-tooltip" matTooltipPosition="right"
+                            matTooltip="Código del usuario enrolado">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Ingresa Contraseña</mat-label>
                         <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
@@ -42,8 +51,7 @@
                                 {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
                         </button>
                     </mat-form-field>
-                </div>
-                <div class="col">
+                    <br>
                     <mat-form-field>
                         <mat-label>Número de huella </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoFingerForm"
@@ -52,7 +60,8 @@
                             matTooltip="Modificar el número del dedo del cual se obtiene la huella del empleado">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <br>
+                </div>
+                <div class="col">
                     <mat-form-field>
                         <mat-label>Data finger </mat-label>
                         <input matInput placeholder="Ejm: 1" formControlName="enroladoData_FingerForm"

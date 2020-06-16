@@ -27,6 +27,7 @@ class EnroladoRutas {
         this.router.delete('/eliminar/:id', ENROLADOS_CONTROLADOR.EliminarEnrolado);
         this.router.post('/xmlDownload/', ENROLADOS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', ENROLADOS_CONTROLADOR.downloadXML);
+        this.router.get('/cargarDatos/:usuario', ENROLADOS_CONTROLADOR.ObtenerDatosEmpleado);
     }
 
     verifyToken(req: Request, res: Response, next: NextFunction) {
