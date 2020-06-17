@@ -134,8 +134,6 @@ class HorarioControlador {
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, id]);
             res.jsonp({ message: 'Tipo Permiso Actualizado' });
-<<<<<<< HEAD
-=======
         });
     }
     FileXML(req, res) {
@@ -157,7 +155,6 @@ class HorarioControlador {
             const name = req.params.nameXML;
             let filePath = `servidor\\xmlDownload\\${name}`;
             res.sendFile(__dirname.split("servidor")[0] + filePath);
->>>>>>> bd1383fd5e211b7c080bb7e5bbb8d81b99713658
         });
     }
 }
