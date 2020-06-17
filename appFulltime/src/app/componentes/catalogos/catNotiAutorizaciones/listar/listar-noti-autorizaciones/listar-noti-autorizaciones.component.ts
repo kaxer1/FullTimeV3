@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ListarNotiAutorizacionesComponent implements OnInit {
 
+  noti_autorizacion: any = [];
   constructor(
     private restN: NotiAutorizacionesService,
     public dialogRef: MatDialogRef<ListarNotiAutorizacionesComponent>,
@@ -16,8 +17,11 @@ export class ListarNotiAutorizacionesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.restN.getNotiAutoriRest().subscribe(res => {
+    console.log(this.data);
+    this.noti_autorizacion = [];
+    this.restN.getListaNotiAutorioRest(this.data.id).subscribe(res => {
       console.log(res);
+      this.noti_autorizacion = res;
     })
   }
 

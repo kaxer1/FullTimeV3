@@ -25,15 +25,19 @@ export class RegistroEnroladosComponent implements OnInit {
   finger = new FormControl('', Validators.pattern('[0-9]*'));
   activo = new FormControl('', Validators.required);
   data_finger = new FormControl('', Validators.pattern('[a-zA-z 1-9]*'));
+  codigoF = new FormControl('', Validators.required);
 
   usuarios: any = [];
   idUltimoEnrolado: any = [];
   idUser: any = [];
+  datosEmpleado: any = [];
 
   // verificar Duplicidad
   usuariosEnrolados: any = [];
 
   hide = true;
+  selec1 = false;
+  selec2 = false;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -50,7 +54,8 @@ export class RegistroEnroladosComponent implements OnInit {
     enroladoContraseniaForm: this.contrasenia,
     enroladoActivoForm: this.activo,
     enroladoFingerForm: this.finger,
-    enroladoData_FingerForm: this.data_finger
+    enroladoData_FingerForm: this.data_finger,
+    codigoForm: this.codigoF
   });
 
   constructor(
@@ -85,7 +90,8 @@ export class RegistroEnroladosComponent implements OnInit {
       contrasenia: form.enroladoContraseniaForm,
       activo: form.enroladoActivoForm,
       finger: form.enroladoFingerForm,
-      data_finger: form.enroladoData_FingerForm
+      data_finger: form.enroladoData_FingerForm,
+      codigo: form.codigoForm
     };
     this.rest.postEnroladosRest(dataEnrolado).subscribe(response => {
       this.toastr.success('Operacion Exitosa', 'Enrolado con éxito');
@@ -177,6 +183,26 @@ export class RegistroEnroladosComponent implements OnInit {
     this.restUsuario.BuscarUsersNoEnrolados().subscribe(data => {
       this.usuarios = data;
       console.log(this.usuarios)
+    })
+  }
+
+  ImprimirDatos(form){
+    this.selec2 = false;
+    this.selec1 = false;
+    this.datosEmpleado = [];
+    this.rest.BuscarDatosEmpleado(form.enroladoId_UsuarioForm).subscribe(data => {
+      this.datosEmpleado = data;
+      console.log(this.datosEmpleado)
+      this.nuevoEnroladoForm.patchValue({
+        enroladoNombreForm: this.datosEmpleado[0].nombre + ' ' + this.datosEmpleado[0].apellido,
+        codigoForm: parseInt(this.datosEmpleado[0].codigo)
+      });
+      if (this.datosEmpleado[0].estado === 1){
+        this.selec1 = true;
+      }
+      else {
+        this.selec2 = true;
+      }
     })
   }
 

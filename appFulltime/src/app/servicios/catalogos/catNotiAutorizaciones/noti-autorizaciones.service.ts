@@ -21,6 +21,10 @@ export class NotiAutorizacionesService {
     return this.http.get<any>(`${this.API_URL}/noti-autorizaciones/${id}`);
   }
   
+  getListaNotiAutorioRest(id_notificacion: number){
+    return this.http.get<any>(`${this.API_URL}/noti-autorizaciones/lista/${id_notificacion}`);
+  }
+  
   postNotiAutoriRest(data: any){
     return this.http.post(`${this.API_URL}/noti-autorizaciones`, data);
   } 

@@ -21,7 +21,7 @@ class AutorizaDepartamentoControlador {
 
     public async EncontrarAutorizacionCargo(req: Request, res: Response) {
         const { id_empl_cargo } = req.params;
-        const AUTORIZA = await pool.query('SELECT *FROM VistaDepartamentoAutoriza WHERE id_empl_cargo= $1', [id_empl_cargo]);
+        const AUTORIZA = await pool.query('SELECT * FROM VistaDepartamentoAutoriza WHERE id_empl_cargo= $1', [id_empl_cargo]);
         if (AUTORIZA.rowCount > 0) {
             return res.jsonp(AUTORIZA.rows)
         }
@@ -29,6 +29,19 @@ class AutorizaDepartamentoControlador {
             return res.status(404).jsonp({ text: 'No se encuentran registros' });
         }
     }
+
+    public async ObtenerQuienesAutorizan(req: Request, res: Response): Promise<any> {
+        const { id_depar } = req.params;
+        const EMPLEADOS = await pool.query('SELECT * FROM VistaPersonasAutorizan WHERE id_depar = $1', [id_depar]);
+        if (EMPLEADOS.rowCount > 0) {
+          return res.jsonp(EMPLEADOS.rows)
+        }
+        else {
+          return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+      }
+
+
 
 }
 

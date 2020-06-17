@@ -1,1 +1,35 @@
-<p>listar-noti-autorizaciones works!</p>
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloNotifica">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Autorización Asignada</span>
+</div>
+<br>
+<div class="container" style="padding-top: 15px;" *ngFor="let n of noti_autorizacion">
+    <div class="row">
+        <div class="col">
+            <label class="col-sm col-form-label">Código Cargo:</label>
+        </div>
+        <div class="col">
+            <label class="col col-form-label">{{n.id_empl_cargo}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="col-sm col-form-label">Orden:</label>
+        </div>
+        <div class="col">
+            <label class="col col-form-label">{{n.orden}}</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="col-sm col-form-label">Empleado:</label>
+        </div>
+        <div class="col">
+            <label class="col col-form-label">{{n.nombre}} {{n.apellido}}</label>
+        </div>
+    </div>
+</div>
+<div style="text-align: center;">
+    <input type="submit" (click)="dialogRef.close()" class="btn btn-sm" value="Salir"
+        style="margin-left: 15px;">
+</div>

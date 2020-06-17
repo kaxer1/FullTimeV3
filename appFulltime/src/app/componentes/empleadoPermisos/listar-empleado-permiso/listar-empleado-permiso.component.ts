@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { PageEvent } from '@angular/material/paginator';
-import { MatDialog } from '@angular/material/dialog';
-import { EditarEmpleadoPermisoComponent } from '../editar-empleado-permiso/editar-empleado-permiso.component';
-import { AutorizacionesComponent } from '../../autorizaciones/autorizaciones/autorizaciones.component';
 
 @Component({
   selector: 'app-listar-empleado-permiso',
@@ -21,7 +18,6 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
 
   constructor(
     private restP: PermisosService,
-    public vistaFlotante: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -40,12 +36,5 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
     });
   }
 
-  AbrirVentanaEditar(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
-  }
-  
-  AbrirAutorizaciones(datosSeleccionados: any): void {
-    this.vistaFlotante.open(AutorizacionesComponent, { width: '350px', data: datosSeleccionados }).disableClose = true;
-  }
 
 }

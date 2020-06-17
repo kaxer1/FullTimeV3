@@ -12,6 +12,7 @@ class NotificacionesAutorizacionesRutas {
     }
     configuracion() {
         this.router.get('/', catNotiAutorizacionesControlador_1.default.ListarNotiAutorizaciones);
+        this.router.get('/lista/:id_notificacion', catNotiAutorizacionesControlador_1.default.ListarPorNotificacion);
         this.router.get('/:id', catNotiAutorizacionesControlador_1.default.ObtenerUnaNotiAutorizacion);
         this.router.post('/', catNotiAutorizacionesControlador_1.default.CrearNotiAutorizacion);
     }

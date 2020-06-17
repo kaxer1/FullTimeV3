@@ -37,6 +37,18 @@ class PermisosControlador {
             }
         });
     }
+    ListarUnPermisoInfo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_permiso;
+            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id = $1 AND  p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC', [id]);
+            if (PERMISOS.rowCount > 0) {
+                return res.json(PERMISOS.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ObtenerUnPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;

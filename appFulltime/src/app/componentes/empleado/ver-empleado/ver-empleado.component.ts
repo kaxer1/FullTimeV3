@@ -1025,6 +1025,7 @@ export class VerEmpleadoComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       console.log(this.archivoSubido[i], this.archivoSubido[i].name)
       formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
+      console.log("iamge", formData);
     }
     this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'imagen subida.');
@@ -1053,6 +1054,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
         if (itemName.toLowerCase() == 'horario empleado') {
           this.plantillaHorario();
+          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
           this.toastr.error('Plantilla seleccionada incorrecta');
         }

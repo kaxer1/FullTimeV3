@@ -79,7 +79,7 @@ export class PrincipalEnroladosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarEnrolado() {
-    this.vistaRegistrarDatos.open(RegistroEnroladosComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroEnroladosComponent, { width: '900px' }).disableClose = true;
   }
 
   AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
@@ -268,11 +268,12 @@ export class PrincipalEnroladosComponent implements OnInit {
   presentarDataPDFEnrolados() {
     return {
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
           [
             { text: 'Id', style: 'tableHeader' },
             { text: 'Nombre', style: 'tableHeader' },
+            { text: 'Código', style: 'tableHeader' },
            // { text: 'Contraseña', style: 'tableHeader' },
             { text: 'Activo', style: 'tableHeader' },
             { text: 'Finger', style: 'tableHeader' },
@@ -282,6 +283,7 @@ export class PrincipalEnroladosComponent implements OnInit {
             return [
               { text: obj.id, style: 'itemsTable' },
               { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.codigo, style: 'itemsTable' },
               //{ text: obj.contrasenia, style: 'itemsTable' },
               { text: obj.activo, style: 'itemsTable' },
               { text: obj.finger, style: 'itemsTable' },
@@ -328,6 +330,7 @@ export class PrincipalEnroladosComponent implements OnInit {
         "usuario_enrolado": {
           '@id': obj.id,
           "nombre": obj.nombre,
+          "codigo": obj.codigo,
          // "contrasenia": obj.contrasenia,
           "activo": obj.activo,
           "finger": obj.finger,
@@ -355,7 +358,8 @@ export class PrincipalEnroladosComponent implements OnInit {
       contrasenia: '12546 Nota: Esta celda debe tener formato text' ,
       activo: 'true o false',
       finger: 5,
-      data_finger: '125dcse2225'
+      data_finger: '125dcse2225',
+      codigo: 'Código del empleado'
     }];
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEnrolados);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();

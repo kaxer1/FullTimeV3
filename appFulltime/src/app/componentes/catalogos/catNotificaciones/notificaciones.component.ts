@@ -165,10 +165,12 @@ export class NotificacionesComponent implements OnInit {
       id_departamento: form.idDepartamentoForm,
       id_tipo_permiso: form.idTipoPermisoForm
     }
-    this.rest.postNotificacionesRest(newNoti)
-    .subscribe(response => {
+    this.rest.postNotificacionesRest(newNoti).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Notificación guardada'),
       this.limpiarCampos();
+      this.rest.getNotificacionesRest().subscribe(res => {
+        this.noti_res = res;
+      });
     }, error => {
       console.log(error);
     })
@@ -187,6 +189,6 @@ export class NotificacionesComponent implements OnInit {
   }
   
   AbrirListaNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
   }
 }

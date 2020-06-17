@@ -11,7 +11,6 @@
                     <th scope="col">Tipo Permiso</th>
                     <th scope="col">Fecha Inicio</th>
                     <th scope="col">Fecha Final</th>
-                    <th scope="col">Documento</th>
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
@@ -25,19 +24,12 @@
                     <td>{{e.nom_permiso}}</td>
                     <td>{{e.fec_inicio.split('T')[0]}}</td>
                     <td>{{e.fec_final.split('T')[0]}}</td>
-                    <td><a href="http://localhost:3000/empleadoPermiso/documentos/{{e.documento}}" target="_blank">Ver</a></td>
                     <td>
-                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" id="iprocesoL" (click)="AbrirAutorizaciones(e)"
-                            matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                            matTooltip="Agrega más tipos de permisos de este departamento.">
-                            <p>Agregar</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(e)"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <!-- <i id="permisoSuc" class="far fa-trash-alt" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        <a class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix matTooltipPosition="right" 
+                            matTooltip="Cambiar el estado del documentdo de autorazación" [routerLink]="['/ver-permiso',e.id]">
+                            <p>Documento</p>
+                        </a>
+                        <!-- <i id="permisoSuc" class="far fa-trash-alt"  matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
                         </i> -->

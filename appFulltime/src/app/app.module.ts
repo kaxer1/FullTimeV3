@@ -197,6 +197,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { EditarNotificacionComponent } from './componentes/catalogos/catNotificaciones/editar-notificacion/editar-notificacion.component';
 import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
+import { RegistrarTimbreComponent } from './componentes/timbres/registrar-timbre/registrar-timbre.component';
+import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar-asistencia/registrar-asistencia.component';
+import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
+import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
+import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
+import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
+import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones/editar-estado-autorizaccion/editar-estado-autorizaccion.component';
 
 @NgModule({
   declarations: [
@@ -324,8 +331,14 @@ import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNo
     HomeEmpleadoComponent,
     ListarEmpleadoPermisoComponent,
     EditarPeriodoVacacionesComponent,
-    EditarNotificacionComponent,
+    RegistrarTimbreComponent,
+    RegistrarAsistenciaComponent,
+    PedidoHoraExtraComponent,
+    CalculoHoraExtraComponent,
+    InformacionJefeComponent,
     ListarNotiAutorizacionesComponent,
+    VerEmpleadoPermisoComponent,
+    EditarEstadoAutorizaccionComponent
   ],
 
   imports: [

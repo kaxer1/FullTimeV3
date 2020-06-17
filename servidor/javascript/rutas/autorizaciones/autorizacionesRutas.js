@@ -12,8 +12,9 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.get('/', autorizacionesControlador_1.default.ListarAutorizaciones);
-        this.router.get('/:id', autorizacionesControlador_1.default.ListarUnaAutorizacion);
+        this.router.get('/info-autorizacion/:id_documento', autorizacionesControlador_1.default.ObtenerAutorizacionPorIdDocumento);
         this.router.post('/', autorizacionesControlador_1.default.CrearAutorizacion);
+        this.router.put('/:id/estado', autorizacionesControlador_1.default.ActualizarEstado);
     }
 }
 const AUTORIZA_DEPARTAMENTO_RUTAS = new DepartamentoRutas();

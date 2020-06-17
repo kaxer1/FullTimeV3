@@ -1,0 +1,167 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
+                <div class="barraTitulo1">
+                    <div class="container">
+                        <div class="row" style="text-align: center;">
+                            <div class="col">
+                                <h5>Informacion del permiso</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px;" *ngFor="let p of InfoPermiso">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Código Permiso:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.id}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Empleado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.nombre}} {{p.apellido}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Cédula:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.cedula}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Descripción:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.descripcion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Tipo Permiso:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.nom_permiso}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.estado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Creación:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_creacion.split('T')[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_inicio.split('T')[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_final.split('T')[0]}}</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
+                                <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
+                                    matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
+                                    <p>Autorización</p>
+                                </i>
+                                <i class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(p)"
+                                    matTooltip="Cambiar el estado del permiso">
+                                    <p>Estado</p>
+                                </i>
+                                <a class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix matTooltipPosition="right" 
+                                    matTooltip="Certificado" href="http://localhost:3000/empleadoPermiso/documentos/{{p.documento}}" target="_blank">
+                                    <p>{{p.docu_nombre}}</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
+                <div class="barraTitulo1">
+                    <div class="container">
+                        <div class="row" style="text-align: center;">
+                            <div class="col">
+                                <h5>Informacion de la Autorización</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px;" *ngFor="let a of autorizacion">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Código autorización:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{a.id}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{estado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Orden:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{a.orden}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Departamento:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{departamento}}</label>
+                            </div>
+                        </div>                        
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
+                                <i class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                                    matTooltip="Cambiar el estado del permiso">
+                                    <p>Estado</p>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

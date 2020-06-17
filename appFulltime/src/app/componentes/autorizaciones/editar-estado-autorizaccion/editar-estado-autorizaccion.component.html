@@ -1,0 +1,29 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="tituloNotifica">
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Cambiar estado de la autorización</span>
+</div>
+<br>
+<div class="container" style="text-align: center;">
+    <form [formGroup]="estadoAutorizacionesForm">
+        <mat-form-field>
+            <mat-label id="selecDepa">Estados *</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
+                matTooltipPosition="right"
+                matTooltip="Lista de estados">
+                help_outline</mat-icon>
+            <mat-select [formControl]="estado">
+                <mat-option *ngFor="let e of estados" [value]="e.id">
+                    {{e.nombre}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+</div>
+<div style="text-align: center;">
+    <input type="submit" class="btn btn-sm"
+        (click)="ActualizarEstadoAutorizacion(estadoAutorizacionesForm.value)"
+        [disabled]="!estadoAutorizacionesForm.valid" value="Guardar">
+    <input type="submit" (click)="dialogRef.close()" class="btn btn-sm" value="Salir"
+        style="margin-left: 15px;">
+</div>
+        

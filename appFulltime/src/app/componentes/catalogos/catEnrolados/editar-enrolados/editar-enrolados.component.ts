@@ -21,6 +21,7 @@ export class EditarEnroladosComponent implements OnInit {
   finger = new FormControl('', Validators.pattern('[0-9]*'));
   activo = new FormControl('', Validators.required);
   data_finger = new FormControl('', Validators.pattern('[a-zA-z 1-9]*'));
+  codigoF = new FormControl('', Validators.required);
 
   usuarios: any = [];
   idUltimoEnrolado: any = [];
@@ -41,7 +42,8 @@ export class EditarEnroladosComponent implements OnInit {
     enroladoContraseniaForm: this.contrasenia,
     enroladoActivoForm: this.activo,
     enroladoFingerForm: this.finger,
-    enroladoData_FingerForm: this.data_finger
+    enroladoData_FingerForm: this.data_finger,
+    codigoForm: this.codigoF
   });
 
   constructor(
@@ -66,7 +68,8 @@ export class EditarEnroladosComponent implements OnInit {
       enroladoContraseniaForm: this.data.datosEnrolado.contrasenia,
       enroladoActivoForm: this.data.datosEnrolado.activo,
       enroladoFingerForm: this.data.datosEnrolado.finger,
-      enroladoData_FingerForm: this.data.datosEnrolado.data_finger
+      enroladoData_FingerForm: this.data.datosEnrolado.data_finger,
+      codigoForm: this.data.datosEnrolado.codigo
     })
     if (this.data.datosEnrolado.activo === true) {
       this.selec1 = true;
@@ -84,7 +87,8 @@ export class EditarEnroladosComponent implements OnInit {
       contrasenia: form.enroladoContraseniaForm,
       activo: form.enroladoActivoForm,
       finger: form.enroladoFingerForm,
-      data_finger: form.enroladoData_FingerForm
+      data_finger: form.enroladoData_FingerForm,
+      codigo: form.codigoForm
     };
     this.rest.ActualizarUnEnrolado(dataEnrolado).subscribe(response => {
       this.toastr.success('Operacion Exitosa', ' Datos de Usuario Enrolado actualizados');

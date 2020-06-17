@@ -17,6 +17,10 @@ export class PermisosService {
   obtenerAllPermisos() {
     return this.http.get(`${this.API_URL}/empleadoPermiso/lista`);
   }
+  
+  obtenerUnPermisoEmleado(id_permiso: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/un-permiso/${id_permiso}`);
+  }
 
   ActualizarEstado(id: number, datos: any) {
     return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/estado`, datos);

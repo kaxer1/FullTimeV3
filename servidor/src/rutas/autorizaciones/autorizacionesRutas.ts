@@ -10,8 +10,9 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', AUTORIZACIONES_CONTROLADOR.ListarAutorizaciones);
-        this.router.get('/:id', AUTORIZACIONES_CONTROLADOR.ListarUnaAutorizacion);
+        this.router.get('/info-autorizacion/:id_documento', AUTORIZACIONES_CONTROLADOR.ObtenerAutorizacionPorIdDocumento);
         this.router.post('/', AUTORIZACIONES_CONTROLADOR.CrearAutorizacion);
+        this.router.put('/:id/estado', AUTORIZACIONES_CONTROLADOR.ActualizarEstado);
     }
 }
 

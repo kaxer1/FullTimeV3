@@ -204,7 +204,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
     }
-    else {
+    else if (form.diasHorasForm === 'Días y Horas') {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: this.tipoPermiso.num_hora_maximo, numDiaMaximoForm: this.tipoPermiso.num_dia_maximo });
       this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0, numHoraMaximoForm: '00:00' });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
@@ -222,7 +222,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.selectDiasHoras = this.diasHoras[1].valor;
       this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-    } else if (this.tipoPermiso.num_hora_maximo === 0) {
+    } else if (this.tipoPermiso.num_hora_maximo === '00:00:00') {
       this.selectDiasHoras = this.diasHoras[0].valor;
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
@@ -322,7 +322,7 @@ export class EditarTipoPermisosComponent implements OnInit {
     }
   }
 
-  Actualizar(id, datos){
+  Actualizar(id, datos) {
     this.rest.putTipoPermisoRest(id, datos).subscribe(res => {
       console.log(res);
       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
