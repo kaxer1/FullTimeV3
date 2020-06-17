@@ -12,7 +12,7 @@ export class EmplApellidoPipe implements PipeTransform {
     const resultadoEmpleado = [];
 
     for(const empleado of value){
-      if(empleado.apellido.toLowerCase().indexOf(arg.toLowerCase()) > -1){
+      if(empleado.apellido && empleado.apellido.toLowerCase().indexOf(arg.toLowerCase()) > -1){
         resultadoEmpleado.push(empleado);
       };
     };

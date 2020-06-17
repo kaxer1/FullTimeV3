@@ -1054,7 +1054,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
         if (itemName.toLowerCase() == 'horario empleado') {
           this.plantillaHorario();
-          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+          //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
           this.toastr.error('Plantilla seleccionada incorrecta');
         }
