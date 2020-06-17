@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class ProcesoControlador {
     list(req, res) {
@@ -61,17 +63,30 @@ class ProcesoControlador {
     }
     EliminarProceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const proc_padre = req.params.id;
             const id = req.params.id;
-            const procesos = yield database_1.default.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
-            console.log(procesos.rows.length);
-            if (procesos.rows.length === 0) {
-                yield database_1.default.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
-                res.jsonp({ message: 'Registro eliminado' });
-            }
-            else {
-                res.jsonp(procesos.rows);
-            }
+            yield database_1.default.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Procesos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
 }

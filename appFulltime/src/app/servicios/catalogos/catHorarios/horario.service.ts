@@ -38,4 +38,8 @@ export class HorarioService {
     return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)  
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/horario/xmlDownload`, data);
+  }
+
 }

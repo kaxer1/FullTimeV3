@@ -17,6 +17,8 @@ class ProcesoRutas {
         this.router.post('/', catProcesoControlador_1.default.create);
         this.router.put('/', catProcesoControlador_1.default.ActualizarProceso);
         this.router.delete('/eliminar/:id', catProcesoControlador_1.default.EliminarProceso);
+        this.router.post('/xmlDownload/', catProcesoControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catProcesoControlador_1.default.downloadXML);
     }
 }
 const PROCESO_RUTAS = new ProcesoRutas();

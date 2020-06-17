@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home'])
         }
         if (datos.rol === 2) { //Empleado
-          this.router.navigate(['/datosEmpleado']);
+          this.router.navigate(['/estadisticas']);
         }
         
       }

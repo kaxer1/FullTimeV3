@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-
+import * as moment from 'moment'
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 
@@ -22,6 +22,7 @@ import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.servi
 export class RegistrarVacacionesComponent implements OnInit {
 
   empleados: any = [];
+  calcular = false;
 
   nombreEmpleado = new FormControl('', [Validators.required]);
   fechaInicio = new FormControl('', Validators.required);
@@ -31,6 +32,8 @@ export class RegistrarVacacionesComponent implements OnInit {
   dialaborableF = new FormControl('', [Validators.required]);
   estadoF = new FormControl('', [Validators.required]);
   legalizadoF = new FormControl('', [Validators.required]);
+  calcularF = new FormControl('');
+  totalF = new FormControl('');
 
   public VacacionesForm = new FormGroup({
     fecInicioForm: this.fechaInicio,
@@ -40,7 +43,9 @@ export class RegistrarVacacionesComponent implements OnInit {
     diaLibreForm: this.dialibreF,
     dialaborableForm: this.dialaborableF,
     estadoForm: this.estadoF,
-    legalizadoForm: this.legalizadoF
+    legalizadoForm: this.legalizadoF,
+    calcularForm: this.calcularF,
+    totalForm: this.totalF
   });
 
   constructor(
@@ -53,9 +58,86 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
+    this.VacacionesForm.patchValue({
+      estadoForm: '1'
+    });
   }
 
-  // Método para ver la información del empleado 
+  ContarDiasHabiles(dateFrom, dateTo) {
+    var from = moment(dateFrom, 'DD/MM/YYY'),
+      to = moment(dateTo, 'DD/MM/YYY'),
+      days = 0,
+      sa = 0;
+    while (!from.isAfter(to)) {
+      /** Si no es sabado ni domingo */
+      if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
+        days++;
+      }
+      from.add(1, 'days');
+    }
+    return days;
+  }
+
+  ContarDiasLibres(dateFrom, dateTo) {
+    var from = moment(dateFrom, 'DD/MM/YYY'),
+      to = moment(dateTo, 'DD/MM/YYY'),
+      days = 0,
+      sa = 0;
+    while (!from.isAfter(to)) {
+      /** Si no es sabado ni domingo */
+      if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
+        days++;
+      }
+      else {
+        sa++
+      }
+      from.add(1, 'days');
+    }
+    return sa;
+  }
+
+  ImprimirCalculos(form) {
+    console.log(form.calcularForm);
+    if (form.fecInicioForm === '' || form.fecFinalForm === '') {
+      this.toastr.info('Aún no ha ingresado fecha de inicio o fin de vacaciones')
+      this.LimpiarCalculo();
+    }
+    else {
+      if ((<HTMLInputElement>document.getElementById('activo')).checked) {
+        if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
+          var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+          var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+          const totalDias = habil + libre;
+          this.VacacionesForm.patchValue({
+            diaLibreForm: libre,
+            dialaborableForm: habil,
+            totalForm: totalDias
+          });
+        }
+        else {
+          this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
+          (<HTMLInputElement>document.getElementById('activo')).checked = false;
+        }
+      } else {
+        this.VacacionesForm.patchValue({
+          diaLibreForm: '',
+          dialaborableForm: '',
+          totalForm: ''
+        });
+      }
+    }
+  }
+
+  LimpiarCalculo() {
+    (<HTMLInputElement>document.getElementById('activo')).checked = false;
+    this.VacacionesForm.patchValue({
+      diaLibreForm: '',
+      dialaborableForm: '',
+      totalForm: ''
+    });
+  }
+
+  /** Método para ver la información del empleado */
   ObtenerEmpleados(idemploy: any) {
     this.empleados = [];
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -69,12 +151,20 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   ValidarDatosVacacion(form) {
     if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
-      this.InsertarVacaciones(form);
+      const ingreso = moment(form.fechaIngresoForm).diff(moment(form.fecFinalForm), 'days');
+      console.log(ingreso);
+      if(ingreso  <= 1 ){
+        this.InsertarVacaciones(form);
+      }
+      else {
+        this.toastr.info('La fecha de ingreso a laborar no es la adecuada')
+      }   
     }
     else {
-      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones')
+      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
     }
   }
+
 
   InsertarVacaciones(form) {
     let datosVacaciones = {

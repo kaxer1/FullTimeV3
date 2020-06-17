@@ -35,6 +35,7 @@ class EmpleadoRutas {
         this.router.post('/emplTitulos/', this.verifyToken, EMPLEADO_CONTROLADOR.createEmpleadoTitulos);
         this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], EMPLEADO_CONTROLADOR.CargaPlantillaEmpleadoUsuario);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, EMPLEADO_CONTROLADOR.eliminarTituloDelEmpleado);
+        this.router.post('/buscarDepartamento', EMPLEADO_CONTROLADOR.ObtenerDepartamentoEmpleado);
     }
 
     verifyToken(req: Request, res: Response, next: NextFunction) {

@@ -1,4 +1,7 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
+import fs from 'fs';
+const builder = require('xmlbuilder');
+
 import pool from '../../database';
 
 class ProcesoControlador {
@@ -43,16 +46,28 @@ class ProcesoControlador {
   }
 
   public async EliminarProceso(req: Request, res: Response): Promise<void> {
-    const proc_padre = req.params.id;
     const id = req.params.id;
-    const procesos = await pool.query('SELECT * FROM cg_procesos WHERE proc_padre = $1', [proc_padre]);
-    console.log(procesos.rows.length)
-    if(procesos.rows.length === 0) {
-      await pool.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
+    await pool.query('DELETE FROM cg_procesos WHERE id = $1', [id]);
       res.jsonp({ message: 'Registro eliminado' });
-    } else {
-      res.jsonp(procesos.rows);
-    }
+  }
+
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
+    console.log(req.body.userName);
+    let filename = "Procesos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename });
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
 }

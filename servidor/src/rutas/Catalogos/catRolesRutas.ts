@@ -15,6 +15,8 @@ class PruebasRutas {
         this.router.post('/', ROLES_CONTROLADOR.CrearRol);
         this.router.put('/', ROLES_CONTROLADOR.ActualizarRol);
         // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.post('/xmlDownload/', ROLES_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', ROLES_CONTROLADOR.downloadXML);
     }
 }
 

@@ -35,12 +35,24 @@ class AutorizaDepartamentoControlador {
     EncontrarAutorizacionCargo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo } = req.params;
-            const AUTORIZA = yield database_1.default.query('SELECT *FROM VistaDepartamentoAutoriza WHERE id_empl_cargo= $1', [id_empl_cargo]);
+            const AUTORIZA = yield database_1.default.query('SELECT * FROM VistaDepartamentoAutoriza WHERE id_empl_cargo= $1', [id_empl_cargo]);
             if (AUTORIZA.rowCount > 0) {
                 return res.jsonp(AUTORIZA.rows);
             }
             else {
                 return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ObtenerQuienesAutorizan(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_depar } = req.params;
+            const EMPLEADOS = yield database_1.default.query('SELECT * FROM VistaPersonasAutorizan WHERE id_depar = $1', [id_depar]);
+            if (EMPLEADOS.rowCount > 0) {
+                return res.jsonp(EMPLEADOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
             }
         });
     }

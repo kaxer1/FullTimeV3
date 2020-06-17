@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { NotiAutorizacionesService } from 'src/app/servicios/catalogos/catNotiAutorizaciones/noti-autorizaciones.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { NotificacionesService } from 'src/app/servicios/catalogos/catNotificaciones/notificaciones.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface Orden {
   valor: number
@@ -30,7 +31,6 @@ export class NotiAutorizacionesComponent implements OnInit {
   notificacion: any = [];
 
   ordenes: Orden[] = [
-    { valor: 0},
     { valor: 1},
     { valor: 2},
     { valor: 3},
@@ -42,12 +42,15 @@ export class NotiAutorizacionesComponent implements OnInit {
     public restNotiAutorizaciones: NotiAutorizacionesService,
     public restNotificaciones: NotificacionesService,
     public restCargoEmpleado: EmplCargosService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    public dialogRef: MatDialogRef<NotiAutorizacionesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.obtenerCargo();
     this.obtenerNotificacion();
+    console.log(this.data);
   }
 
   insertarNotiAutorizacion(form){
@@ -60,25 +63,40 @@ export class NotiAutorizacionesComponent implements OnInit {
     this.restNotiAutorizaciones.postNotiAutoriRest(newNotiAutori).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Autorizacion de Notificación guardada'),
       this.limpiarCampos();
+      this.CerrarVentanaRegistroNoti();
     }, error => {
       console.log(error);
     })
   }
 
   obtenerCargo(){
-    this.restCargoEmpleado.getEmpleadoCargosRest().subscribe(res => {
+    this.restCargoEmpleado.getListaEmpleadoCargosRest().subscribe(res => {
       this.cargo = res;
+      console.log(res);
     });
   }
 
   obtenerNotificacion(){
-    this.restNotificaciones.getNotificacionesRest().subscribe(res => {
-      this.notificacion = res;
+    this.notificacion = [];
+    this.notificacion.push(this.data);
+    this.nuevaNoti_AutorizacionesForm.patchValue({
+      idCatNotificacionForm: this.data.id
     });
   }
 
   limpiarCampos(){
     this.nuevaNoti_AutorizacionesForm.reset();
+  }
+
+  CerrarVentanaRegistroNoti() {
+    this.limpiarCampos();
+    this.dialogRef.close();
+    window.location.reload();
+  }
+
+  Salir() {
+    this.limpiarCampos();
+    this.dialogRef.close();
   }
 
 }

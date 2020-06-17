@@ -3,7 +3,7 @@ import pool from '../../database';
 
 class NotificacionesControlador {
   public async ListarNotificaciones(req: Request, res: Response) {
-    const NOTIFICACIONES = await pool.query('SELECT * FROM cg_notificaciones');
+    const NOTIFICACIONES = await pool.query('SELECT cn.tipo, cn.nivel, cn.id, cd.nombre, ctp.descripcion, cd.id AS departamento, ctp.id AS tipo_permiso FROM cg_notificaciones AS cn, cg_departamentos AS cd, cg_tipo_permisos AS ctp WHERE cn.id_departamento = cd.id AND cn.id_tipo_permiso = ctp.id AND NOT cd.nombre = \'Ninguno\' ORDER BY id ASC');
     if (NOTIFICACIONES.rowCount > 0) {
       return res.jsonp(NOTIFICACIONES.rows)
     }

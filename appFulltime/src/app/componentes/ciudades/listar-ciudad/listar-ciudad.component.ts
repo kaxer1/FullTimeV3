@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
 import { RegistrarCiudadComponent } from 'src/app/componentes/ciudades/registrar-ciudad/registrar-ciudad.component'
-import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-listar-ciudad',

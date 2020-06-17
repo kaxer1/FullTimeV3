@@ -46,6 +46,14 @@ table {width: 100%;}
 
 #desc { text-align: left; }
 
+#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+
+#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+
+#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+
+#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+
 [type="file"] {
     height: 0;
     overflow: hidden;
@@ -97,4 +105,25 @@ table {width: 100%;}
 
 [type="file"] + label.btn-2:hover::before {
     right: 80%
+}
+
+#descargar:hover { 
+    font-weight: bold; 
+    font-size: 16px; 
+    font-family: "Poppins", sans-serif; 
+    border-radius: 5px; 
+    height: 55px; 
+    background-color: rgb(38, 218, 15); 
+    margin-left: 2px;
+}
+
+#descargar { 
+    font-weight: bold; 
+    font-size: 16px; 
+    font-family: "Poppins", sans-serif; 
+    border-radius: 5px; 
+    height: 55px; 
+    background-color: #93a3c7; 
+    overflow: hidden;
+    margin-left: 2px;
 }

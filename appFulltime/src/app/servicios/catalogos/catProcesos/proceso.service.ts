@@ -38,4 +38,9 @@ export class ProcesoService {
     return this.http.put(`${this.API_URL}/proceso`, datos);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/proceso/xmlDownload`, data);
+  }
+
+
 }

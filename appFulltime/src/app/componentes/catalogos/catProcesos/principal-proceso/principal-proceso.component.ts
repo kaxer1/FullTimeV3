@@ -3,11 +3,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.component';
 import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
-import { EliminarProcesosComponent } from "../eliminar-procesos/eliminar-procesos.component";
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 
 @Component({
   selector: 'app-principal-proceso',
@@ -24,7 +32,7 @@ export class PrincipalProcesoComponent implements OnInit {
   procesos: any = [];
   auxiliar1: any = [];
   auxiliar2: any = [];
-  
+
   filtroNombre = '';
   filtroNivel: number;
   filtroProPadre = '';
@@ -33,18 +41,19 @@ export class PrincipalProcesoComponent implements OnInit {
     private rest: ProcesoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
+    private router: Router,
   ) { }
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-  
+
   ngOnInit(): void {
     this.getProcesos();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -69,14 +78,14 @@ export class PrincipalProcesoComponent implements OnInit {
     }
   }
 
-  limpiarCampoBuscar(){
+  limpiarCampoBuscar() {
     this.buscarNombre.reset();
     this.buscarNivel.reset();
     this.buscarPadre.reset();
   }
 
   getProcesos() {
-    this.auxiliar1 = [];
+    this.procesos = [];
     this.rest.getProcesosRest().subscribe(data => {
       this.procesos = data;
     });
@@ -100,18 +109,35 @@ export class PrincipalProcesoComponent implements OnInit {
     });
   }
 
-  AbrirVentanaRegistrarProceso(){
+  AbrirVentanaRegistrarProceso() {
     this.vistaRegistrarDatos.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarCatProcesosComponent, { width: '450px', data: {datosP: datosSeleccionados, lista: true }}).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarCatProcesosComponent, { width: '450px', data: { datosP: datosSeleccionados, lista: true } }).disableClose = true;
     //console.log(datosSeleccionados.fecha);
   }
 
-  AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
-    this.vistaRegistrarDatos.open(EliminarProcesosComponent, { width: '400px', data: dataObjDelete}).disableClose = true;
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_proceso: number) {
+    this.rest.deleteProcesoRest(id_proceso).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.getProcesos();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/proceso']);
+        }
+      });
   }
 
   IngresarSoloNumeros(evt) {
@@ -131,4 +157,136 @@ export class PrincipalProcesoComponent implements OnInit {
     }
   }
 
+  /****************************************************************************************************** 
+   *                                         MÉTODO PARA EXPORTAR A PDF
+   ******************************************************************************************************/
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Procesos', this.procesos);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Lista de Procesos',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFProcesos(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 12,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 10
+        }
+      }
+    };
+  }
+
+  presentarDataPDFProcesos() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+            { text: 'Nivel', style: 'tableHeader' },
+            { text: 'Proceso Superior', style: 'tableHeader' },
+          ],
+          ...this.procesos.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.nombre, style: 'itemsTable' },
+              { text: obj.nivel, style: 'itemsTable' },
+              { text: obj.proc_padre, style: 'itemsTable' },
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.procesos);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Procesos');
+    xlsx.writeFile(wb, "Procesos" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.procesos);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "ProcesosCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloProcesos = [];
+    this.procesos.forEach(obj => {
+      objeto = {
+        "proceso": {
+          '@id': obj.id,
+          "nombre": obj.nombre,
+          "nivel": obj.nivel,
+          "proceso_superior": obj.proc_padre,
+        }
+      }
+      arregloProcesos.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloProcesos).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/proceso/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
 }

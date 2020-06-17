@@ -36,9 +36,9 @@ import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detalle
 import { RegistroAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/registro-autorizacion-depa/registro-autorizacion-depa.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
-import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
-import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 
 @Component({
@@ -93,6 +93,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /** Contador */
   cont = 0;
+  actualizar: boolean;
 
   constructor(
     public restTitulo: TituloService,
@@ -126,12 +127,6 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.actualizacion === false) {
-      this.selectedIndex = 3;
-    }
-    else {
-      this.selectedIndex = 0;
-    }
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -197,12 +192,15 @@ export class VerEmpleadoComponent implements OnInit {
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
     this.empleadoUno = [];
+    let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + data[0]['imagen'];
-        this.Main.urlImagen = this.urlImagen;
+        if (idEmpleadoActivo === idemploy) {
+          this.Main.urlImagen = this.urlImagen;
+        }
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
@@ -723,7 +721,20 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaEditarProceso(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarEmpleadoProcesoComponent,
-      { width: '400px', data: { idEmpleado: this.idEmpleado, datosProcesos: datoSeleccionado } }).disableClose = true;
+      { width: '400px', data: { idEmpleado: this.idEmpleado, datosProcesos: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+      });
+  }
+
+  /* Ventana para editar procesos del empleado */
+  AbrirEditarPeriodoVacaciones(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarPeriodoVacacionesComponent,
+      { width: '900px', data: { idEmpleado: this.idEmpleado, datosPeriodo: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+      });
   }
 
   /* 
@@ -1015,6 +1026,7 @@ export class VerEmpleadoComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       console.log(this.archivoSubido[i], this.archivoSubido[i].name)
       formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
+      console.log("iamge", formData);
     }
     this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'imagen subida.');
@@ -1043,6 +1055,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
         if (itemName.toLowerCase() == 'horario empleado') {
           this.plantillaHorario();
+          //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
           this.toastr.error('Plantilla seleccionada incorrecta');
         }
@@ -1062,10 +1075,93 @@ export class VerEmpleadoComponent implements OnInit {
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
-     this.actualizacion = false;
-      window.location.reload(this.actualizacion);
+      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+      //this.actualizar = false;
+      //window.location.reload(this.actualizar);
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
+    });
+  }
+
+
+  /* ***************************************************************************************************** 
+   *                                        PLANTILLA VACIA DE HORARIOS UN EMPLEADO
+   * *****************************************************************************************************/
+  DescargarPlantillaHorario() {
+    var datosHorario = [{
+      fec_inicio: 'Eliminar Fila: 05/04/2020 Nota: Inicio de actividades /formato de celda tipo Text',
+      fec_final: '05/05/2020 Nota: Fin de actividades / formato de celda tipo Text',
+      lunes: ' true o false Nota: Indicar días libres',
+      martes: 'true o false',
+      miercoles: 'true o false',
+      jueves: 'true o false',
+      viernes: 'true o false',
+      sabado: 'true o false',
+      domingo: 'true o false',
+      nom_horario: 'horario1',
+      estado: '1-Activo/2-Inactivo/3-Suspendido'
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Empleado Horario');
+    xlsx.writeFile(wb, "Horario Empleado" + '.xlsx');
+  }
+
+  /* ***************************************************************************************************** 
+   *                              MÉTODO PARA IMPRIMIR EN XML
+   * *****************************************************************************************************/
+  nacionalidades: any = [];
+  obtenerNacionalidades() {
+    this.restEmpleado.getListaNacionalidades().subscribe(res => {
+      this.nacionalidades = res;
+    });
+  }
+
+  EstadoCivilSelect: any = ['Soltero/a', 'Unión de Hecho', 'Casado/a', 'Divorciado/a', 'Viudo/a'];
+  GeneroSelect: any = ['Masculino', 'Femenino'];
+  EstadoSelect: any = ['Activo', 'Inactivo'];
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloEmpleado = [];
+    this.empleadoUno.forEach(obj => {
+      var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+      var genero = this.GeneroSelect[obj.genero - 1];
+      var estado = this.EstadoSelect[obj.estado - 1];
+      let nacionalidad;
+      this.nacionalidades.forEach(element => {
+        if (obj.id_nacionalidad == element.id) {
+          nacionalidad = element.nombre;
+        }
+      });
+
+      objeto = {
+        "empleado": {
+          '@id': obj.id,
+          "cedula": obj.cedula,
+          "apellido": obj.apellido,
+          "nombre": obj.nombre,
+          "estadoCivil": estadoCivil,
+          "genero": genero,
+          "correo": obj.correo,
+          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
+          "estado": estado,
+          "correoAlternativo": obj.mail_alternativo,
+          "domicilio": obj.domicilio,
+          "telefono": obj.telefono,
+          "nacionalidad": nacionalidad,
+          "imagen": obj.imagen
+        }
+      }
+      arregloEmpleado.push(objeto)
+    });
+
+    this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
+      this.data = res;
+      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
     });
   }
 

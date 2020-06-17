@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class SucursalControlador {
     ListarSucursales(req, res) {
@@ -72,6 +74,27 @@ class SucursalControlador {
             const { nombre, id_ciudad, id_empresa, id } = req.body;
             yield database_1.default.query('UPDATE sucursales SET nombre = $1, id_ciudad = $2, id_empresa = $3 WHERE id = $4', [nombre, id_ciudad, id_empresa, id]);
             res.jsonp({ message: 'Sucursal actualizada exitosamente' });
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Sucursales-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
 }

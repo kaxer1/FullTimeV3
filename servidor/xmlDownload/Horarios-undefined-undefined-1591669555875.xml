@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<root>
+  <tipo_permiso id="133">
+    <nombre>LA</nombre>
+    <min_almuerzo>30</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="134">
+    <nombre>LOB</nombre>
+    <min_almuerzo>0</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="135">
+    <nombre>MA</nombre>
+    <min_almuerzo>15</min_almuerzo>
+    <hora_trabajo>2.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="136">
+    <nombre>LB</nombre>
+    <min_almuerzo>25</min_almuerzo>
+    <hora_trabajo>6.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="137">
+    <nombre>horario3</nombre>
+    <min_almuerzo>15</min_almuerzo>
+    <hora_trabajo>2.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="138">
+    <nombre>horario1</nombre>
+    <min_almuerzo>30</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="139">
+    <nombre>horario4</nombre>
+    <min_almuerzo>0</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="140">
+    <nombre>horario2</nombre>
+    <min_almuerzo>25</min_almuerzo>
+    <hora_trabajo>6.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="141">
+    <nombre>horario2</nombre>
+    <min_almuerzo>25</min_almuerzo>
+    <hora_trabajo>6.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="142">
+    <nombre>horario3</nombre>
+    <min_almuerzo>15</min_almuerzo>
+    <hora_trabajo>2.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="143">
+    <nombre>horario4</nombre>
+    <min_almuerzo>0</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="144">
+    <nombre>horario1</nombre>
+    <min_almuerzo>30</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="145">
+    <nombre>horario2</nombre>
+    <min_almuerzo>25</min_almuerzo>
+    <hora_trabajo>6.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="146">
+    <nombre>horario4</nombre>
+    <min_almuerzo>0</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>false</flexible>
+    <por_horas>true</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="147">
+    <nombre>horario3</nombre>
+    <min_almuerzo>15</min_almuerzo>
+    <hora_trabajo>2.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+  <tipo_permiso id="148">
+    <nombre>horario1</nombre>
+    <min_almuerzo>30</min_almuerzo>
+    <hora_trabajo>8.0</hora_trabajo>
+    <flexible>true</flexible>
+    <por_horas>false</por_horas>
+  </tipo_permiso>
+</root>

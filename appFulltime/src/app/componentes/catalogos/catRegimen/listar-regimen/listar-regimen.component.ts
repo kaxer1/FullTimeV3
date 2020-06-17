@@ -5,6 +5,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
+
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
 import { EditarRegimenComponent } from 'src/app/componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
@@ -106,5 +112,153 @@ export class ListarRegimenComponent implements OnInit {
   /** Ventana para registrar datos de un nuevo régimen laboral */
   AbrirVentanaRegistrarRegimen(): void {
     this.vistaRegistrarDatos.open(RegimenComponent, { width: '900px' }).disableClose = true;
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
+   * ****************************************************************************************************/
+
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('Regimen', this.regimen);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Regímenes Laborales',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFFeriados(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 10,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 8,
+          alignment: 'center',
+        },
+      }
+    };
+  }
+
+  presentarDataPDFFeriados() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Descripción', style: 'tableHeader' },
+            { text: 'Vacaciones por año', style: 'tableHeader' },
+            { text: 'Vacaciones por mes', style: 'tableHeader' },
+            { text: 'Años para antiguedad', style: 'tableHeader' },
+            { text: 'Días de incremento', style: 'tableHeader' },
+            { text: 'Días máximos acumulables', style: 'tableHeader' },
+            { text: 'Días Libres', style: 'tableHeader' },
+          ],
+          ...this.regimen.map(obj => {
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.descripcion, style: 'itemsTable' },
+              { text: obj.dia_anio_vacacion, style: 'itemsTable' },
+              { text: obj.dia_mes_vacacion, style: 'itemsTable' },
+              { text: obj.anio_antiguedad, style: 'itemsTable' },
+              { text: obj.dia_incr_antiguedad, style: 'itemsTable' },
+              { text: obj.max_dia_acumulacion, style: 'itemsTable' },
+              { text: obj.dia_libr_anio_vacacion, style: 'itemsTable' },
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
+   * ****************************************************************************************************/
+
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.regimen);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'regimen');
+    xlsx.writeFile(wb, "RegimenEXCEL" + new Date().getTime() + '.xlsx');
+  }
+
+  /* ****************************************************************************************************
+   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloRegimen = [];
+    this.regimen.forEach(obj => {
+      objeto = {
+        "regimen_laboral": {
+          '@id': obj.id,
+          "descripcion": obj.descripcion,
+          "dia_anio_vacacion": obj.dia_anio_vacacion,
+          "dia_mes_vacacion": obj.dia_mes_vacacion,
+          "anio_antiguedad": obj.anio_antiguedad,
+          "dia_incr_antiguedad": obj.dia_incr_antiguedad,
+          "max_dia_acumulacion": obj.max_dia_acumulacion,
+          "dia_libr_anio_vacacion": obj.dia_libr_anio_vacacion,
+        }
+      }
+      arregloRegimen.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloRegimen).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/regimenLaboral/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
+  /****************************************************************************************************** 
+   * MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.regimen);
+    const csvDataC = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "RegimenCSV" + new Date().getTime() + '.csv');
   }
 }

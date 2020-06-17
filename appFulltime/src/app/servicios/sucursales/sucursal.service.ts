@@ -37,5 +37,8 @@ export class SucursalService {
     return this.http.put(`${this.API_URL}/sucursales`, datos);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/sucursales/xmlDownload`, data);
+  }
 
 }

@@ -1,4 +1,6 @@
-import { Request, Response, text } from 'express'
+import { Request, Response, text } from 'express';
+const builder = require('xmlbuilder');
+import fs from 'fs';
 
 import pool from '../../database';
 
@@ -51,6 +53,25 @@ class RolesControlador {
   //   //res.jsonp({text: 'eliminado un dato ' + req.params.id});
   //   res.jsonp({ message: 'Rol eliminado' });
   // }
+
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true});
+    console.log(req.body.userName);
+    let filename = "Roles-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function(err) {
+      if(err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename});
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
+  }
 }
 
 const ROLES_CONTROLADOR = new RolesControlador();

@@ -33,7 +33,7 @@ export class EditarTipoPermisosComponent implements OnInit {
 
   descuentos: TipoDescuentos[] = [
     { value: '1', viewValue: 'Vacaciones' },
-    { value: '2', viewValue: 'desc2' },
+    { value: '2', viewValue: 'Ninguno' },
   ];
 
   solicitudes: opcionesSolicitud[] = [
@@ -44,6 +44,7 @@ export class EditarTipoPermisosComponent implements OnInit {
   diasHoras: opcionesDiasHoras[] = [
     { valor: 'Días', nombre: 'Días' },
     { valor: 'Horas', nombre: 'Horas' },
+    { valor: 'Días y Horas', nombre: 'Días y Horas' },
   ];
 
   validarGuardar: boolean = false;
@@ -105,11 +106,11 @@ export class EditarTipoPermisosComponent implements OnInit {
       fecValidarForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
-    });  
-    this.SetDatos();  
+    });
+    this.SetDatos();
   }
 
-  SetDatos(){
+  SetDatos() {
     let i = 0;
     this.permisos.forEach(obj => {
       if (this.tipoPermiso.descripcion === obj.valor) {
@@ -121,10 +122,10 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.ActivarDesactivarNombreSet(this.seleccionarPermiso);
     this.ActivarDiasHorasSet();
 
-    if(this.tipoPermiso.acce_empleado === 2){
+    if (this.tipoPermiso.acce_empleado === 2) {
       this.selectAccess = this.solicitudes[1].valor;
     }
-    
+
     this.primeroFormGroup.patchValue({
       descripcionForm: this.tipoPermiso.descripcion,
       nombreForm: this.tipoPermiso.descripcion,
@@ -154,7 +155,7 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.descuentos.forEach(obj => {
       console.log(this.tipoPermiso.tipo_descuento);
       console.log(obj);
-      if (this.tipoPermiso.tipo_descuento === obj.value){
+      if (this.tipoPermiso.tipo_descuento === obj.value) {
         this.selectTipoDescuento = this.descuentos[j].value;
       }
       j++;
@@ -168,39 +169,47 @@ export class EditarTipoPermisosComponent implements OnInit {
   ActivarDesactivarNombre(form1) {
     var nombreTipoPermiso = form1.descripcionForm;
     if (nombreTipoPermiso === 'OTRO') {
-      this.primeroFormGroup.patchValue({ nombreForm: this.tipoPermiso.descripcion});
-      this.estilo = {'visibility' : 'visible'}; this.HabilitarDescrip = false;
+      this.primeroFormGroup.patchValue({ nombreForm: this.tipoPermiso.descripcion });
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
     }
     else {
-      this.primeroFormGroup.patchValue({nombreForm: ''});
-      this.estilo = {'visibility' : 'hidden'}; this.HabilitarDescrip = true;
+      this.primeroFormGroup.patchValue({ nombreForm: '' });
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
     }
 
   }
 
   ActivarDesactivarNombreSet(nombreTipoPermiso) {
     if (nombreTipoPermiso === 'OTRO') {
-      this.estilo = {'visibility' : 'visible'}
+      this.estilo = { 'visibility': 'visible' }
       this.HabilitarDescrip = false;
     } else {
-      this.estilo = {'visibility' : 'hidden'}
+      this.estilo = { 'visibility': 'hidden' }
       this.HabilitarDescrip = true;
     }
   }
 
   ActivarDiasHoras(form) {
     if (form.diasHorasForm === 'Días') {
-      this.primeroFormGroup.patchValue({ numDiaMaximoForm: this.tipoPermiso.num_dia_maximo});
+      this.primeroFormGroup.patchValue({ numDiaMaximoForm: this.tipoPermiso.num_dia_maximo });
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: '00:00' });
-      this.estiloDias = {'visibility' : 'visible'}; this.HabilitarDias = false;
-      this.estiloHoras = {'visibility' : 'hidden'}; this.HabilitarHoras = true;
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
       this.toastr.info('Ingresar número de días máximos de permiso');
-    } else {
+    }
+    else if (form.diasHorasForm === 'Horas') {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: this.tipoPermiso.num_hora_maximo });
-      this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0});
-      this.estiloDias = {'visibility' : 'hidden'}; this.HabilitarDias = true;
-      this.estiloHoras = {'visibility' : 'visible'}; this.HabilitarHoras = false;
+      this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0 });
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+    }
+    else if (form.diasHorasForm === 'Días y Horas') {
+      this.primeroFormGroup.patchValue({ numHoraMaximoForm: this.tipoPermiso.num_hora_maximo, numDiaMaximoForm: this.tipoPermiso.num_dia_maximo });
+      this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0, numHoraMaximoForm: '00:00' });
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.toastr.info('Ingresar número de días , horas y minutos máximos de permiso');
     }
   }
 
@@ -209,13 +218,18 @@ export class EditarTipoPermisosComponent implements OnInit {
   estiloDias: any;
   estiloHoras: any;
   ActivarDiasHorasSet() {
-    if (this.tipoPermiso.num_dia_maximo === 0){
+    if (this.tipoPermiso.num_dia_maximo === 0) {
       this.selectDiasHoras = this.diasHoras[1].valor;
-      this.estiloDias = {'visibility' : 'hidden'}; this.HabilitarDias = true;
-      this.estiloHoras = {'visibility' : 'visible'}; this.HabilitarHoras = false;
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+    } else if (this.tipoPermiso.num_hora_maximo === '00:00:00') {
+      this.selectDiasHoras = this.diasHoras[0].valor;
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
     } else {
-      this.estiloDias = {'visibility' : 'visible'}; this.HabilitarDias = false;
-      this.estiloHoras = {'visibility' : 'hidden'}; this.HabilitarHoras = true;
+      this.selectDiasHoras = this.diasHoras[2].valor;
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
     }
   }
 
@@ -223,12 +237,12 @@ export class EditarTipoPermisosComponent implements OnInit {
   estiloJustificacion: any;
   ActivarJustificacionSet(generarJustificacion: boolean) {
     if (generarJustificacion === true) {
-      this.estiloJustificacion = {'visibility' : 'visible'}; this.HabilitarJustificacion = false;
+      this.estiloJustificacion = { 'visibility': 'visible' }; this.HabilitarJustificacion = false;
       this.terceroFormGroup.patchValue({
         numDiaJustificaForm: this.tipoPermiso.num_dia_justifica
       });
     } else if (generarJustificacion === false) {
-      this.estiloJustificacion = {'visibility' : 'hidden'}; this.HabilitarJustificacion = true;
+      this.estiloJustificacion = { 'visibility': 'hidden' }; this.HabilitarJustificacion = true;
       this.terceroFormGroup.patchValue({
         numDiaJustificaForm: 0
       });
@@ -301,25 +315,25 @@ export class EditarTipoPermisosComponent implements OnInit {
         this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Información General');
       } else {
         dataTipoPermiso.descripcion = form1.nombreForm;
-        this.rest.putTipoPermisoRest(this.tipoPermiso.id, dataTipoPermiso).subscribe(res => {
-          console.log(res);
-          this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
-          window.location.reload();
-        }, error => {
-        });
+        this.Actualizar(this.tipoPermiso.id, dataTipoPermiso);
       }
     } else {
-      this.rest.putTipoPermisoRest(this.tipoPermiso.id, dataTipoPermiso).subscribe(res => {
-        console.log(res);
-        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
-        window.location.reload();
-      }, error => {
-      });
+      this.Actualizar(this.tipoPermiso.id, dataTipoPermiso);
     }
+  }
+
+  Actualizar(id, datos) {
+    this.rest.putTipoPermisoRest(id, datos).subscribe(res => {
+      console.log(res);
+      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+      this.dialogRef.close();
+      window.location.reload();
+    }, error => {
+    });
   }
 
   CerrarVentanaEditarTipoPermiso() {
     this.dialogRef.close();
-    window.location.reload();
+    //window.location.reload();
   }
 }

@@ -133,7 +133,9 @@ export class HomeComponent implements OnInit{
 
 
 // es el constructor
-  constructor() { }
+  constructor(
+    
+  ) { }
 
   ngOnInit(): void {
     var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
@@ -141,7 +143,18 @@ export class HomeComponent implements OnInit{
     var f=new Date();
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
     this.cajaUno();
+
+   /*var intval=window.setInterval(function probando(){
+       // console.log("probando programacion");
+       prueba();
+      },5000);
+
+      function prueba(){
+        alert('Este es un ejemplo');
+      }*/
+    
   }
+
 
    // events y codigo del pie
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {

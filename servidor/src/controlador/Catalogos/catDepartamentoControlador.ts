@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import fs from 'fs';
+const builder = require('xmlbuilder');
+
 import pool from '../../database';
 
 class DepartamentoControlador {
@@ -69,12 +72,40 @@ class DepartamentoControlador {
 
   public async ActualizarDepartamento(req: Request, res: Response): Promise<any> {
     const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    const id  = req.params.id;
+    const id = req.params.id;
     console.log(id);
     await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
     res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
   }
 
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
+    console.log(req.body.userName);
+    let filename = "Departamentos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename });
+  }
+
+  public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
+  }
+
+  public async BuscarDepartamentoPorContrato(req: Request, res: Response) {
+    const id = req.params.id_contrato
+    const departamento = await pool.query('SELECT em.id_departamento, d.nombre FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1',[id]);
+    if (departamento.rowCount > 0) {
+      return res.json(departamento.rows)
+    } else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+}
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();

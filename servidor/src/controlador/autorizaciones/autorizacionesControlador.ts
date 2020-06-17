@@ -13,8 +13,9 @@ class AutorizacionesControlador {
         }
     }
 
-    public async ListarUnaAutorizacion(req: Request, res: Response) {
-        const AUTORIZACIONES = await pool.query('SELECT * FROM autorizaciones');
+    public async ObtenerAutorizacionPorIdDocumento(req: Request, res: Response) {
+        const id = req.params.id_documento
+        const AUTORIZACIONES = await pool.query('SELECT * FROM autorizaciones WHERE id_documento = $1', [id]);
         if (AUTORIZACIONES.rowCount > 0) {
             return res.jsonp(AUTORIZACIONES .rows)
         }
@@ -29,6 +30,12 @@ class AutorizacionesControlador {
         res.jsonp({ message: 'Autorizacion guardado'});
     }
 
+    public async ActualizarEstado(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        const { estado } = req.body;
+        await pool.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
+        res.json({ message: 'Estado de permiso actualizado exitosamente' });
+    }
 }
 
 export const AUTORIZACION_CONTROLADOR = new AutorizacionesControlador();

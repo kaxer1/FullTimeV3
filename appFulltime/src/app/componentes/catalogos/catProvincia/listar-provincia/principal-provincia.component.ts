@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -7,14 +7,13 @@ import { PageEvent } from '@angular/material/paginator';
 
 import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
 import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
-import { MetodosComponent } from 'src/app/componentes/metodos/metodos.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 
 @Component({
   selector: 'app-principal-provincia',
   templateUrl: './principal-provincia.component.html',
   styleUrls: ['./principal-provincia.component.css'],
-  encapsulation: ViewEncapsulation.None
 })
 
 export class PrincipalProvinciaComponent implements OnInit {
@@ -88,7 +87,7 @@ export class PrincipalProvinciaComponent implements OnInit {
         if (confirmado) {
           this.Eliminar(datos.id);
         } else {
-          this.router.navigate(['/enrolados']);
+          this.router.navigate(['/provincia']);
         }
       });
   }

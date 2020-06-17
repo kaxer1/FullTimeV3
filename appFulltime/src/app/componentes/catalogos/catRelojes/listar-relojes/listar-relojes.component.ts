@@ -135,9 +135,9 @@ export class ListarRelojesComponent implements OnInit {
     this.nameFile = this.archivoSubido[0].name;
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 7);
+    let itemName = arrayItems[0].slice(0, 30);
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'relojes') {
+      if (itemName.toLowerCase() == 'dispositivos') {
         this.plantilla();
       } else {
         this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta');
@@ -284,6 +284,70 @@ export class ListarRelojesComponent implements OnInit {
     const csvDataR = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataR], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "DispositivosCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloDispositivos = [];
+    this.relojes.forEach(obj => {
+      objeto = {
+        "dispositivo": {
+          '@id': obj.id,
+          "nombre": obj.nombre,
+          "ip": obj.ip,
+          "puerto": obj.puerto,
+          "marca": obj.marca,
+          "modelo": obj.modelo,
+          "serie": obj.serie,
+          "id_fabricacion": obj.id_fabricacion,
+          "fabricante": obj.fabricante,
+          "mac": obj.mac,
+          "nomdepar": obj.nomdepar,
+          "nomsucursal": obj.nomsucursal,
+          "nomempresa": obj.nomempresa,
+          "nomciudad": obj.nomciudad,
+        }
+      }
+      arregloDispositivos.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloDispositivos).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/relojes/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
+    /* ***************************************************************************************************** 
+   *                                        PLANTILLA VACIA DE DISPOSITIVOS
+   * *****************************************************************************************************/
+  DescargarPlantillaRelojes() {
+    var datosReloj = [{
+      nombre: 'Eliminar esta Fila: Reloj1',
+      ip: '192.168.0.12',
+      puerto: '4562',
+      contrasenia: 'opcional',
+      marca: 'opcional',
+      modelo: 'TX628',
+      serie: 'A4DS174961495',
+      id_fabricacion: 'opcional',
+      fabricante: 'opcional',
+      mac: 'opcional',
+      tien_funciones: 'true o false',
+      id_sucursal: 'sucursal1 Nota: el nombre debe ser exacto al registro',
+      id_departamento: 'sistemas Nota: el nombre debe ser exacto al registro'
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosReloj);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Dispositivos');
+    xlsx.writeFile(wb, "Dispositivos" + '.xlsx');
   }
 
 }

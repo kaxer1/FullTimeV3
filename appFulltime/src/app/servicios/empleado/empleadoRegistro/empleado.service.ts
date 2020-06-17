@@ -96,4 +96,8 @@ export class EmpleadoService {
   //   return this.http.get<any>(`${this.API_URI}/empleado/download/${name}`)
   // }
 
+  BuscarDepartamentoEmpleado(datos: any){ 
+    return this.http.post(`${this.API_URI}/empleado/buscarDepartamento`, datos);
+  }
+
 }

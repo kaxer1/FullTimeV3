@@ -21,6 +21,8 @@ class HorarioRutas {
         this.router.post('/upload', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioPlantilla);
         this.router.post('/cargaMultiple/upload', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioyDetallePlantilla);
         this.router.put('/editar/:id', HORARIO_CONTROLADOR.EditarHorario);
+        this.router.post('/xmlDownload/', HORARIO_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', HORARIO_CONTROLADOR.downloadXML);
     }
 }
 

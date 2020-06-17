@@ -24,4 +24,12 @@ export class TipoComidasService {
   ActualizarUnAlmuerzo(datos: any) {
     return this.http.put(`${this.API_URL}/tipoComidas`, datos);
   }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/tipoComidas/xmlDownload`, data);
+  }
+
+  subirArchivoExcel(formData) {
+    return this.http.post(this.API_URL + '/tipoComidas/upload', formData)  
+  }
 }

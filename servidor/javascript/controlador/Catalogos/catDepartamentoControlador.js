@@ -12,6 +12,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
     ListarDepartamentos(req, res) {
@@ -92,6 +94,39 @@ class DepartamentoControlador {
             console.log(id);
             yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
             res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Departamentos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
+    BuscarDepartamentoPorContrato(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_contrato;
+            const departamento = yield database_1.default.query('SELECT em.id_departamento, d.nombre FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1', [id]);
+            if (departamento.rowCount > 0) {
+                return res.json(departamento.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

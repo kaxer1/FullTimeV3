@@ -2,13 +2,13 @@
 
 p { font-size: x-small; }
 
-#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer;}
+#pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
-#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer;}
+#excel { color:green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
-#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer;}
+#csv { color:blue; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
-#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer;}
+#xml { color:orangered; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
 
 #ver { color: indianred; cursor: pointer; }
 

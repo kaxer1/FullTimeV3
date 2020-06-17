@@ -73,12 +73,12 @@
                     <td>{{e.ruc}}</td>
                     <td>{{e.direccion}}</td>
                     <td>
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
+                        <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
-                        <i id="permisoSuc" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
+                        <i id="eliminar" class="far fa-trash-alt" matSuffix
                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
@@ -89,5 +89,24 @@
         </table>
         <mat-paginator [length]="empresas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <div style="text-align: right;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Empresas en formato XML">
+                <p>XML</p>
+            </i>
+        </div>
     </mat-card>
 </div>

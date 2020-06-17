@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 class EnroladoControlador {
     ListarEnrolados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -41,8 +42,8 @@ class EnroladoControlador {
     }
     CrearEnrolado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = req.body;
-            yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
+            const { id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo } = req.body;
+            yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo) VALUES ($1, $2,$3, $4, $5, $6, $7)', [id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo]);
             res.jsonp({ message: 'Se ha añadido correctamente al catálogo enrolados' });
         });
     }
@@ -71,8 +72,8 @@ class EnroladoControlador {
     }
     ActualizarEnrolado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_usuario, nombre, contrasenia, activo, finger, data_finger, id } = req.body;
-            yield database_1.default.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6 WHERE id = $7', [id_usuario, nombre, contrasenia, activo, finger, data_finger, id]);
+            const { id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo, id } = req.body;
+            yield database_1.default.query('UPDATE cg_enrolados SET id_usuario = $1, nombre = $2, contrasenia = $3, activo = $4, finger = $5, data_finger = $6, codigo = $7 WHERE id = $8', [id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo, id]);
             res.jsonp({ message: 'Usuario Enrolado actualizado exitosamente' });
         });
     }
@@ -93,9 +94,9 @@ class EnroladoControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { id_usuario, nombre, contrasenia, activo, finger, data_finger } = data;
+                const { id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo } = data;
                 if (id_usuario != undefined) {
-                    yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger) VALUES ($1, $2,$3, $4, $5, $6)', [id_usuario, nombre, contrasenia, activo, finger, data_finger]);
+                    yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo) VALUES ($1, $2,$3, $4, $5, $6, $7)', [id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo]);
                 }
                 else {
                     res.jsonp({ error: 'plantilla equivocada' });
@@ -103,6 +104,39 @@ class EnroladoControlador {
             }));
             res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Enrolados-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
+    ObtenerDatosEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { usuario } = req.params;
+            const ENROLADOS = yield database_1.default.query('SELECT e.id, e.nombre, e.apellido, e.cedula, e.codigo, e.estado, u.id FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND u.usuario = $1', [usuario]);
+            if (ENROLADOS.rowCount > 0) {
+                return res.jsonp(ENROLADOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se ha encontrado registros' });
+            }
         });
     }
 }

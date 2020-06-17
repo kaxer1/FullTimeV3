@@ -25,6 +25,18 @@ class NotificacionesAutorizacionesControlador {
             }
         });
     }
+    ListarPorNotificacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_notificacion;
+            const NOTI_AUTORIZACIONES = yield database_1.default.query('SELECT n.id, n.orden, n.id_empl_cargo, e.nombre, e.apellido FROM cg_noti_autorizaciones AS n, empl_cargos AS ec, empl_contratos AS c, empleados AS e WHERE n.id_notificacion = $1 AND ec.id = n.id_empl_cargo AND ec.id_empl_contrato = c.id AND c.id_empleado = e.id ', [id]);
+            if (NOTI_AUTORIZACIONES.rowCount > 0) {
+                return res.jsonp(NOTI_AUTORIZACIONES.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ObtenerUnaNotiAutorizacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;

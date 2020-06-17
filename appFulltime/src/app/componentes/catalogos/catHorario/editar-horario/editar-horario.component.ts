@@ -14,9 +14,9 @@ import { PrincipalHorarioComponent } from '../principal-horario/principal-horari
 export class EditarHorarioComponent implements OnInit {
 
   // Validaciones para el formulario
-  nombre = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
-  horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9](.[0-9])?$")]);
+  horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   flexible = new FormControl('', Validators.required);
   porHoras = new FormControl('', Validators.required);
 
@@ -76,7 +76,7 @@ export class EditarHorarioComponent implements OnInit {
       keynum = evt.which;
     }
     // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 58) {
       return true;
     }
     else {
@@ -110,7 +110,7 @@ export class EditarHorarioComponent implements OnInit {
 
   ObtenerMensajeErrorHoraTrabajo() {
     if (this.horaTrabajo.hasError('pattern')) {
-      return 'Valor debe ser menor a 10 hasta con un decimal';
+      return 'Indicar horas y minutos. Ejemplo: 12:05';
     }
   }
 

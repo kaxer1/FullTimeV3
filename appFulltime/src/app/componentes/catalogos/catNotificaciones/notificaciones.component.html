@@ -14,7 +14,7 @@
                             <mat-form-field>
                                 <mat-label>Código de notificación</mat-label>
                                 <input matInput placeholder="Ej: " [formControl]="tipo"
-                                    (keypress)="IngresarSoloNumeros($event)" required>
+                                    (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="notifica" matSuffix matTooltipPosition="right"
                                     matTooltipClass="notifica-tooltip"
                                     matTooltip="Ingresar un código de identificación de la notificación">
@@ -29,28 +29,28 @@
                                     matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="nivel">
-                                    <mat-option *ngFor="let n of niveles" [value]="n.valor">
+                                    <mat-option *ngFor="let n of niveles" [value]="n.valor" (click)="ActivarFormDepa()">
                                         {{n.valor}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <br>
                             <!-- Cargar en un select cuando ya se pueda registrar los departamentos -->
-                            <mat-form-field>
+                            <mat-form-field *ngIf="HabilitarD">
                                 <mat-label id="selecDepa">Seleccionar Departamento*</mat-label>
                                 <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
                                     matTooltipPosition="right"
                                     matTooltip="Lista de departamentos existentes en la empresa">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="idDepartamento">
-                                    <mat-option *ngFor="let depa of departamentos" [value]="depa.id">
+                                    <mat-option *ngFor="let depa of departamentos" [value]="depa.id" (click)="ObtenerTipoPermiso(depa.id)">
                                         {{depa.nombre}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <br>
                             <!-- Cargar en un select cuando ya este validado el registro permisos. Es opcional seleccionar este campo -->
-                            <mat-form-field>
+                            <mat-form-field *ngIf="HabilitarP">
                                 <mat-label>Seleccionar Permiso*</mat-label>
                                 <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
                                     matTooltipPosition="right"
@@ -76,4 +76,74 @@
         </div>
         <div class="col-sm"></div>
     </div>
+</div>
+
+<div class="container  table-responsive" style="padding-bottom: 50px;">
+    <div id="resulProceso">Lista de Catálogo Notificaciones</div>
+    <mat-card class="mat-elevation-z8 ">
+        <table class="table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Id</th>
+                    <th scope="col">Departamento</th>
+                    <th scope="col">Nivel</th>
+                    <th scope="col">Tipo Permiso</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                    *ngFor="let n of noti_res | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{n.id}}</td>
+                    <td>{{n.nombre}}</td>
+                    <td>{{n.nivel}}</td>
+                    <td>{{n.descripcion}}</td>
+                    <td>
+                        <i class="far fa-eye" style="color:rgb(9, 87, 90)" id="iprocesoL" matSuffix (click)="AbrirListaNotificacionAutorizacion(n)"
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver las autorizaciones registradas con los cargos">
+                            <p>Ver</p>
+                        </i>
+                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" id="iprocesoL" (click)="AbrirNotificacionAutorizacion(n)"
+                            matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Agrega más tipos de permisos de este departamento.">
+                            <p>Agregar</p>
+                        </i>
+                        <i class="fas fa-edit" style="color:green; margin-left: 15px;" id="iprocesoL" (click)="EditarNotificacion(n)"
+                            matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Modificar los datos generales del registro">
+                            <p>Editar</p>
+                        </i>
+                        <i class="far fa-trash-alt" style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Eliminar registro">
+                            <p>Eliminar</p>
+                        </i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="noti_res.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+        <!-- <div style="text-align: right;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato XML">
+                <p>XML</p>
+            </i>
+        </div> -->
+    </mat-card>
+
 </div>

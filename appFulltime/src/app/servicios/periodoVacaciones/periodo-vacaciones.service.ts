@@ -14,20 +14,24 @@ export class PeriodoVacacionesService {
 
   // Período de Vacaciones
 
-  ConsultarPerVacaciones(){
+  ConsultarPerVacaciones() {
     return this.http.get(`${this.API_URL}/perVacacion`);
   }
 
-  CrearPerVacaciones(datos: any){ 
+  CrearPerVacaciones(datos: any) {
     return this.http.post(`${this.API_URL}/perVacacion`, datos);
   }
 
-  BuscarIDPerVacaciones(id: number){
+  BuscarIDPerVacaciones(id: number) {
     return this.http.get(`${this.API_URL}/perVacacion/buscar/${id}`);
   }
 
-  getInfoPeriodoVacacionesPorIdContrato(id_empl_contrato: number){
+  getInfoPeriodoVacacionesPorIdContrato(id_empl_contrato: number) {
     return this.http.get<any>(`${this.API_URL}/perVacacion/infoPeriodo/${id_empl_contrato}`);
+  }
+
+  ActualizarPeriodoV(datos: any) {
+    return this.http.put(`${this.API_URL}/perVacacion`, datos);
   }
 
 }

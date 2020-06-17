@@ -21,6 +21,8 @@ class RelojesRuta {
         this.router.post('/plantillaExcel/', multipartMiddlewarePlantilla, RELOJES_CONTROLADOR.CargaPlantillaRelojes);
         this.router.put('/', RELOJES_CONTROLADOR.ActualizarReloj);
         // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.post('/xmlDownload/', RELOJES_CONTROLADOR.FileXML);
+        this.router.get('/download/:nameXML', RELOJES_CONTROLADOR.downloadXML);
     }
 }
 

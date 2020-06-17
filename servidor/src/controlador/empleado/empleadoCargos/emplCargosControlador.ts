@@ -3,7 +3,12 @@ import pool from '../../../database';
 
 class EmpleadoCargosControlador {
   public async list(req: Request, res: Response) {
-    const empleadoCargos = await pool.query('SELECT * FROM empl_cargos');
+    const Cargos = await pool.query('SELECT * FROM empl_cargos');
+    res.jsonp(Cargos.rows);
+  }
+
+  public async ListarCargoEmpleado(req: Request, res: Response) {
+    const empleadoCargos = await pool.query('SELECT ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM empl_cargos AS ecr, empl_contratos AS ecn, empleados AS e WHERE ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY cargo ASC');
     res.jsonp(empleadoCargos.rows);
   }
 

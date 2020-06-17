@@ -25,9 +25,10 @@ class AutorizacionesControlador {
             }
         });
     }
-    ListarUnaAutorizacion(req, res) {
+    ObtenerAutorizacionPorIdDocumento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const AUTORIZACIONES = yield database_1.default.query('SELECT * FROM autorizaciones');
+            const id = req.params.id_documento;
+            const AUTORIZACIONES = yield database_1.default.query('SELECT * FROM autorizaciones WHERE id_documento = $1', [id]);
             if (AUTORIZACIONES.rowCount > 0) {
                 return res.jsonp(AUTORIZACIONES.rows);
             }
@@ -41,6 +42,14 @@ class AutorizacionesControlador {
             const { id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento } = req.body;
             yield database_1.default.query('INSERT INTO autorizaciones ( id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_documento, tipo_documento, orden, estado, id_notificacion, id_noti_autorizacion, id_departamento]);
             res.jsonp({ message: 'Autorizacion guardado' });
+        });
+    }
+    ActualizarEstado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { estado } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
+            res.json({ message: 'Estado de permiso actualizado exitosamente' });
         });
     }
 }

@@ -68,8 +68,16 @@
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2">Subir Enrolados</label>
+                        <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Enrolados">Subir Enrolados</label>
                     </form>
+                    <br>
+                    <button (click)="DescargarPlantillasEnrolados()" mat-button type="submit" id="descargar"
+                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Presionar para descargar Plantilla para carga multiple de usuarios enrolados">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Enrolados
+                    </button>
                 </div>
             </mat-card>
         </div>
@@ -84,6 +92,7 @@
                 <tr style="text-align: center;">
                     <th scope="col">Id Usuario</th>
                     <th scope="col">Nombre</th>
+                    <th scope="col">Código</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Finger</th>
                     <th scope="col">Acción</th>
@@ -94,6 +103,7 @@
                     *ngFor="let enrolado of enrolados | iduser: filtroIdUser | activo: filtroActivo | enrNombre: filtroEnrNombre | paginate:tamanio_pagina:numero_pagina">
                     <td>{{enrolado.id_usuario}}</td>
                     <td>{{enrolado.nombre}}</td>
+                    <td>{{enrolado.codigo}}</td>
                     <td *ngIf="enrolado.activo == true">Activo</td>
                     <td *ngIf="enrolado.activo == false">Inactivo</td>
                     <td>{{enrolado.finger}}</td>
@@ -124,5 +134,23 @@
         </table>
         <mat-paginator [length]="enrolados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <div style="text-align: right;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato XML">
+                <p>XML</p>
+            </i>
+        </div>
     </mat-card>
 </div>

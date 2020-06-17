@@ -28,4 +28,8 @@ export class RolesService {
     return this.http.put(`${this.API_URI}/rol`, data);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URI}/rol/xmlDownload`, data);
+  }
+
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<root>
+  <empleado id="16">
+    <cedula>1256698522</cedula>
+    <apellido>Altamirano Taco</apellido>
+    <nombre>Luis Jose</nombre>
+    <estadoCivil>Soltero/a</estadoCivil>
+    <genero>Masculino</genero>
+    <correo>jenny_p56@hotmail.com</correo>
+    <fechaNacimiento>2020-04-16</fechaNacimiento>
+    <estado>Activo</estado>
+    <domicilio>Solanda</domicilio>
+    <telefono>2365589963</telefono>
+    <imagen>2BlXQiHhZuUxwrL2nG8Afsbb.jpg</imagen>
+  </empleado>
+</root>

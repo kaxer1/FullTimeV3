@@ -1,9 +1,15 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as xlsx from 'xlsx';
+import * as FileSaver from 'file-saver';
+
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
 
 @Component({
@@ -40,14 +46,15 @@ export class VistaElementosComponent implements OnInit {
     this.ObtenerTipoPermiso();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
-  
+
   ObtenerTipoPermiso() {
     this.rest.getTipoPermisoRest().subscribe(datos => {
       this.tipoPermiso = datos;
+      console.log(this.tipoPermiso);
     }, error => {
     });
   }
@@ -62,7 +69,187 @@ export class VistaElementosComponent implements OnInit {
   AbrirVentanaEditarTipoPermisos(tipoPermiso: any): void {
     const DIALOG_REF = this.vistaTipoPermiso.open(EditarTipoPermisosComponent,
       { width: '900px', data: tipoPermiso });
-      DIALOG_REF.disableClose = true;
+    DIALOG_REF.disableClose = true;
+  }
+
+  /****************************************************************************************************** 
+ *                                         MÉTODO PARA EXPORTAR A PDF
+ ******************************************************************************************************/
+  generarPdf(action = 'open') {
+    const documentDefinition = this.getDocumentDefinicion();
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  getDocumentDefinicion() {
+    sessionStorage.setItem('TipoPermisos', this.tipoPermiso);
+    return {
+      pageOrientation: 'landscape',
+      content: [
+        {
+          text: 'Lista de Tipos de Permisos',
+          bold: true,
+          fontSize: 20,
+          alignment: 'center',
+          margin: [0, 0, 0, 20]
+        },
+        this.presentarDataPDFTipoPermisos(),
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 20, 0, 10],
+          decoration: 'underline'
+        },
+        name: {
+          fontSize: 16,
+          bold: true
+        },
+        jobTitle: {
+          fontSize: 14,
+          bold: true,
+          italics: true
+        },
+        tableHeader: {
+          fontSize: 9,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
+        itemsTable: {
+          fontSize: 8,
+          alignment: 'center',
+        }
+      }
+    };
+  }
+
+  DescuentoSelect: any = ['Vacaciones', 'Ninguno'];
+  AccesoEmpleadoSelect: any = ['Si', 'No'];
+  presentarDataPDFTipoPermisos() {
+    return {
+      table: {
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+        body: [
+          [
+            { text: 'Id', style: 'tableHeader' },
+            { text: 'Permiso', style: 'tableHeader' },
+            { text: 'Días de permiso', style: 'tableHeader' },
+            { text: 'Horas de permiso', style: 'tableHeader' },
+            { text: 'Solicita Empleado', style: 'tableHeader' },
+            { text: 'Días para solicitar', style: 'tableHeader' },
+            { text: 'Incluye almuerzo', style: 'tableHeader' },
+            { text: 'Afecta Vacaciones', style: 'tableHeader' },
+            { text: 'Acumular', style: 'tableHeader' },
+            { text: 'Notificar por correo', style: 'tableHeader' },
+            { text: 'Descuento', style: 'tableHeader' },
+            { text: 'Actualizar', style: 'tableHeader' },
+            { text: 'Eliminar', style: 'tableHeader' },
+            { text: 'Preautorizar', style: 'tableHeader' },
+            { text: 'Autorizar', style: 'tableHeader' },
+            { text: 'Legalizar', style: 'tableHeader' },
+            { text: 'Días para Justificar', style: 'tableHeader' }
+          ],
+          ...this.tipoPermiso.map(obj => {
+            var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
+            var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
+            return [
+              { text: obj.id, style: 'itemsTable' },
+              { text: obj.descripcion, style: 'itemsTable' },
+              { text: obj.num_dia_maximo, style: 'itemsTable' },
+              { text: obj.num_hora_maximo, style: 'itemsTable' },
+              { text: acceso, style: 'itemsTable' },
+              { text: obj.num_dia_ingreso, style: 'itemsTable' },
+              { text: obj.almu_incluir, style: 'itemsTable' },
+              { text: obj.vaca_afecta, style: 'itemsTable' },
+              { text: obj.anio_acumula, style: 'itemsTable' },
+              { text: obj.correo, style: 'itemsTable' },
+              { text: descuento, style: 'itemsTable' },
+              { text: obj.actualizar, style: 'itemsTable' },
+              { text: obj.eliminar, style: 'itemsTable' },
+              { text: obj.preautorizar, style: 'itemsTable' },
+              { text: obj.autorizar, style: 'itemsTable' },
+              { text: obj.legalizar, style: 'itemsTable' },
+              { text: obj.gene_justificacion, style: 'itemsTable' },
+            ];
+          })
+        ]
+      }
+    };
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+  exportToExcel() {
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoPermiso);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'TipoPermisos');
+    xlsx.writeFile(wb, "TipoPermisos" + new Date().getTime() + '.xlsx');
+  }
+
+  /****************************************************************************************************** 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
+   ******************************************************************************************************/
+
+  exportToCVS() {
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoPermiso);
+    const csvDataH = xlsx.utils.sheet_to_csv(wse);
+    const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
+    FileSaver.saveAs(data, "TipoPermisosCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloTipoPermisos = [];
+    this.tipoPermiso.forEach(obj => {
+      var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
+      var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
+      objeto = {
+        "tipo_permiso": {
+          '@id': obj.id,
+          "descripcion": obj.descripcion,
+          "num_dia_maximo": obj.num_dia_maximo,
+          "num_hora_maximo": obj.num_hora_maximo,
+          "acce_empleado": acceso,
+          "num_dia_ingreso": obj.num_dia_ingreso,
+          "almu_incluir": obj.almu_incluir,
+          "vaca_afecta": obj.vaca_afecta,
+          "anio_acumula": obj.anio_acumula,
+          "correo": obj.correo,
+          "tipo_descuento": descuento,
+          "actualizar": obj.actualizar,
+          "eliminar": obj.eliminar,
+          "preautorizar": obj.preautorizar,
+          "autorizar": obj.autorizar,
+          "legalizar": obj.legalizar,
+          "fec_validar": obj.fec_validar,
+          "gene_justificacion": obj.gene_justificacion,
+        }
+      }
+      arregloTipoPermisos.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
   }
 
 }

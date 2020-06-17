@@ -21,7 +21,7 @@ class EmpleadoControlador {
     }
     res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
   }
-  
+
   public async getImagen(req: Request, res: Response): Promise<any> {
     const imagen = req.params.imagen;
     let filePath = `servidor\\imagenesEmpleados\\${imagen}`
@@ -29,18 +29,19 @@ class EmpleadoControlador {
   }
 
   public async create(req: Request, res: Response): Promise<void> {
-    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad} = req.body;
-    await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
+    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo} = req.body;
+    await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
     const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
     const idEmployGuardado = oneEmpley.rows[0].id;
-    res.jsonp({ message: 'Empleado guardado', id: idEmployGuardado});
+    res.jsonp({ message: 'Empleado guardado', id: idEmployGuardado });
   }
 
   public async editar(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
-    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad} = req.body;
-    await pool.query('UPDATE empleados SET cedula = $2, apellido = $3, nombre = $4, esta_civil = $5, genero = $6, correo = $7, fec_nacimiento = $8, estado = $9, mail_alternativo = $10, domicilio = $11, telefono = $12, id_nacionalidad = $13 WHERE id = $1 ', [id, cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
-    res.jsonp({ message: 'Empleado Actualizado'});
+    const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo} = req.body;
+    await pool.query('UPDATE empleados SET cedula = $2, apellido = $3, nombre = $4, esta_civil = $5, genero = $6, correo = $7, fec_nacimiento = $8, estado = $9, mail_alternativo = $10, domicilio = $11, telefono = $12, id_nacionalidad = $13, codigo = $14 WHERE id = $1 ', [id, cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
+    res.json({ message: 'Empleado Actualizado'});
+
   }
 
   public async crearImagenEmpleado(req: Request, res: Response): Promise<void> {
@@ -51,21 +52,21 @@ class EmpleadoControlador {
     const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
     if (unEmpleado.rowCount > 0) {
       unEmpleado.rows.map(async (obj) => {
-        if (obj.imagen != null ){
+        if (obj.imagen != null) {
           try {
             console.log(obj.imagen);
             let filePath = `servidor\\imagenesEmpleados\\${obj.imagen}`;
             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
             fs.unlinkSync(direccionCompleta);
             await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            res.jsonp({ message: 'Imagen Actualizada'});
+            res.jsonp({ message: 'Imagen Actualizada' });
           } catch (error) {
             await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-            res.jsonp({ message: 'Imagen Actualizada'});
+            res.jsonp({ message: 'Imagen Actualizada' });
           }
         } else {
           await pool.query('Update empleados Set imagen = $2 Where id = $1 ', [id, imagen]);
-          res.jsonp({ message: 'Imagen Actualizada'});
+          res.jsonp({ message: 'Imagen Actualizada' });
         }
       });
     }
@@ -74,12 +75,12 @@ class EmpleadoControlador {
   public async CargaPlantillaEmpleadoUsuario(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
-    let filename = cadena.split("\\")[1]; 
+    let filename = cadena.split("\\")[1];
     var filePath = `./plantillas/${filename}`
 
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames;
-    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
     plantilla.forEach(async (data: any) => {
 
@@ -98,33 +99,33 @@ class EmpleadoControlador {
         const md5 = new Md5();
         const contrasena = md5.appendStr(data.contrasena).end();
 
-        const { cedula, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, usuario, estado_user, id_rol, app_habilita} = data;
+        const { cedula, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo, usuario, estado_user, id_rol, app_habilita} = data;
         
         if(cedula != undefined){
-          await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad]);
+          await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
           const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
           const id_empleado = oneEmpley.rows[0].id;
-          await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
+          await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol, id_empleado, app_habilita]);
         } else {
           res.jsonp({error: 'plantilla equivocada'});
         }
     });
-    
     res.jsonp({ message: 'La plantilla a sido receptada' });
     fs.unlinkSync(filePath);
-}
+  }
 
   public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {
     const { observacion, id_empleado, id_titulo } = req.body;
     await pool.query('INSERT INTO empl_titulos ( observacion, id_empleado, id_titulo ) VALUES ($1, $2, $3)', [observacion, id_empleado, id_titulo]);
-    res.jsonp({ message: 'Titulo del empleado Guardado'});
+
+    res.jsonp({ message: 'Titulo del empleado Guardado' });
   }
-  
+
   public async editarTituloDelEmpleado(req: Request, res: Response): Promise<void> {
     const id = req.params.id_empleado_titulo;
-    const { observacion, id_titulo} = req.body;
+    const { observacion, id_titulo } = req.body;
     await pool.query('UPDATE empl_titulos SET observacion = $1, id_titulo = $2 WHERE id = $3 ', [observacion, id_titulo, id]);
-    res.jsonp({ message: 'Titulo del empleado Actualizado'});
+    res.jsonp({ message: 'Titulo del empleado Actualizado' });
   }
 
   public async eliminarTituloDelEmpleado(req: Request, res: Response): Promise<void> {
@@ -139,20 +140,20 @@ class EmpleadoControlador {
     if (unEmpleadoTitulo.rowCount > 0) {
       return res.jsonp(unEmpleadoTitulo.rows)
     }
-    res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados'});
+    res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
-    var xml = builder.create('root').ele(req.body).end({ pretty: true});
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
     console.log(req.body.userName);
     let filename = "Empleado-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
-    fs.writeFile(`xmlDownload/${filename}`, xml, function(err) {
-      if(err) {
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
         return console.log(err);
       }
       console.log("Archivo guardado");
     });
-    res.jsonp({ text: 'XML creado', name: filename});
+    res.jsonp({ text: 'XML creado', name: filename });
   }
 
   public async downloadXML(req: Request, res: Response): Promise<any> {
@@ -160,6 +161,19 @@ class EmpleadoControlador {
     let filePath = `servidor\\xmlDownload\\${name}`
     res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
+
+  public async ObtenerDepartamentoEmpleado(req: Request, res: Response): Promise<any> {
+    const { id_emple, id_cargo } = req.body;
+    const DEPARTAMENTO = await pool.query('SELECT *FROM VistaDepartamentoEmpleado WHERE id_emple = $1 AND id_cargo = $2', [id_emple, id_cargo]);
+    if (DEPARTAMENTO.rowCount > 0) {
+      return res.jsonp(DEPARTAMENTO.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registros no encontrados' });
+    }
+  }
+
+
 
 }
 

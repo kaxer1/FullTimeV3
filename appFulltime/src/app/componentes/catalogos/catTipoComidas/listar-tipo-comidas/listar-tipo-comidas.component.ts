@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
@@ -25,6 +26,7 @@ export class ListarTipoComidasComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.minLength(2)]);
+  archivoForm = new FormControl('', Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public BuscarTipoComidaForm = new FormGroup({
@@ -43,6 +45,7 @@ export class ListarTipoComidasComponent implements OnInit {
   constructor(
     private rest: TipoComidasService,
     public router: Router,
+    private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
   ) { }
 
@@ -80,12 +83,9 @@ export class ListarTipoComidasComponent implements OnInit {
     this.ObtenerTipoComidas();
   }
 
-  /**
-   * 
-   * GENERACION DE PDF
-   * 
-   */
-
+  /****************************************************************************************************** 
+   *                                         MÉTODO PARA EXPORTAR A PDF
+   ******************************************************************************************************/
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
 
@@ -105,7 +105,7 @@ export class ListarTipoComidasComponent implements OnInit {
       pageOrientation: 'landscape',
       content: [
         {
-          text: 'Comidas',
+          text: 'Lista de Tipos de Comidas',
           bold: true,
           fontSize: 20,
           alignment: 'center',
@@ -166,28 +166,106 @@ export class ListarTipoComidasComponent implements OnInit {
     };
   }
 
-  /**
-   * 
-   * METODO PARA EXPORTAR A EXCEL
-   * 
-   */
-
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
   exportToExcel() {
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'TiposComidas');
+    xlsx.utils.book_append_sheet(wb, wsr, 'TipoComidas');
     xlsx.writeFile(wb, "Comidas" + new Date().getTime() + '.xlsx');
   }
 
   /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
+   *                                        MÉTODO PARA EXPORTAR A CSV 
    ******************************************************************************************************/
 
   exportToCVS() {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
     const csvDataH = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "CatHorarioCSV" + new Date().getTime() + '.csv');
+    FileSaver.saveAs(data, "TipoComidasCSV" + new Date().getTime() + '.csv');
+  }
+
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+
+  urlxml: string;
+  data: any = [];
+  exportToXML() {
+    var objeto;
+    var arregloComidas = [];
+    this.tipoComidas.forEach(obj => {
+      objeto = {
+        "tipo_comida": {
+          '@id': obj.id,
+          "nombre": obj.nombre,
+          "observacion": obj.observacion,
+          "valor": obj.valor,
+        }
+      }
+      arregloComidas.push(objeto)
+    });
+
+    this.rest.DownloadXMLRest(arregloComidas).subscribe(res => {
+      this.data = res;
+      console.log("prueba data", res)
+      this.urlxml = 'http://localhost:3000/tipoComidas/download/' + this.data.name;
+      window.open(this.urlxml, "_blank");
+    });
+  }
+
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
+  nameFile: string;
+  archivoSubido: Array<File>;
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems = this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 15);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'tipo comidas') {
+        this.plantilla();
+        this.ObtenerTipoComidas();
+        window.location.reload();
+      } else {
+        this.toastr.error('Solo se acepta Tipo Comidas', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantilla() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.subirArchivoExcel(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Tipo Comidas importada.');
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
+  }
+
+    /* ***************************************************************************************************** 
+   *                                PLANTILLA VACIA DE TIPO COMIDAS
+   * *****************************************************************************************************/
+  DescargarPlantillaComidas() {
+    var datosFeriado = [{
+      nombre: 'Eliminar esta Fila: Sopa',
+      valor: 2.55,
+      observacion: 'Con postre' 
+    }];
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Tipo Comidas');
+    xlsx.writeFile(wb, "Tipo Comidas" + '.xlsx');
   }
 
 }

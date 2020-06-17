@@ -1,9 +1,18 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
+import fs from 'fs';
+const builder = require('xmlbuilder');
+
 import pool from '../../database';
 
 class TipoPermisosControlador {
   public async list(req: Request, res: Response) {
     const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos ORDER BY id');
+    res.jsonp(rolPermisos.rows);
+  }
+
+  public async listAccess(req: Request, res: Response) {
+    const acce_empleado = req.params.acce_empleado;
+    const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY id', [acce_empleado]);
     res.jsonp(rolPermisos.rows);
   }
 
@@ -29,8 +38,27 @@ class TipoPermisosControlador {
     res.jsonp({ message: 'Tipo Permiso Actualizado' });
   }
 
+  public async FileXML(req: Request, res: Response): Promise<any> {
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
+    console.log(req.body.userName);
+    let filename = "TipoPermisos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        console.log("Archivo guardado");
+    });
+    res.jsonp({ text: 'XML creado', name: filename });
 }
 
-export const tipoPermisosControlador = new TipoPermisosControlador();
+public async downloadXML(req: Request, res: Response): Promise<any> {
+    const name = req.params.nameXML;
+    let filePath = `servidor\\xmlDownload\\${name}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
+}
 
-export default tipoPermisosControlador;
+}
+
+export const TIPO_PERMISOS_CONTROLADOR = new TipoPermisosControlador();
+
+export default TIPO_PERMISOS_CONTROLADOR;

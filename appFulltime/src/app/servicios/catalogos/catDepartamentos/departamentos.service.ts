@@ -17,6 +17,10 @@ export class DepartamentosService {
   ConsultarDepartamentos(){
     return this.http.get(`${this.API_URL}/departamento`);
   }
+  
+  ConsultarDepartamentoPorContrato(id_contrato: number){
+    return this.http.get(`${this.API_URL}/departamento/busqueda-contrato/${id_contrato}`);
+  }
 
   ConsultarNombreDepartamentos(){
     return this.http.get(`${this.API_URL}/departamento/nombreDepartamento`);
@@ -44,6 +48,10 @@ export class DepartamentosService {
 
   BuscarDepartamentoSucursal(id:number){
     return this.http.get(`${this.API_URL}/departamento/buscarDepa/${id}`);
+  }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/departamento/xmlDownload`, data);
   }
 
 }

@@ -32,4 +32,8 @@ export class RelojesService {
   subirArchivoExcel(formData) {
     return this.http.post(`${this.API_URL}/relojes/plantillaExcel/`, formData);
   }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/relojes/xmlDownload`, data);
+  }
 }

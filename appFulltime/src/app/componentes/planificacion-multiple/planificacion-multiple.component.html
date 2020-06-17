@@ -7,9 +7,13 @@
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <div class="container">
                     <form method="post" enctype="multipart/form-data">
-                        <input (change)="fileChangeHorario($event)" type="file" [formControl]="archivoHorarioForm" id="file"
+                        <input (change)="fileChangeHorario($event)" type="file" [formControl]="archivoHorarioForm"
+                            id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2">Cargar Horarios</label>
+                        <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Planificacion Multiple">Cargar
+                            Horarios</label>
                     </form>
                 </div>
             </mat-card>
@@ -19,9 +23,14 @@
                 <span>DESCARGAR PLANTILLA</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
-
+                <div class="container">
+                    <button (click)="DescargarPlantillaPlanificacion()" mat-button type="submit" id="descargar"
+                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                        matTooltip="Presionar para descargar Plantilla para carga multiple de horarios">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Planficacion Multiple
+                    </button>
+                </div>
             </mat-card>
         </div>
     </div>
 </div>
-

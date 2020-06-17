@@ -9,22 +9,22 @@
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
-                        <mat-label>Fecha de Inicio de Vacaciones</mat-label>
-                        <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicio"
-                            min="1950-01-31" max="2050-01-31" required>
+                        <mat-label id="fecVaca">Fecha Inicio de Vacaciones</mat-label>
+                        <input (click)="LimpiarCalculo()" (dateInput)="LimpiarCalculo()" matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                            [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31" required>
                         <mat-datepicker-toggle matSuffix [for]="picker" matSuffix id="cargoE"
                             matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar la fecha en la que sale a tomar vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker></mat-datepicker>
+                        <mat-datepicker touchUi #picker> </mat-datepicker>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
                         <mat-label id="fecVaca">Fecha fin de Vacaciones</mat-label>
-                        <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinal"
-                            required>
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE"
-                            matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                        <input (click)="LimpiarCalculo()" (dateInput)="LimpiarCalculo()" matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                            [formControl]="fechaFinal" required>
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE" matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right"
                             matTooltip="Indicar la fecha de finalización de vacaciones tomadas. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker2></mat-datepicker>
@@ -34,8 +34,8 @@
                         <mat-label id="fecVaca">Fecha ingreso al Trabajo</mat-label>
                         <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" [formControl]="fechaIngreso"
                             required>
-                        <mat-datepicker-toggle matSuffix [for]="picker3" id="cargoE"
-                            matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                        <mat-datepicker-toggle matSuffix [for]="picker3" id="cargoE" matTooltipClass="cargoE-tooltip"
+                            matTooltipPosition="right"
                             matTooltip="Indicar la fecha en la que se incorpora nuevamente al trabajo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker3></mat-datepicker>
@@ -51,32 +51,47 @@
                             help_outline</mat-icon>
                     </mat-form-field>
                     <br>
-                    <mat-form-field>
-                        <mat-label>Vacaciones: días libres</mat-label>
-                        <input matInput placeholder="Días de incremento" [formControl]="dialibreF" required
-                            (keypress)="IngresarSoloNumeros($event)">
-                        <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
-                            matTooltip="Número de días libres que estan dentro de las vacaciones">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                    <br>
+                    <input style="margin-right: 5px;" matSuffix matTooltipClass="regimen-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para calcular número de dias libres y laborables" type="checkbox"
+                        (click)="ImprimirCalculos(VacacionesForm.value)" id="activo" unchecked="false">
+                    <label style="margin-right: 12px;" id="calculo">Calcular días hábiles,
+                        libres y totales</label>
                     <mat-form-field>
                         <mat-label id="dias">Vacaciones: días laborables</mat-label>
-                        <input matInput placeholder="Días de incremento" [formControl]="dialaborableF" required
-                            (keypress)="IngresarSoloNumeros($event)">
+                        <input readonly="readonly" matInput placeholder="Días de incremento"
+                            [formControl]="dialaborableF" required (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                             matTooltip="Número de días laborables que se toman para vacaciones">
                             help_outline</mat-icon>
                     </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>Vacaciones: días libres</mat-label>
+                        <input readonly="readonly" matInput placeholder="Días de incremento" [formControl]="dialibreF"
+                            required (keypress)="IngresarSoloNumeros($event)">
+                        <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
+                            matTooltip="Número de días libres que estan dentro de las vacaciones">
+                            help_outline</mat-icon>
+                    </mat-form-field>
                 </div>
                 <div class="col">
+                    <mat-form-field>
+                        <mat-label>Días totales</mat-label>
+                        <input readonly="readonly" matInput placeholder="Días de incremento" [formControl]="totalF"
+                            required (keypress)="IngresarSoloNumeros($event)">
+                        <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
+                            matTooltip="Número de días totales que se toman de vacaciones">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
                     <mat-form-field>
                         <mat-label>Estado</mat-label>
                         <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                             matTooltipPosition="right" matTooltip="Indicar el estado de vacaciones">
                             help_outline
                         </mat-icon>
-                        <mat-select required [formControl]="estadoF">
+                        <mat-select required [formControl]="estadoF" [disabled]="true">
                             <mat-option value="1">Solicitado</mat-option>
                             <mat-option value="2">Rechazado</mat-option>
                             <mat-option value="3">Aceptado</mat-option>
@@ -85,9 +100,9 @@
                     </mat-form-field>
                     <br>
                     <label style="margin-right: 95px;">Legalizado *</label>
-                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                    matTooltipPosition="right" matTooltip="Indicar si las vacaciones han sido legalizadas">
-                    help_outline</mat-icon>
+                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si las vacaciones han sido legalizadas">
+                        help_outline</mat-icon>
                     <section>
                         <mat-radio-group required aria-label="select an option" [formControl]="legalizadoF" required
                             [value]="legalizadoF.value">

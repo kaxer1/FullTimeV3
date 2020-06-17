@@ -36,7 +36,7 @@ export class TipoPermisosComponent implements OnInit {
 
   descuentos: TipoDescuentos[] = [
     { value: '1', viewValue: 'Vacaciones' },
-    { value: '2', viewValue: 'desc2' },
+    { value: '2', viewValue: 'Ninguno' },
   ];
 
   solicitudes: opcionesSolicitud[] = [
@@ -47,6 +47,7 @@ export class TipoPermisosComponent implements OnInit {
   diasHoras: opcionesDiasHoras[] = [
     { valor: 'Días', nombre: 'Días' },
     { valor: 'Horas', nombre: 'Horas' },
+    { valor: 'Días y Horas', nombre: 'Días y Horas' },
   ];
 
   validarGuardar: boolean = false;
@@ -213,13 +214,22 @@ export class TipoPermisosComponent implements OnInit {
       (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
       this.toastr.info('Ingresar número de días máximos de permiso');
     }
-    else {
+    else if (form.diasHorasForm === 'Horas') {
       this.primeroFormGroup.patchValue({
         numHoraMaximoForm: '',
       });
       (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
       (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
       this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+    }
+    else {
+      this.primeroFormGroup.patchValue({
+        numHoraMaximoForm: '',
+        numDiaMaximoForm: ''
+      });
+      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
+      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
+      this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
     }
   }
 
@@ -232,12 +242,17 @@ export class TipoPermisosComponent implements OnInit {
         datos.num_hora_maximo = '00:00';
       }
     }
-    else {
+    else if (form.diasHorasForm === 'Horas') {
       if (datos.num_hora_maximo === '') {
         this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
       }
       else {
         datos.num_dia_maximo = 0;
+      }
+    }
+    else if (form.diasHorasForm === 'Días y Horas'){
+      if (datos.num_hora_maximo === '' || datos.num_dia_maximo === '') {
+        this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso');
       }
     }
   }

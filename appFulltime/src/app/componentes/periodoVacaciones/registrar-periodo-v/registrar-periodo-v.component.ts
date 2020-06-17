@@ -19,6 +19,7 @@ import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/pe
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class RegistrarPeriodoVComponent implements OnInit {
 
   // Datos del empleado

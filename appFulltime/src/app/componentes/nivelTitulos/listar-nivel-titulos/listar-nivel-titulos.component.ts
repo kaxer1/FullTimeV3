@@ -3,11 +3,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { RegistrarNivelTitulosComponent } from 'src/app/componentes/nivelTitulos/registrar-nivel-titulos/registrar-nivel-titulos.component'
 import { EditarNivelTituloComponent } from 'src/app/componentes/nivelTitulos/editar-nivel-titulo/editar-nivel-titulo.component'
-import { EliminarNivelTitulosComponent } from '../eliminar-nivel-titulos/eliminar-nivel-titulos.component'
-
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 
 
@@ -16,6 +16,7 @@ import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulo
   templateUrl: './listar-nivel-titulos.component.html',
   styleUrls: ['./listar-nivel-titulos.component.css']
 })
+
 export class ListarNivelTitulosComponent implements OnInit {
 
   nivelTitulos: any = [];
@@ -23,7 +24,7 @@ export class ListarNivelTitulosComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
- 
+
   // Asignación de validaciones a inputs del formulario
   public BuscarNivelTitulosForm = new FormGroup({
     nombreForm: this.nombreF,
@@ -38,13 +39,14 @@ export class ListarNivelTitulosComponent implements OnInit {
     public vistaRegistrarDatos: MatDialog,
     public restNivelTitulos: NivelTitulosService,
     private toastr: ToastrService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.ObtenerNiveles();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -98,7 +100,24 @@ export class ListarNivelTitulosComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarNivelTituloComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
   }
 
-  AbrirAlertaEliminarTitulo(dataObjDelete: any): void {
-    this.vistaRegistrarDatos.open(EliminarNivelTitulosComponent, { width: '400px', data: dataObjDelete}).disableClose = true;
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_nivel: number) {
+    //console.log("probando id", id_prov)
+    this.restNivelTitulos.deleteNivelTituloRest(id_nivel).subscribe(res => {
+      this.toastr.error("Registro eliminado");
+      this.ObtenerNiveles();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/nivelTitulos']);
+        }
+      });
   }
 }

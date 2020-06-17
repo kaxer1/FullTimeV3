@@ -16,7 +16,13 @@ const database_1 = __importDefault(require("../../../database"));
 class EmpleadoCargosControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const empleadoCargos = yield database_1.default.query('SELECT * FROM empl_cargos');
+            const Cargos = yield database_1.default.query('SELECT * FROM empl_cargos');
+            res.jsonp(Cargos.rows);
+        });
+    }
+    ListarCargoEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const empleadoCargos = yield database_1.default.query('SELECT ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM empl_cargos AS ecr, empl_contratos AS ecn, empleados AS e WHERE ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY cargo ASC');
             res.jsonp(empleadoCargos.rows);
         });
     }

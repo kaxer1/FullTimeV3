@@ -2,6 +2,7 @@ import { Request, Response, text } from 'express'
 import pool from '../../database';
 import excel from 'xlsx';
 import fs from 'fs';
+const builder = require('xmlbuilder');
 
 class RelojesControlador {
 
@@ -41,25 +42,43 @@ class RelojesControlador {
     public async CargaPlantillaRelojes(req: Request, res: Response): Promise<void> {
         let list: any = req.files;
         let cadena = list.uploads[0].path;
-        let filename = cadena.split("\\")[1]; 
+        let filename = cadena.split("\\")[1];
         var filePath = `./plantillas/${filename}`
-    
+
         const workbook = excel.readFile(filePath);
         const sheet_name_list = workbook.SheetNames;
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]); 
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
         plantilla.forEach(async (data: any) => {
             const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento } = data;
-            if(nombre != undefined){
+            if (nombre != undefined) {
                 console.log(data);
                 await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento]);
             } else {
-                res.jsonp({error: 'plantilla equivocada'});
+                res.jsonp({ error: 'plantilla equivocada' });
             }
         });
-        
         res.jsonp({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
-      }
+    }
+
+    public async FileXML(req: Request, res: Response): Promise<any> {
+        var xml = builder.create('root').ele(req.body).end({ pretty: true });
+        console.log(req.body.userName);
+        let filename = "Dispositivos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+        fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Archivo guardado");
+        });
+        res.jsonp({ text: 'XML creado', name: filename });
+    }
+
+    public async downloadXML(req: Request, res: Response): Promise<any> {
+        const name = req.params.nameXML;
+        let filePath = `servidor\\xmlDownload\\${name}`
+        res.sendFile(__dirname.split("servidor")[0] + filePath);
+    }
 
 }
 

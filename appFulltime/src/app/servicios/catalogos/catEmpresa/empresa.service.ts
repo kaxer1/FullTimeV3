@@ -31,4 +31,8 @@ export class EmpresaService {
     return this.http.get(`${this.API_URL}/empresas/buscar/${nombre}`);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.API_URL}/empresas/xmlDownload`, data);
+  }
+
 }

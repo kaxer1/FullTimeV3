@@ -1,4 +1,7 @@
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
+import fs from 'fs';
+const builder = require('xmlbuilder');
+
 import pool from '../../database';
 
 class EmpresaControlador {
@@ -34,6 +37,25 @@ class EmpresaControlador {
         const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id } = req.body;
         await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7 WHERE id = $8', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id]);
         res.jsonp({ message: 'Empresa actualizada exitosamente' });
+    }
+
+    public async FileXML(req: Request, res: Response): Promise<any> {
+        var xml = builder.create('root').ele(req.body).end({ pretty: true });
+        console.log(req.body.userName);
+        let filename = "Empresas-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+        fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Archivo guardado");
+        });
+        res.jsonp({ text: 'XML creado', name: filename });
+    }
+
+    public async downloadXML(req: Request, res: Response): Promise<any> {
+        const name = req.params.nameXML;
+        let filePath = `servidor\\xmlDownload\\${name}`
+        res.sendFile(__dirname.split("servidor")[0] + filePath);
     }
 
 }

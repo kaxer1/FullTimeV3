@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 class HorarioControlador {
     ListarHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -133,6 +134,30 @@ class HorarioControlador {
             const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
             yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, id]);
             res.jsonp({ message: 'Tipo Permiso Actualizado' });
+<<<<<<< HEAD
+=======
+        });
+    }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "Horarios-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+>>>>>>> bd1383fd5e211b7c080bb7e5bbb8d81b99713658
         });
     }
 }

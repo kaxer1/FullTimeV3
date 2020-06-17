@@ -12,11 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fs_1 = __importDefault(require("fs"));
+const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class TipoPermisosControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos ORDER BY id');
+            res.jsonp(rolPermisos.rows);
+        });
+    }
+    listAccess(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const acce_empleado = req.params.acce_empleado;
+            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY id', [acce_empleado]);
             res.jsonp(rolPermisos.rows);
         });
     }
@@ -45,6 +54,27 @@ class TipoPermisosControlador {
             res.jsonp({ message: 'Tipo Permiso Actualizado' });
         });
     }
+    FileXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var xml = builder.create('root').ele(req.body).end({ pretty: true });
+            console.log(req.body.userName);
+            let filename = "TipoPermisos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
+            fs_1.default.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log("Archivo guardado");
+            });
+            res.jsonp({ text: 'XML creado', name: filename });
+        });
+    }
+    downloadXML(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const name = req.params.nameXML;
+            let filePath = `servidor\\xmlDownload\\${name}`;
+            res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
 }
-exports.tipoPermisosControlador = new TipoPermisosControlador();
-exports.default = exports.tipoPermisosControlador;
+exports.TIPO_PERMISOS_CONTROLADOR = new TipoPermisosControlador();
+exports.default = exports.TIPO_PERMISOS_CONTROLADOR;
