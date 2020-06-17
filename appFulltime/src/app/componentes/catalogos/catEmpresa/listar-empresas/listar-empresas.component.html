@@ -73,12 +73,12 @@
                     <td>{{e.ruc}}</td>
                     <td>{{e.direccion}}</td>
                     <td>
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
+                        <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
-                        <i id="permisoSuc" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
+                        <i id="eliminar" class="far fa-trash-alt" matSuffix
                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
                             <p>Eliminar</p>

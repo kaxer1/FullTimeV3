@@ -74,7 +74,7 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 p { font-size: x-small; }
 
-#doc { font-size: 14px; }
+#doc { font-size: 14px; text-align: center;}
 
 #delete { color:red; margin-right: 5px; cursor: pointer;}
 
