@@ -205,6 +205,8 @@ import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hor
 import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
 import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
 import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones/editar-estado-autorizaccion/editar-estado-autorizaccion.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} };
 
 
 @NgModule({
@@ -350,6 +352,7 @@ import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    SocketIoModule.forRoot(config),
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
