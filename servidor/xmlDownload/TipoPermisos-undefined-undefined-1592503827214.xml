@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<root>
+  <tipo_permiso id="9">
+    <descripcion>Asuntos Personales</descripcion>
+    <num_dia_maximo>5</num_dia_maximo>
+    <num_hora_maximo>00:00:00-05</num_hora_maximo>
+    <acce_empleado>Si</acce_empleado>
+    <num_dia_ingreso>2</num_dia_ingreso>
+    <almu_incluir>true</almu_incluir>
+    <vaca_afecta>true</vaca_afecta>
+    <anio_acumula>true</anio_acumula>
+    <correo>true</correo>
+    <tipo_descuento>Vacaciones</tipo_descuento>
+    <actualizar>true</actualizar>
+    <eliminar>true</eliminar>
+    <preautorizar>true</preautorizar>
+    <autorizar>true</autorizar>
+    <legalizar>true</legalizar>
+    <fec_validar>true</fec_validar>
+    <gene_justificacion>true</gene_justificacion>
+  </tipo_permiso>
+</root>
