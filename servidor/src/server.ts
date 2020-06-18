@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express, { Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -44,15 +45,22 @@ import PERMISOS_RUTAS from './rutas/permisos/permisosRutas';
 import DETALLE_CATALOGO_HORARIO_RUTAS from './rutas/horarios/detalleCatHorario/detalleCatHorarioRutas';
 import NOTIFICACIONES_AUTORIZACIONES_RUTAS from './rutas/catalogos/catNotiAutorizacionesRutas';
 import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
+import { createServer, Server } from 'http';
+const socketIo = require('socket.io');
 
-class Server {
+class Servidor {
 
     public app: Application;
+    private server: Server;
+    private io: SocketIO.Server;
 
     constructor() {
         this.app = express();
         this.configuracion();
         this.rutas();
+        this.server = createServer(this.app);
+        this.io = socketIo(this.server);
+
     }
 
     configuracion(): void {
@@ -125,11 +133,26 @@ class Server {
     }
 
     start(): void {
-        this.app.listen(this.app.get('puerto'), () => {
-            console.log('Servidor en el puerto', this.app.get('puerto'))
+        this.server.listen(this.app.get('puerto'), () => {
+            console.log('Servidor en el puerto', this.app.get('puerto'));
         });
-    }
+        this.io.on('connection', (socket: any) => {
+            console.log('Connected client on port %s.', this.app.get('puerto'));
+            
+            socket.on("nueva_notificacion", (data: any) => {
+                console.log(data.titulo, data.mensaje, data.photo, data.url)
+                this.io.sockets.emit( 'enviar_notification', { 
+                    titulo: data.titulo, 
+                    mensaje: data.mensaje, 
+                    photo: data.photo, 
+                    url: data.url, 
+                });
+                
+            });
+      
+        });
+    }    
 }
 
-const SERVIDOR = new Server();
+const SERVIDOR = new Servidor();
 SERVIDOR.start();

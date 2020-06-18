@@ -87,6 +87,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.datoEmpleado);
     var f = new Date();
     if (f.getMonth() < 10 && f.getDate() < 10) {
       this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
@@ -539,6 +540,13 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       console.log(this.idPermisoRes.id);
       this.SubirRespaldo(this.idPermisoRes.id)
       this.ImprimirNumeroPermiso();
+      let notificacion = { 
+        titulo: 'Solicitud enviada', 
+        mensaje: 'enviar una solicitud', 
+        photo: 'photo 1', 
+        url: 'url 1', 
+      }
+      this.restP.getDocument(notificacion);
     });
   }
 

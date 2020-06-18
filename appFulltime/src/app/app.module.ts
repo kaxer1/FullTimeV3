@@ -205,6 +205,10 @@ import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-
 import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
 import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones/editar-estado-autorizaccion/editar-estado-autorizaccion.component';
 
+
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -348,6 +352,7 @@ import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    SocketIoModule.forRoot(config),
     LayoutModule,
     MatToolbarModule,
     MatButtonModule,
