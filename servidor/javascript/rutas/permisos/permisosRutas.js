@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const permisosControlador_1 = __importDefault(require("../../controlador/permisos/permisosControlador"));
 const multipart = require('connect-multiparty');
+const webpush = require('../../webpush');
 const multipartMiddleware = multipart({
     uploadDir: './docRespaldosPermisos',
 });

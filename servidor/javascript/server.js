@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require('dotenv').config();
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -48,11 +49,15 @@ const permisosRutas_1 = __importDefault(require("./rutas/permisos/permisosRutas"
 const detalleCatHorarioRutas_1 = __importDefault(require("./rutas/horarios/detalleCatHorario/detalleCatHorarioRutas"));
 const catNotiAutorizacionesRutas_1 = __importDefault(require("./rutas/catalogos/catNotiAutorizacionesRutas"));
 const autorizacionesRutas_1 = __importDefault(require("./rutas/autorizaciones/autorizacionesRutas"));
-class Server {
+const http_1 = require("http");
+const socketIo = require('socket.io');
+class Servidor {
     constructor() {
         this.app = express_1.default();
         this.configuracion();
         this.rutas();
+        this.server = http_1.createServer(this.app);
+        this.io = socketIo(this.server);
     }
     configuracion() {
         this.app.set('puerto', process.env.PORT || 3001);
@@ -136,10 +141,22 @@ class Server {
         this.app.use('/autorizaciones', autorizacionesRutas_1.default);
     }
     start() {
-        this.app.listen(this.app.get('puerto'), () => {
+        this.server.listen(this.app.get('puerto'), () => {
             console.log('Servidor en el puerto', this.app.get('puerto'));
+        });
+        this.io.on('connection', (socket) => {
+            console.log('Connected client on port %s.', this.app.get('puerto'));
+            socket.on("nueva_notificacion", (data) => {
+                console.log(data.titulo, data.mensaje, data.photo, data.url);
+                this.io.sockets.emit('enviar_notification', {
+                    titulo: data.titulo,
+                    mensaje: data.mensaje,
+                    photo: data.photo,
+                    url: data.url,
+                });
+            });
         });
     }
 }
-const SERVIDOR = new Server();
+const SERVIDOR = new Servidor();
 SERVIDOR.start();

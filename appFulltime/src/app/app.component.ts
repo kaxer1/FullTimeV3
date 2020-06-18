@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { LoginService } from './servicios/login/login.service';
+import { Socket } from 'ngx-socket-io';
+
 
 @Component({
   selector: 'app-root',
@@ -16,8 +18,13 @@ export class AppComponent {
   constructor(
     public router: Router,
     public location: Location,
-    public loginServices: LoginService
-  ){ }
+    public loginServices: LoginService,
+    private socket: Socket
+  ){ 
+    this.socket.on('enviar_notification', (data) => {
+      console.log(data);
+    })
+  }
 
   removerForget(){
     var tituloPestania = this.location.prepareExternalUrl(this.location.path());
