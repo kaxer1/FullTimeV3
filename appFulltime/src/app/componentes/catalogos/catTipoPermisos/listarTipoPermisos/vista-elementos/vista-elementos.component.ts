@@ -247,7 +247,7 @@ export class VistaElementosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/departamento/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }
