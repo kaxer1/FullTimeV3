@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,13 @@ export class PermisosService {
 
   constructor(
     private http: HttpClient,
+    private socket: Socket
   ) { }
+
+  // realtime
+  getDocument(data: any) {
+    this.socket.emit('nueva_notificacion', data);
+  }
 
   // Permisos Empleado
 

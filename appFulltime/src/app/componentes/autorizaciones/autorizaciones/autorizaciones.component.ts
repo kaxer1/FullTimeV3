@@ -103,6 +103,8 @@ export class AutorizacionesComponent implements OnInit {
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
       this.limpiarCampos();
+      this.dialogRef.close();
+      window.location.reload();
     }, error => {
       console.log(error);
     })
