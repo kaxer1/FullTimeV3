@@ -22,8 +22,8 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 })
 export class ListaSucursalesComponent implements OnInit {
 
-  buscarNombre = new FormControl('',[Validators.minLength(2)]);
-  buscarCiudad = new FormControl('',[Validators.minLength(2)]);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarCiudad = new FormControl('', [Validators.minLength(2)]);
   buscarEmpresa = new FormControl('', [Validators.minLength(2)]);
   filtroNombreSuc = '';
   filtroCiudadSuc = '';
@@ -52,18 +52,18 @@ export class ListaSucursalesComponent implements OnInit {
     this.ObtenerSucursal();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  ObtenerSucursal(){
+  ObtenerSucursal() {
     this.rest.getSucursalesRest().subscribe(data => {
       this.sucursales = data;
     });
   }
 
-  AbrirVentanaRegistrarSucursal(){
+  AbrirVentanaRegistrarSucursal() {
     this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
   }
 
@@ -73,7 +73,7 @@ export class ListaSucursalesComponent implements OnInit {
     //console.log(datosSeleccionados.fecha);
   }
 
-  LimpiarCampoBuscar(){
+  LimpiarCampoBuscar() {
     this.BuscarSucursalForm.setValue({
       buscarNombreForm: '',
       buscarCiudadForm: '',
@@ -156,6 +156,10 @@ export class ListaSucursalesComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -163,25 +167,32 @@ export class ListaSucursalesComponent implements OnInit {
 
   presentarDataPDFSucursales() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Empresa', style: 'tableHeader' },
-            { text: 'Sucursal', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' }
-          ],
-          ...this.sucursales.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nomempresa, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Empresa', style: 'tableHeader' },
+                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Ciudad', style: 'tableHeader' }
+              ],
+              ...this.sucursales.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nomempresa, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTable' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

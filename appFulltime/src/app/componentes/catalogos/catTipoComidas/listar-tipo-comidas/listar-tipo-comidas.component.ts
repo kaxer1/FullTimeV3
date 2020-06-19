@@ -137,6 +137,10 @@ export class ListarTipoComidasComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableD: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -144,25 +148,32 @@ export class ListarTipoComidasComponent implements OnInit {
 
   presentarDataPDFAlmuerzos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Observación', style: 'tableHeader' },
-            { text: 'Valor', style: 'tableHeader' }
-          ],
-          ...this.tipoComidas.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.observacion, style: 'itemsTable' },
-              { text: '$ ' + obj.valor, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 60],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Observación', style: 'tableHeader' },
+                { text: 'Valor', style: 'tableHeader' }
+              ],
+              ...this.tipoComidas.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableD' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.observacion, style: 'itemsTable' },
+                  { text: '$ ' + obj.valor, style: 'itemsTableD' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
@@ -253,14 +264,14 @@ export class ListarTipoComidasComponent implements OnInit {
     });
   }
 
-    /* ***************************************************************************************************** 
-   *                                PLANTILLA VACIA DE TIPO COMIDAS
-   * *****************************************************************************************************/
+  /* ***************************************************************************************************** 
+ *                                PLANTILLA VACIA DE TIPO COMIDAS
+ * *****************************************************************************************************/
   DescargarPlantillaComidas() {
     var datosFeriado = [{
       nombre: 'Eliminar esta Fila: Sopa',
       valor: 2.55,
-      observacion: 'Con postre' 
+      observacion: 'Con postre'
     }];
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();

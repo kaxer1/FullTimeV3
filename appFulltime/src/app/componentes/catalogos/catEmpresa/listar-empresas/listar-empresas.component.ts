@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -114,9 +114,9 @@ export class ListarEmpresasComponent implements OnInit {
     }
   }
 
-   /****************************************************************************************************** 
-   *                                         MÉTODO PARA EXPORTAR A PDF
-   ******************************************************************************************************/
+  /****************************************************************************************************** 
+  *                                         MÉTODO PARA EXPORTAR A PDF
+  ******************************************************************************************************/
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
 
@@ -132,24 +132,25 @@ export class ListarEmpresasComponent implements OnInit {
 
   getDocumentDefinicion() {
     sessionStorage.setItem('Empresas', this.empresas);
+    
     return {
-      pageOrientation: 'landscape',
+     pageOrientation: 'landscape',
       content: [
         {
           text: 'Lista de Empresas',
           bold: true,
           fontSize: 20,
           alignment: 'center',
-          margin: [0, 0, 0, 20]
+          margin: [0, 0, 0, 20],
         },
         this.presentarDataPDFEmpresas(),
-      ],
+      ], 
       styles: {
         header: {
           fontSize: 18,
           bold: true,
           margin: [0, 20, 0, 10],
-          decoration: 'underline'
+          decoration: 'underline',
         },
         name: {
           fontSize: 16,
@@ -168,40 +169,51 @@ export class ListarEmpresasComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
-        }
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
+        },
       }
     };
   }
 
   presentarDataPDFEmpresas() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'RUC', style: 'tableHeader' },
-            { text: 'Dirección', style: 'tableHeader' },
-            { text: 'Teléfono', style: 'tableHeader' },
-            { text: 'Correo', style: 'tableHeader' },
-            { text: 'Tipo de Empresa', style: 'tableHeader' },
-            { text: 'Representante', style: 'tableHeader' }
-          ],
-          ...this.empresas.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.ruc, style: 'itemsTable' },
-              { text: obj.direccion, style: 'itemsTable' },
-              { text: obj.telefono, style: 'itemsTable' },
-              { text: obj.correo, style: 'itemsTable' },
-              { text: obj.tipo_empresa, style: 'itemsTable' },
-              { text: obj.representante, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', '*', '*', 'auto', 'auto', '*'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'RUC', style: 'tableHeader' },
+                { text: 'Dirección', style: 'tableHeader' },
+                { text: 'Teléfono', style: 'tableHeader' },
+                { text: 'Correo', style: 'tableHeader' },
+                { text: 'Tipo de Empresa', style: 'tableHeader' },
+                { text: 'Representante', style: 'tableHeader' }
+              ],
+              ...this.empresas.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.ruc, style: 'itemsTableC' },
+                  { text: obj.direccion, style: 'itemsTable' },
+                  { text: obj.telefono, style: 'itemsTableC' },
+                  { text: obj.correo, style: 'itemsTable' },
+                  { text: obj.tipo_empresa, style: 'itemsTable' },
+                  { text: obj.representante, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

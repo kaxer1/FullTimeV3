@@ -136,53 +136,60 @@ export class VistaElementosComponent implements OnInit {
   AccesoEmpleadoSelect: any = ['Si', 'No'];
   presentarDataPDFTipoPermisos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Permiso', style: 'tableHeader' },
-            { text: 'Días de permiso', style: 'tableHeader' },
-            { text: 'Horas de permiso', style: 'tableHeader' },
-            { text: 'Solicita Empleado', style: 'tableHeader' },
-            { text: 'Días para solicitar', style: 'tableHeader' },
-            { text: 'Incluye almuerzo', style: 'tableHeader' },
-            { text: 'Afecta Vacaciones', style: 'tableHeader' },
-            { text: 'Acumular', style: 'tableHeader' },
-            { text: 'Notificar por correo', style: 'tableHeader' },
-            { text: 'Descuento', style: 'tableHeader' },
-            { text: 'Actualizar', style: 'tableHeader' },
-            { text: 'Eliminar', style: 'tableHeader' },
-            { text: 'Preautorizar', style: 'tableHeader' },
-            { text: 'Autorizar', style: 'tableHeader' },
-            { text: 'Legalizar', style: 'tableHeader' },
-            { text: 'Días para Justificar', style: 'tableHeader' }
-          ],
-          ...this.tipoPermiso.map(obj => {
-            var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
-            var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTable' },
-              { text: obj.num_dia_maximo, style: 'itemsTable' },
-              { text: obj.num_hora_maximo, style: 'itemsTable' },
-              { text: acceso, style: 'itemsTable' },
-              { text: obj.num_dia_ingreso, style: 'itemsTable' },
-              { text: obj.almu_incluir, style: 'itemsTable' },
-              { text: obj.vaca_afecta, style: 'itemsTable' },
-              { text: obj.anio_acumula, style: 'itemsTable' },
-              { text: obj.correo, style: 'itemsTable' },
-              { text: descuento, style: 'itemsTable' },
-              { text: obj.actualizar, style: 'itemsTable' },
-              { text: obj.eliminar, style: 'itemsTable' },
-              { text: obj.preautorizar, style: 'itemsTable' },
-              { text: obj.autorizar, style: 'itemsTable' },
-              { text: obj.legalizar, style: 'itemsTable' },
-              { text: obj.gene_justificacion, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Permiso', style: 'tableHeader' },
+                { text: 'Días de permiso', style: 'tableHeader' },
+                { text: 'Horas de permiso', style: 'tableHeader' },
+                { text: 'Solicita Empleado', style: 'tableHeader' },
+                { text: 'Días para solicitar', style: 'tableHeader' },
+                { text: 'Incluye almuerzo', style: 'tableHeader' },
+                { text: 'Afecta Vacaciones', style: 'tableHeader' },
+                { text: 'Acumular', style: 'tableHeader' },
+                { text: 'Notificar por correo', style: 'tableHeader' },
+                { text: 'Descuento', style: 'tableHeader' },
+                { text: 'Actualizar', style: 'tableHeader' },
+                { text: 'Eliminar', style: 'tableHeader' },
+                { text: 'Preautorizar', style: 'tableHeader' },
+                { text: 'Autorizar', style: 'tableHeader' },
+                { text: 'Legalizar', style: 'tableHeader' },
+                { text: 'Días para Justificar', style: 'tableHeader' }
+              ],
+              ...this.tipoPermiso.map(obj => {
+                var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
+                var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTable' },
+                  { text: obj.num_dia_maximo, style: 'itemsTable' },
+                  { text: obj.num_hora_maximo, style: 'itemsTable' },
+                  { text: acceso, style: 'itemsTable' },
+                  { text: obj.num_dia_ingreso, style: 'itemsTable' },
+                  { text: obj.almu_incluir, style: 'itemsTable' },
+                  { text: obj.vaca_afecta, style: 'itemsTable' },
+                  { text: obj.anio_acumula, style: 'itemsTable' },
+                  { text: obj.correo, style: 'itemsTable' },
+                  { text: descuento, style: 'itemsTable' },
+                  { text: obj.actualizar, style: 'itemsTable' },
+                  { text: obj.eliminar, style: 'itemsTable' },
+                  { text: obj.preautorizar, style: 'itemsTable' },
+                  { text: obj.autorizar, style: 'itemsTable' },
+                  { text: obj.legalizar, style: 'itemsTable' },
+                  { text: obj.gene_justificacion, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

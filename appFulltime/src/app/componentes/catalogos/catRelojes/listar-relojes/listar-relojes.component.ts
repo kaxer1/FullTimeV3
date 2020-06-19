@@ -208,13 +208,17 @@ export class ListarRelojesComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 11,
+          fontSize: 10,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
           fontSize: 9
+        },
+        itemsTableC: {
+          fontSize: 9,
+          alignment: 'center'
         }
       }
     };
@@ -222,45 +226,52 @@ export class ListarRelojesComponent implements OnInit {
 
   presentarDataPDFRelojes() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'IP', style: 'tableHeader' },
-            { text: 'Puerto', style: 'tableHeader' },
-            { text: 'Marca', style: 'tableHeader' },
-            { text: 'Modelo', style: 'tableHeader' },
-            { text: 'Serie', style: 'tableHeader' },
-            { text: 'ID Fabricante', style: 'tableHeader' },
-            { text: 'Fabricante', style: 'tableHeader' },
-            { text: 'Mac', style: 'tableHeader' },
-            { text: 'Departamento', style: 'tableHeader' },
-            { text: 'Sucursal', style: 'tableHeader' },
-            { text: 'Empresa', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' }
-          ],
-          ...this.relojes.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.ip, style: 'itemsTable' },
-              { text: obj.puerto, style: 'itemsTable' },
-              { text: obj.marca, style: 'itemsTable' },
-              { text: obj.modelo, style: 'itemsTable' },
-              { text: obj.serie, style: 'itemsTable' },
-              { text: obj.id_fabricacion, style: 'itemsTable' },
-              { text: obj.fabricante, style: 'itemsTable' },
-              { text: obj.mac, style: 'itemsTable' },
-              { text: obj.nomdepar, style: 'itemsTable' },
-              { text: obj.nomsucursal, style: 'itemsTable' },
-              { text: obj.nomempresa, style: 'itemsTable' },
-              { text: obj.nomciudad, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'IP', style: 'tableHeader' },
+                { text: 'Puerto', style: 'tableHeader' },
+                { text: 'Marca', style: 'tableHeader' },
+                { text: 'Modelo', style: 'tableHeader' },
+                { text: 'Serie', style: 'tableHeader' },
+                { text: 'ID Fabricante', style: 'tableHeader' },
+                { text: 'Fabricante', style: 'tableHeader' },
+                { text: 'Mac', style: 'tableHeader' },
+                { text: 'Departamento', style: 'tableHeader' },
+                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Empresa', style: 'tableHeader' },
+                { text: 'Ciudad', style: 'tableHeader' }
+              ],
+              ...this.relojes.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.ip, style: 'itemsTableC' },
+                  { text: obj.puerto, style: 'itemsTableC' },
+                  { text: obj.marca, style: 'itemsTable' },
+                  { text: obj.modelo, style: 'itemsTable' },
+                  { text: obj.serie, style: 'itemsTable' },
+                  { text: obj.id_fabricacion, style: 'itemsTable' },
+                  { text: obj.fabricante, style: 'itemsTable' },
+                  { text: obj.mac, style: 'itemsTable' },
+                  { text: obj.nomdepar, style: 'itemsTable' },
+                  { text: obj.nomsucursal, style: 'itemsTable' },
+                  { text: obj.nomempresa, style: 'itemsTable' },
+                  { text: obj.nomciudad, style: 'itemsTable' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

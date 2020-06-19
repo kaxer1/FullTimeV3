@@ -288,13 +288,17 @@ export class PrincipalHorarioComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 12,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8
+          fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -302,29 +306,36 @@ export class PrincipalHorarioComponent implements OnInit {
 
   presentarDataPDFEmpleados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Minutos de almuerzo', style: 'tableHeader' },
-            { text: 'Horas de trabajo', style: 'tableHeader' },
-            { text: 'Horario Flexibe', style: 'tableHeader' },
-            { text: 'Horario por horas', style: 'tableHeader' },
-          ],
-          ...this.horarios.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.min_almuerzo, style: 'itemsTable' },
-              { text: obj.hora_trabajo, style: 'itemsTable' },
-              { text: obj.flexible, style: 'itemsTable' },
-              { text: obj.por_horas, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Minutos de almuerzo', style: 'tableHeader' },
+                { text: 'Horas de trabajo', style: 'tableHeader' },
+                { text: 'Horario Flexibe', style: 'tableHeader' },
+                { text: 'Horario por horas', style: 'tableHeader' },
+              ],
+              ...this.horarios.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.min_almuerzo, style: 'itemsTableC' },
+                  { text: obj.hora_trabajo, style: 'itemsTableC' },
+                  { text: obj.flexible, style: 'itemsTableC' },
+                  { text: obj.por_horas, style: 'itemsTableC' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

@@ -267,31 +267,38 @@ export class PrincipalEnroladosComponent implements OnInit {
   EstadoSelect: any = ['Si', 'No'];
   presentarDataPDFEnrolados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Código', style: 'tableHeader' },
-           // { text: 'Contraseña', style: 'tableHeader' },
-            { text: 'Activo', style: 'tableHeader' },
-            { text: 'Finger', style: 'tableHeader' },
-            { text: 'Data Finger', style: 'tableHeader' }
-          ],
-          ...this.enrolados.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.codigo, style: 'itemsTable' },
-              //{ text: obj.contrasenia, style: 'itemsTable' },
-              { text: obj.activo, style: 'itemsTable' },
-              { text: obj.finger, style: 'itemsTable' },
-              { text: obj.data_finger, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
+               // { text: 'Contraseña', style: 'tableHeader' },
+                { text: 'Activo', style: 'tableHeader' },
+                { text: 'Finger', style: 'tableHeader' },
+                { text: 'Data Finger', style: 'tableHeader' }
+              ],
+              ...this.enrolados.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.codigo, style: 'itemsTable' },
+                  //{ text: obj.contrasenia, style: 'itemsTable' },
+                  { text: obj.activo, style: 'itemsTable' },
+                  { text: obj.finger, style: 'itemsTable' },
+                  { text: obj.data_finger, style: 'itemsTable' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

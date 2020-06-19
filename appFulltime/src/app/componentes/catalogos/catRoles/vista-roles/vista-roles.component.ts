@@ -140,13 +140,14 @@ export class VistaRolesComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 13,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8
+          fontSize: 11,
+          alignment: 'center'
         }
       }
     };
@@ -154,21 +155,28 @@ export class VistaRolesComponent implements OnInit {
 
   presentarDataPDFRoles() {
     return {
-      table: {
-        widths: ['auto', 'auto',],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-          ],
-          ...this.roles.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [50, 150],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+              ],
+              ...this.roles.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                ];
+              })
+            ],
+          },
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

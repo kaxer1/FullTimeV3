@@ -177,33 +177,40 @@ export class ListarRegimenComponent implements OnInit {
 
   presentarDataPDFFeriados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Descripción', style: 'tableHeader' },
-            { text: 'Vacaciones por año', style: 'tableHeader' },
-            { text: 'Vacaciones por mes', style: 'tableHeader' },
-            { text: 'Años para antiguedad', style: 'tableHeader' },
-            { text: 'Días de incremento', style: 'tableHeader' },
-            { text: 'Días máximos acumulables', style: 'tableHeader' },
-            { text: 'Días Libres', style: 'tableHeader' },
-          ],
-          ...this.regimen.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTable' },
-              { text: obj.dia_anio_vacacion, style: 'itemsTable' },
-              { text: obj.dia_mes_vacacion, style: 'itemsTable' },
-              { text: obj.anio_antiguedad, style: 'itemsTable' },
-              { text: obj.dia_incr_antiguedad, style: 'itemsTable' },
-              { text: obj.max_dia_acumulacion, style: 'itemsTable' },
-              { text: obj.dia_libr_anio_vacacion, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Vacaciones por año', style: 'tableHeader' },
+                { text: 'Vacaciones por mes', style: 'tableHeader' },
+                { text: 'Años para antiguedad', style: 'tableHeader' },
+                { text: 'Días de incremento', style: 'tableHeader' },
+                { text: 'Días máximos acumulables', style: 'tableHeader' },
+                { text: 'Días Libres', style: 'tableHeader' },
+              ],
+              ...this.regimen.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTable' },
+                  { text: obj.dia_anio_vacacion, style: 'itemsTable' },
+                  { text: obj.dia_mes_vacacion, style: 'itemsTable' },
+                  { text: obj.anio_antiguedad, style: 'itemsTable' },
+                  { text: obj.dia_incr_antiguedad, style: 'itemsTable' },
+                  { text: obj.max_dia_acumulacion, style: 'itemsTable' },
+                  { text: obj.dia_libr_anio_vacacion, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

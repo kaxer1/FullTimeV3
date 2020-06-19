@@ -180,6 +180,10 @@ export class PrincipalDepartamentoComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -187,29 +191,36 @@ export class PrincipalDepartamentoComponent implements OnInit {
 
   presentarDataPDFDepartamentos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Empresa', style: 'tableHeader' },
-            { text: 'Sucursal', style: 'tableHeader' },
-            { text: 'Departamento', style: 'tableHeader' },
-            { text: 'Nivel', style: 'tableHeader' },
-            { text: 'Departamento Superior', style: 'tableHeader' }
-          ],
-          ...this.departamentos.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nomempresa, style: 'itemsTable' },
-              { text: obj.nomsucursal, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.nivel, style: 'itemsTable' },
-              { text: obj.departamento_padre, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Empresa', style: 'tableHeader' },
+                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Departamento', style: 'tableHeader' },
+                { text: 'Nivel', style: 'tableHeader' },
+                { text: 'Departamento Superior', style: 'tableHeader' }
+              ],
+              ...this.departamentos.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nomempresa, style: 'itemsTable' },
+                  { text: obj.nomsucursal, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.nivel, style: 'itemsTableC' },
+                  { text: obj.departamento_padre, style: 'itemsTableC' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

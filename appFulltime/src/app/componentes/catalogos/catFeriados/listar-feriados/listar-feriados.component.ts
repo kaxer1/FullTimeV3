@@ -210,17 +210,17 @@ export class ListarFeriadosComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 13,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8,
+          fontSize: 10,
           alignment: 'center',
         },
         itemsTableD: {
-          fontSize: 8,
+          fontSize: 10,
         }
       }
     };
@@ -228,25 +228,32 @@ export class ListarFeriadosComponent implements OnInit {
 
   presentarDataPDFFeriados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Descripción', style: 'tableHeader' },
-            { text: 'Fecha', style: 'tableHeader' },
-            { text: 'Fecha Recuperación', style: 'tableHeader' },
-          ],
-          ...this.feriados.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTableD' },
-              { text: obj.fecha, style: 'itemsTable' },
-              { text: obj.fec_recuperacion, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Fecha', style: 'tableHeader' },
+                { text: 'Fecha Recuperación', style: 'tableHeader' },
+              ],
+              ...this.feriados.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTableD' },
+                  { text: obj.fecha, style: 'itemsTable' },
+                  { text: obj.fec_recuperacion, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

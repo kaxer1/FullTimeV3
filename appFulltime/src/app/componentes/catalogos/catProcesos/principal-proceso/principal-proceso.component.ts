@@ -211,6 +211,10 @@ export class PrincipalProcesoComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -218,25 +222,32 @@ export class PrincipalProcesoComponent implements OnInit {
 
   presentarDataPDFProcesos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Nivel', style: 'tableHeader' },
-            { text: 'Proceso Superior', style: 'tableHeader' },
-          ],
-          ...this.procesos.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.nivel, style: 'itemsTable' },
-              { text: obj.proc_padre, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Nivel', style: 'tableHeader' },
+                { text: 'Proceso Superior', style: 'tableHeader' },
+              ],
+              ...this.procesos.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.nivel, style: 'itemsTableC' },
+                  { text: obj.proc_padre, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

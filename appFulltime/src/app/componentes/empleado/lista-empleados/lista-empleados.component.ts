@@ -214,6 +214,10 @@ export class ListaEmpleadosComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 8
+        },
+        itemsTableD: {
+          fontSize: 8,
+          alignment: 'center'
         }
       }
     };
@@ -224,52 +228,59 @@ export class ListaEmpleadosComponent implements OnInit {
   EstadoSelect: any = ['Activo', 'Inactivo'];
   presentarDataPDFEmpleados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Apellido', style: 'tableHeader' },
-            { text: 'Cedula', style: 'tableHeader' },
-            { text: 'Fecha Nacimiento', style: 'tableHeader' },
-            { text: 'Correo', style: 'tableHeader' },
-            { text: 'Correo Alternativo', style: 'tableHeader' },
-            { text: 'Género', style: 'tableHeader' },
-            { text: 'Estado Civil', style: 'tableHeader' },
-            { text: 'Domicilio', style: 'tableHeader' },
-            { text: 'Teléfono', style: 'tableHeader' },
-            { text: 'Estado', style: 'tableHeader' },
-            { text: 'Nacionalidad', style: 'tableHeader' },
-          ],
-          ...this.empleado.map(obj => {
-            var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
-            var genero = this.GeneroSelect[obj.genero - 1];
-            var estado = this.EstadoSelect[obj.estado - 1];
-            let nacionalidad;
-            this.nacionalidades.forEach(element => {
-              if (obj.id_nacionalidad == element.id) {
-                nacionalidad = element.nombre;
-              }
-            });
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.apellido, style: 'itemsTable' },
-              { text: obj.cedula, style: 'itemsTable' },
-              { text: obj.fec_nacimiento.split("T")[0], style: 'itemsTable' },
-              { text: obj.correo, style: 'itemsTable' },
-              { text: obj.mail_alternativo, style: 'itemsTable' },
-              { text: genero, style: 'itemsTable' },
-              { text: estadoCivil, style: 'itemsTable' },
-              { text: obj.domicilio, style: 'itemsTable' },
-              { text: obj.telefono, style: 'itemsTable' },
-              { text: estado, style: 'itemsTable' },
-              { text: nacionalidad, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Apellido', style: 'tableHeader' },
+                { text: 'Cedula', style: 'tableHeader' },
+                { text: 'Fecha Nacimiento', style: 'tableHeader' },
+                { text: 'Correo', style: 'tableHeader' },
+                { text: 'Correo Alternativo', style: 'tableHeader' },
+                { text: 'Género', style: 'tableHeader' },
+                { text: 'Estado Civil', style: 'tableHeader' },
+                { text: 'Domicilio', style: 'tableHeader' },
+                { text: 'Teléfono', style: 'tableHeader' },
+                { text: 'Estado', style: 'tableHeader' },
+                { text: 'Nacionalidad', style: 'tableHeader' },
+              ],
+              ...this.empleado.map(obj => {
+                var estadoCivil = this.EstadoCivilSelect[obj.esta_civil - 1];
+                var genero = this.GeneroSelect[obj.genero - 1];
+                var estado = this.EstadoSelect[obj.estado - 1];
+                let nacionalidad;
+                this.nacionalidades.forEach(element => {
+                  if (obj.id_nacionalidad == element.id) {
+                    nacionalidad = element.nombre;
+                  }
+                });
+                return [
+                  { text: obj.id, style: 'itemsTableD' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.apellido, style: 'itemsTable' },
+                  { text: obj.cedula, style: 'itemsTableD' },
+                  { text: obj.fec_nacimiento.split("T")[0], style: 'itemsTableD' },
+                  { text: obj.correo, style: 'itemsTableD' },
+                  { text: obj.mail_alternativo, style: 'itemsTableD' },
+                  { text: genero, style: 'itemsTableD' },
+                  { text: estadoCivil, style: 'itemsTableD' },
+                  { text: obj.domicilio, style: 'itemsTableD' },
+                  { text: obj.telefono, style: 'itemsTableD' },
+                  { text: estado, style: 'itemsTableD' },
+                  { text: nacionalidad, style: 'itemsTableD' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
