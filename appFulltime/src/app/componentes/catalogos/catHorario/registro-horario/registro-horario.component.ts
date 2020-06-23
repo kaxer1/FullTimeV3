@@ -20,6 +20,8 @@ export class RegistroHorarioComponent implements OnInit {
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   flexible = new FormControl('', Validators.required);
   porHoras = new FormControl('', Validators.required);
+  nombreCertificadoF = new FormControl('');
+  archivoForm = new FormControl('');
 
   // asignar los campos en un formulario en grupo
   public nuevoHorarioForm = new FormGroup({
@@ -27,7 +29,8 @@ export class RegistroHorarioComponent implements OnInit {
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
     horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras
+    horarioPorHorasForm: this.porHoras,
+    nombreCertificadoForm: this.nombreCertificadoF
   });
 
   constructor(
@@ -47,7 +50,7 @@ export class RegistroHorarioComponent implements OnInit {
       flexible: form.horarioFlexibleForm,
       por_horas: form.horarioPorHorasForm
     };
-    if (dataHorario.min_almuerzo === ''){
+    if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
     }
     this.rest.postHorarioRest(dataHorario).subscribe(response => {
@@ -106,6 +109,24 @@ export class RegistroHorarioComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoHorarioForm.reset();
+  }
+
+  LimpiarNombreArchivo() {
+    this.nuevoHorarioForm.patchValue({
+      nombreCertificadoForm: '',
+    });
+  }
+
+  nameFile: string;
+  archivoSubido: Array<File>;
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    if (this.archivoSubido.length != 0) {
+      const name = this.archivoSubido[0].name;
+      console.log(this.archivoSubido[0].name);
+      this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
+    }
   }
 
   CerrarVentanaRegistroHorario() {

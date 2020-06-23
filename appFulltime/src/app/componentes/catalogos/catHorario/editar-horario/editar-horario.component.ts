@@ -19,6 +19,8 @@ export class EditarHorarioComponent implements OnInit {
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   flexible = new FormControl('', Validators.required);
   porHoras = new FormControl('', Validators.required);
+  nombreCertificadoF = new FormControl('');
+  archivoForm = new FormControl('');
 
   // asignar los campos en un formulario en grupo
   public nuevoHorarioForm = new FormGroup({
@@ -26,9 +28,10 @@ export class EditarHorarioComponent implements OnInit {
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
     horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras
+    horarioPorHorasForm: this.porHoras,
+    nombreCertificadoForm: this.nombreCertificadoF
   });
-  
+
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
@@ -42,7 +45,8 @@ export class EditarHorarioComponent implements OnInit {
       horarioMinAlmuerzoForm: this.horario.min_almuerzo,
       horarioHoraTrabajoForm: this.horario.hora_trabajo,
       horarioFlexibleForm: this.horario.flexible,
-      horarioPorHorasForm: this.horario.por_horas
+      horarioPorHorasForm: this.horario.por_horas,
+      nombreCertificadoForm: this.horario.doc_nombre,
     })
   }
 
@@ -54,10 +58,10 @@ export class EditarHorarioComponent implements OnInit {
       flexible: form.horarioFlexibleForm,
       por_horas: form.horarioPorHorasForm
     };
-    if (dataHorario.min_almuerzo === ''){
+    if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
     }
-    
+
     this.rest.putHorarioRest(this.horario.id, dataHorario).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Horario registrado');
       this.LimpiarCampos();
@@ -116,6 +120,24 @@ export class EditarHorarioComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoHorarioForm.reset();
+  }
+
+  LimpiarNombreArchivo() {
+    this.nuevoHorarioForm.patchValue({
+      nombreCertificadoForm: '',
+    });
+  }
+
+  nameFile: string;
+  archivoSubido: Array<File>;
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    if (this.archivoSubido.length != 0) {
+      const name = this.archivoSubido[0].name;
+      console.log(this.archivoSubido[0].name);
+      this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
+    }
   }
 
   CerrarVentanaEditarHorario() {

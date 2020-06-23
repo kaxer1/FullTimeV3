@@ -83,6 +83,17 @@ class EmpleadoHorariosControlador {
         fs.unlinkSync(filePath);
     }
 
+    public async ObtenerNumeroHoras(req: Request, res: Response): Promise<any> {
+        const { id_emple, fecha } = req.body;
+        const HORAS = await pool.query('SELECT * FROM VistaNumeroHoras WHERE id_emple = $1 AND $2 BETWEEN fec_inicio AND fec_final', [id_emple, fecha]);
+        if (HORAS.rowCount > 0) {
+            return res.jsonp(HORAS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();

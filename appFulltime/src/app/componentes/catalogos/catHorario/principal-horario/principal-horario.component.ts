@@ -92,7 +92,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '900px' }).disableClose = true;
   }
 
   AbrirRegistraDetalle(datosSeleccionados: any): void {
@@ -110,7 +110,7 @@ export class PrincipalHorarioComponent implements OnInit {
 
   AbrirVentanaEditarHorario(horario: any): void {
     const DIALOG_REF = this.vistaRegistrarDatos.open(EditarHorarioComponent,
-      { width: '600px', data: horario });
+      { width: '900px', data: horario });
     DIALOG_REF.disableClose = true;
   }
 
@@ -360,7 +360,7 @@ export class PrincipalHorarioComponent implements OnInit {
         {
           width: 'auto',
           table: {
-            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
                 { text: 'Id', style: 'tableHeader' },
@@ -369,6 +369,7 @@ export class PrincipalHorarioComponent implements OnInit {
                 { text: 'Horas de trabajo', style: 'tableHeader' },
                 { text: 'Horario Flexibe', style: 'tableHeader' },
                 { text: 'Horario por horas', style: 'tableHeader' },
+                { text: 'Documento', style: 'tableHeader' },
               ],
               ...this.horarios.map(obj => {
                 return [
@@ -378,6 +379,7 @@ export class PrincipalHorarioComponent implements OnInit {
                   { text: obj.hora_trabajo, style: 'itemsTableC' },
                   { text: obj.flexible, style: 'itemsTableC' },
                   { text: obj.por_horas, style: 'itemsTableC' },
+                  { text: obj.doc_nombre, style: 'itemsTableC' },
                 ];
               })
             ]
@@ -429,6 +431,8 @@ export class PrincipalHorarioComponent implements OnInit {
           "hora_trabajo": obj.hora_trabajo,
           "flexible": obj.flexible,
           "por_horas": obj.por_horas,
+          "doc_nombre": obj.doc_nombre,
+          "documento": obj.documento,
         }
       }
       arregloHorarios.push(objeto)

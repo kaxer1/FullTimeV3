@@ -97,6 +97,18 @@ class EmpleadoHorariosControlador {
             fs_1.default.unlinkSync(filePath);
         });
     }
+    ObtenerNumeroHoras(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_emple, fecha } = req.body;
+            const HORAS = yield database_1.default.query('SELECT * FROM VistaNumeroHoras WHERE id_emple = $1 AND $2 BETWEEN fec_inicio AND fec_final', [id_emple, fecha]);
+            if (HORAS.rowCount > 0) {
+                return res.jsonp(HORAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();
 exports.default = exports.EMPLEADO_HORARIOS_CONTROLADOR;

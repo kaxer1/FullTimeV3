@@ -8,6 +8,7 @@ import * as moment from 'moment'
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { LoginService } from 'src/app/servicios/login/login.service';
 
 interface opcionesDiasHoras {
@@ -46,6 +47,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   num: number;
   tipoPermisoSelec: string;
   FechaActual: any;
+  horasTrabajo: any = [];
 
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
@@ -81,6 +83,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   constructor(
     private restTipoP: TipoPermisosService,
     private restP: PermisosService,
+    private restH: EmpleadoHorariosService,
     private toastr: ToastrService,
     private loginServise: LoginService,
     public dialogRef: MatDialogRef<RegistroEmpleadoPermisoComponent>,
@@ -162,19 +165,31 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     }
   }
 
-  dSalida: number = 0;
+  dSalida: any;
   validarFechaSalida(event) {
     this.LimpiarCamposFecha();
-    this.dSalida = event.value._i.date;
-    console.log(this.dSalida);
+    //this.dSalida = event.value._i.date;
+    this.dSalida = event.value;
+    console.log('fecha Salida', moment(this.dSalida));
     console.log(event);
   }
 
-  dIngreso: number = 0;
+  dIngreso: any;
   validarFechaIngreso(event, form) {
     if (form.fechaInicioForm != '' && form.idPermisoForm != '') {
-      this.dIngreso = event.value._i.date;
-      this.VerificarDiasHoras(form);
+      this.horasTrabajo = [];
+      let datosFechas = {
+        id_emple: this.datoEmpleado.idEmpleado,
+        fecha: form.fechaInicioForm
+      }
+      this.dIngreso = event.value;
+      this.restH.BuscarNumeroHoras(datosFechas).subscribe(datos => {
+        this.horasTrabajo = datos;
+        console.log("horas", this.horasTrabajo[0].horas);
+        this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
+      }, error => {
+        this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR');
+      });
     }
     else {
       this.toastr.error('Aún no selecciona un Tipo de Permiso o aún no ingresa fecha de salida.', 'VERIFICAR');
@@ -361,7 +376,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   RevisarIngresoDias(form) {
     if (parseInt(form.diasForm) <= this.Tdias) {
-      const resta = this.dIngreso - this.dSalida;
+      const resta = this.dIngreso.diff(this.dSalida, 'days');
+      console.log('datos', resta, ' ');
       if (resta != form.diasForm) {
         this.toastr.error('Recuerde el día de ingreso no puede superar o ser menor a los días de permiso solicitados.',
           'Día de ingreso incorrecto.');
@@ -379,17 +395,18 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   }
 
   RevisarIngresoHoras() {
-    if (this.dSalida != this.dIngreso) {
+    const resta = this.dIngreso.diff(this.dSalida, 'days');
+    if (resta != 0) {
       this.toastr.error('Recuerde su permiso es por horas, y debe ingresar el mismo día en el que sale.',
         'Día de ingreso incorrecto');
       this.LimpiarCamposFecha();
     }
   }
 
-  MensajeIngresoHoras() {
+  MensajeIngresoHoras(hora_empleado) {
     if (this.tipoPermisoSelec === 'Días' || this.tipoPermisoSelec === 'Días y Horas') {
       this.toastr.info('Usted puede solicitar hasta: ' + String(this.Tdias) +
-        ' dias de permiso. Si solicita horas recuerde que deben ser menor a 8 horas.',
+        ' dias de permiso. Si solicita horas recuerde que deben ser menor a ' + hora_empleado + ' horas.',
         'De acuerdo con la configuración de este tipo de permiso');
       this.LimpiarCamposFecha();
     }
@@ -416,13 +433,14 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   }
 
 
-  ValidarConfiguracionHoras(form) {
+  ValidarConfiguracionHoras(form, hora_empleado) {
+    var datoHora = parseInt(hora_empleado.split(":"));
     if (this.tipoPermisoSelec === 'Días') {
-      if (form.horasForm < '08:00') {
+      if (parseInt(form.horasForm.split(":")) < datoHora) {
         this.RevisarIngresoHoras();
       }
       else {
-        this.MensajeIngresoHoras();
+        this.MensajeIngresoHoras(hora_empleado);
       }
     }
     else if (this.tipoPermisoSelec === 'Horas') {
@@ -430,21 +448,22 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.RevisarIngresoHoras();
       }
       else {
-        this.MensajeIngresoHoras();
+        this.MensajeIngresoHoras(hora_empleado);
       }
     }
     else if (this.tipoPermisoSelec === 'Días y Horas') {
-      if (form.horasForm < '08:00') {
+      //console.log("comparar horas", parseInt(datoHora));
+      if (parseInt(form.horasForm.split(":")) < datoHora) {
         this.RevisarIngresoHoras();
       }
       else {
-        this.MensajeIngresoHoras();
+        this.MensajeIngresoHoras(hora_empleado);
       }
     }
   }
 
   RevisarIngresoDiasHoras(contarDias, form) {
-    const resta = this.dIngreso - this.dSalida;
+    const resta = this.dIngreso.diff(this.dSalida, 'days');
     if (resta != contarDias) {
       this.toastr.error('Recuerde el día de ingreso no puede superar o ser menor a los días de permiso solicitados',
         'Día de ingreso incorrecto');
@@ -455,15 +474,17 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     }
   }
 
-  ValidarConfiguracionDiasHoras(form) {
+  ValidarConfiguracionDiasHoras(form, hora_empleado) {
+    var datoHora = hora_empleado.split(":");
     if (this.tipoPermisoSelec === 'Días') {
       var contarDias = parseInt(form.diasForm) + 1;
-      if (contarDias <= this.Tdias) {
+      if (contarDias <= this.Tdias && parseInt(form.horasForm.split(":")) < parseInt(datoHora)) {
+        console.log('verificar dias y horas', contarDias);
         this.RevisarIngresoDiasHoras(contarDias, form);
       }
       else {
-        this.toastr.info('Los días de permiso que puede solicitar deben ser menores o iguales a: '
-          + String(this.Tdias) + ' días. Tenga en cuenta que solicita días y adicional horas',
+        this.toastr.info('Los días de permiso que puede solicitar deben ser menores a : '
+          + String(this.Tdias) + ' días y las horas deben ser menores a ' + datoHora + ' horas. Tenga en cuenta que solicita días y adicional horas.',
           'De acuerdo con la configuración de este tipo de permiso.')
         this.LimpiarCamposFecha();
       }
@@ -479,10 +500,11 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     }
     else if (this.tipoPermisoSelec === 'Días y Horas') {
       var contarDias = parseInt(form.diasForm) + 1
+
       if (parseInt(form.diasForm) === this.Tdias && form.horasForm <= this.Thoras) {
         this.RevisarIngresoDiasHoras(contarDias, form);
       }
-      else if (parseInt(form.diasForm) < this.Tdias && form.horasForm < '08:00') {
+      else if (parseInt(form.diasForm) < this.Tdias && parseInt(form.horasForm.split(":")) < parseInt(datoHora)) {
         this.RevisarIngresoDiasHoras(contarDias, form);
       }
       else {
@@ -496,7 +518,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   }
 
-  VerificarDiasHoras(form) {
+  VerificarDiasHoras(form, hora_empleado) {
     if (form.solicitarForm === 'Días') {
       if (form.diasForm === '' || form.diasForm == 0) {
         this.toastr.info('Aún no ha ingresado número de días de permiso.');
@@ -513,7 +535,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.LimpiarCamposFecha();
       }
       else {
-        this.ValidarConfiguracionHoras(form);
+        this.ValidarConfiguracionHoras(form, hora_empleado);
       }
     }
 
@@ -526,7 +548,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.LimpiarCamposFecha();
       }
       else {
-        this.ValidarConfiguracionDiasHoras(form);
+        this.ValidarConfiguracionDiasHoras(form, hora_empleado);
       }
     }
   }

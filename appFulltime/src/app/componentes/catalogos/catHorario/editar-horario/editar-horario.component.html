@@ -37,7 +37,7 @@
                             <input matInput placeholder="Ej: 8:15 " [formControl]="horaTrabajo" required
                                 (keypress)="IngresarNumeroDecimal($event)">
                             <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar el número de horas de trabajo. 
+                                matTooltip="Indicar el número de horas de trabajo. 
                             En caso de que sean horas y minutos ingresar de esta manera 10 : 35">
                                 help_outline</mat-icon>
                             <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
@@ -60,7 +60,7 @@
                             </div>
                         </section>
                         <br>
-                        <label style="margin-right: 68px;">Horario por Horas *</label>
+                        <label style="margin-right: 76px;">Horario por Horas *</label>
                         <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
                             matTooltip="El horario por horas indica que se labora en un rango de horas">
                             help_outline</mat-icon>
@@ -75,6 +75,24 @@
                                 </div>
                             </div>
                         </section>
+                    </div>
+                    <div class="col">
+                        <div class="container">
+                            <div class="row">
+                                <form method="post" enctype="multipart/form-data">
+                                    <input (change)="fileChange($event)" type="file" [formControl]="archivoForm"
+                                        id="file">
+                                    <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
+                                        matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                        matTooltip="Subir documento que respalde la creación de horario, solo en caso de ser necesario como un respaldo de cambios en el horario.">Subir
+                                        Documento</label>
+                                </form>
+                            </div>
+                            <div class="row">
+                                <input type="text" placeholder="Ningún archivo seleccionado" class="form-control"
+                                    style="width: 230px;" [formControl]="nombreCertificadoF">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
