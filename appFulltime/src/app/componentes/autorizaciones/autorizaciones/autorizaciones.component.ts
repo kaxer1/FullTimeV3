@@ -95,7 +95,7 @@ export class AutorizacionesComponent implements OnInit {
       tipo_documento: form.tipoDocumentoF, 
       orden: form.ordenF, 
       estado: form.estadoF, 
-      id_notificacion: form.idNotiAutorizacionF, 
+      id_notificacion: form.idNotificacionF, 
       id_noti_autorizacion: form.idNotiAutorizacionF, 
       id_departamento: form.idDepartamentoF
     }

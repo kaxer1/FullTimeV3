@@ -1,6 +1,6 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="tituloNotifica">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Notificación Autorizacion</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Notificación Autorización</span>
 </div>
 <br>
 <!-- Formulario Completo -->
@@ -27,7 +27,7 @@
                 help_outline</mat-icon>
             <mat-select [formControl]="idEmplCargo">
                 <mat-option *ngFor="let c of cargo" [value]="c.cargo">
-                    {{c.cargo}} {{c.nombre}} {{c.apellido}}
+                    ({{c.departamento}} - {{c.sucursal}} ) {{c.nombre.split(' ')[0]}} {{c.apellido.split(' ')[0]}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

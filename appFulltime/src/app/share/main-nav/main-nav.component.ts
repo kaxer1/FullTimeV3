@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import {FormControl} from '@angular/forms';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-main-nav',
@@ -40,8 +41,12 @@ export class MainNavComponent implements OnInit {
     public location: Location,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
-    private roter: Router
+    private roter: Router,
+    private socket: Socket
   ) {
+    this.socket.on('enviar_notification', (data) => {
+      console.log(data);
+    })
     var tituloPestania = this.location.prepareExternalUrl(this.location.path());
     tituloPestania = tituloPestania.slice(1);
     this.pestania = tituloPestania;

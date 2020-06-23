@@ -564,6 +564,7 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaCargo(): void {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
+      console.log(datos);
       console.log("idcargo ", this.idContrato[0].max)
       this.vistaRegistrarDatos.open(EmplCargosComponent,
         { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } }).

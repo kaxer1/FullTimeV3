@@ -88,7 +88,7 @@
                         
                         <div class="row" style="margin-top: 5px;">
                             <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
-                                <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
+                                <i *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
                                     matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
                                     <p>Autorización</p>
                                 </i>

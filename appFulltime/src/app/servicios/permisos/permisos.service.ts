@@ -15,7 +15,7 @@ export class PermisosService {
   ) { }
 
   // realtime
-  getDocument(data: any) {
+  setDocument(data: any) {
     this.socket.emit('nueva_notificacion', data);
   }
 

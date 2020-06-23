@@ -140,14 +140,16 @@ class Servidor {
             console.log('Connected client on port %s.', this.app.get('puerto'));
             
             socket.on("nueva_notificacion", (data: any) => {
-                console.log(data.titulo, data.mensaje, data.photo, data.url)
-                this.io.sockets.emit( 'enviar_notification', { 
+                let data_llega = {
+                    id_empleado_send: data.id_empleado_send,
+                    id_empleado_recive: data.id_empleado_recive,
+                    id_departamento_recive: data.id_departamento_recive,
                     titulo: data.titulo, 
-                    mensaje: data.mensaje, 
-                    photo: data.photo, 
-                    url: data.url, 
-                });
-                
+                    create_at: data.create_at, 
+                    id_permiso: data.id_permiso
+                }
+                console.log(data_llega);
+                socket.broadcast.emit( 'enviar_notification', data_llega);
             });
       
         });
