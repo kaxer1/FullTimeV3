@@ -1,6 +1,7 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="permisoEmpleado">
-    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" [(ngModel)]="num">Solicitud de Permiso N°
+    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" ngDefaultControl [(ngModel)]="num"
+    [ngModelOptions]="{standalone: true}">Solicitud de Permiso N°
         {{num}}</h5>
 </div>
 <!-- Formulario Completo -->
@@ -141,7 +142,7 @@
                         <div class="row">
                             <form method="post" enctype="multipart/form-data">
                                 <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
-                                <label for="file" class="btn-2">Subir Certificado</label>
+                                <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()">Subir Certificado</label>
                             </form>
                         </div>
                         <div class="row">

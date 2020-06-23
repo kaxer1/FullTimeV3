@@ -12,6 +12,7 @@ import * as FileSaver from 'file-saver';
 
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
@@ -50,16 +51,32 @@ export class PrincipalHorarioComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: HorarioService,
+    public restE: EmpleadoService,
     private restD: DetalleCatHorariosService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerHorarios();
     this.nameFile = '';
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -230,7 +247,7 @@ export class PrincipalHorarioComponent implements OnInit {
     var datosHorario = [{
       nombre_horario: 'Eliminar esta Fila: horario1',
       orden: 1,
-      hora: '9:00 Nota: formato de celda tipo Text' ,
+      hora: '9:00 Nota: formato de celda tipo Text',
       nocturno: 'true o false',
       tipo_accion: '1-Entrada/2-Salida/3-S.Almuerzo/4-E.Almuerzo',
       minutos_espera: '0:10 Nota: formato de celda tipo Text'
@@ -261,6 +278,38 @@ export class PrincipalHorarioComponent implements OnInit {
     sessionStorage.setItem('Empleados', this.horarios);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha,
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Horarios',

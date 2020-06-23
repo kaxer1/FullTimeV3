@@ -13,6 +13,7 @@ import * as FileSaver from 'file-saver';
 import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-empresas',
@@ -38,14 +39,30 @@ export class ListarEmpresasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: EmpresaService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) { 
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerEmpresa();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -132,9 +149,41 @@ export class ListarEmpresasComponent implements OnInit {
 
   getDocumentDefinicion() {
     sessionStorage.setItem('Empresas', this.empresas);
-    
+
     return {
-     pageOrientation: 'landscape',
+      pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha,
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Empresas',
@@ -144,7 +193,7 @@ export class ListarEmpresasComponent implements OnInit {
           margin: [0, 0, 0, 20],
         },
         this.presentarDataPDFEmpresas(),
-      ], 
+      ],
       styles: {
         header: {
           fontSize: 18,

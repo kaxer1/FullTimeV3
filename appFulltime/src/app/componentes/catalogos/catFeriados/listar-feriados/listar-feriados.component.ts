@@ -14,6 +14,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -38,6 +39,8 @@ export class ListarFeriadosComponent implements OnInit {
   feriados: any = [];
   filtroDescripcion = '';
   filtradoFecha = '';
+  empleado: any = [];
+  idEmpleado: number;
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -49,15 +52,27 @@ export class ListarFeriadosComponent implements OnInit {
 
   constructor(
     private rest: FeriadosService,
+    private restE: EmpleadoService,
     public vistaRegistrarFeriado: MatDialog,
     public vistaAsignarCiudad: MatDialog,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerFeriados();
+    this.ObtenerEmpleados(this.idEmpleado);
   }
 
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
+  }
   // Lectura de datos
   ObtenerFeriados() {
     this.feriados = [];
@@ -183,6 +198,37 @@ export class ListarFeriadosComponent implements OnInit {
     sessionStorage.setItem('Feriados', this.feriados);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { color: 'blue', text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha, 
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'FERIADOS',
@@ -315,7 +361,7 @@ export class ListarFeriadosComponent implements OnInit {
     var datosFeriado = [{
       fecha: 'Eliminar esta Fila: 23/02/2020 (Nota: formato de celda tipo Text)',
       descripcion: 'Carnaval',
-      fec_recuperacion: '25/05/2020 (Nota: formato de celda tipo Text) Escribir en caso de exitir recuperacion' 
+      fec_recuperacion: '25/05/2020 (Nota: formato de celda tipo Text) Escribir en caso de exitir recuperacion'
     }];
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();

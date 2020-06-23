@@ -60,6 +60,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   estadoF = new FormControl('');
   legalizarF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
+  archivoForm = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -533,21 +534,26 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   idPermisoRes: any;
   GuardarDatos(datos) {
-    this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Permiso registrado');
-      this.LimpiarCampos();
-      this.idPermisoRes = res;
-      console.log(this.idPermisoRes.id);
-      this.SubirRespaldo(this.idPermisoRes.id)
-      this.ImprimirNumeroPermiso();
-      let notificacion = { 
-        titulo: 'Solicitud enviada', 
-        mensaje: 'enviar una solicitud', 
-        photo: 'photo 1', 
-        url: 'url 1', 
-      }
-      this.restP.getDocument(notificacion);
-    });
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
+        this.toastr.success('Operación Exitosa', 'Permiso registrado');
+        this.LimpiarCampos();
+        this.idPermisoRes = res;
+        console.log(this.idPermisoRes.id);
+        this.SubirRespaldo(this.idPermisoRes.id)
+        this.ImprimirNumeroPermiso();
+        let notificacion = {
+          titulo: 'Solicitud enviada',
+          mensaje: 'enviar una solicitud',
+          photo: 'photo 1',
+          url: 'url 1',
+        }
+        this.restP.getDocument(notificacion);
+      });
+    }
+    else {
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+    }
   }
 
   LimpiarCampos() {
@@ -562,6 +568,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.PermisoForm.patchValue({
       fechaFinalForm: '',
       diaLibreForm: '',
+    });
+  }
+
+  LimpiarNombreArchivo() {
+    this.PermisoForm.patchValue({
+      nombreCertificadoForm: '',
     });
   }
 
@@ -584,19 +596,22 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
    * 
    */
 
-  archivoForm = new FormControl('');
+
   nameFile: string;
   archivoSubido: Array<File>;
 
   fileChange(element) {
     this.archivoSubido = element.target.files;
-    const name = this.archivoSubido[0].name;
-    console.log(this.archivoSubido[0].name);
-    this.PermisoForm.patchValue({ nombreCertificadoForm: name });
+    if (this.archivoSubido.length != 0) {
+      const name = this.archivoSubido[0].name;
+      console.log(this.archivoSubido[0].name);
+      this.PermisoForm.patchValue({ nombreCertificadoForm: name });
+    }
   }
 
   SubirRespaldo(id: number) {
     let formData = new FormData();
+    console.log("tamaño", this.archivoSubido[0].size);
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }

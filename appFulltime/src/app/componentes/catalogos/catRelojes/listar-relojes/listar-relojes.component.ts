@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
 import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -31,6 +32,9 @@ export class ListarRelojesComponent implements OnInit {
   filtroSucursalReloj = '';
   filtroDepartamentoReloj = '';
   relojes: any = [];
+
+  empleado: any = [];
+  idEmpleado: number;
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.minLength(2)]);
@@ -57,13 +61,26 @@ export class ListarRelojesComponent implements OnInit {
 
   constructor(
     private rest: RelojesService,
+    public restE: EmpleadoService,
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerReloj();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -181,6 +198,38 @@ export class ListarRelojesComponent implements OnInit {
     sessionStorage.setItem('Dispositivos', this.relojes);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha,
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Dispositivos ',
@@ -336,9 +385,9 @@ export class ListarRelojesComponent implements OnInit {
     });
   }
 
-    /* ***************************************************************************************************** 
-   *                                        PLANTILLA VACIA DE DISPOSITIVOS
-   * *****************************************************************************************************/
+  /* ***************************************************************************************************** 
+ *                                        PLANTILLA VACIA DE DISPOSITIVOS
+ * *****************************************************************************************************/
   DescargarPlantillaRelojes() {
     var datosReloj = [{
       nombre: 'Eliminar esta Fila: Reloj1',

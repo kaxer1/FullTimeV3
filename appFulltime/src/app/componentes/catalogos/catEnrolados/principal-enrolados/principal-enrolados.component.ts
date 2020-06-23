@@ -16,7 +16,7 @@ import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.compone
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 interface buscarActivo {
   value: boolean;
@@ -50,6 +50,9 @@ export class PrincipalEnroladosComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   activoBus: buscarActivo[] = [
     { value: true, viewValue: 'Activados' },
     { value: false, viewValue: 'Desactivados' }
@@ -57,13 +60,26 @@ export class PrincipalEnroladosComponent implements OnInit {
 
   constructor(
     private rest: EnroladoService,
+    public restE: EmpleadoService,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
     private router: Router,
-  ) { }
+  ) { 
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.getEnrolados();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -204,9 +220,9 @@ export class PrincipalEnroladosComponent implements OnInit {
     });
   }
 
-   /****************************************************************************************************** 
-   *                                         MÉTODO PARA EXPORTAR A PDF
-   ******************************************************************************************************/
+  /****************************************************************************************************** 
+  *                                         MÉTODO PARA EXPORTAR A PDF
+  ******************************************************************************************************/
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
 
@@ -224,6 +240,38 @@ export class PrincipalEnroladosComponent implements OnInit {
     sessionStorage.setItem('Enrolados', this.enrolados);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha,
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Usuarios Enrolados',
@@ -278,7 +326,7 @@ export class PrincipalEnroladosComponent implements OnInit {
                 { text: 'Id', style: 'tableHeader' },
                 { text: 'Nombre', style: 'tableHeader' },
                 { text: 'Código', style: 'tableHeader' },
-               // { text: 'Contraseña', style: 'tableHeader' },
+                // { text: 'Contraseña', style: 'tableHeader' },
                 { text: 'Activo', style: 'tableHeader' },
                 { text: 'Finger', style: 'tableHeader' },
                 { text: 'Data Finger', style: 'tableHeader' }
@@ -323,9 +371,9 @@ export class PrincipalEnroladosComponent implements OnInit {
     FileSaver.saveAs(data, "DepartamentosCSV" + new Date().getTime() + '.csv');
   }
 
-/* ****************************************************************************************************
- *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
- * ****************************************************************************************************/
+  /* ****************************************************************************************************
+   *                                 PARA LA EXPORTACIÓN DE ARCHIVOS XML
+   * ****************************************************************************************************/
 
   urlxml: string;
   data: any = [];
@@ -338,7 +386,7 @@ export class PrincipalEnroladosComponent implements OnInit {
           '@id': obj.id,
           "nombre": obj.nombre,
           "codigo": obj.codigo,
-         // "contrasenia": obj.contrasenia,
+          // "contrasenia": obj.contrasenia,
           "activo": obj.activo,
           "finger": obj.finger,
           "data_finger": obj.data_finger,
@@ -359,10 +407,10 @@ export class PrincipalEnroladosComponent implements OnInit {
    *                               PLANTILLA VACIA DE ENROLADOS
    * *****************************************************************************************************/
   DescargarPlantillasEnrolados() {
-    var datosEnrolados= [{
+    var datosEnrolados = [{
       id_usuario: 'Eliminar esta Fila: nombre de usuario: jenny',
       nombre: 'jenny',
-      contrasenia: '12546 Nota: Esta celda debe tener formato text' ,
+      contrasenia: '12546 Nota: Esta celda debe tener formato text',
       activo: 'true o false',
       finger: 5,
       data_finger: '125dcse2225',

@@ -15,7 +15,7 @@ import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.c
 import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-principal-proceso',
@@ -37,12 +37,18 @@ export class PrincipalProcesoComponent implements OnInit {
   filtroNivel: number;
   filtroProPadre = '';
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: ProcesoService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
     private router: Router,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -51,6 +57,16 @@ export class PrincipalProcesoComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProcesos();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -177,6 +193,38 @@ export class PrincipalProcesoComponent implements OnInit {
     sessionStorage.setItem('Procesos', this.procesos);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha,
+            {
+              text: [
+                {
+                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Procesos',
