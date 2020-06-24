@@ -106,7 +106,7 @@ class PermisosControlador {
                     }));
                 }
             });
-            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, titulo });
+            res.jsonp({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, titulo });
         });
     }
     ObtenerNumPermiso(req, res) {

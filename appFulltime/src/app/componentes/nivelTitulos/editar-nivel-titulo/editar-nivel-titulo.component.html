@@ -4,6 +4,10 @@
 </div>
 <form [formGroup]="nuevoNivelTituloForm">
     <div class="container" style="text-align: center;">
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
+        </div>
         <mat-form-field>
             <mat-label>Nuevo Nivel de Título</mat-label>
             <input matInput placeholder="Ej: Ingenieria en Software" [formControl]="nombre"

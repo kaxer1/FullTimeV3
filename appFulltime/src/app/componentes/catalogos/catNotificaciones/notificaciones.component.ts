@@ -201,10 +201,10 @@ export class NotificacionesComponent implements OnInit {
   }
 
   AbrirNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(NotiAutorizacionesComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(NotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
   }
   
   AbrirListaNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '500px', data: datosSeleccionados }).disableClose = true;
   }
 }

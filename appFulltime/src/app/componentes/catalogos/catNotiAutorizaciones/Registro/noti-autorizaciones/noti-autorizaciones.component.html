@@ -2,10 +2,14 @@
 <div class="tituloNotifica">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Notificación Autorización</span>
 </div>
-<br>
 <!-- Formulario Completo -->
 <div class="container" style="text-align: center;">
     <form [formGroup]="nuevaNoti_AutorizacionesForm">
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
+        </div>
+        <br>
         <mat-form-field>
             <mat-label>Notificación*</mat-label>
             <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
@@ -46,6 +50,7 @@
         </mat-form-field>
     </form>
 </div>
+<br>
 <div style="text-align: center;">
     <input type="submit" class="btn btn-sm"
         (click)="insertarNotiAutorizacion(nuevaNoti_AutorizacionesForm.value)"

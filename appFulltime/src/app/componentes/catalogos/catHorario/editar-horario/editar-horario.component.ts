@@ -1,4 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -32,21 +33,24 @@ export class EditarHorarioComponent implements OnInit {
     nombreCertificadoForm: this.nombreCertificadoF
   });
 
+  contador: number = 0;
+
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
+    public router: Router,
     public dialogRef: MatDialogRef<EditarHorarioComponent>,
-    @Inject(MAT_DIALOG_DATA) public horario: any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.nuevoHorarioForm.patchValue({
-      horarioNombreForm: this.horario.nombre,
-      horarioMinAlmuerzoForm: this.horario.min_almuerzo,
-      horarioHoraTrabajoForm: this.horario.hora_trabajo,
-      horarioFlexibleForm: this.horario.flexible,
-      horarioPorHorasForm: this.horario.por_horas,
-      nombreCertificadoForm: this.horario.doc_nombre,
+      horarioNombreForm: this.data.horario.nombre,
+      horarioMinAlmuerzoForm: this.data.horario.min_almuerzo,
+      horarioHoraTrabajoForm: this.data.horario.hora_trabajo,
+      horarioFlexibleForm: this.data.horario.flexible,
+      horarioPorHorasForm: this.data.horario.por_horas,
+      nombreCertificadoForm: this.data.horario.doc_nombre,
     })
   }
 
@@ -56,19 +60,61 @@ export class EditarHorarioComponent implements OnInit {
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
       flexible: form.horarioFlexibleForm,
-      por_horas: form.horarioPorHorasForm
+      por_horas: form.horarioPorHorasForm,
+      doc_nombre: form.nombreCertificadoForm
     };
     if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
     }
+    if (form.nombreCertificadoForm === '') {
+      dataHorario.doc_nombre = null;
+      this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
+        this.ModificarDocumento();
+        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.SalirActualizar();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+      });
+    }
+    else {
+      if (this.contador === 0) {
+        this.GuardarDatos(dataHorario);
+      }
+      else {
+        this.ActualizarDatos(dataHorario);
+      }
+    }
+  }
 
-    this.rest.putHorarioRest(this.horario.id, dataHorario).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario registrado');
-      this.LimpiarCampos();
-      this.dialogRef.close();
-      window.location.reload();
+  ActualizarDatos(datos) {
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.SubirRespaldo(this.data.horario.id);
+        this.SalirActualizar();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+      });
+    }
+    else {
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+    }
+  }
+
+  ModificarDocumento() {
+    let datoDocumento = {
+      documento: null
+    }
+    this.rest.EditarDocumento(this.data.horario.id, datoDocumento).subscribe(response => {
+    }, error => { });
+  }
+
+  GuardarDatos(datos) {
+    this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Horario actualizado');
+      this.SalirActualizar();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+      this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
     });
   }
 
@@ -132,6 +178,7 @@ export class EditarHorarioComponent implements OnInit {
   archivoSubido: Array<File>;
 
   fileChange(element) {
+    this.contador = 1;
     this.archivoSubido = element.target.files;
     if (this.archivoSubido.length != 0) {
       const name = this.archivoSubido[0].name;
@@ -140,8 +187,32 @@ export class EditarHorarioComponent implements OnInit {
     }
   }
 
+  SubirRespaldo(id: number) {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
+  }
+
   CerrarVentanaEditarHorario() {
     this.dialogRef.close();
+  }
+
+  SalirActualizar() {
+    this.LimpiarCampos();
+    if (this.data.actualizar === true) {
+      this.dialogRef.close();
+      window.location.reload();
+    }
+    else {
+      this.dialogRef.close();
+      this.router.navigate(['/verHorario/', this.data.horario.id]);
+    }
   }
 
 }

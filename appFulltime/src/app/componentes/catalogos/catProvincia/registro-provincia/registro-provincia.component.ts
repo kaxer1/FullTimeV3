@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -14,7 +14,6 @@ interface opcionesPais {
   selector: 'app-registro-provincia',
   templateUrl: './registro-provincia.component.html',
   styleUrls: ['./registro-provincia.component.css'],
-  encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroProvinciaComponent implements OnInit {

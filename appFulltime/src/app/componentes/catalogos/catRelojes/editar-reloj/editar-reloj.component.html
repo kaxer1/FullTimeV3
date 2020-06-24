@@ -2,11 +2,14 @@
 <div class="barraTituloRelojR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Datos del Dispositivo</span>
 </div>
-<br>
 <!-- Formulario Completo -->
 <form [formGroup]="RelojesForm">
     <mat-card-content>
         <div class="container" style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col">
                     <mat-form-field>
@@ -54,9 +57,9 @@
                                 <div class="row">
                                     <div class="col-sm">
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
-                                        [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
+                                            [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
                                         <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
-                                        [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
+                                            [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
                                     </div>
                                 </div>
                             </div>

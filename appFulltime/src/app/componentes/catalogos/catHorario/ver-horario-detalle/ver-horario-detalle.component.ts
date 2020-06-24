@@ -6,7 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
-//import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
+import { EditarHorarioComponent } from 'src/app/componentes/catalogos/catHorario/editar-horario/editar-horario.component';
 
 
 @Component({
@@ -82,8 +82,7 @@ export class VerHorarioDetalleComponent implements OnInit {
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    /*this.vistaRegistrarDatos.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true} }).disableClose = true;
-    console.log(datosSeleccionados.fecha);*/
+    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true} }).disableClose = true; 
   }
 
 }

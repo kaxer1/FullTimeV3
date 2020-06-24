@@ -139,7 +139,7 @@ export class ListaSucursalesComponent implements OnInit {
     sessionStorage.setItem('Sucursales', this.sucursales);
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.095, bold: true, italics: false },
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {

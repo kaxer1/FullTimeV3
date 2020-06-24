@@ -7,7 +7,7 @@ const express_1 = require("express");
 const catHorarioControlador_1 = __importDefault(require("../../controlador/catalogos/catHorarioControlador"));
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
-    uploadDir: './plantillas',
+    uploadDir: './docRespaldosHorarios',
 });
 class HorarioRutas {
     constructor() {
@@ -23,6 +23,9 @@ class HorarioRutas {
         this.router.put('/editar/:id', catHorarioControlador_1.default.EditarHorario);
         this.router.post('/xmlDownload/', catHorarioControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catHorarioControlador_1.default.downloadXML);
+        this.router.get('/documentos/:docs', catHorarioControlador_1.default.ObtenerDocumento);
+        this.router.put('/:id/documento', multipartMiddleware, catHorarioControlador_1.default.GuardarDocumentoHorario);
+        this.router.put('/editar/editarDocumento/:id', catHorarioControlador_1.default.EditarDocumento);
     }
 }
 const HORARIO_RUTAS = new HorarioRutas();

@@ -2,11 +2,14 @@
 <div class="autorizarDepa">
     <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Autoridades Departamentos</h5>
 </div>
-<br>
 <!-- Formulario Completo -->
 <form [formGroup]="autorizarDepaForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>

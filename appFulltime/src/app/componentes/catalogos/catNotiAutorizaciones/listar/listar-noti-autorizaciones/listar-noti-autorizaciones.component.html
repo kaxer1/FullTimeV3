@@ -2,7 +2,6 @@
 <div class="tituloNotifica">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Autorización Asignada</span>
 </div>
-<br>
 <div class="container" style="padding-top: 15px;" *ngFor="let n of noti_autorizacion">
     <div class="row">
         <div class="col">
@@ -29,6 +28,7 @@
         </div>
     </div>
 </div>
+<br>
 <div style="text-align: center;">
     <input type="submit" (click)="dialogRef.close()" class="btn btn-sm" value="Salir"
         style="margin-left: 15px;">

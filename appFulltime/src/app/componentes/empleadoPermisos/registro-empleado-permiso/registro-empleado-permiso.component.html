@@ -1,13 +1,17 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="permisoEmpleado">
     <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" ngDefaultControl [(ngModel)]="num"
-    [ngModelOptions]="{standalone: true}">Solicitud de Permiso N°
+        [ngModelOptions]="{standalone: true}">Solicitud de Permiso N°
         {{num}}</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="PermisoForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px; text-align: center;">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col-sm">
                     <mat-form-field>
@@ -68,8 +72,9 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Horas y minutos de permiso</mat-label>
-                        <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)" max="7:30" 
-                            [formControl]="horasF" style="visibility:hidden" id="horas" (click)="LimpiarCamposFecha()">
+                        <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
+                            max="7:30" [formControl]="horasF" style="visibility:hidden" id="horas"
+                            (click)="LimpiarCamposFecha()">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
                             help_outline</mat-icon>
@@ -98,6 +103,7 @@
                             matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker3></mat-datepicker>
+                        <mat-error *ngIf="fechaFinalF.invalid">{{ObtenerMensajeFecha()}}</mat-error>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
@@ -138,18 +144,16 @@
                         </mat-radio-group>
                     </section>
                     <br>
-                    <div class="container">
-                        <div class="row">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
-                                <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()">Subir Certificado</label>
-                            </form>
-                        </div>
-                        <div class="row">
-                            <input type="text" placeholder="Ningún archivo seleccionado" class="form-control"
-                                style="width: 230px;" [formControl]="nombreCertificadoF">
-                        </div>
-                    </div>
+                    <section class="example-section">
+                        <form method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                            <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()">Subir
+                                Certificado *</label>
+
+                        </form>
+                        <input type="text" placeholder="Ningún archivo seleccionado" class="form-control"
+                            style="width: 230px; " [formControl]="nombreCertificadoF">
+                    </section>
                 </div>
             </div>
         </div>

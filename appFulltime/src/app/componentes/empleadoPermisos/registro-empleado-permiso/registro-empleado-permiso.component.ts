@@ -191,6 +191,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
       }, error => {
         this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR');
+        this.LimpiarCamposFecha();
       });
     }
     else {
@@ -564,7 +565,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.LimpiarCampos();
         this.idPermisoRes = res;
         console.log(this.idPermisoRes.id);
-        this.SubirRespaldo(this.idPermisoRes.id)
+        this.SubirRespaldo(this.idPermisoRes.id);
         this.ImprimirNumeroPermiso();
         var f = new Date();
         let notificacion = {
@@ -610,19 +611,11 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     //window.location.reload();
   }
 
-  ObtenerMensajeErrorDescripcion() {
-    if (this.descripcionF.hasError('pattern')) {
-      return 'Ingresar una descripción válida';
-    }
-    return this.descripcionF.hasError('required') ? 'Campo Obligatorio' : '';
-  }
 
-  /**
-   * 
-   * Subida de archivo
-   * 
+  /** *******************************************************************
+   *  SUBIR ARCHIVO
+   *  *******************************************************************
    */
-
 
   nameFile: string;
   archivoSubido: Array<File>;
@@ -649,4 +642,20 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     });
   }
 
+  /** ********************************************************************************
+   *  MENSAJES QUE INDICAN ERRORES AL INGRESAR DATOS
+   *  ********************************************************************************
+   */
+  ObtenerMensajeErrorDescripcion() {
+    if (this.descripcionF.hasError('pattern')) {
+      return 'Ingresar una descripción válida';
+    }
+    return this.descripcionF.hasError('required') ? 'Campo Obligatorio' : '';
+  }
+
+  ObtenerMensajeFecha() {
+    if (this.fechaFinalF.hasError('required')) {
+      return 'Campo Obligatorio';
+    }
+  }
 }

@@ -2,10 +2,13 @@
 <div class="tituloPlanificacionAlmuerzos">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Planificación Almuerzos</span>
 </div>
-<br>
 <form [formGroup]="PlanificacionComidasForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col">
                     <mat-form-field>

@@ -14,32 +14,40 @@ export class HorarioService {
   ) { }
 
   // Catálogo de Horarios
-  getHorariosRest(){
+  getHorariosRest() {
     return this.http.get(`${this.API_URL}/horario`);
   }
 
-  getOneHorarioRest(id:number){
+  getOneHorarioRest(id: number) {
     return this.http.get(`${this.API_URL}/horario/${id}`);
   }
-  
-  postHorarioRest(data: any){
-    return this.http.post(`${this.API_URL}/horario`, data);
-  } 
 
-  putHorarioRest(id:number, data: any){
+  postHorarioRest(data: any) {
+    return this.http.post(`${this.API_URL}/horario`, data);
+  }
+
+  putHorarioRest(id: number, data: any) {
     return this.http.put(`${this.API_URL}/horario/editar/${id}`, data);
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/horario/upload', formData)  
+    return this.http.post(this.API_URL + '/horario/upload', formData)
   }
 
   CargarHorariosDetalles(formData) {
-    return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)  
+    return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)
   }
 
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/horario/xmlDownload`, data);
+  }
+
+  SubirArchivoRespaldo(formData, id: number) {
+    return this.http.put(`${this.API_URL}/horario/${id}/documento`, formData)
+  }
+
+  EditarDocumento(id: number, data: any) {
+    return this.http.put(`${this.API_URL}/horario/editar/editarDocumento/${id}`, data);
   }
 
 }

@@ -121,10 +121,11 @@
                     <td *ngIf="horario.flexible == false">No</td>
                     <td *ngIf="horario.por_horas == true">Sí</td>
                     <td *ngIf="horario.por_horas == false">No</td>
-                    <td> <a class="fas fa-file-alt"
+                    <td *ngIf="horario.doc_nombre == null"></td>
+                    <td *ngIf="horario.doc_nombre != null"> <a class="fas fa-file-alt"
                             style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
                             matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                            href="http://localhost:3000/horario/documentos/{{horario.documento}}">
+                            href="http://localhost:3000/horario/documentos/{{horario.documento}}" target="_blank">
                             <p>{{horario.doc_nombre}}</p>
                         </a></td>
                     <td>
