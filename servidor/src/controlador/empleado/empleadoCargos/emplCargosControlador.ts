@@ -8,7 +8,7 @@ class EmpleadoCargosControlador {
   }
 
   public async ListarCargoEmpleado(req: Request, res: Response) {
-    const empleadoCargos = await pool.query('SELECT ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM empl_cargos AS ecr, empl_contratos AS ecn, empleados AS e WHERE ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY cargo ASC');
+    const empleadoCargos = await pool.query('SELECT cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY nombre ASC');
     res.jsonp(empleadoCargos.rows);
   }
 

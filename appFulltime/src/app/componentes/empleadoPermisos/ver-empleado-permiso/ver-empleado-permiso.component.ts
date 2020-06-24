@@ -26,6 +26,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   departamento: string = '';
   estado: string = '';
 
+  HabilitarAutorizacion: boolean = true;
+
   estados: Estado[] = [
     { id: 1, nombre: 'Pendiente'},
     { id: 2, nombre: 'Pre-autorizado'},
@@ -56,7 +58,9 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           }
         })
         this.restD.EncontrarUnDepartamento(this.autorizacion[0].id_departamento);
-      })
+      }, error => {
+        this.HabilitarAutorizacion = false;
+      });
     })
   }
 

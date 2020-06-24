@@ -6,7 +6,7 @@
                     <div class="container">
                         <div class="row" style="text-align: center;">
                             <div class="col">
-                                <h5>Informacion del permiso</h5>
+                                <h5>Información del permiso</h5>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                         
                         <div class="row" style="margin-top: 5px;">
                             <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
-                                <i id="iconos" class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
+                                <i id="iconos"  *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
                                     matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
                                     <p>Autorización</p>
                                 </i>

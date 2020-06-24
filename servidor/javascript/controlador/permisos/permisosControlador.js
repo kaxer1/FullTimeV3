@@ -67,9 +67,9 @@ class PermisosControlador {
             yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre]);
             const ultimo = yield database_1.default.query('SELECT id FROM permisos WHERE fec_creacion = $1 AND  id_tipo_permiso = $2 AND id_empl_contrato = $3', [fec_creacion, id_tipo_permiso, id_empl_contrato]);
             const JefesDepartamentos = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s ,empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id');
-            const correoInfoPidePermiso = yield database_1.default.query('SELECT distinct e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato', [id_empl_contrato]);
-            const email = 'kevincuray41@gmail.com';
-            const pass = '2134Lamboclak';
+            const correoInfoPidePermiso = yield database_1.default.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [id_empl_contrato]);
+            const email = process.env.EMAIL;
+            const pass = process.env.PASSWORD;
             let smtpTransport = nodemailer.createTransport({
                 service: 'Gmail',
                 auth: {
@@ -77,9 +77,15 @@ class PermisosControlador {
                     pass: pass
                 }
             });
+            let id_departamento_autoriza;
+            let id_empleado_autoriza;
+            let titulo = estado;
             JefesDepartamentos.rows.forEach(obj => {
                 if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal) {
                     var url = 'http://localhost:4200/ver-permiso';
+                    console.log(obj);
+                    id_departamento_autoriza = obj.id_dep;
+                    id_empleado_autoriza = obj.empleado;
                     let data = {
                         to: obj.correo,
                         from: email,
@@ -100,7 +106,7 @@ class PermisosControlador {
                     }));
                 }
             });
-            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id });
+            res.json({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, titulo });
         });
     }
     ObtenerNumPermiso(req, res) {

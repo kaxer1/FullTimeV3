@@ -93,6 +93,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.datoEmpleado);
     var f = new Date();
+
     if (f.getMonth() < 10 && f.getDate() < 10) {
       this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
     } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
@@ -172,6 +173,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.dSalida = event.value;
     console.log('fecha Salida', moment(this.dSalida));
     console.log(event);
+
   }
 
   dIngreso: any;
@@ -564,13 +566,16 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         console.log(this.idPermisoRes.id);
         this.SubirRespaldo(this.idPermisoRes.id)
         this.ImprimirNumeroPermiso();
+        var f = new Date();
         let notificacion = {
-          titulo: 'Solicitud enviada',
-          mensaje: 'enviar una solicitud',
-          photo: 'photo 1',
-          url: 'url 1',
+          id_empleado_send: this.datoEmpleado.idEmpleado,
+          id_empleado_recive: this.idPermisoRes.id_empleado_autoriza,
+          id_departamento_recive: this.idPermisoRes.id_departamento_autoriza,
+          titulo: this.idPermisoRes.titulo,
+          create_at: this.FechaActual + ' ' + f.toLocaleTimeString(),
+          id_permiso: this.idPermisoRes.id
         }
-        this.restP.getDocument(notificacion);
+        this.restP.setDocument(notificacion);
       });
     }
     else {

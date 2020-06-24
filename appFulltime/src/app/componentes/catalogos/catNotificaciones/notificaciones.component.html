@@ -29,8 +29,21 @@
                                     matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                                     help_outline</mat-icon>
                                 <mat-select [formControl]="nivel">
-                                    <mat-option *ngFor="let n of niveles" [value]="n.valor" (click)="ActivarFormDepa()">
+                                    <mat-option *ngFor="let n of niveles" [value]="n.valor" (click)="ActivarFormSucursal()">
                                         {{n.valor}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field *ngIf="HabilitarS">
+                                <mat-label>Sucursales *</mat-label>
+                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="notifica-tooltip"
+                                    matTooltip="Seleccionar la sucursal a la que se quiere registrar las notificaciones">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="sucursal">
+                                    <mat-option *ngFor="let s of sucu_res" [value]="s.id" (click)="ActivarFormDepa(s.id)">
+                                        {{s.nombre}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

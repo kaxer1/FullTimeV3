@@ -45,7 +45,9 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
 
   ActualizarEstadoAutorizacion(form){
     let newAutorizaciones = {
-      estado: form.estadoF, 
+      estado: form.estadoF,
+      id_permiso: this.data.id_documento, 
+      id_departamento: this.data.id_departamento
     }
 
     this.restA.ActualizarEstadoAutorizacion(this.data.id, newAutorizaciones).subscribe(res => {

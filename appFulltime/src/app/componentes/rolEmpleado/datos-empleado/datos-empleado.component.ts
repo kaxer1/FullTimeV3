@@ -441,14 +441,14 @@ export class DatosEmpleadoComponent implements OnInit {
   AbrirVentanaPermiso(): void {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id)
+      console.log("Ultimo idContrato ", this.idContrato[this.idContrato.length - 1].id)
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id)
         this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
           {
             width: '1200px',
-            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].id, idPerVacacion: this.idPerVacacion[0].id }
+            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[this.idContrato.length - 1].id, idPerVacacion: this.idPerVacacion[0].id }
           }).afterClosed().subscribe(item => {
             this.obtenerPermisos(parseInt(this.idEmpleado));
           });
