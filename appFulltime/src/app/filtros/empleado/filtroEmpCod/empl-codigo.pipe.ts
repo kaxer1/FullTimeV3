@@ -6,14 +6,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class EmplCodigoPipe implements PipeTransform {
 
   transform(value: any, arg: any): any {
-    if (arg === '' || arg === undefined || arg.length < 1) return value;
-    const RESULTADO_BUSQUEDAS = [];
-    for (const resultados of value) {
-      if (resultados.id && resultados.id == arg) {
-        RESULTADO_BUSQUEDAS.push(resultados);
-      }
+    if (arg === undefined || arg === null || arg.length < 2) return value;
+
+    const resultadoEmpleado = [];
+
+    for (const empleado of value) {
+      if (empleado.codigo && empleado.codigo.toLowerCase().indexOf(arg.toLowerCase()) > -1) {
+        resultadoEmpleado.push(empleado);
+      };
     };
-    return RESULTADO_BUSQUEDAS;
+    return resultadoEmpleado;
   }
 
 }

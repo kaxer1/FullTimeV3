@@ -44,6 +44,18 @@ class VacacionesControlador {
             }
         });
     }
+    ObtenerFechasFeriado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { fechaSalida, fechaIngreso } = req.body;
+            const FECHAS = yield database_1.default.query('SELECT fecha FROM cg_feriados WHERE fecha BETWEEN $1 AND $2 ORDER BY fecha ASC', [fechaSalida, fechaIngreso]);
+            if (FECHAS.rowCount > 0) {
+                return res.jsonp(FECHAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.VACACIONES_CONTROLADOR = new VacacionesControlador();
 exports.default = exports.VACACIONES_CONTROLADOR;

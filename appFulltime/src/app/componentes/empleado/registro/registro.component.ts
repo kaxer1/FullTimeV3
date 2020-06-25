@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder, FormControl } from '@angular/forms';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr'
 import { Router } from '@angular/router';
@@ -181,32 +181,35 @@ export class RegistroComponent implements OnInit {
 
     console.log(dataEmpleado);
     this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-      this.empleadoGuardado = response;
-
-      //Cifrado de contraseña
-      const md5 = new Md5();
-      let clave = md5.appendStr(form3.passForm).end();
-      console.log("pass", clave);
-
-      let dataUser = {
-        usuario: form3.userForm,
-        contrasena: clave,
-        estado: true,
-        id_rol: form3.rolForm,
-        id_empleado: this.empleadoGuardado.id,
-        app_habilita: true
+      if (response.message === 'error') {
+        this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
       }
+      else {
+        this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+        this.empleadoGuardado = response;
+        //Cifrado de contraseña
+        const md5 = new Md5();
+        let clave = md5.appendStr(form3.passForm).end();
+        console.log("pass", clave);
 
-      this.user.postUsuarioRest(dataUser).subscribe(data => {
-        this.agregarDiscapacidad(this.empleadoGuardado.id);
-      });
+        let dataUser = {
+          usuario: form3.userForm,
+          contrasena: clave,
+          estado: true,
+          id_rol: form3.rolForm,
+          id_empleado: this.empleadoGuardado.id,
+          app_habilita: true
+        }
+
+        this.user.postUsuarioRest(dataUser).subscribe(data => {
+          this.agregarDiscapacidad(this.empleadoGuardado.id);
+        });
+        this.limpliarCampos();
+      }
     },
       error => {
         console.log(error);
       });
-
-    this.limpliarCampos();
   }
 
   agregarDiscapacidad(id: string) {

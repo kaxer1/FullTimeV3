@@ -7,6 +7,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as moment from 'moment'
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-registrar-vacaciones',
@@ -34,6 +35,7 @@ export class RegistrarVacacionesComponent implements OnInit {
   legalizadoF = new FormControl('', [Validators.required]);
   calcularF = new FormControl('');
   totalF = new FormControl('');
+  diasTF = new FormControl('');
 
   public VacacionesForm = new FormGroup({
     fecInicioForm: this.fechaInicio,
@@ -45,7 +47,8 @@ export class RegistrarVacacionesComponent implements OnInit {
     estadoForm: this.estadoF,
     legalizadoForm: this.legalizadoF,
     calcularForm: this.calcularF,
-    totalForm: this.totalF
+    totalForm: this.totalF,
+    diasTForm: this.diasTF
   });
 
   constructor(
@@ -63,15 +66,68 @@ export class RegistrarVacacionesComponent implements OnInit {
     });
   }
 
-  ContarDiasHabiles(dateFrom, dateTo) {
-    var from = moment(dateFrom, 'DD/MM/YYY'),
-      to = moment(dateTo, 'DD/MM/YYY'),
-      days = 0,
-      sa = 0;
+  fechasTotales: any = [];
+  VerificarFeriado(form): any {
+    var diasFeriado = 0;
+    var diasL = 0;
+    let dataFechas = {
+      fechaSalida: form.fecInicioForm,
+      fechaIngreso: form.fecFinalForm
+    }
+    this.restV.BuscarFechasFeriado(dataFechas).subscribe(data => {
+      this.fechasTotales = [];
+      this.fechasTotales = data;
+      console.log('fechas feriados', this.fechasTotales);
+      var totalF = this.fechasTotales.length;
+      console.log('total de fechas', totalF);
+
+      for (let i = 0; i <= this.fechasTotales.length - 1; i++) {
+        let fechaF = this.fechasTotales[i].fecha.split('T')[0];
+        let diasF = this.ContarDiasHabiles(fechaF, fechaF);
+        console.log('total de fechas', diasF);
+        if (diasF != 0) {
+         diasFeriado = diasFeriado + 1;
+        }
+        else {
+          diasL = diasL + 1;
+        }
+      }
+
+      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+
+      var totalH = habil - diasFeriado;
+      var totalL = libre - diasL;
+      const totalDias = totalH + totalL + totalF;
+
+      this.VacacionesForm.patchValue({
+        diaLibreForm: totalL,
+        dialaborableForm: totalH,
+        totalForm: totalDias,
+        diasTForm: totalF
+      });
+
+    }, error => {
+      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      const totalDias = habil + libre;
+      this.VacacionesForm.patchValue({
+        diaLibreForm: libre,
+        dialaborableForm: habil,
+        totalForm: totalDias
+      });
+    })
+  }
+
+  ContarDiasHabiles(dateFrom, dateTo): any {
+    var from = moment(dateFrom),
+      to = moment(dateTo),
+      days = 0;
+    console.log('visualizar', from);
     while (!from.isAfter(to)) {
       /** Si no es sabado ni domingo */
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
-        days++;
+        days++;;
       }
       from.add(1, 'days');
     }
@@ -105,14 +161,7 @@ export class RegistrarVacacionesComponent implements OnInit {
     else {
       if ((<HTMLInputElement>document.getElementById('activo')).checked) {
         if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
-          var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
-          var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
-          const totalDias = habil + libre;
-          this.VacacionesForm.patchValue({
-            diaLibreForm: libre,
-            dialaborableForm: habil,
-            totalForm: totalDias
-          });
+          this.VerificarFeriado(form);
         }
         else {
           this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
@@ -153,12 +202,12 @@ export class RegistrarVacacionesComponent implements OnInit {
     if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
       const ingreso = moment(form.fechaIngresoForm).diff(moment(form.fecFinalForm), 'days');
       console.log(ingreso);
-      if(ingreso  <= 1 ){
+      if (ingreso <= 1) {
         this.InsertarVacaciones(form);
       }
       else {
         this.toastr.info('La fecha de ingreso a laborar no es la adecuada')
-      }   
+      }
     }
     else {
       this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');

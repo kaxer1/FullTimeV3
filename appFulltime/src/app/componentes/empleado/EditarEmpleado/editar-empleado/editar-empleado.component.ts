@@ -33,7 +33,7 @@ export class EditarEmpleadoComponent implements OnInit {
   NacionalidadControl = new FormControl('', Validators.required);
   filteredOptions: Observable<string[]>;
   idEmpleado: string;
-  
+
   constructor(
     private rest: EmpleadoService,
     private toastr: ToastrService,
@@ -129,13 +129,13 @@ export class EditarEmpleadoComponent implements OnInit {
     let nombres = form1.nombreForm.split(' ');
     let NombreCapitalizado = '';
     let ApellidoCapitalizado = '';
-    if ( nombres[1] == undefined){
-      this.toastr.error('por favor escribir los dos nombres','Falta segundo nombre del empleado');
+    if (nombres[1] == undefined) {
+      this.toastr.error('por favor escribir los dos nombres', 'Falta segundo nombre del empleado');
     } else {
       let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
       let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
       NombreCapitalizado = name1 + ' ' + name2;
-  
+
       let apellidos = form1.apellidoForm.split(' ');
       let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
       let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
@@ -156,11 +156,18 @@ export class EditarEmpleadoComponent implements OnInit {
         id_nacionalidad: this.idNacionalidad,
         codigo: form1.codigoForm
       };
-  
       console.log(dataEmpleado);
       this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
-        this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
-      },error => {console.log(error);});
+        console.log('verificar', response.message)
+        if (response.message === 'error') {
+          this.toastr.error('Se le recuerda que el código del empleado debe ser único', 'Verificar un dato Incorrecto');
+        }
+        else {
+          this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
+          this.guardar();
+          this.cancelar();
+        }
+      }, error => { console.log(error); });
     }
   }
 
@@ -205,8 +212,8 @@ export class EditarEmpleadoComponent implements OnInit {
     });
   }
 
-  guardar(){this.verEmpleado.verEmpleado(this.idEmpleado);}
+  guardar() { this.verEmpleado.verEmpleado(this.idEmpleado); }
 
-  cancelar(){this.verEmpleado.verRegistroEdicion(true);}
+  cancelar() { this.verEmpleado.verRegistroEdicion(true); }
 
 }

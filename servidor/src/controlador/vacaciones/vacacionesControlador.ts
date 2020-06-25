@@ -30,6 +30,17 @@ class VacacionesControlador {
     }
   }
 
+  public async ObtenerFechasFeriado(req: Request, res: Response): Promise<any> {
+    const { fechaSalida, fechaIngreso } = req.body;
+    const FECHAS = await pool.query('SELECT fecha FROM cg_feriados WHERE fecha BETWEEN $1 AND $2 ORDER BY fecha ASC', [fechaSalida, fechaIngreso]);
+    if (FECHAS.rowCount > 0) {
+      return res.jsonp(FECHAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registros no encontrados' });
+    }
+  }
+
 }
 
 export const VACACIONES_CONTROLADOR = new VacacionesControlador();

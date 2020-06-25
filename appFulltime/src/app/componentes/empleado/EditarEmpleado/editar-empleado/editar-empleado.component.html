@@ -204,7 +204,7 @@
                 <div>
                     <button mat-button matStepperPrevious class="btn">Atrás</button>
                     <button mat-button
-                        (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value); guardar(); cancelar()"
+                        (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value)"
                         type="submit" class="btn btn-primary" [disabled]="!segundoFormGroup.valid">Guardar
                     </button>
                     <button mat-button (click)="cancelar()" class="btn">Cancelar</button>
