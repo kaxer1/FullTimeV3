@@ -8,6 +8,7 @@ import {FormControl} from '@angular/forms';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { Socket } from 'ngx-socket-io';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -36,17 +37,35 @@ export class MainNavComponent implements OnInit {
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
 
+  id_empleado_logueado: number;
+  noti_real_time: any = [];
+  num_noti_false: number = 0;
+  num_noti: number = 0;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
     private roter: Router,
-    private socket: Socket
+    private socket: Socket,
+    private realTime: RealTimeService
   ) {
     this.socket.on('enviar_notification', (data) => {
-      console.log(data);
-    })
+      if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
+        console.log(data);
+        this.realTime.ObtenerUnaNotificaciones(data.id).subscribe(res => {
+          this.estadoNotificacion = false;
+          if (this.noti_real_time.length < 5){
+            this.noti_real_time.unshift(res[0]);
+          } else if (this.noti_real_time.length >= 5) {
+            this.noti_real_time.unshift(res[0]);
+            this.noti_real_time.pop();
+          }
+          this.num_noti_false = this.num_noti_false + 1;
+        })
+      }
+    });
     var tituloPestania = this.location.prepareExternalUrl(this.location.path());
     tituloPestania = tituloPestania.slice(1);
     this.pestania = tituloPestania;
@@ -73,12 +92,43 @@ export class MainNavComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
+    this.id_empleado_logueado = parseInt(localStorage.getItem('empleado')); 
+    this.LlamarNotificaicones(this.id_empleado_logueado);    
+  }
+
+  LlamarNotificaicones(id: number) {
+    this.realTime.ObtenerNotificacionesReceives(id).subscribe(res => {
+      this.noti_real_time = res;
+      console.log(this.noti_real_time);
+      if (this.noti_real_time.length > 0) {
+        this.noti_real_time.forEach(obj => {
+          if(obj.visto === false) {
+            this.num_noti_false = this.num_noti_false + 1;
+            this.estadoNotificacion = false
+          }
+        });
+      }
+
+    })
+  }
+
+  CambiarVistaNotificacion(id_realtime: number) {
+    this.realTime.PutVistaNotificacion(id_realtime).subscribe(res => {
+      console.log(res);
+    });
   }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
-
     return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  estadoNotificacion: boolean = true;
+  numeroNotificacion() {
+    if (this.num_noti_false > 0) {
+      this.num_noti_false = 0;
+      this.estadoNotificacion = !this.estadoNotificacion;
+    }
   }
   
   infoUser(){

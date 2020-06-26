@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,14 @@ export class AutorizacionService {
   AUTORIZACIONES_URL = 'http://localhost:3000';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private socket: Socket
   ) { }
+
+  // realtime
+  sendNotiRealTimeEstado(data: any) {
+    this.socket.emit('nueva_notificacion', data);
+  }
 
   // catalogo de notificaciones
   getAutorizacionesRest(){

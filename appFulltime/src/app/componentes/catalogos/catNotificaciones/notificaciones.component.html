@@ -112,12 +112,7 @@
                     <td>{{n.nivel}}</td>
                     <td>{{n.descripcion}}</td>
                     <td>
-                        <i class="far fa-eye" style="color:rgb(9, 87, 90)" id="iprocesoL" matSuffix (click)="AbrirListaNotificacionAutorizacion(n)"
-                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                            matTooltip="Ver las autorizaciones registradas con los cargos">
-                            <p>Ver</p>
-                        </i>
-                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" id="iprocesoL" (click)="AbrirNotificacionAutorizacion(n)"
+                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231)" id="iprocesoL" (click)="AbrirNotificacionAutorizacion(n)"
                             matSuffix matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
                             matTooltip="Agrega más tipos de permisos de este departamento.">
                             <p>Agregar</p>
@@ -131,6 +126,11 @@
                             matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
                             matTooltip="Eliminar registro">
                             <p>Eliminar</p>
+                        </i>
+                        <i class="far fa-eye" style="color:rgb(9, 87, 90); margin-left: 15px;" id="iprocesoL" matSuffix (click)="AbrirListaNotificacionAutorizacion(n)"
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Ver las autorizaciones registradas con los cargos">
+                            <p>Ver</p>
                         </i>
                     </td>
                 </tr>

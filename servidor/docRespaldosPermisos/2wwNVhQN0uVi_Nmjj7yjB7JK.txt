@@ -1,4 +1,0 @@
-1. Modificar solicitud, tomar encuenta únicamente el último cargo del empleado.
-2. Seleccionar departamento de acuerdo a las Sucursales.
-3. Mostrar únicamente quien autoriza dentro del departamento seleccionado.
-4. Validar que no se duplique el registro de un usuario que autoriza, notificaciones. 

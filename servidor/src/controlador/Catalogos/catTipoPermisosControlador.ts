@@ -6,13 +6,13 @@ import pool from '../../database';
 
 class TipoPermisosControlador {
   public async list(req: Request, res: Response) {
-    const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos ORDER BY id');
+    const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos ORDER BY descripcion');
     res.jsonp(rolPermisos.rows);
   }
 
   public async listAccess(req: Request, res: Response) {
     const acce_empleado = req.params.acce_empleado;
-    const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY id', [acce_empleado]);
+    const rolPermisos = await pool.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY descripcion', [acce_empleado]);
     res.json(rolPermisos.rows);
   }
 

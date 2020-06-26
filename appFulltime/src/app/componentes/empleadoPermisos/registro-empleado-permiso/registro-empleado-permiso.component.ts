@@ -9,6 +9,7 @@ import * as moment from 'moment'
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { LoginService } from 'src/app/servicios/login/login.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 interface opcionesDiasHoras {
   valor: string;
@@ -82,6 +83,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     private restP: PermisosService,
     private toastr: ToastrService,
     private loginServise: LoginService,
+    private realTime: RealTimeService,
     public dialogRef: MatDialogRef<RegistroEmpleadoPermisoComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
   ) { }
@@ -187,6 +189,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
+      console.log(this.datosPermiso);
       if (this.datosPermiso[0].num_dia_maximo === 0) {
         (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
         (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
@@ -531,24 +534,33 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
 
   idPermisoRes: any;
+  NotifiRes: any;
   GuardarDatos(datos) {
     this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Permiso registrado');
       this.LimpiarCampos();
       this.idPermisoRes = res;
-      console.log(this.idPermisoRes.id);
+      console.log(this.idPermisoRes.estado);
       this.SubirRespaldo(this.idPermisoRes.id)
       this.ImprimirNumeroPermiso();
       var f = new Date();
       let notificacion = { 
-        id_empleado_send: this.datoEmpleado.idEmpleado,
-        id_empleado_recive: this.idPermisoRes.id_empleado_autoriza,
-        id_departamento_recive: this.idPermisoRes.id_departamento_autoriza,
-        titulo: this.idPermisoRes.titulo, 
-        create_at: this.FechaActual + ' ' + f.toLocaleTimeString(), 
+        id: null,
+        id_send_empl: this.datoEmpleado.idEmpleado,
+        id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
+        id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
+        estado: this.idPermisoRes.estado, 
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
         id_permiso: this.idPermisoRes.id
       }
-      this.restP.setDocument(notificacion);
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+        console.log(res);
+        this.NotifiRes = res;
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0) {
+          this.restP.sendNotiRealTime(notificacion);
+        }
+      })
     });
   }
 

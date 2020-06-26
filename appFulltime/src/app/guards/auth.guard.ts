@@ -37,6 +37,8 @@ export class AuthGuard implements CanActivate {
         return true;
       }
     }
+    let id_permiso_solicitado_sin_loggeo = state.url.split("/")[2]; 
+    localStorage.setItem("redireccionar",  id_permiso_solicitado_sin_loggeo)
     this.router.navigate(['/login']);
     return false;
   }

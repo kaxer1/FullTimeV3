@@ -45,6 +45,7 @@ import PERMISOS_RUTAS from './rutas/permisos/permisosRutas';
 import DETALLE_CATALOGO_HORARIO_RUTAS from './rutas/horarios/detalleCatHorario/detalleCatHorarioRutas';
 import NOTIFICACIONES_AUTORIZACIONES_RUTAS from './rutas/catalogos/catNotiAutorizacionesRutas';
 import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
+import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacionesRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -129,6 +130,7 @@ class Servidor {
         this.app.use('/nivel-titulo', NIVEL_TITULO_RUTAS);
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
+        this.app.use('/noti-real-time', NOTIFICACION_TIEMPO_REAL_RUTAS);
 
     }
 
@@ -141,10 +143,11 @@ class Servidor {
             
             socket.on("nueva_notificacion", (data: any) => {
                 let data_llega = {
-                    id_empleado_send: data.id_empleado_send,
-                    id_empleado_recive: data.id_empleado_recive,
-                    id_departamento_recive: data.id_departamento_recive,
-                    titulo: data.titulo, 
+                    id: data.id,
+                    id_send_empl: data.id_send_empl,
+                    id_receives_empl: data.id_receives_empl,
+                    id_receives_depa: data.id_receives_depa,
+                    estado: data.estado, 
                     create_at: data.create_at, 
                     id_permiso: data.id_permiso
                 }
