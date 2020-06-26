@@ -40,7 +40,7 @@ class PermisosControlador {
     ListarUnPermisoInfo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_permiso;
-            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id = $1 AND  p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC', [id]);
+            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, e.id AS id_empleado, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id = $1 AND  p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC', [id]);
             if (PERMISOS.rowCount > 0) {
                 return res.json(PERMISOS.rows);
             }
@@ -79,11 +79,11 @@ class PermisosControlador {
             });
             let id_departamento_autoriza;
             let id_empleado_autoriza;
-            let titulo = estado;
+            console.log('ESTADO DEL TITULO');
+            console.log(estado);
             JefesDepartamentos.rows.forEach(obj => {
                 if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal) {
                     var url = 'http://localhost:4200/ver-permiso';
-                    console.log(obj);
                     id_departamento_autoriza = obj.id_dep;
                     id_empleado_autoriza = obj.empleado;
                     let data = {
@@ -95,7 +95,6 @@ class PermisosControlador {
                     cédula ${correoInfoPidePermiso.rows[0].cedula} solicita autorización de permiso: </p>
                     <a href="${url}/${ultimo.rows[0].id}">Ir a verificar permisos</a>`
                     };
-                    console.log(data);
                     smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
                         if (error) {
                             console.log(error);
@@ -106,7 +105,7 @@ class PermisosControlador {
                     }));
                 }
             });
-            res.jsonp({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, titulo });
+            res.jsonp({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
         });
     }
     ObtenerNumPermiso(req, res) {

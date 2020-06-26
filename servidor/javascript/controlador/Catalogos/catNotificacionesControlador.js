@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class NotificacionesControlador {
     ListarNotificaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const NOTIFICACIONES = yield database_1.default.query('SELECT cn.tipo, cn.nivel, cn.id, cd.nombre, ctp.descripcion, cd.id AS departamento, ctp.id AS tipo_permiso FROM cg_notificaciones AS cn, cg_departamentos AS cd, cg_tipo_permisos AS ctp WHERE cn.id_departamento = cd.id AND cn.id_tipo_permiso = ctp.id AND NOT cd.nombre = \'Ninguno\' ORDER BY id ASC');
+            const NOTIFICACIONES = yield database_1.default.query('SELECT cn.tipo, cn.nivel, cn.id, cd.nombre, ctp.descripcion, cd.id AS departamento, ctp.id AS tipo_permiso FROM cg_notificaciones AS cn, cg_departamentos AS cd, cg_tipo_permisos AS ctp WHERE cn.id_departamento = cd.id AND cn.id_tipo_permiso = ctp.id AND NOT cd.nombre = \'Ninguno\' ORDER BY cd.nombre ASC');
             if (NOTIFICACIONES.rowCount > 0) {
                 return res.jsonp(NOTIFICACIONES.rows);
             }

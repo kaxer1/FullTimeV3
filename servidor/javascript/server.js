@@ -50,6 +50,7 @@ const detalleCatHorarioRutas_1 = __importDefault(require("./rutas/horarios/detal
 const catNotiAutorizacionesRutas_1 = __importDefault(require("./rutas/catalogos/catNotiAutorizacionesRutas"));
 const autorizacionesRutas_1 = __importDefault(require("./rutas/autorizaciones/autorizacionesRutas"));
 const plantillaRutas_1 = __importDefault(require("./rutas/descargarPlantilla/plantillaRutas"));
+const notificacionesRutas_1 = __importDefault(require("./rutas/notificaciones/notificacionesRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -118,6 +119,7 @@ class Servidor {
         this.app.use('/nivel-titulo', nivelTituloRutas_1.default);
         this.app.use('/noti-autorizaciones', catNotiAutorizacionesRutas_1.default);
         this.app.use('/autorizaciones', autorizacionesRutas_1.default);
+        this.app.use('/noti-real-time', notificacionesRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
     }
@@ -129,10 +131,11 @@ class Servidor {
             console.log('Connected client on port %s.', this.app.get('puerto'));
             socket.on("nueva_notificacion", (data) => {
                 let data_llega = {
-                    id_empleado_send: data.id_empleado_send,
-                    id_empleado_recive: data.id_empleado_recive,
-                    id_departamento_recive: data.id_departamento_recive,
-                    titulo: data.titulo,
+                    id: data.id,
+                    id_send_empl: data.id_send_empl,
+                    id_receives_empl: data.id_receives_empl,
+                    id_receives_depa: data.id_receives_depa,
+                    estado: data.estado,
                     create_at: data.create_at,
                     id_permiso: data.id_permiso
                 };

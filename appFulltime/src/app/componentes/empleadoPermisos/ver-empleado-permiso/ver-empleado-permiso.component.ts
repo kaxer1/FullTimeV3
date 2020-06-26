@@ -22,7 +22,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   InfoPermiso: any = [];
   autorizacion: any = [];
-
+  dep: any = [];
   departamento: string = '';
   estado: string = '';
 
@@ -47,17 +47,20 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     let id_permiso = this.router.url.split('/')[2];
     this.restP.obtenerUnPermisoEmleado(parseInt(id_permiso)).subscribe(res => {
       this.InfoPermiso = res;
-      console.log(this.InfoPermiso[0].id);
-
+      console.log(this.InfoPermiso)
       this.restA.getUnaAutorizacionPorPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
-        console.log(res1);
         this.autorizacion = res1;
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
             this.estado = obj.nombre;
           }
         })
-        this.restD.EncontrarUnDepartamento(this.autorizacion[0].id_departamento);
+        this.restD.EncontrarUnDepartamento(this.autorizacion[0].id_departamento).subscribe(res2 => {
+          this.dep.push(res2);
+          this.dep.forEach(obj => {
+            this.departamento = obj.nombre;
+          });
+        });
       }, error => {
         this.HabilitarAutorizacion = false;
       });
@@ -65,7 +68,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: {permiso: datosSeleccionados, depa: this.dep} }).disableClose = true;
   }
   
   AbrirAutorizaciones(datosSeleccionados: any): void {
@@ -73,6 +76,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirVentanaEditarAutorizacion(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: datosSeleccionados }).disableClose = true;
+    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: {auto: [datosSeleccionados], empl: this.InfoPermiso} }).disableClose = true;
   }
 }

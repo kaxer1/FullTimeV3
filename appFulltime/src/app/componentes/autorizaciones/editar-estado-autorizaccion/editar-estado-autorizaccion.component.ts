@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { AutorizacionService } from "src/app/servicios/autorizacion/autorizacion.service";
 import { ToastrService } from 'ngx-toastr';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 interface Estado {
   id: number,
@@ -32,6 +33,7 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
   constructor(
     private restA: AutorizacionService,
     private toastr: ToastrService,
+    private realTime: RealTimeService,
     public dialogRef: MatDialogRef<EditarEstadoAutorizaccionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -53,8 +55,8 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
     this.restA.ActualizarEstadoAutorizacion(this.data.id, newAutorizaciones).subscribe(res => {
       console.log(res);
       this.toastr.success('Operación exitosa','Estado Actualizado');
-      this.dialogRef.close();
-      window.location.reload();
+      // this.dialogRef.close();
+      // window.location.reload();
     })
   }
 

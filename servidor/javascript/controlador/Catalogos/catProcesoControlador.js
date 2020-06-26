@@ -18,8 +18,8 @@ const database_1 = __importDefault(require("../../database"));
 class ProcesoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const Sin_proc_padre = yield database_1.default.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL');
-            const Con_proc_padre = yield database_1.default.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id');
+            const Sin_proc_padre = yield database_1.default.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL ORDER BY cg_p.nombre ASC');
+            const Con_proc_padre = yield database_1.default.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id ORDER BY cg_p.nombre ASC');
             Sin_proc_padre.rows.forEach(obj => {
                 Con_proc_padre.rows.push(obj);
             });

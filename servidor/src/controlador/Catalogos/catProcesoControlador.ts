@@ -6,8 +6,8 @@ import pool from '../../database';
 
 class ProcesoControlador {
   public async list(req: Request, res: Response) {
-    const Sin_proc_padre = await pool.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL');
-    const Con_proc_padre = await pool.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id');
+    const Sin_proc_padre = await pool.query('SELECT * FROM cg_procesos AS cg_p WHERE cg_p.proc_padre IS NULL ORDER BY cg_p.nombre ASC');
+    const Con_proc_padre = await pool.query('SELECT cg_p.id, cg_p.nombre, cg_p.nivel, nom_p.nombre AS proc_padre FROM cg_procesos AS cg_p, NombreProcesos AS nom_p WHERE cg_p.proc_padre = nom_p.id ORDER BY cg_p.nombre ASC');
     Sin_proc_padre.rows.forEach(obj => {
       Con_proc_padre.rows.push(obj);
     })

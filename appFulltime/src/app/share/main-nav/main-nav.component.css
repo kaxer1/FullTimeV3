@@ -157,8 +157,7 @@ mat-expansion-panel-header{ background: transparent; }
 .mat-list-item:hover{
   background: rgb(26, 115, 199); }
 
-a.mat-list-item.texcol:active{
-  background: rgb(26, 115, 199); }
+a.mat-list-item.texcol:active{background: rgb(26, 115, 199); }
 
 mat-form-field { height: 10px; }
 
@@ -169,3 +168,18 @@ mat-form-field { height: 10px; }
 .card-text {margin-top: -10px; }
 
 #accion { font-size: 16px;}
+
+a.mat-menu-item {
+  width: 210%;
+  height: 100%;
+}
+
+.noti_menu {
+  text-decoration: none;
+}
+
+a.mat-menu-item.noti_menu:hover {color: rgba(17, 113, 192, 0.952); background: rgba(236, 236, 236, 0.643);}
+
+.divider {
+  margin-top: -7%; margin-left: -25%; width: 150%;
+}

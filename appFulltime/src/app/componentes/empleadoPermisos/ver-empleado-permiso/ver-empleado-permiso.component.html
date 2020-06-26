@@ -92,7 +92,7 @@
                                     matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
                                     <p>Autorización</p>
                                 </i>
-                                <i id="iconos" class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(p)"
+                                <i *ngIf="HabilitarAutorizacion" class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(p)"
                                     matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>
                                 </i>

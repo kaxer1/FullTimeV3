@@ -8,7 +8,7 @@ import pool from '../../database';
 class RolesControlador {
 
   public async ListarRoles(req: Request, res: Response) {
-    const ROL = await pool.query('SELECT * FROM cg_roles');
+    const ROL = await pool.query('SELECT * FROM cg_roles ORDER BY nombre ASC');
     if (ROL.rowCount > 0) {
       return res.jsonp(ROL.rows)
     } else {
