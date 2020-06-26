@@ -45,6 +45,7 @@ import PERMISOS_RUTAS from './rutas/permisos/permisosRutas';
 import DETALLE_CATALOGO_HORARIO_RUTAS from './rutas/horarios/detalleCatHorario/detalleCatHorarioRutas';
 import NOTIFICACIONES_AUTORIZACIONES_RUTAS from './rutas/catalogos/catNotiAutorizacionesRutas';
 import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
+import PLANTILLA_RUTAS from './rutas/descargarPlantilla/plantillaRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -70,6 +71,7 @@ class Servidor {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.raw({ type: 'image/*', limit:'1Mb' }));
+
    }
 
     rutas(): void {
@@ -129,6 +131,9 @@ class Servidor {
         this.app.use('/nivel-titulo', NIVEL_TITULO_RUTAS);
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
+
+        // Plantillas
+        this.app.use('/plantillaD', PLANTILLA_RUTAS);
 
     }
 

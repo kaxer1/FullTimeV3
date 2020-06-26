@@ -156,8 +156,10 @@ export class ListarFeriadosComponent implements OnInit {
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'feriados') {
         this.plantilla();
+        this.ObtenerFeriados();
+        //window.location.reload();
       } else {
-        this.toastr.error('Solo se acepta Feriados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta');
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
@@ -170,10 +172,19 @@ export class ListarFeriadosComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
-      this.ObtenerFeriados();
-      this.archivoForm.reset();
-      this.nameFile = '';
+      console.log('probando plantilla', res);
+      if (res.message === 'error') {
+        this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla');
+      }
+      else if(res.error === 'error'){
+        this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla');
+      }
+      else if (res.message === 'correcto'){
+        this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
+        //this.ObtenerFeriados();
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
     });
   }
 
@@ -214,7 +225,7 @@ export class ListarFeriadosComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha, 
+            'Fecha: ' + fecha,
             {
               text: [
                 {
@@ -354,18 +365,4 @@ export class ListarFeriadosComponent implements OnInit {
     FileSaver.saveAs(data, "FeriadosCSV" + new Date().getTime() + '.csv');
   }
 
-  /* ***************************************************************************************************** 
-   *                                PLANTILLA VACIA DE FERIADOS
-   * *****************************************************************************************************/
-  DescargarPlantillaFeriados() {
-    var datosFeriado = [{
-      fecha: 'Eliminar esta Fila: 23/02/2020 (Nota: formato de celda tipo Text)',
-      descripcion: 'Carnaval',
-      fec_recuperacion: '25/05/2020 (Nota: formato de celda tipo Text) Escribir en caso de exitir recuperacion'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Feriados');
-    xlsx.writeFile(wb, "Feriados" + '.xlsx');
-  }
 }

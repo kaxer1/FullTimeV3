@@ -1083,30 +1083,6 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-
-  /* ***************************************************************************************************** 
-   *                                        PLANTILLA VACIA DE HORARIOS UN EMPLEADO
-   * *****************************************************************************************************/
-  DescargarPlantillaHorario() {
-    var datosHorario = [{
-      fec_inicio: 'Eliminar Fila: 05/04/2020 Nota: Inicio de actividades /formato de celda tipo Text',
-      fec_final: '05/05/2020 Nota: Fin de actividades / formato de celda tipo Text',
-      lunes: ' true o false Nota: Indicar días libres',
-      martes: 'true o false',
-      miercoles: 'true o false',
-      jueves: 'true o false',
-      viernes: 'true o false',
-      sabado: 'true o false',
-      domingo: 'true o false',
-      nom_horario: 'horario1',
-      estado: '1-Activo/2-Inactivo/3-Suspendido'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Empleado Horario');
-    xlsx.writeFile(wb, "Horario Empleado" + '.xlsx');
-  }
-
   /* ***************************************************************************************************** 
    *                              MÉTODO PARA IMPRIMIR EN XML
    * *****************************************************************************************************/

@@ -313,19 +313,4 @@ export class ListarTipoComidasComponent implements OnInit {
     });
   }
 
-  /* ***************************************************************************************************** 
- *                                PLANTILLA VACIA DE TIPO COMIDAS
- * *****************************************************************************************************/
-  DescargarPlantillaComidas() {
-    var datosFeriado = [{
-      nombre: 'Eliminar esta Fila: Sopa',
-      valor: 2.55,
-      observacion: 'Con postre'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Tipo Comidas');
-    xlsx.writeFile(wb, "Tipo Comidas" + '.xlsx');
-  }
-
 }

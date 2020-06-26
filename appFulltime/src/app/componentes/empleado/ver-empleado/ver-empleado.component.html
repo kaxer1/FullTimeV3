@@ -540,13 +540,11 @@
                                     </form>
                                 </div>
                                 <div class="col-md">
-                                    <button (click)="DescargarPlantillaHorario()" mat-button type="submit"
-                                        id="descargar" class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip"
-                                        matTooltipPosition="right"
-                                        matTooltip="Presionar para descargar Plantilla para carga multiple de horarios del empleado">
-                                        <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
-                                        Empleado
-                                    </button>
+                                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                                    matTooltip="Dar click para ver o descargar el documento"
+                                    href="http://localhost:3000/plantillaD/documento/Horario Empleado.xlsx">
+                                    <span class="material-icons">cloud_download</span> Descargar Plantilla Horario Empleado
+                                </a>
                                 </div>
                             </div>
                         </div>

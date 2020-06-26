@@ -125,6 +125,7 @@ export class PrincipalHorarioComponent implements OnInit {
     console.log("funcion horario", itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'catalogo horarios') {
+        console.log("entra");
         this.plantillaHorario();
       } else {
         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
@@ -136,10 +137,13 @@ export class PrincipalHorarioComponent implements OnInit {
 
   plantillaHorario() {
     let formData = new FormData();
+    console.log("entra1", this.archivoSubido);
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
+    console.log("entra2", formData);
     this.rest.subirArchivoExcel(formData).subscribe(res => {
+      console.log("entra3", res);
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
       this.ObtenerHorarios();
       this.archivo1Form.reset();
@@ -218,43 +222,6 @@ export class PrincipalHorarioComponent implements OnInit {
        window.location.reload();
      });
    }*/
-
-  /* ***************************************************************************************************** 
-   * PLANTILLA VACIA DE HORARIOS
-   * *****************************************************************************************************/
-  DescargarPlantillaHorario() {
-    var datosHorario = [{
-      nombre_horario: 'Eliminar esta Fila: horario1',
-      minutos_almuerzo: 60,
-      hora_trabajo: 'Numero de horas 9 (En caso de ser horas y minutos 9:15) Nota: Esta celda debe estar en formato Text',
-      flexible: 'true o false',
-      por_horas: 'true o false'
-    }];
-    //this.prueba = datosDepartamento;
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    //console.log('Revisando', this.prueba)
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'CatalogoHorario');
-    xlsx.writeFile(wb, "Catalogo Horarios" + '.xlsx');
-  }
-
-  /* ***************************************************************************************************** 
-   * PLANTILLA VACIA DE DETALLES
-   * *****************************************************************************************************/
-  DescargarPlantillaDetalles() {
-    var datosHorario = [{
-      nombre_horario: 'Eliminar esta Fila: horario1',
-      orden: 1,
-      hora: '9:00 Nota: formato de celda tipo Text',
-      nocturno: 'true o false',
-      tipo_accion: '1-Entrada/2-Salida/3-S.Almuerzo/4-E.Almuerzo',
-      minutos_espera: '0:10 Nota: formato de celda tipo Text'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'DetalleHorario');
-    xlsx.writeFile(wb, "Detalles Horarios" + '.xlsx');
-  }
 
   /****************************************************************************************************** 
    * MÉTODO PARA EXPORTAR A PDF 

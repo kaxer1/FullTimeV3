@@ -18,7 +18,7 @@ class HorarioRutas {
         this.router.get('/', HORARIO_CONTROLADOR.ListarHorarios);
         this.router.get('/:id', HORARIO_CONTROLADOR.ObtenerUnHorario);
         this.router.post('/', HORARIO_CONTROLADOR.CrearHorario);
-        this.router.post('/upload', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioPlantilla);
+        this.router.post('/uploads', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioPlantilla);
         this.router.post('/cargaMultiple/upload', multipartMiddleware, HORARIO_CONTROLADOR.CrearHorarioyDetallePlantilla);
         this.router.put('/editar/:id', HORARIO_CONTROLADOR.EditarHorario);
         this.router.post('/xmlDownload/', HORARIO_CONTROLADOR.FileXML);

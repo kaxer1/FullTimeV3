@@ -50,11 +50,11 @@
                             </form>
                         </div>
                         <div class="col-md">
-                            <button (click)="DescargarPlantillaHorario()" mat-button type="submit" id="descargar"
-                                class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Presionar para descargar Plantilla para carga multiple de horarios">
-                                <span class="material-icons">cloud_download</span> Descargar Plantilla Horarios
-                            </button>
+                            <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                                href="http://localhost:3000/plantillaD/documento/Catalogo Horarios.xlsx">
+                                <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -73,11 +73,11 @@
                             </form>
                         </div>
                         <div class="col-md">
-                            <button (click)="DescargarPlantillaDetalles()" mat-button type="submit" id="descargar"
-                                class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Presionar para descargar Plantilla para carga multiple de detalle de horarios">
+                            <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                                href="http://localhost:3000/plantillaD/documento/Detalles Horarios.xlsx">
                                 <span class="material-icons">cloud_download</span> Descargar Plantilla Detalles
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

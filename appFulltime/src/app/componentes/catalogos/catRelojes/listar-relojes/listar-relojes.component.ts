@@ -385,29 +385,4 @@ export class ListarRelojesComponent implements OnInit {
     });
   }
 
-  /* ***************************************************************************************************** 
- *                                        PLANTILLA VACIA DE DISPOSITIVOS
- * *****************************************************************************************************/
-  DescargarPlantillaRelojes() {
-    var datosReloj = [{
-      nombre: 'Eliminar esta Fila: Reloj1',
-      ip: '192.168.0.12',
-      puerto: '4562',
-      contrasenia: 'opcional',
-      marca: 'opcional',
-      modelo: 'TX628',
-      serie: 'A4DS174961495',
-      id_fabricacion: 'opcional',
-      fabricante: 'opcional',
-      mac: 'opcional',
-      tien_funciones: 'true o false',
-      id_sucursal: 'sucursal1 Nota: el nombre debe ser exacto al registro',
-      id_departamento: 'sistemas Nota: el nombre debe ser exacto al registro'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosReloj);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Dispositivos');
-    xlsx.writeFile(wb, "Dispositivos" + '.xlsx');
-  }
-
 }

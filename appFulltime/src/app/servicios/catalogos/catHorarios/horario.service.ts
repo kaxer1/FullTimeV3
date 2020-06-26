@@ -31,7 +31,7 @@ export class HorarioService {
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/horario/upload', formData)
+    return this.http.post(this.API_URL + '/horario/uploads', formData)
   }
 
   CargarHorariosDetalles(formData) {

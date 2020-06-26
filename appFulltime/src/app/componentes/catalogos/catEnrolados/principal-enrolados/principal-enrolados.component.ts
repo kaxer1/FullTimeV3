@@ -193,7 +193,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.nameFile = this.archivoSubido[0].name;
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 8);
+    let itemName = arrayItems[0].slice(0, 9);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'enrolados') {
@@ -402,24 +402,4 @@ export class PrincipalEnroladosComponent implements OnInit {
       window.open(this.urlxml, "_blank");
     });
   }
-
-  /* ***************************************************************************************************** 
-   *                               PLANTILLA VACIA DE ENROLADOS
-   * *****************************************************************************************************/
-  DescargarPlantillasEnrolados() {
-    var datosEnrolados = [{
-      id_usuario: 'Eliminar esta Fila: nombre de usuario: jenny',
-      nombre: 'jenny',
-      contrasenia: '12546 Nota: Esta celda debe tener formato text',
-      activo: 'true o false',
-      finger: 5,
-      data_finger: '125dcse2225',
-      codigo: 'Código del empleado'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEnrolados);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Enrolados');
-    xlsx.writeFile(wb, "Enrolados" + '.xlsx');
-  }
-
 }
