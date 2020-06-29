@@ -25,12 +25,17 @@ class TipoPermisosControlador {
     res.status(404).jsonp({ text: 'Rol permiso no encontrado' });
   }
 
-  public async create(req: Request, res: Response): Promise<void> {
-    const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
-    await pool.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo]);
-    res.jsonp({ message: 'Guardado Tipo Permiso' });
+  public async create(req: Request, res: Response) {
+    try {
+      const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
+      await pool.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo]);
+      res.jsonp({ message: 'Registro guardado exitosamente' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
-  
+
   public async editar(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
     const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
@@ -43,19 +48,19 @@ class TipoPermisosControlador {
     console.log(req.body.userName);
     let filename = "TipoPermisos-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
     fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log("Archivo guardado");
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
     });
     res.jsonp({ text: 'XML creado', name: filename });
-}
+  }
 
-public async downloadXML(req: Request, res: Response): Promise<any> {
+  public async downloadXML(req: Request, res: Response): Promise<any> {
     const name = req.params.nameXML;
     let filePath = `servidor\\xmlDownload\\${name}`
     res.sendFile(__dirname.split("servidor")[0] + filePath);
-}
+  }
 
 }
 

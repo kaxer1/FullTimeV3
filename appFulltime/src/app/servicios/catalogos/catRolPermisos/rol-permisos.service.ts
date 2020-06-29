@@ -14,25 +14,25 @@ export class RolPermisosService {
 
   // catalogo de ROL PERMISOS
 
-  getRolPermisoRest(){
+  getRolPermisoRest() {
     return this.http.get(`${this.API_URL}/rolPermisos`);
   }
 
-  getOneRolPermisoRest(id:number){
+  getOneRolPermisoRest(id: number) {
     return this.http.get(`${this.API_URL}/rolPermisos/${id}`);
   }
-  
-  postRolPermisoRest(data: any){
+
+  postRolPermisoRest(data: any) {
     return this.http.post(`${this.API_URL}/rolPermisos`, data);
   }
 
   // permisos denegado
 
-  getPermisosUsuarioRolRest(id: number){
+  getPermisosUsuarioRolRest(id: number) {
     return this.http.get(`${this.API_URL}/rolPermisos/denegado/${id}`);
   }
 
-  postPermisoDenegadoRest(data: any){
+  postPermisoDenegadoRest(data: any) {
     return this.http.post(`${this.API_URL}/rolPermisos/denegado`, data);
   }
 
