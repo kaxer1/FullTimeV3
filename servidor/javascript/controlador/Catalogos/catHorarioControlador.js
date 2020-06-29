@@ -50,7 +50,7 @@ class HorarioControlador {
             res.jsonp({ message: 'El horario ha sido registrado', id: ultimo.rows[0].id });
         });
     }
-    CrearHorarioPlantilla(req, res) {
+    CargarHorarioPlantilla(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
@@ -59,34 +59,6 @@ class HorarioControlador {
             const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
-                //console.log("datos", data);
-                //console.log("almuerzo", min_almuerzo);
-                if (minutos_almuerzo != undefined) {
-                    //console.log("datos", data);
-                    //console.log("almuerzo", min_almuerzo);
-                    yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-                }
-                else {
-                    minutos_almuerzo = 0;
-                    yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-                }
-            }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
-            fs_1.default.unlinkSync(filePath);
-        });
-    }
-    CrearHorarioyDetallePlantilla(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let list = req.files;
-            let cadena = list.uploads[0].path;
-            let filename = cadena.split("\\")[1];
-            var filePath = `./plantillas/${filename}`;
-            const workbook = xlsx_1.default.readFile(filePath);
-            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            const plantillaD = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             /** Horarios */
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
                 var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
@@ -104,7 +76,19 @@ class HorarioControlador {
                     console.log("vacio");
                 }
             }));
-            console.log("termina");
+            res.jsonp({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    CrearHorarioyDetallePlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+            const plantillaD = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             /** Detalle de Horarios */
             plantillaD.forEach((data) => __awaiter(this, void 0, void 0, function* () {
                 var { nombre_horarios, orden, hora, nocturno, tipo_accion, minutos_espera } = data;

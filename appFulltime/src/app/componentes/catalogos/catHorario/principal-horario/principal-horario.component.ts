@@ -109,7 +109,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaEditarHorario(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false} }).disableClose = true; 
+    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).disableClose = true;
   }
 
   /****************************************************************************************************** 
@@ -125,7 +125,6 @@ export class PrincipalHorarioComponent implements OnInit {
     console.log("funcion horario", itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'catalogo horarios') {
-        console.log("entra");
         this.plantillaHorario();
       } else {
         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
@@ -137,13 +136,10 @@ export class PrincipalHorarioComponent implements OnInit {
 
   plantillaHorario() {
     let formData = new FormData();
-    console.log("entra1", this.archivoSubido);
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    console.log("entra2", formData);
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
-      console.log("entra3", res);
+    this.rest.CargarHorariosMultiples(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
       this.ObtenerHorarios();
       this.archivo1Form.reset();
@@ -186,42 +182,6 @@ export class PrincipalHorarioComponent implements OnInit {
       this.nameFileDetalle = '';
     });
   }
-
-  /* ***************************************************************************************************** 
-   * PLANTILLA CARGAR HORARIO Y DETALLES
-   * *****************************************************************************************************/
-  /* nameFileHorarioDetalle: string;
-   archivoSubidoDetalleHorario: Array<File>;
-   fileChangeDetalleHorario(element) {
-     this.archivoSubidoDetalleHorario = element.target.files;
-     this.nameFileHorarioDetalle = this.archivoSubidoDetalleHorario[0].name;
-     let arrayItems = this.nameFileHorarioDetalle.split(".");
-     let itemExtencion = arrayItems[arrayItems.length - 1];
-     let itemName = arrayItems[0].slice(0, 50);
-     console.log(itemName.toLowerCase());
-     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-       if (itemName.toLowerCase() == 'horarios y detalles') {
-         this.plantillaDetalleHorario();
-       } else {
-         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
-       }
-     } else {
-       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-     }
-   }
- 
-   plantillaDetalleHorario() {
-     let formData = new FormData();
-     for (var i = 0; i < this.archivoSubidoDetalleHorario.length; i++) {
-       formData.append("uploads[]", this.archivoSubidoDetalleHorario[i], this.archivoSubidoDetalleHorario[i].name);
-     }
-     this.rest.CargarHorariosDetalles(formData).subscribe(res => {
-       this.toastr.success('Operación Exitosa', 'Plantilla de Horarios importada.');
-       this.archivo3Form.reset();
-       this.nameFileHorarioDetalle = '';
-       window.location.reload();
-     });
-   }*/
 
   /****************************************************************************************************** 
    * MÉTODO PARA EXPORTAR A PDF 
