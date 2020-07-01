@@ -222,14 +222,15 @@ export class ListarFeriadosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
+          var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha,
+            'Fecha: ' + fecha + ' Hora: ' + time,,
             {
               text: [
                 {
-                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

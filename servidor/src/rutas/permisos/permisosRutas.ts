@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import PERMISOS_CONTROLADOR from '../../controlador/permisos/permisosControlador';
-const multipart = require('connect-multiparty');  
+const multipart = require('connect-multiparty');
 const webpush = require('../../webpush');
 
-const multipartMiddleware = multipart({  
+const multipartMiddleware = multipart({
     uploadDir: './docRespaldosPermisos',
 });
 
@@ -21,10 +21,12 @@ class PermisosRutas {
         this.router.get('/un-permiso/:id_permiso', PERMISOS_CONTROLADOR.ListarUnPermisoInfo);
         this.router.post('/', PERMISOS_CONTROLADOR.CrearPermisos);
         this.router.get('/documentos/:docs', PERMISOS_CONTROLADOR.getDoc);
-        this.router.get('/numPermiso/:id_empleado',  PERMISOS_CONTROLADOR.ObtenerNumPermiso);
-        this.router.get('/permisoContrato/:id_empl_contrato',  PERMISOS_CONTROLADOR.ObtenerPermisoContrato);
+        this.router.get('/numPermiso/:id_empleado', PERMISOS_CONTROLADOR.ObtenerNumPermiso);
+        this.router.get('/permisoContrato/:id_empl_contrato', PERMISOS_CONTROLADOR.ObtenerPermisoContrato);
         this.router.put('/:id/documento', multipartMiddleware, PERMISOS_CONTROLADOR.guardarDocumentoPermiso);
         this.router.put('/:id/estado', PERMISOS_CONTROLADOR.ActualizarEstado);
+        this.router.get('/datosSolicitud/:id_emple_permiso', PERMISOS_CONTROLADOR.ObtenerDatosSolicitud);
+        this.router.get('/datosAutorizacion/:id_permiso', PERMISOS_CONTROLADOR.ObtenerDatosAutorizacion);
     }
 }
 

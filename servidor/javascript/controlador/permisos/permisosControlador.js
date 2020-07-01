@@ -156,6 +156,30 @@ class PermisosControlador {
             res.json({ message: 'Estado de permiso actualizado exitosamente' });
         });
     }
+    ObtenerDatosSolicitud(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_emple_permiso;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaDatoSolicitud WHERE id_emple_permiso = $1', [id]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ObtenerDatosAutorizacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_permiso;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1', [id]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.PERMISOS_CONTROLADOR = new PermisosControlador();
 exports.default = exports.PERMISOS_CONTROLADOR;

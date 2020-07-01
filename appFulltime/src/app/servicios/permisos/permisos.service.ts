@@ -24,7 +24,7 @@ export class PermisosService {
   obtenerAllPermisos() {
     return this.http.get(`${this.API_URL}/empleadoPermiso/lista`);
   }
-  
+
   obtenerUnPermisoEmleado(id_permiso: number) {
     return this.http.get(`${this.API_URL}/empleadoPermiso/un-permiso/${id_permiso}`);
   }
@@ -42,11 +42,11 @@ export class PermisosService {
   }
 
   ObtenerUnPermiso(id: number) {
-    return this.http.get(`${this.API_URL}/empleadoPermiso/${id}`)  
+    return this.http.get(`${this.API_URL}/empleadoPermiso/${id}`)
   }
 
   SubirArchivoRespaldo(formData, id: number) {
-    return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)  
+    return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/documento`, formData)
   }
 
   BuscarNumPermiso(id: number) {
@@ -57,5 +57,12 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/permisoContrato/${id}`);
   }
 
+  BuscarDatosSolicitud(id_emple_permiso: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/datosSolicitud/${id_emple_permiso}`);
+  }
+
+  BuscarDatosAutorizacion(id_permiso: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/datosAutorizacion/${id_permiso}`);
+  }
 
 }

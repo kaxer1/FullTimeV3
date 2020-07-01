@@ -110,7 +110,7 @@ export class VistaElementosComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
@@ -123,14 +123,15 @@ export class VistaElementosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
+          var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha,
+            'Fecha: ' + fecha + ' Hora: ' + time,,
             {
               text: [
                 {
-                  text: '© ' + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }
