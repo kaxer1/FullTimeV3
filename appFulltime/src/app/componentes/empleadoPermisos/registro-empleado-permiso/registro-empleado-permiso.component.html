@@ -136,7 +136,7 @@
                         help_outline
                     </mat-icon>
                     <section class="example-section">
-                        <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required>
+                        <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required [disabled]="true">
                             <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
                                 [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
                             <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"

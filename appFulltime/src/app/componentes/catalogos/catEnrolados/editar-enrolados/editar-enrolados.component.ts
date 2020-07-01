@@ -73,9 +73,15 @@ export class EditarEnroladosComponent implements OnInit {
     })
     if (this.data.datosEnrolado.activo === true) {
       this.selec1 = true;
+      this.nuevoEnroladoForm.patchValue({
+        enroladoActivoForm: true,
+      })
     }
     else {
       this.selec2 = true;
+      this.nuevoEnroladoForm.patchValue({
+        enroladoActivoForm: false,
+      })
     }
   }
 

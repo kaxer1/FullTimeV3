@@ -63,7 +63,8 @@
                             matTooltip="Lista de permisos que pudo solicitar un empleado">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idCatNotificacion" required>
-                            <mat-option *ngFor="let n of notificacion" [value]="n.id">
+                            <mat-option *ngFor="let n of notificacion" [value]="n.id"
+                                (click)="obtenerNotiAutorizaciones(nuevaAutorizacionesForm.value)">
                                 {{n.tipo}}
                             </mat-option>
                         </mat-select>
@@ -75,8 +76,8 @@
                             matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idCatNotiAutorizacion" required>
-                            <mat-option *ngFor="let na of notiAutrizaciones" [value]="na.id">
-                                {{na.id}}
+                            <mat-option *ngFor="let na of notiAutrizaciones" [value]="na.id_auto_noti" id="opciones">
+                                ({{na.depa_autoriza}} - {{na.nom_sucursal}} ) {{na.nombre.split(' ')[0]}} {{na.apellido.split(' ')[0]}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

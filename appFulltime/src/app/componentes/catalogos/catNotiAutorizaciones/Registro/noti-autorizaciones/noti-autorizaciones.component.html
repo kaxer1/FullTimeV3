@@ -23,11 +23,11 @@
         </mat-form-field>
         <br>
         <mat-form-field>
-            <mat-label>Cargo Empleado *</mat-label>
+            <mat-label>Empleado Autoriza</mat-label>
             <mat-icon id="notifica" matSuffix matTooltipPosition="right" matTooltipClass="notifica-tooltip"
                 matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                 help_outline</mat-icon>
-            <mat-select [formControl]="idEmplCargo">
+            <mat-select [formControl]="idEmplCargo" required>
                 <mat-option *ngFor="let c of cargo" [value]="c.cargo" id="opciones">
                     ({{c.departamento}} - {{c.sucursal}} ) {{c.nombre.split(' ')[0]}} {{c.apellido.split(' ')[0]}}
                 </mat-option>
