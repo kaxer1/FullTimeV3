@@ -29,6 +29,7 @@ export class EditarCargoComponent implements OnInit {
   sueldo = new FormControl('', [Validators.required]);
   horaTrabaja = new FormControl('', [Validators.required]);
   idEmpresaF = new FormControl('', Validators.required);
+  cargoF = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
   public nuevoEmplCargosForm = new FormGroup({
     idDeparForm: this.idDepartamento,
@@ -38,8 +39,9 @@ export class EditarCargoComponent implements OnInit {
     sueldoForm: this.sueldo,
     horaTrabajaForm: this.horaTrabaja,
     idEmpresaForm: this.idEmpresaF,
+    cargoForm: this.cargoF
   });
-  
+
   constructor(
     private restCatDepartamento: DepartamentosService,
     private restEmplCargos: EmplCargosService,
@@ -58,7 +60,7 @@ export class EditarCargoComponent implements OnInit {
   obtenerCargoEmpleado() {
     this.restEmplCargos.getUnCargoRest(this.idSelectCargo).subscribe(res => {
       this.cargo = res;
-      this.id_empl_contrato =  this.cargo[0].id_empl_contrato;
+      this.id_empl_contrato = this.cargo[0].id_empl_contrato;
       this.cargo.forEach(obj => {
         this.FiltrarSucursalesSet(obj.id_empresa);
         this.ObtenerDepartamentosSet(obj.id_sucursal);
@@ -70,7 +72,8 @@ export class EditarCargoComponent implements OnInit {
           idSucursalForm: obj.id_sucursal,
           sueldoForm: obj.sueldo.split('.')[0],
           horaTrabajaForm: obj.hora_trabaja,
-          idEmpresaForm: obj.id_empresa
+          idEmpresaForm: obj.id_empresa,
+          cargoForm: obj.cargo
         })
       });
     })
@@ -83,7 +86,7 @@ export class EditarCargoComponent implements OnInit {
     })
   }
 
-  FiltrarSucursales(form ?) {
+  FiltrarSucursales(form?) {
     let idEmpre = form.idEmpresaForm
     this.sucursales = [];
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
@@ -120,7 +123,7 @@ export class EditarCargoComponent implements OnInit {
       this.toastr.info('Sucursal no cuenta con departamentos registrados')
     });
   }
-  
+
 
   IngresarSoloNumeros(evt) {
     if (window.event) {
@@ -142,11 +145,12 @@ export class EditarCargoComponent implements OnInit {
   ActualizarEmpleadoCargo(form) {
     let dataEmpleadoCargo = {
       id_departamento: form.idDeparForm,
-      fec_inicio: form.fecInicioForm,  
+      fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
       id_sucursal: form.idSucursalForm,
       sueldo: form.sueldoForm,
-      hora_trabaja: form.horaTrabajaForm
+      hora_trabaja: form.horaTrabajaForm,
+      cargo: form.cargoForm
     }
     this.restEmplCargos.ActualizarContratoEmpleado(this.idSelectCargo, this.id_empl_contrato, dataEmpleadoCargo).subscribe(res => {
       this.verEmpleado.obtenerCargoEmpleado(parseInt(this.idEmploy));
@@ -155,7 +159,11 @@ export class EditarCargoComponent implements OnInit {
     });
   }
 
-  cancelar(){this.verEmpleado.verCargoEdicion(true);}
+  cancelar() { this.verEmpleado.verCargoEdicion(true); }
 
-
+  ObtenerMensajeErrorCargoRequerido() {
+    if (this.cargoF.hasError('required')) {
+      return 'Campo Obligatorio';
+    }
+  }
 }

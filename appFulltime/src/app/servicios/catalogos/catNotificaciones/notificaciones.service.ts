@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,17 @@ export class NotificacionesService {
   ) { }
 
   // catalogo de notificaciones
-  getNotificacionesRest(){
+  getNotificacionesRest() {
     return this.http.get(`${this.NOTIFICACIONES_URL}/notificaciones`);
   }
 
-  postNotificacionesRest(data: any){
-    return this.http.post(`${this.NOTIFICACIONES_URL}/notificaciones`, data);
+  postNotificacionesRest(data: any) {
+    return this.http.post(`${this.NOTIFICACIONES_URL}/notificaciones`, data).pipe(
+      catchError(data)
+    );
+  }
+
+  BuscarNotificacionPermiso(id: number) {
+    return this.http.get(`${this.NOTIFICACIONES_URL}/notificaciones/notificacionPermiso/${id}`);
   }
 }

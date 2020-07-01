@@ -39,9 +39,26 @@ class NotificacionesControlador {
     }
     CrearNotificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { tipo, nivel, id_departamento, id_tipo_permiso } = req.body;
-            yield database_1.default.query('INSERT INTO cg_notificaciones ( tipo, nivel, id_departamento, id_tipo_permiso ) VALUES ($1, $2, $3, $4)', [tipo, nivel, id_departamento, id_tipo_permiso]);
-            res.jsonp({ message: 'Notificación guardada' });
+            try {
+                const { tipo, nivel, id_departamento, id_tipo_permiso } = req.body;
+                yield database_1.default.query('INSERT INTO cg_notificaciones ( tipo, nivel, id_departamento, id_tipo_permiso ) VALUES ($1, $2, $3, $4)', [tipo, nivel, id_departamento, id_tipo_permiso]);
+                res.jsonp({ message: 'Notificación guardada' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
+        });
+    }
+    ObtenerNotificacionPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_tipo_permiso } = req.params;
+            const NOTIFICACIONES = yield database_1.default.query('SELECT * FROM cg_notificaciones WHERE id_tipo_permiso = $1', [id_tipo_permiso]);
+            if (NOTIFICACIONES.rowCount > 0) {
+                return res.jsonp(NOTIFICACIONES.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

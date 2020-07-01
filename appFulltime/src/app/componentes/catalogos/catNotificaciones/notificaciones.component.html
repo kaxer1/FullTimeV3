@@ -18,8 +18,7 @@
                         <form [formGroup]="nuevaNotificacionForm">
                             <mat-form-field>
                                 <mat-label>Código de notificación</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="tipo"
-                                    (keypress)="IngresarSoloNumeros($event)">
+                                <input matInput placeholder="Ej: " [formControl]="tipo" required>
                                 <mat-icon id="notifica" matSuffix matTooltipPosition="right"
                                     matTooltipClass="notifica-tooltip"
                                     matTooltip="Ingresar un código de identificación de la notificación">
@@ -105,6 +104,7 @@
             <thead class="thead-light">
                 <tr style="text-align: center;">
                     <th scope="col">Id</th>
+                    <th scope="col">Código</th>
                     <th scope="col">Departamento</th>
                     <th scope="col">Nivel</th>
                     <th scope="col">Tipo Permiso</th>
@@ -114,6 +114,7 @@
             <tbody>
                 <tr *ngFor="let n of noti_res | paginate:tamanio_pagina:numero_pagina">
                     <td>{{n.id}}</td>
+                    <td>{{n.tipo}}</td>
                     <td>{{n.nombre}}</td>
                     <td>{{n.nivel}}</td>
                     <td>{{n.descripcion}}</td>
@@ -133,9 +134,9 @@
                             matTooltip="Eliminar registro">
                             <p>Eliminar</p>
                         </i>
-                        <i class="far fa-eye" style="color:rgb(9, 87, 90); margin-left: 15px;" id="iprocesoL" matSuffix (click)="AbrirListaNotificacionAutorizacion(n)"
-                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                            matTooltip="Ver las autorizaciones registradas con los cargos">
+                        <i class="far fa-eye" style="color:rgb(9, 87, 90); margin-left: 15px;" id="iprocesoL" matSuffix
+                            (click)="AbrirListaNotificacionAutorizacion(n)" matTooltipClass="procesoL-tooltip"
+                            matTooltipPosition="right" matTooltip="Ver las autorizaciones registradas con los cargos">
                             <p>Ver</p>
                         </i>
                     </td>

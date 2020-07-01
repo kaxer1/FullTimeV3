@@ -9,8 +9,8 @@
 }
 
 #home-section {
-    background: url('../../../../assets/imagenes/jefaturas.jpg') no-repeat;
-    min-height: 100vh;
+    background: url('../../../../assets/imagenes/informacion.JPG') no-repeat;
+    min-height: 200vh;
     background-size: cover;
     background-attachment: fixed; 
 }

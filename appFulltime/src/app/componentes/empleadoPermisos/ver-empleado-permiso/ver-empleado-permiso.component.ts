@@ -114,11 +114,11 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirAutorizaciones(datosSeleccionados: any): void {
-    this.vistaFlotante.open(AutorizacionesComponent, { width: '350px', data: datosSeleccionados }).disableClose = true;
+    this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
   }
 
   AbrirVentanaEditarAutorizacion(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: { auto: [datosSeleccionados], empl: this.InfoPermiso } }).disableClose = true;
+    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: { auto: datosSeleccionados, empl: this.InfoPermiso } }).disableClose = true;
   }
 
   /****************************************************************************************************** 

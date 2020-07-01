@@ -14,6 +14,7 @@ class NotificacionesRutas {
         this.router.get('/', catNotificacionesControlador_1.default.ListarNotificaciones);
         this.router.get('/:id', catNotificacionesControlador_1.default.ObtenerUnaNotificacion);
         this.router.post('/', catNotificacionesControlador_1.default.CrearNotificacion);
+        this.router.get('/notificacionPermiso/:id_tipo_permiso', catNotificacionesControlador_1.default.ObtenerNotificacionPermiso);
     }
 }
 const NOTIFICACIONES_RUTAS = new NotificacionesRutas();

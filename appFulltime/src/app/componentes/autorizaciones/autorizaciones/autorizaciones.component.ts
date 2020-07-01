@@ -29,7 +29,7 @@ interface Documento {
 export class AutorizacionesComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
-  TipoDocumento = new FormControl('', Validators.required);
+  TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
   idCatNotificacion = new FormControl('', Validators.required);
@@ -85,14 +85,14 @@ export class AutorizacionesComponent implements OnInit {
     console.log(this.data);
     this.obtenerDepartamento();
     this.obtenerNotiAutorizaciones();
-    this.obtenerNotificacion();
+    this.obtenerNotificacion(this.data.id_tipo_permiso);
     
   }
 
   insertarAutorizacion(form){
     let newAutorizaciones = {
       id_documento: this.data.id,
-      tipo_documento: form.tipoDocumentoF, 
+      tipo_documento: 1, //revisar si ayuda o no este campo
       orden: form.ordenF, 
       estado: form.estadoF, 
       id_notificacion: form.idNotificacionF, 
@@ -110,8 +110,8 @@ export class AutorizacionesComponent implements OnInit {
     })
   }
 
-  obtenerNotificacion(){
-    this.restNotificaciones.getNotificacionesRest().subscribe(res => {
+  obtenerNotificacion(id: number){
+    this.restNotificaciones.BuscarNotificacionPermiso(id).subscribe(res => {
       console.log(res);
       this.notificacion = res;
     });
@@ -129,7 +129,7 @@ export class AutorizacionesComponent implements OnInit {
       console.log(res);
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
-        idDocumentoF: this.data.id,
+        idDocumentoF: this.data.nom_permiso,
         ordenF: 1,
         estadoF: 1,
         idDepartamentoF: this.departamentos[0].id_departamento

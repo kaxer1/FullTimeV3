@@ -49,8 +49,8 @@
                     <div class="col-sm">
                         <mat-form-field>
                             <mat-label>Fecha de Inicio</mat-label>
-                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31"
-                                required>
+                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                                [formControl]="fechaInicio" min="1950-01-31" max="2050-01-31" required>
                             <mat-datepicker-toggle matSuffix [for]="picker" id="cargoE" matTooltipClass="cargoE-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Indicar la fecha de ingreso del empleado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -60,15 +60,26 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Fecha de Finalización</mat-label>
-                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaFinal" required>
-                            <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE" matTooltipClass="cargoE-tooltip"
-                                matTooltipPosition="right"
+                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                                [formControl]="fechaFinal" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE"
+                                matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
                                 matTooltip="Indicar la fecha de finalización del cargo del empelado. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                             </mat-datepicker-toggle>
                             <mat-datepicker touchUi #picker2></mat-datepicker>
                         </mat-form-field>
                     </div>
                     <div class="col-sm">
+                        <mat-form-field>
+                            <mat-label>Cargo a desempeñar</mat-label>
+                            <input matInput placeholder="Ej: Secretaria" [formControl]="cargoF" required>
+                            <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar el cargo que va a desempeñar el empleado">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="cargoF.invalid">{{ObtenerMensajeErrorCargoRequerido()}}</mat-error>
+                            <mat-error *ngIf="cargoF.invalid">Ingresar un cargo válido</mat-error>
+                        </mat-form-field>
+                        <br>
                         <mat-form-field>
                             <mat-label>Sueldo</mat-label>
                             <input matInput [formControl]="sueldo" style="text-align: right;"

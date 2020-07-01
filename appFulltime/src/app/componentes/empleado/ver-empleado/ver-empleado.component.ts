@@ -253,7 +253,7 @@ export class VerEmpleadoComponent implements OnInit {
         console.log("idContratoProbandoJenny", this.idContrato[i].id);
         this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[i]['id']).subscribe(datos => {
           this.cargoEmpleado = datos;
-          console.log("jenny datos", this.cargoEmpleado)
+          //console.log("jenny datos", this.cargoEmpleado)
           if (this.cargoEmpleado.length === 0) {
             console.log("No se encuentran registros")
           }
