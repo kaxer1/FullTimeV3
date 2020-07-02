@@ -548,11 +548,13 @@
                                     </form>
                                 </div>
                                 <div class="col-md">
-                                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
-                                    matTooltip="Dar click para ver o descargar el documento"
-                                    href="http://localhost:3000/plantillaD/documento/Horario Empleado.xlsx">
-                                    <span class="material-icons">cloud_download</span> Descargar Plantilla Horario Empleado
-                                </a>
+                                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                                        matTooltipPosition="right"
+                                        matTooltip="Dar click para ver o descargar el documento"
+                                        href="http://localhost:3000/plantillaD/documento/Horario Empleado.xlsx">
+                                        <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
+                                        Empleado
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -810,95 +812,61 @@
         </ng-template>
 
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-            <div class="row">
-                <div class="col-md">
-                    <mat-card class="mat-elevation-z8">
-                        <div class="barraTitulo">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col" style="text-align: left;">
-                                        <h5>Planificación Horario</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaPlanHorario()">Añadir</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <mat-card-content>
-                            <div class="container" *ngFor="let p of planHorario" style="padding-top: 15px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Final:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <mat-divider></mat-divider>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
 
-                <div class="col-md">
-                    <mat-card class="mat-elevation-z8">
-                        <div class="barraTitulo">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col" style="text-align: left;">
-                                        <h5>Detalle de Horario</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaDetallePlanHorario()">Añadir</button>
-                                    </div>
-                                </div>
+            <mat-card class="mat-elevation-z8">
+                <div class="barraTitulo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="text-align: left;">
+                                <h5>Planificación Horario</h5>
+                            </div>
+                            <div class="col" style="text-align: right;">
+                                <button type="submit" class="btn btn-outline-light btn-sm"
+                                    (click)="AbrirVentanaPlanHorario()">Añadir</button>
                             </div>
                         </div>
-                        <mat-card-content>
-                            <div class="container" *ngFor="let ph of planHoraDetalle" style="padding-top: 15px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{ph.fecha.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Tipo Día:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 1">Libre</label>
-                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 2">Feriado</label>
-                                        <label class="col col-form-label" *ngIf="ph.tipo_dia == 3">Normal</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Horarios:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{ph.horarios}}</label>
-                                    </div>
-                                </div>
-                                <mat-divider></mat-divider>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
+                    </div>
                 </div>
-            </div>
+                <mat-card-content>
+                    <div class="container table-responsive" style="padding-bottom: 50px;">
+                        <mat-card class="mat-elevation-z8">
+                            <table class="table table-hover table-sm ">
+                                <thead class="thead-light">
+                                    <tr style="text-align: center;">
+                                        <th scope="col">Fecha Inicio</th>
+                                        <th scope="col">Fecha Final</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let h of planHorario | paginate:tamanio_pagina:numero_pagina">
+
+                                        <td>{{h.fec_inicio.split("T")[0]}}</td>
+                                        <td>{{h.fec_final.split("T")[0]}}</td>
+                                        <td>
+                                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                                matTooltip="Agregar Detalles de Planificación de Horario"
+                                                class="far fa-list-alt" id="detalleH"
+                                                (click)="AbrirVentanaDetallePlanHorario(h)">
+                                                <p>Detalle</p>
+                                            </i>
+                                            <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                                matTooltip="Ver datos generales de la planificación" class="fas fa-eye"
+                                                id="ver"  [routerLink]="['/verDetalles/', h.id, e.id]">
+                                                <p>Ver</p>
+                                            </i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <mat-paginator [length]="planHorario.length" [pageSize]="tamanio_pagina"
+                                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                                showFirstLastButtons>
+                            </mat-paginator>
+                        </mat-card>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </div>
     </mat-tab>
 
@@ -1174,8 +1142,8 @@
                                     <div class="col">
                                         <a id="doc"
                                             href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
-                                            target="_blank" matSuffix
-                                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                            target="_blank" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="departamento-tooltip"
                                             matTooltip="Dar click para descargar o ver documento">{{pt.docu_nombre}}</a>
                                     </div>
                                 </div>

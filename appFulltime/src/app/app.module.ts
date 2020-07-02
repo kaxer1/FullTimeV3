@@ -207,6 +207,7 @@ import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones
 
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { VerDetallePlanHorariosComponent } from './componentes/detallePlanHorarios/ver-detalle-plan-horarios/ver-detalle-plan-horarios.component';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
@@ -342,7 +343,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     InformacionJefeComponent,
     ListarNotiAutorizacionesComponent,
     VerEmpleadoPermisoComponent,
-    EditarEstadoAutorizaccionComponent
+    EditarEstadoAutorizaccionComponent,
+    VerDetallePlanHorariosComponent
   ],
 
   imports: [

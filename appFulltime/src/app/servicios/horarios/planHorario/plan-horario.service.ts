@@ -20,12 +20,16 @@ export class PlanHorarioService {
     return this.http.post(`${this.API_URL}/planHorario`, datos);
   }
 
-  BuscarIDPlanHorario(id: number){
+  BuscarIDPlanHorario(id: number) {
     return this.http.get(`${this.API_URL}/planHorario/buscar/${id}`);
   }
-  
-  ObtenerPlanHorarioPorIdCargo(id: number){
+
+  ObtenerPlanHorarioPorIdCargo(id: number) {
     return this.http.get<any>(`${this.API_URL}/planHorario/infoPlan/${id}`);
+  }
+
+  ObtenerPlanHorarioPorId(id: number) {
+    return this.http.get<any>(`${this.API_URL}/planHorario/datosPlanHorario/${id}`);
   }
 
 }

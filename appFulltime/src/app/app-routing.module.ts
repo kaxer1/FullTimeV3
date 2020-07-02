@@ -50,6 +50,7 @@ import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar
 import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
 import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
 import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
+import { VerDetallePlanHorariosComponent } from './componentes/detallePlanHorarios/ver-detalle-plan-horarios/ver-detalle-plan-horarios.component';
 
 import { AuthGuard } from "./guards/auth.guard";
 import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
@@ -101,6 +102,8 @@ const routes: Routes = [
   { path: 'asistencia', component: RegistrarAsistenciaComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'pedirHoraExtra', component: PedidoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'calcularHoraExtra', component: CalculoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  { path: 'verDetalles/:id/:id_empleado', component: VerDetallePlanHorariosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  
   { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 }},
   { path: 'estadisticas', component: HomeEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 }},
   { path: 'informacion', component: InformacionJefeComponent, canActivate: [AuthGuard], data: { roles: 2 }},

@@ -39,7 +39,9 @@ class PlanHorarioControlador {
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     EncontrarPlanHorarioPorIdCargo(req, res) {
@@ -49,7 +51,21 @@ class PlanHorarioControlador {
             if (HORARIO_CARGO.rowCount > 0) {
                 return res.jsonp(HORARIO_CARGO.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    EncontrarPlanHorarioPorId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const HORARIO_CARGO = yield database_1.default.query('SELECT * FROM plan_horarios AS p WHERE p.id = $1', [id]);
+            if (HORARIO_CARGO.rowCount > 0) {
+                return res.jsonp(HORARIO_CARGO.rows);
+            }
+            else {
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
 }

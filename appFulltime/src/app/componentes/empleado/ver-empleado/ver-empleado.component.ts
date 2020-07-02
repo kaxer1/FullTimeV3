@@ -136,6 +136,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
     this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+    this.obtenerPlanHorarios(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
@@ -302,6 +303,7 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  /** Método para imprimir datos de Vacaciones */
   vacaciones: any = [];
   obtenerVacaciones(id_empleado: number) {
     this.restPerV.BuscarIDPerVacaciones(id_empleado).subscribe(datos => {
@@ -313,21 +315,31 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { });
   }
 
+  /** Método para imprimir datos de la planificación de horarios */
   planHorario: any;
-  obtenerPlanHorarios(idEmpleadoCargo: number) {
-    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
-      this.planHorario = res;
-      this.planHorario.map(obj => {
-        this.obtenerPlanHoraDetalle(obj.id);
-      })
-    }, error => { console.log("") });
-  }
-
-  planHoraDetalle: any;
-  obtenerPlanHoraDetalle(id_plan_horario: number) {
-    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
-      this.planHoraDetalle = res;
-    }, error => { console.log("") });
+  planHorarioTotales: any;
+  obtenerPlanHorarios(id_empleado: number) {
+    this.planHorario = [];
+    this.planHorarioTotales = [];
+    this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      //console.log("idCargo Procesos", this.idCargo[0].id);
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        this.restPlanH.ObtenerPlanHorarioPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
+          this.planHorario = datos;
+          if (this.planHorario.length != 0) {
+            if (this.cont === 0) {
+              this.planHorarioTotales = datos
+              this.cont++;
+            }
+            else {
+              this.planHorarioTotales = this.planHorarioTotales.concat(datos);
+              console.log("Datos plan horario" + i + '', this.planHorarioTotales)
+            }
+          }
+        })
+      }
+    });
   }
 
   /** Método para mostrar datos de los procesos del empleado */
@@ -632,24 +644,19 @@ export class VerEmpleadoComponent implements OnInit {
       this.idCargo = datos;
       console.log("idcargo ", this.idCargo[0].max)
       this.vistaRegistrarDatos.open(RegistroPlanHorarioComponent,
-        { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).disableClose = true;
+        { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } })
+        .afterClosed().subscribe(item => {
+          this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+        });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 
   /* Ventana para registrar detalle de horario del empleado*/
-  AbrirVentanaDetallePlanHorario(): void {
-    this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPlanHorario = datos;
-      console.log("idcargo ", this.idPlanHorario[0].id)
-      this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
-        { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).afterClosed().subscribe(item => {
-          //this.obtenerPlanHoraDetalle(parseInt(this.idEmpleado));
-        });
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
-    });
+  AbrirVentanaDetallePlanHorario(datos: any): void {
+    this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
+      { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false } }).disableClose = true;
   }
 
   /* Ventana para ingresar planificación de comidas */
