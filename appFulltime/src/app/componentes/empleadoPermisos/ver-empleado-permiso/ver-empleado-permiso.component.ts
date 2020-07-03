@@ -103,6 +103,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     this.datoSolicitud = [];
     this.restP.BuscarDatosSolicitud(id).subscribe(data => {
       this.datoSolicitud = data;
+      console.log('datos solicitud', this.datoSolicitud);
     })
   }
 
@@ -111,6 +112,18 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     this.datosAutorizacion = [];
     this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
       this.datosAutorizacion = data;
+      if(this.datosAutorizacion[0].estado_auto === 1){
+        this.datosAutorizacion[0].estado_auto = 'Pendiente';
+      }
+      else if (this.datosAutorizacion[0].estado_auto === 2) { 
+        this.datosAutorizacion[0].estado_auto = 'Pre-autorizado';
+      }
+      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+        this.datosAutorizacion[0].estado_auto = 'Autorizado';
+      }
+      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+        this.datosAutorizacion[0].estado_auto = 'Negado';
+      }
     })
   }
 
@@ -400,7 +413,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
                         widths: ['auto'],
                         body: [
                           [
-                            { text: 'AUTORIZADO POR', style: 'tableHeaderA' },
+                            { text: (this.datosAutorizacion[0].estado_auto).toUpperCase() + ' POR', style: 'tableHeaderA' },
                           ],
                           [
                             { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },

@@ -7,12 +7,13 @@ import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePla
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 
+
 @Component({
-  selector: 'app-ver-detalle-plan-horarios',
-  templateUrl: './ver-detalle-plan-horarios.component.html',
-  styleUrls: ['./ver-detalle-plan-horarios.component.css']
+  selector: 'app-detalle-horario-empleado',
+  templateUrl: './detalle-horario-empleado.component.html',
+  styleUrls: ['./detalle-horario-empleado.component.css']
 })
-export class VerDetallePlanHorariosComponent implements OnInit {
+export class DetalleHorarioEmpleadoComponent implements OnInit {
 
   idPlanH: string;
   idEmpleado: string;
@@ -76,7 +77,7 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   }
 
   AbrirVentanaDetalles(datosSeleccionados): void {
-    this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { planHorario: datosSeleccionados, actualizarPage: true } })
+    this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent, { width: '350px', data: { planHorario: datosSeleccionados, actualizarPage: true, direccionarE: true } })
       .afterClosed().subscribe(item => {
         this.ListarDetalles(this.idPlanH);
       });
@@ -86,5 +87,6 @@ export class VerDetallePlanHorariosComponent implements OnInit {
      console.log(datosSeleccionados);
      this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true } }).disableClose = true;
    }*/
+
 
 }

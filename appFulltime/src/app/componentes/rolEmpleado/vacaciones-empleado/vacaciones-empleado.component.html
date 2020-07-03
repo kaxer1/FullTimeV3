@@ -1,0 +1,157 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8">
+                <div class="barraTitulo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="text-align: center;">
+                                <h5>Periodo de Vacaciones</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" *ngFor="let p of peridoVacaciones" style="padding-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Descripción:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.descripcion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Día Vacación:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.dia_vacacion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Día Antiguedad:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.dia_antiguedad}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Día Perdido:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.dia_perdido}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.estado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8">
+                <div class="barraTitulo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="text-align: left;">
+                                <h5>Solicitar Vacaciones</h5>
+                            </div>
+                            <div class="col" style="text-align: center;">
+                                <button type="submit" class="btn btn-outline-light btn-sm"
+                                    (click)="AbrirVentanaVacaciones()">Añadir</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Día Libre:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.dia_libre}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Día Laborable:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.dia_laborable}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Legalizado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.legalizado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.estado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

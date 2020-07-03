@@ -656,7 +656,7 @@ export class VerEmpleadoComponent implements OnInit {
   /* Ventana para registrar detalle de horario del empleado*/
   AbrirVentanaDetallePlanHorario(datos: any): void {
     this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
-      { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false } }).disableClose = true;
+      { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false, direccionarE: false } }).disableClose = true;
   }
 
   /* Ventana para ingresar planificación de comidas */

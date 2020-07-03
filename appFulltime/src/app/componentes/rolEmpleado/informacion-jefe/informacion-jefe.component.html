@@ -1,56 +1,39 @@
-<header id="home-section">
-    <div class="dark-overlay">
-        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-            <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <div class="tituloHorarioL" *ngFor="let d of departamento">
-                    <span>AUTORIZAN EN EL DEPARTAMENTO DE {{d.nombre.toUpperCase()}}</span>
-                </div>
-                <div class="container" *ngFor="let a of autorizan">
-                    <br>
-                    <div class="row">
-                        <div class="col">
-                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Nombre:</label>
-                        </div>
-                        <div class="col">
-                            <label class="col col-form-label">{{a.nombre}} {{a.apellido}} </label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Departamento:</label>
-                        </div>
-                        <div class="col">
-                            <label class="col col-form-label">{{a.depa_trabaja}}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Cargo:</label>
-                        </div>
-                        <div class="col">
-                            <label class="col col-form-label">{{a.cargo}}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Télefono:</label>
-                        </div>
-                        <div class="col">
-                            <label class="col col-form-label">{{a.telefono}}</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="col-sm col-form-label" style="font-family: Homer Simpson U">Correo:</label>
-                        </div>
-                        <div class="col">
-                            <label class="col col-form-label">{{a.correo}}</label>
-                        </div>
-                    </div>
-                    <br>
-                    <mat-divider></mat-divider>
-                </div>
-            </mat-card>
-        </div>
+<div class="dark-overlay">
+    <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+        <mat-card class="example-card mat-elevation-z9" id="carta1" style="text-align: center;">
+            <img src="../../../../assets/imagenes/informacion.JPG"> <br><br>
+            <div class="tituloHorarioL" *ngFor="let d of departamento">
+                <span>AUTORIZAN EN EL DEPARTAMENTO DE {{d.nombre.toUpperCase()}}</span>
+            </div>
+            <br>
+            <div class="container table-responsive" style="padding-bottom: 50px;">
+                <!-- <div id="resulDis">AUTORIDADES</div>-->
+                <table class="mat-elevation-z8 table table-hover table-sm">
+                    <thead class="thead-light">
+                        <tr style="text-align: center;">
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Apellido</th>
+                            <th scope="col">Departamento</th>
+                            <th scope="col">Cargo</th>
+                            <th scope="col">Télefono</th>
+                            <th scope="col">Correo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let a of autorizan | paginate:tamanio_pagina:numero_pagina">
+                            <td>{{a.nombre}}</td>
+                            <td>{{a.apellido}}</td>
+                            <td>{{a.depa_trabaja}}</td>
+                            <td>{{a.cargo}}</td>
+                            <td>{{a.telefono}}</td>
+                            <td>{{a.correo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <mat-paginator [length]="autorizan.length" [pageSize]="tamanio_pagina"
+                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </mat-card>
     </div>
-</header>
+</div>

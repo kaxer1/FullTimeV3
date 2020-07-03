@@ -6,22 +6,6 @@
     padding-bottom: 6px; 
 }
 
-.barraTitulo1 { 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 14px; 
-    padding-bottom: 6px; 
-}
-
-.barraTitulo2 { 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 14px; 
-    padding-bottom: 6px; 
-}
-
 #resulHorario { 
     font-size: 17px; 
     text-align: center; 
@@ -31,55 +15,9 @@
     padding-bottom: 6px; 
 }
 
-.col-sm { font-weight: bold;}
-
 #boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
 
-mat-divider { background: rgba(131, 131, 131, 0.609);}
-
-.material-icons {margin-right: 8px;}
-
 #boton:hover { background-color: rgba(75, 75, 75, 0.609);}
-
-p { font-size: x-small; }
-
-.fas {cursor: pointer;}
-
-.far {cursor: pointer;}
-
-#detalleH { color: rgb(38, 0, 255); margin-right: 15px;}
-
-#ver { color: indianred; }
-
-mat-tab-group {
-    background: rgb(232,232,232);
-    background: radial-gradient(circle, rgba(232,232,232,0.8883928571428571) 0%, rgba(249,249,249,1) 100%);
-}
-
-#Selector {color: white; padding: 7% 25%; }
-
-mat-grid-tile {background-color: rgb(80,87,97); }
-
-mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
-
-#avatar { 
-    border-radius: 100%; 
-    height: 100px; 
-    width: 100px; 
-    background-color: rgb(126, 126, 126); 
-    margin-bottom: 10px;
-}
-
-#avatarImagen { border-radius: 100%; height: 100px; width: 100px; }
-
-.iniciales {color: white; font-weight: bold; font-size: 60px; }
-
-#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}
-
-
-#doc { font-size: 14px; text-align: center;}
-
-#delete { color:red; margin-right: 5px; cursor: pointer;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 

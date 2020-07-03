@@ -88,9 +88,13 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
   CerrarVentanaDetallePlanHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    if (this.data.actualizarPage === false) {
+    if (this.data.actualizarPage === false && this.data.direccionarE === false) {
       this.router.navigate(['/verDetalles/', this.data.planHorario.id, this.data.idEmpleado]);
     }
+    if (this.data.actualizarPage === false && this.data.direccionarE === true) {
+      this.router.navigate(['/detallesHEmpleado/', this.data.planHorario.id, this.data.idEmpleado]);
+    }
+
   }
 
   Salir() {
