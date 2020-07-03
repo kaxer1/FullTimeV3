@@ -207,6 +207,10 @@ import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones
 
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacaciones/listar-vacaciones.component';
+import { EstadoVacacionesComponent } from './componentes/vacaciones/estado-vacaciones/estado-vacaciones.component';
+import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
+import { EditarEstadoVacacionAutoriacionComponent } from './componentes/autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
@@ -342,7 +346,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     InformacionJefeComponent,
     ListarNotiAutorizacionesComponent,
     VerEmpleadoPermisoComponent,
-    EditarEstadoAutorizaccionComponent
+    EditarEstadoAutorizaccionComponent,
+    ListarVacacionesComponent,
+    EstadoVacacionesComponent,
+    VerVacacionComponent,
+    EditarEstadoVacacionAutoriacionComponent
   ],
 
   imports: [

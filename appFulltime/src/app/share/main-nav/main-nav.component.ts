@@ -55,6 +55,7 @@ export class MainNavComponent implements OnInit {
       if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
         console.log(data);
         this.realTime.ObtenerUnaNotificaciones(data.id).subscribe(res => {
+          console.log(res);
           this.estadoNotificacion = false;
           if (this.noti_real_time.length < 5){
             this.noti_real_time.unshift(res[0]);

@@ -417,9 +417,9 @@ export class DatosEmpleadoComponent implements OnInit {
   AbrirVentanaVacaciones(): void {
     this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion[0].id)
+      console.log(this.idPerVacacion)
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } }).disableClose = true;
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } }).disableClose = true;
     }, error => {
       this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
     });

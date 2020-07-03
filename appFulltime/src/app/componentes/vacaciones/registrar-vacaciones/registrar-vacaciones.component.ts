@@ -8,6 +8,7 @@ import * as moment from 'moment'
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { promise } from 'protractor';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 @Component({
   selector: 'app-registrar-vacaciones',
@@ -24,6 +25,7 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   empleados: any = [];
   calcular = false;
+  FechaActual: any;
 
   nombreEmpleado = new FormControl('', [Validators.required]);
   fechaInicio = new FormControl('', Validators.required);
@@ -55,15 +57,29 @@ export class RegistrarVacacionesComponent implements OnInit {
     private rest: EmpleadoService,
     private restV: VacacionesService,
     private toastr: ToastrService,
+    private realTime: RealTimeService,
     public dialogRef: MatDialogRef<RegistrarVacacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
   ) { }
 
   ngOnInit(): void {
+    console.log(this.datoEmpleado);
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
     this.VacacionesForm.patchValue({
-      estadoForm: '1'
+      estadoForm: 'Solicitado'
     });
+
+    var f = new Date();
+
+    if (f.getMonth() < 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+    }
   }
 
   fechasTotales: any = [];
@@ -214,8 +230,10 @@ export class RegistrarVacacionesComponent implements OnInit {
     }
   }
 
-
+  responseVacacion: any = [];
+  NotifiRes: any;
   InsertarVacaciones(form) {
+    console.log(this.datoEmpleado)
     let datosVacaciones = {
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
@@ -224,9 +242,32 @@ export class RegistrarVacacionesComponent implements OnInit {
       dia_libre: form.diaLibreForm,
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
-      id_peri_vacacion: this.datoEmpleado.idPerVacacion
+      id_peri_vacacion: this.datoEmpleado.idPerVacacion,
+      idContrato: this.datoEmpleado.idContrato
     };
+    console.log(datosVacaciones);
     this.restV.RegistrarVacaciones(datosVacaciones).subscribe(response => {
+      console.log(response);
+      this.responseVacacion = response
+      var f = new Date();
+      let notificacion = { 
+        id: null,
+        id_send_empl: this.datoEmpleado.idEmpleado,
+        id_receives_empl: this.responseVacacion.id_empleado_autoriza,
+        id_receives_depa: this.responseVacacion.id_departamento_autoriza,
+        estado: this.responseVacacion.estado, 
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+        id_permiso: null,
+        id_vacaciones: this.responseVacacion.id_vacacion
+      }
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+        console.log(res);
+        this.NotifiRes = res;
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0) {
+          this.restV.sendNotiRealTime(notificacion);
+        }
+      });
       this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas')
       this.CerrarVentanaRegistroVacaciones();
     }, error => {

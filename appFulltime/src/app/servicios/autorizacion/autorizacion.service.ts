@@ -32,7 +32,11 @@ export class AutorizacionService {
     return this.http.post(`${this.AUTORIZACIONES_URL}/autorizaciones`, data);
   }
 
-  ActualizarEstadoAutorizacion(id: number, datos: any) {
-    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado`, datos);
+  PutEstadoAutoPermiso(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-permiso`, datos);
+  }
+  
+  PutEstadoAutoVacacion(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-vacacion`, datos);
   }
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { AutorizacionService } from "src/app/servicios/autorizacion/autorizacion.service";
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { ToastrService } from 'ngx-toastr';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 interface Estado {
   id: number,
@@ -10,11 +10,11 @@ interface Estado {
 }
 
 @Component({
-  selector: 'app-editar-estado-autorizaccion',
-  templateUrl: './editar-estado-autorizaccion.component.html',
-  styleUrls: ['./editar-estado-autorizaccion.component.css']
+  selector: 'app-editar-estado-vacacion-autoriacion',
+  templateUrl: './editar-estado-vacacion-autoriacion.component.html',
+  styleUrls: ['./editar-estado-vacacion-autoriacion.component.css']
 })
-export class EditarEstadoAutorizaccionComponent implements OnInit {
+export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
 
   estados: Estado[] = [
     { id: 1, nombre: 'Pendiente'},
@@ -32,7 +32,7 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
   constructor(
     private restA: AutorizacionService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<EditarEstadoAutorizaccionComponent>,
+    public dialogRef: MatDialogRef<EditarEstadoVacacionAutoriacionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -50,12 +50,11 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
       id_departamento: this.data.id_departamento
     }
 
-    this.restA.PutEstadoAutoPermiso(this.data.id, newAutorizaciones).subscribe(res => {
+    this.restA.PutEstadoAutoVacacion(this.data.id, newAutorizaciones).subscribe(res => {
       console.log(res);
       this.toastr.success('Operación exitosa','Estado Actualizado');
       // this.dialogRef.close();
       // window.location.reload();
     })
   }
-
 }
