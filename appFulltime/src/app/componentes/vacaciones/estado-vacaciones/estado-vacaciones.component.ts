@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+import { FormGroup, FormControl } from '@angular/forms';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 
 interface Estados {
   valor: string;
@@ -10,38 +10,38 @@ interface Estados {
 }
 
 @Component({
-  selector: 'app-editar-empleado-permiso',
-  templateUrl: './editar-empleado-permiso.component.html',
-  styleUrls: ['./editar-empleado-permiso.component.css']
+  selector: 'app-estado-vacaciones',
+  templateUrl: './estado-vacaciones.component.html',
+  styleUrls: ['./estado-vacaciones.component.css']
 })
-export class EditarEmpleadoPermisoComponent implements OnInit {
-
-  estadoF = new FormControl('');
-
-  public PermisoForm = new FormGroup({
-    estadoForm: this.estadoF
-  });
+export class EstadoVacacionesComponent implements OnInit {
 
   estados: Estados[] = [
-    { valor: 'Pendiente', nombre: 'Pendiente' },
+    { valor: 'Solicitado', nombre: 'Solicitado' },
     { valor: 'Rechazado', nombre: 'Rechazado' },
     { valor: 'Aceptado', nombre: 'Aceptado' },
     { valor: 'Eliminado', nombre: 'Eliminado' }
   ];
+
+  estadoF = new FormControl('');
+
+  public VacacionForm = new FormGroup({
+    estadoForm: this.estadoF
+  });
 
   id_empleado_loggin: number;
   FechaActual: any;
   NotifiRes: any;
 
   constructor(
-    private restP: PermisosService,
+    private restV: VacacionesService,
     private realTime: RealTimeService,
-    public dialogRef: MatDialogRef<EditarEmpleadoPermisoComponent>,
+    public dialogRef: MatDialogRef<EstadoVacacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    console.log('dat', this.data);
+    console.log(this.data);
     var f = new Date();
 
     if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -56,32 +56,34 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
 
     this.llenarForm();
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado')); 
+    
   }
 
   llenarForm(){
-    this.PermisoForm.patchValue({
-      estadoForm: this.data.permiso.estado
+    this.VacacionForm.patchValue({
+      estadoForm: this.data.vacacion.estado
     });
   }
 
-  EditarEstadoPermiso(form){
-    let datosPermiso = {
+  EditarEstadoVacacion(form){
+    let datosVacacion = {
       estado: form.estadoForm
     }
 
-    this.restP.ActualizarEstado(this.data.permiso.id, datosPermiso).subscribe(res => {
+    this.restV.ActualizarEstado(this.data.vacacion.id, datosVacacion).subscribe(res => {
       console.log(res);
-  
+      // this.dialogRef.close();
+      // window.location.reload();
       var f = new Date();
       let notificacion = { 
         id: null,
         id_send_empl: this.id_empleado_loggin,
-        id_receives_empl: this.data.permiso.id_empleado,
+        id_receives_empl: this.data.vacacion.id_empleado,
         id_receives_depa: this.data.depa[0].id,
         estado: form.estadoForm, 
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-        id_permiso: this.data.permiso.id,
-        id_vacaciones: null
+        id_vacaciones: this.data.vacacion.id,
+        id_permiso: null
       }
       console.log(notificacion);
       
@@ -90,11 +92,10 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
         this.NotifiRes = res;
         notificacion.id = this.NotifiRes._id;
         if (this.NotifiRes._id > 0) {
-          this.restP.sendNotiRealTime(notificacion);
+          this.restV.sendNotiRealTime(notificacion);
         }
       });
-      this.dialogRef.close();
-      //window.location.reload();
+
     });
   }
 

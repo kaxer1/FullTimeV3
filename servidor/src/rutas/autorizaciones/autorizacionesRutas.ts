@@ -12,7 +12,8 @@ class DepartamentoRutas {
         this.router.get('/', AUTORIZACIONES_CONTROLADOR.ListarAutorizaciones);
         this.router.get('/info-autorizacion/:id_documento', AUTORIZACIONES_CONTROLADOR.ObtenerAutorizacionPorIdDocumento);
         this.router.post('/', AUTORIZACIONES_CONTROLADOR.CrearAutorizacion);
-        this.router.put('/:id/estado', AUTORIZACIONES_CONTROLADOR.ActualizarEstado);
+        this.router.put('/:id/estado-permiso', AUTORIZACIONES_CONTROLADOR.ActualizarEstadoPermiso);
+        this.router.put('/:id/estado-vacacion', AUTORIZACIONES_CONTROLADOR.ActualizarEstadoVacacion);
     }
 }
 

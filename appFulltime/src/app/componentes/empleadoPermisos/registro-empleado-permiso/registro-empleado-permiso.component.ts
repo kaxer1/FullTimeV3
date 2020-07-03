@@ -563,34 +563,35 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   idPermisoRes: any;
   NotifiRes: any;
   GuardarDatos(datos) {
-if (this.archivoSubido[0].size <= 2e+6) {
-    this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Permiso registrado');
-      this.LimpiarCampos();
-      this.idPermisoRes = res;
-      console.log(this.idPermisoRes.estado);
-      this.SubirRespaldo(this.idPermisoRes.id)
-      this.ImprimirNumeroPermiso();
-      var f = new Date();
-      let notificacion = { 
-        id: null,
-        id_send_empl: this.datoEmpleado.idEmpleado,
-        id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
-        id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
-        estado: this.idPermisoRes.estado, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-        id_permiso: this.idPermisoRes.id
-      }
-      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-        console.log(res);
-        this.NotifiRes = res;
-        notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0) {
-          this.restP.sendNotiRealTime(notificacion);
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
+        this.toastr.success('Operación Exitosa', 'Permiso registrado');
+        this.LimpiarCampos();
+        this.idPermisoRes = res;
+        console.log(this.idPermisoRes.estado);
+        this.SubirRespaldo(this.idPermisoRes.id)
+        this.ImprimirNumeroPermiso();
+        var f = new Date();
+        let notificacion = { 
+          id: null,
+          id_send_empl: this.datoEmpleado.idEmpleado,
+          id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
+          id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
+          estado: this.idPermisoRes.estado, 
+          create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+          id_permiso: this.idPermisoRes.id,
+          id_vacaciones: null
         }
-      })
-    });
-       }
+        this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+          console.log(res);
+          this.NotifiRes = res;
+          notificacion.id = this.NotifiRes._id;
+          if (this.NotifiRes._id > 0) {
+            this.restP.sendNotiRealTime(notificacion);
+          }
+        });
+      });
+    }
     else {
       this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
     }

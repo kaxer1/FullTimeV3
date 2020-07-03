@@ -154,7 +154,8 @@ class Servidor {
                     id_receives_depa: data.id_receives_depa,
                     estado: data.estado, 
                     create_at: data.create_at, 
-                    id_permiso: data.id_permiso
+                    id_permiso: data.id_permiso,
+                    id_vacaciones: data.id_vacaciones
                 }
                 console.log(data_llega);
                 socket.broadcast.emit( 'enviar_notification', data_llega);

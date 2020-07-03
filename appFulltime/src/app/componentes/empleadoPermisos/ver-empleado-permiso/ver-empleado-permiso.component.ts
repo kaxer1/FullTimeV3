@@ -42,6 +42,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   empleado: any = [];
   idEmpleado: number;
+  id_permiso: string;
 
   datoSolicitud: any = [];
   datosAutorizacion: any = [];
@@ -55,11 +56,18 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     public vistaFlotante: MatDialog
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+    this.id_permiso = this.router.url.split('/')[2];
   }
 
   ngOnInit(): void {
-    let id_permiso = this.router.url.split('/')[2];
-    this.restP.obtenerUnPermisoEmleado(parseInt(id_permiso)).subscribe(res => {
+    this.BuscarDatos();
+    this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerSolicitud(this.id_permiso);
+    this.ObtenerAutorizacion(this.id_permiso);
+  }
+
+  BuscarDatos() {
+    this.restP.obtenerUnPermisoEmleado(parseInt(this.id_permiso)).subscribe(res => {
       this.InfoPermiso = res;
       console.log(this.InfoPermiso)
       this.restA.getUnaAutorizacionPorPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
@@ -79,9 +87,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         this.HabilitarAutorizacion = false;
       });
     });
-    this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerSolicitud(id_permiso);
-    this.ObtenerAutorizacion(id_permiso);
   }
 
   // metodo para ver la informacion del empleado 
@@ -110,7 +115,10 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: { permiso: datosSeleccionados, depa: this.dep } }).disableClose = true;
+    this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: { permiso: datosSeleccionados, depa: this.dep } })
+    .afterClosed().subscribe(item => {
+      this.BuscarDatos();
+    });
   }
 
   AbrirAutorizaciones(datosSeleccionados: any): void {
@@ -118,7 +126,10 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirVentanaEditarAutorizacion(datosSeleccionados: any): void {
-    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: { auto: datosSeleccionados, empl: this.InfoPermiso } }).disableClose = true;
+    this.vistaFlotante.open(EditarEstadoAutorizaccionComponent, { width: '350px', data: { auto: datosSeleccionados, empl: this.InfoPermiso } })
+      .afterClosed().subscribe(item => {
+        this.BuscarDatos();
+      });
   }
 
   /****************************************************************************************************** 

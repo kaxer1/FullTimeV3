@@ -100,6 +100,21 @@ import { EditarCargoComponent } from './componentes/empleado/editar-cargo/editar
 import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/editar-empleado-permiso/editar-empleado-permiso.component';
 import { HomeEmpleadoComponent } from './componentes/rolEmpleado/home-empleado/home-empleado.component';
 import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
+import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
+import { EditarNotificacionComponent } from './componentes/catalogos/catNotificaciones/editar-notificacion/editar-notificacion.component';
+import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
+import { RegistrarTimbreComponent } from './componentes/timbres/registrar-timbre/registrar-timbre.component';
+import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar-asistencia/registrar-asistencia.component';
+import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
+import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
+import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
+import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
+import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones/editar-estado-autorizaccion/editar-estado-autorizaccion.component';
+import { VerDetallePlanHorariosComponent } from './componentes/detallePlanHorarios/ver-detalle-plan-horarios/ver-detalle-plan-horarios.component';
+import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacaciones/listar-vacaciones.component';
+import { EstadoVacacionesComponent } from './componentes/vacaciones/estado-vacaciones/estado-vacaciones.component';
+import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
+import { EditarEstadoVacacionAutoriacionComponent } from './componentes/autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -194,20 +209,9 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
-import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
-import { EditarNotificacionComponent } from './componentes/catalogos/catNotificaciones/editar-notificacion/editar-notificacion.component';
-import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
-import { RegistrarTimbreComponent } from './componentes/timbres/registrar-timbre/registrar-timbre.component';
-import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar-asistencia/registrar-asistencia.component';
-import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
-import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
-import { InformacionJefeComponent } from './componentes/rolEmpleado/informacion-jefe/informacion-jefe.component';
-import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
-import { EditarEstadoAutorizaccionComponent } from './componentes/autorizaciones/editar-estado-autorizaccion/editar-estado-autorizaccion.component';
-
-
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { VerDetallePlanHorariosComponent } from './componentes/detallePlanHorarios/ver-detalle-plan-horarios/ver-detalle-plan-horarios.component';
+
+
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
 @NgModule({
@@ -344,7 +348,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListarNotiAutorizacionesComponent,
     VerEmpleadoPermisoComponent,
     EditarEstadoAutorizaccionComponent,
-    VerDetallePlanHorariosComponent
+    VerDetallePlanHorariosComponent,
+    ListarVacacionesComponent,
+    EstadoVacacionesComponent,
+    VerVacacionComponent,
+    EditarEstadoVacacionAutoriacionComponent,
   ],
 
   imports: [

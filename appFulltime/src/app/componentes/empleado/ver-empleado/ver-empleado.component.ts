@@ -606,7 +606,7 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaPerVacaciones(): void {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ", this.idContrato[0].max);
+      console.log("idcargo ", this.idContrato);
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id);
@@ -627,9 +627,9 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaVacaciones(): void {
     this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion[0].id)
+      console.log("idPerVaca ", this.idPerVacacion)
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } })
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } })
         .afterClosed().subscribe(item => {
           this.obtenerVacaciones(parseInt(this.idEmpleado));
         });

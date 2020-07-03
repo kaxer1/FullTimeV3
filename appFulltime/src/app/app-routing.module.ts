@@ -54,6 +54,8 @@ import { VerDetallePlanHorariosComponent } from './componentes/detallePlanHorari
 
 import { AuthGuard } from "./guards/auth.guard";
 import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-empleado-permiso/ver-empleado-permiso.component';
+import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
+import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacaciones/listar-vacaciones.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full'},
@@ -89,6 +91,7 @@ const routes: Routes = [
   { path: 'emplCargos', component: EmplCargosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'ver-permiso/:id', component: VerEmpleadoPermisoComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  { path: 'ver-vacacion/:id', component: VerVacacionComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'sucursales', component: ListaSucursalesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'nivelTitulos', component: ListarNivelTitulosComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard], data: { roles: 1 }},
@@ -98,6 +101,7 @@ const routes: Routes = [
   { path: 'planificacion', component: PlanificacionMultipleComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'verHorario/:id', component: VerHorarioDetalleComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'permisos-solicitados', component: ListarEmpleadoPermisoComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  { path: 'vacaciones-solicitados', component: ListarVacacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'timbres', component: RegistrarTimbreComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'asistencia', component: RegistrarAsistenciaComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'pedirHoraExtra', component: PedidoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 }},

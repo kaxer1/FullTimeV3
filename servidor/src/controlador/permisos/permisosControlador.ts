@@ -67,11 +67,10 @@ class PermisosControlador {
 
         let id_departamento_autoriza;
         let id_empleado_autoriza;
-        console.log('ESTADO DEL TITULO');
-        console.log(estado);
         JefesDepartamentos.rows.forEach(obj => {
-            if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal) {
-                var url = 'http://localhost:4200/ver-permiso';
+
+            if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal){
+                var url = `${process.env.URL_DOMAIN}/ver-permiso`;
                 id_departamento_autoriza = obj.id_dep;
                 id_empleado_autoriza = obj.empleado;
                 let data = {
