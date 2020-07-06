@@ -12,6 +12,7 @@ class NotificacionesRutas {
         this.router.get('/', NOTIFICACIONES_CONTROLADOR.ListarNotificaciones);
         this.router.get('/:id', NOTIFICACIONES_CONTROLADOR.ObtenerUnaNotificacion);
         this.router.post('/', NOTIFICACIONES_CONTROLADOR.CrearNotificacion);
+        this.router.get('/notificacionPermiso/:id_tipo_permiso', NOTIFICACIONES_CONTROLADOR.ObtenerNotificacionPermiso);
     }
 }
 

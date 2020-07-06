@@ -1,41 +1,42 @@
 <mat-icon id="movilidad">open_with</mat-icon>
 <div class="tituloNotifica">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Notificación Autorizacion</span>
+    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Notificación Autorización</span>
 </div>
-<br>
 <!-- Formulario Completo -->
 <div class="container" style="text-align: center;">
     <form [formGroup]="nuevaNoti_AutorizacionesForm">
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
+        </div>
+        <br>
         <mat-form-field>
             <mat-label>Notificación*</mat-label>
-            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                matTooltipPosition="right"
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
                 matTooltip="Lista de permisos que pudo solicitar un empleado">
                 help_outline</mat-icon>
-            <mat-select [formControl]="idCatNotificacion">
+            <mat-select [formControl]="idCatNotificacion" [disabled]="true">
                 <mat-option *ngFor="let n of notificacion" [value]="n.id">
-                    {{n.id}}
+                    {{n.tipo}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <br>
         <mat-form-field>
-            <mat-label>Cargo Empleado *</mat-label>
-            <mat-icon id="notifica" matSuffix matTooltipPosition="right"
-                matTooltipClass="notifica-tooltip"
+            <mat-label>Empleado Autoriza</mat-label>
+            <mat-icon id="notifica" matSuffix matTooltipPosition="right" matTooltipClass="notifica-tooltip"
                 matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                 help_outline</mat-icon>
-            <mat-select [formControl]="idEmplCargo">
-                <mat-option *ngFor="let c of cargo" [value]="c.cargo">
-                    {{c.cargo}} {{c.nombre}} {{c.apellido}}
+            <mat-select [formControl]="idEmplCargo" required>
+                <mat-option *ngFor="let c of cargo" [value]="c.cargo" id="opciones">
+                    ({{c.departamento}} - {{c.sucursal}} ) {{c.nombre.split(' ')[0]}} {{c.apellido.split(' ')[0]}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
         <br>
         <mat-form-field>
             <mat-label id="selecDepa">Orden*</mat-label>
-            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
-                matTooltipPosition="right"
+            <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
                 matTooltip="Lista de orden">
                 help_outline</mat-icon>
             <mat-select [formControl]="orden">
@@ -46,11 +47,10 @@
         </mat-form-field>
     </form>
 </div>
+<br>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-sm"
-        (click)="insertarNotiAutorizacion(nuevaNoti_AutorizacionesForm.value)"
+    <input type="submit" class="btn btn-sm" (click)="insertarNotiAutorizacion(nuevaNoti_AutorizacionesForm.value)"
         [disabled]="!nuevaNoti_AutorizacionesForm.valid" value="Guardar">
     <input type="submit" (click)="limpiarCampos(); dialogRef.close()" class="btn btn-sm" value="Salir"
         style="margin-left: 15px;">
 </div>
-       

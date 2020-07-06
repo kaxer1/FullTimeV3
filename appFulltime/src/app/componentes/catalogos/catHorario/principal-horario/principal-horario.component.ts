@@ -12,6 +12,7 @@ import * as FileSaver from 'file-saver';
 
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
@@ -50,16 +51,32 @@ export class PrincipalHorarioComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: HorarioService,
+    public restE: EmpleadoService,
     private restD: DetalleCatHorariosService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerHorarios();
     this.nameFile = '';
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -75,7 +92,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '900px' }).disableClose = true;
   }
 
   AbrirRegistraDetalle(datosSeleccionados: any): void {
@@ -91,10 +108,8 @@ export class PrincipalHorarioComponent implements OnInit {
     this.ObtenerHorarios();
   }
 
-  AbrirVentanaEditarHorario(horario: any): void {
-    const DIALOG_REF = this.vistaRegistrarDatos.open(EditarHorarioComponent,
-      { width: '600px', data: horario });
-    DIALOG_REF.disableClose = true;
+  AbrirVentanaEditarHorario(datosSeleccionados: any): void {
+    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).disableClose = true;
   }
 
   /****************************************************************************************************** 
@@ -124,7 +139,7 @@ export class PrincipalHorarioComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
+    this.rest.CargarHorariosMultiples(formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
       this.ObtenerHorarios();
       this.archivo1Form.reset();
@@ -168,79 +183,6 @@ export class PrincipalHorarioComponent implements OnInit {
     });
   }
 
-  /* ***************************************************************************************************** 
-   * PLANTILLA CARGAR HORARIO Y DETALLES
-   * *****************************************************************************************************/
-  /* nameFileHorarioDetalle: string;
-   archivoSubidoDetalleHorario: Array<File>;
-   fileChangeDetalleHorario(element) {
-     this.archivoSubidoDetalleHorario = element.target.files;
-     this.nameFileHorarioDetalle = this.archivoSubidoDetalleHorario[0].name;
-     let arrayItems = this.nameFileHorarioDetalle.split(".");
-     let itemExtencion = arrayItems[arrayItems.length - 1];
-     let itemName = arrayItems[0].slice(0, 50);
-     console.log(itemName.toLowerCase());
-     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-       if (itemName.toLowerCase() == 'horarios y detalles') {
-         this.plantillaDetalleHorario();
-       } else {
-         this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
-       }
-     } else {
-       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-     }
-   }
- 
-   plantillaDetalleHorario() {
-     let formData = new FormData();
-     for (var i = 0; i < this.archivoSubidoDetalleHorario.length; i++) {
-       formData.append("uploads[]", this.archivoSubidoDetalleHorario[i], this.archivoSubidoDetalleHorario[i].name);
-     }
-     this.rest.CargarHorariosDetalles(formData).subscribe(res => {
-       this.toastr.success('Operación Exitosa', 'Plantilla de Horarios importada.');
-       this.archivo3Form.reset();
-       this.nameFileHorarioDetalle = '';
-       window.location.reload();
-     });
-   }*/
-
-  /* ***************************************************************************************************** 
-   * PLANTILLA VACIA DE HORARIOS
-   * *****************************************************************************************************/
-  DescargarPlantillaHorario() {
-    var datosHorario = [{
-      nombre_horario: 'Eliminar esta Fila: horario1',
-      minutos_almuerzo: 60,
-      hora_trabajo: 'Numero de horas 9 (En caso de ser horas y minutos 9:15) Nota: Esta celda debe estar en formato Text',
-      flexible: 'true o false',
-      por_horas: 'true o false'
-    }];
-    //this.prueba = datosDepartamento;
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    //console.log('Revisando', this.prueba)
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'CatalogoHorario');
-    xlsx.writeFile(wb, "Catalogo Horarios" + '.xlsx');
-  }
-
-  /* ***************************************************************************************************** 
-   * PLANTILLA VACIA DE DETALLES
-   * *****************************************************************************************************/
-  DescargarPlantillaDetalles() {
-    var datosHorario = [{
-      nombre_horario: 'Eliminar esta Fila: horario1',
-      orden: 1,
-      hora: '9:00 Nota: formato de celda tipo Text' ,
-      nocturno: 'true o false',
-      tipo_accion: '1-Entrada/2-Salida/3-S.Almuerzo/4-E.Almuerzo',
-      minutos_espera: '0:10 Nota: formato de celda tipo Text'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'DetalleHorario');
-    xlsx.writeFile(wb, "Detalles Horarios" + '.xlsx');
-  }
-
   /****************************************************************************************************** 
    * MÉTODO PARA EXPORTAR A PDF 
    ******************************************************************************************************/
@@ -261,6 +203,39 @@ export class PrincipalHorarioComponent implements OnInit {
     sessionStorage.setItem('Empleados', this.horarios);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Horarios',
@@ -288,13 +263,17 @@ export class PrincipalHorarioComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 12,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8
+          fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -302,29 +281,38 @@ export class PrincipalHorarioComponent implements OnInit {
 
   presentarDataPDFEmpleados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Minutos de almuerzo', style: 'tableHeader' },
-            { text: 'Horas de trabajo', style: 'tableHeader' },
-            { text: 'Horario Flexibe', style: 'tableHeader' },
-            { text: 'Horario por horas', style: 'tableHeader' },
-          ],
-          ...this.horarios.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.min_almuerzo, style: 'itemsTable' },
-              { text: obj.hora_trabajo, style: 'itemsTable' },
-              { text: obj.flexible, style: 'itemsTable' },
-              { text: obj.por_horas, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Minutos de almuerzo', style: 'tableHeader' },
+                { text: 'Horas de trabajo', style: 'tableHeader' },
+                { text: 'Horario Flexibe', style: 'tableHeader' },
+                { text: 'Horario por horas', style: 'tableHeader' },
+                { text: 'Documento', style: 'tableHeader' },
+              ],
+              ...this.horarios.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.min_almuerzo, style: 'itemsTableC' },
+                  { text: obj.hora_trabajo, style: 'itemsTableC' },
+                  { text: obj.flexible, style: 'itemsTableC' },
+                  { text: obj.por_horas, style: 'itemsTableC' },
+                  { text: obj.doc_nombre, style: 'itemsTableC' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
@@ -369,6 +357,8 @@ export class PrincipalHorarioComponent implements OnInit {
           "hora_trabajo": obj.hora_trabajo,
           "flexible": obj.flexible,
           "por_horas": obj.por_horas,
+          "doc_nombre": obj.doc_nombre,
+          "documento": obj.documento,
         }
       }
       arregloHorarios.push(objeto)

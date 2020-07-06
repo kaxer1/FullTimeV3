@@ -71,7 +71,7 @@ export class DispositivosEnroladosComponent implements OnInit {
     // Ventana para editar datos
     AbrirVentanaEditar(datosSeleccionados: any): void {
       console.log(datosSeleccionados);
-      this.vistaRegistrarDatos.open(EditarEnroladosComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: true} }).disableClose = true;
+      this.vistaRegistrarDatos.open(EditarEnroladosComponent, { width: '900px', data: { datosEnrolado: datosSeleccionados, actualizar: true} }).disableClose = true;
     }
 
 }

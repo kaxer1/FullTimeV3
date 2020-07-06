@@ -14,6 +14,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/registrar-feriados/registrar-feriados.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -38,6 +39,8 @@ export class ListarFeriadosComponent implements OnInit {
   feriados: any = [];
   filtroDescripcion = '';
   filtradoFecha = '';
+  empleado: any = [];
+  idEmpleado: number;
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -49,15 +52,27 @@ export class ListarFeriadosComponent implements OnInit {
 
   constructor(
     private rest: FeriadosService,
+    private restE: EmpleadoService,
     public vistaRegistrarFeriado: MatDialog,
     public vistaAsignarCiudad: MatDialog,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerFeriados();
+    this.ObtenerEmpleados(this.idEmpleado);
   }
 
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
+  }
   // Lectura de datos
   ObtenerFeriados() {
     this.feriados = [];
@@ -141,8 +156,10 @@ export class ListarFeriadosComponent implements OnInit {
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'feriados') {
         this.plantilla();
+        this.ObtenerFeriados();
+        //window.location.reload();
       } else {
-        this.toastr.error('Solo se acepta Feriados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta');
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
@@ -155,10 +172,19 @@ export class ListarFeriadosComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
-      this.ObtenerFeriados();
-      this.archivoForm.reset();
-      this.nameFile = '';
+      console.log('probando plantilla', res);
+      if (res.message === 'error') {
+        this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla');
+      }
+      else if(res.error === 'error'){
+        this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla');
+      }
+      else if (res.message === 'correcto'){
+        this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
+        //this.ObtenerFeriados();
+        this.archivoForm.reset();
+        this.nameFile = '';
+      }
     });
   }
 
@@ -183,6 +209,38 @@ export class ListarFeriadosComponent implements OnInit {
     sessionStorage.setItem('Feriados', this.feriados);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { color: 'blue', text: 'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'FERIADOS',
@@ -210,17 +268,17 @@ export class ListarFeriadosComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 13,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8,
+          fontSize: 10,
           alignment: 'center',
         },
         itemsTableD: {
-          fontSize: 8,
+          fontSize: 10,
         }
       }
     };
@@ -228,25 +286,32 @@ export class ListarFeriadosComponent implements OnInit {
 
   presentarDataPDFFeriados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Descripción', style: 'tableHeader' },
-            { text: 'Fecha', style: 'tableHeader' },
-            { text: 'Fecha Recuperación', style: 'tableHeader' },
-          ],
-          ...this.feriados.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTableD' },
-              { text: obj.fecha, style: 'itemsTable' },
-              { text: obj.fec_recuperacion, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Fecha', style: 'tableHeader' },
+                { text: 'Fecha Recuperación', style: 'tableHeader' },
+              ],
+              ...this.feriados.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTableD' },
+                  { text: obj.fecha, style: 'itemsTable' },
+                  { text: obj.fec_recuperacion, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
@@ -301,18 +366,4 @@ export class ListarFeriadosComponent implements OnInit {
     FileSaver.saveAs(data, "FeriadosCSV" + new Date().getTime() + '.csv');
   }
 
-  /* ***************************************************************************************************** 
-   *                                PLANTILLA VACIA DE FERIADOS
-   * *****************************************************************************************************/
-  DescargarPlantillaFeriados() {
-    var datosFeriado = [{
-      fecha: 'Eliminar esta Fila: 23/02/2020 (Nota: formato de celda tipo Text)',
-      descripcion: 'Carnaval',
-      fec_recuperacion: '25/05/2020 (Nota: formato de celda tipo Text) Escribir en caso de exitir recuperacion' 
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Feriados');
-    xlsx.writeFile(wb, "Feriados" + '.xlsx');
-  }
 }

@@ -7,6 +7,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import * as moment from 'moment'
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
+import { promise } from 'protractor';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 @Component({
   selector: 'app-registrar-vacaciones',
@@ -23,6 +25,7 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   empleados: any = [];
   calcular = false;
+  FechaActual: any;
 
   nombreEmpleado = new FormControl('', [Validators.required]);
   fechaInicio = new FormControl('', Validators.required);
@@ -34,6 +37,7 @@ export class RegistrarVacacionesComponent implements OnInit {
   legalizadoF = new FormControl('', [Validators.required]);
   calcularF = new FormControl('');
   totalF = new FormControl('');
+  diasTF = new FormControl('');
 
   public VacacionesForm = new FormGroup({
     fecInicioForm: this.fechaInicio,
@@ -45,33 +49,101 @@ export class RegistrarVacacionesComponent implements OnInit {
     estadoForm: this.estadoF,
     legalizadoForm: this.legalizadoF,
     calcularForm: this.calcularF,
-    totalForm: this.totalF
+    totalForm: this.totalF,
+    diasTForm: this.diasTF
   });
 
   constructor(
     private rest: EmpleadoService,
     private restV: VacacionesService,
     private toastr: ToastrService,
+    private realTime: RealTimeService,
     public dialogRef: MatDialogRef<RegistrarVacacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
   ) { }
 
   ngOnInit(): void {
+    console.log(this.datoEmpleado);
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
     this.VacacionesForm.patchValue({
-      estadoForm: '1'
+      estadoForm: 'Solicitado'
     });
+
+    var f = new Date();
+
+    if (f.getMonth() < 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+    }
   }
 
-  ContarDiasHabiles(dateFrom, dateTo) {
-    var from = moment(dateFrom, 'DD/MM/YYY'),
-      to = moment(dateTo, 'DD/MM/YYY'),
-      days = 0,
-      sa = 0;
+  fechasTotales: any = [];
+  VerificarFeriado(form): any {
+    var diasFeriado = 0;
+    var diasL = 0;
+    let dataFechas = {
+      fechaSalida: form.fecInicioForm,
+      fechaIngreso: form.fecFinalForm
+    }
+    this.restV.BuscarFechasFeriado(dataFechas).subscribe(data => {
+      this.fechasTotales = [];
+      this.fechasTotales = data;
+      console.log('fechas feriados', this.fechasTotales);
+      var totalF = this.fechasTotales.length;
+      console.log('total de fechas', totalF);
+
+      for (let i = 0; i <= this.fechasTotales.length - 1; i++) {
+        let fechaF = this.fechasTotales[i].fecha.split('T')[0];
+        let diasF = this.ContarDiasHabiles(fechaF, fechaF);
+        console.log('total de fechas', diasF);
+        if (diasF != 0) {
+         diasFeriado = diasFeriado + 1;
+        }
+        else {
+          diasL = diasL + 1;
+        }
+      }
+
+      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+
+      var totalH = habil - diasFeriado;
+      var totalL = libre - diasL;
+      const totalDias = totalH + totalL + totalF;
+
+      this.VacacionesForm.patchValue({
+        diaLibreForm: totalL,
+        dialaborableForm: totalH,
+        totalForm: totalDias,
+        diasTForm: totalF
+      });
+
+    }, error => {
+      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      const totalDias = habil + libre;
+      this.VacacionesForm.patchValue({
+        diaLibreForm: libre,
+        dialaborableForm: habil,
+        totalForm: totalDias
+      });
+    })
+  }
+
+  ContarDiasHabiles(dateFrom, dateTo): any {
+    var from = moment(dateFrom),
+      to = moment(dateTo),
+      days = 0;
+    console.log('visualizar', from);
     while (!from.isAfter(to)) {
       /** Si no es sabado ni domingo */
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
-        days++;
+        days++;;
       }
       from.add(1, 'days');
     }
@@ -105,14 +177,7 @@ export class RegistrarVacacionesComponent implements OnInit {
     else {
       if ((<HTMLInputElement>document.getElementById('activo')).checked) {
         if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
-          var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
-          var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
-          const totalDias = habil + libre;
-          this.VacacionesForm.patchValue({
-            diaLibreForm: libre,
-            dialaborableForm: habil,
-            totalForm: totalDias
-          });
+          this.VerificarFeriado(form);
         }
         else {
           this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
@@ -153,20 +218,22 @@ export class RegistrarVacacionesComponent implements OnInit {
     if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm) && Date.parse(form.fecInicioForm) < Date.parse(form.fechaIngresoForm)) {
       const ingreso = moment(form.fechaIngresoForm).diff(moment(form.fecFinalForm), 'days');
       console.log(ingreso);
-      if(ingreso  <= 1 ){
+      if (ingreso <= 1) {
         this.InsertarVacaciones(form);
       }
       else {
         this.toastr.info('La fecha de ingreso a laborar no es la adecuada')
-      }   
+      }
     }
     else {
       this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
     }
   }
 
-
+  responseVacacion: any = [];
+  NotifiRes: any;
   InsertarVacaciones(form) {
+    console.log(this.datoEmpleado)
     let datosVacaciones = {
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
@@ -175,9 +242,32 @@ export class RegistrarVacacionesComponent implements OnInit {
       dia_libre: form.diaLibreForm,
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
-      id_peri_vacacion: this.datoEmpleado.idPerVacacion
+      id_peri_vacacion: this.datoEmpleado.idPerVacacion,
+      idContrato: this.datoEmpleado.idContrato
     };
+    console.log(datosVacaciones);
     this.restV.RegistrarVacaciones(datosVacaciones).subscribe(response => {
+      console.log(response);
+      this.responseVacacion = response
+      var f = new Date();
+      let notificacion = { 
+        id: null,
+        id_send_empl: this.datoEmpleado.idEmpleado,
+        id_receives_empl: this.responseVacacion.id_empleado_autoriza,
+        id_receives_depa: this.responseVacacion.id_departamento_autoriza,
+        estado: this.responseVacacion.estado, 
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+        id_permiso: null,
+        id_vacaciones: this.responseVacacion.id_vacacion
+      }
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+        console.log(res);
+        this.NotifiRes = res;
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0) {
+          this.restV.sendNotiRealTime(notificacion);
+        }
+      });
       this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas')
       this.CerrarVentanaRegistroVacaciones();
     }, error => {

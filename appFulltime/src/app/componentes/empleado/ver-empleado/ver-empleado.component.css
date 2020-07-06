@@ -47,6 +47,10 @@ p { font-size: x-small; }
 
 .far {cursor: pointer;}
 
+#detalleH { color: rgb(38, 0, 255); margin-right: 15px;}
+
+#ver { color: indianred; }
+
 mat-tab-group {
     background: rgb(232,232,232);
     background: radial-gradient(circle, rgba(232,232,232,0.8883928571428571) 0%, rgba(249,249,249,1) 100%);
@@ -72,7 +76,6 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 #edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}
 
-p { font-size: x-small; }
 
 #doc { font-size: 14px; text-align: center;}
 
@@ -139,21 +142,25 @@ td { padding-top: 10px; text-align: center; }
 
 #descargar:hover { 
     font-weight: bold; 
-    font-size: 16px; 
+    font-size: 14px; 
     font-family: "Poppins", sans-serif; 
     border-radius: 5px; 
     height: 55px; 
     background-color: rgb(38, 218, 15); 
     color: white;
+    padding-top: 10px; 
+    padding-bottom: 6px;
 }
 
 #descargar { 
     font-weight: bold; 
-    font-size: 16px; 
+    font-size: 14px; 
     font-family: "Poppins", sans-serif; 
     border-radius: 5px; 
     height: 55px; 
     background-color: #93a3c7; 
     overflow: hidden;
     color: white;
+    padding-top: 10px; 
+    padding-bottom: 6px;
 }

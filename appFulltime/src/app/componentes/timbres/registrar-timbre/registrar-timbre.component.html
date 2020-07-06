@@ -5,9 +5,13 @@
         </div>
         <form [formGroup]="TimbreForm">
             <div class="container">
+                <br>
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
+                </div>
                 <div class="row">
                     <div class="col">
-                        <br>
                         <mat-form-field>
                             <mat-label>Empleado</mat-label>
                             <input matInput [formControl]="nombreEmpleadoF" readonly>

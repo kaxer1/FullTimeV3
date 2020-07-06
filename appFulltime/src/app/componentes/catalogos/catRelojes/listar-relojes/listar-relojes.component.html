@@ -115,12 +115,14 @@
                             matTooltip="Presionar para seleccionar Plantilla con nombre Dispositivos">Subir
                             Dispositivos</label>
                     </form>
-                    <br>
-                    <button (click)="DescargarPlantillaRelojes()" mat-button type="submit" id="descargar"
-                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Presionar para descargar Plantilla para carga multiple de dispositivos">
+                </div>
+                <br>
+                <div class="container">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/Dispositivos.xlsx">
                         <span class="material-icons">cloud_download</span> Descargar Plantilla Dispositivos
-                    </button>
+                    </a>
                 </div>
             </mat-card>
         </div>

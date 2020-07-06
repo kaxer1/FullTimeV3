@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
 import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -31,6 +32,9 @@ export class ListarRelojesComponent implements OnInit {
   filtroSucursalReloj = '';
   filtroDepartamentoReloj = '';
   relojes: any = [];
+
+  empleado: any = [];
+  idEmpleado: number;
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.minLength(2)]);
@@ -57,13 +61,26 @@ export class ListarRelojesComponent implements OnInit {
 
   constructor(
     private rest: RelojesService,
+    public restE: EmpleadoService,
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerReloj();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -181,6 +198,39 @@ export class ListarRelojesComponent implements OnInit {
     sessionStorage.setItem('Dispositivos', this.relojes);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Dispositivos ',
@@ -208,13 +258,17 @@ export class ListarRelojesComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 11,
+          fontSize: 10,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
           fontSize: 9
+        },
+        itemsTableC: {
+          fontSize: 9,
+          alignment: 'center'
         }
       }
     };
@@ -222,45 +276,52 @@ export class ListarRelojesComponent implements OnInit {
 
   presentarDataPDFRelojes() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'IP', style: 'tableHeader' },
-            { text: 'Puerto', style: 'tableHeader' },
-            { text: 'Marca', style: 'tableHeader' },
-            { text: 'Modelo', style: 'tableHeader' },
-            { text: 'Serie', style: 'tableHeader' },
-            { text: 'ID Fabricante', style: 'tableHeader' },
-            { text: 'Fabricante', style: 'tableHeader' },
-            { text: 'Mac', style: 'tableHeader' },
-            { text: 'Departamento', style: 'tableHeader' },
-            { text: 'Sucursal', style: 'tableHeader' },
-            { text: 'Empresa', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' }
-          ],
-          ...this.relojes.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.ip, style: 'itemsTable' },
-              { text: obj.puerto, style: 'itemsTable' },
-              { text: obj.marca, style: 'itemsTable' },
-              { text: obj.modelo, style: 'itemsTable' },
-              { text: obj.serie, style: 'itemsTable' },
-              { text: obj.id_fabricacion, style: 'itemsTable' },
-              { text: obj.fabricante, style: 'itemsTable' },
-              { text: obj.mac, style: 'itemsTable' },
-              { text: obj.nomdepar, style: 'itemsTable' },
-              { text: obj.nomsucursal, style: 'itemsTable' },
-              { text: obj.nomempresa, style: 'itemsTable' },
-              { text: obj.nomciudad, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'IP', style: 'tableHeader' },
+                { text: 'Puerto', style: 'tableHeader' },
+                { text: 'Marca', style: 'tableHeader' },
+                { text: 'Modelo', style: 'tableHeader' },
+                { text: 'Serie', style: 'tableHeader' },
+                { text: 'ID Fabricante', style: 'tableHeader' },
+                { text: 'Fabricante', style: 'tableHeader' },
+                { text: 'Mac', style: 'tableHeader' },
+                { text: 'Departamento', style: 'tableHeader' },
+                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Empresa', style: 'tableHeader' },
+                { text: 'Ciudad', style: 'tableHeader' }
+              ],
+              ...this.relojes.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.ip, style: 'itemsTableC' },
+                  { text: obj.puerto, style: 'itemsTableC' },
+                  { text: obj.marca, style: 'itemsTable' },
+                  { text: obj.modelo, style: 'itemsTable' },
+                  { text: obj.serie, style: 'itemsTable' },
+                  { text: obj.id_fabricacion, style: 'itemsTable' },
+                  { text: obj.fabricante, style: 'itemsTable' },
+                  { text: obj.mac, style: 'itemsTable' },
+                  { text: obj.nomdepar, style: 'itemsTable' },
+                  { text: obj.nomsucursal, style: 'itemsTable' },
+                  { text: obj.nomempresa, style: 'itemsTable' },
+                  { text: obj.nomciudad, style: 'itemsTable' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
@@ -323,31 +384,6 @@ export class ListarRelojesComponent implements OnInit {
       this.urlxml = 'http://192.168.0.192:3001/relojes/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
-  }
-
-    /* ***************************************************************************************************** 
-   *                                        PLANTILLA VACIA DE DISPOSITIVOS
-   * *****************************************************************************************************/
-  DescargarPlantillaRelojes() {
-    var datosReloj = [{
-      nombre: 'Eliminar esta Fila: Reloj1',
-      ip: '192.168.0.12',
-      puerto: '4562',
-      contrasenia: 'opcional',
-      marca: 'opcional',
-      modelo: 'TX628',
-      serie: 'A4DS174961495',
-      id_fabricacion: 'opcional',
-      fabricante: 'opcional',
-      mac: 'opcional',
-      tien_funciones: 'true o false',
-      id_sucursal: 'sucursal1 Nota: el nombre debe ser exacto al registro',
-      id_departamento: 'sistemas Nota: el nombre debe ser exacto al registro'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosReloj);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Dispositivos');
-    xlsx.writeFile(wb, "Dispositivos" + '.xlsx');
   }
 
 }

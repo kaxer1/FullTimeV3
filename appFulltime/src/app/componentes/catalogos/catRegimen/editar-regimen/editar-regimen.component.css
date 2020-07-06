@@ -27,3 +27,12 @@ label { font-size: small; }
 #maxD { font-size: 13px;}
 
 #anio { font-size: 14px; }
+
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 5px;  
+    text-align: justify;
+    padding-bottom: 10px; 
+    color: rgb(52,65,84);
+}

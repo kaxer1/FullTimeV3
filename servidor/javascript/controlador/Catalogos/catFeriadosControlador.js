@@ -73,16 +73,21 @@ class FeriadosControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { fecha, descripcion, fec_recuperacion } = data;
-                if (fecha != undefined) {
-                    yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+                try {
+                    const { fecha, descripcion, fec_recuperacion } = data;
+                    if (fecha != undefined && descripcion != undefined) {
+                        yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+                    }
+                    else {
+                        res.jsonp({ message: 'error' });
+                    }
+                    res.jsonp({ message: 'correcto' });
+                    fs_1.default.unlinkSync(filePath);
                 }
-                else {
-                    res.jsonp({ error: 'plantilla equivocada' });
+                catch (error) {
+                    res.jsonp({ error: 'error' });
                 }
             }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
-            fs_1.default.unlinkSync(filePath);
         });
     }
     FileXML(req, res) {

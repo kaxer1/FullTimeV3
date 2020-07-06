@@ -1,0 +1,57 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+
+    <mat-card class="mat-elevation-z8">
+        <div class="barraTitulo">
+            <div class="container">
+                <div class="row">
+                    <div class="col" style="text-align: left;">
+                        <h5>Planificación Horario</h5>
+                    </div>
+                    <div class="col" style="text-align: right;">
+                        <button type="submit" class="btn btn-outline-light btn-sm"
+                            (click)="AbrirVentanaPlanHorario()">Añadir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-card-content>
+            <div class="container table-responsive" style="padding-bottom: 50px;">
+                <mat-card class="mat-elevation-z8">
+                    <table class="table table-hover table-sm ">
+                        <thead class="thead-light">
+                            <tr style="text-align: center;">
+                                <th scope="col">Fecha Inicio</th>
+                                <th scope="col">Fecha Final</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let h of planHorario | paginate:tamanio_pagina:numero_pagina">
+
+                                <td>{{h.fec_inicio.split("T")[0]}}</td>
+                                <td>{{h.fec_final.split("T")[0]}}</td>
+                                <td>
+                                    <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                        matTooltip="Agregar Detalles de Planificación de Horario"
+                                        class="far fa-list-alt" id="detalleH"
+                                        (click)="AbrirVentanaDetallePlanHorario(h)">
+                                        <p>Detalle</p>
+                                    </i>
+                                    <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                        matTooltip="Ver datos generales de la planificación" class="fas fa-eye"
+                                        id="ver"  [routerLink]="['/detallesHEmpleado/', h.id, e.id]">
+                                        <p>Ver</p>
+                                    </i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <mat-paginator [length]="planHorario.length" [pageSize]="tamanio_pagina"
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </mat-card>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

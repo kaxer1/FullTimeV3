@@ -14,7 +14,7 @@ import * as FileSaver from 'file-saver';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
 import { EditarRegimenComponent } from 'src/app/componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
-
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-regimen',
@@ -42,15 +42,31 @@ export class ListarRegimenComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: RegimenService,
+    private restE: EmpleadoService,
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerRegimen();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -135,6 +151,39 @@ export class ListarRegimenComponent implements OnInit {
     sessionStorage.setItem('Regimen', this.regimen);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Regímenes Laborales',
@@ -177,33 +226,40 @@ export class ListarRegimenComponent implements OnInit {
 
   presentarDataPDFFeriados() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Descripción', style: 'tableHeader' },
-            { text: 'Vacaciones por año', style: 'tableHeader' },
-            { text: 'Vacaciones por mes', style: 'tableHeader' },
-            { text: 'Años para antiguedad', style: 'tableHeader' },
-            { text: 'Días de incremento', style: 'tableHeader' },
-            { text: 'Días máximos acumulables', style: 'tableHeader' },
-            { text: 'Días Libres', style: 'tableHeader' },
-          ],
-          ...this.regimen.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTable' },
-              { text: obj.dia_anio_vacacion, style: 'itemsTable' },
-              { text: obj.dia_mes_vacacion, style: 'itemsTable' },
-              { text: obj.anio_antiguedad, style: 'itemsTable' },
-              { text: obj.dia_incr_antiguedad, style: 'itemsTable' },
-              { text: obj.max_dia_acumulacion, style: 'itemsTable' },
-              { text: obj.dia_libr_anio_vacacion, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Vacaciones por año', style: 'tableHeader' },
+                { text: 'Vacaciones por mes', style: 'tableHeader' },
+                { text: 'Años para antiguedad', style: 'tableHeader' },
+                { text: 'Días de incremento', style: 'tableHeader' },
+                { text: 'Días máximos acumulables', style: 'tableHeader' },
+                { text: 'Días Libres', style: 'tableHeader' },
+              ],
+              ...this.regimen.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTable' },
+                  { text: obj.dia_anio_vacacion, style: 'itemsTable' },
+                  { text: obj.dia_mes_vacacion, style: 'itemsTable' },
+                  { text: obj.anio_antiguedad, style: 'itemsTable' },
+                  { text: obj.dia_incr_antiguedad, style: 'itemsTable' },
+                  { text: obj.max_dia_acumulacion, style: 'itemsTable' },
+                  { text: obj.dia_libr_anio_vacacion, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

@@ -6,7 +6,7 @@
                     <div class="container">
                         <div class="row" style="text-align: center;">
                             <div class="col">
-                                <h5>Informacion del permiso</h5>
+                                <h5>Información del permiso</h5>
                             </div>
                         </div>
                     </div>
@@ -15,10 +15,10 @@
                     <div class="container" style="padding-top: 15px;" *ngFor="let p of InfoPermiso">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código Permiso:</label>
+                                <label class="col-sm col-form-label">Fecha Creación:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{p.id}}</label>
+                                <label class="col col-form-label">{{p.fec_creacion.split('T')[0]}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -39,14 +39,6 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Descripción:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.descripcion}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
                                 <label class="col-sm col-form-label">Tipo Permiso:</label>
                             </div>
                             <div class="col">
@@ -55,18 +47,26 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
+                                <label class="col-sm col-form-label">Código Permiso:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{p.estado}}</label>
+                                <label class="col col-form-label">{{p.id}}</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Creación:</label>
+                                <label class="col-sm col-form-label">Descripción:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{p.fec_creacion.split('T')[0]}}</label>
+                                <label class="col col-form-label">{{p.descripcion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.estado}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -85,21 +85,33 @@
                                 <label class="col col-form-label">{{p.fec_final.split('T')[0]}}</label>
                             </div>
                         </div>
-                        
-                        <div class="row" style="margin-top: 5px;">
-                            <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
-                                <i id="iconos" class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
-                                    matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
-                                    <p>Autorización</p>
-                                </i>
-                                <i id="iconos" class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditar(p)"
-                                    matTooltip="Cambiar el estado del permiso">
-                                    <p>Estado</p>
-                                </i>
-                                <a id="iconos" class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix matTooltipPosition="right" 
-                                    matTooltip="Certificado" href="http://localhost:3000/empleadoPermiso/documentos/{{p.documento}}" target="_blank">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Certificado:</label>
+                            </div>
+                            <div class="col">
+                                <a id="iconos" class="fas fa-file-alt" style="color:rgb(197, 95, 11);" matSuffix
+                                    matTooltipPosition="right" matTooltip="Certificado"
+                                    href="http://localhost:3000/empleadoPermiso/documentos/{{p.documento}}"
+                                    target="_blank">
                                     <p>{{p.docu_nombre}}</p>
                                 </a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col d-flex align-items-center justify-content-center"
+                                style="text-align: right;">
+                                <i id="iconos" *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle"
+                                    style="color:rgb(58, 90, 231); margin-left: 15px;" (click)="AbrirAutorizaciones(p)"
+                                    matTooltipPosition="right"
+                                    matTooltip="Agrega más tipos de permisos de este departamento.">
+                                    <p>Autorización</p>
+                                </i>
+                                <i *ngIf="HabilitarAutorizacion" class="fas fa-edit"
+                                    style="color:green; margin-left: 15px; text-align: center" matSuffix matTooltipPosition="right"
+                                    (click)="AbrirVentanaEditar(p)" matTooltip="Cambiar el estado del permiso">
+                                    <p>Estado</p>
+                                </i>
                             </div>
                         </div>
                     </div>
@@ -112,7 +124,7 @@
                     <div class="container">
                         <div class="row" style="text-align: center;">
                             <div class="col">
-                                <h5>Informacion de la Autorización</h5>
+                                <h5>Información de la Autorización</h5>
                             </div>
                         </div>
                     </div>
@@ -150,10 +162,25 @@
                             <div class="col">
                                 <label class="col col-form-label">{{departamento}}</label>
                             </div>
-                        </div>                        
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Solicitud de Permiso:</label>
+                            </div>
+                            <div class="col">
+                                <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
+                                    style="color:red;" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Descargar Solicitud de Permiso en formato PDF">
+                                    <p>Archivo PDF</p>
+                                </i>
+                            </div>
+                        </div>
                         <div class="row" style="margin-top: 5px;">
-                            <div class="col d-flex align-items-center justify-content-center" style="text-align: right;">
-                                <i class="fas fa-edit" style="color:green; margin-left: 15px;" matSuffix matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                            <div class="col d-flex align-items-center justify-content-center"
+                                style="text-align: right;">
+                                <i class="fas fa-edit" style="color:green; margin-left: 15px; text-align: center;" matSuffix
+                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
                                     matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>
                                 </i>

@@ -47,7 +47,7 @@ class AutorizaDepartamentoControlador {
     ObtenerQuienesAutorizan(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_depar } = req.params;
-            const EMPLEADOS = yield database_1.default.query('SELECT * FROM VistaPersonasAutorizan WHERE id_depar = $1', [id_depar]);
+            const EMPLEADOS = yield database_1.default.query('SELECT * FROM VistaAutorizanCargo WHERE id_depar = $1', [id_depar]);
             if (EMPLEADOS.rowCount > 0) {
                 return res.jsonp(EMPLEADOS.rows);
             }

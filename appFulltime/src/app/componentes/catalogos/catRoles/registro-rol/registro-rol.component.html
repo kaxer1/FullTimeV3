@@ -5,6 +5,10 @@
 <form [formGroup]="nuevoRolForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <mat-form-field>
                 <mat-label>Descripción</mat-label>
                 <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
@@ -18,7 +22,7 @@
     </mat-card-content>
 </form>
 <div style="text-align: center;">
-    <input type="submit" class="btn btn-sm" (click)="insertarRol(nuevoRolForm.value)"
-        [disabled]="!nuevoRolForm.valid" value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="insertarRol(nuevoRolForm.value)" [disabled]="!nuevoRolForm.valid"
+        value="Guardar">
     <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroRol()" value="Salir">
 </div>

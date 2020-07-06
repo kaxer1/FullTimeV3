@@ -45,6 +45,8 @@ import PERMISOS_RUTAS from './rutas/permisos/permisosRutas';
 import DETALLE_CATALOGO_HORARIO_RUTAS from './rutas/horarios/detalleCatHorario/detalleCatHorarioRutas';
 import NOTIFICACIONES_AUTORIZACIONES_RUTAS from './rutas/catalogos/catNotiAutorizacionesRutas';
 import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
+import PLANTILLA_RUTAS from './rutas/descargarPlantilla/plantillaRutas';
+import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacionesRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -89,13 +91,11 @@ class Servidor {
                 res.header('Expires: 0');
                 res.header('Authorization', 'token');
                 return res.status(200).json({});
-
             }
-
             next();
         });
-
     }
+
 
     rutas(): void {
         this.app.use('/', indexRutas);
@@ -154,6 +154,10 @@ class Servidor {
         this.app.use('/nivel-titulo', NIVEL_TITULO_RUTAS);
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
+        this.app.use('/noti-real-time', NOTIFICACION_TIEMPO_REAL_RUTAS);
+
+        // Plantillas
+        this.app.use('/plantillaD', PLANTILLA_RUTAS);
 
     }
 
@@ -165,14 +169,18 @@ class Servidor {
             console.log('Connected client on port %s.', this.app.get('puerto'));
             
             socket.on("nueva_notificacion", (data: any) => {
-                console.log(data.titulo, data.mensaje, data.photo, data.url)
-                this.io.sockets.emit( 'enviar_notification', { 
-                    titulo: data.titulo, 
-                    mensaje: data.mensaje, 
-                    photo: data.photo, 
-                    url: data.url, 
-                });
-                
+                let data_llega = {
+                    id: data.id,
+                    id_send_empl: data.id_send_empl,
+                    id_receives_empl: data.id_receives_empl,
+                    id_receives_depa: data.id_receives_depa,
+                    estado: data.estado, 
+                    create_at: data.create_at, 
+                    id_permiso: data.id_permiso,
+                    id_vacaciones: data.id_vacaciones
+                }
+                console.log(data_llega);
+                socket.broadcast.emit( 'enviar_notification', data_llega);
             });
       
         });

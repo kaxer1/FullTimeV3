@@ -1,0 +1,15 @@
+.barraTitulo { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
+mat-divider { background: rgba(131, 131, 131, 0.609);}
+
+
+
+
+
+

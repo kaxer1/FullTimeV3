@@ -26,7 +26,7 @@ class PermisosControlador {
 
     public async ListarUnPermisoInfo(req: Request, res: Response) {
         const id = req.params.id_permiso
-        const PERMISOS = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id = $1 AND  p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC', [id]);
+        const PERMISOS = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, e.id AS id_empleado, cp.id AS id_tipo_permiso, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id = $1 AND  p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC', [id]);
         if (PERMISOS.rowCount > 0) {
             return res.jsonp(PERMISOS.rows)
         }
@@ -37,7 +37,7 @@ class PermisosControlador {
 
     public async ObtenerUnPermiso(req: Request, res: Response) {
         const id = req.params.id;
-        const PERMISOS = await pool.query('SELECT * FROM permisos WHERE id = $1',[id]);
+        const PERMISOS = await pool.query('SELECT * FROM permisos WHERE id = $1', [id]);
         if (PERMISOS.rowCount > 0) {
             return res.jsonp(PERMISOS.rows)
         }
@@ -49,26 +49,30 @@ class PermisosControlador {
     public async CrearPermisos(req: Request, res: Response): Promise<void> {
         const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre } = req.body;
         await pool.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre]);
-        
+
         const ultimo = await pool.query('SELECT id FROM permisos WHERE fec_creacion = $1 AND  id_tipo_permiso = $2 AND id_empl_contrato = $3', [fec_creacion, id_tipo_permiso, id_empl_contrato]);
         const JefesDepartamentos = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s ,empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id');
-        const correoInfoPidePermiso = await pool.query('SELECT distinct e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato', [id_empl_contrato]);
+        const correoInfoPidePermiso = await pool.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [id_empl_contrato]);
 
-        const email = 'kevincuray41@gmail.com';
-        const pass = '2134Lamboclak';
-        
+        const email = process.env.EMAIL;
+        const pass = process.env.PASSWORD;
+
         let smtpTransport = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-              user: email,
-              pass: pass
+                user: email,
+                pass: pass
             }
         });
 
+        let id_departamento_autoriza;
+        let id_empleado_autoriza;
         JefesDepartamentos.rows.forEach(obj => {
+
             if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal){
-                var url = 'http://localhost:4200/ver-permiso';
-                
+                var url = `${process.env.URL_DOMAIN}/ver-permiso`;
+                id_departamento_autoriza = obj.id_dep;
+                id_empleado_autoriza = obj.empleado;
                 let data = {
                     to: obj.correo,
                     from: email,
@@ -78,18 +82,16 @@ class PermisosControlador {
                     cédula ${correoInfoPidePermiso.rows[0].cedula} solicita autorización de permiso: </p>
                     <a href="${url}/${ultimo.rows[0].id}">Ir a verificar permisos</a>`
                 };
-                console.log(data);
                 smtpTransport.sendMail(data, async (error: any, info: any) => {
                     if (error) {
-                      console.log(error);
+                        console.log(error);
                     } else {
-                      console.log('Email sent: ' + info.response);
+                        console.log('Email sent: ' + info.response);
                     }
                 });
             }
-        });     
-        
-        res.jsonp({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id });
+        });
+        res.jsonp({ message: 'Permiso se registró con éxito', id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
     }
 
     public async ObtenerNumPermiso(req: Request, res: Response): Promise<any> {
@@ -103,8 +105,8 @@ class PermisosControlador {
         }
     }
 
-    public async ObtenerPermisoContrato(req: Request, res: Response){
-        try {   
+    public async ObtenerPermisoContrato(req: Request, res: Response) {
+        try {
             const { id_empl_contrato } = req.params;
             const PERMISO = await pool.query('SELECT * FROM VistaNombrePermiso  WHERE id_empl_contrato = $1', [id_empl_contrato]);
             return res.jsonp(PERMISO.rows)
@@ -123,9 +125,9 @@ class PermisosControlador {
         let list: any = req.files;
         let doc = list.uploads[0].path.split("\\")[1];
         let id = req.params.id
-    
+
         await pool.query('UPDATE permisos SET documento = $2 WHERE id = $1', [id, doc]);
-        res.jsonp({ message: 'Documento Actualizado'});
+        res.jsonp({ message: 'Documento Actualizado' });
     }
 
     public async ActualizarEstado(req: Request, res: Response): Promise<void> {
@@ -133,6 +135,28 @@ class PermisosControlador {
         const { estado } = req.body;
         await pool.query('UPDATE permisos SET estado = $1 WHERE id = $2', [estado, id]);
         res.jsonp({ message: 'Estado de permiso actualizado exitosamente' });
+    }
+
+    public async ObtenerDatosSolicitud(req: Request, res: Response) {
+        const id = req.params.id_emple_permiso;
+        const SOLICITUD = await pool.query('SELECT *FROM VistaDatoSolicitud WHERE id_emple_permiso = $1', [id]);
+        if (SOLICITUD.rowCount > 0) {
+            return res.json(SOLICITUD.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async ObtenerDatosAutorizacion(req: Request, res: Response) {
+        const id = req.params.id_permiso;
+        const SOLICITUD = await pool.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1', [id]);
+        if (SOLICITUD.rowCount > 0) {
+            return res.json(SOLICITUD.rows)
+        }
+        else {
+            return res.status(404).json({ text: 'No se encuentran registros' });
+        }
     }
 }
 

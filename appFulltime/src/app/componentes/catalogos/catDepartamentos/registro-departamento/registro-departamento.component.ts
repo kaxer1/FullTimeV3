@@ -96,19 +96,12 @@ export class RegistroDepartamentoComponent implements OnInit {
       depa_padre: departamentoPadreNombre,
       id_sucursal: form.idSucursalForm
     };
-    if (departamentoPadreNombre === 'Ninguno') {
-      this.rest.ConsultarIdNombreDepartamentos(departamentoPadreNombre).subscribe(datos => {
-        this.departamentoId = datos;
-        for (let i = this.departamentoId.length - 1; i >= 0; i--) {
-          var id_dePadre = this.departamentoId[i]['id'];
-        }
-        datosDepartamento.depa_padre = id_dePadre;
-        this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Departamento registrado');
-          this.LimpiarCampos();
-        });
-      }, (error) => {
-      })
+    if (departamentoPadreNombre === 0) {
+      datosDepartamento.depa_padre = null;
+      this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Departamento registrado');
+        this.LimpiarCampos();
+      });
     }
     else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {

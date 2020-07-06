@@ -52,12 +52,14 @@
                         matTooltipPosition="right"
                         matTooltip="Presionar para seleccionar Plantilla con nombre Feriados">Subir Feriados</label>
                     </form>
-                    <br>
-                    <button (click)="DescargarPlantillaFeriados()" mat-button type="submit" id="descargar"
-                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Presionar para descargar Plantilla para carga multiple de feriados">
-                        <span class="material-icons">cloud_download</span>  Descargar Plantilla Feriados
-                    </button>
+                </div>
+                <br>
+                <div class="col-md">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/Feriados.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Feriados
+                    </a>
                 </div>
             </mat-card>
         </div>

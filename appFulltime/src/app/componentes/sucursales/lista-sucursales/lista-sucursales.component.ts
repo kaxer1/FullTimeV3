@@ -13,6 +13,7 @@ import * as FileSaver from 'file-saver';
 import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
 import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-sucursal/editar-sucursal.component';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-lista-sucursales',
@@ -22,8 +23,8 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 })
 export class ListaSucursalesComponent implements OnInit {
 
-  buscarNombre = new FormControl('',[Validators.minLength(2)]);
-  buscarCiudad = new FormControl('',[Validators.minLength(2)]);
+  buscarNombre = new FormControl('', [Validators.minLength(2)]);
+  buscarCiudad = new FormControl('', [Validators.minLength(2)]);
   buscarEmpresa = new FormControl('', [Validators.minLength(2)]);
   filtroNombreSuc = '';
   filtroCiudadSuc = '';
@@ -42,28 +43,44 @@ export class ListaSucursalesComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: SucursalService,
     private toastr: ToastrService,
+    public restE: EmpleadoService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerSucursal();
+    this.ObtenerEmpleados(this.idEmpleado);
   }
 
-  ManejarPagina(e: PageEvent){
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
+  }
+
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  ObtenerSucursal(){
+  ObtenerSucursal() {
     this.rest.getSucursalesRest().subscribe(data => {
       this.sucursales = data;
     });
   }
 
-  AbrirVentanaRegistrarSucursal(){
+  AbrirVentanaRegistrarSucursal() {
     this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
   }
 
@@ -73,7 +90,7 @@ export class ListaSucursalesComponent implements OnInit {
     //console.log(datosSeleccionados.fecha);
   }
 
-  LimpiarCampoBuscar(){
+  LimpiarCampoBuscar() {
     this.BuscarSucursalForm.setValue({
       buscarNombreForm: '',
       buscarCiudadForm: '',
@@ -122,6 +139,39 @@ export class ListaSucursalesComponent implements OnInit {
     sessionStorage.setItem('Sucursales', this.sucursales);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Sucursales',
@@ -156,6 +206,10 @@ export class ListaSucursalesComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -163,25 +217,32 @@ export class ListaSucursalesComponent implements OnInit {
 
   presentarDataPDFSucursales() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Empresa', style: 'tableHeader' },
-            { text: 'Sucursal', style: 'tableHeader' },
-            { text: 'Ciudad', style: 'tableHeader' }
-          ],
-          ...this.sucursales.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nomempresa, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.descripcion, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Empresa', style: 'tableHeader' },
+                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Ciudad', style: 'tableHeader' }
+              ],
+              ...this.sucursales.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nomempresa, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.descripcion, style: 'itemsTable' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

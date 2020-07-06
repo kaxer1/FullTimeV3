@@ -15,7 +15,7 @@ import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.c
 import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-principal-proceso',
@@ -37,12 +37,18 @@ export class PrincipalProcesoComponent implements OnInit {
   filtroNivel: number;
   filtroProPadre = '';
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: ProcesoService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
     private router: Router,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -51,6 +57,16 @@ export class PrincipalProcesoComponent implements OnInit {
 
   ngOnInit(): void {
     this.getProcesos();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -177,6 +193,39 @@ export class PrincipalProcesoComponent implements OnInit {
     sessionStorage.setItem('Procesos', this.procesos);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Procesos',
@@ -211,6 +260,10 @@ export class PrincipalProcesoComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -218,25 +271,32 @@ export class PrincipalProcesoComponent implements OnInit {
 
   presentarDataPDFProcesos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Nivel', style: 'tableHeader' },
-            { text: 'Proceso Superior', style: 'tableHeader' },
-          ],
-          ...this.procesos.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.nivel, style: 'itemsTable' },
-              { text: obj.proc_padre, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Nivel', style: 'tableHeader' },
+                { text: 'Proceso Superior', style: 'tableHeader' },
+              ],
+              ...this.procesos.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.nivel, style: 'itemsTableC' },
+                  { text: obj.proc_padre, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

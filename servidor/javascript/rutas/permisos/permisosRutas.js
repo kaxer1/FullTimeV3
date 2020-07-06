@@ -26,6 +26,8 @@ class PermisosRutas {
         this.router.get('/permisoContrato/:id_empl_contrato', permisosControlador_1.default.ObtenerPermisoContrato);
         this.router.put('/:id/documento', multipartMiddleware, permisosControlador_1.default.guardarDocumentoPermiso);
         this.router.put('/:id/estado', permisosControlador_1.default.ActualizarEstado);
+        this.router.get('/datosSolicitud/:id_emple_permiso', permisosControlador_1.default.ObtenerDatosSolicitud);
+        this.router.get('/datosAutorizacion/:id_permiso', permisosControlador_1.default.ObtenerDatosAutorizacion);
     }
 }
 const PERMISOS_RUTAS = new PermisosRutas();

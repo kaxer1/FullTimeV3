@@ -5,6 +5,10 @@
     <form [formGroup]="nuevoTituloEmpleadoForm">
         <mat-card-content>
             <div class="container" style="padding-top: 15px; text-align: center;">
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
+                </div>
                 <mat-form-field>
                     <mat-label>Observaciones</mat-label>
                     <input matInput placeholder="ejemplo" (keypress)="IngresarSoloLetras($event)"

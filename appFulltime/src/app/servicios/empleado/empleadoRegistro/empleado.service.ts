@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
 import { saveAs } from "file-saver";
+import {  throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +11,12 @@ import { saveAs } from "file-saver";
 export class EmpleadoService {
 
   API_URI = 'http://192.168.0.192:3001';
+
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  }
 
   constructor(private http: HttpClient) { }
   
@@ -21,11 +30,17 @@ export class EmpleadoService {
   }
 
   postEmpleadoRest(data: any){
-    return this.http.post(`${this.API_URI}/empleado`, data);
+    return this.http.post(`${this.API_URI}/empleado`, data)
+    .pipe(
+      catchError(data)
+    );
   }
   
   putEmpleadoRest(data: any, id: number){
-    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data);
+    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data)
+    .pipe(
+      catchError(data)
+    );
   }
   
   subirArchivoExcel(formData) {

@@ -2,11 +2,15 @@
 <div class="tituloprocesoR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Acciones de Personal Registrar Proceso</span>
 </div>
-<br>
 <div style="text-align: center">
     <form [formGroup]="nuevoProcesoForm">
         <mat-card-content>
             <div class="container">
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el
+                        botón
+                        Guardar.</span>
+                </div>
                 <mat-form-field>
                     <mat-label>Nombre de proceso</mat-label>
                     <input matInput placeholder="Ej: Emergencia" [formControl]="nombre"

@@ -26,7 +26,7 @@
                                     <mat-form-field>
                                         <mat-label>Ingresar CI o pasaporte</mat-label>
                                         <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
-                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                             [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
                                         <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
                                         </mat-error>
@@ -90,6 +90,14 @@
                         <label for="file" class="btn-2">Subir Empleados</label>
                     </form>
                 </div>
+                <br>
+                <div class="container">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/Empleados.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Empleados
+                    </a>
+                </div>
             </mat-card>
         </div>
     </div>
@@ -101,7 +109,7 @@
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr style="text-align: center;">
-                    <th scope="col">Id </th>
+                    <th scope="col">Código</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Apellido</th>
                     <th scope="col">Cédula</th>
@@ -113,7 +121,7 @@
             <tbody>
                 <tr
                     *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
-                    <th style="padding-top: 10px; text-align: center;" scope="row">{{e.id}}</th>
+                    <th style="padding-top: 10px; text-align: center;" scope="row">{{e.codigo}}</th>
                     <td style="padding-top: 10px;">{{e.nombre}}</td>
                     <td style="padding-top: 10px;">{{e.apellido}}</td>
                     <td style="padding-top: 10px;">{{e.cedula}}</td>

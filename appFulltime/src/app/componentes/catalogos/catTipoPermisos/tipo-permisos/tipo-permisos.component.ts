@@ -150,10 +150,14 @@ export class TipoPermisosComponent implements OnInit {
   IngresarDatos(datos) {
     this.validarGuardar = true;
     this.rest.postTipoPermisoRest(datos).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
-      window.location.reload();
-    }, error => {
-    });
+      if (res.message === 'error') {
+        this.toastr.error('Revisarlo en la lista de Tipo de Permisos y actualizar los datos si desea realizar cambios en la configuración del permiso', 'Tipo de Permiso ya esta configurado');
+      }
+      else {
+        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+        window.location.reload();
+      }
+    }, error => { });
   }
 
   ActivarDesactivarNombre(form1) {
@@ -250,7 +254,7 @@ export class TipoPermisosComponent implements OnInit {
         datos.num_dia_maximo = 0;
       }
     }
-    else if (form.diasHorasForm === 'Días y Horas'){
+    else if (form.diasHorasForm === 'Días y Horas') {
       if (datos.num_hora_maximo === '' || datos.num_dia_maximo === '') {
         this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso');
       }

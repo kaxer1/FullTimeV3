@@ -2,11 +2,14 @@
 <div class="tituloComidaR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar tipo de Comida</span>
 </div>
-<br>
 <!-- Formulario Completo -->
 <form [formGroup]="TipoComidaForm">
     <mat-card-content>
         <div class="container" style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <mat-form-field>
                 <mat-label>Tipo de Comida</mat-label>
                 <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,14 @@ export class AutorizacionService {
   AUTORIZACIONES_URL = 'http://192.168.0.192:3001';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private socket: Socket
   ) { }
+
+  // realtime
+  sendNotiRealTimeEstado(data: any) {
+    this.socket.emit('nueva_notificacion', data);
+  }
 
   // catalogo de notificaciones
   getAutorizacionesRest(){
@@ -25,7 +32,11 @@ export class AutorizacionService {
     return this.http.post(`${this.AUTORIZACIONES_URL}/autorizaciones`, data);
   }
 
-  ActualizarEstadoAutorizacion(id: number, datos: any) {
-    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado`, datos);
+  PutEstadoAutoPermiso(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-permiso`, datos);
+  }
+  
+  PutEstadoAutoVacacion(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-vacacion`, datos);
   }
 }

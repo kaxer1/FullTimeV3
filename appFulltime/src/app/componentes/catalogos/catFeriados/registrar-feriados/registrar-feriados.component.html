@@ -2,11 +2,14 @@
 <div class="barraTituloR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registra Nuevo Feriado</span>
 </div>
-<br>
 <!-- Formulario Completo -->
 <form [formGroup]="FeriadosForm">
     <mat-card-content>
         <div class="container" style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <mat-form-field>
                 <mat-label>Descripción</mat-label>
                 <input matInput placeholder="Descripción feriado" [formControl]="descripcionF"

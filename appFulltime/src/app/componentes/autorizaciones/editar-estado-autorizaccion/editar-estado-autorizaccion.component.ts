@@ -17,12 +17,12 @@ interface Estado {
 export class EditarEstadoAutorizaccionComponent implements OnInit {
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente'},
-    { id: 2, nombre: 'Pre-autorizado'},
-    { id: 3, nombre: 'Autorizado'},
-    { id: 4, nombre: 'Negado'},
+    { id: 1, nombre: 'Pendiente' },
+    { id: 2, nombre: 'Pre-autorizado' },
+    { id: 3, nombre: 'Autorizado' },
+    { id: 4, nombre: 'Negado' },
   ];
-  
+
   estado = new FormControl('', Validators.required);
 
   public estadoAutorizacionesForm = new FormGroup({
@@ -39,20 +39,21 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.estadoAutorizacionesForm.patchValue({
-      estadoF: this.data.estado
+      estadoF: this.data.auto.estado
     });
   }
 
-  ActualizarEstadoAutorizacion(form){
+  ActualizarEstadoAutorizacion(form) {
     let newAutorizaciones = {
-      estado: form.estadoF, 
+      estado: form.estadoF,
+      id_vacaciones: this.data.auto.id_documento, 
+      id_departamento: this.data.auto.id_departamento
     }
 
-    this.restA.ActualizarEstadoAutorizacion(this.data.id, newAutorizaciones).subscribe(res => {
+    this.restA.PutEstadoAutoPermiso(this.data.auto.id, newAutorizaciones).subscribe(res => {
       console.log(res);
-      this.toastr.success('Operación exitosa','Estado Actualizado');
+      this.toastr.success('Operación exitosa', 'Estado Actualizado');
       this.dialogRef.close();
-      window.location.reload();
     })
   }
 

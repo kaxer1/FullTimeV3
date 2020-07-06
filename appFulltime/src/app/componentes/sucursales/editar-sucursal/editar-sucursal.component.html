@@ -2,10 +2,13 @@
 <div class="tituloSucursalR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Modificar Datos Sucursal</span>
 </div>
-<br>
 <form [formGroup]="nuevaSucursalForm">
     <mat-card-content>
         <div class="container">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col">
                     <mat-form-field>
