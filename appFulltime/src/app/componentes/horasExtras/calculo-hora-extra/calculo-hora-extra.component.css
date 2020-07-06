@@ -18,3 +18,12 @@ mat-label { font-size: 14px; }
 #permiso { cursor: pointer; }
 
 #fechaR { font-size: 12px; }
+
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 5px;  
+    text-align: justify;
+    padding-bottom: 10px; 
+    color: rgb(52,65,84);
+}

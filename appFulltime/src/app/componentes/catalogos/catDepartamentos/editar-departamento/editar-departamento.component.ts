@@ -8,7 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 
 interface Nivel {
-  valor: string;
+  valor: number;
   nombre: string
 }
 
@@ -31,7 +31,7 @@ export class EditarDepartamentoComponent implements OnInit {
   sucursales: any = [];
   departamentos: any = [];
   departamentoModificar: any = []
-  selectPadre;
+  selectPadre: string = 'Ninguno';
   idD = '';
   nombreD = '';
 
@@ -46,13 +46,12 @@ export class EditarDepartamentoComponent implements OnInit {
 
   // Arreglo de niveles existentes
   niveles: Nivel[] = [
-    { valor: '1', nombre: '1' },
-    { valor: '2', nombre: '2' },
-    { valor: '3', nombre: '3' },
-    { valor: '4', nombre: '4' },
-    { valor: '5', nombre: '5' }
+    { valor: 1, nombre: '1' },
+    { valor: 2, nombre: '2' },
+    { valor: 3, nombre: '3' },
+    { valor: 4, nombre: '4' },
+    { valor: 5, nombre: '5' }
   ];
-  selectNivel: string = this.niveles[0].valor;
 
   constructor(
     private rest: DepartamentosService,
@@ -65,6 +64,8 @@ export class EditarDepartamentoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.descripcionD);
+    this.ObtenerDepartamentosInicio();
     this.BuscarEmpresas();
     this.ValidarCamposModificar();
   }
@@ -73,15 +74,14 @@ export class EditarDepartamentoComponent implements OnInit {
     var departamentoPadreId
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     console.log(form.departamentoDepartamentoPadreForm);
-    if (departamentoPadreNombre == 'Ninguna' || departamentoPadreNombre == null) {
+    if (departamentoPadreNombre === 0) {
       let datadepartamento = {
         nombre: form.departamentoNombreForm,
         nivel: form.departamentoNivelForm,
         depa_padre: null,
         id_sucursal: form.idSucursalForm
       };
-      this.rest.updateDepartamento(this.descripcionD.id, datadepartamento)
-        .subscribe(response => {
+      this.rest.updateDepartamento(this.descripcionD.id, datadepartamento).subscribe(response => {
           this.toastr.success('Operacion Exitosa', 'Departamento modificado');
           window.location.reload();
           this.dialogRef.close();
@@ -123,18 +123,31 @@ export class EditarDepartamentoComponent implements OnInit {
     this.idD = this.descripcionD.id;
     this.rest.EncontrarUnDepartamento(parseInt(this.idD)).subscribe(res => {
       this.departamentoModificar = res;
+      console.log(this.departamentoModificar)
       this.FiltrarSucursalesEditar(this.descripcionD.id_empresa);
       this.ObtenerDepartamentosEditar(this.descripcionD.id_sucursal);
-      this.nuevoDepartamentoForm.setValue({
+      this.nuevoDepartamentoForm.patchValue({
         idEmpresaForm: this.descripcionD.id_empresa,
         idSucursalForm: this.descripcionD.id_sucursal,
         departamentoNombreForm: this.departamentoModificar.nombre,
         departamentoNivelForm: this.departamentoModificar.nivel,
-        departamentoDepartamentoPadreForm: this.departamentoModificar.depa_padre
       })
-      this.selectNivel = this.niveles[this.departamentoModificar.nivel-1].valor
       this.ObtenerNombre(this.departamentoModificar.depa_padre);
     }, err => { })
+  }
+
+  ObtenerDepartamentosInicio() {
+    this.departamentos = [];
+    let idSucursal = this.descripcionD.id_sucursal;
+    this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
+      this.departamentos = datos;
+      console.log(this.departamentos)
+      this.nuevoDepartamentoForm.patchValue({
+        departamentoDepartamentoPadreForm: this.descripcionD.departamento_padre
+      })
+    }, error => {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
   }
 
   BuscarEmpresas() {
@@ -187,12 +200,20 @@ export class EditarDepartamentoComponent implements OnInit {
   nombreDepa: any = [];
   ObtenerNombre(id: number) {
     this.nombreDepa = [];
-    this.rest.EncontrarUnDepartamento(id).subscribe(datos => {
-      this.nombreDepa = datos;
-      this.selectPadre = this.nombreDepa.nombre;
-    }, error => {
-      this.toastr.info('Descripción ingresada no coincide con los registros')
-    });
+    if (id !== null) {
+      this.rest.EncontrarUnDepartamento(id).subscribe(datos => {
+        this.nombreDepa = datos;
+        this.selectPadre = this.nombreDepa.nombre;
+      }, error => {
+        this.toastr.info('Descripción ingresada no coincide con los registros')
+      });
+    } else {
+      console.log('llegue');
+      this.nuevoDepartamentoForm.patchValue({
+        departamentoDepartamentoPadreForm: 0
+      })
+      // this.selectPadre = 'Ninguno';
+    }
   }
 
   IngresarSoloLetras(e) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditarNotificacionComponent } from './editar-notificacion/editar-notificacion.component';
 import { NotiAutorizacionesComponent } from "../catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component";
 import { ListarNotiAutorizacionesComponent } from '../catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
 interface Nivel {
   valor: string
@@ -26,10 +27,11 @@ export class NotificacionesComponent implements OnInit {
   departamentos: any = [];
   tipoPermiso: any = [];
 
-  tipo = new FormControl('');
+  tipo = new FormControl('', Validators.required);
   nivel = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
   idTipoPermiso = new FormControl('', Validators.required);
+  sucursal = new FormControl('', Validators.required);
 
   public nuevaNotificacionForm = new FormGroup({
     tipoForm: this.tipo,
@@ -38,20 +40,22 @@ export class NotificacionesComponent implements OnInit {
     idTipoPermisoForm: this.idTipoPermiso
   });
 
-  niveles: Nivel[] = [    
-    { valor: '1'},
-    { valor: '2'},
-    { valor: '3'},
-    { valor: '4'},
-    { valor: '5'}
+  niveles: Nivel[] = [
+    { valor: '1' },
+    { valor: '2' },
+    { valor: '3' },
+    { valor: '4' },
+    { valor: '5' }
   ];
 
   HabilitarD: boolean = false;
   HabilitarP: boolean = false;
+  HabilitarS: boolean = false;
 
   tipo_permiso_res: any = [];
   noti_res: any = [];
   depa_res: any = [];
+  sucu_res: any = [];
 
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
@@ -63,6 +67,7 @@ export class NotificacionesComponent implements OnInit {
     private rest: NotificacionesService,
     private restD: DepartamentosService,
     private restP: TipoPermisosService,
+    private restS: SucursalService,
     public vistaRegistrarDatos: MatDialog
   ) { }
 
@@ -71,8 +76,8 @@ export class NotificacionesComponent implements OnInit {
     this.rest.getNotificacionesRest().subscribe(res => {
       this.noti_res = res;
     });
-    this.restD.ConsultarDepartamentos().subscribe(res => {
-      this.departamentos = res;
+    this.restS.getSucursalesRest().subscribe(res => {
+      this.sucu_res = res;
     });
     this.restP.getTipoPermisoRest().subscribe(res => {
       this.tipo_permiso_res = res;
@@ -84,10 +89,21 @@ export class NotificacionesComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  ActivarFormDepa(){
-    this.HabilitarD = true;
+  ActivarFormSucursal() {
+    this.HabilitarS = true;
   }
-  
+
+  ActivarFormDepa(id_sucursal: number) {
+    this.departamentos = [];
+    this.HabilitarD = true;
+    this.restD.BuscarDepartamentoSucursal(id_sucursal).subscribe(res => {
+      this.departamentos = res;
+    }, error => {
+      this.toastr.info('Selecciones otra sucursal que contenga departamentos', 'Sucursal sin departamentos');
+      this.sucursal.setValue('')
+    });
+  }
+
   // depa_Asignado: any = [];
   // ListaDepartamentos() {
   //   this.departamentos = [];
@@ -118,13 +134,13 @@ export class NotificacionesComponent implements OnInit {
     this.tipoPermiso = []
     this.tipo_permiso_Asignado = [];
     this.noti_res.forEach(elm => {
-      if (id_depa == elm.departamento){
+      if (id_depa == elm.departamento) {
         this.tipo_permiso_Asignado.push(elm.descripcion);
       }
     });
     // console.log(this.tipo_permiso_Asignado);
-    this.tipo_permiso_res.forEach(element=> {
-      if(this.tipo_permiso_Asignado.indexOf(element.descripcion) < 0){
+    this.tipo_permiso_res.forEach(element => {
+      if (this.tipo_permiso_Asignado.indexOf(element.descripcion) < 0) {
         let dataTipoPermiso = {
           id: element.id,
           descripcion: element.descripcion,
@@ -158,7 +174,7 @@ export class NotificacionesComponent implements OnInit {
     }
   }
 
-  insertarNotificacion(form){
+  insertarNotificacion(form) {
     let newNoti = {
       tipo: form.tipoForm,
       nivel: form.nivelForm,
@@ -166,18 +182,26 @@ export class NotificacionesComponent implements OnInit {
       id_tipo_permiso: form.idTipoPermisoForm
     }
     this.rest.postNotificacionesRest(newNoti).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Notificación guardada'),
-      this.limpiarCampos();
-      this.rest.getNotificacionesRest().subscribe(res => {
-        this.noti_res = res;
-      });
+      if (response.message === 'error') {
+        this.toastr.error('El código ingresado ya esta siendo usado', 'CÓDIGO DE NOTIFICACIÓN DEBE SER ÚNICO');
+      }
+      else {
+        this.toastr.success('Operación Exitosa', 'Notificación guardada');
+        this.limpiarCampos();
+        this.rest.getNotificacionesRest().subscribe(res => {
+          this.noti_res = res;
+        });
+      }
     }, error => {
       console.log(error);
     })
   }
 
-  limpiarCampos(){
+  limpiarCampos() {
     this.nuevaNotificacionForm.reset();
+    this.HabilitarS = false;
+    this.HabilitarP = false;
+    this.HabilitarD = false;
   }
 
   EditarNotificacion(datosSeleccionados: any): void {
@@ -185,10 +209,10 @@ export class NotificacionesComponent implements OnInit {
   }
 
   AbrirNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(NotiAutorizacionesComponent, { width: '300px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(NotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
   }
-  
+
   AbrirListaNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(ListarNotiAutorizacionesComponent, { width: '500px', data: datosSeleccionados }).disableClose = true;
   }
 }

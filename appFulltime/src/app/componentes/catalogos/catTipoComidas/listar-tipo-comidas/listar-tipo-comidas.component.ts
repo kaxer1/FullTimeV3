@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { EditarTipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -42,15 +43,31 @@ export class ListarTipoComidasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: TipoComidasService,
+    public restE: EmpleadoService,
     public router: Router,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerTipoComidas();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -103,6 +120,39 @@ export class ListarTipoComidasComponent implements OnInit {
     sessionStorage.setItem('Comidas', this.tipoComidas);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Tipos de Comidas',
@@ -137,6 +187,10 @@ export class ListarTipoComidasComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
+        },
+        itemsTableD: {
+          fontSize: 10,
+          alignment: 'center'
         }
       }
     };
@@ -144,25 +198,32 @@ export class ListarTipoComidasComponent implements OnInit {
 
   presentarDataPDFAlmuerzos() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'Observación', style: 'tableHeader' },
-            { text: 'Valor', style: 'tableHeader' }
-          ],
-          ...this.tipoComidas.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.observacion, style: 'itemsTable' },
-              { text: '$ ' + obj.valor, style: 'itemsTable' }
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', 60],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'Observación', style: 'tableHeader' },
+                { text: 'Valor', style: 'tableHeader' }
+              ],
+              ...this.tipoComidas.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableD' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.observacion, style: 'itemsTable' },
+                  { text: '$ ' + obj.valor, style: 'itemsTableD' }
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 
@@ -251,21 +312,6 @@ export class ListarTipoComidasComponent implements OnInit {
       this.archivoForm.reset();
       this.nameFile = '';
     });
-  }
-
-    /* ***************************************************************************************************** 
-   *                                PLANTILLA VACIA DE TIPO COMIDAS
-   * *****************************************************************************************************/
-  DescargarPlantillaComidas() {
-    var datosFeriado = [{
-      nombre: 'Eliminar esta Fila: Sopa',
-      valor: 2.55,
-      observacion: 'Con postre' 
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosFeriado);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Tipo Comidas');
-    xlsx.writeFile(wb, "Tipo Comidas" + '.xlsx');
   }
 
 }

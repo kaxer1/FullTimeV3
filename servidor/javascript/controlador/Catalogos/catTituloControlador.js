@@ -16,7 +16,7 @@ const database_1 = __importDefault(require("../../database"));
 class TituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const titulo = yield database_1.default.query('SELECT ct.id, ct.nombre, nt.nombre as nivel FROM cg_titulos AS ct, nivel_titulo AS nt WHERE ct.id_nivel = nt.id');
+            const titulo = yield database_1.default.query('SELECT ct.id, ct.nombre, nt.nombre as nivel FROM cg_titulos AS ct, nivel_titulo AS nt WHERE ct.id_nivel = nt.id ORDER BY ct.nombre ASC');
             res.jsonp(titulo.rows);
         });
     }

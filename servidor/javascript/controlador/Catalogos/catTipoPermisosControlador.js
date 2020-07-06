@@ -18,15 +18,15 @@ const database_1 = __importDefault(require("../../database"));
 class TipoPermisosControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos ORDER BY id');
+            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos ORDER BY descripcion');
             res.jsonp(rolPermisos.rows);
         });
     }
     listAccess(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const acce_empleado = req.params.acce_empleado;
-            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY id', [acce_empleado]);
-            res.jsonp(rolPermisos.rows);
+            const rolPermisos = yield database_1.default.query('SELECT * FROM cg_tipo_permisos WHERE acce_empleado = $1 ORDER BY descripcion', [acce_empleado]);
+            res.json(rolPermisos.rows);
         });
     }
     getOne(req, res) {
@@ -41,9 +41,14 @@ class TipoPermisosControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
-            yield database_1.default.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo]);
-            res.jsonp({ message: 'Guardado Tipo Permiso' });
+            try {
+                const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
+                yield database_1.default.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, correo, gene_justificacion, fec_validar, acce_empleado, actualizar, autorizar, eliminar, legalizar, preautorizar, almu_incluir, num_dia_justifica, num_hora_maximo]);
+                res.jsonp({ message: 'Registro guardado exitosamente' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     editar(req, res) {

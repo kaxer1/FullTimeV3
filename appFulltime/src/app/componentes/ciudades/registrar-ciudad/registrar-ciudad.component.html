@@ -2,19 +2,22 @@
 <div class="tituloCiudadR">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Ciudad</span>
 </div>
-<br>
 <div style="text-align: center">
     <form [formGroup]="nuevaCiudadForm">
         <mat-card-content>
             <div class="container">
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
+                </div>
                 <div class="row">
                     <div class="col">
                         <mat-form-field>
-                            <mat-label>Seleccionar Continente *</mat-label>
+                            <mat-label>Seleccionar Continente</mat-label>
                             <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
                                 matTooltipPosition="right" matTooltip="Lista de continentes registrados en el sistema">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente">
+                            <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente" required>
                                 <mat-option *ngFor="let c of continentes" [value]="c.continente"
                                     (click)="FiltrarPaises(nuevaCiudadForm.value)">
                                     {{c.continente}}
@@ -23,12 +26,12 @@
                         </mat-form-field>
                         <br>
                         <mat-form-field>
-                            <mat-label>Seleccionar País *</mat-label>
+                            <mat-label>Seleccionar País</mat-label>
                             <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Lista de paises ubicados en el continente seleccionado">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises">
+                            <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises" required>
                                 <mat-option *ngFor="let pais of paises" [value]="pais.id"
                                     (click)="FiltrarProvincias(nuevaCiudadForm.value)">
                                     {{pais.nombre}}
@@ -38,12 +41,12 @@
                     </div>
                     <div class="col">
                         <mat-form-field>
-                            <mat-label>Seleccionar Provincia</mat-label>
+                            <mat-label id="provincia">Seleccionar Provincia</mat-label>
                             <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Lista de provincias, departamentos o estados ubicados en el país seleccionado">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia">
+                            <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia" required>
                                 <mat-option *ngFor="let pro of provincias" [value]="pro.id">
                                     {{pro.nombre}}
                                 </mat-option>

@@ -137,6 +137,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
     this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+    this.obtenerPlanHorarios(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
@@ -254,7 +255,7 @@ export class VerEmpleadoComponent implements OnInit {
         console.log("idContratoProbandoJenny", this.idContrato[i].id);
         this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[i]['id']).subscribe(datos => {
           this.cargoEmpleado = datos;
-          console.log("jenny datos", this.cargoEmpleado)
+          //console.log("jenny datos", this.cargoEmpleado)
           if (this.cargoEmpleado.length === 0) {
             console.log("No se encuentran registros")
           }
@@ -303,6 +304,7 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  /** Método para imprimir datos de Vacaciones */
   vacaciones: any = [];
   obtenerVacaciones(id_empleado: number) {
     this.restPerV.BuscarIDPerVacaciones(id_empleado).subscribe(datos => {
@@ -314,21 +316,31 @@ export class VerEmpleadoComponent implements OnInit {
     }, error => { });
   }
 
+  /** Método para imprimir datos de la planificación de horarios */
   planHorario: any;
-  obtenerPlanHorarios(idEmpleadoCargo: number) {
-    this.restPlanH.ObtenerPlanHorarioPorIdCargo(idEmpleadoCargo).subscribe(res => {
-      this.planHorario = res;
-      this.planHorario.map(obj => {
-        this.obtenerPlanHoraDetalle(obj.id);
-      })
-    }, error => { console.log("") });
-  }
-
-  planHoraDetalle: any;
-  obtenerPlanHoraDetalle(id_plan_horario: number) {
-    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario).subscribe(res => {
-      this.planHoraDetalle = res;
-    }, error => { console.log("") });
+  planHorarioTotales: any;
+  obtenerPlanHorarios(id_empleado: number) {
+    this.planHorario = [];
+    this.planHorarioTotales = [];
+    this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      //console.log("idCargo Procesos", this.idCargo[0].id);
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        this.restPlanH.ObtenerPlanHorarioPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
+          this.planHorario = datos;
+          if (this.planHorario.length != 0) {
+            if (this.cont === 0) {
+              this.planHorarioTotales = datos
+              this.cont++;
+            }
+            else {
+              this.planHorarioTotales = this.planHorarioTotales.concat(datos);
+              console.log("Datos plan horario" + i + '', this.planHorarioTotales)
+            }
+          }
+        })
+      }
+    });
   }
 
   /** Método para mostrar datos de los procesos del empleado */
@@ -565,6 +577,7 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaCargo(): void {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
+      console.log(datos);
       console.log("idcargo ", this.idContrato[0].max)
       this.vistaRegistrarDatos.open(EmplCargosComponent,
         { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } }).
@@ -594,7 +607,7 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaPerVacaciones(): void {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
-      console.log("idcargo ", this.idContrato[0].max);
+      console.log("idcargo ", this.idContrato);
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id);
@@ -615,9 +628,9 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaVacaciones(): void {
     this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion[0].id)
+      console.log("idPerVaca ", this.idPerVacacion)
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id } })
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } })
         .afterClosed().subscribe(item => {
           this.obtenerVacaciones(parseInt(this.idEmpleado));
         });
@@ -632,24 +645,19 @@ export class VerEmpleadoComponent implements OnInit {
       this.idCargo = datos;
       console.log("idcargo ", this.idCargo[0].max)
       this.vistaRegistrarDatos.open(RegistroPlanHorarioComponent,
-        { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).disableClose = true;
+        { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } })
+        .afterClosed().subscribe(item => {
+          this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+        });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 
   /* Ventana para registrar detalle de horario del empleado*/
-  AbrirVentanaDetallePlanHorario(): void {
-    this.restPlanH.BuscarIDPlanHorario(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPlanHorario = datos;
-      console.log("idcargo ", this.idPlanHorario[0].id)
-      this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
-        { width: '350px', data: { idEmpleado: this.idEmpleado, idPlanHorario: this.idPlanHorario[0].id } }).afterClosed().subscribe(item => {
-          //this.obtenerPlanHoraDetalle(parseInt(this.idEmpleado));
-        });
-    }, error => {
-      this.toastr.info('El empleado no tiene registrado Planificación de Horario', 'Primero Registrar Planificación de Horario')
-    });
+  AbrirVentanaDetallePlanHorario(datos: any): void {
+    this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
+      { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false, direccionarE: false } }).disableClose = true;
   }
 
   /* Ventana para ingresar planificación de comidas */
@@ -1081,30 +1089,6 @@ export class VerEmpleadoComponent implements OnInit {
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });
-  }
-
-
-  /* ***************************************************************************************************** 
-   *                                        PLANTILLA VACIA DE HORARIOS UN EMPLEADO
-   * *****************************************************************************************************/
-  DescargarPlantillaHorario() {
-    var datosHorario = [{
-      fec_inicio: 'Eliminar Fila: 05/04/2020 Nota: Inicio de actividades /formato de celda tipo Text',
-      fec_final: '05/05/2020 Nota: Fin de actividades / formato de celda tipo Text',
-      lunes: ' true o false Nota: Indicar días libres',
-      martes: 'true o false',
-      miercoles: 'true o false',
-      jueves: 'true o false',
-      viernes: 'true o false',
-      sabado: 'true o false',
-      domingo: 'true o false',
-      nom_horario: 'horario1',
-      estado: '1-Activo/2-Inactivo/3-Suspendido'
-    }];
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosHorario);
-    const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Empleado Horario');
-    xlsx.writeFile(wb, "Horario Empleado" + '.xlsx');
   }
 
   /* ***************************************************************************************************** 

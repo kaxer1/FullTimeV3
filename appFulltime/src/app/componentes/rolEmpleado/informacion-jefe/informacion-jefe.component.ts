@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -20,6 +21,11 @@ export class InformacionJefeComponent implements OnInit {
   idCargo: any = [];
   autorizan: any = [];
 
+  // items de paginación de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
   constructor(
     private rest: EmpleadoService,
     private restCargo: EmplCargosService,
@@ -32,6 +38,11 @@ export class InformacionJefeComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerNombreDepartamento();
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1
   }
 
   ObtenerNombreDepartamento() {
@@ -52,7 +63,7 @@ export class InformacionJefeComponent implements OnInit {
 
   ObtenerPersonasAutorizan(id: number) {
     this.autorizan = [];
-    this.restAuto.BuscarEmpleadosAutorizan(id) .subscribe(datos => {
+    this.restAuto.BuscarEmpleadosAutorizan(id).subscribe(datos => {
       this.autorizan = datos;
     }, error => { });
   }

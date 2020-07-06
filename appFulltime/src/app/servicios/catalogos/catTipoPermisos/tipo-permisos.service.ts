@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,9 @@ export class TipoPermisosService {
   }
 
   postTipoPermisoRest(data: any) {
-    return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data);
+    return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data).pipe(
+      catchError(data)
+    );;
   }
 
   putTipoPermisoRest(id: number, data: any) {

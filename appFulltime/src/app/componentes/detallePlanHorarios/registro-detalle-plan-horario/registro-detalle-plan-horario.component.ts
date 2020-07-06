@@ -1,9 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
@@ -50,8 +51,9 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
     public rest: DetallePlanHorarioService,
     public restH: HorarioService,
     private toastr: ToastrService,
+    private router: Router,
     public dialogRef: MatDialogRef<RegistroDetallePlanHorarioComponent>,
-    @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
@@ -66,9 +68,9 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
   }
 
   InsertarDetallePlanHorario(form) {
-    let datosDetallePlanH= {
+    let datosDetallePlanH = {
       fecha: form.fechaForm,
-      id_plan_horario: this.datoEmpleado.idPlanHorario,
+      id_plan_horario: this.data.planHorario.id,
       tipo_dia: form.tipoDiaForm,
       id_cg_horarios: form.horarioForm,
     };
@@ -86,7 +88,18 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
   CerrarVentanaDetallePlanHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+    if (this.data.actualizarPage === false && this.data.direccionarE === false) {
+      this.router.navigate(['/verDetalles/', this.data.planHorario.id, this.data.idEmpleado]);
+    }
+    if (this.data.actualizarPage === false && this.data.direccionarE === true) {
+      this.router.navigate(['/detallesHEmpleado/', this.data.planHorario.id, this.data.idEmpleado]);
+    }
+
+  }
+
+  Salir() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
   }
 
 }

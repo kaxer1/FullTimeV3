@@ -29,13 +29,15 @@ class HorarioControlador {
 
   public async CrearHorario(req: Request, res: Response): Promise<void> {
     //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
-    const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
+    const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre } = req.body;
     console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
-    await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas]);
-    res.jsonp({ message: 'El horario ha sido registrado' });
+    await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre) VALUES ($1, $2, $3, $4, $5, $6)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre]);
+    const ultimo = await pool.query('SELECT MAX(id) AS id FROM cg_horarios');
+
+    res.jsonp({ message: 'El horario ha sido registrado', id: ultimo.rows[0].id });
   }
 
-  public async CrearHorarioPlantilla(req: Request, res: Response): Promise<void> {
+  public async CargarHorarioPlantilla(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
     let filename = cadena.split("\\")[1];
@@ -44,35 +46,6 @@ class HorarioControlador {
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
-    plantilla.forEach(async (data: any) => {
-      var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
-      //console.log("datos", data);
-      //console.log("almuerzo", min_almuerzo);
-      if (minutos_almuerzo != undefined) {
-        //console.log("datos", data);
-        //console.log("almuerzo", min_almuerzo);
-        await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-      } else {
-        minutos_almuerzo = 0;
-        await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-      }
-    });
-
-    res.jsonp({ message: 'La plantilla a sido receptada' });
-    fs.unlinkSync(filePath);
-  }
-
-  public async CrearHorarioyDetallePlantilla(req: Request, res: Response): Promise<void> {
-    let list: any = req.files;
-    let cadena = list.uploads[0].path;
-    let filename = cadena.split("\\")[1];
-    var filePath = `./plantillas/${filename}`
-
-    const workbook = excel.readFile(filePath);
-    const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-    const plantillaD = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
     /** Horarios */
     plantilla.forEach(async (data: any) => {
@@ -90,7 +63,21 @@ class HorarioControlador {
         console.log("vacio")
       }
     });
-    console.log("termina");
+
+    res.jsonp({ message: 'La plantilla a sido receptada' });
+    fs.unlinkSync(filePath);
+  }
+
+  public async CrearHorarioyDetallePlantilla(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+    const plantillaD = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
     /** Detalle de Horarios */
     plantillaD.forEach(async (data: any) => {
       var { nombre_horarios, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
@@ -116,9 +103,9 @@ class HorarioControlador {
 
   public async EditarHorario(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
-    const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas } = req.body;
-    await pool.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, id]);
-    
+    const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre } = req.body;
+    await pool.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5, doc_nombre = $6 WHERE id = $7', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre, id]);
+
     res.jsonp({ message: 'Tipo Permiso Actualizado' });
   }
 
@@ -139,6 +126,29 @@ class HorarioControlador {
     const name = req.params.nameXML;
     let filePath = `servidor\\xmlDownload\\${name}`
     res.sendFile(__dirname.split("servidor")[0] + filePath);
+  }
+
+  public async ObtenerDocumento(req: Request, res: Response): Promise<any> {
+    const docs = req.params.docs;
+    let filePath = `servidor\\docRespaldosHorarios\\${docs}`
+    res.sendFile(__dirname.split("servidor")[0] + filePath);
+  }
+
+  public async GuardarDocumentoHorario(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let doc = list.uploads[0].path.split("\\")[1];
+    let id = req.params.id
+
+    await pool.query('UPDATE cg_horarios SET documento = $2 WHERE id = $1', [id, doc]);
+    res.jsonp({ message: 'Documento Actualizado' });
+  }
+
+  public async EditarDocumento(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    const { documento } = req.body;
+    await pool.query('UPDATE cg_horarios SET documento = $1 WHERE id = $2', [documento, id]);
+
+    res.jsonp({ message: 'Tipo Permiso Actualizado' });
   }
 
 }

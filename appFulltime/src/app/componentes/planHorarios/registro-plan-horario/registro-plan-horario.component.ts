@@ -69,7 +69,7 @@ export class RegistroPlanHorarioComponent implements OnInit {
   CerrarVentanaPlanHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
+   // window.location.reload();
   }
 
 }

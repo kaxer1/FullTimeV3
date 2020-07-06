@@ -1,17 +1,28 @@
-.btn { border-radius: 25px; margin-left: 15px; }
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
 }
-#nombreP { font-size: 12px; }
+
+#nombreP { font-size: 11px; }
+
 .barraTituloProvinciaR { 
-    font-size: 18px; 
+    font-size: 20px; 
     text-align: center; 
-    background: rgb(6, 194, 15); 
+    background: rgb(52,65,84); 
     color: white; 
-    border-radius: 10px; 
     padding-top: 10px; 
 }
-#provReg { color:rgb(6, 194, 15); font-size: 18px; }
-.provinciaReg-tooltip { background-color : rgb(6, 194, 15); }
+
+#provReg { cursor: pointer; }
+
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 5px;  
+    text-align: justify;
+    padding-bottom: 10px; 
+    color: rgb(52,65,84);
+}

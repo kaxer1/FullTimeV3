@@ -13,6 +13,8 @@ import * as FileSaver from 'file-saver';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/registro-rol/registro-rol.component';
 import { EditarRolComponent } from 'src/app/componentes/catalogos/catRoles/editar-rol/editar-rol.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
 
 @Component({
   selector: 'app-vista-roles',
@@ -24,27 +26,47 @@ export class VistaRolesComponent implements OnInit {
   roles: any = [];
   filtroRoles = '';
 
+  empleado: any = [];
+  idEmpleado: number;
   // items de paginacion de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+  logo: any;
+  urlImagen: any;
+  
 
   buscarDescripcion = new FormControl('', Validators.minLength(2));
 
   constructor(
     private rest: RolesService,
+    private restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
+    private scriptService: ScriptService
   ) {
     this.obtenerRoles();
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+    this.scriptService.load('pdfMake', 'vfsFonts');
   }
 
   ngOnInit() {
+    this.ObtenerEmpleados(this.idEmpleado);
+    
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   IngresarSoloLetras(e) {
@@ -109,17 +131,52 @@ export class VistaRolesComponent implements OnInit {
 
   }
 
+
   getDocumentDefinicion() {
     sessionStorage.setItem('Roles', this.roles);
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: {text:'Usuario: ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize:9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
+
       content: [
         {
           text: 'ROLES DEL SISTEMA',
           bold: true,
           fontSize: 20,
           alignment: 'center',
-          margin: [0, 0, 0, 20]
+          margin: [0, 0, 0, 20],
         },
         this.presentarDataPDFRoles(),
       ],
@@ -140,13 +197,14 @@ export class VistaRolesComponent implements OnInit {
           italics: true
         },
         tableHeader: {
-          fontSize: 10,
+          fontSize: 13,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED'
         },
         itemsTable: {
-          fontSize: 8
+          fontSize: 11,
+          alignment: 'center'
         }
       }
     };
@@ -154,23 +212,60 @@ export class VistaRolesComponent implements OnInit {
 
   presentarDataPDFRoles() {
     return {
-      table: {
-        widths: ['auto', 'auto',],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-          ],
-          ...this.roles.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [50, 150],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+              ],
+              ...this.roles.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTable' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                ];
+              })
+            ],
+          },
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
+
+
+  /*logoEmplesa() {
+    this.getBase64();
+    if (this.logo) {
+      return {
+        image: this.logo,
+        width: 110,
+        alignment: 'right'
+      };
+    }
+    return null;
+  }
+
+  fileChanged(e) {
+    const file = e.target.files[0];
+    this.getBase64();
+  }
+
+  getBase64() {
+    const reader = new FileReader();
+    reader.readAsDataURL(this.urlImagen);
+    reader.onload = () => {
+      // console.log(reader.result);
+      this.logo = reader.result as string;
+    };
+    reader.onerror = (error) => {
+      console.log('Error: ', error);
+    };
+  }*/
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL

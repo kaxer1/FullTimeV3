@@ -32,14 +32,14 @@ class AutorizaDepartamentoControlador {
 
     public async ObtenerQuienesAutorizan(req: Request, res: Response): Promise<any> {
         const { id_depar } = req.params;
-        const EMPLEADOS = await pool.query('SELECT * FROM VistaPersonasAutorizan WHERE id_depar = $1', [id_depar]);
+        const EMPLEADOS = await pool.query('SELECT * FROM VistaAutorizanCargo WHERE id_depar = $1', [id_depar]);
         if (EMPLEADOS.rowCount > 0) {
-          return res.jsonp(EMPLEADOS.rows)
+            return res.jsonp(EMPLEADOS.rows)
         }
         else {
-          return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
         }
-      }
+    }
 
 
 

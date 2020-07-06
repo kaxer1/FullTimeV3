@@ -1,0 +1,15 @@
+	30/06/2020
+31. Enviar notificación de vacaciones solicitadas. Correo
+32. Pantalla para cambiar estado de solicitud de vacaciones.
+
+	01/07/2020
+33. Pantalla para mostrar lista de solicitudes de vacaciones
+34. Registro de solicitud de vacaciones en el catalogo Notificaciones
+
+	02/07/2020
+35. Registro de autorizacion en la tabla noti_autorizacion
+36. Enviar al empleado mensaje de estado de su solicitud de vacaciones. Correo
+
+	03/07/2020
+37. Tabla para lista de solicitud de vacaciones.
+38. Vista de notificaciones de vacaciones en el sistema.

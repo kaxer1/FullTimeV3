@@ -69,15 +69,18 @@
                         <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                         <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                        matTooltipPosition="right"
-                        matTooltip="Presionar para seleccionar Plantilla con nombre Enrolados">Subir Enrolados</label>
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Enrolados">Subir
+                            Enrolados</label>
                     </form>
-                    <br>
-                    <button (click)="DescargarPlantillasEnrolados()" mat-button type="submit" id="descargar"
-                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Presionar para descargar Plantilla para carga multiple de usuarios enrolados">
+                </div>
+                <br>
+                <div class="container">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/Enrolados.xlsx">
                         <span class="material-icons">cloud_download</span> Descargar Plantilla Enrolados
-                    </button>
+                    </a>
                 </div>
             </mat-card>
         </div>
@@ -136,19 +139,23 @@
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
         <div style="text-align: right;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato PDF">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Usuarios Enrolados en formato PDF">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato EXCEL">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Usuarios Enrolados en formato EXCEL">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato CSV">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Usuarios Enrolados en formato CSV">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Usuarios Enrolados en formato XML">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Usuarios Enrolados en formato XML">
                 <p>XML</p>
             </i>
         </div>

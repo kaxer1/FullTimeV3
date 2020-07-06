@@ -69,9 +69,16 @@ export class NotiAutorizacionesComponent implements OnInit {
     })
   }
 
+  totalCargos: any = [];
   obtenerCargo(){
     this.restCargoEmpleado.getListaEmpleadoCargosRest().subscribe(res => {
-      this.cargo = res;
+      // this.cargo = res;
+      this.totalCargos = res;
+      this.totalCargos.forEach(obj => {
+        if (obj.departamento === this.data.nombre) {
+          this.cargo.push(obj);
+        }
+      });
       console.log(res);
     });
   }

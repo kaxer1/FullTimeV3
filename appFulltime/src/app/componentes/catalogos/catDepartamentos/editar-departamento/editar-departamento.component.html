@@ -2,10 +2,13 @@
 <div class="barraTituloRegDepa">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Editar Departamento</span>
 </div>
-<br>
 <form [formGroup]="nuevoDepartamentoForm">
     <mat-card-content>
         <div style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col">
                     <mat-form-field>
@@ -46,9 +49,9 @@
                         <mat-label>Nivel</mat-label>
                         <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
                             matTooltip="Seleccionar niveles del departamento">help_outline</mat-icon>
-                        <mat-select [formControl]="nivel" [(ngModel)]="selectNivel" required>
-                            <mat-option *ngFor="let n of niveles" [value]="n.nombre">
-                                {{n.valor}}
+                        <mat-select [formControl]="nivel" required>
+                            <mat-option *ngFor="let n of niveles" [value]="n.valor">
+                                {{n.nombre}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -58,7 +61,8 @@
                         <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
                             matTooltip="Seleccionar Departamento Superior del nuevo departamento">help_outline
                         </mat-icon>
-                        <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre">
+                        <mat-select [formControl]="departamentoPadre" >
+                            <mat-option [value]="0">Ninguno</mat-option>
                             <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
                                 {{departamento.nombre}}
                             </mat-option>

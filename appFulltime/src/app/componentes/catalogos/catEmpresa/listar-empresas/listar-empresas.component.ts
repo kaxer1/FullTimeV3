@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -13,6 +13,7 @@ import * as FileSaver from 'file-saver';
 import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-empresas',
@@ -38,14 +39,30 @@ export class ListarEmpresasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  empleado: any = [];
+  idEmpleado: number;
+
   constructor(
     private rest: EmpresaService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { }
+  ) { 
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     this.ObtenerEmpresa();
+    this.ObtenerEmpleados(this.idEmpleado);
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -114,9 +131,9 @@ export class ListarEmpresasComponent implements OnInit {
     }
   }
 
-   /****************************************************************************************************** 
-   *                                         MÉTODO PARA EXPORTAR A PDF
-   ******************************************************************************************************/
+  /****************************************************************************************************** 
+  *                                         MÉTODO PARA EXPORTAR A PDF
+  ******************************************************************************************************/
   generarPdf(action = 'open') {
     const documentDefinition = this.getDocumentDefinicion();
 
@@ -132,15 +149,49 @@ export class ListarEmpresasComponent implements OnInit {
 
   getDocumentDefinicion() {
     sessionStorage.setItem('Empresas', this.empresas);
+
     return {
       pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+          var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,,
+            {
+              text: [
+                {
+                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
+      },
       content: [
         {
           text: 'Lista de Empresas',
           bold: true,
           fontSize: 20,
           alignment: 'center',
-          margin: [0, 0, 0, 20]
+          margin: [0, 0, 0, 20],
         },
         this.presentarDataPDFEmpresas(),
       ],
@@ -149,7 +200,7 @@ export class ListarEmpresasComponent implements OnInit {
           fontSize: 18,
           bold: true,
           margin: [0, 20, 0, 10],
-          decoration: 'underline'
+          decoration: 'underline',
         },
         name: {
           fontSize: 16,
@@ -168,40 +219,51 @@ export class ListarEmpresasComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10
-        }
+        },
+        itemsTableC: {
+          fontSize: 10,
+          alignment: 'center'
+        },
       }
     };
   }
 
   presentarDataPDFEmpresas() {
     return {
-      table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
-        body: [
-          [
-            { text: 'Id', style: 'tableHeader' },
-            { text: 'Nombre', style: 'tableHeader' },
-            { text: 'RUC', style: 'tableHeader' },
-            { text: 'Dirección', style: 'tableHeader' },
-            { text: 'Teléfono', style: 'tableHeader' },
-            { text: 'Correo', style: 'tableHeader' },
-            { text: 'Tipo de Empresa', style: 'tableHeader' },
-            { text: 'Representante', style: 'tableHeader' }
-          ],
-          ...this.empresas.map(obj => {
-            return [
-              { text: obj.id, style: 'itemsTable' },
-              { text: obj.nombre, style: 'itemsTable' },
-              { text: obj.ruc, style: 'itemsTable' },
-              { text: obj.direccion, style: 'itemsTable' },
-              { text: obj.telefono, style: 'itemsTable' },
-              { text: obj.correo, style: 'itemsTable' },
-              { text: obj.tipo_empresa, style: 'itemsTable' },
-              { text: obj.representante, style: 'itemsTable' },
-            ];
-          })
-        ]
-      }
+      columns: [
+        { width: '*', text: '' },
+        {
+          width: 'auto',
+          table: {
+            widths: [30, 'auto', 'auto', '*', '*', 'auto', 'auto', '*'],
+            body: [
+              [
+                { text: 'Id', style: 'tableHeader' },
+                { text: 'Nombre', style: 'tableHeader' },
+                { text: 'RUC', style: 'tableHeader' },
+                { text: 'Dirección', style: 'tableHeader' },
+                { text: 'Teléfono', style: 'tableHeader' },
+                { text: 'Correo', style: 'tableHeader' },
+                { text: 'Tipo de Empresa', style: 'tableHeader' },
+                { text: 'Representante', style: 'tableHeader' }
+              ],
+              ...this.empresas.map(obj => {
+                return [
+                  { text: obj.id, style: 'itemsTableC' },
+                  { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.ruc, style: 'itemsTableC' },
+                  { text: obj.direccion, style: 'itemsTable' },
+                  { text: obj.telefono, style: 'itemsTableC' },
+                  { text: obj.correo, style: 'itemsTable' },
+                  { text: obj.tipo_empresa, style: 'itemsTable' },
+                  { text: obj.representante, style: 'itemsTable' },
+                ];
+              })
+            ]
+          }
+        },
+        { width: '*', text: '' },
+      ]
     };
   }
 

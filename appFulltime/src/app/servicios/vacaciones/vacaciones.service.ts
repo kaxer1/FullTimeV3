@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Socket } from 'ngx-socket-io';
 
 @Injectable({
   providedIn: 'root'
@@ -7,19 +8,39 @@ import { HttpClient } from '@angular/common/http';
 export class VacacionesService {
 
   API_URL = 'http://192.168.0.192:3001';
-  
-  constructor( private http: HttpClient ) { }
 
-  ObtenerListaVacaciones(){
-    return this.http.get(`${this.API_URL}/vacaciones`);
+  constructor(
+    private http: HttpClient,
+    private socket: Socket
+  ) { }
+
+  // realtime
+  sendNotiRealTime(data: any) {
+    this.socket.emit('nueva_notificacion', data);
   }
 
-  RegistrarVacaciones(datos: any){
+  ActualizarEstado(id: number, datos: any) {
+    return this.http.put(`${this.API_URL}/vacaciones/${id}/estado`, datos);
+  }
+
+  ObtenerListaVacaciones() {
+    return this.http.get(`${this.API_URL}/vacaciones`);
+  }
+  
+  ObtenerUnaVacacion(id: number) {
+    return this.http.get(`${this.API_URL}/vacaciones/one/${id}`);
+  }
+
+  RegistrarVacaciones(datos: any) {
     return this.http.post(`${this.API_URL}/vacaciones`, datos);
   }
 
-  ObtenerVacacionesPorIdPeriodo(id_peri_perido: number){
+  ObtenerVacacionesPorIdPeriodo(id_peri_perido: number) {
     return this.http.get<any>(`${this.API_URL}/vacaciones/${id_peri_perido}`)
+  }
+
+  BuscarFechasFeriado(datos: any) {
+    return this.http.post(`${this.API_URL}/vacaciones/fechasFeriado`, datos);
   }
 
 }

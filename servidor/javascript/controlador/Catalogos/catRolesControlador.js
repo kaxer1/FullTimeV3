@@ -18,7 +18,7 @@ const database_1 = __importDefault(require("../../database"));
 class RolesControlador {
     ListarRoles(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ROL = yield database_1.default.query('SELECT * FROM cg_roles');
+            const ROL = yield database_1.default.query('SELECT * FROM cg_roles ORDER BY nombre ASC');
             if (ROL.rowCount > 0) {
                 return res.jsonp(ROL.rows);
             }

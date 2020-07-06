@@ -20,4 +20,13 @@
 
 /*.enrol-tooltip { background-color : rgb(3, 167, 167); }*/
 
-#nombreEmpl { font-size: 14px;}
+#nombreEmpl { font-size: 14px; }
+
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    padding-left: 5px;  
+    text-align: justify;
+    padding-bottom: 10px; 
+    color: rgb(52,65,84);
+}

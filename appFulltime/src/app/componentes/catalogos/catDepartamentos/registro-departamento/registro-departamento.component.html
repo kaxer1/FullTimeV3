@@ -2,10 +2,13 @@
 <div class="barraTituloRegDepa">
     <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Departamento</span>
 </div>
-<br>
 <form [formGroup]="nuevoDepartamentoForm">
     <mat-card-content>
         <div style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
+            </div>
             <div class="row">
                 <div class="col">
                     <mat-form-field>
@@ -59,6 +62,7 @@
                             matTooltip="Seleccionar Departamento Superior del nuevo departamento">help_outline
                         </mat-icon>
                         <mat-select [formControl]="departamentoPadre" [(ngModel)]="selectPadre">
+                            <mat-option [value]="0">Ninguno</mat-option>
                             <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
                                 {{departamento.nombre}}
                             </mat-option>

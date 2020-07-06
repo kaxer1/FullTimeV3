@@ -44,14 +44,14 @@ class EmpleadoHorariosControlador {
 
         plantilla.forEach(async (data: any) => {
             const { id } = req.params;
-            var { fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nom_horario, estado } = data;
+            var { fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
             const id_cargo = await pool.query('SELECT MAX(ec.id) FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
             var id_empl_cargo = id_cargo.rows[0]['max'];;
-            var nombre = nom_horario;
+            var nombre = nombre_horario;
             const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
             var id_horarios = idHorario.rows[0]['id'];
             var id_hora = 1;
-            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
+            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
             console.log("carga exitosa");
         });
         res.jsonp({ message: 'La plantilla a sido receptada' });
@@ -69,18 +69,29 @@ class EmpleadoHorariosControlador {
         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
         plantilla.forEach(async (data: any) => {
-            var { cedula, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nom_horario, estado } = data;
+            var { cedula, fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
             const id_cargo = await pool.query('SELECT MAX(ecargo.id) FROM empl_cargos AS ecargo, empl_contratos AS econtrato, empleados AS e WHERE econtrato.id_empleado = e.id AND ecargo.id_empl_contrato = econtrato.id AND e.cedula = $1', [cedula]);
             var id_empl_cargo = id_cargo.rows[0]['max'];;
-            var nombre = nom_horario;
+            var nombre = nombre_horario;
             const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
             var id_horarios = idHorario.rows[0]['id'];
             var id_hora = 1;
-            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
+            await pool.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
             console.log("carga exitosa");
         });
         res.jsonp({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
+    }
+
+    public async ObtenerNumeroHoras(req: Request, res: Response): Promise<any> {
+        const { id_emple, fecha } = req.body;
+        const HORAS = await pool.query('SELECT * FROM VistaNumeroHoras WHERE id_emple = $1 AND $2 BETWEEN fec_inicio AND fec_final', [id_emple, fecha]);
+        if (HORAS.rowCount > 0) {
+            return res.jsonp(HORAS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
     }
 
 }

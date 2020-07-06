@@ -2,6 +2,10 @@
     <img src="../../../../../assets/imagenes/logo/logoAdmin.png"> <br><br>
     <span>Confirmar nueva contraseña</span>
     <form [formGroup]="cambiarContraseniaForm">
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
+        </div>
         <mat-form-field>
             <mat-label>Contraseña Actual</mat-label>
             <input matInput placeholder="máximo 10 caracteres" [type]="hide1 ? 'password' : 'text'" maxlength="10"

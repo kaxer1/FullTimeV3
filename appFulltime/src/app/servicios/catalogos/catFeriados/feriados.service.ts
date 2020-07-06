@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -17,24 +18,27 @@ export class FeriadosService {
     return this.http.post(`${this.API_URL}/feriados`, datos);
   }
 
-  ConsultarFeriado(){
+  ConsultarFeriado() {
     return this.http.get(`${this.API_URL}/feriados`);
   }
 
-  ConsultarUnFeriado(id: number){
+  ConsultarUnFeriado(id: number) {
     return this.http.get(`${this.API_URL}/feriados/${id}`);
   }
 
-  ActualizarUnFeriado(datos:any){
+  ActualizarUnFeriado(datos: any) {
     return this.http.put(`${this.API_URL}/feriados`, datos);
   }
 
-  ConsultarUltimoId(){
+  ConsultarUltimoId() {
     return this.http.get(`${this.API_URL}/feriados/ultimoId`);
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/feriados/upload', formData)  
+    return this.http.post(this.API_URL + '/feriados/upload', formData)
+      .pipe(
+        catchError(formData)
+      );
   }
 
   DownloadXMLRest(data: any) {

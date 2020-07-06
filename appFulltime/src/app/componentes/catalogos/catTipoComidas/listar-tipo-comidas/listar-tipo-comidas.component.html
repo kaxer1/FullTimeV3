@@ -43,12 +43,14 @@
                         matTooltipPosition="right"
                         matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo Comidas</label>
                     </form>
-                    <br>
-                    <button (click)="DescargarPlantillaComidas()" mat-button type="submit" id="descargar"
-                        class="btn btn-sm" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                        matTooltip="Presionar para descargar Plantilla para carga multiple de tipos de comida">
-                        <span class="material-icons">cloud_download</span>  Descargar Plantilla Tipo Comidas
-                    </button>
+                </div>
+                <br>
+                <div class="col-md">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                        matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/Tipo Comidas.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Tipo Comidas
+                    </a>
                 </div>
             </mat-card>
         </div>

@@ -13,6 +13,7 @@ class EmpleadosCargpsRutas {
     configuracion(): void {
         this.router.get('/', EMPLEADO_CARGO_CONTROLADOR.list);
         this.router.get('/lista-empleados/', EMPLEADO_CARGO_CONTROLADOR.ListarCargoEmpleado);
+        this.router.get('/empleadosAutorizan/:id', EMPLEADO_CARGO_CONTROLADOR.ListarEmpleadoAutoriza);
         this.router.get('/:id', EMPLEADO_CARGO_CONTROLADOR.getOne);
         this.router.get('/cargoInfo/:id_empl_contrato', EMPLEADO_CARGO_CONTROLADOR.EncontrarInfoCargoEmpleado);
         this.router.post('/', EMPLEADO_CARGO_CONTROLADOR.Crear);

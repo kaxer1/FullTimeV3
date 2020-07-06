@@ -20,6 +20,8 @@ export class RegistroHorarioComponent implements OnInit {
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
   flexible = new FormControl('', Validators.required);
   porHoras = new FormControl('', Validators.required);
+  nombreCertificadoF = new FormControl('');
+  archivoForm = new FormControl('');
 
   // asignar los campos en un formulario en grupo
   public nuevoHorarioForm = new FormGroup({
@@ -27,7 +29,8 @@ export class RegistroHorarioComponent implements OnInit {
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
     horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras
+    horarioPorHorasForm: this.porHoras,
+    nombreCertificadoForm: this.nombreCertificadoF
   });
 
   constructor(
@@ -39,23 +42,47 @@ export class RegistroHorarioComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  idHorario: any;
   InsertarHorario(form) {
     let dataHorario = {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
       flexible: form.horarioFlexibleForm,
-      por_horas: form.horarioPorHorasForm
+      por_horas: form.horarioPorHorasForm,
+      doc_nombre: form.nombreCertificadoForm
     };
-    if (dataHorario.min_almuerzo === ''){
+    if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
     }
-    this.rest.postHorarioRest(dataHorario).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario registrado');
-      this.LimpiarCampos();
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
-    });
+    if (form.nombreCertificadoForm === '') {
+      this.rest.postHorarioRest(dataHorario).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.LimpiarCampos();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+      });
+    }
+    else {
+      this.GuardarDatos(dataHorario);
+    }
+
+  }
+
+  GuardarDatos(datos) {
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.rest.postHorarioRest(datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.LimpiarCampos();
+        this.idHorario = response;
+        this.SubirRespaldo(this.idHorario.id);
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+      });
+    }
+    else {
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+    }
   }
 
   IngresarNumeroDecimal(evt) {
@@ -106,6 +133,36 @@ export class RegistroHorarioComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoHorarioForm.reset();
+  }
+
+  LimpiarNombreArchivo() {
+    this.nuevoHorarioForm.patchValue({
+      nombreCertificadoForm: '',
+    });
+  }
+
+  nameFile: string;
+  archivoSubido: Array<File>;
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    if (this.archivoSubido.length != 0) {
+      const name = this.archivoSubido[0].name;
+      console.log(this.archivoSubido[0].name);
+      this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
+    }
+  }
+
+  SubirRespaldo(id: number) {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.archivoForm.reset();
+      this.nameFile = '';
+    });
   }
 
   CerrarVentanaRegistroHorario() {

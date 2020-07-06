@@ -18,9 +18,14 @@ const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
     ListarDepartamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
-            if (DEPARTAMENTOS.rowCount > 0) {
-                return res.jsonp(DEPARTAMENTOS.rows);
+            // const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
+            const Sin_depa_padre = yield database_1.default.query('SELECT d.id, d.nombre, d.nivel, d.depa_padre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, sucursales AS s, cg_empresa AS e WHERE d.id_sucursal = s.id AND e.id = s.id_empresa AND d.depa_padre IS NULL ORDER BY nombre ASC');
+            const Con_depa_padre = yield database_1.default.query('SELECT d.id, d.nombre, d.nivel, nom_d.nombre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, nombredepartamento AS nom_d, sucursales AS s, cg_empresa AS e WHERE d.depa_padre = nom_d.id AND d.id_sucursal = s.id AND e.id = s.id_empresa ORDER BY nombre ASC');
+            if (Sin_depa_padre.rowCount > 0) {
+                Sin_depa_padre.rows.forEach(obj => {
+                    Con_depa_padre.rows.push(obj);
+                });
+                res.jsonp(Con_depa_padre.rows);
             }
             else {
                 return res.status(404).jsonp({ text: 'No se encuentran registros' });
@@ -120,9 +125,9 @@ class DepartamentoControlador {
     BuscarDepartamentoPorContrato(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_contrato;
-            const departamento = yield database_1.default.query('SELECT em.id_departamento, d.nombre FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1', [id]);
+            const departamento = yield database_1.default.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC', [id]);
             if (departamento.rowCount > 0) {
-                return res.json(departamento.rows);
+                return res.json([departamento.rows[0]]);
             }
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });

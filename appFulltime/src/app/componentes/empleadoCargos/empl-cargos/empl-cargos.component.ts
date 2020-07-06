@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
 
@@ -39,6 +39,7 @@ export class EmplCargosComponent implements OnInit {
   sueldo = new FormControl('', [Validators.required]);
   horaTrabaja = new FormControl('', [Validators.required]);
   idEmpresaF = new FormControl('', Validators.required);
+  cargoF = new FormControl('', [Validators.required, Validators.minLength(3)]);
 
   public nuevoEmplCargosForm = new FormGroup({
     // idEmplContratoForm: this.idEmpleContrato,
@@ -49,6 +50,7 @@ export class EmplCargosComponent implements OnInit {
     sueldoForm: this.sueldo,
     horaTrabajaForm: this.horaTrabaja,
     idEmpresaForm: this.idEmpresaF,
+    cargoForm: this.cargoF
   });
 
   constructor(
@@ -126,7 +128,8 @@ export class EmplCargosComponent implements OnInit {
       fec_final: form.fecFinalForm,
       id_sucursal: form.idSucursalForm,
       sueldo: form.sueldoForm,
-      hora_trabaja: form.horaTrabajaForm
+      hora_trabaja: form.horaTrabajaForm,
+      cargo: form.cargoForm
     }
     console.log(dataEmpleadoCargo);
     this.restEmplCargos.postEmpleadoCargosRest(dataEmpleadoCargo).subscribe(res => {
@@ -139,6 +142,12 @@ export class EmplCargosComponent implements OnInit {
     this.limpiarCampos();
     this.dialogRef.close();
     //window.location.reload();
+  }
+
+  ObtenerMensajeErrorCargoRequerido() {
+    if (this.cargoF.hasError('required')) {
+      return 'Campo Obligatorio';
+    }
   }
 
 }

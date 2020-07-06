@@ -35,4 +35,8 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario/cargaMultiple`, formData)  
   }
 
+  BuscarNumeroHoras(datos: any){ 
+    return this.http.post(`${this.API_URL}/empleadoHorario/horas`, datos);
+  }
+
 }

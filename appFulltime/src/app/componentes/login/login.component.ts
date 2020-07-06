@@ -42,6 +42,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.url = this.router.url;
+    console.log(this.url); 
+    // console.log(window.history.back());
   }
 
   ObtenerMensajeCampoUsuarioError() {
@@ -79,7 +81,13 @@ export class LoginComponent implements OnInit {
         this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
 
         if (datos.rol === 1) { // Admin
-          this.router.navigate(['/home'])
+          if (!!localStorage.getItem("redireccionar")) {
+            let id_permiso = parseInt(localStorage.getItem("redireccionar"));
+            this.router.navigate(['/ver-permiso/',id_permiso]);
+            localStorage.removeItem("redireccionar");
+          } else {
+            this.router.navigate(['/home'])
+          };
         }
         if (datos.rol === 2) { //Empleado
           this.router.navigate(['/estadisticas']);

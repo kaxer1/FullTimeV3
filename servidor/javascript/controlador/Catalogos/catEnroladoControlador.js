@@ -94,9 +94,20 @@ class EnroladoControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo } = data;
-                if (id_usuario != undefined) {
-                    yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo) VALUES ($1, $2,$3, $4, $5, $6, $7)', [id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo]);
+                const { cedula, contrasenia, finger, data_finger } = data;
+                //Nombre, Apellido, Código e id_usuario del empleado
+                const datosEmpleado = yield database_1.default.query('SELECT id, nombre, apellido, codigo, estado FROM empleados WHERE cedula = $1', [cedula]);
+                let nombre = datosEmpleado.rows[0]['nombre'] + ' ' + datosEmpleado.rows[0]['apellido'];
+                let codigo = parseInt(datosEmpleado.rows[0]['codigo']);
+                if (datosEmpleado.rows[0]['estado'] === 1) {
+                    var activo = true;
+                }
+                else {
+                    activo = false;
+                }
+                const id_usuario = yield database_1.default.query('SELECT id FROM usuarios WHERE id_empleado = $1', [datosEmpleado.rows[0]['id']]);
+                if (cedula != undefined) {
+                    yield database_1.default.query('INSERT INTO cg_enrolados (id_usuario, nombre, contrasenia, activo, finger, data_finger, codigo) VALUES ($1, $2,$3, $4, $5, $6, $7)', [id_usuario.rows[0]['id'], nombre, contrasenia, activo, finger, data_finger, codigo]);
                 }
                 else {
                     res.jsonp({ error: 'plantilla equivocada' });
