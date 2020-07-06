@@ -61,9 +61,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   ngOnInit(): void {
     this.BuscarDatos();
-    this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerSolicitud(this.id_permiso);
-    this.ObtenerAutorizacion(this.id_permiso);
   }
 
   BuscarDatos() {
@@ -87,6 +84,10 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         this.HabilitarAutorizacion = false;
       });
     });
+
+    this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerSolicitud(this.id_permiso);
+    this.ObtenerAutorizacion(this.id_permiso);
   }
 
   // metodo para ver la informacion del empleado 
@@ -121,9 +122,10 @@ export class VerEmpleadoPermisoComponent implements OnInit {
       else if (this.datosAutorizacion[0].estado_auto === 3) { 
         this.datosAutorizacion[0].estado_auto = 'Autorizado';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+      else if (this.datosAutorizacion[0].estado_auto === 4) { 
         this.datosAutorizacion[0].estado_auto = 'Negado';
       }
+       console.log('autorizacion', this.datosAutorizacion);
     })
   }
 
@@ -413,7 +415,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
                         widths: ['auto'],
                         body: [
                           [
-                            { text: (this.datosAutorizacion[0].estado_auto).toUpperCase() + ' POR', style: 'tableHeaderA' },
+                            { text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },
                           ],
                           [
                             { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },

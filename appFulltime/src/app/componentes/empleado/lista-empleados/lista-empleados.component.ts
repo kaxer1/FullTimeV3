@@ -115,12 +115,6 @@ export class ListaEmpleadosComponent implements OnInit {
     })
   }
 
-  verEmpleado(id: any) {
-    this.empleado = []
-    this.rest.getOneEmpleadoRest(id).subscribe(data => {
-      this.empleado = data;
-    })
-  }
 
   limpiarCampos() {
     this.codigo.reset();
@@ -196,7 +190,7 @@ export class ListaEmpleadosComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
