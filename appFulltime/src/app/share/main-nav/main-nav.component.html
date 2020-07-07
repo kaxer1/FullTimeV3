@@ -460,6 +460,9 @@
             </a>
           </div>
         </div>
+        <a *ngIf="loginService.getRolMenu()" [routerLink]="['/lista-notificaciones']" style="text-align: center;" >
+          Mostrar todas las notificaciones            
+        </a>
       </mat-menu>
 
       <button mat-mini-fab>
