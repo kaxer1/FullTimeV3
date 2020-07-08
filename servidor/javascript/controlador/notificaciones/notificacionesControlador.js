@@ -30,6 +30,16 @@ class NotificacionTiempoRealControlador {
             res.status(404).jsonp({ text: 'Registro no encontrado' });
         });
     }
+    ListaNotificacionesRecibidas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_receive;
+            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC', [id]);
+            if (REAL_TIME_NOTIFICACION.rowCount > 0) {
+                return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            }
+            res.status(404).jsonp({ text: 'Registro no encontrado' });
+        });
+    }
     ListaPorJefe(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_receive;

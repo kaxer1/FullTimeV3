@@ -38,6 +38,8 @@ class AutorizacionesControlador {
         const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoPermisoReenviarEstadoEmpleado = await pool.query('SELECT p.id, p.descripcion, p.estado, e.cedula, e.nombre, e.apellido, e.correo FROM permisos AS p, empl_contratos AS c, empleados AS e WHERE p.id = $1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id', [id_permiso]);
 
+        console.log(JefeDepartamento.rows)
+        console.log(InfoPermisoReenviarEstadoEmpleado.rows)
         const estadoAutorizacion = [
             { id: 1, nombre: 'Pendiente'},
             { id: 2, nombre: 'Pre-autorizado'},
@@ -103,7 +105,8 @@ class AutorizacionesControlador {
         await pool.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
         const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.cedula, e.nombre, e.apellido, e.correo FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND c.id_empleado = e.id', [id_vacaciones]);
-        
+        console.log(JefeDepartamento.rows)
+        console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
         const estadoAutorizacion = [
             { id: 1, nombre: 'Pendiente'},
             { id: 2, nombre: 'Pre-autorizado'},

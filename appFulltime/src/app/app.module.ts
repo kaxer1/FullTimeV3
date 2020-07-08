@@ -216,6 +216,7 @@ import { DetalleHorarioEmpleadoComponent } from './componentes/rolEmpleado/detal
 import { HorariosEmpleadoComponent } from './componentes/rolEmpleado/horarios-empleado/horarios-empleado.component';
 import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/vacaciones-empleado.component';
 import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
+import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
@@ -365,6 +366,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     HorariosEmpleadoComponent,
     VacacionesEmpleadoComponent,
     SolicitarPermisosEmpleadoComponent,
+    RealtimeNotificacionComponent,
   ],
 
   imports: [

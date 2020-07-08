@@ -28,6 +28,10 @@ export class RealTimeService {
   ObtenerNotificacionesReceives(id_empleado: number) {
     return this.http.get(`${this.API_URL}/noti-real-time/receives/${id_empleado}`);
   }
+  
+  ObtenerNotificacionesAllReceives(id_empleado: number) {
+    return this.http.get(`${this.API_URL}/noti-real-time/all-receives/${id_empleado}`);
+  }
 
   IngresarNotificacionEmpleado(datos: any) {
     return this.http.post(`${this.API_URL}/noti-real-time`, datos);
