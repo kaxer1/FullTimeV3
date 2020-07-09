@@ -566,7 +566,7 @@ export class VerEmpleadoComponent implements OnInit {
   */
   /* Ventana para ingresar contrato del empleado*/
   AbrirVentanaCrearContrato(): void {
-    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '900px', data: this.idEmpleado }).
+    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '600px', data: this.idEmpleado }).
       afterClosed().subscribe(item => {
         this.obtenerContratoEmpleadoRegimen();
       });

@@ -92,7 +92,14 @@ export class EmpleadoService {
   BuscarContratoEmpleadoRegimen(id: number){
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contratoRegimen/${id}`);
   }
-  
+
+  SubirContrato(formData, id: number) {
+    return this.http.put(`${this.API_URI}/contratoEmpleado/${id}/documento`, formData)
+  }
+
+  EditarDocumento(id: number, data: any) {
+    return this.http.put(`${this.API_URI}/contratoEmpleado/editar/editarDocumento/${id}`, data);
+  }
   
   // servicio para obtener la lista de las nacionalidades
   getListaNacionalidades(){

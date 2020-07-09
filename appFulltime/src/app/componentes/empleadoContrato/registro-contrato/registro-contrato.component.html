@@ -57,29 +57,45 @@
                     </mat-form-field>
                 </div>
                 <div class="col">
-                    <label style="margin-right: 62px;">Controlar Vacaciones *</label>
-                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
-                        help_outline</mat-icon>
-                    <section>
-                        <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
-                            required [value]="controlVacacionesF.value">
-                            <mat-radio-button value="true">Si</mat-radio-button>
-                            <mat-radio-button value="false">No</mat-radio-button>
-                        </mat-radio-group>
-                    </section>
-                    <label style="margin-right: 72px;">Controlar Asistencia *</label>
-                    <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                    matTooltipPosition="right"
-                    matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
-                    help_outline</mat-icon>
-                    <section>
-                        <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
-                            required [value]="controlAsistenciaF.value">
-                            <mat-radio-button value="true">Si</mat-radio-button>
-                            <mat-radio-button value="false">No</mat-radio-button>
-                        </mat-radio-group>
-                    </section>
+                    <div class="container">
+                        <label style="margin-right: 32px;">Controlar Vacaciones *</label>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
+                            help_outline</mat-icon>
+                        <section>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
+                                required [value]="controlVacacionesF.value">
+                                <mat-radio-button value="true">Si</mat-radio-button>
+                                <mat-radio-button value="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                        <label style="margin-right: 32px;">Controlar Asistencia *</label>
+                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                            help_outline</mat-icon>
+                        <section>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
+                                required [value]="controlAsistenciaF.value">
+                                <mat-radio-button value="true">Si</mat-radio-button>
+                                <mat-radio-button value="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                    </div>
+                </div>
+                <div class="col">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                        <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
+                            matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                            matTooltip="Subir el repectivo documento contrato del empleado">Subir
+                            Contrato</label>
+                    </form>
+                    <div class="col">
+                        <input type="text" readonly id="nomContrato" placeholder="Ningún archivo seleccionado"
+                            class="form-control" style="width: 212px;" [formControl]="nombreContratoF">
+                    </div>
                 </div>
             </div>
         </div>

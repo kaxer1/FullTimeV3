@@ -66,6 +66,23 @@
                                 <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Contrato:</label>
+                            </div>
+                            <div class="col">
+                                <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
+                                    style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                                    matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
+                                    href="http://localhost:3000/contratoEmpleado/documentos/{{ce.documento}}"
+                                    target="_blank">
+                                    <p>{{ce.doc_nombre}}</p>
+                                </a>
+                                <label id="contratoLaboral" class="col col-form-label"
+                                    *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''">Contrato Laboral no
+                                    cargado</label>
+                            </div>
+                        </div>
                         <mat-divider></mat-divider>
                     </div>
                 </mat-card-content>

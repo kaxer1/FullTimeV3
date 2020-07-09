@@ -377,6 +377,27 @@
                                         <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Contrato:</label>
+                                    </div>
+                                    <div class="col">
+                                        <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
+                                            style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                                            matTooltipPosition="right"
+                                            matTooltip="Dar click para descargar contrato de trabajo"
+                                            href="http://localhost:3000/contratoEmpleado/documentos/{{ce.documento}}"
+                                            target="_blank">
+                                            <p>{{ce.doc_nombre}}</p>
+                                        </a>
+                                        <a *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''"
+                                            href="{{rutaContrato}}" mat-button type="submit"
+                                            (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
+                                            [disabled]="!btnActualizarContrato">
+                                            Cargar Contrato de Trabajo
+                                        </a>
+                                    </div>
+                                </div>
                                 <div style="text-align: right;">
                                     <a href="{{rutaContrato}}" mat-button type="submit"
                                         (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
@@ -850,9 +871,10 @@
                                                 (click)="AbrirVentanaDetallePlanHorario(h)">
                                                 <p>Detalle</p>
                                             </i>
-                                            <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                            <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip"
+                                                matTooltipPosition="right"
                                                 matTooltip="Ver datos generales de la planificación" class="fas fa-eye"
-                                                id="ver"  [routerLink]="['/verDetalles/', h.id, e.id]">
+                                                id="ver" [routerLink]="['/verDetalles/', h.id, e.id]">
                                                 <p>Ver</p>
                                             </i>
                                         </td>
