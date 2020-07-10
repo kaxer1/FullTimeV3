@@ -217,6 +217,11 @@ import { HorariosEmpleadoComponent } from './componentes/rolEmpleado/horarios-em
 import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/vacaciones-empleado.component';
 import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
 import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
+import { SubirDocumentoComponent } from './componentes/documentos/subir-documento/subir-documento.component';
+import { EditarDocumentoComponent } from './componentes/documentos/editar-documento/editar-documento.component';
+import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
+import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
+import { FiltrarNombreDocuPipe } from './filtros/documentos/filtrar-nombre-docu.pipe';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
@@ -367,6 +372,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     VacacionesEmpleadoComponent,
     SolicitarPermisosEmpleadoComponent,
     RealtimeNotificacionComponent,
+    SubirDocumentoComponent,
+    EditarDocumentoComponent,
+    VerDocumentosComponent,
+    VerDocumentacionComponent,
+    FiltrarNombreDocuPipe,
   ],
 
   imports: [

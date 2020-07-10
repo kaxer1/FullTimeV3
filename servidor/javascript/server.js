@@ -51,6 +51,7 @@ const catNotiAutorizacionesRutas_1 = __importDefault(require("./rutas/catalogos/
 const autorizacionesRutas_1 = __importDefault(require("./rutas/autorizaciones/autorizacionesRutas"));
 const plantillaRutas_1 = __importDefault(require("./rutas/descargarPlantilla/plantillaRutas"));
 const notificacionesRutas_1 = __importDefault(require("./rutas/notificaciones/notificacionesRutas"));
+const documentosRutas_1 = __importDefault(require("./rutas/documentos/documentosRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -122,6 +123,8 @@ class Servidor {
         this.app.use('/noti-real-time', notificacionesRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
+        // Documentos
+        this.app.use('/archivosCargados', documentosRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

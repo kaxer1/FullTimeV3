@@ -38,6 +38,9 @@
           <a mat-list-item [routerLink]="['/nivelTitulos']" class="texcol">
             <span matLine>Crear Nivel de Educación</span>
           </a>
+          <a mat-list-item [routerLink]="['/archivos']" class="texcol">
+            <span matLine>Documentos</span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
       <!-- Empleado -->
@@ -187,10 +190,25 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
+      <!--Documentación-->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec10">
+          <mat-panel-title>
+            <mat-icon mat-list-icon class="color-icon">insert_drive_file</mat-icon>
+            <span class="item-menu">Documentos</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/archivos']" class="texcol">
+            <span matLine>Archivos</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
       <!-- Acciones de Personal-->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec8">
-          <mat-panel-title class="item">
+          <mat-panel-title>
             <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
             <span class="item-menu" id="accion">Acción de Personal</span>
           </mat-panel-title>
@@ -296,6 +314,9 @@
         <mat-nav-list>
           <a mat-list-item [routerLink]="['/informacion']" class="texcol">
             <span matLine>Autoridades</span>
+          </a>
+          <a mat-list-item [routerLink]="['/verDocumentacion']" class="texcol">
+            <span matLine>Archivos</span>
           </a>
           <a mat-list-item [routerLink]="['/estadisticas']" class="texcol">
             <span matLine>Estadísticas Generales</span>
