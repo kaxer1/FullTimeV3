@@ -72,10 +72,10 @@ class ContratoEmpleadoControlador {
             }
         });
     }
-    EncontrarContratoIdEmpleado(req, res) {
+    EncontrarDatosUltimoContrato(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empleado } = req.params;
-            const CONTRATO = yield database_1.default.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 AND ec.id_regimen = cr.id', [id_empleado]);
+            const { id } = req.params;
+            const CONTRATO = yield database_1.default.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id = $1 AND ec.id_regimen = cr.id', [id]);
             if (CONTRATO.rowCount > 0) {
                 return res.jsonp(CONTRATO.rows);
             }
@@ -85,7 +85,7 @@ class ContratoEmpleadoControlador {
     EncontrarContratoEmpleadoRegimen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const CONTRATO_EMPLEADO_REGIMEN = yield database_1.default.query('SELECT ec.fec_ingreso, fec_salida, cr.descripcion, dia_anio_vacacion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 and ec.id_regimen = cr.id', [id_empleado]);
+            const CONTRATO_EMPLEADO_REGIMEN = yield database_1.default.query('SELECT ec.id, ec.fec_ingreso, fec_salida, cr.descripcion, dia_anio_vacacion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 and ec.id_regimen = cr.id ORDER BY ec.id ASC', [id_empleado]);
             if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
                 return res.jsonp(CONTRATO_EMPLEADO_REGIMEN.rows);
             }

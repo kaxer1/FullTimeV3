@@ -85,7 +85,7 @@ export class EmpleadoService {
     return this.http.get(`${this.API_URI}/contratoEmpleado/contratoActual/${id}`);
   }
 
-  BuscarContratoIdEmpleado(id: number){
+  BuscarDatosContrato(id: number){
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contrato/${id}`);
   }
 
