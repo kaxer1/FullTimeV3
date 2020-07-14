@@ -44,6 +44,10 @@ table { width: 100%; font-size: 13px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
+.scrollme { 
+    overflow-x: scroll; 
+} 
+
 [type="file"] {
     height: 0;
     overflow: hidden;

@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { ScrollingModule } from '@angular/cdk/scrolling'
 
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
@@ -423,7 +424,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatDatepickerModule, 
     MatNativeDateModule,
     MatTabsModule,
-    MatMenuModule
+    MatMenuModule,
+    ScrollingModule
   ],
   providers: [
     AuthGuard,

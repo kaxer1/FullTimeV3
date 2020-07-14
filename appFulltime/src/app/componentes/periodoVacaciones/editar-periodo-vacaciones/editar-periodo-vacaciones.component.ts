@@ -32,6 +32,8 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
   nombreEmpleadoF = new FormControl('', [Validators.required]);
   descripcionF = new FormControl('', [Validators.required, Validators.minLength(4)]);
   diaVacacionF = new FormControl('', [Validators.required]);
+  horaVacacionF = new FormControl('', [Validators.required]);
+  minVacacionF = new FormControl('', [Validators.required]);
   diaAntiguedadF = new FormControl('', [Validators.required]);
   estadoF = new FormControl('', [Validators.required]);
   fechaFinF = new FormControl('');
@@ -43,6 +45,8 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
     nombreEmpleadoForm: this.nombreEmpleadoF,
     descripcionForm: this.descripcionF,
     diaVacacionForm: this.diaVacacionF,
+    horaVacacionForm: this.horaVacacionF,
+    minVacacionForm: this.minVacacionF,
     diaAntiguedadForm: this.diaAntiguedadF,
     estadoForm: this.estadoF,
     fechaFinForm: this.fechaFinF,
@@ -60,11 +64,6 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerEmpleados(this.data.idEmpleado);
-    this.PerVacacionesForm.patchValue({
-      diaVacacionForm: 0,
-      diaAntiguedadForm: 0,
-      diaPerdidoForm: 0
-    });
     this.ImprimirDatos();
   }
 
@@ -88,7 +87,9 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
       estadoForm: this.data.datosPeriodo.estado,
       fechaFinForm: this.data.datosPeriodo.fec_final,
       fechaInicioForm: this.data.datosPeriodo.fec_inicio,
-      diaPerdidoForm: this.data.datosPeriodo.dia_perdido
+      diaPerdidoForm: this.data.datosPeriodo.dia_perdido,
+      horaVacacionForm: this.data.datosPeriodo.horas_vacaciones,
+      minVacacionForm: this.data.datosPeriodo.min_vacaciones,
     });
     console.log("estado", this.data.datosPeriodo.estado)
     if (this.data.datosPeriodo.estado === 1) {
@@ -123,7 +124,9 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
       estado: form.estadoForm,
       fec_inicio: form.fechaInicioForm,
       fec_final: form.fechaFinForm,
-      dia_perdido: form.diaPerdidoForm
+      dia_perdido: form.diaPerdidoForm,
+      horas_vacaciones: form.horaVacacionForm,
+      min_vacaciones: form.minVacacionForm,
     };
     this.restV.ActualizarPeriodoV(datosPerVacaciones).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Período de Vacaciones actualizado')

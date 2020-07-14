@@ -28,7 +28,7 @@
     color: rgb(52,65,84);
 }
 
-#nomContrato { font-size: 14px; }
+#nomContrato { font-size: 14px; display: inline-block; }
 
 #tamañoLetra { font-size: 14px; margin-right: 7px;}
 

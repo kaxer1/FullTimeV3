@@ -556,7 +556,7 @@
                             </div>
                         </div>
                         <mat-card-content>
-                            <div class="container" *ngFor="let c of cargosTotalesEmpleado" style="padding-top: 15px;">
+                            <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
                                 <div class="row">
                                     <div class="col">
                                         <label class="col-sm col-form-label">Código:</label>
@@ -915,6 +915,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
+                                        <label class="col-sm col-form-label">Días por Antiguedad:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
                                         <label class="col-sm col-form-label">Días de Vacaciones:</label>
                                     </div>
                                     <div class="col">
@@ -923,10 +931,18 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Días por Antiguedad:</label>
+                                        <label class="col-sm col-form-label">Horas de Vacaciones:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
+                                        <label class="col col-form-label">{{p.horas_vacaciones}}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label class="col-sm col-form-label">Minutos de Vacaciones:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{p.min_vacaciones}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -944,7 +960,6 @@
                                         <p>Editar</p>
                                     </i>
                                 </div>
-                                <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>
                     </mat-card>

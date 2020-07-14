@@ -4,7 +4,7 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
-.fas { color:green; cursor: pointer;}
+.fas { color:green; cursor: pointer; margin-right: 10px;}
 
 .far { color:red; cursor: pointer; }
 
@@ -33,6 +33,12 @@ th { font-size: small; }
 }
 
 table {width: 100%; font-size: 12px;}
+
+.scrollme { 
+    overflow-x: scroll; 
+} 
+
+th { font-size: 10px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 

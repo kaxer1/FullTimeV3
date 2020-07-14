@@ -51,7 +51,7 @@ class EmpleadoCargosControlador {
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unEmplCargp = yield database_1.default.query('SELECT ec.id, ec.cargo, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, s.nombre AS sucursal, d.nombre AS departamento FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d WHERE ec.id = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id', [id]);
+            const unEmplCargp = yield database_1.default.query('SELECT ec.id, ec.cargo, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, s.nombre AS sucursal, d.nombre AS departamento FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d WHERE ec.id = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id ORDER BY ec.id', [id]);
             if (unEmplCargp.rowCount > 0) {
                 return res.jsonp(unEmplCargp.rows);
             }

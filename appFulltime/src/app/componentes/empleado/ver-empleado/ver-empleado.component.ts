@@ -291,6 +291,10 @@ export class VerEmpleadoComponent implements OnInit {
       this.idContrato = datos;
       this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
         this.cargosTotalesEmpleado = datos;
+        let cargoIdActual = this.cargosTotalesEmpleado[this.cargosTotalesEmpleado.length - 1].id;
+        this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
+          this.cargoEmpleado = datos;
+        }, error => { });
       }, error => {
         this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
       });
@@ -611,7 +615,7 @@ export class VerEmpleadoComponent implements OnInit {
   */
   /* Ventana para ingresar contrato del empleado*/
   AbrirVentanaCrearContrato(): void {
-    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '600px', data: this.idEmpleado }).
+    this.vistaRegistrarDatos.open(RegistroContratoComponent, { width: '650px', data: this.idEmpleado }).
       afterClosed().subscribe(item => {
         this.obtenerContratoEmpleadoRegimen();
         this.obtenerCargoEmpleado(parseInt(this.idEmpleado));

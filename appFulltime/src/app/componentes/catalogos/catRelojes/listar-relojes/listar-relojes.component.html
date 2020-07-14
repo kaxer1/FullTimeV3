@@ -129,49 +129,51 @@
     </div>
 </div>
 <br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
+<div class="container" style="padding-bottom: 50px; text-align: center;">
     <div id="resultadosRelojes">Resultado de búsqueda</div>
     <mat-card class="mat-elevation-z8">
-        <table class="table table-hover table-sm">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Código</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">Sucursal</th>
-                    <th scope="col">Ciudad</th>
-                    <th scope="col">Departamento</th>
-                    <th scope="col">Dispositivo</th>
-                    <th scope="col">IP</th>
-                    <th scope="col">Puerto</th>
-                    <th scope="col">Modelo</th>
-                    <th scope="col">Tiene Funciones</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
-                    <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
-                    <td>{{reloj.nomempresa}}</td>
-                    <td>{{reloj.nomsucursal}}</td>
-                    <td>{{reloj.nomciudad}}</td>
-                    <td>{{reloj.nomdepar}}</td>
-                    <td>{{reloj.nombre}}</td>
-                    <td>{{reloj.ip}}</td>
-                    <td>{{reloj.puerto}}</td>
-                    <td>{{reloj.modelo}}</td>
-                    <td *ngIf="reloj.tien_funciones == true">Sí</td>
-                    <td *ngIf="reloj.tien_funciones == false">No</td>
-                    <td>
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(reloj)" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="scrollme" style="text-align: center;">
+            <table class="table table-hover table-responsive" style="margin: 0 auto;">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Código</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Sucursal</th>
+                        <th scope="col">Ciudad</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Dispositivo</th>
+                        <th scope="col">IP</th>
+                        <th scope="col">Puerto</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">Tiene Funciones</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
+                        <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
+                        <td>{{reloj.nomempresa}}</td>
+                        <td>{{reloj.nomsucursal}}</td>
+                        <td>{{reloj.nomciudad}}</td>
+                        <td>{{reloj.nomdepar}}</td>
+                        <td>{{reloj.nombre}}</td>
+                        <td>{{reloj.ip}}</td>
+                        <td>{{reloj.puerto}}</td>
+                        <td>{{reloj.modelo}}</td>
+                        <td *ngIf="reloj.tien_funciones == true">Sí</td>
+                        <td *ngIf="reloj.tien_funciones == false">No</td>
+                        <td>
+                            <i class="fas fa-edit" (click)="AbrirVentanaEditar(reloj)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="relojes.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>

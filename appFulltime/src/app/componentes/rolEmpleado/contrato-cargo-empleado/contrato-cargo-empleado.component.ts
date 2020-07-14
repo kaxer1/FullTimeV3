@@ -84,7 +84,7 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
     this.cargoSeleccionado = [];
   }
 
-  /** Método para obtener los datos del Cargo Actual del empleado */
+  /** Método para obtener los datos del cargo del empleado */
   cargoEmpleado: any = [];
   cargosTotalesEmpleado: any = [];
   obtenerCargoEmpleado(id_empleado: number) {
@@ -94,6 +94,10 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
       this.idContrato = datos;
       this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
         this.cargosTotalesEmpleado = datos;
+        let cargoIdActual = this.cargosTotalesEmpleado[this.cargosTotalesEmpleado.length - 1].id;
+        this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
+          this.cargoEmpleado = datos;
+        }, error => { });
       }, error => {
         this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
       });

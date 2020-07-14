@@ -31,3 +31,18 @@
     padding-bottom: 10px; 
     color: rgb(52,65,84);
 }
+
+.scrollbar {
+    float: left;
+    height: 450px;
+    width: 100%;
+    background: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-bottom: 25px;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5; 
+}

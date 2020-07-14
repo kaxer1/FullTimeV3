@@ -18,7 +18,8 @@
                                 matTooltipPosition="right"
                                 matTooltip="Seleccionar Régimen Laboral con el cual va a prestar sus servicios el empleado">
                                 help_outline</mat-icon>
-                            <mat-select id="nomContrato" [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen" required>
+                            <mat-select id="nomContrato" [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen"
+                                required>
                                 <mat-option *ngFor="let regimen of regimenLaboral" [value]="regimen.id">
                                     {{regimen.descripcion}}
                                 </mat-option>
@@ -49,11 +50,14 @@
                         </mat-form-field>
                     </div>
                     <div class="col">
-                        <label id="tamañoLetra">Controlar Vacaciones *</label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
-                            help_outline</mat-icon>
+                        <mat-form-field>
+                            <mat-label>Controlar Vacaciones *</mat-label>
+                            <input matInput readonly="readonly">
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                                help_outline</mat-icon>
+                        </mat-form-field>
                         <section>
                             <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
                                 required>
@@ -61,11 +65,14 @@
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
                         </section>
-                        <label id="tamañoLetra">Controlar Asistencia *</label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
-                            help_outline</mat-icon>
+                        <mat-form-field>
+                            <mat-label>Controlar Asistencia *</mat-label>
+                            <input matInput readonly="readonly">
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                                help_outline</mat-icon>
+                        </mat-form-field>
                         <section>
                             <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
                                 required>
@@ -75,6 +82,7 @@
                         </section>
                     </div>
                     <div class="col">
+                    <br>
                         <form method="post" enctype="multipart/form-data">
                             <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
                             <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
@@ -82,10 +90,8 @@
                                 matTooltip="Actualizar el documento contrato del empleado">Subir
                                 Contrato</label>
                         </form>
-                        <div class="col">
-                            <input type="text" readonly id="nomContrato" placeholder="Ningún archivo seleccionado"
-                                class="form-control" style="width: 212px;" [formControl]="nombreContratoF">
-                        </div>
+                        <input type="text" readonly id="nomContrato" placeholder="Ningún archivo seleccionado"
+                            class="form-control" style="width: 212px;" [formControl]="nombreContratoF">
                     </div>
                 </div>
             </div>
