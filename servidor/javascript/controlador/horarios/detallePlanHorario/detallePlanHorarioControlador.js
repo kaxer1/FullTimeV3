@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../../database"));
+const xlsx_1 = __importDefault(require("xlsx"));
+const fs_1 = __importDefault(require("fs"));
 class DetallePlanHorarioControlador {
     ListarDetallePlanHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,6 +42,27 @@ class DetallePlanHorarioControlador {
                 return res.jsonp(HORARIO_CARGO.rows);
             }
             res.status(404).jsonp({ text: 'Registro no encontrado' });
+        });
+    }
+    CrearDetallePlanificacionPlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { id_plan_horario } = req.params;
+                const { fecha_inicio_actividades, tipo_dia, nombre_horario } = data;
+                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre_horario]);
+                if (fecha_inicio_actividades != undefined) {
+                    yield database_1.default.query('INSERT INTO plan_hora_detalles (fecha, id_plan_horario, tipo_dia, id_cg_horarios) VALUES ($1, $2, $3, $4)', [fecha_inicio_actividades, id_plan_horario, tipo_dia.split(" ")[0], idHorario.rows[0]['id']]);
+                }
+            }));
+            res.jsonp({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
         });
     }
 }

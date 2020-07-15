@@ -23,5 +23,8 @@ export class DetallePlanHorarioService {
   ObtenerPlanHoraDetallePorIdPlanHorario(id_plan_horario: number){
     return this.http.get<any>(`${this.API_URL}/detallePlanHorario/infoPlan/${id_plan_horario}`);
   }
-
+  
+  subirArchivoExcel(id_plan_horario: number, formData) {
+    return this.http.post(`${this.API_URL}/detallePlanHorario/${id_plan_horario}/upload`, formData)  
+  }
 }

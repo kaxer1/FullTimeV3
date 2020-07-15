@@ -121,7 +121,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.nameFile = this.archivoSubido[0].name;
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 50);
+    let itemName = arrayItems[0].slice(0, 17);
     console.log("funcion horario", itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'catalogo horarios') {
