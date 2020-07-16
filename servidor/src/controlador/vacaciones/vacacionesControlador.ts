@@ -29,7 +29,7 @@ class VacacionesControlador {
     const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion, idContrato } = req.body;
     await pool.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion]);
     const ultimo = await pool.query('SELECT * FROM vacaciones  ORDER BY id DESC LIMIT 1')
-    const JefesDepartamentos = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s ,empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id');
+    const JefesDepartamentos = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado');
     const correoInfoPidePermiso = await pool.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [idContrato]);
     
     const email = process.env.EMAIL;
@@ -43,36 +43,46 @@ class VacacionesControlador {
       }
     });
     
-    let id_departamento_autoriza;
-    let id_empleado_autoriza;
     JefesDepartamentos.rows.forEach(obj => {
-    if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal){
-      var url = `${process.env.URL_DOMAIN}/ver-vacacion`;
-      id_departamento_autoriza = obj.id_dep;
-      id_empleado_autoriza = obj.empleado;
-      let data = {
-        to: obj.correo,
-        from: email,
-        subject: 'Solicitud de vacaciones',
-        html: `<p><b>${correoInfoPidePermiso.rows[0].nombre} ${correoInfoPidePermiso.rows[0].apellido}</b> con número de
-        cédula ${correoInfoPidePermiso.rows[0].cedula} solicita vacaciones desde la fecha ${fec_inicio.split("T")[0]}
-        hasta ${fec_final.split("T")[0]} </p>
-        <a href="${url}/${ultimo.rows[0].id}">Ir a verificar permiso</a>`
-      };
-      console.log(data);
-      smtpTransport.sendMail(data, async (error: any, info: any) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
+      if (obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal){
+        var url = `${process.env.URL_DOMAIN}/ver-vacacion`;
+        let id_departamento_autoriza = obj.id_dep;
+        let id_empleado_autoriza = obj.empleado;
+        let data = {
+          to: obj.correo,
+          from: email,
+          subject: 'Solicitud de vacaciones',
+          html: `<p><b>${correoInfoPidePermiso.rows[0].nombre} ${correoInfoPidePermiso.rows[0].apellido}</b> con número de
+          cédula ${correoInfoPidePermiso.rows[0].cedula} solicita vacaciones desde la fecha ${fec_inicio.split("T")[0]}
+          hasta ${fec_final.split("T")[0]} </p>
+          <a href="${url}/${ultimo.rows[0].id}">Ir a verificar permiso</a>`
+        };
+        
+        if (obj.vaca_mail === true && obj.vaca_noti === true) {
+          smtpTransport.sendMail(data, async (error: any, info: any) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+          res.jsonp({  message: 'Vacaciones guardadas con éxito', notificacion: true, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado});
+        } else if (obj.vaca_mail === true && obj.vaca_noti === false) {
+          smtpTransport.sendMail(data, async (error: any, info: any) => {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+            }
+          });
+          res.jsonp({  message: 'Vacaciones guardadas con éxito', notificacion: false, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado});
+        } else if (obj.vaca_mail === false && obj.vaca_noti === true) {
+          res.jsonp({  message: 'Vacaciones guardadas con éxito', notificacion: true, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado});
+        } else if (obj.vaca_mail === false && obj.vaca_noti === false) {
+          res.jsonp({  message: 'Vacaciones guardadas con éxito', notificacion: false, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado});
         }
-      });
-    }
+      }
     });     
-
-    // res.jsonp({  message: 'Vacaciones guardadas con éxito'});
-    res.jsonp({  message: 'Vacaciones guardadas con éxito' , id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado});
-    
   }
 
   public async VacacionesIdPeriodo(req: Request, res: Response) {
@@ -99,10 +109,97 @@ class VacacionesControlador {
 
   public async ActualizarEstado(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
-    const { estado } = req.body;
+    const { estado, id_vacacion, id_rece_emp, id_depa_send} = req.body;
     await pool.query('UPDATE vacaciones SET estado = $1 WHERE id = $2', [estado, id]);
-    res.json({ message: 'Estado de permiso actualizado exitosamente' });
-}
+
+    const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_depa_send]);
+    const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacacion, id_rece_emp]);
+    // console.log(JefeDepartamento.rows)
+    // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
+    const estadoAutorizacion = [
+        { id: 1, nombre: 'Pendiente'},
+        { id: 2, nombre: 'Pre-autorizado'},
+        { id: 3, nombre: 'Autorizado'},
+        { id: 4, nombre: 'Negado'},
+    ];
+
+    let nombreEstado = '';
+    estadoAutorizacion.forEach(obj => {
+        if (obj.id === estado) {
+            nombreEstado = obj.nombre
+        }
+    })
+    
+    const email = process.env.EMAIL;
+    const pass = process.env.PASSWORD;
+    
+    let smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: email,
+          pass: pass
+        }
+    });
+
+    JefeDepartamento.rows.forEach(obj => {
+        var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+        InfoVacacionesReenviarEstadoEmpleado.rows.forEach(ele => {
+            let notifi_realtime = {
+                id_send_empl: obj.empleado,
+                id_receives_depa: obj.id_dep,
+                estado: nombreEstado, 
+                id_vacaciones: id_vacacion,
+                id_permiso: null
+            }
+              
+            let data = {
+                from: obj.correo,
+                to: ele.correo,
+                subject: 'Estado de solicitud de Vacaciones',
+                html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
+                cédula ${obj.cedula} a cambiado el estado de su solicitud de vacaciones a: <b>${nombreEstado}</b></p>
+                <h4><b>Informacion de las vacaciones</b></h4>
+                <ul>
+                    <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
+                    <li><b>Cédula</b>: ${ele.cedula} </li>
+                    <li><b>Sucursal</b>: ${obj.sucursal} </li>
+                    <li><b>Departamento</b>: ${obj.departamento} </li>
+                    <li><b>Fecha inicio </b>: ${ele.fec_inicio.toLocaleString().split(" ")[0]} </li> 
+                    <li><b>Fecha final </b>: ${ele.fec_final.toLocaleString().split(" ")[0]} </li>
+                    <li><b>Fecha ingresa </b>: ${ele.fec_ingreso.toLocaleString().split(" ")[0]} </li>
+                    </ul>
+                <a href="${url}">Ir a verificar estado permisos</a>`
+            };
+
+            if (ele.vaca_mail === true && ele.vaca_noti === true) {
+                smtpTransport.sendMail(data, async (error: any, info: any) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    } 
+                });
+                res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
+            } else if (ele.vaca_mail === true && ele.vaca_noti === false) {
+                smtpTransport.sendMail(data, async (error: any, info: any) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+                res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
+            } else if (ele.vaca_mail === false && ele.vaca_noti === true) {
+                res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
+            } else if (ele.vaca_mail === false && ele.vaca_noti === false) {
+                res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
+            }
+            
+        });
+    });     
+        
+    res.json({ message: 'Estado de vacacion actualizado exitosamente' });
+  }
 
 }
 

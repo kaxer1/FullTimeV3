@@ -1,40 +1,26 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-sm"></div>
         <div class="col-sm">
             <mat-card class="example-card mat-elevation-z8">
                 <div class="tituloNotifica">
                     <span>Registrar Notificación</span>
                 </div>
                 <br>
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                </div>
                 <!-- Formulario Completo -->
                 <mat-card-content>
-                    <div class="container" style="text-align: center;">
-                        <div class="nota">
-                            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar
-                                el botón
-                                Guardar.</span>
-                        </div>
-                        <form [formGroup]="nuevaNotificacionForm">
-                            <mat-form-field>
-                                <mat-label>Código de notificación</mat-label>
-                                <input matInput placeholder="Ej: " [formControl]="tipo" required>
-                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="notifica-tooltip"
-                                    matTooltip="Ingresar un código de identificación de la notificación">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="tipo.invalid">{{ObtenerMensajeErrorTipoRequerido()}}</mat-error>
-                            </mat-form-field>
-                            <br>
+                    <form [formGroup]="nuevaNotificacionForm">
+                        <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
                                 <mat-label>Nivel *</mat-label>
                                 <mat-icon id="notifica" matSuffix matTooltipPosition="right"
                                     matTooltipClass="notifica-tooltip"
                                     matTooltip="Niveles que puede tener la autorización, en el caso de definir niveles diferentes a los departamentos">
                                     help_outline</mat-icon>
-                                <mat-select [formControl]="nivel">
-                                    <mat-option *ngFor="let n of niveles" [value]="n.valor"
-                                        (click)="ActivarFormSucursal()">
+                                <mat-select [formControl]="nivel" disabled>
+                                    <mat-option *ngFor="let n of niveles" [value]="n.valor">
                                         {{n.valor}}
                                     </mat-option>
                                 </mat-select>
@@ -46,9 +32,8 @@
                                     matTooltipClass="notifica-tooltip"
                                     matTooltip="Seleccionar la sucursal a la que se quiere registrar las notificaciones">
                                     help_outline</mat-icon>
-                                <mat-select [formControl]="sucursal">
-                                    <mat-option *ngFor="let s of sucu_res" [value]="s.id"
-                                        (click)="ActivarFormDepa(s.id)">
+                                <mat-select [formControl]="sucursal" disabled>
+                                    <mat-option *ngFor="let s of sucu_res" [value]="s.id">
                                         {{s.nombre}}
                                     </mat-option>
                                 </mat-select>
@@ -61,15 +46,24 @@
                                     matTooltipPosition="right"
                                     matTooltip="Lista de departamentos existentes en la empresa">
                                     help_outline</mat-icon>
-                                <mat-select [formControl]="idDepartamento">
-                                    <mat-option *ngFor="let depa of departamentos" [value]="depa.id"
-                                        (click)="ObtenerTipoPermiso(depa.id)">
-                                        {{depa.nombre}}
+                                <mat-select [formControl]="idDepartamento" disabled>
+                                    <mat-option *ngFor="let d of departamentos" [value]="d.id">
+                                        {{d.nombre}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <br>
                             <!-- Cargar en un select cuando ya este validado el registro permisos. Es opcional seleccionar este campo -->
+                            <mat-form-field>
+                                <mat-label>Código de notificación</mat-label>
+                                <input matInput placeholder="Ej: " [formControl]="tipo" required>
+                                <mat-icon id="notifica" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="notifica-tooltip"
+                                    matTooltip="Ingresar un código de identificación de la notificación">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="tipo.invalid">{{ObtenerMensajeErrorTipoRequerido()}}</mat-error>
+                            </mat-form-field>
+                            <br>
                             <mat-form-field *ngIf="HabilitarP">
                                 <mat-label>Seleccionar Permiso*</mat-label>
                                 <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip"
@@ -82,25 +76,24 @@
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </mat-card-content>
-                <div style="text-align: center;">
+                <div class="d-flex justify-content-around">
+                    <a [routerLink]="['/suc-notificaciones']" type="submit" (click)="limpiarCampos()" class="btn btn-sm">Atrás</a>
                     <input type="submit" class="btn btn-sm" (click)="insertarNotificacion(nuevaNotificacionForm.value)"
                         [disabled]="!nuevaNotificacionForm.valid" value="Guardar">
-                    <input type="submit" (click)="limpiarCampos()" class="btn btn-sm" value="Cancelar"
-                        style="margin-left: 15px;">
+                    <input type="submit" (click)="limpiarCampos()" class="btn btn-sm" value="Cancelar">
                 </div>
             </mat-card>
         </div>
-        <div class="col-sm"></div>
     </div>
 </div>
 
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resulProceso">Lista de Catálogo Notificaciones</div>
+<div class="container  " style="padding-bottom: 50px;">
     <mat-card class="mat-elevation-z8 ">
-        <table class="table table-hover table-sm">
+        <div id="resulProceso">Lista de Catálogo Notificaciones</div>
+        <table class="table table-responsive table-hover table-lg">
             <thead class="thead-light">
                 <tr style="text-align: center;">
                     <th scope="col">Id</th>
@@ -118,12 +111,7 @@
                     <td>{{n.nombre}}</td>
                     <td>{{n.nivel}}</td>
                     <td>{{n.descripcion}}</td>
-                    <td>
-                        <i class="fas fa-plus-circle" style="color:rgb(58, 90, 231); margin-left: 15px;" id="iprocesoL"
-                            (click)="AbrirNotificacionAutorizacion(n)" matSuffix matTooltipClass="procesoL-tooltip"
-                            matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento.">
-                            <p>Agregar</p>
-                        </i>
+                    <td class="d-flex justify-content-start">
                         <i class="fas fa-edit" style="color:green; margin-left: 15px;" id="iprocesoL"
                             (click)="EditarNotificacion(n)" matSuffix matTooltipClass="procesoL-tooltip"
                             matTooltipPosition="right" matTooltip="Modificar los datos generales del registro">

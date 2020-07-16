@@ -568,7 +568,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.toastr.success('Operación Exitosa', 'Permiso registrado');
         this.LimpiarCampos();
         this.idPermisoRes = res;
-        console.log(this.idPermisoRes.estado);
+        console.log(this.idPermisoRes);
         this.SubirRespaldo(this.idPermisoRes.id)
         this.ImprimirNumeroPermiso();
         var f = new Date();
@@ -586,7 +586,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
           console.log(res);
           this.NotifiRes = res;
           notificacion.id = this.NotifiRes._id;
-          if (this.NotifiRes._id > 0) {
+          if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
             this.restP.sendNotiRealTime(notificacion);
           }
         });

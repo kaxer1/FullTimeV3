@@ -1,14 +1,17 @@
-import { Component, ViewChild, HostBinding, Input, OnInit,  } from '@angular/core';
+import { Component, OnInit,  } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { Socket } from 'ngx-socket-io';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SettingsComponent } from "src/app/componentes/settings/settings.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-main-nav',
@@ -47,7 +50,9 @@ export class MainNavComponent implements OnInit {
     public location: Location,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
+    public vistaFlotante: MatDialog,
     private roter: Router,
+    private toaster: ToastrService,
     private socket: Socket,
     private realTime: RealTimeService
   ) {
@@ -109,8 +114,17 @@ export class MainNavComponent implements OnInit {
           }
         });
       }
-
-    })
+    });
+    this.realTime.ObtenerConfigNotiEmpleado(id).subscribe(res => {
+      console.log(res);
+      if (res[0].vaca_noti === false || res[0].permiso_noti === false || res[0].hora_extra_noti === false) {
+        this.num_noti_false = 0;
+        this.estadoNotificacion = true
+      }
+    }, error => {
+      console.log(error);
+      this.toaster.info('Configure si desea que le lleguen notficaciones y avisos al correo electrónico', 'Falta Ajustes del Sistema');
+    });
   }
 
   CambiarVistaNotificacion(id_realtime: number) {
@@ -152,5 +166,9 @@ export class MainNavComponent implements OnInit {
     });
   }
 
+  AbrirSettings() {
+    const id_empleado = parseInt(localStorage.getItem('empleado'));
+    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: {id_empleado} }).disableClose = true;
+  }
 
 }

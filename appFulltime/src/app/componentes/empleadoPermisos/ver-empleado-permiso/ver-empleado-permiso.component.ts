@@ -64,6 +64,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   BuscarDatos() {
+    this.InfoPermiso = [];
+    this.dep = [];
     this.restP.obtenerUnPermisoEmleado(parseInt(this.id_permiso)).subscribe(res => {
       this.InfoPermiso = res;
       console.log(this.InfoPermiso)

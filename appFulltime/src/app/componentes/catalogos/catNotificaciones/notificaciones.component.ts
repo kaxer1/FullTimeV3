@@ -8,9 +8,9 @@ import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { EditarNotificacionComponent } from './editar-notificacion/editar-notificacion.component';
-import { NotiAutorizacionesComponent } from "../catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component";
 import { ListarNotiAutorizacionesComponent } from '../catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { Router } from '@angular/router';
 
 interface Nivel {
   valor: string
@@ -36,6 +36,7 @@ export class NotificacionesComponent implements OnInit {
   public nuevaNotificacionForm = new FormGroup({
     tipoForm: this.tipo,
     nivelForm: this.nivel,
+    idSucForm: this.sucursal,
     idDepartamentoForm: this.idDepartamento,
     idTipoPermisoForm: this.idTipoPermiso
   });
@@ -48,9 +49,9 @@ export class NotificacionesComponent implements OnInit {
     { valor: '5' }
   ];
 
-  HabilitarD: boolean = false;
-  HabilitarP: boolean = false;
-  HabilitarS: boolean = false;
+  HabilitarD: boolean = true;
+  HabilitarP: boolean = true;
+  HabilitarS: boolean = true;
 
   tipo_permiso_res: any = [];
   noti_res: any = [];
@@ -61,6 +62,7 @@ export class NotificacionesComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+  dataParams: any;
 
   constructor(
     private toastr: ToastrService,
@@ -68,19 +70,33 @@ export class NotificacionesComponent implements OnInit {
     private restD: DepartamentosService,
     private restP: TipoPermisosService,
     private restS: SucursalService,
+    private router: Router,
     public vistaRegistrarDatos: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.limpiarCampos();
-    this.rest.getNotificacionesRest().subscribe(res => {
+    this.dataParams = this.router.routerState.snapshot.root.children[0].params;
+    console.log(this.dataParams);
+    this.setValores();
+  }
+
+  setValores() {
+    this.nuevaNotificacionForm.patchValue({ nivelForm: this.dataParams.nivel });
+    this.rest.getNotiByDepaRest(parseInt(this.dataParams.id_depa)).subscribe(res => {
       this.noti_res = res;
-    });
-    this.restS.getSucursalesRest().subscribe(res => {
+    }); 
+    this.restS.getOneSucursalRest(this.dataParams.id_suc).subscribe(res => {
       this.sucu_res = res;
+      this.nuevaNotificacionForm.patchValue({ idSucForm: parseInt(this.dataParams.id_suc) });
+    });
+    this.restD.EncontrarUnDepartamento(this.dataParams.id_depa).subscribe(res => {
+      this.departamentos = [res];
+      this.nuevaNotificacionForm.patchValue({ idDepartamentoForm: parseInt(this.dataParams.id_depa) });
     });
     this.restP.getTipoPermisoRest().subscribe(res => {
       this.tipo_permiso_res = res;
+      console.log(this.tipo_permiso_res)
+      this.ObtenerTipoPermiso(parseInt(this.dataParams.id_depa))
     });
   }
 
@@ -88,45 +104,6 @@ export class NotificacionesComponent implements OnInit {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
-
-  ActivarFormSucursal() {
-    this.HabilitarS = true;
-  }
-
-  ActivarFormDepa(id_sucursal: number) {
-    this.departamentos = [];
-    this.HabilitarD = true;
-    this.restD.BuscarDepartamentoSucursal(id_sucursal).subscribe(res => {
-      this.departamentos = res;
-    }, error => {
-      this.toastr.info('Selecciones otra sucursal que contenga departamentos', 'Sucursal sin departamentos');
-      this.sucursal.setValue('')
-    });
-  }
-
-  // depa_Asignado: any = [];
-  // ListaDepartamentos() {
-  //   this.departamentos = [];
-  //   this.depa_Asignado = [];
-  //   this.restD.ConsultarDepartamentos().subscribe(datos => {
-  //     this.departamentos = datos;
-  //     this.depa_filtrado = datos;
-  //     this.noti_filtrado.forEach(elm => {
-  //       this.depa_Asignado.push(elm.nombre);
-  //     });
-  //     console.log(this.depa_Asignado)
-  //     this.depa_filtrado.forEach(obj => {
-  //       if(this.depa_Asignado.indexOf(obj.nombre) < 0){
-  //         console.log(obj.nombre);
-  //         let dataDepa = {
-  //           id: obj.id,
-  //           nombre: obj.nombre,
-  //         }
-  //         this.departamentos.push(dataDepa);
-  //       }
-  //     });
-  //   });
-  // }
 
   tipo_permiso_Asignado: any = [];
   ObtenerTipoPermiso(id_depa) {
@@ -188,9 +165,7 @@ export class NotificacionesComponent implements OnInit {
       else {
         this.toastr.success('Operación Exitosa', 'Notificación guardada');
         this.limpiarCampos();
-        this.rest.getNotificacionesRest().subscribe(res => {
-          this.noti_res = res;
-        });
+        this.setValores();
       }
     }, error => {
       console.log(error);
@@ -199,17 +174,10 @@ export class NotificacionesComponent implements OnInit {
 
   limpiarCampos() {
     this.nuevaNotificacionForm.reset();
-    this.HabilitarS = false;
-    this.HabilitarP = false;
-    this.HabilitarD = false;
   }
 
   EditarNotificacion(datosSeleccionados: any): void {
     this.vistaRegistrarDatos.open(EditarNotificacionComponent, { width: '450px', data: datosSeleccionados }).disableClose = true;
-  }
-
-  AbrirNotificacionAutorizacion(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(NotiAutorizacionesComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
   }
 
   AbrirListaNotificacionAutorizacion(datosSeleccionados: any): void {
