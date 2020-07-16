@@ -39,6 +39,22 @@ export class RealTimeService {
 
   PutVistaNotificacion(id_realtime: number) {
     let data = {visto:true};
-    return this.http.post(`${this.API_URL}/noti-real-time/vista/${id_realtime}`, data);
+    return this.http.put(`${this.API_URL}/noti-real-time/vista/${id_realtime}`, data);
+  }
+
+  /*
+    METODOS PARA CONFIG_NOTI
+  */
+
+  ObtenerConfigNotiEmpleado(id_empleado: number) {
+    return this.http.get(`${this.API_URL}/noti-real-time/config/${id_empleado}`);
+  }
+
+  IngresarConfigNotiEmpleado(datos: any) {
+    return this.http.post(`${this.API_URL}/noti-real-time/config`, datos);
+  }
+
+  ActualizarConfigNotiEmpl(id_empleado: number, datos: any) {
+    return this.http.put(`${this.API_URL}/noti-real-time/config/noti-put/${id_empleado}`, datos);
   }
 }

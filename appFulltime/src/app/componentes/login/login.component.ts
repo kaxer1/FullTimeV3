@@ -75,10 +75,14 @@ export class LoginComponent implements OnInit {
         this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
       }
       else {
+        console.log(datos)
         localStorage.setItem('token', datos.token);
         localStorage.setItem('usuario', datos.usuario);
         localStorage.setItem('rol', datos.rol);
         localStorage.setItem('empleado', datos.empleado);
+        localStorage.setItem('empresa', datos.empresa);
+        localStorage.setItem('sucursal', datos.sucursal);
+        localStorage.setItem('departamento', datos.departamento);
         this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
 
         if (datos.rol === 1) { // Admin

@@ -130,7 +130,8 @@ export class RegistrarVacacionesComponent implements OnInit {
       this.VacacionesForm.patchValue({
         diaLibreForm: libre,
         dialaborableForm: habil,
-        totalForm: totalDias
+        totalForm: totalDias,
+        diasTForm: 0
       });
     })
   }
@@ -264,7 +265,7 @@ export class RegistrarVacacionesComponent implements OnInit {
         console.log(res);
         this.NotifiRes = res;
         notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0) {
+        if (this.NotifiRes._id > 0 && this.responseVacacion.notificacion === true) {
           this.restV.sendNotiRealTime(notificacion);
         }
       });

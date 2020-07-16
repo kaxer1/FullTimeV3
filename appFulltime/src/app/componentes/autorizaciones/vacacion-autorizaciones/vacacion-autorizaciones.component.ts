@@ -24,11 +24,11 @@ interface Documento {
 }
 
 @Component({
-  selector: 'app-autorizaciones',
-  templateUrl: './autorizaciones.component.html',
-  styleUrls: ['./autorizaciones.component.css']
+  selector: 'app-vacacion-autorizaciones',
+  templateUrl: './vacacion-autorizaciones.component.html',
+  styleUrls: ['./vacacion-autorizaciones.component.css']
 })
-export class AutorizacionesComponent implements OnInit {
+export class VacacionAutorizacionesComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
   TipoDocumento = new FormControl('');
@@ -80,7 +80,7 @@ export class AutorizacionesComponent implements OnInit {
     public restDepartamento: DepartamentosService,
     public restCargo: EmplCargosService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<AutorizacionesComponent>,
+    public dialogRef: MatDialogRef<VacacionAutorizacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
@@ -88,7 +88,7 @@ export class AutorizacionesComponent implements OnInit {
     console.log(this.data);
     this.obtenerDepartamento();
     //this.obtenerNotiAutorizaciones();
-    this.obtenerNotificacion(this.data.id_tipo_permiso);
+    this.obtenerNotificacion(this.data.id);
 
   }
 

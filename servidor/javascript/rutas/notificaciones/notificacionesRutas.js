@@ -17,7 +17,11 @@ class NotificacionTiempoRealRutas {
         this.router.get('/all-receives/:id_receive', notificacionesControlador_1.default.ListaNotificacionesRecibidas);
         this.router.get('/receives/:id_receive', notificacionesControlador_1.default.ListaPorJefe);
         this.router.post('/', notificacionesControlador_1.default.create);
-        this.router.post('/vista/:id', notificacionesControlador_1.default.ActualizarVista);
+        this.router.put('/vista/:id', notificacionesControlador_1.default.ActualizarVista);
+        // RUTAS CONFIG_NOTI
+        this.router.get('/config/:id', notificacionesControlador_1.default.ObtenerConfigEmpleado);
+        this.router.post('/config/', notificacionesControlador_1.default.CrearConfiguracion);
+        this.router.put('/config/noti-put/:id', notificacionesControlador_1.default.ActualizarConfigEmpleado);
     }
 }
 const NOTIFICACION_TIEMPO_REAL_RUTAS = new NotificacionTiempoRealRutas();

@@ -193,3 +193,15 @@ a.mat-menu-item.noti_menu:hover {color: rgba(17, 113, 192, 0.952); background: r
 .divider {
   margin-top: -7%; margin-left: -25%; width: 150%;
 }
+
+.mostrar-noti {
+  padding-top: 5px;
+  color: #000;
+  text-decoration: none;
+}
+
+.mostrar-noti:hover {
+  background-color: rgb(255, 255, 255);
+  color: rgb(31, 31, 31);
+  text-decoration: none;
+}

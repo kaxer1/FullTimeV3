@@ -52,7 +52,7 @@ import { VerEmpleadoPermisoComponent } from './componentes/empleadoPermisos/ver-
 import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
 import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacaciones/listar-vacaciones.component';
 import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
-
+import { SucListaNotiComponent } from './componentes/catalogos/catNotificaciones/suc-lista-noti/suc-lista-noti.component';
 import { AuthGuard } from "./guards/auth.guard";
 
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
@@ -66,6 +66,8 @@ import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacacione
 import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
 import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
 import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
+
+
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -87,7 +89,8 @@ const routes: Routes = [
   { path: 'horario', component: PrincipalHorarioComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'registrarHorario', component: RegistroHorarioComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'horasExtras', component: HorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  { path: 'notificaciones', component: NotificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'notificaciones/:id_suc/:id_depa/:nivel', component: NotificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'suc-notificaciones', component: SucListaNotiComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'feriados', component: RegistrarFeriadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listarFeriados', component: ListarFeriadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'modificarDepartamento/:id', component: RegistroDepartamentoComponent, canActivate: [AuthGuard], data: { roles: 1 } },

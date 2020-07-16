@@ -116,6 +116,20 @@ import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacac
 import { EstadoVacacionesComponent } from './componentes/vacaciones/estado-vacaciones/estado-vacaciones.component';
 import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
 import { EditarEstadoVacacionAutoriacionComponent } from './componentes/autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
+import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
+import { PlanificacionHorarioEmpleadoComponent } from './componentes/rolEmpleado/planificacion-horario-empleado/planificacion-horario-empleado.component';
+import { DetalleHorarioEmpleadoComponent } from './componentes/rolEmpleado/detalle-horario-empleado/detalle-horario-empleado.component';
+import { HorariosEmpleadoComponent } from './componentes/rolEmpleado/horarios-empleado/horarios-empleado.component';
+import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/vacaciones-empleado.component';
+import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
+import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
+import { SubirDocumentoComponent } from './componentes/documentos/subir-documento/subir-documento.component';
+import { EditarDocumentoComponent } from './componentes/documentos/editar-documento/editar-documento.component';
+import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
+import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
+import { SettingsComponent } from './componentes/settings/settings.component';
+import { VacacionAutorizacionesComponent } from './componentes/autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
+import { SucListaNotiComponent } from './componentes/catalogos/catNotificaciones/suc-lista-noti/suc-lista-noti.component';
 
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -172,6 +186,7 @@ import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-
 import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
 import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
+import { FiltrarNombreDocuPipe } from './filtros/documentos/filtrar-nombre-docu.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 
@@ -211,19 +226,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
-import { PlanificacionHorarioEmpleadoComponent } from './componentes/rolEmpleado/planificacion-horario-empleado/planificacion-horario-empleado.component';
-import { DetalleHorarioEmpleadoComponent } from './componentes/rolEmpleado/detalle-horario-empleado/detalle-horario-empleado.component';
-import { HorariosEmpleadoComponent } from './componentes/rolEmpleado/horarios-empleado/horarios-empleado.component';
-import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/vacaciones-empleado.component';
-import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
-import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
-import { SubirDocumentoComponent } from './componentes/documentos/subir-documento/subir-documento.component';
-import { EditarDocumentoComponent } from './componentes/documentos/editar-documento/editar-documento.component';
-import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
-import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
-import { FiltrarNombreDocuPipe } from './filtros/documentos/filtrar-nombre-docu.pipe';
-
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -378,6 +380,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     VerDocumentosComponent,
     VerDocumentacionComponent,
     FiltrarNombreDocuPipe,
+    SettingsComponent,
+    VacacionAutorizacionesComponent,
+    SucListaNotiComponent,
+
   ],
 
   imports: [

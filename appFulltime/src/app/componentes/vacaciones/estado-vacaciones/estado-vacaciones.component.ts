@@ -65,15 +65,18 @@ export class EstadoVacacionesComponent implements OnInit {
     });
   }
 
+  resVacacion: any = [];
   EditarEstadoVacacion(form){
     let datosVacacion = {
-      estado: form.estadoForm
+      estado: form.estadoForm,
+      id_vacacion: this.data.vacacion.id,
+      id_rece_emp: this.data.vacacion.id_empleado,
+      id_depa_send: this.data.depa[0].id
     }
 
-    this.restV.ActualizarEstado(this.data.vacacion.id, datosVacacion).subscribe(res => {
-      console.log(res);
-      // this.dialogRef.close();
-      // window.location.reload();
+    this.restV.ActualizarEstado(this.data.vacacion.id, datosVacacion).subscribe(respon => {
+      this.resVacacion = respon
+      console.log(this.resVacacion);
       var f = new Date();
       let notificacion = { 
         id: null,
@@ -88,12 +91,13 @@ export class EstadoVacacionesComponent implements OnInit {
       console.log(notificacion);
       
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-        console.log(res);
         this.NotifiRes = res;
+        console.log(this.NotifiRes);
         notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0) {
+        if (this.NotifiRes._id > 0 && this.resVacacion.notificacion === true) {
           this.restV.sendNotiRealTime(notificacion);
         }
+        this.dialogRef.close();
       });
 
     });
