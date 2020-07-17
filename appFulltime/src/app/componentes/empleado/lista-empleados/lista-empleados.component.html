@@ -8,68 +8,59 @@
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
                 <mat-card-content>
-                    <div class="container" style="text-align: center;">
-                        <form [formGroup]="">
-                            <div class="row">
-                                <div class="col-sm">
-                                    <mat-form-field>
-                                        <mat-label>Ingresar Código</mat-label>
-                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
-                                            [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
-                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="emple-tooltip"
-                                            matTooltip="Búsqueda de empleado por el código">
-                                            help_outline</mat-icon>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm">
-                                    <mat-form-field>
-                                        <mat-label>Ingresar CI o pasaporte</mat-label>
-                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
-                                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                            [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
-                                        <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
-                                        </mat-error>
-                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="emple-tooltip"
-                                            matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
-                                            help_outline</mat-icon>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm">
-                                    <mat-form-field>
-                                        <mat-label>Ingresar Nombres</mat-label>
-                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
-                                            [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
-                                        <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
-                                        </mat-error>
-                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="emple-tooltip"
-                                            matTooltip="Búsqueda de empleado por el nombre">
-                                            help_outline</mat-icon>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-sm">
-                                    <mat-form-field>
-                                        <mat-label>Ingresar Apellidos</mat-label>
-                                        <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
-                                            [formControl]="apellido" type="text"
-                                            (keypress)="IngresarSoloLetras($event)">
-                                        <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
-                                        </mat-error>
-                                        <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="emple-tooltip"
-                                            matTooltip="Búsqueda de empleado por el apellido">
-                                            help_outline</mat-icon>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <form [formGroup]="">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <mat-form-field>
+                                <mat-label>Ingresar Código</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
+                                    [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el código">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar CI o pasaporte</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Nombres</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
+                                    [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el nombre">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Ingresar Apellidos</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
+                                    [formControl]="apellido" type="text"
+                                    (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el apellido">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </form>
                 </mat-card-content>
-                <div style="text-align: center;">
+                <div class="d-flex justify-content-around">
                     <button mat-button type="button" class="btn btn-sm" [routerLink]="['/registrarEmpleado']">Crear
                         nuevo Empleado
                     </button>
@@ -103,9 +94,9 @@
     </div>
 </div>
 <br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
+<div class="container" style="padding-bottom: 50px;">
     <div id="resulEmpleados">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8">
+    <mat-card class="mat-elevation-z8 table-responsive">
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr style="text-align: center;">
@@ -119,15 +110,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
-                    <th style="padding-top: 10px; text-align: center;" scope="row">{{e.codigo}}</th>
-                    <td style="padding-top: 10px;">{{e.nombre}}</td>
-                    <td style="padding-top: 10px;">{{e.apellido}}</td>
-                    <td style="padding-top: 10px;">{{e.cedula}}</td>
-                    <td style="padding-top: 10px; text-align: center;">{{e.estado}}</td>
-                    <td style="padding-top: 10px;">{{e.correo}}</td>
-                    <td style="padding-top: 10px; text-align: center;">
+                <tr *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                    <th scope="row">{{e.codigo}}</th>
+                    <td>{{e.nombre}}</td>
+                    <td>{{e.apellido}}</td>
+                    <td>{{e.cedula}}</td>
+                    <td>{{e.estado}}</td>
+                    <td>{{e.correo}}</td>
+                    <td class="d-flex justify-content-start">
                         <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
                             matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
                             [routerLink]="['/verEmpleado/',e.id]">

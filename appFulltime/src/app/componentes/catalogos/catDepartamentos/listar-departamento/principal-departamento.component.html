@@ -6,83 +6,76 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarDepartamentosForm">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
-                            <div class="row">
-                                <div class="col">
-                                    <mat-form-field>
-                                        <mat-label>Departamento</mat-label>
-                                        <input matInput id="depNombre" name="filtroNombre" placeholder="Departamento"
-                                            [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
-                                            [(ngModel)]="filtroNombre">
-                                        <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
-                                            matTooltip="Búsqueda por Departamento">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <br>
-                                    <mat-form-field>
-                                        <mat-label>Empresa</mat-label>
-                                        <input matInput id="depPadre" name="filtroEmpresaSuc"
-                                            placeholder="Nombre de Empresa" [formControl]="buscarEmpresa"
-                                            [(ngModel)]="filtroEmpresaSuc">
-                                        <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
-                                            matTooltip="Búsqueda del Departamento por nombre de Empresa">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="buscarEmpresa.invalid">
-                                            Indispensable ingresar dos letras</mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                </div>
-                                <div class="col">
-                                    <mat-form-field>
-                                        <mat-label>Sucursal</mat-label>
-                                        <input matInput id="depPadre" name="filtroNombreSuc"
-                                            placeholder="Nombre de Sucursal" [formControl]="buscarNombre"
-                                            [(ngModel)]="filtroNombreSuc">
-                                        <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
-                                            matTooltip="Búsqueda del Departamento por nombre de Sucursal">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="buscarNombre.invalid">
-                                            Indispensable ingresar dos letras</mat-error>
-                                    </mat-form-field>
-                                    <br>
-                                    <mat-form-field>
-                                        <mat-label>Departamento Superior</mat-label>
-                                        <input matInput id="depPadre" name="filtroDeparPadre"
-                                            placeholder="Departamento Superior" [formControl]="departamentoPadreF"
-                                            (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroDeparPadre">
-                                        <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
-                                            matTooltip="Búsqueda por Departamento Superior">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="departamentoPadreF.invalid">
-                                            {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                <mat-card-content>
+                    <form [formGroup]="BuscarDepartamentosForm">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <mat-form-field>
+                                <mat-label>Departamento</mat-label>
+                                <input matInput id="depNombre" name="filtroNombre" placeholder="Departamento"
+                                    [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
+                                    [(ngModel)]="filtroNombre">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda por Departamento">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
+                                </mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Empresa</mat-label>
+                                <input matInput id="depPadre" name="filtroEmpresaSuc"
+                                    placeholder="Nombre de Empresa" [formControl]="buscarEmpresa"
+                                    [(ngModel)]="filtroEmpresaSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Empresa">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarEmpresa.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Sucursal</mat-label>
+                                <input matInput id="depPadre" name="filtroNombreSuc"
+                                    placeholder="Nombre de Sucursal" [formControl]="buscarNombre"
+                                    [(ngModel)]="filtroNombreSuc">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda del Departamento por nombre de Sucursal">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="buscarNombre.invalid">
+                                    Indispensable ingresar dos letras</mat-error>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Departamento Superior</mat-label>
+                                <input matInput id="depPadre" name="filtroDeparPadre"
+                                    placeholder="Departamento Superior" [formControl]="departamentoPadreF"
+                                    (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroDeparPadre">
+                                <mat-icon id="color" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Búsqueda por Departamento Superior">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="departamentoPadreF.invalid">
+                                    {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
+                            </mat-form-field> 
                         </div>
-                    </mat-card-content>
-                </form>
-                <mat-card-actions style="text-align: center">
+                    </form>
+                </mat-card-content>
+                <div class="d-flex justify-content-around">
                     <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarDepartamento()"
                         value="Crear nuevo Departamento">
                     <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
     </div>
 </div>
 <br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
+<div class="container" style="padding-bottom: 50px;">
     <div id="resulDepartamentos">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8">
+    <mat-card class="mat-elevation-z8 table-responsive">
         <table class="table table-hover table-sm">
             <thead class="thead-light">
                 <tr>
@@ -102,7 +95,7 @@
                     <td>{{departamento.nombre}}</td>
                     <td>{{departamento.nivel}}</td>
                     <td>{{departamento.departamento_padre}}</td>
-                    <td>
+                    <td class="d-flex justify-content-start">
                         <i class="fas fa-edit" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro"
