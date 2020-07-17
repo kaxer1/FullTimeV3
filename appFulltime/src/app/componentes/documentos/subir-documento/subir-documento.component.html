@@ -1,0 +1,32 @@
+<mat-icon id="movilidad">open_with</mat-icon>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="tituloHorarioL">
+        <span>DOCUMENTOS</span>
+    </div>
+ <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+            </div>
+            <div class="col-sm" style="text-align: center;">
+                <form method="post" enctype="multipart/form-data">
+                    <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                    <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
+                        matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                        matTooltip="Subir documentos. Tamaño máximo permitido 2MB">Subir
+                        Archivo</label>
+                </form>
+                <form [formGroup]="GuardarDocumentoForm">
+                    <input readonly id="nomDoc" type="text" placeholder="Ningún archivo seleccionado"
+                        class="form-control" style="width: 230px;" [formControl]="nombreDocumentoF">
+                </form>
+                <br>
+                <input type="submit" class="btn btn-sm" [disabled]="!GuardarDocumentoForm.valid"
+                    (click)="InsertarDocumento(GuardarDocumentoForm.value)" value="Guardar">
+                <input type="submit" class="btn btn-sm" (click)="CerrarVentanaEditar()" value="Salir">
+            </div>
+            <div class="col-sm">
+            </div>
+        </div>
+    </div>
+</div>

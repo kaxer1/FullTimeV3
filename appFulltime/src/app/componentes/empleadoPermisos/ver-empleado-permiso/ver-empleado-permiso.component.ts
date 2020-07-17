@@ -115,27 +115,27 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     this.datosAutorizacion = [];
     this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
       this.datosAutorizacion = data;
-      if(this.datosAutorizacion[0].estado_auto === 1){
+      if (this.datosAutorizacion[0].estado_auto === 1) {
         this.datosAutorizacion[0].estado_auto = 'Pendiente';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 2) { 
+      else if (this.datosAutorizacion[0].estado_auto === 2) {
         this.datosAutorizacion[0].estado_auto = 'Pre-autorizado';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+      else if (this.datosAutorizacion[0].estado_auto === 3) {
         this.datosAutorizacion[0].estado_auto = 'Autorizado';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 4) { 
+      else if (this.datosAutorizacion[0].estado_auto === 4) {
         this.datosAutorizacion[0].estado_auto = 'Negado';
       }
-       console.log('autorizacion', this.datosAutorizacion);
+      console.log('autorizacion', this.datosAutorizacion);
     })
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: { permiso: datosSeleccionados, depa: this.dep } })
-    .afterClosed().subscribe(item => {
-      this.BuscarDatos();
-    });
+      .afterClosed().subscribe(item => {
+        this.BuscarDatos();
+      });
   }
 
   AbrirAutorizaciones(datosSeleccionados: any): void {
@@ -166,7 +166,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   getDocumentDefinicion() {
-
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
@@ -216,7 +215,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           alignment: 'center',
           margin: [0, 0, 0, 20]
         },
-        // { width: 100, text: 'INFO', /*background: '#6495ED',*/ alignment: 'center', fontSize: 9, decorationColor: '#6495ED' },
         this.presentarDataPDFPermiso(),
       ],
       styles: {
@@ -238,16 +236,12 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED',
-          /* fillColor: '#505761',
-           color: 'white'*/
         },
         tableHeaderA: {
           fontSize: 10,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED',
-          /*fillColor: '#505761',
-          color: 'white'*/
           margin: [20, 0, 20, 0],
 
         },
@@ -272,12 +266,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   presentarDataPDFPermiso() {
     return {
-      /*   columns: [
-           { width: '*', text: '' },
-           {
-             width: 'auto',*/
-      // layout: 'noBorders',
-      //layout: 'lightHorizontalLines',
       table: {
         widths: ['*'],
         body: [
@@ -334,7 +322,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           [
             {
               columns: [
-                //'Fecha: ',
                 {
                   text: [
                     {
@@ -461,26 +448,14 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         ]
       },
       layout: {
-        //hLineWidth: function(i, node) {
-        //  return (i === 0 || i === node.table.body.length) ? 2 : 1;
-        //},
-        //vLineWidth: function(i, node) {
-        //  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-        //},
         hLineColor: function (i, node) {
           return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
         },
-        /* vLineColor: function (i, node) {
-           return (i === 0 || i === node.table.widths.length) ? 'red' : 'blue';
-         },*/
         paddingLeft: function (i, node) { return 40; },
         paddingRight: function (i, node) { return 40; },
         paddingTop: function (i, node) { return 10; },
         paddingBottom: function (i, node) { return 10; }
       }
-      /*    },
-          { width: '*', text: '' },
-        ]*/
     };
   }
 

@@ -1,166 +1,176 @@
-<mat-icon id="movilidad">open_with</mat-icon>
-<div class="permisoEmpleado">
-    <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" ngDefaultControl [(ngModel)]="num"
-        [ngModelOptions]="{standalone: true}">Solicitud de Permiso N°
-        {{num}}</h5>
-</div>
-<!-- Formulario Completo -->
-<form [formGroup]="PermisoForm">
-    <mat-card-content>
-        <div class="container" style="padding-top: 15px; text-align: center;">
-            <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                    Guardar.</span>
-            </div>
-            <div class="row">
-                <div class="col-sm">
-                    <mat-form-field>
-                        <mat-label>Fecha de Creación</mat-label>
-                        <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecCreacionF"
-                            min="1950-01-31" max="2050-01-31" required [disabled]="true">
-                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker1></mat-datepicker>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Seleccionar Permiso</mat-label>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                            matTooltip="Lista de Tipos de Permisos existentes">help_outline</mat-icon>
-                        <mat-select [formControl]="idPermisoF" required>
-                            <mat-option *ngFor="let per of tipoPermisos" (click)="ImprimirDatos(PermisoForm.value)"
-                                [value]="per.id">
-                                {{per.descripcion}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Descripción</mat-label>
-                        <input matInput placeholder="Ej: Descripcion del tipo de permiso"
-                            (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF" required>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar un motivo por el que solicita el permiso">
-                            help_outline</mat-icon>
-                        <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorDescripcion()}}</mat-error>
-                    </mat-form-field>
+<div class="scrollbar scrollbar-primary">
+    <mat-icon id="movilidad">open_with</mat-icon>
+    <div class="permisoEmpleado">
+        <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" ngDefaultControl [(ngModel)]="num"
+            [ngModelOptions]="{standalone: true}">Solicitud de Permiso N°
+            {{num}}</h5>
+    </div>
+    <!-- Formulario Completo -->
+    <form [formGroup]="PermisoForm">
+        <mat-card-content>
+            <div class="container" style="padding-top: 15px; text-align: center;">
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
                 </div>
-                <div class="col-sm">
-                    <mat-form-field>
-                        <mat-label id=solP>Solicitud de permiso por:</mat-label>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                            matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
-                            help_outline</mat-icon>
-                        <mat-select [formControl]="solicitarF" required>
-                            <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
-                                (click)="ActivarDiasHoras(PermisoForm.value)">
-                                {{dh.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Días de permiso</mat-label>
-                        <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="diasF" style="visibility:hidden" id="dias" (click)="LimpiarCamposFecha()">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar número de días solicitados de permiso">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Horas y minutos de permiso</mat-label>
-                        <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
-                            max="7:30" [formControl]="horasF" style="visibility:hidden" id="horas"
-                            (click)="LimpiarCamposFecha()">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                            matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm">
-                    <mat-form-field>
-                        <mat-label>Fecha de Salida</mat-label>
-                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" readonly
-                            placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
-                            required>
-                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar la fecha en la desea el permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker2></mat-datepicker>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>Fecha de Ingreso</mat-label>
-                        <input matInput [matDatepicker]="picker3"
-                            (dateInput)="validarFechaIngreso($event, PermisoForm.value)" placeholder="dd/mm/aaaa"
-                            [formControl]="fechaFinalF" required readonly>
-                        <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker touchUi #picker3></mat-datepicker>
-                        <mat-error *ngIf="fechaFinalF.invalid">{{ObtenerMensajeFecha()}}</mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label id="letras">Fin de semana: días libres</mat-label>
-                        <input matInput placeholder="Días libres" [formControl]="diaLibreF"
-                            (keypress)="IngresarSoloNumeros($event)" style="visibility:hidden" id="Dlibres">
-                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                </div>
-                <div class="col-sm">
-                    <mat-form-field>
-                        <mat-label>Estado</mat-label>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar cual es el estado del permiso">
-                            help_outline
-                        </mat-icon>
-                        <mat-select [formControl]="estadoF" [disabled]="true">
-                            <mat-option value="Pendiente">Pendiente</mat-option>
-                            <mat-option value="Rechazado">Rechazado</mat-option>
-                            <mat-option value="Aceptado">Aceptado</mat-option>
-                            <mat-option value="Eliminado">Eliminado</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <br>
-                    <label style="margin-right: 35px;">Permiso Legalizado *</label>
-                    <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                        matTooltip="Indicar si el permiso debe ser legalizado">
-                        help_outline
-                    </mat-icon>
-                    <section class="example-section">
-                        <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required [disabled]="true">
-                            <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
-                                [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
-                            <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
-                                [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
-                        </mat-radio-group>
-                    </section>
-                    <br>
-                    <section class="example-section">
-                        <form method="post" enctype="multipart/form-data">
-                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
-                            <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()">Subir
-                                Certificado *</label>
+                <div class="row">
+                    <div class="col-sm">
+                        <mat-form-field>
+                            <mat-label>Fecha de Creación</mat-label>
+                            <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa"
+                                [formControl]="fecCreacionF" min="1950-01-31" max="2050-01-31" required
+                                [disabled]="true">
+                            <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker1></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Seleccionar Permiso</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
+                                matTooltipPosition="right" matTooltip="Lista de Tipos de Permisos existentes">
+                                help_outline</mat-icon>
+                            <mat-select [formControl]="idPermisoF" required>
+                                <mat-option *ngFor="let per of tipoPermisos" (click)="ImprimirDatos(PermisoForm.value)"
+                                    [value]="per.id">
+                                    {{per.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Descripción</mat-label>
+                            <input matInput placeholder="Ej: Descripcion del tipo de permiso"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF" required>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar un motivo por el que solicita el permiso">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorDescripcion()}}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm">
+                        <mat-form-field>
+                            <mat-label id=solP>Solicitud de permiso por:</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Seleccionar si el permiso será por días o por horas y minutos">
+                                help_outline</mat-icon>
+                            <mat-select [formControl]="solicitarF" required>
+                                <mat-option *ngFor="let dh of diasHoras" [value]="dh.valor"
+                                    (click)="ActivarDiasHoras(PermisoForm.value)">
+                                    {{dh.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Días de permiso</mat-label>
+                            <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
+                                [formControl]="diasF" style="visibility:hidden" id="dias"
+                                (click)="LimpiarCamposFecha()">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar número de días solicitados de permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Horas y minutos de permiso</mat-label>
+                            <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
+                                max="7:30" [formControl]="horasF" style="visibility:hidden" id="horas"
+                                (click)="LimpiarCamposFecha()">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm">
+                        <mat-form-field>
+                            <mat-label>Fecha de Salida</mat-label>
+                            <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" readonly
+                                placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
+                                required>
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar la fecha en la desea el permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha de Ingreso</mat-label>
+                            <input matInput [matDatepicker]="picker3"
+                                (dateInput)="validarFechaIngreso($event, PermisoForm.value)" placeholder="dd/mm/aaaa"
+                                [formControl]="fechaFinalF" required readonly>
+                            <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                matTooltip="Indicar la fecha de finalización del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker3></mat-datepicker>
+                            <mat-error *ngIf="fechaFinalF.invalid">{{ObtenerMensajeFecha()}}</mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label id="letras">Fin de semana: días libres</mat-label>
+                            <input matInput placeholder="Días libres" [formControl]="diaLibreF"
+                                (keypress)="IngresarSoloNumeros($event)" style="visibility:hidden" id="Dlibres">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm">
+                        <mat-form-field>
+                            <mat-label>Estado</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
+                                matTooltipPosition="right" matTooltip="Indicar cual es el estado del permiso">
+                                help_outline
+                            </mat-icon>
+                            <mat-select [formControl]="estadoF" [disabled]="true">
+                                <mat-option value="Pendiente">Pendiente</mat-option>
+                                <mat-option value="Rechazado">Rechazado</mat-option>
+                                <mat-option value="Aceptado">Aceptado</mat-option>
+                                <mat-option value="Eliminado">Eliminado</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Permiso Legalizado *</mat-label>
+                            <input matInput readonly="readonly">
+                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
+                                matTooltipPosition="right" matTooltip="Indicar si el permiso debe ser legalizado">
+                                help_outline
+                            </mat-icon>
+                        </mat-form-field>
+                        <section class="example-section">
+                            <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required
+                                [disabled]="true">
+                                <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
+                                    [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
+                                <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
+                                    [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                        <br>
+                        <section class="example-section">
+                            <form method="post" enctype="multipart/form-data">
+                                <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                                <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()">Subir
+                                    Certificado *</label>
 
-                        </form>
-                        <input type="text" placeholder="Ningún archivo seleccionado" class="form-control"
-                            style="width: 230px; " [formControl]="nombreCertificadoF">
-                    </section>
+                            </form>
+                            <input type="text" id="nombreCertific" placeholder="Ningún archivo seleccionado" class="form-control"
+                                style="width: 200px; " [formControl]="nombreCertificadoF">
+                        </section>
+                    </div>
                 </div>
             </div>
-        </div>
-    </mat-card-content>
-</form>
-<div style="text-align: center;">
-    <button type="submit" class="btn btn-sm" (click)="RegistrarPermiso(PermisoForm.value)"
-        [disabled]="!PermisoForm.valid"> Guardar </button>
-    <button type="submit" class="btn btn-sm" (click)="CerrarVentanaPermiso()"> Salir </button>
+        </mat-card-content>
+    </form>
+    <div style="text-align: center;">
+        <button type="submit" class="btn btn-sm" (click)="RegistrarPermiso(PermisoForm.value)"
+            [disabled]="!PermisoForm.valid"> Guardar </button>
+        <button type="submit" class="btn btn-sm" (click)="CerrarVentanaPermiso()"> Salir </button>
+    </div>
 </div>

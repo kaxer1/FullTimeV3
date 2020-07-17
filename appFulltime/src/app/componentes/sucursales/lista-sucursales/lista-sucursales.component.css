@@ -18,7 +18,7 @@
 
 #permisoSuc { cursor: pointer; }
 
-/*.color-tooltipSuc { background: rgba(233, 33, 33, 0.828); }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 .btn { margin-left: 20px; background-color: rgb(80,87,97); color: white; }
 

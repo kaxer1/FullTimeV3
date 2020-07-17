@@ -15,6 +15,22 @@
                     <div class="container" *ngFor="let p of peridoVacaciones" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
+                                <label class="col-sm col-form-label">Inicio de Período:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fin de Período:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <label class="col-sm col-form-label">Descripción:</label>
                             </div>
                             <div class="col">
@@ -23,15 +39,16 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Día Vacación:</label>
+                                <label class="col-sm col-form-label">Vacaciones Usadas:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{p.dia_vacacion}}</label>
+                                <label class="col col-form-label" *ngIf="p.estado == 1">Sí</label>
+                                <label class="col col-form-label" *ngIf="p.estado == 2">No</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Día Antiguedad:</label>
+                                <label class="col-sm col-form-label">Días por Antiguedad:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{p.dia_antiguedad}}</label>
@@ -39,34 +56,34 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Día Perdido:</label>
+                                <label class="col-sm col-form-label">Días de Vacaciones:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.dia_vacacion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Horas de Vacaciones:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.horas_vacaciones}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Minutos de Vacaciones:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{p.min_vacaciones}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Días Perdidos:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{p.dia_perdido}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.estado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
                             </div>
                         </div>
                         <mat-divider></mat-divider>

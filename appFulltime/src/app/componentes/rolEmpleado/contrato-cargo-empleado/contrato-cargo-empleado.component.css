@@ -6,7 +6,11 @@
     padding-bottom: 6px; 
 }
 
-mat-divider { background: rgba(131, 131, 131, 0.609);}
+mat-divider { background: rgba(131, 131, 131, 0.609); }
+
+#contratoLaboral { font-size: 14px; }
+
+#cerrar { color: rgb(38, 0, 255); }
 
 
 

@@ -1,5 +1,7 @@
 .btn-sm { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
+.example-card { background: white; }
+
 p { font-size: x-small; }
 
 #pdf { color:red; font-size: 20px; text-align: center; margin-left: 20px;}
@@ -43,6 +45,12 @@ h5 { text-align: center; }
 table { width: 100%; font-size: 13px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
+mat-form-field { padding: 10px 15px 0px 15px;}
+
+.scrollme { 
+    overflow-x: scroll; 
+} 
 
 [type="file"] {
     height: 0;

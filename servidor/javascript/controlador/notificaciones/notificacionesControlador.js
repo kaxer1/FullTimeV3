@@ -33,7 +33,7 @@ class NotificacionTiempoRealControlador {
     ListaNotificacionesRecibidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_receive;
-            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC', [id]);
+            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC', [id]);
             if (REAL_TIME_NOTIFICACION.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION.rows);
             }
@@ -43,7 +43,7 @@ class NotificacionTiempoRealControlador {
     ListaPorJefe(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_receive;
-            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC LIMIT 5', [id]);
+            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC LIMIT 5', [id]);
             if (REAL_TIME_NOTIFICACION.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION.rows);
             }
@@ -53,7 +53,7 @@ class NotificacionTiempoRealControlador {
     ObtenerUnaNotificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const REAL_TIME_NOTIFICACION_VACACIONES = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id = $1 AND e.id = r.id_send_empl', [id]);
+            const REAL_TIME_NOTIFICACION_VACACIONES = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id = $1 AND e.id = r.id_send_empl', [id]);
             if (REAL_TIME_NOTIFICACION_VACACIONES.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION_VACACIONES.rows);
             }
@@ -62,8 +62,8 @@ class NotificacionTiempoRealControlador {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones } = req.body;
-            yield database_1.default.query('INSERT INTO realtime_noti ( id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones]);
+            const { id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra } = req.body;
+            yield database_1.default.query('INSERT INTO realtime_noti ( id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra]);
             const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT id FROM realtime_noti ORDER BY id DESC LIMIT 1');
             // console.log(REAL_TIME_NOTIFICACION.rows);
             res.jsonp({ message: 'Notificacion guardada', _id: REAL_TIME_NOTIFICACION.rows[0].id });

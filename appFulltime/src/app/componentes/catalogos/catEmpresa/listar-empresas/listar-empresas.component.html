@@ -6,90 +6,83 @@
         <div style="text-align: center;">
             <h5 style="text-align: center;">Criterios de Búsqueda</h5>
         </div>
-        <form [formGroup]="BuscarEmpresaForm">
-            <mat-card-content>
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <mat-form-field>
-                                <mat-label>Nombre</mat-label>
-                                <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
-                                    [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
-                                <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
-                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                                    matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                        </div>
-                        <div class="col">
-                        </div>
-                        <div class="col">
-                            <mat-form-field>
-                                <mat-label>RUC</mat-label>
-                                <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa" maxlength="13"
-                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                                    (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
-                                    [(ngModel)]="filtroRucEmpresa">
-                                <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
-                                <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                                    matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
+        <mat-card-content>
+            <form [formGroup]="BuscarEmpresaForm">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <mat-form-field>
+                        <mat-label>Nombre</mat-label>
+                        <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
+                            [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
+                        <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
+                        <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                            matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <br>
+                    <mat-form-field>
+                        <mat-label>RUC</mat-label>
+                        <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa" maxlength="13"
+                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                            (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
+                            [(ngModel)]="filtroRucEmpresa">
+                        <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
+                        <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                            matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
+                            help_outline</mat-icon>
+                    </mat-form-field>
                 </div>
-            </mat-card-content>
-        </form>
-        <mat-card-actions style="text-align: center">
-            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva
-                Empresa</button>
+            </form>
+        </mat-card-content>
+        <mat-card-actions class="d-flex justify-content-center">
+            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva Empresa</button>
             <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
         </mat-card-actions>
     </mat-card>
 </div>
-<br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
-    <mat-card class="mat-elevation-z8">
+
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
         <div id="resultadosEmpre">Resultado de búsqueda</div>
-        <table class="table table-hover table-sm ">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Id</th>
-                    <th scope="col">Empresa</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Representante</th>
-                    <th scope="col">RUC</th>
-                    <th scope="col">Dirección</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
-                    <td>{{e.id}}</td>
-                    <td>{{e.nombre}}</td>
-                    <td>{{e.tipo_empresa}}</td>
-                    <td>{{e.representante}}</td>
-                    <td>{{e.ruc}}</td>
-                    <td>{{e.direccion}}</td>
-                    <td>
-                        <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i id="eliminar" class="far fa-trash-alt" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                            matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm ">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Id</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Representante</th>
+                        <th scope="col">RUC</th>
+                        <th scope="col">Dirección</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{e.id}}</td>
+                        <td>{{e.nombre}}</td>
+                        <td>{{e.tipo_empresa}}</td>
+                        <td>{{e.representante}}</td>
+                        <td>{{e.ruc}}</td>
+                        <td>{{e.direccion}}</td>
+                        <td class="d-flex justify-content-center">
+                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i id="eliminar" class="far fa-trash-alt" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="empresas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
-        <div style="text-align: right;">
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">        
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato PDF">
                 <p>PDF</p>
@@ -108,5 +101,5 @@
                 <p>XML</p>
             </i>
         </div>
-    </mat-card>
+    </div>
 </div>

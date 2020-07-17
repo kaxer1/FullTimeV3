@@ -168,7 +168,7 @@ export class MainNavComponent implements OnInit {
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: {id_empleado} }).disableClose = true;
+    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: {id_empleado} });
   }
 
 }

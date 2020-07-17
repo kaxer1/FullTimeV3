@@ -1,47 +1,43 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-sm">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="tituloRegistro">
                 <span>TÍTULOS PROFESIONALES</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarTitulosForm">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
-                            <div class="row">
-                                <div class="col">
-                                    <mat-form-field>
-                                        <mat-label>Búsqueda por nombre</mat-label>
-                                        <input matInput placeholder="Nombre Título" name="filtradoNombre"
-                                            [formControl]="nombreF" [(ngModel)]="filtradoNombre"
-                                            (keypress)="IngresarSoloLetras($event)">
-                                        <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
-                                            matTooltipPosition="right"
-                                            matTooltip="Búsqueda de un título profesional por su nombre">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                                <div class="col">
-                                    <mat-form-field>
-                                        <mat-label>Búsqueda por nivel</mat-label>
-                                        <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
-                                            [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
-                                        <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
-                                            matTooltipPosition="right"
-                                            matTooltip="Búsqueda de un título profesional por su nivel">
-                                            help_outline</mat-icon>
-                                        <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
-                                        </mat-error>
-                                    </mat-form-field>
-                                </div>
-                            </div>
+                <mat-card-content>
+                    <form [formGroup]="BuscarTitulosForm">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <mat-form-field>
+                                <mat-label>Búsqueda por nombre</mat-label>
+                                <input matInput placeholder="Nombre Título" name="filtradoNombre"
+                                    [formControl]="nombreF" [(ngModel)]="filtradoNombre"
+                                    (keypress)="IngresarSoloLetras($event)">
+                                <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de un título profesional por su nombre">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
+                                </mat-error>
+                            </mat-form-field>
+                            <br>                             
+                            <mat-form-field>
+                                <mat-label>Búsqueda por nivel</mat-label>
+                                <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
+                                    [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
+                                <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Búsqueda de un título profesional por su nivel">
+                                    help_outline</mat-icon>
+                                <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
+                                </mat-error>
+                            </mat-form-field>
                         </div>
-                    </mat-card-content>
-                </form>
-                <mat-card-actions style="text-align: center">
+                    </form>
+                </mat-card-content>
+                <mat-card-actions class="d-flex justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarTitulo()">Crear
                         Título Profesional
                     </button>
@@ -52,39 +48,39 @@
         </div>
     </div>
 </div>
-<br>
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resulTitulos">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8">
-        <table class="table table-hover table-sm">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Nivel</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let t of verTitulos | filtrosNombres: filtradoNombre | fitroNivel: filtradoNivel | paginate:tamanio_pagina:numero_pagina">
-                    <td>{{t.nombre}}</td>
-                    <td>{{t.nivel}}</td>
-                    <td>
-                        <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix
-                            matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i class="far fa-trash-alt" matSuffix matTooltipClass="tituloL-tooltip"
-                            matTooltipPosition="right" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulTitulos">Resultado de búsqueda</div>
+        <div class="table-responsive">    
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Nivel</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of verTitulos | filtrosNombres: filtradoNombre | fitroNivel: filtradoNivel | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{t.nombre}}</td>
+                        <td>{{t.nivel}}</td>
+                        <td class="d-flex justify-content-center">
+                            <i class="fas fa-edit" (click)=AbrirVentanaEditarTitulo(t) matSuffix
+                                matTooltipClass="tituloL-tooltip" matTooltipPosition="right"
+                                matTooltip="Editar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i class="far fa-trash-alt" matSuffix matTooltipClass="tituloL-tooltip"
+                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="verTitulos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-    </mat-card>
+    </div>
 </div>

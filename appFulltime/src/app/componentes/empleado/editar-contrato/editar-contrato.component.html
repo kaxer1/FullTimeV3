@@ -18,7 +18,8 @@
                                 matTooltipPosition="right"
                                 matTooltip="Seleccionar Régimen Laboral con el cual va a prestar sus servicios el empleado">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen" required>
+                            <mat-select id="nomContrato" [formControl]="idRegimenF" [(ngModel)]="seleccionarRegimen"
+                                required>
                                 <mat-option *ngFor="let regimen of regimenLaboral" [value]="regimen.id">
                                     {{regimen.descripcion}}
                                 </mat-option>
@@ -28,8 +29,8 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label>Fecha de ingreso</mat-label>
-                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" [formControl]="fechaIngresoF"
-                                required>
+                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                                [formControl]="fechaIngresoF" required>
                             <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
                                 matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar la fecha de ingreso del empleado a la empresa. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -39,7 +40,8 @@
                         <br>
                         <mat-form-field>
                             <mat-label>Fecha de salida</mat-label>
-                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" [formControl]="fechaSalidaF">
+                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                                [formControl]="fechaSalidaF">
                             <mat-datepicker-toggle matSuffix [for]="picker2" id="contratoE"
                                 matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar la fecha estimada de salida del empleado, en caso de conocerla. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -48,27 +50,48 @@
                         </mat-form-field>
                     </div>
                     <div class="col">
-                        <label style="margin-right: 62px;">Controlar Vacaciones *</label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar si se va a o no a controlar las vacaciones del empleado">
-                            help_outline</mat-icon>
+                        <mat-form-field>
+                            <mat-label>Controlar Vacaciones *</mat-label>
+                            <input matInput readonly="readonly">
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                                help_outline</mat-icon>
+                        </mat-form-field>
                         <section>
-                            <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF" required>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlVacacionesF"
+                                required>
                                 <mat-radio-button [value]="true">Si</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
                         </section>
-                        <label style="margin-right: 72px;">Controlar Asistencia *</label>
-                        <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
-                        matTooltipPosition="right"
-                        matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
-                        help_outline</mat-icon>
+                        <mat-form-field>
+                            <mat-label>Controlar Asistencia *</mat-label>
+                            <input matInput readonly="readonly">
+                            <mat-icon id="contratoE" matSuffix matTooltipClass="contratoE-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si se va a o no a controlar la asistencia del empleado">
+                                help_outline</mat-icon>
+                        </mat-form-field>
                         <section>
-                            <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF" required>
+                            <mat-radio-group required aria-label="select an option" [formControl]="controlAsistenciaF"
+                                required>
                                 <mat-radio-button [value]="true">Si</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
                         </section>
+                    </div>
+                    <div class="col">
+                    <br>
+                        <form method="post" enctype="multipart/form-data">
+                            <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
+                            <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
+                                matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                matTooltip="Actualizar el documento contrato del empleado">Subir
+                                Contrato</label>
+                        </form>
+                        <input type="text" readonly id="nomContrato" placeholder="Ningún archivo seleccionado"
+                            class="form-control" style="width: 212px;" [formControl]="nombreContratoF">
                     </div>
                 </div>
             </div>

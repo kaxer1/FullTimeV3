@@ -47,6 +47,8 @@ import NOTIFICACIONES_AUTORIZACIONES_RUTAS from './rutas/catalogos/catNotiAutori
 import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
 import PLANTILLA_RUTAS from './rutas/descargarPlantilla/plantillaRutas';
 import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacionesRutas';
+import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
+import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -71,9 +73,9 @@ class Servidor {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(express.raw({ type: 'image/*', limit:'1Mb' }));
+        this.app.use(express.raw({ type: 'image/*', limit: '1Mb' }));
 
-   }
+    }
 
     rutas(): void {
         this.app.use('/', indexRutas);
@@ -86,6 +88,7 @@ class Servidor {
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
         this.app.use('/perVacacion', PERIODO_VACACION__RUTAS);
         this.app.use('/vacaciones', VACACIONES__RUTAS);
+        this.app.use('/horas-extras-pedidas', HORA_EXTRA_PEDIDA_RUTAS);
         this.app.use('/empleadoProcesos', EMPLEADO_PROCESO_RUTAS);
 
         // Autorizaciones
@@ -137,6 +140,9 @@ class Servidor {
         // Plantillas
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
 
+        // Documentos
+        this.app.use('/archivosCargados', DOCUMENTOS_RUTAS)
+
     }
 
     start(): void {
@@ -145,24 +151,24 @@ class Servidor {
         });
         this.io.on('connection', (socket: any) => {
             console.log('Connected client on port %s.', this.app.get('puerto'));
-            
+
             socket.on("nueva_notificacion", (data: any) => {
                 let data_llega = {
                     id: data.id,
                     id_send_empl: data.id_send_empl,
                     id_receives_empl: data.id_receives_empl,
                     id_receives_depa: data.id_receives_depa,
-                    estado: data.estado, 
-                    create_at: data.create_at, 
+                    estado: data.estado,
+                    create_at: data.create_at,
                     id_permiso: data.id_permiso,
                     id_vacaciones: data.id_vacaciones
                 }
                 console.log(data_llega);
-                socket.broadcast.emit( 'enviar_notification', data_llega);
+                socket.broadcast.emit('enviar_notification', data_llega);
             });
-      
+
         });
-    }    
+    }
 }
 
 const SERVIDOR = new Servidor();
