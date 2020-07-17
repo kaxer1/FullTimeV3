@@ -109,6 +109,17 @@ class HorasExtrasPedidasControlador {
 
   }
 
+  public async ObtenerSolicitudHoraExtra(req: Request, res: Response) {
+    const id = req.params.id_emple_hora;
+    const SOLICITUD = await pool.query('SELECT *FROM VistaSolicitudHoraExtra WHERE id_emple_hora = $1', [id]);
+    if (SOLICITUD.rowCount > 0) {
+      return res.json(SOLICITUD.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
 }
 
 export const horaExtraPedidasControlador = new HorasExtrasPedidasControlador();

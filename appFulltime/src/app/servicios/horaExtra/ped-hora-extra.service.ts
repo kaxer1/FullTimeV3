@@ -35,4 +35,8 @@ export class PedHoraExtraService {
     return this.http.post(`${this.API_URL}/horas-extras-pedidas`, datos);
   }
 
+  BuscarDatosSolicitud(id_emple_hora: number) {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/datosSolicitud/${id_emple_hora}`);
+  }
+
 }
