@@ -259,7 +259,8 @@ export class RegistrarVacacionesComponent implements OnInit {
         estado: this.responseVacacion.estado, 
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
         id_permiso: null,
-        id_vacaciones: this.responseVacacion.id_vacacion
+        id_vacaciones: this.responseVacacion.id_vacacion,
+        id_hora_extra: null,
       }
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
         console.log(res);

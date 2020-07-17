@@ -48,6 +48,7 @@ import AUTORIZACIONES_RUTAS from './rutas/autorizaciones/autorizacionesRutas';
 import PLANTILLA_RUTAS from './rutas/descargarPlantilla/plantillaRutas';
 import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacionesRutas';
 import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
+import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -87,6 +88,7 @@ class Servidor {
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
         this.app.use('/perVacacion', PERIODO_VACACION__RUTAS);
         this.app.use('/vacaciones', VACACIONES__RUTAS);
+        this.app.use('/horas-extras-pedidas', HORA_EXTRA_PEDIDA_RUTAS);
         this.app.use('/empleadoProcesos', EMPLEADO_PROCESO_RUTAS);
 
         // Autorizaciones

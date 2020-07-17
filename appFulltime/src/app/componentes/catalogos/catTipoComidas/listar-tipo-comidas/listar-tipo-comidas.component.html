@@ -1,15 +1,15 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="tituloTipoCoL">
                 <span>ALMUERZOS</span>
             </div>
-            <mat-card class="example-card mat-elevation-z9" id="carta 1">
-                <br>
+            <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <form [formGroup]="BuscarTipoComidaForm">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
+                <mat-card-content>
+                    <form [formGroup]="BuscarTipoComidaForm">
+                        <div class="d-flex flex-wrap justify-content-center">                        
                             <mat-form-field>
                                 <mat-label>Nombre del plato</mat-label>
                                 <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
@@ -21,9 +21,9 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                    </mat-card-content>
-                </form>
-                <mat-card-actions style="text-align: center">
+                    </form>
+                </mat-card-content>
+                <mat-card-actions class="d-flex justify-content-center">
                     <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarTipoComidas()"
                         value="Crear nuevo Tipo de Comida">
                     <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
@@ -34,65 +34,60 @@
             <div class="tituloTipoCoL">
                 <span>REGISTRO MULTIPLE DE TIPO COMIDAS</span>
             </div>
-            <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <div class="container">
-                    <form method="post" enctype="multipart/form-data">
-                        <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                        <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                        matTooltipPosition="right"
-                        matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo Comidas</label>
-                    </form>
-                </div>
-                <br>
-                <div class="col-md">
-                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
-                        matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                        href="http://localhost:3000/plantillaD/documento/Tipo Comidas.xlsx">
-                        <span class="material-icons">cloud_download</span> Descargar Plantilla Tipo Comidas
-                    </a>
-                </div>
+            <mat-card class="mat-elevation-z9 d-flex flex-wrap justify-content-center" id="carta1">
+                <form method="post" enctype="multipart/form-data">
+                    <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                    matTooltipPosition="right"
+                    matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo Comidas</label>
+                </form>
+                <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                    matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                    href="http://localhost:3000/plantillaD/documento/Tipo Comidas.xlsx">
+                    <span class="material-icons">cloud_download</span> Descargar Plantilla Tipo Comidas
+                </a>
             </mat-card>
         </div>
     </div>
 </div>
-<br>
-<div class="container  table-responsive" style="padding-bottom: 50px;">
-    <div id="resulComidas">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8 ">
-        <table class="table table-hover table-sm">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Valor</th>
-                    <th scope="col">Observación</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
-                    <td id="centrar">{{comida.nombre}}</td>
-                    <td id="fila">$ {{comida.valor}}</td>
-                    <td id="centrar">{{comida.observacion}}</td>
-                    <td id="centrar">
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
-                            matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i class="far fa-trash-alt" matSuffix matTooltipClass="comidasL-tooltip"
-                            matTooltipPosition="right" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulComidas">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Observación</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                        <td id="centrar">{{comida.nombre}}</td>
+                        <td id="fila">$ {{comida.valor}}</td>
+                        <td id="centrar">{{comida.observacion}}</td>
+                        <td class="d-flex justify-content-center">                        
+                            <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
+                                matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
+                                matTooltip="Editar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i class="far fa-trash-alt" matSuffix matTooltipClass="comidasL-tooltip"
+                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="tipoComidas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-        <div style="text-align: right;">
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Comidas en formato PDF">
                 <p>PDF</p>
@@ -110,5 +105,5 @@
                 <p>XML</p>
             </i>
         </div>
-    </mat-card>
+    </div>
 </div>

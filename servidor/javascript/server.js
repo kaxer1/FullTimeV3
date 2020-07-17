@@ -52,6 +52,7 @@ const autorizacionesRutas_1 = __importDefault(require("./rutas/autorizaciones/au
 const plantillaRutas_1 = __importDefault(require("./rutas/descargarPlantilla/plantillaRutas"));
 const notificacionesRutas_1 = __importDefault(require("./rutas/notificaciones/notificacionesRutas"));
 const documentosRutas_1 = __importDefault(require("./rutas/documentos/documentosRutas"));
+const horaExtraRutas_1 = __importDefault(require("./rutas/horaExtra/horaExtraRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -80,6 +81,7 @@ class Servidor {
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
         this.app.use('/perVacacion', periodoVacacionRutas_1.default);
         this.app.use('/vacaciones', vacacionesRutas_1.default);
+        this.app.use('/horas-extras-pedidas', horaExtraRutas_1.default);
         this.app.use('/empleadoProcesos', empleProcesosRutas_1.default);
         // Autorizaciones
         this.app.use('/autorizaDepartamento', autorizaDepartamentoRutas_1.default);

@@ -20,7 +20,7 @@ p { font-size: x-small; }
 
 #iComidasL { cursor: pointer; }
 
-/*.comidasL-tooltip { background-color : rgb(40, 155, 184); }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 .tituloTipoCoL { 
     font-size: 20px; 

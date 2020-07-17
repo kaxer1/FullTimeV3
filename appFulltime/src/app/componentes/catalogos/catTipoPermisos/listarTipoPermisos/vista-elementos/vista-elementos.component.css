@@ -22,7 +22,7 @@ p { font-size: x-small; }
 
 #permiso { cursor: pointer; }
 
-/*.color-tooltip { background: #2c6ec5; }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 table { width: 100%; font-size: 14px;}
 

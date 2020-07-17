@@ -580,7 +580,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
           estado: this.idPermisoRes.estado, 
           create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
           id_permiso: this.idPermisoRes.id,
-          id_vacaciones: null
+          id_vacaciones: null,
+          id_hora_extra: null
         }
         this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
           console.log(res);

@@ -1,6 +1,7 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+<br>
+<div class="container" style="margin-bottom: 15px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-sm">
+        <div class="col-sm" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="tituloRegL">
                 <span>RÉGIMEN LABORAL</span>
             </div>
@@ -35,52 +36,51 @@
         </div>
     </div>
 </div>
-
-<br>
-<div class="container" style="padding-bottom: 50px;">
-    <div id="resulRegimen">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8 scrollme">
-        <table class="table table-hover table-sm table-responsive">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Régimen Laboral</th>
-                    <th scope="col">V: días por año</th>
-                    <th scope="col">V: días por mes</th>
-                    <th scope="col">Años considerados antiguedad</th>
-                    <th scope="col">V: días de incremento</th>
-                    <th scope="col">Máximo días acumulables</th>
-                    <th scope="col">V: días libres</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr 
-                    *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
-                    <td>{{regimenL.descripcion}}</td>
-                    <td>{{regimenL.dia_anio_vacacion}}</td>
-                    <td>{{regimenL.dia_mes_vacacion}}</td>
-                    <td>{{regimenL.anio_antiguedad}}</td>
-                    <td>{{regimenL.dia_incr_antiguedad}}</td>
-                    <td>{{regimenL.max_dia_acumulacion}}</td>
-                    <td>{{regimenL.dia_libr_anio_vacacion}}</td>
-                    <td>
-                        <i class="fas fa-edit" (click)="AbrirVentanaEditar(regimenL)" matSuffix
-                            matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
-                            matTooltip="Editar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i class="far fa-trash-alt" matSuffix matTooltipClass="regimenL-tooltip"
-                            matTooltipPosition="right" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulRegimen">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Régimen Laboral</th>
+                        <th scope="col">V: días por año</th>
+                        <th scope="col">V: días por mes</th>
+                        <th scope="col">Años considerados antiguedad</th>
+                        <th scope="col">V: días de incremento</th>
+                        <th scope="col">Máximo días acumulables</th>
+                        <th scope="col">V: días libres</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{regimenL.descripcion}}</td>
+                        <td>{{regimenL.dia_anio_vacacion}}</td>
+                        <td>{{regimenL.dia_mes_vacacion}}</td>
+                        <td>{{regimenL.anio_antiguedad}}</td>
+                        <td>{{regimenL.dia_incr_antiguedad}}</td>
+                        <td>{{regimenL.max_dia_acumulacion}}</td>
+                        <td>{{regimenL.dia_libr_anio_vacacion}}</td>
+                        <td class="d-flex justify-content-center">
+                            <i class="fas fa-edit" (click)="AbrirVentanaEditar(regimenL)" matSuffix
+                                matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
+                                matTooltip="Editar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i class="far fa-trash-alt" matSuffix matTooltipClass="regimenL-tooltip"
+                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="regimen.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-        <div style="text-align: right;">
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Regímenes Laborales en formato PDF">
                 <p>PDF</p>
@@ -98,5 +98,5 @@
                 <p>XML</p>
             </i>
         </div>
-    </mat-card>
+    </div>
 </div>

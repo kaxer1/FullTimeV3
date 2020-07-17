@@ -226,6 +226,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
+import { VerPedidoHoraExtraComponent } from './componentes/horasExtras/ver-pedido-hora-extra/ver-pedido-hora-extra.component';
+import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-extra/estado-hora-extra.component';
+import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/hora-extra-empleado.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -383,6 +387,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     SettingsComponent,
     VacacionAutorizacionesComponent,
     SucListaNotiComponent,
+    ListaPedidoHoraExtraComponent,
+    VerPedidoHoraExtraComponent,
+    EstadoHoraExtraComponent,
+    HoraExtraEmpleadoComponent,
 
   ],
 
