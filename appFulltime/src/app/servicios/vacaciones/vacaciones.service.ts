@@ -43,4 +43,8 @@ export class VacacionesService {
     return this.http.post(`${this.API_URL}/vacaciones/fechasFeriado`, datos);
   }
 
+  BuscarDatosSolicitud(id_emple_vacacion: number) {
+    return this.http.get(`${this.API_URL}/vacaciones/datosSolicitud/${id_emple_vacacion}`);
+  }
+
 }

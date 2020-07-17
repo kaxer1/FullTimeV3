@@ -16,8 +16,8 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EditarEstadoVacacionAutoriacionComponent } from '../../autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 import { EstadoVacacionesComponent } from "../estado-vacaciones/estado-vacaciones.component";
 
-
-
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 
 interface Estado {
@@ -61,7 +61,9 @@ export class VerVacacionComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private restD: DepartamentosService,
+    private restP: PermisosService,
     private restA: AutorizacionService,
+    public restE: EmpleadoService,
     public vistaFlotante: MatDialog
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -98,7 +100,51 @@ export class VerVacacionComponent implements OnInit {
         this.HabilitarAutorizacion = false;
       });
     });
+
+    
+    this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerSolicitud(this.id_vacacion);
+    this.ObtenerAutorizacion(this.id_vacacion);
   }
+
+    // metodo para ver la informacion del empleado 
+    ObtenerEmpleados(idemploy: any) {
+      this.empleado = [];
+      this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+        this.empleado = data;
+        //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
+      })
+    }
+  
+    // metodo para ver la informacion de la solicitud 
+    ObtenerSolicitud(id: any) {
+      this.datoSolicitud = [];
+      this.restV.BuscarDatosSolicitud(id).subscribe(data => {
+        this.datoSolicitud = data;
+        console.log('datos solicitud', this.datoSolicitud);
+      })
+    }
+  
+    // metodo para ver la informacion de la autorización 
+    ObtenerAutorizacion(id: any) {
+      this.datosAutorizacion = [];
+      this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
+        this.datosAutorizacion = data;
+        if (this.datosAutorizacion[0].estado_auto === 1) {
+          this.datosAutorizacion[0].estado_auto = 'Pendiente';
+        }
+        else if (this.datosAutorizacion[0].estado_auto === 2) {
+          this.datosAutorizacion[0].estado_auto = 'Pre-autorizado';
+        }
+        else if (this.datosAutorizacion[0].estado_auto === 3) {
+          this.datosAutorizacion[0].estado_auto = 'Autorizado';
+        }
+        else if (this.datosAutorizacion[0].estado_auto === 4) {
+          this.datosAutorizacion[0].estado_auto = 'Negado';
+        }
+        console.log('autorizacion', this.datosAutorizacion);
+      })
+    }
 
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
@@ -135,6 +181,21 @@ export class VerVacacionComponent implements OnInit {
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
 
+  }
+
+  ObtenerFecha(){
+    var fecha;
+    var f = new Date();
+    if (f.getMonth() < 10 && f.getDate() < 10) {
+      fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+      fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+      fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+      fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+    }
+    return fecha;
   }
 
   getDocumentDefinicion() {
@@ -187,7 +248,8 @@ export class VerVacacionComponent implements OnInit {
           alignment: 'center',
           margin: [0, 0, 0, 20]
         },
-        this.presentarDataPDFPermiso(),
+      
+        this.presentarDataPDFPermiso(this.ObtenerFecha()),
       ],
       styles: {
         header: {
@@ -236,7 +298,7 @@ export class VerVacacionComponent implements OnInit {
     };
   }
 
-  presentarDataPDFPermiso() {
+  presentarDataPDFPermiso(f) {
     return {
       table: {
         widths: ['*'],
@@ -250,7 +312,7 @@ export class VerVacacionComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'FECHA: ' + this.datoSolicitud[0].fec_creacion.split('T')[0], style: 'itemsTableD'
+                      text: 'FECHA: ' + f, style: 'itemsTableD'
                     }
                   ]
                 },
@@ -311,7 +373,7 @@ export class VerVacacionComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'N°. Permiso: ' + this.datoSolicitud[0].num_permiso, style: 'itemsTableD'
+                      text: 'Días de Vacaciones: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD'
                     }
                   ]
                 }
@@ -320,7 +382,7 @@ export class VerVacacionComponent implements OnInit {
           ],
           [
             {
-              text: 'MOTIVO', style: 'tableHeader'
+              text: 'VACACIONES', style: 'tableHeader'
             }
           ],
           [
@@ -329,7 +391,7 @@ export class VerVacacionComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'TIPO DE SOLICITUD: ' + this.datoSolicitud[0].nom_permiso, style: 'itemsTableD'
+                      text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD'
                     }
                   ]
                 },
@@ -349,7 +411,7 @@ export class VerVacacionComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD'
+                      text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD'
                     }
                   ]
                 },
