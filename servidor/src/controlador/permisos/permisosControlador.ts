@@ -169,7 +169,7 @@ class PermisosControlador {
         });
 
         JefeDepartamento.rows.forEach(obj => {
-            var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+            var url = `${process.env.URL_DOMAIN}/solicitarPermiso`;
             InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
                 let notifi_realtime = {
                     id_send_empl: obj.empleado,

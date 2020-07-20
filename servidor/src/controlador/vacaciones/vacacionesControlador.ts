@@ -142,7 +142,7 @@ class VacacionesControlador {
     });
 
     JefeDepartamento.rows.forEach(obj => {
-        var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+        var url = `${process.env.URL_DOMAIN}/vacacionesEmpleado`;
         InfoVacacionesReenviarEstadoEmpleado.rows.forEach(ele => {
             let notifi_realtime = {
                 id_send_empl: obj.empleado,
@@ -168,7 +168,7 @@ class VacacionesControlador {
                     <li><b>Fecha final </b>: ${ele.fec_final.toLocaleString().split(" ")[0]} </li>
                     <li><b>Fecha ingresa </b>: ${ele.fec_ingreso.toLocaleString().split(" ")[0]} </li>
                     </ul>
-                <a href="${url}">Ir a verificar estado permisos</a>`
+                <a href="${url}">Ir a verificar estado vacaciones</a>`
             };
 
             if (ele.vaca_mail === true && ele.vaca_noti === true) {

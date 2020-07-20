@@ -24,8 +24,16 @@ export class AutorizacionService {
     return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones`);
   }
 
-  getUnaAutorizacionPorPermisoRest(id_documento: number){
-    return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones/info-autorizacion/${id_documento}`);
+  getUnaAutorizacionByPermisoRest(id_permiso: number){
+    return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones/by-permiso/${id_permiso}`);
+  }
+
+  getUnaAutorizacionByVacacionRest(id_vacacion: number){
+    return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones/by-vacacion/${id_vacacion}`);
+  }
+
+  getUnaAutorizacionByHoraExtraRest(id_hora_extra: number){
+    return this.http.get<any>(`${this.AUTORIZACIONES_URL}/autorizaciones/by-hora-extra/${id_hora_extra}`);
   }
 
   postAutorizacionesRest(data: any){
@@ -38,5 +46,9 @@ export class AutorizacionService {
   
   PutEstadoAutoVacacion(id: number, datos: any) {
     return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-vacacion`, datos);
+  }
+  
+  PutEstadoAutoHoraExtra(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-hora-extra`, datos);
   }
 }

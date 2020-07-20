@@ -8,16 +8,10 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-import { AutorizacionesComponent } from '../../autorizaciones/autorizaciones/autorizaciones.component';
-
-
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EditarEstadoVacacionAutoriacionComponent } from '../../autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 import { EstadoVacacionesComponent } from "../estado-vacaciones/estado-vacaciones.component";
-
-
-
 import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 
 interface Estado {
@@ -81,11 +75,12 @@ export class VerVacacionComponent implements OnInit {
 
       this.vacacion = res;
       console.log(this.vacacion)
-      this.restA.getUnaAutorizacionPorPermisoRest(this.vacacion[0].id).subscribe(res1 => {
+      this.restA.getUnaAutorizacionByVacacionRest(this.vacacion[0].id).subscribe(res1 => {
         this.autorizacion = res1;
+        console.log(this.autorizacion);
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
-            this.estado = obj.nombre;
+            this.estado = obj.nombre
           }
         })
         this.restD.EncontrarUnDepartamento(this.autorizacion[0].id_departamento).subscribe(res2 => {

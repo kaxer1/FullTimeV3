@@ -14,6 +14,7 @@ class HorasExtrasPedidasRutas {
         this.router.get('/:id', HorasExtrasPedidasControlador.ObtenerUnaHoraExtraPedida);
         this.router.get('/lista/:id_user', HorasExtrasPedidasControlador.ObtenerlistaHora);
         this.router.post('/', HorasExtrasPedidasControlador.CrearHoraExtraPedida);
+        this.router.put('/:id/estado', HorasExtrasPedidasControlador.ActualizarEstado);
     }
 }
 

@@ -35,4 +35,8 @@ export class PedHoraExtraService {
     return this.http.post(`${this.API_URL}/horas-extras-pedidas`, datos);
   }
 
+  ActualizarEstado(id: number, datos: any) {
+    return this.http.put(`${this.API_URL}/horas-extras-pedidas/${id}/estado`, datos);
+  }
+
 }

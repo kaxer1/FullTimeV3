@@ -69,7 +69,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     this.restP.obtenerUnPermisoEmleado(parseInt(this.id_permiso)).subscribe(res => {
       this.InfoPermiso = res;
       console.log(this.InfoPermiso)
-      this.restA.getUnaAutorizacionPorPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
+      this.restA.getUnaAutorizacionByPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
         this.autorizacion = res1;
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
@@ -139,7 +139,9 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   AbrirAutorizaciones(datosSeleccionados: any): void {
-    this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
+    this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.BuscarDatos();
+    });
   }
 
   AbrirVentanaEditarAutorizacion(datosSeleccionados: any): void {
