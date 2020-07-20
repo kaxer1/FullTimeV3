@@ -86,6 +86,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   AbrirAutorizaciones(datosHoraExtra) {
     this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', data: datosHoraExtra}).afterClosed().subscribe(items => {
       this.BuscarInfo();
+      this.HabilitarAutorizacion = true;
     });
   }
 

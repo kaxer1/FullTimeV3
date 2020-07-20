@@ -4,7 +4,7 @@ const nodemailer = require("nodemailer");
 
 class HorasExtrasPedidasControlador {
   public async ListarHorasExtrasPedidas(req: Request, res: Response) {
-    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT * FROM hora_extr_pedidos');
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, h.fec_solicita, h.descripcion, h.num_hora, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empleados AS e WHERE h.id_usua_solicita = e.id');
     if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
       return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
     }
