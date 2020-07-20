@@ -84,7 +84,7 @@ export class RegistroContratoComponent implements OnInit {
   }
 
   ValidarDatosContrato(form) {
-    if (form.fechaSalidaForm === '') {
+    if (form.fechaSalidaForm === '' || form.fechaSalidaForm === null) {
       form.fechaSalidaForm = null;
       this.InsertarContrato(form);
     } else {
