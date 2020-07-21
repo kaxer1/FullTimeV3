@@ -43,12 +43,12 @@
                                 <label class="col-sm col-form-label">Estado:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{h.estado}}</label>
+                                <label class="col col-form-label">{{nomEstado}}</label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Número Hora:</label>
+                                <label class="col-sm col-form-label">Número de Horas:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{h.num_hora}}</label>
@@ -60,7 +60,7 @@
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}
-                                    {{h.fec_solicita.split("T")[1].split(".")[0]}}</label>
+                                    </label>
                             </div>
                         </div>
                         <div class="row">
@@ -69,7 +69,7 @@
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}
-                                    {{h.fec_inicio.split("T")[1].split(".")[0]}}</label>
+                                    </label>
                             </div>
                         </div>
                         <div class="row">
@@ -78,11 +78,12 @@
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{h.fec_final.split("T")[0]}}
-                                    {{h.fec_final.split("T")[1].split(".")[0]}}</label>
+                                    </label>
                             </div>
                         </div>
 
                         <!-- <div class="row">
+                            {{h.fec_final.split("T")[1].split(".")[0]}}
                             <div class="col">
                                 <label class="col-sm col-form-label">Certificado:</label>
                             </div>
