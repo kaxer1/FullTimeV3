@@ -90,7 +90,9 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarDepartamento(): void {
-    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '600px' }).afterClosed().subscribe(item => {
+      this.ListaDepartamentos();
+    });
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {

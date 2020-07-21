@@ -114,11 +114,11 @@ export class DatosEmpleadoComponent implements OnInit {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
-/* 
-   * ***************************************************************************************************
-   *                               MÉTODO PARA MOSTRAR DATOS
-   * ***************************************************************************************************
-  */
+  /* 
+     * ***************************************************************************************************
+     *                               MÉTODO PARA MOSTRAR DATOS
+     * ***************************************************************************************************
+    */
   /** Método para ver la información del empleado */
   textoBoton: string = 'Subir Foto';
   verEmpleado(idemploy: any) {
@@ -132,7 +132,7 @@ export class DatosEmpleadoComponent implements OnInit {
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
-        if (idEmpleadoActivo === idemploy){
+        if (idEmpleadoActivo === idemploy) {
           this.Main.urlImagen = this.urlImagen;
         }
       } else {
@@ -164,12 +164,12 @@ export class DatosEmpleadoComponent implements OnInit {
   /** Método para obtener el contrato de un empleado con su respectivo régimen laboral */
   idContratoEmpleado: number;
   obtenerContratoEmpleadoRegimen() {
-    this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
-      this.contratoEmpleadoRegimen = res;
-    }, error => { console.log("") });
-    this.restEmpleado.BuscarContratoIdEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
-      this.contratoEmpleado = res;
-    }, error => { console.log("") });
+    this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idContrato = datos;
+      this.restEmpleado.BuscarDatosContrato(this.idContrato[0].max).subscribe(res => {
+        this.contratoEmpleado = res;
+      }, error => { });
+    }, error => { });
   }
 
   /** Método para obtener los datos del cargo del empleado */
@@ -178,28 +178,13 @@ export class DatosEmpleadoComponent implements OnInit {
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
+    this.restEmpleado.BuscarIDContratoActual(id_empleado).subscribe(datos => {
       this.idContrato = datos;
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        console.log("idContratoProbandoJenny", this.idContrato[i].id);
-        this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[i]['id']).subscribe(datos => {
-          this.cargoEmpleado = datos;
-          console.log("jenny datos", this.cargoEmpleado)
-          if (this.cargoEmpleado.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.cargosTotalesEmpleado = datos
-              this.cont++;
-            }
-            else {
-              this.cargosTotalesEmpleado = this.cargosTotalesEmpleado.concat(datos);
-              console.log("Datos Cargos " + i + '', this.cargosTotalesEmpleado)
-            }
-          }
-        });
-      }
+      this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
+        this.cargosTotalesEmpleado = datos;
+      }, error => {
+        this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
+      });
     });
   }
 
@@ -755,11 +740,11 @@ export class DatosEmpleadoComponent implements OnInit {
   }
 
 
-   /**
-   * 
-   * METODO PARA EXPORTAR A XML
-   * 
-   */
+  /**
+  * 
+  * METODO PARA EXPORTAR A XML
+  * 
+  */
 
   nacionalidades: any = [];
   obtenerNacionalidades() {
@@ -768,9 +753,9 @@ export class DatosEmpleadoComponent implements OnInit {
     });
   }
 
-  EstadoCivilSelect: any = ['Soltero/a','Unión de Hecho','Casado/a','Divorciado/a','Viudo/a'];
-  GeneroSelect: any = ['Masculino','Femenino'];
-  EstadoSelect: any = ['Activo','Inactivo'];
+  EstadoCivilSelect: any = ['Soltero/a', 'Unión de Hecho', 'Casado/a', 'Divorciado/a', 'Viudo/a'];
+  GeneroSelect: any = ['Masculino', 'Femenino'];
+  EstadoSelect: any = ['Activo', 'Inactivo'];
 
   urlxml: string;
   data: any = [];
@@ -808,7 +793,7 @@ export class DatosEmpleadoComponent implements OnInit {
       }
       arregloEmpleado.push(objeto)
     });
-    
+
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
       this.urlxml = 'http://192.168.0.192:3001/empleado/download/' + this.data.name;

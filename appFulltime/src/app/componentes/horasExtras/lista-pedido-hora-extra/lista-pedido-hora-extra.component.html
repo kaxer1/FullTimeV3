@@ -1,0 +1,42 @@
+<br>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resultadosEmpre">Lista de todos las Horas Extras Solicitadas por empleados</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Empleado</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Fecha Creación</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Fecha Inicio</th>
+                        <th scope="col">Fecha Final</th>
+                        <th scope="col">Horas</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of horas_extras | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{h.nombre}} {{h.apellido}}</td>
+                        <td>{{h.estado}}</td>
+                        <td>{{h.fec_solicita.split('T')[0]}}</td>
+                        <td>{{h.descripcion}}</td>
+                        <td>{{h.fec_inicio.split('T')[0]}}</td>
+                        <td>{{h.fec_final.split('T')[0]}}</td>
+                        <td>{{h.num_hora}}</td>
+                        <td class="d-flex justify-content-center">
+                            <a class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix matTooltipPosition="right" 
+                                matTooltip="Cambiar el estado del documento de autorazación" [routerLink]="['/ver-hora-extra', h.id]">
+                                <p>Documento</p>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="horas_extras.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

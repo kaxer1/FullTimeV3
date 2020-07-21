@@ -78,6 +78,10 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('usuario', datos.usuario);
         localStorage.setItem('rol', datos.rol);
         localStorage.setItem('empleado', datos.empleado);
+        localStorage.setItem('empresa', datos.empresa);
+        localStorage.setItem('sucursal', datos.sucursal);
+        localStorage.setItem('departamento', datos.departamento);
+        localStorage.setItem('ultimoCargo', datos.cargo);
         this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
 
         if (datos.rol === 1) { // Admin

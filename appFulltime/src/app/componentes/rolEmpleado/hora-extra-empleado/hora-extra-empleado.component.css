@@ -1,0 +1,15 @@
+.barraTitulo { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
+p { font-size: x-small; }
+
+.fas { cursor: pointer; }
+
+.col-sm { font-weight: bold;}
+
+#iconos { text-align: center; }

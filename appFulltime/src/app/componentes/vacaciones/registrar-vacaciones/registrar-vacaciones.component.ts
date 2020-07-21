@@ -130,7 +130,8 @@ export class RegistrarVacacionesComponent implements OnInit {
       this.VacacionesForm.patchValue({
         diaLibreForm: libre,
         dialaborableForm: habil,
-        totalForm: totalDias
+        totalForm: totalDias,
+        diasTForm: 0
       });
     })
   }
@@ -239,7 +240,7 @@ export class RegistrarVacacionesComponent implements OnInit {
       fec_final: form.fecFinalForm,
       fec_ingreso: form.fechaIngresoForm,
       estado: form.estadoForm,
-      dia_libre: form.diaLibreForm,
+      dia_libre: form.diaLibreForm + form.diasTForm,
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
@@ -258,13 +259,14 @@ export class RegistrarVacacionesComponent implements OnInit {
         estado: this.responseVacacion.estado, 
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
         id_permiso: null,
-        id_vacaciones: this.responseVacacion.id_vacacion
+        id_vacaciones: this.responseVacacion.id_vacacion,
+        id_hora_extra: null,
       }
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
         console.log(res);
         this.NotifiRes = res;
         notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0) {
+        if (this.NotifiRes._id > 0 && this.responseVacacion.notificacion === true) {
           this.restV.sendNotiRealTime(notificacion);
         }
       });

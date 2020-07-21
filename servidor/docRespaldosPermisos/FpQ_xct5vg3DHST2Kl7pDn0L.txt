@@ -1,0 +1,19 @@
+	10/07/2020
+4. Parametrizar solicitud de horas extras enviar a través de correo o notificaciones en el sistema
+5. Modificaciones en tabla para solicitud de horas extras 
+
+	13/07/2020
+6. Enviar notificación de horas extras solicitadas. Correo o notificación
+7. Pantalla para cambiar estado de solicitud de horas extras. 
+	
+	14/07/2020
+8. Pantalla para mostrar lista de solicitudes de horas extras
+9. Enviar al empleado mensaje de estado de su solicitud de horas extras. Correo o notificacion.
+
+	15/07/2020
+10. Autorización de permisos - permitir que la autorización la realicen más de una persona.
+11. Autorización de vacaciones - permitir que la autorización la realicen más de una persona.
+
+	16/07/2020
+12. Autorización de horas extras - permitir que la autorización la realicen más de una persona.
+13. Cancelar solicitud de permiso, vacaciones y horas extras antes de que sea aceptado o rechazado

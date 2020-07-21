@@ -1,0 +1,193 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
+                <div class="barraTitulo1">
+                    <div class="container">
+                        <div class="row" style="text-align: center;">
+                            <div class="col">
+                                <h5>Información de Hora Extra</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px;" *ngFor="let h of hora_extra">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Empleado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.nombre.split(" ")[0]}}
+                                    {{h.apellido.split(" ")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Cargo:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.cargo}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Descripción:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.descripcion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{nomEstado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Número de Horas:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.num_hora}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Solicita:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}
+                                    </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}
+                                    </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{h.fec_final.split("T")[0]}}
+                                    </label>
+                            </div>
+                        </div>
+
+                        <!-- <div class="row">
+                            {{h.fec_final.split("T")[1].split(".")[0]}}
+                            <div class="col">
+                                <label class="col-sm col-form-label">Certificado:</label>
+                            </div>
+                            <div class="col">
+                                <a id="iconos" class="fas fa-file-alt" style="color:rgb(197, 95, 11);" matSuffix
+                                    matTooltipPosition="right" matTooltip="Certificado"
+                                    href="http://192.168.0.192:3001/empleadoPermiso/documentos/{{p.documento}}"
+                                    target="_blank">
+                                    <p>{{p.docu_nombre}}</p>
+                                </a>
+                            </div>
+                        </div> -->
+
+                        <div class="col" style="text-align: right;">
+                            <i id="iconos" *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle"
+                                style="color:rgb(58, 90, 231);" (click)="AbrirAutorizaciones(h)"
+                                matTooltipPosition="right"
+                                matTooltip="Agrega más tipos de permisos de este departamento.">
+                                <p>Autorización</p>
+                            </i>
+                            <i *ngIf="HabilitarAutorizacion" class="fas fa-edit"
+                                style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
+                                (click)="AbrirVentanaEditar(h)" matTooltip="Cambiar el estado del permiso">
+                                <p>Estado</p>
+                            </i>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-md">
+            <mat-card class="mat-elevation-z8" style="padding-bottom: 5px;">
+                <div class="barraTitulo1">
+                    <div class="container">
+                        <div class="row" style="text-align: center;">
+                            <div class="col">
+                                <h5>Información de la Autorización</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px;" *ngFor="let a of autorizacion">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Código autorización:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{a.id}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Estado:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{estado}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Orden:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{a.orden}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Departamento:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{departamento}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Solicitud de Hora Extra:</label>
+                            </div>
+                            <div class="col">
+                                <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
+                                    style="color:red; margin-left: 20px; text-align: center;" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="departamento-tooltip"
+                                    matTooltip="Descargar Solicitud de Permiso en formato PDF">
+                                    <p>Hora Extra</p>
+                                </i>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 5px;">
+                            <div class="col">
+                            </div>
+                            <div class="col">
+                            </div>
+                            <div class="col" style="text-align: right;">
+                                <i class="fas fa-edit" style="color:green; text-align: center;" matSuffix
+                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                                    matTooltip="Cambiar el estado de la hora extra">
+                                    <p>Estado</p>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

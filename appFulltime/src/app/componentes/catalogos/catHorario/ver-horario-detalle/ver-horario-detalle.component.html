@@ -44,7 +44,7 @@
                     <a *ngIf="h.doc_nombre != null" class="fas fa-file-alt"
                         style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
                         matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                        href="http://localhost:3000/horario/documentos/{{h.documento}}" target="_blank">
+                        href="http://192.168.0.192:3001/horario/documentos/{{h.documento}}" target="_blank">
                         <p>{{h.doc_nombre}}</p>
                     </a>
                     <i id="editarF" (click)="AbrirVentanaEditar(h)" matSuffix matTooltipClass="color-tooltip"

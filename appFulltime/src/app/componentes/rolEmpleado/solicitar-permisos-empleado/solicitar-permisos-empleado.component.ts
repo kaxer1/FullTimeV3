@@ -55,7 +55,7 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     this.permisosTotales = [];
     this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
       this.idContrato = datos;
-      // console.log("idContrato ", this.idContrato[0].id);
+      console.log("idContrato ", this.idContrato);
       for (let i = 0; i <= this.idContrato.length - 1; i++) {
         this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
           this.permisosEmpleado = datos;

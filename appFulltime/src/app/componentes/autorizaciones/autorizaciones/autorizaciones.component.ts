@@ -31,20 +31,14 @@ interface Documento {
 export class AutorizacionesComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
-  TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
-  idCatNotificacion = new FormControl('', Validators.required);
-  idCatNotiAutorizacion = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
 
   public nuevaAutorizacionesForm = new FormGroup({
     idDocumentoF: this.idDocumento,
-    tipoDocumentoF: this.TipoDocumento,
     ordenF: this.orden,
     estadoF: this.estado,
-    idNotificacionF: this.idCatNotificacion,
-    idNotiAutorizacionF: this.idCatNotiAutorizacion,
     idDepartamentoF: this.idDepartamento
   });
 
@@ -67,16 +61,10 @@ export class AutorizacionesComponent implements OnInit {
     { id: 4, nombre: 'Negado' },
   ];
 
-  tipoDoc: Documento[] = [
-    { id: 1, nombre: 'doc1' },
-    { id: 2, nombre: 'doc2' },
-    { id: 3, nombre: 'doc3' },
-  ]
-
   constructor(
     public restAutorizaciones: AutorizacionService,
-    public restNotiAutorizaciones: NotiAutorizacionesService,
-    public restNotificaciones: NotificacionesService,
+    // public restNotiAutorizaciones: NotiAutorizacionesService,
+    // public restNotificaciones: NotificacionesService,
     public restDepartamento: DepartamentosService,
     public restCargo: EmplCargosService,
     private toastr: ToastrService,
@@ -87,20 +75,17 @@ export class AutorizacionesComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.obtenerDepartamento();
-    //this.obtenerNotiAutorizaciones();
-    this.obtenerNotificacion(this.data.id_tipo_permiso);
-
   }
 
   insertarAutorizacion(form) {
     let newAutorizaciones = {
-      id_documento: this.data.id,
-      tipo_documento: 1, //revisar si ayuda o no este campo
       orden: form.ordenF,
       estado: form.estadoF,
-      id_notificacion: form.idNotificacionF,
-      id_noti_autorizacion: form.idNotiAutorizacionF,
-      id_departamento: form.idDepartamentoF
+      id_departamento: form.idDepartamentoF,
+      id_permiso: this.data.id,
+      id_vacacion: null,
+      id_hora_extra: null,
+      id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
@@ -113,28 +98,11 @@ export class AutorizacionesComponent implements OnInit {
     })
   }
 
-  obtenerNotificacion(id: number) {
-    this.restNotificaciones.BuscarNotificacionPermiso(id).subscribe(res => {
-      console.log(res);
-      this.notificacion = res;
-    });
-  }
-
-  obtenerNotiAutorizaciones(form) {
-    this.restCargo.ListarEmpleadosAutorizacion(form.idNotificacionF).subscribe(res => {
-      console.log(res);
-      this.notiAutrizaciones = res;
-    }, error => {
-      this.toastr.info('La notificación seleccionada aun no tiene registrado Empleados que autoricen la solicitud.');
-    });
-  }
-
   obtenerDepartamento() {
     this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_contrato).subscribe(res => {
       console.log(res);
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
-        idDocumentoF: this.data.nom_permiso,
         ordenF: 1,
         estadoF: 1,
         idDepartamentoF: this.departamentos[0].id_departamento
@@ -149,7 +117,6 @@ export class AutorizacionesComponent implements OnInit {
   CerrarVentanaRegistroNoti() {
     this.limpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

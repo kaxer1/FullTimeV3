@@ -142,7 +142,6 @@ export class RegistroDepartamentoComponent implements OnInit {
   CerrarVentanaRegistroDepartamento() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   IngresarSoloLetras(e) {

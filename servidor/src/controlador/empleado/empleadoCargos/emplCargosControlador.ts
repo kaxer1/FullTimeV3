@@ -35,7 +35,7 @@ class EmpleadoCargosControlador {
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const unEmplCargp = await pool.query('SELECT ec.id, ec.cargo, ec.id_empl_contrato, ec.id_departamento, ec.fec_inicio, ec.fec_final, ec.id_sucursal, ec.sueldo, ec.hora_trabaja, s.id_empresa FROM empl_cargos AS ec, sucursales AS s WHERE ec.id = $1 AND s.id = ec.id_sucursal', [id]);
+    const unEmplCargp = await pool.query('SELECT ec.id, ec.cargo, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, s.nombre AS sucursal, d.nombre AS departamento FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d WHERE ec.id = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id ORDER BY ec.id', [id]);
     if (unEmplCargp.rowCount > 0) {
       return res.jsonp(unEmplCargp.rows)
     }
@@ -87,7 +87,7 @@ class EmpleadoCargosControlador {
     if (unEmplCargp.rowCount > 0) {
       return res.jsonp(unEmplCargp.rows)
     }
-    res.status(404).jsonp({ text: 'Cargo del empleado no encontrado' });
+    res.status(404).jsonp({ message: 'error' });
   }
 
   public async EditarCargo(req: Request, res: Response): Promise<any> {

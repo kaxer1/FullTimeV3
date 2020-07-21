@@ -169,7 +169,7 @@ export class RegistrarSucursalesComponent implements OnInit {
         console.log("id sucursal: ", this.ultimoId[0].max);
         let datosDepartamentos = {
           nombre: 'Ninguno',
-          nivel: 0,
+          nivel: 1,
           depa_padre: null,
           id_sucursal: this.ultimoId[0].max
         };

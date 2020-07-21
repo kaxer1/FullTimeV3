@@ -7,7 +7,7 @@ import pool from '../../database';
 class SucursalControlador {
 
   public async ListarSucursales(req: Request, res: Response) {
-    const SUCURSAL = await pool.query('SELECT *FROM NombreCiudadEmpresa');
+    const SUCURSAL = await pool.query('SELECT * FROM NombreCiudadEmpresa ORDER BY nomempresa');
     if (SUCURSAL.rowCount > 0) {
       return res.jsonp(SUCURSAL.rows)
     }

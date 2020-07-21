@@ -39,5 +39,7 @@
 </div>
 <br>
 <div style="text-align: center;">
+    <input *ngIf="habilitarA" type="submit" class="btn btn-sm" (click)="AbrirNotificacionAutorizacion(data)" 
+        matTooltipPosition="right" matTooltip="Agrega más tipos de permisos de este departamento." value="Agregar">
     <input type="submit" (click)="dialogRef.close()" class="btn btn-sm" value="Salir" style="margin-left: 15px;">
 </div>

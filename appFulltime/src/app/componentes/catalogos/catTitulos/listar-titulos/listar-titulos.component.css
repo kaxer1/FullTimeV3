@@ -8,7 +8,7 @@ td { padding-top: 10px; text-align: center; }
 
 .far { color:red; cursor: pointer; margin-left: 20px; }
 
-/*.tituloL-tooltip { background: #4622aa; }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 #itituloL { cursor: pointer; }
 

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { FormControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
@@ -24,11 +26,17 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  nameFile: string;
+  archivoSubido: Array<File>;
+
+  archivo1Form = new FormControl('');
+
   constructor(
     public router: Router,
     private restDP: DetallePlanHorarioService,
     private restPH: PlanHorarioService,
     public vistaRegistrarDatos: MatDialog,
+    private toastr: ToastrService,
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
@@ -87,4 +95,40 @@ export class VerDetallePlanHorariosComponent implements OnInit {
      this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true } }).disableClose = true;
    }*/
 
+  /****************************************************************************************************** 
+* PLANTILLA CARGAR SOLO HORARIOS
+******************************************************************************************************/
+
+  fileChangePlantilla(element) {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems = this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 30);
+    console.log('nombre', itemName);
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() == 'detalle planificacion empleado') {
+        this.plantillaDetalle();
+      } else {
+        this.toastr.error('Solo se acepta Platilla con nombre Detalle Planificacion Empleado', 'Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantillaDetalle() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+      console.log('ver', this.archivoSubido[i])
+    }
+    this.restDP.subirArchivoExcel( parseInt(this.idPlanH), formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.ListarDetalles(this.idPlanH);
+      this.archivo1Form.reset();
+      this.nameFile = '';
+     // window.location.reload();
+    });
+  }
 }
