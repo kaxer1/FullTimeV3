@@ -1,13 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
-import { NotiAutorizacionesService } from 'src/app/servicios/catalogos/catNotiAutorizaciones/noti-autorizaciones.service';
-import { NotificacionesService } from 'src/app/servicios/catalogos/catNotificaciones/notificaciones.service';
+import { ToastrService } from 'ngx-toastr';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
-import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 
 interface Orden {
   valor: number
@@ -18,19 +14,18 @@ interface Estado {
   nombre: string
 }
 
+
 @Component({
-  selector: 'app-vacacion-autorizaciones',
-  templateUrl: './vacacion-autorizaciones.component.html',
-  styleUrls: ['./vacacion-autorizaciones.component.css']
+  selector: 'app-hora-extra-autorizaciones',
+  templateUrl: './hora-extra-autorizaciones.component.html',
+  styleUrls: ['./hora-extra-autorizaciones.component.css']
 })
-export class VacacionAutorizacionesComponent implements OnInit {
+export class HoraExtraAutorizacionesComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
   TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
-  idCatNotificacion = new FormControl('', Validators.required);
-  idCatNotiAutorizacion = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
 
   public nuevaAutorizacionesForm = new FormGroup({
@@ -56,18 +51,19 @@ export class VacacionAutorizacionesComponent implements OnInit {
     { id: 3, nombre: 'Autorizado' },
     { id: 4, nombre: 'Negado' },
   ];
-
+  
   constructor(
     public restAutorizaciones: AutorizacionService,
     public restDepartamento: DepartamentosService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<VacacionAutorizacionesComponent>,
+    public dialogRef: MatDialogRef<HoraExtraAutorizacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     console.log(this.data);
     this.obtenerDepartamento();
+    
   }
 
   insertarAutorizacion(form) {
@@ -76,8 +72,8 @@ export class VacacionAutorizacionesComponent implements OnInit {
       estado: form.estadoF,
       id_departamento: form.idDepartamentoF,
       id_permiso: null,
-      id_vacacion: this.data.id,
-      id_hora_extra: null,
+      id_vacacion: null,
+      id_hora_extra: this.data.id,
       id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
@@ -105,4 +101,5 @@ export class VacacionAutorizacionesComponent implements OnInit {
   limpiarCampos() {
     this.nuevaAutorizacionesForm.reset();
   }
+
 }

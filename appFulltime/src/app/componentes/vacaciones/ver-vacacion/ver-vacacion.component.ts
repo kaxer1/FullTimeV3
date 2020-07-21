@@ -8,21 +8,20 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-import { AutorizacionesComponent } from '../../autorizaciones/autorizaciones/autorizaciones.component';
-
-
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EditarEstadoVacacionAutoriacionComponent } from '../../autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 import { EstadoVacacionesComponent } from "../estado-vacaciones/estado-vacaciones.component";
 
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
-import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
-
 
 //HORAS EXTRAS PRUEBAS
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
+
+
+import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 
 
 interface Estado {
@@ -97,11 +96,12 @@ export class VerVacacionComponent implements OnInit {
 
       this.vacacion = res;
       console.log(this.vacacion)
-      this.restA.getUnaAutorizacionPorPermisoRest(this.vacacion[0].id).subscribe(res1 => {
+      this.restA.getUnaAutorizacionByVacacionRest(this.vacacion[0].id).subscribe(res1 => {
         this.autorizacion = res1;
+        console.log(this.autorizacion);
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
-            this.estado = obj.nombre;
+            this.estado = obj.nombre
           }
         })
         this.restD.EncontrarUnDepartamento(this.autorizacion[0].id_departamento).subscribe(res2 => {
@@ -123,7 +123,7 @@ export class VerVacacionComponent implements OnInit {
 
 
     //hora extra
-    this.ObtenerSolicitudHE(this.id_vacacion);
+    //this.ObtenerSolicitudHE(this.id_vacacion);
   }
 
   // metodo para ver la informacion del empleado 
@@ -146,9 +146,11 @@ export class VerVacacionComponent implements OnInit {
 
   // metodo para ver la informacion de la autorización 
   ObtenerAutorizacion(id: any) {
+    console.log('entra')
     this.datosAutorizacion = [];
-    this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
+    this.restV.BuscarDatosAutorizacion(id, this.idEmpleado).subscribe(data => {
       this.datosAutorizacion = data;
+      console.log('autorizacion', this.datosAutorizacion);
       if (this.datosAutorizacion[0].estado_auto === 1) {
         this.datosAutorizacion[0].estado_auto = 'Pendiente';
       }
@@ -489,323 +491,6 @@ export class VerVacacionComponent implements OnInit {
                           ],
                           [
                             { text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                }
-              ]
-            }
-          ],
-        ]
-      },
-      layout: {
-        hLineColor: function (i, node) {
-          return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
-        },
-        paddingLeft: function (i, node) { return 40; },
-        paddingRight: function (i, node) { return 40; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
-      }
-    };
-  }
-
-
-  /****************************************************************************************************** 
-*                                         MÉTODO PARA EXPORTAR A PDF ----HORAS EXTRAS
-******************************************************************************************************/
-
-  // metodo para ver la informacion de la solicitud 
-  ObtenerSolicitudHE(id: any) {
-    this.datoSolicitudHE = [];
-    this.restHE.BuscarDatosSolicitud(id).subscribe(data => {
-      this.datoSolicitudHE = data;
-      console.log('datos solicitud HE', this.datoSolicitudHE);
-    })
-  }
-
-
-  generarPdfHE(action = 'open') {
-    const documentDefinition = this.getDocumentDefinicionHE();
-
-    switch (action) {
-      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
-      default: pdfMake.createPdf(documentDefinition).open(); break;
-    }
-
-  }
-
-
-  getDocumentDefinicionHE() {
-    return {
-      pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-
-      footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
-        var time = f.getHours() + ':' + f.getMinutes();
-        return {
-          margin: 10,
-          columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,
-            {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
-            }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
-        }
-      },
-      content: [
-        {
-          text: this.datoSolicitudHE[0].nom_empresa,
-          bold: true,
-          fontSize: 15,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-        {
-          text: 'SOLICITUD DE HORAS EXTRAS',
-          fontSize: 10,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-
-        this.presentarDataPDFPermisoHE(this.ObtenerFecha()),
-      ],
-      styles: {
-        header: {
-          fontSize: 9,
-          bold: true,
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-
-        },
-        itemsTableD: {
-          fontSize: 10,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTable: {
-          fontSize: 10,
-          alignment: 'center',
-        }
-      }
-    };
-  }
-
-  presentarDataPDFPermisoHE(f) {
-    return {
-      table: {
-        widths: ['*'],
-        body: [
-          [
-            { text: 'INFORMACIÓN GENERAL', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'FECHA: ' + f, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + this.datoSolicitudHE[0].nom_ciudad, style: 'itemsTableD'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + this.datoSolicitudHE[0].apellido_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + this.datoSolicitudHE[0].nombre_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + this.datoSolicitudHE[0].cedula, style: 'itemsTableD'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'RÉGIMEN: ' + this.datoSolicitudHE[0].nom_regimen, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'Sucursal: ' + this.datoSolicitudHE[0].nom_sucursal, style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              text: 'HORAS EXTRAS', style: 'tableHeader'
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'DESCRIPCIÓN: ' + this.datoSolicitudHE[0].descripcion, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE INICIO: ' + this.datoSolicitudHE[0].fec_inicio.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'Total Horas Extras: ' + this.datoSolicitudHE[0].num_hora + ' horas', style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitudHE[0].fec_final.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                },
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'EMPLEADO', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datoSolicitudHE[0].nombre_emple + ' ' + this.datoSolicitudHE[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },
                           ]
                         ]
                       }

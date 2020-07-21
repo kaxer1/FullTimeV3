@@ -142,7 +142,7 @@ class VacacionesControlador {
     });
 
     JefeDepartamento.rows.forEach(obj => {
-      var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+      var url = `${process.env.URL_DOMAIN}/vacacionesEmpleado`;
       InfoVacacionesReenviarEstadoEmpleado.rows.forEach(ele => {
         let notifi_realtime = {
           id_send_empl: obj.empleado,
@@ -168,7 +168,7 @@ class VacacionesControlador {
                     <li><b>Fecha final </b>: ${ele.fec_final.toLocaleString().split(" ")[0]} </li>
                     <li><b>Fecha ingresa </b>: ${ele.fec_ingreso.toLocaleString().split(" ")[0]} </li>
                     </ul>
-                <a href="${url}">Ir a verificar estado permisos</a>`
+                <a href="${url}">Ir a verificar estado vacaciones</a>`
         };
 
         if (ele.vaca_mail === true && ele.vaca_noti === true) {
@@ -194,16 +194,28 @@ class VacacionesControlador {
         } else if (ele.vaca_mail === false && ele.vaca_noti === false) {
           res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
         }
-
       });
+
     });
 
-    res.json({ message: 'Estado de vacacion actualizado exitosamente' });
+
   }
 
   public async ObtenerSolicitudVacaciones(req: Request, res: Response) {
     const id = req.params.id_emple_vacacion;
     const SOLICITUD = await pool.query('SELECT *FROM VistaDatoSolicitudVacacion WHERE id_emple_vacacion = $1', [id]);
+    if (SOLICITUD.rowCount > 0) {
+      return res.json(SOLICITUD.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ObtenerAutorizacionVacaciones(req: Request, res: Response) {
+    const id = req.params.id_vacaciones;
+    const id_empleado = req.params.id_empleado;
+    const SOLICITUD = await pool.query('SELECT *FROM VistaAutorizacionesVacaciones WHERE id_vacaciones = $1 AND id_empleado = $2', [id, id_empleado]);
     if (SOLICITUD.rowCount > 0) {
       return res.json(SOLICITUD.rows)
     }

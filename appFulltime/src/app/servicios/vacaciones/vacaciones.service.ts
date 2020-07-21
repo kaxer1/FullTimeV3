@@ -47,4 +47,8 @@ export class VacacionesService {
     return this.http.get(`${this.API_URL}/vacaciones/datosSolicitud/${id_emple_vacacion}`);
   }
 
+  BuscarDatosAutorizacion(id_vacaciones: number, id_empleado: number) {
+    return this.http.get(`${this.API_URL}/vacaciones/datosAutorizacion/${id_vacaciones}/${id_empleado}`);
+  }
+
 }

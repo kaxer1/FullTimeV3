@@ -184,7 +184,7 @@ class PermisosControlador {
                 }
             });
             JefeDepartamento.rows.forEach(obj => {
-                var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+                var url = `${process.env.URL_DOMAIN}/solicitarPermiso`;
                 InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
                     let notifi_realtime = {
                         id_send_empl: obj.empleado,
@@ -258,7 +258,8 @@ class PermisosControlador {
     ObtenerDatosAutorizacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_permiso;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1', [id]);
+            const id_empleado = req.params.id_empleado;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1 AND id_empleado = $2', [id, id_empleado]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }

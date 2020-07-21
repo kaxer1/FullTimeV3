@@ -44,9 +44,16 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
     console.log(this.data.datosSeleccionados);
-    var f = new Date();
+    this.tiempo();
+    this.estadoAutorizacionesForm.patchValue({
+      estadoF: this.data.datosSeleccionados.estado
+    });
+  }
 
+  tiempo() {
+    var f = new Date();
     if (f.getMonth() < 10 && f.getDate() < 10) {
       this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
     } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
@@ -56,10 +63,6 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
     } else if (f.getMonth() >= 10 && f.getDate() < 10) {
       this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
     }
-
-    this.estadoAutorizacionesForm.patchValue({
-      estadoF: this.data.datosSeleccionados.estado
-    });
   }
 
   autorizacion: any = [];
@@ -67,7 +70,7 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
   ActualizarEstadoAutorizacion(form){
     let newAutorizaciones = {
       estado: form.estadoF,
-      id_vacaciones: this.data.datosSeleccionados.id_documento, 
+      id_vacaciones: this.data.datosSeleccionados.id_vacacion, 
       id_departamento: this.data.datosSeleccionados.id_departamento,
       id_empleado: this.data.id_rece_emp
     }
@@ -85,7 +88,8 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
         estado: this.autorizacion[0].realtime[0].estado, 
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
         id_vacaciones: this.autorizacion[0].realtime[0].id_vacaciones,
-        id_permiso: null
+        id_permiso: null,
+        id_hora_extra: null
       }
 
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(respo => {

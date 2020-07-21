@@ -12,10 +12,13 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.get('/', autorizacionesControlador_1.default.ListarAutorizaciones);
-        this.router.get('/info-autorizacion/:id_documento', autorizacionesControlador_1.default.ObtenerAutorizacionPorIdDocumento);
+        this.router.get('/by-permiso/:id_permiso', autorizacionesControlador_1.default.ObtenerAutorizacionByPermiso);
+        this.router.get('/by-vacacion/:id_vacacion', autorizacionesControlador_1.default.ObtenerAutorizacionByVacacion);
+        this.router.get('/by-hora-extra/:id_hora_extra', autorizacionesControlador_1.default.ObtenerAutorizacionByHoraExtra);
         this.router.post('/', autorizacionesControlador_1.default.CrearAutorizacion);
         this.router.put('/:id/estado-permiso', autorizacionesControlador_1.default.ActualizarEstadoPermiso);
         this.router.put('/:id/estado-vacacion', autorizacionesControlador_1.default.ActualizarEstadoVacacion);
+        this.router.put('/:id/estado-hora-extra', autorizacionesControlador_1.default.ActualizarEstadoHoraExtra);
     }
 }
 const AUTORIZA_DEPARTAMENTO_RUTAS = new DepartamentoRutas();

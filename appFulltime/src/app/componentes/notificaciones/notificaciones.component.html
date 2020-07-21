@@ -19,13 +19,17 @@
                     <td>{{n.create_at.split('T')[0]}}</td>
                     <td>{{n.create_at.slice(11,16)}}</td>
                     <td class="d-flex justify-content-start">
-                        <a *ngIf="n.id_vacaciones === null" [routerLink]="['/ver-permiso/', n.id_permiso]"
+                        <a *ngIf="n.id_vacaciones === null && n.id_hora_extra === null" [routerLink]="['/ver-permiso/', n.id_permiso]"
                             (click)="CambiarVistaNotificacion(n.id)">
                             permiso
                         </a>
-                        <a *ngIf="n.id_permiso === null" [routerLink]="['/ver-vacacion/', n.id_vacaciones]"
+                        <a *ngIf="n.id_permiso === null && n.id_hora_extra === null" [routerLink]="['/ver-vacacion/', n.id_vacaciones]"
                             (click)="CambiarVistaNotificacion(n.id)">
-                            vacación
+                            vacación 
+                        </a>
+                        <a *ngIf="n.id_permiso === null && n.id_vacaciones === null" [routerLink]="['/ver-hora-extra/', n.id_hora_extra]"
+                            (click)="CambiarVistaNotificacion(n.id)">
+                            hora extra
                         </a>
                         <!-- <i id="permisoSuc" class="far fa-trash-alt"  matTooltipClass="departamento-tooltip"
                             matTooltip="Eliminar este registro">
