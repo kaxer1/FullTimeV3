@@ -64,13 +64,19 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
     });
   }
 
+  resEstado: any = [];
+  idNoti: any = [];
   EditarEstadoPermiso(form){
     let datosPermiso = {
-      estado: form.estadoForm
+      estado: form.estadoForm,
+      id_permiso: this.data.permiso.id, 
+      id_departamento: this.data.depa[0].id,
+      id_empleado: this.data.permiso.id_empleado
     }
 
-    this.restP.ActualizarEstado(this.data.permiso.id, datosPermiso).subscribe(res => {
-      console.log(res);
+    this.restP.ActualizarEstado(this.data.permiso.id, datosPermiso).subscribe(respo => {
+      this.resEstado = [respo];
+      console.log(this.resEstado);
   
       var f = new Date();
       let notificacion = { 
@@ -89,7 +95,7 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
         console.log(res);
         this.NotifiRes = res;
         notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0) {
+        if (this.NotifiRes._id > 0 && this.resEstado[0].notificacion === true) {
           this.restP.sendNotiRealTime(notificacion);
         }
       });

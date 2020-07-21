@@ -100,6 +100,10 @@ mat-expansion-panel-header{ background: transparent; }
   background: rgba(228, 11, 217, 0.739);
 }
 
+.mat-expansion-panel-header.mat-expanded.selec10:hover {
+  background: rgba(112, 11, 228, 0.739);
+}
+
 .mat-expansion-panel-header.mat-expanded.selec1:focus {
   border-radius: 25px;
   background: rgba(11, 195, 228, 0.739);
@@ -154,6 +158,12 @@ mat-expansion-panel-header{ background: transparent; }
   /* background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(171,205,29,0.9108018207282913) 97%); */
 }
 
+.mat-expansion-panel-header.mat-expanded.selec10:focus {
+  border-radius: 25px;
+  background: rgba(112, 11, 228, 0.739);
+  /* background: linear-gradient(90deg, rgba(240,239,242,1) 5%, rgba(171,205,29,0.9108018207282913) 97%); */
+}
+
 .mat-list-item:hover{
   background: rgb(26, 115, 199); }
 
@@ -182,4 +192,16 @@ a.mat-menu-item.noti_menu:hover {color: rgba(17, 113, 192, 0.952); background: r
 
 .divider {
   margin-top: -7%; margin-left: -25%; width: 150%;
+}
+
+.mostrar-noti {
+  padding-top: 5px;
+  color: #000;
+  text-decoration: none;
+}
+
+.mostrar-noti:hover {
+  background-color: rgb(255, 255, 255);
+  color: rgb(31, 31, 31);
+  text-decoration: none;
 }

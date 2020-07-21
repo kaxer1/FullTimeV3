@@ -199,9 +199,15 @@ export class RegistroEnroladosComponent implements OnInit {
       });
       if (this.datosEmpleado[0].estado === 1){
         this.selec1 = true;
+        this.nuevoEnroladoForm.patchValue({
+          enroladoActivoForm: true
+        });
       }
       else {
         this.selec2 = true;
+        this.nuevoEnroladoForm.patchValue({
+          enroladoActivoForm: false
+        });
       }
     })
   }

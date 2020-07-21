@@ -52,7 +52,7 @@
                         <div class="col-md">
                             <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
                                 matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                                href="http://localhost:3000/plantillaD/documento/Catalogo Horarios.xlsx">
+                                href="http://192.168.0.192:3001/plantillaD/documento/Catalogo Horarios.xlsx">
                                 <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
                             </a>
                         </div>
@@ -75,7 +75,7 @@
                         <div class="col-md">
                             <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
                                 matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                                href="http://localhost:3000/plantillaD/documento/Detalles Horarios.xlsx">
+                                href="http://192.168.0.192:3001/plantillaD/documento/Detalles Horarios.xlsx">
                                 <span class="material-icons">cloud_download</span> Descargar Plantilla Detalles
                             </a>
                         </div>
@@ -111,11 +111,11 @@
                     <td *ngIf="horario.flexible == false">No</td>
                     <td *ngIf="horario.por_horas == true">Sí</td>
                     <td *ngIf="horario.por_horas == false">No</td>
-                    <td *ngIf="horario.doc_nombre == null"></td>
-                    <td *ngIf="horario.doc_nombre != null"> <a class="fas fa-file-alt"
+                    <td *ngIf="horario.doc_nombre == '' || horario.doc_nombre == null"></td>
+                    <td *ngIf="horario.doc_nombre != '' && horario.doc_nombre != null"> <a class="fas fa-file-alt"
                             style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
                             matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                            href="http://localhost:3000/horario/documentos/{{horario.documento}}" target="_blank">
+                            href="http://192.168.0.192:3001/horario/documentos/{{horario.documento}}" target="_blank">
                             <p>{{horario.doc_nombre}}</p>
                         </a></td>
                     <td>

@@ -8,6 +8,8 @@ p { font-size: x-small;}
 
 .fas { color:green; margin-left: 25px;}
 
+mat-form-field { padding: 10px 15px 0px 15px;}
+
 .upload {cursor: pointer;}
 
 #btnUpload {background-color: rgb(0, 76, 255); color: white; border-color: white; }

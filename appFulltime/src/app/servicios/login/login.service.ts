@@ -42,10 +42,7 @@ export class LoginService {
   }
 
   logout(){
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('rol');
-    localStorage.removeItem('empleado');
+    localStorage.clear()
     this.router.navigate(['/']);
   }
 

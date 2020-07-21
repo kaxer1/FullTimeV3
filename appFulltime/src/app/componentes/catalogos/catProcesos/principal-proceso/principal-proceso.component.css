@@ -14,7 +14,9 @@ td { padding-top: 10px; text-align: center; }
 }
 
 #iprocesoL { cursor: pointer; }
-/*.procesoL-tooltip { background-color : rgb(114, 43, 2); }*/
+
+mat-form-field { padding: 10px 15px 0px 15px;}
+
 #resulProceso { 
     font-size: 17px; 
     text-align: center; 

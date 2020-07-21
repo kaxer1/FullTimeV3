@@ -1,78 +1,99 @@
-<div class="container" *ngFor="let h of datosPlanificacion" style="padding-top: 15px;">
-    <mat-card class="example-card mat-elevation-z8">
-        <div class="barraTituloD">
-            <span>PLANIFICACIÓN</span>
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-sm">
+            <!--  <br><br><br><br> -->
+            <div class="barraTituloD">
+                <span>PLANIFICACIÓN</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+
+                <mat-card-content>
+                    <div class="container" *ngFor="let h of datosPlanificacion" style="text-align: center">
+                        <br>
+                        <div class="row">
+                            <br>
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                <br>
+                                <label id="datosF" class="col-sm col-form-label">{{h.fec_inicio.split('T')[0]}}</label>
+                            </div>
+                            <br>
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                                <br>
+                                <label id="datosF" class="col-sm col-form-label">{{h.fec_final.split('T')[0]}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+
+                <mat-card-actions *ngFor="let h of datosPlanificacion" style="text-align: center">
+                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaDetalles(h)" value="Registrar Detalle">
+                </mat-card-actions>
+            </mat-card>
         </div>
-        <mat-card-content>
-            <div class="container" style="padding-top: 15px;" style="text-align: center;">
-                <div class="row">
-                    <br>
-                    <div class="col">
-                        <label class="col-sm col-form-label">Fecha Inicio:</label>
-                        <br>
-                        <label id="datosF" class="col-sm col-form-label">{{h.fec_inicio.split('T')[0]}}</label>
-                    </div>
-                    <br>
-                    <div class="col">
-                        <label class="col-sm col-form-label">Fecha Final:</label>
-                        <br>
-                        <label id="datosF" class="col-sm col-form-label">{{h.fec_final.split('T')[0]}}</label>
+        <div class="col-md">
+            <div class="barraTituloD">
+                <span>CARGA MÚLTIPLE DETALLES</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md" style="text-align: center;">
+                            <form method="post" enctype="multipart/form-data">
+                                <input (change)="fileChangePlantilla($event)" type="file" [formControl]="archivo1Form"
+                                    id="file1"
+                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                                <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Presionar para seleccionar Plantilla con nombre Detalle Planificacion Empleado">Cargar
+                                    Detalles</label>
+                            </form>
+                            <br>
+                            <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
+                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar la plantilla"
+                                href="http://192.168.0.192:3001/plantillaD/documento/Detalle Planificacion Empleado.xlsx">
+                                <span class="material-icons">cloud_download</span> Descargar Plantilla Detalle
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <!-- <div style="text-align: right;">
-                    <i id="editarF" (click)="AbrirVentanaEditar(h)" matSuffix matTooltipClass="color-tooltip"
-                        matTooltipPosition="right" matTooltip="Modificar datos de este registro" class="fas fa-edit">
-                        <p>Editar</p>
-                    </i>
-                </div>-->
-            </div>
-            <br>
-            <div class="container" style="padding-top: 15px;" style="text-align: center;">
-                <div class="row">
-                    <br>
-                    <div class="col">
-                    </div>
-                    <br>
-                    <div class="col">
-                        <input type="submit" class="btn btn-sm" (click)="AbrirVentanaDetalles(h)"
-                            value="Registrar Detalle">
-                    </div>
-                    <br>
-                    <div class="col">
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="container table-responsive" style="padding-bottom: 50px;">
-                <div id="resulPlanificacion">DETALLES DE PLANIFICACIÓN</div>
-                <table class="mat-elevation-z8 table table-hover table-sm">
-                    <thead class="thead-light">
-                        <tr style="text-align: center;">
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Tipo de Día</th>
-                            <th scope="col">Horario</th>
-                            <th scope="col">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let dh of datosDetalle | paginate:tamanio_pagina:numero_pagina">
-                            <td>{{dh.fecha.split('T')[0]}}</td>
-                            <td>{{dh.tipo_dia}}</td>
-                            <td>{{dh.horarios}}</td>
-                            <td>
-                               <!-- <i id="editarI" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="container table-responsive" style="padding-bottom: 50px;">
+    <div id="resulPlanificacion">DETALLES DE PLANIFICACIÓN</div>
+    <mat-card class="mat-elevation-z8">
+        <table class="mat-elevation-z8 table table-hover table-sm">
+            <thead class="thead-light">
+                <tr style="text-align: center;">
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Tipo de Día</th>
+                    <th scope="col">Horario</th>
+                    <th scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dh of datosDetalle | paginate:tamanio_pagina:numero_pagina">
+                    <td>{{dh.fecha.split('T')[0]}}</td>
+                    <td>{{dh.tipo_dia}}</td>
+                    <td>{{dh.horarios}}</td>
+                    <td>
+                        <!-- <i id="editarI" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                     matTooltip="Modificar datos de este registro" class="fas fa-edit">
                                     <p>Editar</p>
                                 </i>-->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <mat-paginator [length]="datosDetalle.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-                </mat-paginator>
-            </div>
-         <!--   <input type="submit" class="btn btn-sm" [routerLink]="['/horario/']" value="Ir a la Lista de Horarios">-->
-        </mat-card-content>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="datosDetalle.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
     </mat-card>
 </div>
+<!--   <input type="submit" class="btn btn-sm" [routerLink]="['/horario/']" value="Ir a la Lista de Horarios">-->

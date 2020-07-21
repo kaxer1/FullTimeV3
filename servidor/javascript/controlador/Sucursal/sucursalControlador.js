@@ -18,7 +18,7 @@ const database_1 = __importDefault(require("../../database"));
 class SucursalControlador {
     ListarSucursales(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const SUCURSAL = yield database_1.default.query('SELECT *FROM NombreCiudadEmpresa');
+            const SUCURSAL = yield database_1.default.query('SELECT * FROM NombreCiudadEmpresa ORDER BY nomempresa');
             if (SUCURSAL.rowCount > 0) {
                 return res.jsonp(SUCURSAL.rows);
             }

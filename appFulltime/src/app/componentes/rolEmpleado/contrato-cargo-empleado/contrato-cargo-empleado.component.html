@@ -66,7 +66,134 @@
                                 <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
                             </div>
                         </div>
-                        <mat-divider></mat-divider>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Contrato:</label>
+                            </div>
+                            <div class="col">
+                                <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
+                                    style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px" matSuffix
+                                    matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
+                                    href="http://192.168.0.192:3001/contratoEmpleado/documentos/{{ce.documento}}"
+                                    target="_blank">
+                                    <p>{{ce.doc_nombre}}</p>
+                                </a>
+                                <label id="contratoLaboral" class="col col-form-label"
+                                    *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''">Contrato Laboral no
+                                    cargado</label>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <br>
+            <mat-card class="mat-elevation-z8">
+                <div class="barraTitulo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="text-align: center;">
+                                <h5>Contratos Anteriores</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px; text-align: center;">
+                        <form [formGroup]="contratoForm">
+                            <mat-form-field>
+                                <mat-label>Período del Contrato</mat-label>
+                                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
+                                    matTooltipPosition="right" matTooltip="Lista de contratos del empleado">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="fechaContrato">
+                                    <mat-option *ngFor="let c of contratoBuscado" [value]="c.id"
+                                        (click)="obtenerContratoSeleccionado(contratoForm.value)">
+                                        {{c.fec_ingreso.split("T")[0]}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                    <div class="container" *ngFor="let ce of contratoSeleccionado" style="padding-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Código:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{ce.id}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Regimen:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{ce.descripcion}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{ce.fec_ingreso.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Salida:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label" *ngIf="ce.fec_salida === null ">Sin
+                                    fecha</label>
+                                <label class="col col-form-label"
+                                    *ngIf="ce.fec_salida != null ">{{ce.fec_salida.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Controla Asistencia:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label" *ngIf="ce.asis_controla == true">Si</label>
+                                <label class="col col-form-label" *ngIf="ce.asis_controla == false">No</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Controla Vacaciones:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label" *ngIf="ce.vaca_controla == true">Si</label>
+                                <label class="col col-form-label" *ngIf="ce.vaca_controla == false">No</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Contrato:</label>
+                            </div>
+                            <div class="col">
+                                <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
+                                    style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                                    matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
+                                    href="http://192.168.0.192:3001/contratoEmpleado/documentos/{{ce.documento}}"
+                                    target="_blank">
+                                    <p>{{ce.doc_nombre}}</p>
+                                </a>
+                                <label id="contratoLaboral" class="col col-form-label"
+                                    *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''">Contrato Laboral no
+                                    cargado</label>
+                            </div>
+                        </div>
+                        <br>
+                        <div style="text-align: right;">
+                            <a mat-button type="submit" (click)="LimpiarContrato()">
+                                <i class="fa fa-times-circle" matTooltipPosition="right" id="cerrar"
+                                    matTooltip="Cerrar Registro">
+                                    <p>Cerrar</p>
+                                </i>
+                            </a>
+                        </div>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -84,7 +211,7 @@
                     </div>
                 </div>
                 <mat-card-content>
-                    <div class="container" *ngFor="let c of cargosTotalesEmpleado" style="padding-top: 15px;">
+                    <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
                                 <label class="col-sm col-form-label">Código:</label>
@@ -149,7 +276,103 @@
                                 <label class="col col-form-label">{{c.hora_trabaja}}</label>
                             </div>
                         </div>
-                        <mat-divider></mat-divider>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <br>
+            <mat-card class="mat-elevation-z8">
+                <div class="barraTitulo">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col" style="text-align: center;">
+                                <h5>Cargos Anteriores</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <mat-card-content>
+                    <div class="container" style="padding-top: 15px; text-align: center;">
+                        <form [formGroup]="cargoForm">
+                            <mat-form-field>
+                                <mat-label>Período del Cargo</mat-label>
+                                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Seleccionar contrato para obtener la lista de sus respectivos cargos">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="fechaICargo">
+                                    <mat-option *ngFor="let c of listaCargos" [value]="c.id"
+                                        (click)="obtenerCargoSeleccionadoEmpleado(cargoForm.value)">
+                                        {{c.fec_inicio.split("T")[0]}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                    <div class="container" *ngFor="let c of cargoSeleccionado" style="padding-top: 15px;">
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Código:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.id}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Cargo:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.cargo}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Sucursal:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.sucursal}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Departamento:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.departamento}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Sueldo:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.sueldo}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Horas de Trabajo:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.hora_trabaja}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.fec_inicio.split("T")[0]}}</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label class="col-sm col-form-label">Fecha Final:</label>
+                            </div>
+                            <div class="col">
+                                <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
+                            </div>
+                        </div>
                     </div>
                 </mat-card-content>
             </mat-card>

@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { EditarEmpleadoPermisoComponent } from '../editar-empleado-permiso/editar-empleado-permiso.component';
 import { AutorizacionesComponent } from '../../autorizaciones/autorizaciones/autorizaciones.component';
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
@@ -61,16 +61,15 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   ngOnInit(): void {
     this.BuscarDatos();
-    this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerSolicitud(this.id_permiso);
-    this.ObtenerAutorizacion(this.id_permiso);
   }
 
   BuscarDatos() {
+    this.InfoPermiso = [];
+    this.dep = [];
     this.restP.obtenerUnPermisoEmleado(parseInt(this.id_permiso)).subscribe(res => {
       this.InfoPermiso = res;
       console.log(this.InfoPermiso)
-      this.restA.getUnaAutorizacionPorPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
+      this.restA.getUnaAutorizacionByPermisoRest(this.InfoPermiso[0].id).subscribe(res1 => {
         this.autorizacion = res1;
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
@@ -87,6 +86,10 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         this.HabilitarAutorizacion = false;
       });
     });
+
+    this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerSolicitud(this.id_permiso);
+    this.ObtenerAutorizacion(this.id_permiso);
   }
 
   // metodo para ver la informacion del empleado 
@@ -110,32 +113,36 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   // metodo para ver la informacion de la autorización 
   ObtenerAutorizacion(id: any) {
     this.datosAutorizacion = [];
-    this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
+    this.restP.BuscarDatosAutorizacion(id, this.idEmpleado).subscribe(data => {
       this.datosAutorizacion = data;
-      if(this.datosAutorizacion[0].estado_auto === 1){
+      if (this.datosAutorizacion[0].estado_auto === 1) {
         this.datosAutorizacion[0].estado_auto = 'Pendiente';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 2) { 
+      else if (this.datosAutorizacion[0].estado_auto === 2) {
         this.datosAutorizacion[0].estado_auto = 'Pre-autorizado';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+      else if (this.datosAutorizacion[0].estado_auto === 3) {
         this.datosAutorizacion[0].estado_auto = 'Autorizado';
       }
-      else if (this.datosAutorizacion[0].estado_auto === 3) { 
+      else if (this.datosAutorizacion[0].estado_auto === 4) {
         this.datosAutorizacion[0].estado_auto = 'Negado';
       }
+      console.log('autorizacion', this.datosAutorizacion);
     })
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     this.vistaFlotante.open(EditarEmpleadoPermisoComponent, { width: '300px', data: { permiso: datosSeleccionados, depa: this.dep } })
-    .afterClosed().subscribe(item => {
-      this.BuscarDatos();
-    });
+      .afterClosed().subscribe(item => {
+        this.BuscarDatos();
+      });
   }
 
   AbrirAutorizaciones(datosSeleccionados: any): void {
-    this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).disableClose = true;
+    this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.BuscarDatos();
+      this.HabilitarAutorizacion = true;
+    });
   }
 
   AbrirVentanaEditarAutorizacion(datosSeleccionados: any): void {
@@ -162,7 +169,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   }
 
   getDocumentDefinicion() {
-
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
@@ -212,7 +218,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           alignment: 'center',
           margin: [0, 0, 0, 20]
         },
-        // { width: 100, text: 'INFO', /*background: '#6495ED',*/ alignment: 'center', fontSize: 9, decorationColor: '#6495ED' },
         this.presentarDataPDFPermiso(),
       ],
       styles: {
@@ -234,16 +239,12 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED',
-          /* fillColor: '#505761',
-           color: 'white'*/
         },
         tableHeaderA: {
           fontSize: 10,
           bold: true,
           alignment: 'center',
           fillColor: '#6495ED',
-          /*fillColor: '#505761',
-          color: 'white'*/
           margin: [20, 0, 20, 0],
 
         },
@@ -268,12 +269,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   presentarDataPDFPermiso() {
     return {
-      /*   columns: [
-           { width: '*', text: '' },
-           {
-             width: 'auto',*/
-      // layout: 'noBorders',
-      //layout: 'lightHorizontalLines',
       table: {
         widths: ['*'],
         body: [
@@ -330,7 +325,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           [
             {
               columns: [
-                //'Fecha: ',
                 {
                   text: [
                     {
@@ -413,7 +407,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
                         widths: ['auto'],
                         body: [
                           [
-                            { text: (this.datosAutorizacion[0].estado_auto).toUpperCase() + ' POR', style: 'tableHeaderA' },
+                            { text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },
                           ],
                           [
                             { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
@@ -457,26 +451,14 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         ]
       },
       layout: {
-        //hLineWidth: function(i, node) {
-        //  return (i === 0 || i === node.table.body.length) ? 2 : 1;
-        //},
-        //vLineWidth: function(i, node) {
-        //  return (i === 0 || i === node.table.widths.length) ? 2 : 1;
-        //},
         hLineColor: function (i, node) {
           return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
         },
-        /* vLineColor: function (i, node) {
-           return (i === 0 || i === node.table.widths.length) ? 'red' : 'blue';
-         },*/
         paddingLeft: function (i, node) { return 40; },
         paddingRight: function (i, node) { return 40; },
         paddingTop: function (i, node) { return 10; },
         paddingBottom: function (i, node) { return 10; }
       }
-      /*    },
-          { width: '*', text: '' },
-        ]*/
     };
   }
 

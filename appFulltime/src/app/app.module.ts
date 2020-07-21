@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { ScrollingModule } from '@angular/cdk/scrolling'
 
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
@@ -115,12 +116,22 @@ import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacac
 import { EstadoVacacionesComponent } from './componentes/vacaciones/estado-vacaciones/estado-vacaciones.component';
 import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-vacacion.component';
 import { EditarEstadoVacacionAutoriacionComponent } from './componentes/autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
+import { RealtimeNotificacionComponent } from './componentes/notificaciones/realtime-notificacion/realtime-notificacion.component';
+import { SubirDocumentoComponent } from './componentes/documentos/subir-documento/subir-documento.component';
+import { EditarDocumentoComponent } from './componentes/documentos/editar-documento/editar-documento.component';
+import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
+import { SettingsComponent } from './componentes/settings/settings.component';
+import { VacacionAutorizacionesComponent } from './componentes/autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
+import { SucListaNotiComponent } from './componentes/catalogos/catNotificaciones/suc-lista-noti/suc-lista-noti.component';
+
+
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
 import { PlanificacionHorarioEmpleadoComponent } from './componentes/rolEmpleado/planificacion-horario-empleado/planificacion-horario-empleado.component';
 import { DetalleHorarioEmpleadoComponent } from './componentes/rolEmpleado/detalle-horario-empleado/detalle-horario-empleado.component';
 import { HorariosEmpleadoComponent } from './componentes/rolEmpleado/horarios-empleado/horarios-empleado.component';
 import { VacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/vacaciones-empleado.component';
 import { SolicitarPermisosEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/solicitar-permisos-empleado.component';
+import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
 
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -176,6 +187,7 @@ import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-
 import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
 import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
 import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
+import { FiltrarNombreDocuPipe } from './filtros/documentos/filtrar-nombre-docu.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 
@@ -216,6 +228,13 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} };
+import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
+import { VerPedidoHoraExtraComponent } from './componentes/horasExtras/ver-pedido-hora-extra/ver-pedido-hora-extra.component';
+import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/hora-extra-empleado.component';
+import { HoraExtraAutorizacionesComponent } from './componentes/autorizaciones/hora-extra-autorizaciones/hora-extra-autorizaciones.component';
+import { EditarEstadoHoraExtraAutorizacionComponent } from './componentes/autorizaciones/editar-estado-hora-extra-autorizacion/editar-estado-hora-extra-autorizacion.component';
+import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-extra/estado-hora-extra.component';
+
 
 @NgModule({
   declarations: [
@@ -362,6 +381,21 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     HorariosEmpleadoComponent,
     VacacionesEmpleadoComponent,
     SolicitarPermisosEmpleadoComponent,
+    RealtimeNotificacionComponent,
+    SubirDocumentoComponent,
+    EditarDocumentoComponent,
+    VerDocumentosComponent,
+    VerDocumentacionComponent,
+    FiltrarNombreDocuPipe,
+    SettingsComponent,
+    VacacionAutorizacionesComponent,
+    SucListaNotiComponent,
+    ListaPedidoHoraExtraComponent,
+    VerPedidoHoraExtraComponent,
+    HoraExtraEmpleadoComponent,
+    HoraExtraAutorizacionesComponent,
+    EditarEstadoHoraExtraAutorizacionComponent,
+    EstadoHoraExtraComponent,
   ],
 
   imports: [
@@ -408,7 +442,8 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     MatDatepickerModule, 
     MatNativeDateModule,
     MatTabsModule,
-    MatMenuModule
+    MatMenuModule,
+    ScrollingModule
   ],
   providers: [
     AuthGuard,

@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -35,6 +35,8 @@ export class RegistroContratoComponent implements OnInit {
   fechaSalidaF = new FormControl('');
   controlVacacionesF = new FormControl('', [Validators.required]);
   controlAsistenciaF = new FormControl('', [Validators.required]);
+  nombreContratoF = new FormControl('');
+  archivoForm = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public ContratoForm = new FormGroup({
@@ -43,8 +45,8 @@ export class RegistroContratoComponent implements OnInit {
     fechaIngresoForm: this.fechaIngresoF,
     fechaSalidaForm: this.fechaSalidaF,
     controlVacacionesForm: this.controlVacacionesF,
-    controlAsistenciaForm: this.controlAsistenciaF
-
+    controlAsistenciaForm: this.controlAsistenciaF,
+    nombreContratoForm: this.nombreContratoF
   });
 
   constructor(
@@ -69,20 +71,20 @@ export class RegistroContratoComponent implements OnInit {
     })
   }
 
-    // metodo para ver la informacion del empleado 
-    ObtenerEmpleados(idemploy: any) {
-      this.empleados = [];
-      this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
-        this.empleados = data;
-        console.log(this.empleados)
-        this.ContratoForm.patchValue({
-          idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
-        })
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleados = [];
+    this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleados = data;
+      console.log(this.empleados)
+      this.ContratoForm.patchValue({
+        idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
       })
-    }
+    })
+  }
 
   ValidarDatosContrato(form) {
-    if (form.fechaSalidaForm === '') {
+    if (form.fechaSalidaForm === '' || form.fechaSalidaForm === null) {
       form.fechaSalidaForm = null;
       this.InsertarContrato(form);
     } else {
@@ -103,19 +105,74 @@ export class RegistroContratoComponent implements OnInit {
       vaca_controla: form.controlVacacionesForm,
       asis_controla: form.controlAsistenciaForm,
       id_regimen: form.idRegimenForm,
+      doc_nombre: form.nombreContratoForm
     };
-    this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Contrato registrado')
-      this.CerrarVentanaRegistroContrato();
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+    if (form.nombreContratoForm === '') {
+      this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.CerrarVentanaRegistroContrato();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+      });
+    }
+    else {
+      this.GuardarDatos(datosContrato);
+    }
+
+  }
+
+  nameFile: string;
+  archivoSubido: Array<File>;
+
+  fileChange(element) {
+    this.archivoSubido = element.target.files;
+    if (this.archivoSubido.length != 0) {
+      const name = this.archivoSubido[0].name;
+      console.log(this.archivoSubido[0].name);
+      this.ContratoForm.patchValue({ nombreContratoForm: name });
+    }
+  }
+
+  CargarContrato(id: number) {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubido.length; i++) {
+      formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
+    }
+    this.rest.SubirContrato(formData, id).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Contrato subido con exito');
+      this.archivoForm.reset();
+      this.nameFile = '';
     });
+  }
+
+  idContratoRegistrado: any;
+  GuardarDatos(datos) {
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.rest.CrearContratoEmpleado(datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.idContratoRegistrado = response;
+        console.log('ver id', response);
+        this.CargarContrato(this.idContratoRegistrado.id);
+        this.CerrarVentanaRegistroContrato();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+      });
+    }
+    else {
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+    }
   }
 
 
 
   LimpiarCampos() {
     this.ContratoForm.reset();
+  }
+
+  LimpiarNombreArchivo() {
+    this.ContratoForm.patchValue({
+      nombreContratoForm: '',
+    });
   }
 
   CerrarVentanaRegistroContrato() {
