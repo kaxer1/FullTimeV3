@@ -1,4 +1,5 @@
 require('dotenv').config();
+const nodemailer = require("nodemailer");
 import express, { Application } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -174,3 +175,127 @@ class Servidor {
 
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
+
+import pool from './database';
+
+// metodo para enviar los cumpleaños a una hora determinada, verificando a cada hora hasta que sean las 12 pm y se envie el correo
+setInterval(async () => {
+
+    const path = __dirname.split("javascript")[0]
+    console.log(path);
+
+    const date = new Date();
+    console.log(date.toLocaleDateString());
+    console.log(date.toLocaleTimeString());
+    const hora = date.getHours();
+
+    if (hora === 12) {
+        const felizCumple = await pool.query('SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE fec_nacimiento = $1', [date]);
+        if (felizCumple.rowCount > 0) {
+            const email = process.env.EMAIL;
+            const pass = process.env.PASSWORD;
+            const organizacion = process.env.EMPRESA
+
+            let smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: email,
+                    pass: pass
+                }
+            });
+            // Enviar mail a todos los que nacieron en la fecha seleccionada
+            felizCumple.rows.forEach(obj => {
+
+                let data = {
+                    to: obj.correo,
+                    from: email,
+                    subject: 'Felicidades',
+                    html: `
+                    <h2> <b> ${organizacion} </b> </h2>
+                    <h3 style="text-align-center"><b>¡Feliz Cumpleaños ${obj.nombre.split(" ")[0]}!</b></h3>
+                    <p>Sabemos que es un dia especial para ti <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> 
+                    , esperamos que la pases muy bien en compañia de tus seres queridos.
+                        </p>
+                    <img src="cid:unique@kreata.ee"/>`,
+                    attachments: [{
+                        // filename: 'birthday1.jpg',
+                        path: `${path}/cumpleanios/birthday1.jpg`,
+                        cid: 'unique@kreata.ee' //same cid value as in the html img src
+                    }]
+                };
+                console.log(data)
+
+                smtpTransport.sendMail(data, async (error: any, info: any) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            })
+        }
+    }
+}, 3600000);
+
+function sumaDias(fecha: Date, dias: number) {
+    fecha.setDate(fecha.getDate() + dias);
+    return fecha;
+}
+
+// Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.
+setInterval(async () => {
+
+    const path = __dirname.split("javascript")[0]
+    console.log(path);
+
+    const date = new Date();
+    console.log(date.toLocaleDateString());
+    console.log(date.toLocaleTimeString());
+    const hora = date.getHours();
+    console.log(hora);
+
+    const diaIncrementado = sumaDias(date, 5).toLocaleDateString().split("T")[0];
+    console.log(diaIncrementado);
+
+    if (hora === 0) {
+        const avisoVacacion = await pool.query('SELECT pv.fec_inicio, pv.fec_final, e.nombre, e.apellido, e.correo FROM peri_vacaciones AS pv, empl_contratos AS ec, empleados AS e WHERE pv.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND pv.fec_inicio = $1', [diaIncrementado]);
+        console.log(avisoVacacion.rows);
+
+        if (avisoVacacion.rowCount > 0) {
+            const email = process.env.EMAIL;
+            const pass = process.env.PASSWORD;
+
+            let smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: email,
+                    pass: pass
+                }
+            });
+            // Enviar mail a todos los que nacieron en la fecha seleccionada
+            avisoVacacion.rows.forEach(obj => {
+
+                let data = {
+                    to: obj.correo,
+                    from: email,
+                    subject: 'Aviso toma de vacaciones',
+                    html: `
+                    <h2> <b> ¡Tienes 5 días para tomar vacaciones! </b> </h2>
+                    <p> <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> se le da un aviso de que en 5 días, usted debe
+                    tomar vacaciones como esta prestablecido desde el dia <b> ${obj.fec_inicio.toLocaleDateString().split("T")[0]} </b>
+                    hasta el dia <b>${obj.fec_final.toLocaleDateString().split("T")[0]}</b>.</p>
+                    `
+                };
+                console.log(data)
+
+                smtpTransport.sendMail(data, async (error: any, info: any) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            })
+        }
+    }
+}, 3600000); 
