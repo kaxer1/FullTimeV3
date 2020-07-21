@@ -18,7 +18,8 @@
                                 <label class="col-sm col-form-label">Empleado:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{h.nombre.split(" ")[0]}} {{h.apellido.split(" ")[0]}}</label>
+                                <label class="col col-form-label">{{h.nombre.split(" ")[0]}}
+                                    {{h.apellido.split(" ")[0]}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -58,7 +59,8 @@
                                 <label class="col-sm col-form-label">Fecha Solicita:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}} {{h.fec_solicita.split("T")[1].split(".")[0]}}</label>
+                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}
+                                    {{h.fec_solicita.split("T")[1].split(".")[0]}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -66,7 +68,8 @@
                                 <label class="col-sm col-form-label">Fecha Inicio:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}} {{h.fec_inicio.split("T")[1].split(".")[0]}}</label>
+                                <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}
+                                    {{h.fec_inicio.split("T")[1].split(".")[0]}}</label>
                             </div>
                         </div>
                         <div class="row">
@@ -74,10 +77,11 @@
                                 <label class="col-sm col-form-label">Fecha Final:</label>
                             </div>
                             <div class="col">
-                                <label class="col col-form-label">{{h.fec_final.split("T")[0]}} {{h.fec_final.split("T")[1].split(".")[0]}}</label>
+                                <label class="col col-form-label">{{h.fec_final.split("T")[0]}}
+                                    {{h.fec_final.split("T")[1].split(".")[0]}}</label>
                             </div>
                         </div>
-                       
+
                         <!-- <div class="row">
                             <div class="col">
                                 <label class="col-sm col-form-label">Certificado:</label>
@@ -91,7 +95,7 @@
                                 </a>
                             </div>
                         </div> -->
-                        
+
                         <div class="col" style="text-align: right;">
                             <i id="iconos" *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle"
                                 style="color:rgb(58, 90, 231);" (click)="AbrirAutorizaciones(h)"
@@ -154,19 +158,19 @@
                                 <label class="col col-form-label">{{departamento}}</label>
                             </div>
                         </div>
-                        <!-- <div class="row">
+                        <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Solicitud de Permiso:</label>
+                                <label class="col-sm col-form-label">Solicitud de Hora Extra:</label>
                             </div>
                             <div class="col">
                                 <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
-                                    style="color:red;" matSuffix matTooltipPosition="right"
+                                    style="color:red; margin-left: 20px; text-align: center;" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip"
                                     matTooltip="Descargar Solicitud de Permiso en formato PDF">
-                                    <p>Archivo PDF</p>
+                                    <p>Hora Extra</p>
                                 </i>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="row" style="margin-top: 5px;">
                             <div class="col">
                             </div>

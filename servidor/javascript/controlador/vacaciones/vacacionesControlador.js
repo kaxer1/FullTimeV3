@@ -212,7 +212,31 @@ class VacacionesControlador {
                     }
                 });
             });
-            res.json({ message: 'Estado de vacacion actualizado exitosamente' });
+        });
+    }
+    ObtenerSolicitudVacaciones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_emple_vacacion;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaDatoSolicitudVacacion WHERE id_emple_vacacion = $1', [id]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ObtenerAutorizacionVacaciones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_vacaciones;
+            const id_empleado = req.params.id_empleado;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizacionesVacaciones WHERE id_vacaciones = $1 AND id_empleado = $2', [id, id_empleado]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

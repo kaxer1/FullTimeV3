@@ -61,8 +61,8 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/datosSolicitud/${id_emple_permiso}`);
   }
 
-  BuscarDatosAutorizacion(id_permiso: number) {
-    return this.http.get(`${this.API_URL}/empleadoPermiso/datosAutorizacion/${id_permiso}`);
+  BuscarDatosAutorizacion(id_permiso: number, id_empleado: number) {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/datosAutorizacion/${id_permiso}/${id_empleado}`);
   }
 
 }

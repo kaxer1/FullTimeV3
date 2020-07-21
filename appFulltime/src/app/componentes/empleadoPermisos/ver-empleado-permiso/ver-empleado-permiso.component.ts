@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { EditarEmpleadoPermisoComponent } from '../editar-empleado-permiso/editar-empleado-permiso.component';
 import { AutorizacionesComponent } from '../../autorizaciones/autorizaciones/autorizaciones.component';
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
@@ -113,7 +113,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   // metodo para ver la informacion de la autorización 
   ObtenerAutorizacion(id: any) {
     this.datosAutorizacion = [];
-    this.restP.BuscarDatosAutorizacion(id).subscribe(data => {
+    this.restP.BuscarDatosAutorizacion(id, this.idEmpleado).subscribe(data => {
       this.datosAutorizacion = data;
       if (this.datosAutorizacion[0].estado_auto === 1) {
         this.datosAutorizacion[0].estado_auto = 'Pendiente';

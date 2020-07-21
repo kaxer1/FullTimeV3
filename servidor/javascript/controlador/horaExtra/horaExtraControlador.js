@@ -123,6 +123,18 @@ class HorasExtrasPedidasControlador {
             });
         });
     }
+    ObtenerSolicitudHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_emple_hora;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaSolicitudHoraExtra WHERE id_emple_hora = $1', [id]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ActualizarEstado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
@@ -211,6 +223,19 @@ class HorasExtrasPedidasControlador {
                     }
                 });
             });
+        });
+    }
+    ObtenerAutorizacionHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_hora;
+            const id_empleado = req.params.id_empleado;
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizacionesHorasE WHERE id_hora = $1 AND id_empleado = $2', [id, id_empleado]);
+            if (SOLICITUD.rowCount > 0) {
+                return res.json(SOLICITUD.rows);
+            }
+            else {
+                return res.status(404).json({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

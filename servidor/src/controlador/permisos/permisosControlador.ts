@@ -239,7 +239,8 @@ class PermisosControlador {
 
     public async ObtenerDatosAutorizacion(req: Request, res: Response) {
         const id = req.params.id_permiso;
-        const SOLICITUD = await pool.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1', [id]);
+        const id_empleado = req.params.id_empleado;
+        const SOLICITUD = await pool.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1 AND id_empleado = $2', [id, id_empleado]);
         if (SOLICITUD.rowCount > 0) {
             return res.json(SOLICITUD.rows)
         }

@@ -507,7 +507,7 @@
                                     </div>
                                     <div class="col">
                                         <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
-                                            style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                                            style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px" matSuffix
                                             matTooltipPosition="right"
                                             matTooltip="Dar click para descargar contrato de trabajo"
                                             href="http://localhost:3000/contratoEmpleado/documentos/{{ce.documento}}"
@@ -1388,11 +1388,14 @@
                                         <label class="col-sm col-form-label">Documento:</label>
                                     </div>
                                     <div class="col">
-                                        <a id="doc"
+                                        <a id="doc" class="fas fa-file-alt"
+                                            style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px" matSuffix
+                                            matTooltipPosition="right"
+                                            matTooltip="Dar click para descargar contrato de trabajo"
                                             href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
-                                            target="_blank" matSuffix matTooltipPosition="right"
-                                            matTooltipClass="departamento-tooltip"
-                                            matTooltip="Dar click para descargar o ver documento">{{pt.docu_nombre}}</a>
+                                            target="_blank">
+                                            <p>{{pt.docu_nombre}}</p>
+                                        </a>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>

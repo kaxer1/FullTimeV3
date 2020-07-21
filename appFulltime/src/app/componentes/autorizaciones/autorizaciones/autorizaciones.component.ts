@@ -103,7 +103,6 @@ export class AutorizacionesComponent implements OnInit {
       console.log(res);
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
-        idDocumentoF: this.data.id,
         ordenF: 1,
         estadoF: 1,
         idDepartamentoF: this.departamentos[0].id_departamento

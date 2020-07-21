@@ -35,8 +35,17 @@ export class PedHoraExtraService {
     return this.http.post(`${this.API_URL}/horas-extras-pedidas`, datos);
   }
 
+
+  BuscarDatosSolicitud(id_emple_hora: number) {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/datosSolicitud/${id_emple_hora}`);
+  }
+  
   ActualizarEstado(id: number, datos: any) {
     return this.http.put(`${this.API_URL}/horas-extras-pedidas/${id}/estado`, datos);
+  }
+
+  BuscarDatosAutorizacion(id_hora: number, id_empleado: number) {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/datosAutorizacion/${id_hora}/${id_empleado}`);
   }
 
 }

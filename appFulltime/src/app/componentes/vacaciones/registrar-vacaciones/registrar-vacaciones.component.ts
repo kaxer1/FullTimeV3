@@ -240,7 +240,7 @@ export class RegistrarVacacionesComponent implements OnInit {
       fec_final: form.fecFinalForm,
       fec_ingreso: form.fechaIngresoForm,
       estado: form.estadoForm,
-      dia_libre: form.diaLibreForm,
+      dia_libre: form.diaLibreForm + form.diasTForm,
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
