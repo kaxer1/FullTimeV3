@@ -17,7 +17,7 @@ const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT * FROM hora_extr_pedidos');
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, h.fec_solicita, h.descripcion, h.num_hora, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empleados AS e WHERE h.id_usua_solicita = e.id');
             if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
                 return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
             }

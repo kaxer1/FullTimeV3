@@ -186,6 +186,7 @@ export class VerVacacionComponent implements OnInit {
   AbrirAutorizaciones(datosSeleccionados: any): void {
     this.vistaFlotante.open(VacacionAutorizacionesComponent, { width: '350px', data: datosSeleccionados }).afterClosed().subscribe(item => {
       this.BuscarDatos();
+      this.HabilitarAutorizacion = true;
     });
   }
 

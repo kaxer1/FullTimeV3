@@ -141,6 +141,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   AbrirAutorizaciones(datosSeleccionados: any): void {
     this.vistaFlotante.open(AutorizacionesComponent, { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(items => {
       this.BuscarDatos();
+      this.HabilitarAutorizacion = true;
     });
   }
 
