@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const fs_1 = __importDefault(require("fs"));
 const nodemailer = require("nodemailer");
 class PermisosControlador {
     ListarPermisos(req, res) {
@@ -266,6 +267,17 @@ class PermisosControlador {
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
             }
+        });
+    }
+    ElimnarPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_permiso, doc } = req.params;
+            // const dep = await pool.query('')
+            yield database_1.default.query('DELETE FROM permisos WHERE id = $1', [id_permiso]);
+            let filePath = `servidor\\docRespaldosPermisos\\${doc}`;
+            let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+            fs_1.default.unlinkSync(direccionCompleta);
+            res.jsonp({ message: 'registro eliminado' });
         });
     }
 }

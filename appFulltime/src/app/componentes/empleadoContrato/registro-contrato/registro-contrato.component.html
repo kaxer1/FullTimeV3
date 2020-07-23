@@ -4,13 +4,13 @@
         <h5 mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Contrato del Empleado</h5>
     </div>
     <!-- Formulario Completo -->
-    <form [formGroup]="ContratoForm">
-        <mat-card-content>
-            <div class="container" style="text-align: center">
-                <div class="nota">
-                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                        Guardar.</span>
-                </div>
+    <mat-card-content>
+        <div class="container" style="text-align: center">
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+            </div>
+            <span class="nota">Desea subir un archivo (opcional) </span><mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
+            <form [formGroup]="ContratoForm">
                 <div class="row">
                     <div class="col">
                         <mat-form-field>
@@ -92,7 +92,7 @@
                             </mat-radio-group>
                         </section>
                     </div>
-                    <div class="col">
+                    <div class="col" *ngIf="isChecked">
                         <form method="post" enctype="multipart/form-data">
                             <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
                             <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
@@ -102,11 +102,15 @@
                         </form>
                         <input type="text" readonly id="nomContrato" placeholder="Ningún archivo seleccionado"
                             class="form-control" style="width: 210px;" [formControl]="nombreContratoF">
+                        <br><br>
+                        <div *ngIf="HabilitarBtn">
+                            <button class="btn btn-sm" type="submit" (click)="deseleccionarArchivo()" >Deseleccionar Documento</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </mat-card-content>
-    </form>
+            </form>
+        </div>
+    </mat-card-content>
     <div style="text-align: center">
         <mat-card-actions style="text-align: center">
             <input type="submit" class="btn btn-sm" [disabled]="!ContratoForm.valid"
