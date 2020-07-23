@@ -82,6 +82,13 @@ class UsuarioControlador {
             res.jsonp({ message: 'Usuario Guardado' });
         });
     }
+    ActualizarUsuario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { usuario, contrasena, id_rol, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
+            res.jsonp({ message: 'Usuario Actualizado' });
+        });
+    }
 }
 exports.USUARIO_CONTROLADOR = new UsuarioControlador();
 exports.default = exports.USUARIO_CONTROLADOR;

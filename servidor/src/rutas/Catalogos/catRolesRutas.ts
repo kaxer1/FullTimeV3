@@ -17,6 +17,7 @@ class PruebasRutas {
         // this.router.delete('/:id', pruebaControlador.delete);
         this.router.post('/xmlDownload/', ROLES_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', ROLES_CONTROLADOR.downloadXML);
+        this.router.delete('/eliminar/:id', ROLES_CONTROLADOR.EliminarRol);
     }
 }
 

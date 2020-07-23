@@ -17,6 +17,7 @@ class UsuarioRutas {
         this.router.get('/datos/:id_empleado', USUARIO_CONTROLADOR.ObtenerDatosUsuario);
         this.router.put('/', USUARIO_CONTROLADOR.CambiarPasswordUsuario);
         this.router.get('/noEnrolados', USUARIO_CONTROLADOR.ListarUsuriosNoEnrolados);
+        this.router.put('/actualizarDatos', USUARIO_CONTROLADOR.ActualizarUsuario);
     }
 }
 

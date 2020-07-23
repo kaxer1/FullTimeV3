@@ -11,6 +11,7 @@ class EmpleadoControlador {
   public async list(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
     res.jsonp(empleado.rows);
+   
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {

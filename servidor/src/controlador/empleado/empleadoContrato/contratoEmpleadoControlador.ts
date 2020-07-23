@@ -39,7 +39,10 @@ class ContratoEmpleadoControlador {
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+        
     }
 
     public async EncontrarIdContratoActual(req: Request, res: Response): Promise<any> {
@@ -50,11 +53,11 @@ class ContratoEmpleadoControlador {
                 return res.jsonp(CONTRATO.rows)
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         }
         else {
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
         }
     }
 
@@ -64,7 +67,10 @@ class ContratoEmpleadoControlador {
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+           return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+        
     }
 
     public async EncontrarContratoEmpleadoRegimen(req: Request, res: Response): Promise<any> {
@@ -73,7 +79,10 @@ class ContratoEmpleadoControlador {
         if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
             return res.jsonp(CONTRATO_EMPLEADO_REGIMEN.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+        
     }
 
     public async EditarContrato(req: Request, res: Response): Promise<any> {

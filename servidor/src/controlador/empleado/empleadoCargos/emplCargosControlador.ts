@@ -40,7 +40,7 @@ class EmpleadoCargosControlador {
       return res.jsonp(unEmplCargp.rows)
     }
     else {
-      res.status(404).jsonp({ text: 'Cargo del empleado no encontrado' });
+      return res.status(404).jsonp({ text: 'Cargo del empleado no encontrado' });
     }
 
   }
@@ -59,7 +59,7 @@ class EmpleadoCargosControlador {
       return res.jsonp(CARGO.rows)
     }
     else {
-      res.status(404).jsonp({ text: 'Registro no encontrado' });
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
     }
   }
 
@@ -72,12 +72,12 @@ class EmpleadoCargosControlador {
         return res.jsonp(CARGO.rows)
       }
       else {
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        return res.status(404).jsonp({ text: 'Registro no encontrado' });
       }
 
     }
     else {
-      res.status(404).jsonp({ text: 'Registro no encontrado' });
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
     }
   }
 
@@ -87,7 +87,10 @@ class EmpleadoCargosControlador {
     if (unEmplCargp.rowCount > 0) {
       return res.jsonp(unEmplCargp.rows)
     }
-    res.status(404).jsonp({ message: 'error' });
+    else {
+      return res.status(404).jsonp({ message: 'error' });
+    }
+    
   }
 
   public async EditarCargo(req: Request, res: Response): Promise<any> {

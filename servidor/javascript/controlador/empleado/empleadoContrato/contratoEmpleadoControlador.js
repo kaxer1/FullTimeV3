@@ -52,7 +52,9 @@ class ContratoEmpleadoControlador {
             if (CONTRATO.rowCount > 0) {
                 return res.jsonp(CONTRATO.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     EncontrarIdContratoActual(req, res) {
@@ -64,11 +66,11 @@ class ContratoEmpleadoControlador {
                     return res.jsonp(CONTRATO.rows);
                 }
                 else {
-                    res.status(404).jsonp({ text: 'Registro no encontrado' });
+                    return res.status(404).jsonp({ text: 'Registro no encontrado' });
                 }
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -79,7 +81,9 @@ class ContratoEmpleadoControlador {
             if (CONTRATO.rowCount > 0) {
                 return res.jsonp(CONTRATO.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     EncontrarContratoEmpleadoRegimen(req, res) {
@@ -89,7 +93,9 @@ class ContratoEmpleadoControlador {
             if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
                 return res.jsonp(CONTRATO_EMPLEADO_REGIMEN.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     EditarContrato(req, res) {
