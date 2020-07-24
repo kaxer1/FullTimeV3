@@ -176,7 +176,6 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ nombreForm: '' });
       this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
     }
-
   }
 
   ActivarDesactivarNombreSet(nombreTipoPermiso) {

@@ -94,6 +94,10 @@ export class VerEmpleadoComponent implements OnInit {
   cont = 0;
   actualizar: boolean;
 
+  // Datos empleado logueado
+  empleadoLogueado: any = [];
+  idEmpleadoLogueado: number;
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -114,6 +118,7 @@ export class VerEmpleadoComponent implements OnInit {
     private toastr: ToastrService,
     private scriptService: ScriptService
   ) {
+    this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
     this.ruta = 'http://localhost:4200' + cadena + '#editar';
     this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
@@ -126,6 +131,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -138,6 +144,14 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerVacaciones(parseInt(this.idEmpleado));
     this.obtenerPlanHorarios(parseInt(this.idEmpleado));
     this.obtenerContratosEmpleado();
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleadoLogueado(idemploy: any) {
+    this.empleadoLogueado = [];
+    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleadoLogueado = data;
+    })
   }
 
   ManejarPagina(e: PageEvent) {
@@ -813,12 +827,39 @@ export class VerEmpleadoComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('profile', this.empleadoUno);
     return {
-      header: function (currentPage, pageCount, pageSize) {
-        // you can apply any logic and return any valid pdfmake element
-        return [
-          { text: 'simple text', alignment: (currentPage % 2) ? 'left' : 'right' },
-          { canvas: [{ type: 'rect', x: 170, y: 32, w: pageSize.width - 170, h: 40 }] }
-        ]
+      pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+
+      footer: function (currentPage, pageCount, fecha) {
+        var f = new Date();
+        if (f.getMonth() < 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
+          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
+        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
+          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
+        }
+        var time = f.getHours() + ':' + f.getMinutes();
+        return {
+          margin: 10,
+          columns: [
+            'Fecha: ' + fecha + ' Hora: ' + time,
+            {
+              text: [
+                {
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue',
+                  opacity: 0.5
+                }
+              ],
+            }
+          ],
+          fontSize: 10,
+          color: '#A4B8FF',
+        }
       },
       content: [
         // this.logoEmplesa(),

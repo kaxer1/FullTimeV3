@@ -14,6 +14,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { EditarDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -58,9 +59,11 @@ export class PrincipalDepartamentoComponent implements OnInit {
     private rest: DepartamentosService,
     public restE: EmpleadoService,
     private toastr: ToastrService,
+    private scriptService: ScriptService,
     public vistaRegistrarDepartamento: MatDialog
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+    this.scriptService.load('pdfMake', 'vfsFonts');
    }
 
   ngOnInit(): void {
