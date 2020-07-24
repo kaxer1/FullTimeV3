@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import pool from '../../../database';
-const path = require("path");
 import excel from 'xlsx';
 import fs from 'fs';
 import { Md5 } from 'ts-md5';

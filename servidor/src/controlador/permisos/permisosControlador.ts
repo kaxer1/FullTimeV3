@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import fs from 'fs';
 const nodemailer = require("nodemailer");
 
 class PermisosControlador {
@@ -247,6 +248,18 @@ class PermisosControlador {
         else {
             return res.status(404).json({ text: 'No se encuentran registros' });
         }
+    }
+
+    public async ElimnarPermiso(req: Request, res: Response) {
+        const {id_permiso, doc} = req.params;
+        // const dep = await pool.query('')
+        await pool.query('DELETE FROM permisos WHERE id = $1',[id_permiso]);
+
+        let filePath = `servidor\\docRespaldosPermisos\\${doc}`
+        let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+        fs.unlinkSync(direccionCompleta);
+
+        res.jsonp({message: 'registro eliminado'});
     }
 }
 

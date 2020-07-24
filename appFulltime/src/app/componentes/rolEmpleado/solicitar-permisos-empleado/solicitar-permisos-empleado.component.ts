@@ -9,6 +9,7 @@ import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
 
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { CancelarPermisoComponent } from './cancelar-permiso/cancelar-permiso.component';
 
 @Component({
   selector: 'app-solicitar-permisos-empleado',
@@ -41,7 +42,7 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
   }
 
-/* 
+  /* 
    * ***************************************************************************************************
    *                               MÉTODO PARA MOSTRAR DATOS
    * ***************************************************************************************************
@@ -128,6 +129,13 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
       });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+    });
+  }
+
+
+  CancelarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(CancelarPermisoComponent, {width: '300px', data: dataPermiso}).afterClosed().subscribe(items => {
+      this.obtenerPermisos(parseInt(this.idEmpleado))
     });
   }
 }

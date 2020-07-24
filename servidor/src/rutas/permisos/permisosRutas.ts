@@ -27,6 +27,7 @@ class PermisosRutas {
         this.router.put('/:id/estado', PERMISOS_CONTROLADOR.ActualizarEstado);
         this.router.get('/datosSolicitud/:id_emple_permiso', PERMISOS_CONTROLADOR.ObtenerDatosSolicitud);
         this.router.get('/datosAutorizacion/:id_permiso/:id_empleado', PERMISOS_CONTROLADOR.ObtenerDatosAutorizacion);
+        this.router.delete('/eliminar/:id_permiso/:doc', PERMISOS_CONTROLADOR.ElimnarPermiso);
     }
 }
 

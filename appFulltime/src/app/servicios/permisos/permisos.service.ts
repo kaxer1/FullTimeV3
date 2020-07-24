@@ -65,4 +65,7 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/datosAutorizacion/${id_permiso}/${id_empleado}`);
   }
 
+  EliminarPermiso(id_permiso: number, doc: string) {
+    return this.http.delete(`${this.API_URL}/empleadoPermiso/eliminar/${id_permiso}/${doc}`);
+  }
 }

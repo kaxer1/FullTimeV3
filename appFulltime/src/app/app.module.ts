@@ -232,6 +232,7 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { HoraExtraAutorizacionesComponent } from './componentes/autorizaciones/hora-extra-autorizaciones/hora-extra-autorizaciones.component';
 import { EditarEstadoHoraExtraAutorizacionComponent } from './componentes/autorizaciones/editar-estado-hora-extra-autorizacion/editar-estado-hora-extra-autorizacion.component';
 import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-extra/estado-hora-extra.component';
+import { CancelarPermisoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/cancelar-permiso/cancelar-permiso.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -395,6 +396,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     HoraExtraAutorizacionesComponent,
     EditarEstadoHoraExtraAutorizacionComponent,
     EstadoHoraExtraComponent,
+    CancelarPermisoComponent,
   ],
 
   imports: [

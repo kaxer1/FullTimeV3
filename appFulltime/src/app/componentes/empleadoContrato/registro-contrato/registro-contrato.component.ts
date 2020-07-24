@@ -23,6 +23,8 @@ import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.s
 })
 export class RegistroContratoComponent implements OnInit {
 
+  isChecked: boolean = false;
+
   // Datos Régimen
   regimenLaboral: any = [];
   empleados: any = [];
@@ -121,6 +123,13 @@ export class RegistroContratoComponent implements OnInit {
 
   }
 
+  HabilitarBtn: boolean = false;
+  deseleccionarArchivo() {
+    this.archivoSubido = [];
+    this.isChecked = false;
+    this.LimpiarNombreArchivo();
+  }
+
   nameFile: string;
   archivoSubido: Array<File>;
 
@@ -130,6 +139,7 @@ export class RegistroContratoComponent implements OnInit {
       const name = this.archivoSubido[0].name;
       console.log(this.archivoSubido[0].name);
       this.ContratoForm.patchValue({ nombreContratoForm: name });
+      this.HabilitarBtn = true;
     }
   }
 
