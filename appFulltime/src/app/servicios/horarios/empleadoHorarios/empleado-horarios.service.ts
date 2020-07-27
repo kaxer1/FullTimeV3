@@ -39,4 +39,8 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario/horas`, datos);
   }
 
+  ActualizarDatos(datos: any) {
+    return this.http.put(`${this.API_URL}/empleadoHorario`, datos);
+  }
+
 }

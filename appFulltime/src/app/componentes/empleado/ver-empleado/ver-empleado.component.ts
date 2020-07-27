@@ -40,6 +40,7 @@ import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProc
 import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
+import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -805,6 +806,16 @@ export class VerEmpleadoComponent implements OnInit {
       { width: '900px', data: { idEmpleado: this.idEmpleado, datosPeriodo: datoSeleccionado } })
       .afterClosed().subscribe(item => {
         this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
+      });
+  }
+
+  /* Ventana para editar horario del empleado */
+  AbrirEditarHorario(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
+      { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       });
   }
 

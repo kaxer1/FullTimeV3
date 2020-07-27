@@ -25,6 +25,10 @@ table { width: 100%; font-size: 14px; }
 
 td { padding-top: 10px; text-align: center; }
 
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center; }
+
+p { font-size: x-small; }
+
 [type="file"] {
     height: 0;
     overflow: hidden;

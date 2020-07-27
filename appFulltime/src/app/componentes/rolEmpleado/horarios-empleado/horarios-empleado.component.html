@@ -31,8 +31,7 @@
                         </div>
                         <div class="col-md">
                             <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
-                                matTooltipPosition="right"
-                                matTooltip="Dar click para ver o descargar el documento"
+                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
                                 href="http://localhost:3000/plantillaD/documento/Horario Empleado.xlsx">
                                 <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
                                 Empleado
@@ -61,6 +60,7 @@
                     <th scope="col">Vi</th>
                     <th scope="col">Sa</th>
                     <th scope="col">Do</th>
+                    <th scope="col">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,6 +82,20 @@
                     <td *ngIf="h.sabado == false">Normal</td>
                     <td *ngIf="h.domingo == true">Libre</td>
                     <td *ngIf="h.domingo == false">Normal</td>
+                    <td>
+                        <!-- 
+                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                            <p>Eliminar</p>
+                        </i>-->
+
+                        <i class="fas fa-edit" id="edit" (click)="AbrirEditarHorario(h)" matSuffix
+                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+
+                        </i>
+                    </td>
                 </tr>
             </tbody>
         </table>

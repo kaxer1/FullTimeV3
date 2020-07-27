@@ -26,8 +26,8 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <i id="editarF" (click)="AbrirVentanaEditarFeriado(f)" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar datos de este registro" class="fas fa-edit">
+                    <i id="editarF" (click)="AbrirVentanaEditarFeriado(f)" matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right" matTooltip="Modificar datos de este registro" class="fas fa-edit">
                         <p>Editar</p>
                     </i>
                 </div>
@@ -49,9 +49,16 @@
                             <td>{{dc.nombreferiado}}</td>
                             <td>{{dc.nombreciudad}}</td>
                             <td>
-                                <i id="editarI" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                <i id="editarI" (click)="AbrirVentanaEditarCiudad(dc)" matSuffix
+                                    matTooltipClass="color-tooltip" matTooltipPosition="right"
                                     matTooltip="Modificar datos de este registro" class="fas fa-edit">
                                     <p>Editar</p>
+                                </i>
+                                <i class="far fa-trash-alt" (click)="ConfirmarDelete(dc)"
+                                    style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                                    matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                                    matTooltip="Eliminar registro">
+                                    <p>Eliminar</p>
                                 </i>
                             </td>
                         </tr>
@@ -63,8 +70,7 @@
             </div>
             <input type="submit" class="btn btn-sm" [routerLink]="['/listarFeriados/']"
                 value="Ir a la Lista de Feriados">
-            <input type="submit" class="btn btn-sm" (click)="AbrirVentanaAsignarCiudad(f)"
-                value="Asignar una Ciudad">
+            <input type="submit" class="btn btn-sm" (click)="AbrirVentanaAsignarCiudad(f)" value="Asignar una Ciudad">
         </mat-card-content>
     </mat-card>
 </div>

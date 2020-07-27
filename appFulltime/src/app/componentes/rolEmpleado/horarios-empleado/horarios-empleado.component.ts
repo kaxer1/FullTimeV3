@@ -10,6 +10,7 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
+import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 
 @Component({
   selector: 'app-horarios-empleado',
@@ -105,6 +106,21 @@ export class HorariosEmpleadoComponent implements OnInit {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
+
+  /* 
+   ****************************************************************************************************
+   *                               ABRIR VENTANAS PARA EDITAR DATOS DEL EMPLEADO
+   ****************************************************************************************************
+  */
+    /* Ventana para editar horario del empleado */
+    AbrirEditarHorario(datoSeleccionado: any): void {
+      console.log(datoSeleccionado);
+      this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
+        { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
+        .afterClosed().subscribe(item => {
+          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+        });
+    }
 
   /* ****************************************************************************************************
    *                               CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA

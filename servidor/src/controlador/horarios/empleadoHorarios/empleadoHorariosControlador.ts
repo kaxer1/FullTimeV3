@@ -94,6 +94,12 @@ class EmpleadoHorariosControlador {
         }
     }
 
+    public async ActualizarEmpleadoHorarios(req: Request, res: Response): Promise<void> {
+        const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id } = req.body;
+        await pool.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id]);
+        res.jsonp({ message: 'El horario del empleado se registró con éxito' });
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();

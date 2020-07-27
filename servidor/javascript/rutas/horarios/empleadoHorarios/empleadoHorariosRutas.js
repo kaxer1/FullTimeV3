@@ -21,6 +21,7 @@ class EmpleadoHorariosRutas {
         this.router.post('/upload/:id', multipartMiddleware, empleadoHorariosControlador_1.default.CrearHorarioEmpleadoPlantilla);
         this.router.post('/cargaMultiple', multipartMiddleware, empleadoHorariosControlador_1.default.CargarMultiplesHorariosEmpleadosPlantilla);
         this.router.post('/horas', empleadoHorariosControlador_1.default.ObtenerNumeroHoras);
+        this.router.put('/', empleadoHorariosControlador_1.default.ActualizarEmpleadoHorarios);
     }
 }
 const EMPLEADO_HORARIOS_RUTAS = new EmpleadoHorariosRutas();
