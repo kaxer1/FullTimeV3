@@ -23,7 +23,7 @@ class DetallePlanHorarioControlador {
 
     public async EncontrarPlanHoraDetallesPorIdPlanHorario(req: Request, res: Response): Promise<any> {
         const { id_plan_horario } = req.params;
-        const HORARIO_CARGO = await pool.query('SELECT p.id, p.fecha, p.id_plan_horario, p.tipo_dia, h.nombre AS horarios FROM plan_hora_detalles AS p, cg_horarios AS h WHERE p.id_plan_horario = $1 AND p.id_cg_horarios = h.id ', [id_plan_horario]);
+        const HORARIO_CARGO = await pool.query('SELECT p.id, p.fecha, p.id_plan_horario, p.tipo_dia, h.id AS id_horario, h.nombre AS horarios FROM plan_hora_detalles AS p, cg_horarios AS h WHERE p.id_plan_horario = $1 AND p.id_cg_horarios = h.id ', [id_plan_horario]);
         if (HORARIO_CARGO.rowCount > 0) {
             return res.jsonp(HORARIO_CARGO.rows)
         }
@@ -50,6 +50,18 @@ class DetallePlanHorarioControlador {
         });
         res.jsonp({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
+    }
+
+    public async ActualizarDetallePlanHorario(req: Request, res: Response): Promise<void> {
+        const { fecha, id_plan_horario, tipo_dia, id_cg_horarios, id } = req.body;
+        await pool.query('UPDATE plan_hora_detalles SET fecha = $1, id_plan_horario = $2, tipo_dia = $3, id_cg_horarios = $4 WHERE id = $5', [fecha, id_plan_horario, tipo_dia, id_cg_horarios, id]);
+        res.jsonp({ message: 'Detalle Plan Horario Actualizado' });
+    }
+
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM plan_hora_detalles WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
     }
 
 }

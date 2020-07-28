@@ -19,6 +19,8 @@ class DetallePlanHorarioRutas {
         this.router.get('/infoPlan/:id_plan_horario', detallePlanHorarioControlador_1.default.EncontrarPlanHoraDetallesPorIdPlanHorario);
         this.router.post('/', detallePlanHorarioControlador_1.default.CrearDetallePlanHorario);
         this.router.post('/:id_plan_horario/upload', multipartMiddleware, detallePlanHorarioControlador_1.default.CrearDetallePlanificacionPlantilla);
+        this.router.put('/', detallePlanHorarioControlador_1.default.ActualizarDetallePlanHorario);
+        this.router.delete('/eliminar/:id', detallePlanHorarioControlador_1.default.EliminarRegistros);
     }
 }
 const DETALLE_PLAN_HORARIO_RUTAS = new DetallePlanHorarioRutas();

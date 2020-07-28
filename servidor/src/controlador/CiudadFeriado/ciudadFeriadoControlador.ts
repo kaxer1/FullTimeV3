@@ -4,14 +4,14 @@ import pool from '../../database';
 class CiudadFeriadoControlador {
 
     public async AsignarCiudadFeriado(req: Request, res: Response): Promise<void> {
-        const { id_feriado, id_ciudad} = req.body;
+        const { id_feriado, id_ciudad } = req.body;
         await pool.query('INSERT INTO ciud_feriados (id_feriado, id_ciudad) VALUES ($1, $2)', [id_feriado, id_ciudad]);
         res.jsonp({ message: 'Ciudad asignada a feriado' });
     }
 
     public async ObtenerIdCiudades(req: Request, res: Response): Promise<any> {
         const { id_feriado, id_ciudad } = req.body;
-        const CIUDAD_FERIADO = await pool.query('SELECT * FROM ciud_feriados WHERE id_feriado = $1 AND id_ciudad = $2', [id_feriado, id_ciudad ]);
+        const CIUDAD_FERIADO = await pool.query('SELECT * FROM ciud_feriados WHERE id_feriado = $1 AND id_ciudad = $2', [id_feriado, id_ciudad]);
         if (CIUDAD_FERIADO.rowCount > 0) {
             return res.jsonp(CIUDAD_FERIADO.rows)
         }
@@ -51,8 +51,8 @@ class CiudadFeriadoControlador {
     public async EliminarCiudadFeriado(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         await pool.query('DELETE FROM ciud_feriados WHERE id = $1', [id]);
-          res.jsonp({ message: 'Registro eliminado' });
-      }
+        res.jsonp({ message: 'Registro eliminado' });
+    }
 
 
 

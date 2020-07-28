@@ -834,17 +834,16 @@
                             <td *ngIf="h.domingo == true">Libre</td>
                             <td *ngIf="h.domingo == false">Normal</td>
                             <td>
-                                <!-- 
-                                <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
-                                    <p>Eliminar</p>
-                                </i>-->
-
                                 <i class="fas fa-edit" id="edit" (click)="AbrirEditarHorario(h)" matSuffix
                                     matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
-
+                                </i>
+                                <i class="far fa-trash-alt" (click)="ConfirmarDeleteHorario(h)"
+                                    style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                                    matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                                    matTooltip="Eliminar registro">
+                                    <p>Eliminar</p>
                                 </i>
                             </td>
                         </tr>
@@ -1105,6 +1104,18 @@
                                                 matTooltip="Ver datos generales de la planificación" class="fas fa-eye"
                                                 id="ver" [routerLink]="['/verDetalles/', h.id, e.id]">
                                                 <p>Ver</p>
+                                            </i>
+                                            <i class="fas fa-edit" style="color:green; margin-left: 15px;"
+                                                (click)="AbrirEditarPlanificacion(h)" matSuffix
+                                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                                matTooltip="Modificar los datos generales de este registro">
+                                                <p>Editar</p>
+                                            </i>
+                                            <i class="far fa-trash-alt" (click)="ConfirmarDeletePlanificacion(h)"
+                                                style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                                                matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                                                matTooltip="Eliminar registro">
+                                                <p>Eliminar</p>
                                             </i>
                                         </td>
                                     </tr>

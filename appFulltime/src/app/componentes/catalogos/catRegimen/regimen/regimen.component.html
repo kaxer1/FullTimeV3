@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col">
                         <mat-form-field>
-                            <mat-label>Seleccionar Régimen Laboral</mat-label>
+                            <mat-label>Seleccionar Régimen</mat-label>
                             <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                                 matTooltip="Seleccionar uno de los Régimen establecidos">
                                 help_outline</mat-icon>
@@ -26,11 +26,11 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <br>
-                        <mat-form-field>
+                        <br *ngIf="!HabilitarDescrip">
+                        <mat-form-field *ngIf="!HabilitarDescrip">
                             <mat-label>Régimen Laboral</mat-label>
                             <input matInput placeholder="Nombre Régimen" [formControl]="descripcionF"
-                                (keypress)="IngresarSoloLetras($event)" id="nombreR" style="visibility:hidden">
+                                (keypress)="IngresarSoloLetras($event)"  [ngStyle]="estilo">
                             <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar un nuevo nombre de Régimen Laboral">
                                 help_outline</mat-icon>

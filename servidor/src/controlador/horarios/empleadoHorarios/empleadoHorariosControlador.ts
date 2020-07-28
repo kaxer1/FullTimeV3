@@ -100,6 +100,12 @@ class EmpleadoHorariosControlador {
         res.jsonp({ message: 'El horario del empleado se registró con éxito' });
     }
 
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM empl_horarios WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();

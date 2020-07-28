@@ -24,7 +24,7 @@ export class EmpleadoHorariosService {
   }
 
   SubirArchivoExcel(formData, id) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/upload/${id}`, formData)  
+    return this.http.post(`${this.API_URL}/empleadoHorario/upload/${id}`, formData)
   }
 
   BuscarHorarioCargo(id: any) {
@@ -32,15 +32,19 @@ export class EmpleadoHorariosService {
   }
 
   CargaMultiple(formData) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/cargaMultiple`, formData)  
+    return this.http.post(`${this.API_URL}/empleadoHorario/cargaMultiple`, formData)
   }
 
-  BuscarNumeroHoras(datos: any){ 
+  BuscarNumeroHoras(datos: any) {
     return this.http.post(`${this.API_URL}/empleadoHorario/horas`, datos);
   }
 
   ActualizarDatos(datos: any) {
     return this.http.put(`${this.API_URL}/empleadoHorario`, datos);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/empleadoHorario/eliminar/${id}`);
   }
 
 }

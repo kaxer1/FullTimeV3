@@ -41,6 +41,7 @@ import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVac
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
+import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -535,6 +536,12 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  /* 
+ ****************************************************************************************************
+ *                               ABRIR VENTANAS PARA ELIMINAR DATOS DEL EMPLEADO
+ ****************************************************************************************************
+*/
+
   /* Eliminar registro de discapacidad */
   eliminarDiscapacidad(id_discapacidad: number) {
     console.log("id_dicacapacidad", id_discapacidad)
@@ -578,6 +585,54 @@ export class VerEmpleadoComponent implements OnInit {
       });
   }
 
+  /** Función para eliminar registro seleccionado HORARIO*/
+  EliminarHorario(id_horario: number) {
+    this.restEmpleHorario.EliminarRegistro(id_horario).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteHorario(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarHorario(datos.id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarPlanificacion(id_plan: number) {
+    this.restPlanH.EliminarRegistro(id_plan).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeletePlanificacion(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarPlanificacion(datos.id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
+
+  /* 
+  ****************************************************************************************************
+  *                               ACCIONES BOTONES
+  ****************************************************************************************************
+ */
 
   /* Este Método controla que se habilite el botón si no existe un registro de discapacidad, 
    * si hay registro se habilita para actualizar este registro. */
@@ -817,6 +872,16 @@ export class VerEmpleadoComponent implements OnInit {
       .afterClosed().subscribe(item => {
         this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       });
+  }
+
+  /* Ventana para registrar horario */
+  AbrirEditarPlanificacion(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarPlanificacionComponent,
+      { width: '300px', data: datoSeleccionado }).afterClosed().subscribe(item => {
+        this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+      });
+
   }
 
   /* 

@@ -11,6 +11,7 @@ import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHora
 
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-horarios-empleado',
@@ -112,15 +113,15 @@ export class HorariosEmpleadoComponent implements OnInit {
    *                               ABRIR VENTANAS PARA EDITAR DATOS DEL EMPLEADO
    ****************************************************************************************************
   */
-    /* Ventana para editar horario del empleado */
-    AbrirEditarHorario(datoSeleccionado: any): void {
-      console.log(datoSeleccionado);
-      this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
-        .afterClosed().subscribe(item => {
-          this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-        });
-    }
+  /* Ventana para editar horario del empleado */
+  AbrirEditarHorario(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
+      { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
+      .afterClosed().subscribe(item => {
+        this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+      });
+  }
 
   /* ****************************************************************************************************
    *                               CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA
@@ -165,6 +166,27 @@ export class HorariosEmpleadoComponent implements OnInit {
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });
+  }
+
+  /** Función para eliminar registro seleccionado HORARIO*/
+  EliminarHorario(id_horario: number) {
+    this.restEmpleHorario.EliminarRegistro(id_horario).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteHorario(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarHorario(datos.id);
+        } else {
+          this.router.navigate(['/horariosEmpleado']);
+        }
+      });
   }
 
 }

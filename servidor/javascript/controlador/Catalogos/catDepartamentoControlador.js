@@ -87,18 +87,28 @@ class DepartamentoControlador {
     }
     CrearDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-            yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
-            res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+            try {
+                const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+                yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
+                res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     ActualizarDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-            const id = req.params.id;
-            console.log(id);
-            yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-            res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+            try {
+                const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+                const id = req.params.id;
+                console.log(id);
+                yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
+                res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     FileXML(req, res) {

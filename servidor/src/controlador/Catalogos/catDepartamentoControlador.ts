@@ -70,18 +70,28 @@ class DepartamentoControlador {
     res.status(404).jsonp({ text: 'El departamento no ha sido encontrado' });
   }
 
-  public async CrearDepartamento(req: Request, res: Response): Promise<void> {
-    const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
-    res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+  public async CrearDepartamento(req: Request, res: Response) {
+    try {
+      const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+      await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
+      res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
 
-  public async ActualizarDepartamento(req: Request, res: Response): Promise<any> {
-    const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    const id = req.params.id;
-    console.log(id);
-    await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-    res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+  public async ActualizarDepartamento(req: Request, res: Response) {
+    try {
+      const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+      const id = req.params.id;
+      console.log(id);
+      await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
+      res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
@@ -105,13 +115,13 @@ class DepartamentoControlador {
 
   public async BuscarDepartamentoPorContrato(req: Request, res: Response) {
     const id = req.params.id_contrato
-    const departamento = await pool.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC',[id]);
+    const departamento = await pool.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC', [id]);
     if (departamento.rowCount > 0) {
       return res.json([departamento.rows[0]]);
     } else {
       return res.status(404).json({ text: 'No se encuentran registros' });
     }
-}
+  }
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();
