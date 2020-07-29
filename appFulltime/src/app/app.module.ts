@@ -237,6 +237,7 @@ import { EditarCiudadComponent } from './componentes/catalogos/catFeriados/edita
 import { EditarHorarioEmpleadoComponent } from './componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from './componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarDetallePlanComponent } from './componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
+import { EditarPlanComidasComponent } from './componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -405,6 +406,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarHorarioEmpleadoComponent,
     EditarPlanificacionComponent,
     EditarDetallePlanComponent,
+    EditarPlanComidasComponent,
   ],
 
   imports: [

@@ -79,6 +79,18 @@ class DetallePlanHorarioControlador {
             res.jsonp({ message: 'Registro eliminado' });
         });
     }
+    ObtenerRegistrosFecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_plan_horario, fecha } = req.body;
+            const FECHA = yield database_1.default.query('SELECT * FROM plan_hora_detalles WHERE id_plan_horario = $1 AND fecha = $2', [id_plan_horario, fecha]);
+            if (FECHA.rowCount > 0) {
+                return res.jsonp(FECHA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.DETALLE_PLAN_HORARIO_CONTROLADOR = new DetallePlanHorarioControlador();
 exports.default = exports.DETALLE_PLAN_HORARIO_CONTROLADOR;

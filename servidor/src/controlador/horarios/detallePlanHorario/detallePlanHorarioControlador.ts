@@ -64,6 +64,17 @@ class DetallePlanHorarioControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
+    public async ObtenerRegistrosFecha(req: Request, res: Response): Promise<any> {
+        const { id_plan_horario, fecha } = req.body;
+        const FECHA = await pool.query('SELECT * FROM plan_hora_detalles WHERE id_plan_horario = $1 AND fecha = $2', [id_plan_horario, fecha]);
+        if (FECHA.rowCount > 0) {
+            return res.jsonp(FECHA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
 }
 
 export const DETALLE_PLAN_HORARIO_CONTROLADOR = new DetallePlanHorarioControlador();

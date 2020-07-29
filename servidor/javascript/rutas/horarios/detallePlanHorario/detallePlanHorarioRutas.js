@@ -21,6 +21,7 @@ class DetallePlanHorarioRutas {
         this.router.post('/:id_plan_horario/upload', multipartMiddleware, detallePlanHorarioControlador_1.default.CrearDetallePlanificacionPlantilla);
         this.router.put('/', detallePlanHorarioControlador_1.default.ActualizarDetallePlanHorario);
         this.router.delete('/eliminar/:id', detallePlanHorarioControlador_1.default.EliminarRegistros);
+        this.router.post('/verificarRegistro', detallePlanHorarioControlador_1.default.ObtenerRegistrosFecha);
     }
 }
 const DETALLE_PLAN_HORARIO_RUTAS = new DetallePlanHorarioRutas();

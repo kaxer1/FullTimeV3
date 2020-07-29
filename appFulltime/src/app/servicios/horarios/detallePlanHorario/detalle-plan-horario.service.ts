@@ -35,4 +35,9 @@ export class DetallePlanHorarioService {
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/detallePlanHorario/eliminar/${id}`);
   }
+
+  VerificarDuplicidad(datos: any) {
+    return this.http.post(`${this.API_URL}/detallePlanHorario/verificarRegistro`, datos);
+  }
+
 }

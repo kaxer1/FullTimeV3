@@ -42,6 +42,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
+import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -627,6 +628,47 @@ export class VerEmpleadoComponent implements OnInit {
       });
   }
 
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarPlanComidas(id_plan: number) {
+    this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeletePlanComidas(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarPlanComidas(datos.id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarProceso(id_plan: number) {
+    this.restEmpleadoProcesos.EliminarRegistro(id_plan).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteProceso(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarProceso(datos.id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
 
   /* 
   ****************************************************************************************************
@@ -775,6 +817,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* Ventana para registrar detalle de horario del empleado*/
   AbrirVentanaDetallePlanHorario(datos: any): void {
+    console.log(datos);
     this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
       { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false, direccionarE: false } }).disableClose = true;
   }
@@ -878,10 +921,17 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirEditarPlanificacion(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarPlanificacionComponent,
-      { width: '300px', data: datoSeleccionado }).afterClosed().subscribe(item => {
+      { width: '300px', data: {idEmpleado: this.idEmpleado, datosPlan: datoSeleccionado} }).afterClosed().subscribe(item => {
         this.obtenerPlanHorarios(parseInt(this.idEmpleado));
       });
-
+  }
+  /* Ventana para editar planificación de comidas */
+  AbrirEditarPlanComidas(datoSeleccionado): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarPlanComidasComponent, { width: '600px', data: datoSeleccionado })
+      .afterClosed().subscribe(item => {
+        this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+      });
   }
 
   /* 

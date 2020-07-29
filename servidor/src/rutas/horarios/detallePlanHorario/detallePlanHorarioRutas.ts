@@ -22,6 +22,7 @@ class DetallePlanHorarioRutas {
         this.router.post('/:id_plan_horario/upload', multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.CrearDetallePlanificacionPlantilla);
         this.router.put('/', DETALLE_PLAN_HORARIO_CONTROLADOR.ActualizarDetallePlanHorario);
         this.router.delete('/eliminar/:id', DETALLE_PLAN_HORARIO_CONTROLADOR.EliminarRegistros);
+        this.router.post('/verificarRegistro', DETALLE_PLAN_HORARIO_CONTROLADOR.ObtenerRegistrosFecha);
 
     }
 }

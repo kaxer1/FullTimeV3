@@ -6,6 +6,7 @@ import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAda
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-editar-planificacion',
@@ -32,6 +33,7 @@ export class EditarPlanificacionComponent implements OnInit {
 
   constructor(
     public rest: PlanHorarioService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EditarPlanificacionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
@@ -42,12 +44,24 @@ export class EditarPlanificacionComponent implements OnInit {
   }
 
   ValidarDatosPlanHorario(form) {
-    if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
-      this.InsertarPlanHorario(form);
+    let datosBusqueda = {
+      id_cargo: this.data.datosPlan.id_cargo,
+      id_empleado: this.data.idEmpleado
     }
-    else {
-      this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
-    }
+    this.restE.BuscarFechaContrato(datosBusqueda).subscribe(response => {
+      console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fechaIngresoForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
+      if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fechaIngresoForm)) {
+        if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
+          this.InsertarPlanHorario(form);
+        }
+        else {
+          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso')
+        }
+      }
+      else {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+      }
+    }, error => { });
   }
 
   InsertarPlanHorario(form) {
@@ -76,8 +90,8 @@ export class EditarPlanificacionComponent implements OnInit {
 
   CargarDatos() {
     this.PlanHorarioForm.patchValue({
-      fechaIngresoForm: this.data.fec_inicio,
-      fechaSalidaForm: this.data.fec_final,
+      fechaIngresoForm: this.data.datosPlan.fec_inicio,
+      fechaSalidaForm: this.data.datosPlan.fec_final,
     })
   }
 

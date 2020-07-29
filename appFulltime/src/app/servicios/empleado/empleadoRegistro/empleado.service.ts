@@ -105,6 +105,10 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha`, datos);
   }
 
+  BuscarFechaIdContrato(datos: any) {
+    return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha/contrato`, datos);
+  }
+
   // servicio para obtener la lista de las nacionalidades
   getListaNacionalidades() {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)

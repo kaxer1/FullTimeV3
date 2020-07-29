@@ -142,6 +142,18 @@ class ContratoEmpleadoControlador {
             }
         });
     }
+    EncontrarFechaContratoId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_contrato } = req.body;
+            const FECHA = yield database_1.default.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato WHERE contrato.id = $1', [id_contrato]);
+            if (FECHA.rowCount > 0) {
+                return res.jsonp(FECHA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
 }
 const CONTRATO_EMPLEADO_CONTROLADOR = new ContratoEmpleadoControlador();
 exports.default = CONTRATO_EMPLEADO_CONTROLADOR;

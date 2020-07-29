@@ -35,7 +35,7 @@ class EmpleadoCargosControlador {
 
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const unEmplCargp = await pool.query('SELECT ec.id, ec.cargo, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, s.nombre AS sucursal, d.nombre AS departamento FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d WHERE ec.id = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id ORDER BY ec.id', [id]);
+    const unEmplCargp = await pool.query('SELECT ec.id, ec.id_empl_contrato, ec.cargo, ec.fec_inicio, ec.fec_final, ec.sueldo, ec.hora_trabaja, ec.id_sucursal, s.nombre AS sucursal, d.id AS id_departamento, d.nombre AS departamento, e.id AS id_empresa, e.nombre AS empresa FROM empl_cargos AS ec, sucursales AS s, cg_departamentos AS d, cg_empresa AS e WHERE ec.id = $1 AND ec.id_sucursal = s.id AND ec.id_departamento = d.id AND s.id_empresa = e.id ORDER BY ec.id', [id]);
     if (unEmplCargp.rowCount > 0) {
       return res.jsonp(unEmplCargp.rows)
     }

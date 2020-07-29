@@ -80,9 +80,10 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       });
   }
 
-  AbrirVentanaEditar(datosSeleccionados: any): void {
+  AbrirVentanaEditar(datosSeleccionados: any, datosPlan: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarDetallePlanComponent, { width: '350px', data: datosSeleccionados })
+    this.vistaRegistrarDatos.open(EditarDetallePlanComponent, 
+      { width: '350px', data: {detalle: datosSeleccionados, plan: datosPlan} })
       .afterClosed().subscribe(item => {
         this.ListarDetalles(this.idPlanH);
       });

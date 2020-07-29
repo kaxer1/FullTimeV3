@@ -10,6 +10,7 @@ import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-empl-cargos',
@@ -58,6 +59,7 @@ export class EmplCargosComponent implements OnInit {
     private restEmplCargos: EmplCargosService,
     private restSucursales: SucursalService,
     private restE: EmpresaService,
+    private restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EmplCargosComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
@@ -118,6 +120,26 @@ export class EmplCargosComponent implements OnInit {
       this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
       return false;
     }
+  }
+
+  ValidarDatosRegistro(form) {
+    let datosBusqueda = {
+      id_contrato: this.datoEmpleado.idContrato,
+    }
+    this.restEmpleado.BuscarFechaIdContrato(datosBusqueda).subscribe(response => {
+      console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fecInicioForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
+      if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fecInicioForm)) {
+        if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm)) {
+          this.insertarEmpleadoCargo(form);
+        }
+        else {
+          this.toastr.info('La fecha de finalización de actividades debe ser posterior a la fecha de inicio de actividades')
+        }
+      }
+      else {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+      }
+    }, error => { });
   }
 
   insertarEmpleadoCargo(form) {

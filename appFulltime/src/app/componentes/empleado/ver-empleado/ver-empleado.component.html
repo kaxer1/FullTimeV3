@@ -216,12 +216,10 @@
                                                 <p>Editar</p>
                                             </i>
                                         </a>
-                                        <a mat-button type="submit" (click)="ConfirmarDeleteTitulo(rte.id)">
-                                            <i class="far fa-trash-alt" matTooltipPosition="right" id="delete"
-                                                matTooltip="Eliminar este registro">
-                                                <p>Eliminar</p>
-                                            </i>
-                                        </a>
+                                        <i class="far fa-trash-alt" (click)="ConfirmarDeleteTitulo(rte.id)"
+                                            matTooltipPosition="right" id="delete" matTooltip="Eliminar este registro">
+                                            <p>Eliminar</p>
+                                        </i>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>
@@ -1187,6 +1185,10 @@
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>
+                                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeleteProceso(e)" class=" far fa-trash-alt"
+                                    matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
+                                    <p>Eliminar</p>
+                                </i>
                                 </div>
                                 <mat-divider></mat-divider>
                             </div>
@@ -1213,7 +1215,7 @@
                             <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Fecha:</label>
+                                        <label class="col-sm col-form-label">Fecha de Solicitud:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{pc.fecha.split("T")[0]}}</label>
@@ -1221,7 +1223,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Solicita:</label>
+                                        <label class="col-sm col-form-label">Fecha Planificación:</label>
                                     </div>
                                     <div class="col">
                                         <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
@@ -1267,6 +1269,18 @@
                                         <label class="col col-form-label">$ {{pc.valor}}</label>
                                     </div>
                                 </div>
+                                <div style="text-align: right;">
+                                    <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
+                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
+                                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)" class=" far fa-trash-alt"
+                                        matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
+                                        <p>Eliminar</p>
+                                    </i>
+                                </div>
+
                                 <mat-divider></mat-divider>
                             </div>
                         </mat-card-content>

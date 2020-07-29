@@ -2,10 +2,11 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-registro-plan-horario',
@@ -32,6 +33,7 @@ export class RegistroPlanHorarioComponent implements OnInit {
 
   constructor(
     public rest: PlanHorarioService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroPlanHorarioComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
@@ -41,12 +43,24 @@ export class RegistroPlanHorarioComponent implements OnInit {
   }
 
   ValidarDatosPlanHorario(form) {
-    if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
-      this.InsertarPlanHorario(form);
+    let datosBusqueda = {
+      id_cargo: this.datoEmpleado.idCargo,
+      id_empleado: this.datoEmpleado.idEmpleado
     }
-    else {
-      this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
-    }
+    this.restE.BuscarFechaContrato(datosBusqueda).subscribe(response => {
+      console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fechaIngresoForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
+      if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fechaIngresoForm)) {
+        if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
+          this.InsertarPlanHorario(form);
+        }
+        else {
+          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso')
+        }
+      }
+      else {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+      }
+    }, error => { });
   }
 
   InsertarPlanHorario(form) {
@@ -69,7 +83,7 @@ export class RegistroPlanHorarioComponent implements OnInit {
   CerrarVentanaPlanHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-   // window.location.reload();
+    // window.location.reload();
   }
 
 }

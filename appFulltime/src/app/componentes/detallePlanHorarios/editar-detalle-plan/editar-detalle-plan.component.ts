@@ -5,6 +5,7 @@ import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAda
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
@@ -66,18 +67,38 @@ export class EditarDetallePlanComponent implements OnInit {
     })
   }
 
+  ValidarRegistro(form) {
+    var fin = this.data.plan.fec_final.split('T')[0];
+    var inicio = this.data.plan.fec_inicio.split('T')[0];
+    var ingreso = String(moment(form.fechaForm, "YYYY/MM/DD").format("YYYY-MM-DD"));
+    if ((Date.parse(fin) >= Date.parse(ingreso)) &&
+      (Date.parse(inicio) <= Date.parse(ingreso))) {
+      this.InsertarDetallePlanHorario(form);
+    }
+    else {
+      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.');
+    }
+  }
+
   InsertarDetallePlanHorario(form) {
-    let datosDetallePlanH = {
-      fecha: form.fechaForm,
-      id_plan_horario: this.data.id_plan_horario,
-      tipo_dia: form.tipoDiaForm,
-      id_cg_horarios: form.horarioForm,
-      id: this.data.id
-    };
-    this.rest.ActualizarRegistro(datosDetallePlanH).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado')
-      this.Salir();
+    let datosBusqueda = {
+      id_plan_horario: this.data.detalle.id_plan_horario,
+      fecha: form.fechaForm
+    }
+    this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
+      this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
     }, error => {
+      let datosDetallePlanH = {
+        fecha: form.fechaForm,
+        id_plan_horario: this.data.detalle.id_plan_horario,
+        tipo_dia: form.tipoDiaForm,
+        id_cg_horarios: form.horarioForm,
+        id: this.data.detalle.id
+      };
+      this.rest.ActualizarRegistro(datosDetallePlanH).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado')
+        this.Salir();
+      }, error => { });
     });
   }
 
@@ -92,9 +113,9 @@ export class EditarDetallePlanComponent implements OnInit {
 
   CargarDatos() {
     this.DetallePlanHorarioForm.patchValue({
-      fechaForm: this.data.fecha,
-      tipoDiaForm: this.data.tipo_dia,
-      horarioForm: this.data.id_horario
+      fechaForm: this.data.detalle.fecha,
+      tipoDiaForm: this.data.detalle.tipo_dia,
+      horarioForm: this.data.detalle.id_horario
     })
   }
 

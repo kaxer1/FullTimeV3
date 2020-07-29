@@ -123,6 +123,17 @@ class ContratoEmpleadoControlador {
             return res.status(404).jsonp({ text: 'Registro no encontrado' });
         }
     }
+
+    public async EncontrarFechaContratoId(req: Request, res: Response): Promise<any> {
+        const { id_contrato } = req.body;
+        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato WHERE contrato.id = $1', [id_contrato]);
+        if (FECHA.rowCount > 0) {
+            return res.jsonp(FECHA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+    }
 }
 
 const CONTRATO_EMPLEADO_CONTROLADOR = new ContratoEmpleadoControlador();

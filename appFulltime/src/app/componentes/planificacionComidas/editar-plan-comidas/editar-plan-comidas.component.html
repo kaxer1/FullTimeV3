@@ -1,0 +1,95 @@
+<div class="scrollbar scrollbar-primary">
+    <mat-icon id="mover">open_with</mat-icon>
+    <div class="tituloPlanificacionAlmuerzos">
+        <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Planificación Almuerzos</span>
+    </div>
+    <form [formGroup]="PlanificacionComidasForm">
+        <mat-card-content>
+            <div class="container" style="text-align: center;">
+                <div class="nota">
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Empleado</mat-label>
+                            <input id="nomEmpleado" matInput placeholder="Ejm: 1" formControlName="idEmpleadoForm"
+                                (keypress)="IngresarSoloLetras($event)" readonly="readonly" required>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right" matTooltip="Nombre del empleado que planifica almuerzo">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha Actual</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                                formControlName="fechaForm" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker" id="planComida"
+                                matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar fecha en la que se registra la planificación. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label id="selecAlmuerzo">Seleccionar Almuerzo *</mat-label>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right" matTooltip="Lista de platos de comida existentes">
+                                help_outline</mat-icon>
+                            <mat-select formControlName="idComidaForm">
+                                <mat-option *ngFor="let comidas of tipoComidas" [value]="comidas.id">
+                                    {{comidas.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col">
+                        <mat-form-field>
+                            <mat-label>Observación</mat-label>
+                            <input matInput placeholder="Ejm: 1" formControlName="observacionForm"
+                                (keypress)="IngresarSoloLetras($event)" required>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar una indicación de la planificación de almuerzo">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Fecha de planificación</mat-label>
+                            <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
+                                formControlName="fechaPlanificacionForm" required>
+                            <mat-datepicker-toggle matSuffix [for]="picker2" id="planComida"
+                                matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                                matTooltip="Ingresar fecha en la que se va a asistir al almuerzo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #picker2></mat-datepicker>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Hora de inicio</mat-label>
+                            <input matInput type="time" placeholder="Ejm: 1" formControlName="horaInicioForm" required>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right" matTooltip="Ingresar la hora en la que inicia el almuerzo">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Hora de fin</mat-label>
+                            <input matInput type="time" placeholder="Ejm: 1" formControlName="horaFinForm" required>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right" matTooltip="Ingresar la hora de finalización del almuerzo">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </form>
+    <div style="text-align: center;">
+        <input type="submit" class="btn btn-sm" (click)="InsertarPlanificacion(PlanificacionComidasForm.value)"
+            [disabled]="!PlanificacionComidasForm.valid" value="Guardar">
+        <input type="submit" class="btn btn-sm" (click)="CerrarRegistroPlanificacion()" value="Salir">
+    </div>
+</div>
