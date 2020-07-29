@@ -76,37 +76,40 @@ export class EditarDepartamentoComponent implements OnInit {
     console.log(form.departamentoDepartamentoPadreForm);
     if (departamentoPadreNombre === 0) {
       let datadepartamento = {
-        nombre: form.departamentoNombreForm,
+        nombre: form.departamentoNombreForm.toUpperCase(),
         nivel: form.departamentoNivelForm,
         depa_padre: null,
         id_sucursal: form.idSucursalForm
       };
-      this.rest.updateDepartamento(this.descripcionD.id, datadepartamento).subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-          window.location.reload();
-          this.dialogRef.close();
-        }, error => {
-          console.log(error);
-        });
+      this.GuardarDatos(datadepartamento);
     } else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
         departamentoPadreId = data[0].id;
         let datadepartamento = {
-          nombre: form.departamentoNombreForm,
+          nombre: form.departamentoNombreForm.toUpperCase(),
           nivel: form.departamentoNivelForm,
           depa_padre: departamentoPadreId,
           id_sucursal: form.idSucursalForm
         };
-        this.rest.updateDepartamento(this.descripcionD.id, datadepartamento)
-          .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-            window.location.reload();
-            this.dialogRef.close();
-          }, error => {
-            console.log(error);
-          });
+        this.GuardarDatos(datadepartamento);
       })
     }
+  }
+
+  GuardarDatos(datos) {
+    this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'Departamento ya existe');
+      }
+      else {
+        this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+        window.location.reload();
+        this.dialogRef.close();
+      }
+    }, error => {
+      console.log(error);
+    });
+
   }
 
   CerrarVentanaRegistroDepartamento() {

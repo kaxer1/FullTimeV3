@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,39 +15,43 @@ export class DepartamentosService {
 
   // catalogo de departamentos
 
-  ConsultarDepartamentos(){
+  ConsultarDepartamentos() {
     return this.http.get(`${this.API_URL}/departamento`);
   }
-  
-  ConsultarDepartamentoPorContrato(id_contrato: number){
+
+  ConsultarDepartamentoPorContrato(id_contrato: number) {
     return this.http.get(`${this.API_URL}/departamento/busqueda-contrato/${id_contrato}`);
   }
 
-  ConsultarNombreDepartamentos(){
+  ConsultarNombreDepartamentos() {
     return this.http.get(`${this.API_URL}/departamento/nombreDepartamento`);
   }
 
-  ConsultarIdNombreDepartamentos(nombreDepartamento: string){
+  ConsultarIdNombreDepartamentos(nombreDepartamento: string) {
     return this.http.get(`${this.API_URL}/departamento/idDepartamento/${nombreDepartamento}`);
   }
 
-  postDepartamentoRest(data: any){ 
-    return this.http.post(`${this.API_URL}/departamento`, data);
+  postDepartamentoRest(data: any) {
+    return this.http.post(`${this.API_URL}/departamento`, data).pipe(
+      catchError(data)
+    );
   }
 
-  getIdDepartamentoPadre(departamentoPadre: string){
+  getIdDepartamentoPadre(departamentoPadre: string) {
     return this.http.get(`${this.API_URL}/departamento/busqueda/${departamentoPadre}`);
   }
 
-  updateDepartamento(idDepartamento: number, data:any){
-    return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data)
+  updateDepartamento(idDepartamento: number, data: any) {
+    return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data).pipe(
+      catchError(data)
+    );
   }
 
-  EncontrarUnDepartamento(id:number){
+  EncontrarUnDepartamento(id: number) {
     return this.http.get(`${this.API_URL}/departamento/${id}`);
   }
 
-  BuscarDepartamentoSucursal(id:number){
+  BuscarDepartamentoSucursal(id: number) {
     return this.http.get(`${this.API_URL}/departamento/buscarDepa/${id}`);
   }
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpErrorResponse} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { saveAs } from "file-saver";
-import {  throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 
@@ -19,53 +19,53 @@ export class EmpleadoService {
   }
 
   constructor(private http: HttpClient) { }
-  
+
   // Empleados  
-  getEmpleadosRest(){
+  getEmpleadosRest() {
     return this.http.get(`${this.API_URI}/empleado`);
   }
-  
-  getOneEmpleadoRest(id: number){
+
+  getOneEmpleadoRest(id: number) {
     return this.http.get<any>(`${this.API_URI}/empleado/${id}`);
   }
 
-  postEmpleadoRest(data: any){
+  postEmpleadoRest(data: any) {
     return this.http.post(`${this.API_URI}/empleado`, data)
-    .pipe(
-      catchError(data)
-    );
+      .pipe(
+        catchError(data)
+      );
   }
-  
-  putEmpleadoRest(data: any, id: number){
+
+  putEmpleadoRest(data: any, id: number) {
     return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data)
-    .pipe(
-      catchError(data)
-    );
+      .pipe(
+        catchError(data)
+      );
   }
-  
+
   subirArchivoExcel(formData) {
     return this.http.post(`${this.API_URI}/empleado/plantillaExcel/`, formData);
   }
 
   // Servicio para insertar el empleado con sus respectivos titulos
-  postEmpleadoTitulos(data: any){
+  postEmpleadoTitulos(data: any) {
     return this.http.post(`${this.API_URI}/empleado/emplTitulos`, data);
   }
 
-  getEmpleadoTituloRest(id: number){
+  getEmpleadoTituloRest(id: number) {
     return this.http.get(`${this.API_URI}/empleado/emplTitulos/${id}`);
   }
 
-  putEmpleadoTituloRest(id: number, data: any){
+  putEmpleadoTituloRest(id: number, data: any) {
     return this.http.put(`${this.API_URI}/empleado/${id}/titulo`, data);
   }
 
-  deleteEmpleadoTituloRest(id: number){
+  deleteEmpleadoTituloRest(id: number) {
     return this.http.delete(`${this.API_URI}/empleado/eliminar/titulo/${id}`);
   }
 
   // Servicio para insertar contrato del empleado
-  CrearContratoEmpleado(datos: any){
+  CrearContratoEmpleado(datos: any) {
     return this.http.post(`${this.API_URI}/contratoEmpleado`, datos);
   }
 
@@ -73,23 +73,23 @@ export class EmpleadoService {
     return this.http.get(`${this.API_URI}/contratoEmpleado/${id}/get`);
   }
 
-  ActualizarContratoEmpleado(id: number, id_empleado: number, data: any){
+  ActualizarContratoEmpleado(id: number, id_empleado: number, data: any) {
     return this.http.put(`${this.API_URI}/contratoEmpleado/${id_empleado}/${id}/actualizar/`, data);
   }
 
-  BuscarIDContrato(id: number){
+  BuscarIDContrato(id: number) {
     return this.http.get(`${this.API_URI}/contratoEmpleado/${id}`);
   }
 
-  BuscarIDContratoActual(id: number){
+  BuscarIDContratoActual(id: number) {
     return this.http.get(`${this.API_URI}/contratoEmpleado/contratoActual/${id}`);
   }
 
-  BuscarDatosContrato(id: number){
+  BuscarDatosContrato(id: number) {
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contrato/${id}`);
   }
 
-  BuscarContratoEmpleadoRegimen(id: number){
+  BuscarContratoEmpleadoRegimen(id: number) {
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contratoRegimen/${id}`);
   }
 
@@ -100,15 +100,19 @@ export class EmpleadoService {
   EditarDocumento(id: number, data: any) {
     return this.http.put(`${this.API_URI}/contratoEmpleado/editar/editarDocumento/${id}`, data);
   }
-  
+
+  BuscarFechaContrato(datos: any) {
+    return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha`, datos);
+  }
+
   // servicio para obtener la lista de las nacionalidades
-  getListaNacionalidades(){
+  getListaNacionalidades() {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)
   }
 
   // servicios para subir las imagenes
   subirImagen(formData, idEmpleado: number) {
-    return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)  
+    return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)
   }
 
   DownloadXMLRest(data: any) {
@@ -118,7 +122,7 @@ export class EmpleadoService {
   //   return this.http.get<any>(`${this.API_URI}/empleado/download/${name}`)
   // }
 
-  BuscarDepartamentoEmpleado(datos: any){ 
+  BuscarDepartamentoEmpleado(datos: any) {
     return this.http.post(`${this.API_URI}/empleado/buscarDepartamento`, datos);
   }
 

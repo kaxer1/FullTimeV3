@@ -130,6 +130,18 @@ class ContratoEmpleadoControlador {
             res.jsonp({ message: 'Contrato Actualizado' });
         });
     }
+    EncontrarFechaContrato(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_cargo, id_empleado } = req.body;
+            const FECHA = yield database_1.default.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato, empl_cargos AS cargo, empleados WHERE contrato.id_empleado = empleados.id AND cargo.id_empl_contrato = contrato.id AND cargo.id = $1 AND empleados.id = $2', [id_cargo, id_empleado]);
+            if (FECHA.rowCount > 0) {
+                return res.jsonp(FECHA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
 }
 const CONTRATO_EMPLEADO_CONTROLADOR = new ContratoEmpleadoControlador();
 exports.default = CONTRATO_EMPLEADO_CONTROLADOR;

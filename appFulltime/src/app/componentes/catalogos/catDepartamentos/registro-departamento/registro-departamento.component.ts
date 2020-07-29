@@ -91,28 +91,34 @@ export class RegistroDepartamentoComponent implements OnInit {
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     var datosDepartamento = {
-      nombre: form.departamentoNombreForm,
+      nombre: form.departamentoNombreForm.toUpperCase(),
       nivel: form.departamentoNivelForm,
       depa_padre: departamentoPadreNombre,
       id_sucursal: form.idSucursalForm
     };
     if (departamentoPadreNombre === null) {
       datosDepartamento.depa_padre = null;
-      this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Departamento registrado');
-        this.LimpiarCampos();
-      });
+      this.GuardarDatos(datosDepartamento);
     }
     else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {
         departamentoPadreId = datos[0].id;
         datosDepartamento.depa_padre = departamentoPadreId;
-        this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Departamento registrado');
-          this.LimpiarCampos();
-        });
+        this.GuardarDatos(datosDepartamento);
       })
     }
+  }
+
+  GuardarDatos(datos) {
+    this.rest.postDepartamentoRest(datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'Departamento ya existe');
+      }
+      else {
+        this.toastr.success('Operación Exitosa', 'Departamento registrado');
+        this.LimpiarCampos();
+      }
+    });
   }
 
   ObtenerDepartamentos(form) {
@@ -170,6 +176,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
     return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
   }
-  
+
 }
 

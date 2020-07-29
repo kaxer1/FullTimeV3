@@ -42,6 +42,20 @@ class CiudadFeriadoControlador {
         }
     }
 
+    public async ActualizarCiudadFeriado(req: Request, res: Response): Promise<void> {
+        const { id_feriado, id_ciudad, id } = req.body;
+        await pool.query('UPDATE ciud_feriados SET id_feriado = $1, id_ciudad = $2 WHERE id = $3', [id_feriado, id_ciudad, id]);
+        res.jsonp({ message: 'Ciudad asignada a feriado' });
+    }
+
+    public async EliminarCiudadFeriado(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM ciud_feriados WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
+
+
 }
 
 export const CIUDAD_FERIADO_CONTROLADOR = new CiudadFeriadoControlador();

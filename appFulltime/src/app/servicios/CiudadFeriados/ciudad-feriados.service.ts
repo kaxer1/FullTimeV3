@@ -31,5 +31,13 @@ export class CiudadFeriadosService {
   BuscarCiudadesFeriado(id: number){
     return this.http.get(`${this.API_URL}/ciudadFeriados/nombresCiudades/${id}`);
   }
+
+  ActualizarDatos(data: any) {
+    return this.http.put(`${this.API_URL}/ciudadFeriados`, data);
+  }
+
+  EliminarRegistro(id: number){
+    return this.http.delete(`${this.API_URL}/ciudadFeriados/eliminar/${id}`);
+  }
   
 }

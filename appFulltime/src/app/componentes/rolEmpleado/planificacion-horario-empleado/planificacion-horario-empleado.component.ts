@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -10,6 +11,8 @@ import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePla
 
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 
 
 @Component({
@@ -38,6 +41,7 @@ export class PlanificacionHorarioEmpleadoComponent implements OnInit {
     public vistaRegistrarDatos: MatDialog,
     public restPlanHoraDetalle: DetallePlanHorarioService,
     private toastr: ToastrService,
+    public router: Router,
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
   }
@@ -105,6 +109,37 @@ export class PlanificacionHorarioEmpleadoComponent implements OnInit {
   AbrirVentanaDetallePlanHorario(datos: any): void {
     this.vistaRegistrarDatos.open(RegistroDetallePlanHorarioComponent,
       { width: '350px', data: { idEmpleado: this.idEmpleado, planHorario: datos, actualizarPage: false, direccionarE: true } }).disableClose = true;
+  }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarPlanificacion(id_plan: number) {
+    this.restPlanH.EliminarRegistro(id_plan).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeletePlanificacion(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarPlanificacion(datos.id);
+        } else {
+          this.router.navigate(['/planificacionHorario']);
+        }
+      });
+  }
+
+  /* Ventana para editar datos */
+  AbrirEditarPlanificacion(datoSeleccionado: any): void {
+    console.log(datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarPlanificacionComponent,
+      { width: '300px', data: datoSeleccionado }).afterClosed().subscribe(item => {
+        this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+      });
+
   }
 
 

@@ -7,6 +7,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detallePlanHorarios/registro-detalle-plan-horario/registro-detalle-plan-horario.component';
+import { EditarDetallePlanComponent } from 'src/app/componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 
 @Component({
@@ -67,19 +70,6 @@ export class VerDetallePlanHorariosComponent implements OnInit {
     this.datosDetalle = [];
     this.restDP.ObtenerPlanHoraDetallePorIdPlanHorario(id_planificacion).subscribe(datos => {
       this.datosDetalle = datos;
-      for (let i = this.datosDetalle.length - 1; i >= 0; i--) {
-        var cadena = this.datosDetalle[i]['tipo_dia'];
-        if (cadena === 1) {
-          this.datosDetalle[i]['tipo_dia'] = 'Libre';
-        }
-        else if (cadena === 2) {
-          this.datosDetalle[i]['tipo_dia'] = 'Feriado';
-        }
-        else if (cadena === 3) {
-          this.datosDetalle[i]['tipo_dia'] = 'Normal';
-        }
-      }
-      console.log(this.datosDetalle)
     })
   }
 
@@ -90,10 +80,34 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       });
   }
 
-  /* AbrirVentanaEditar(datosSeleccionados: any): void {
-     console.log(datosSeleccionados);
-     this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true } }).disableClose = true;
-   }*/
+  AbrirVentanaEditar(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarDetallePlanComponent, { width: '350px', data: datosSeleccionados })
+      .afterClosed().subscribe(item => {
+        this.ListarDetalles(this.idPlanH);
+      });
+  }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarDetalle(id_detalle: number) {
+    this.restDP.EliminarRegistro(id_detalle).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ListarDetalles(this.idPlanH);
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarDetalle(datos.id);
+        } else {
+          this.router.navigate(['/verDetalles/', this.idPlanH, this.idEmpleado]);
+        }
+      });
+  }
 
   /****************************************************************************************************** 
 * PLANTILLA CARGAR SOLO HORARIOS
@@ -123,12 +137,12 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
       console.log('ver', this.archivoSubido[i])
     }
-    this.restDP.subirArchivoExcel( parseInt(this.idPlanH), formData).subscribe(res => {
+    this.restDP.subirArchivoExcel(parseInt(this.idPlanH), formData).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
       this.ListarDetalles(this.idPlanH);
       this.archivo1Form.reset();
       this.nameFile = '';
-     // window.location.reload();
+      // window.location.reload();
     });
   }
 }
