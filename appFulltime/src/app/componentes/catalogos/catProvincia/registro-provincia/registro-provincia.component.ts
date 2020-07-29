@@ -4,6 +4,8 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 interface opcionesPais {
   valor: string;
@@ -27,6 +29,7 @@ export class RegistroProvinciaComponent implements OnInit {
   nombreContinenteF = new FormControl('');
   nombrePaisF = new FormControl('', [Validators.required]);
   nombreProvinciaF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
+  filteredOptions: Observable<string[]>;
 
   // Asignación de validaciones a inputs del formulario
   public NuevaProvinciasForm = new FormGroup({
@@ -43,6 +46,18 @@ export class RegistroProvinciaComponent implements OnInit {
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
+    this.filteredOptions = this.nombrePaisF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.paises.filter(pais => pais.nombre.toLowerCase().includes(filterValue));
+    }
   }
 
   ObtenerContinentes() {
@@ -83,10 +98,17 @@ export class RegistroProvinciaComponent implements OnInit {
   }
 
   InsertarProvincia(form) {
+    let idPais;
+    this.paises.forEach(obj => {
+      if (obj.nombre === form.nombrePaisForm) {
+        idPais = obj.id
+      }
+    });
     let dataProvincia = {
       nombre: form.nombreProvinciaForm,
-      id_pais: form.nombrePaisForm,
+      id_pais: idPais,
     };
+    
     if (dataProvincia.id_pais === 'Seleccionar') {
       this.toastr.info('Seleccionar un país')
     }
@@ -129,6 +151,5 @@ export class RegistroProvinciaComponent implements OnInit {
   CerrarVentanaRegistroProvincia() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 }

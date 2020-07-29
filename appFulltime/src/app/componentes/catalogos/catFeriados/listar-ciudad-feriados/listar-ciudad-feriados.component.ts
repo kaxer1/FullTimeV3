@@ -76,7 +76,10 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaAsignarCiudad(datosSeleccionados): void {
-    this.vistaRegistrarDatos.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: true } }).afterClosed().subscribe(items => {
+      this.BuscarDatosFeriado(this.idFeriado);
+      this.ListarCiudadesFeriados(this.idFeriado);
+    });
   }
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {

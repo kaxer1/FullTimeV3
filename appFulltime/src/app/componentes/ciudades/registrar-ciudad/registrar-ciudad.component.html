@@ -26,36 +26,36 @@
                         </mat-form-field>
                         <br>
                         <mat-form-field>
-                            <mat-label>Seleccionar País</mat-label>
-                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
-                                matTooltipPosition="right"
+                            <input type="text" placeholder="Escribir País" aria-label="Number" matInput
+                                [formControl]="nombrePaisF" [matAutocomplete]="auto" [(ngModel)]="seleccionarPaises" required>
+                            <mat-autocomplete #auto="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOptions | async"
+                                    [value]="option.nombre" (click)="FiltrarProvincias(nuevaCiudadForm.value)">
+                                    {{option.nombre}}
+                                </mat-option>
+                            </mat-autocomplete>                
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip" matTooltipPosition="right"
                                 matTooltip="Lista de paises ubicados en el continente seleccionado">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises" required>
-                                <mat-option *ngFor="let pais of paises" [value]="pais.id"
-                                    (click)="FiltrarProvincias(nuevaCiudadForm.value)">
-                                    {{pais.nombre}}
-                                </mat-option>
-                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col">
                         <mat-form-field>
-                            <mat-label id="provincia">Seleccionar Provincia</mat-label>
-                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
-                                matTooltipPosition="right"
+                            <input type="text" placeholder="Escribir Provincia" aria-label="Number" matInput
+                                [formControl]="idProvinciaF" [matAutocomplete]="auto1" [(ngModel)]="seleccionarProvincia" required>
+                            <mat-autocomplete #auto1="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredOpt | async" [value]="option.nombre">
+                                    {{option.nombre}}
+                                </mat-option>
+                            </mat-autocomplete>                
+                            <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip" matTooltipPosition="right"
                                 matTooltip="Lista de provincias, departamentos o estados ubicados en el país seleccionado">
                                 help_outline</mat-icon>
-                            <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia" required>
-                                <mat-option *ngFor="let pro of provincias" [value]="pro.id">
-                                    {{pro.nombre}}
-                                </mat-option>
-                            </mat-select>
                         </mat-form-field>
                         <br>
                         <mat-form-field>
                             <mat-label>Ingresar Ciudad</mat-label>
-                            <input matInput placeholder="Ej: Contabilidad" [formControl]="nombreF"
+                            <input matInput placeholder="Ej: Quito" [formControl]="nombreF"
                                 (keypress)="IngresarSoloLetras($event)" required>
                             <mat-icon id="iciudadR" matSuffix matTooltipClass="ciudadR-tooltip"
                                 matTooltipPosition="right"

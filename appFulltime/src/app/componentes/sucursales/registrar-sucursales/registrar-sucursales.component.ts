@@ -9,6 +9,8 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registrar-sucursales',
@@ -29,6 +31,11 @@ export class RegistrarSucursalesComponent implements OnInit {
   nombreCiudades: any = [];
   seleccionarCiudad;
   ultimoId: any = [];
+
+  filteredOptPais: Observable<string[]>;
+  filteredOptProv: Observable<string[]>;
+  filteredOptCiud: Observable<string[]>;
+  filteredOptEmpr: Observable<string[]>;
 
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
@@ -61,6 +68,54 @@ export class RegistrarSucursalesComponent implements OnInit {
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
     this.BuscarEmpresas();
+    this.filteredOptPais = this.nombrePaisF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterPais(value))
+      );
+    this.filteredOptProv = this.idProvinciaF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterProvincia(value))
+      );
+    this.filteredOptCiud = this.idCiudad.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterCiudad(value))
+      );
+    this.filteredOptEmpr = this.idEmpresaF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterEmpresa(value))
+      );
+  }
+
+  private _filterPais(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.paises.filter(pais => pais.nombre.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterProvincia(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.provincias.filter(provincias => provincias.nombre.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterCiudad(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.nombreCiudades.filter(ciudades => ciudades.descripcion.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterEmpresa(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.empresas.filter(empresas => empresas.nombre.toLowerCase().includes(filterValue));
+    }
   }
 
   ObtenerContinentes() {
@@ -69,7 +124,7 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.continentes = datos;
       this.continentes[this.continentes.length] = { continente: "Seleccionar" };
       this.seleccionarContinente = this.continentes[this.continentes.length - 1].continente;
-    })
+    });
   }
 
   ObtenerPaises(continente) {
@@ -107,14 +162,19 @@ export class RegistrarSucursalesComponent implements OnInit {
   }
 
   FiltrarProvincias(form) {
-    var nombrePais = form.nombrePaisForm;
-    if (nombrePais === undefined) {
+    let idPais;
+    this.paises.forEach(obj => {
+      if (obj.nombre === form.nombrePaisForm) {
+        idPais = obj.id
+      }
+    });
+    if (idPais === undefined) {
       this.toastr.info('No ha seleccionado ninguna opción')
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
     else {
-      this.seleccionarProvincia = this.ObtenerProvincias(nombrePais);
+      this.seleccionarProvincia = this.ObtenerProvincias(idPais);
     }
   }
 
@@ -130,7 +190,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   }
 
   FiltrarCiudades(form) {
-    var nombreProvincia = form.idProvinciaForm;
+    let nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
       this.toastr.info('No ha seleccionado ninguna opción')
       this.seleccionarCiudad = '';
@@ -155,11 +215,24 @@ export class RegistrarSucursalesComponent implements OnInit {
   }
 
   InsertarSucursal(form) {
+    let idEmpr;
+    this.empresas.forEach(obj => {
+      if (obj.nombre === form.idEmpresaForm) {
+        idEmpr = obj.id
+      }
+    });
+    let idCiud;
+    this.nombreCiudades.forEach(obj => {
+      if (obj.descripcion === form.idCiudadForm) {
+        idCiud = obj.id
+      }
+    });
     let dataSucursal = {
       nombre: form.sucursalNombreForm,
-      id_ciudad: form.idCiudadForm,
-      id_empresa: form.idEmpresaForm
+      id_ciudad: idCiud,
+      id_empresa: idEmpr
     };
+    
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
@@ -194,7 +267,6 @@ export class RegistrarSucursalesComponent implements OnInit {
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   ObtenerMensajeErrorNombre() {

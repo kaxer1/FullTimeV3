@@ -102,24 +102,30 @@ export class MainNavComponent implements OnInit {
     this.LlamarNotificaicones(this.id_empleado_logueado);    
   }
 
+  confRes: any = [] ;
   LlamarNotificaicones(id: number) {
     this.realTime.ObtenerNotificacionesReceives(id).subscribe(res => {
       this.noti_real_time = res;
       console.log(this.noti_real_time);
-      if (this.noti_real_time.length > 0) {
-        this.noti_real_time.forEach(obj => {
-          if(obj.visto === false) {
-            this.num_noti_false = this.num_noti_false + 1;
-            this.estadoNotificacion = false
-          }
-        });
+      if (!this.noti_real_time.text) {
+        if (this.noti_real_time.length > 0) {
+          this.noti_real_time.forEach(obj => {
+            if(obj.visto === false) {
+              this.num_noti_false = this.num_noti_false + 1;
+              this.estadoNotificacion = false
+            }
+          });
+        }
       }
     });
     this.realTime.ObtenerConfigNotiEmpleado(id).subscribe(res => {
       console.log(res);
-      if (res[0].vaca_noti === false || res[0].permiso_noti === false || res[0].hora_extra_noti === false) {
-        this.num_noti_false = 0;
-        this.estadoNotificacion = true
+      this.confRes = res;
+      if (!this.confRes.text) {   
+        if (res[0].vaca_noti === false || res[0].permiso_noti === false || res[0].hora_extra_noti === false) {
+          this.num_noti_false = 0;
+          this.estadoNotificacion = true
+        }
       }
     }, error => {
       console.log(error);

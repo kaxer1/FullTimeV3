@@ -207,7 +207,6 @@ export class EditarHorarioComponent implements OnInit {
     this.LimpiarCampos();
     if (this.data.actualizar === true) {
       this.dialogRef.close();
-      window.location.reload();
     }
     else {
       this.dialogRef.close();

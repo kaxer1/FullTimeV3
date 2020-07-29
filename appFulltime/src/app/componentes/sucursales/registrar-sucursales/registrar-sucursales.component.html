@@ -24,57 +24,60 @@
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Seleccionar País</mat-label>
-                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                            matTooltipPosition="right" matTooltip="Lista de países del continente seleccionado">
-                            help_outline</mat-icon>
-                        <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises" required>
-                            <mat-option *ngFor="let pais of paises" [value]="pais.id"
-                                (click)="FiltrarProvincias(nuevaSucursalForm.value)">
-                                {{pais.nombre}}
+                        <input type="text" placeholder="Escribir País" aria-label="Number" matInput
+                            [formControl]="nombrePaisF" [matAutocomplete]="auto" [(ngModel)]="seleccionarPaises" required>
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptPais | async"
+                                [value]="option.nombre" (click)="FiltrarProvincias(nuevaSucursalForm.value)">
+                                {{option.nombre}}
                             </mat-option>
-                        </mat-select>
+                        </mat-autocomplete>                
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de países del continente seleccionado">
+                            help_outline</mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field>
-                        <mat-label id="provSelec">Seleccionar Provincia</mat-label>
-                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Lista de provincias, departamentos o estados del país seleccionado">help_outline
-                        </mat-icon>
-                        <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia" required>
-                            <mat-option *ngFor="let pro of provincias" [value]="pro.nombre"
-                                (click)="FiltrarCiudades(nuevaSucursalForm.value)">
-                                {{pro.nombre}}
+                        <input type="text" placeholder="Escribir Provincia" aria-label="Number" matInput
+                            [formControl]="idProvinciaF" [matAutocomplete]="auto1" [(ngModel)]="seleccionarProvincia" required>
+                        <mat-autocomplete #auto1="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptProv | async" 
+                                [value]="option.nombre" (click)="FiltrarCiudades(nuevaSucursalForm.value)">
+                                {{option.nombre}}
                             </mat-option>
-                        </mat-select>
+                        </mat-autocomplete>                
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de provincias, departamentos o estados ubicados en el país seleccionado">
+                            help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>
-                        <mat-label>Seleccionar Ciudad</mat-label>
-                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                            matTooltipPosition="right"
+                        <input type="text" placeholder="Escribir Ciudad" aria-label="Number" matInput
+                            [formControl]="idCiudad" [matAutocomplete]="auto2" [(ngModel)]="seleccionarCiudad" required>
+                        <mat-autocomplete #auto2="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptCiud | async" 
+                                [value]="option.descripcion" (click)="SeleccionarCiudad(nuevaSucursalForm.value)">
+                                {{option.descripcion}}
+                            </mat-option>
+                        </mat-autocomplete>                
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de ciudades de la provincia, departamento o estado seleccionado">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="idCiudad" [(ngModel)]="seleccionarCiudad" required>
-                            <mat-option *ngFor="let ciudad of nombreCiudades" [value]="ciudad.id"
-                                (click)="SeleccionarCiudad(nuevaSucursalForm.value)">
-                                {{ciudad.descripcion}}
-                            </mat-option>
-                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-form-field>
-                        <mat-label>Seleccionar Empresa</mat-label>
-                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                            matTooltipPosition="right" matTooltip="Lista de Empresas">help_outline</mat-icon>
-                        <mat-select [formControl]="idEmpresaF" required>
-                            <mat-option *ngFor="let empre of empresas" [value]="empre.id">
-                                {{empre.nombre}}
+                        <input type="text" placeholder="Escribir Empresa" aria-label="Number" matInput
+                            [formControl]="idEmpresaF" [matAutocomplete]="auto3" required>
+                        <mat-autocomplete #auto3="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredOptEmpr | async" [value]="option.nombre">
+                                {{option.nombre}}
                             </mat-option>
-                        </mat-select>
+                        </mat-autocomplete>                
+                        <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                            matTooltip="Lista de Empresas">
+                            help_outline</mat-icon>
                     </mat-form-field>
                     <br>
                     <mat-form-field>

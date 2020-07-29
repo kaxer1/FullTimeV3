@@ -49,7 +49,7 @@ class NotificacionTiempoRealControlador {
                 if (REAL_TIME_NOTIFICACION.rowCount > 0) {
                     return res.jsonp(REAL_TIME_NOTIFICACION.rows);
                 }
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
             res.status(404).jsonp({ message: 'sin registros' });
         });
@@ -99,10 +99,10 @@ class NotificacionTiempoRealControlador {
                 if (CONFIG_NOTI.rowCount > 0) {
                     return res.jsonp(CONFIG_NOTI.rows);
                 }
-                res.status(404).jsonp({ message: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
             else {
-                res.status(404).jsonp({ message: 'Registro no encontrado' });
+                res.status(404).jsonp({ text: 'Sin registros encontrado' });
             }
         });
     }

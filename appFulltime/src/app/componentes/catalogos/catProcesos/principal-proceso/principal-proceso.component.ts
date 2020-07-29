@@ -107,7 +107,7 @@ export class PrincipalProcesoComponent implements OnInit {
     });
   }
 
-  getOneProvincia(id: number) {
+  getOneProceso(id: number) {
     this.rest.getOneProcesoRest(id).subscribe(data => {
       this.procesos = data;
     })
@@ -126,7 +126,9 @@ export class PrincipalProcesoComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProceso() {
-    this.vistaRegistrarDatos.open(RegistroProcesoComponent, { width: '450px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroProcesoComponent, { width: '450px' }).afterClosed().subscribe(items => {
+      this.getProcesos();
+    });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {

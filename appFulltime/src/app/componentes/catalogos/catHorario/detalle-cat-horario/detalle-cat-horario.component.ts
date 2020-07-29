@@ -101,7 +101,6 @@ export class DetalleCatHorarioComponent implements OnInit {
   CerrarVentanaDetalleHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
 }

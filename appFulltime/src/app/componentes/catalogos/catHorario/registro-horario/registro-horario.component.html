@@ -45,31 +45,35 @@
                         </mat-form-field>
                     </div>
                     <div class="col">
-                        <label style="margin-right: 95px;">Horario Flexible *</label>
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                            matTooltip="El horario flexible indica que se controlará entrada y salida">
-                            help_outline</mat-icon>
-                        <section>
-                            <mat-radio-group required aria-label="select an option" [formControl]="flexible" required
-                                [value]="flexible.value">
-                                <mat-radio-button class="example-match" value="true">Si </mat-radio-button>
-                                <mat-radio-button class="example-match" value="false">No </mat-radio-button>
-                            </mat-radio-group>
-                        </section>
                         <br>
-                        <label style="margin-right: 76px;">Horario por Horas *</label>
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                            matTooltip="El horario por horas indica que se labora en un rango de horas">
-                            help_outline</mat-icon>
-                        <section>
-                            <mat-radio-group aria-label="Select an option" [formControl]="porHoras"
-                                [value]="porHoras.value">
-                                <mat-radio-button class="example-match" value="true">Si</mat-radio-button>
-                                <mat-radio-button class="example-match" value="false">No</mat-radio-button>
-                            </mat-radio-group>
-                        </section>
+                        <mat-radio-group aria-label="Select an option" [formControl]="flexible" required>
+                            <label class="d-flex justify-content-around">
+                                <span>Horario Flexible *</span>
+                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                    matTooltip="El horario flexible indica que se controlará entrada y salida">
+                                    help_outline</mat-icon>
+                            </label>
+                            <div class="d-flex justify-content-around">
+                                <mat-radio-button value="true">Si</mat-radio-button>
+                                <mat-radio-button value="false">No</mat-radio-button>
+                            </div>
+                        </mat-radio-group>
+                        <br>
+                        <mat-radio-group aria-label="Select an option" [formControl]="porHoras" required>
+                            <label class="d-flex justify-content-around">
+                                <span>Horario por Horas *</span>
+                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                    matTooltip="El horario por horas indica que se labora en un rango de horas">
+                                    help_outline</mat-icon>
+                            </label>
+                            <div class="d-flex justify-content-around">
+                                <mat-radio-button value="true">Si</mat-radio-button>
+                                <mat-radio-button value="false">No</mat-radio-button>
+                            </div>
+                        </mat-radio-group>
                     </div>
                     <div class="col" *ngIf="isChecked">
+                        <br>
                         <div class="container">
                             <div class="row">
                                 <form method="post" enctype="multipart/form-data">
