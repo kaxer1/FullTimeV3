@@ -7,9 +7,11 @@
     <mat-card-content>
         <div class="container">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
             </div>
-            <span class="nota">Desea subir un archivo (opcional) </span><mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
+            <span class="nota">Desea subir un archivo (opcional) </span>
+            <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
             <form [formGroup]="nuevoHorarioForm">
                 <div class="row">
                     <div class="col">
@@ -49,7 +51,8 @@
                         <mat-radio-group aria-label="Select an option" [formControl]="flexible" required>
                             <label class="d-flex justify-content-around">
                                 <span>Horario Flexible *</span>
-                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip"
+                                    matTooltipPosition="right"
                                     matTooltip="El horario flexible indica que se controlará entrada y salida">
                                     help_outline</mat-icon>
                             </label>
@@ -62,7 +65,8 @@
                         <mat-radio-group aria-label="Select an option" [formControl]="porHoras" required>
                             <label class="d-flex justify-content-around">
                                 <span>Horario por Horas *</span>
-                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip"
+                                    matTooltipPosition="right"
                                     matTooltip="El horario por horas indica que se labora en un rango de horas">
                                     help_outline</mat-icon>
                             </label>
@@ -79,8 +83,9 @@
                                 <form method="post" enctype="multipart/form-data">
                                     <input (change)="fileChange($event)" type="file" [formControl]="archivoForm"
                                         id="file">
-                                    <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix matTooltipClass="horario-tooltip" matTooltipPosition="right"
-                                    matTooltip="Subir documento que respalde la creación de horario, solo en caso de ser necesario como un respaldo de cambios en el horario.">Subir
+                                    <label for="file" class="btn-2" (click)="LimpiarNombreArchivo()" id="iHor" matSuffix
+                                        matTooltipClass="horario-tooltip" matTooltipPosition="right"
+                                        matTooltip="Subir documento que respalde la creación de horario, solo en caso de ser necesario como un respaldo de cambios en el horario.">Subir
                                         Documento</label>
                                 </form>
                             </div>
@@ -90,7 +95,8 @@
                             </div>
                             <br>
                             <div class="row" *ngIf="HabilitarBtn">
-                                <button class="btn btn-sm" type="submit" (click)="deseleccionarArchivo()" >Deseleccionar Documento</button>
+                                <button class="btn btn-sm" type="submit" (click)="deseleccionarArchivo()">Quitar
+                                    Documento</button>
                             </div>
                         </div>
                     </div>

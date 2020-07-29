@@ -7,9 +7,11 @@
     <mat-card-content>
         <div class="container" style="text-align: center">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
             </div>
-            <span class="nota">Desea subir un archivo (opcional) </span><mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
+            <span class="nota">Desea subir un archivo (opcional) </span>
+            <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
             <form [formGroup]="ContratoForm">
                 <div class="row">
                     <div class="col">
@@ -104,7 +106,8 @@
                             class="form-control" style="width: 210px;" [formControl]="nombreContratoF">
                         <br><br>
                         <div *ngIf="HabilitarBtn">
-                            <button class="btn btn-sm" type="submit" (click)="deseleccionarArchivo()" >Deseleccionar Documento</button>
+                            <button class="btn btn-sm" type="submit" (click)="deseleccionarArchivo()">Quitar
+                                Documento</button>
                         </div>
                     </div>
                 </div>

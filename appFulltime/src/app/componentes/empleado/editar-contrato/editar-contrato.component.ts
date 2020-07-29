@@ -22,6 +22,8 @@ export class EditarContratoComponent implements OnInit {
 
   contador: number = 0;
 
+  isChecked: boolean;
+
   // Control de campos y validaciones del formulario
   idRegimenF = new FormControl('', [Validators.required]);
   fechaIngresoF = new FormControl('', [Validators.required]);
@@ -64,6 +66,14 @@ export class EditarContratoComponent implements OnInit {
         controlAsistenciaForm: this.UnContrato.asis_controla,
         nombreContratoForm: this.UnContrato.doc_nombre
       })
+      if(this.UnContrato.doc_nombre != '' && this.UnContrato.doc_nombre != null){
+        this.HabilitarBtn = true;
+        this.isChecked = true;
+      }
+      else {
+        this.HabilitarBtn = false;
+        this.isChecked = false;
+      }
     });
   }
 
@@ -88,6 +98,13 @@ export class EditarContratoComponent implements OnInit {
         this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
       }
     }
+  }
+
+  HabilitarBtn: boolean = false;
+  deseleccionarArchivo() {
+    this.archivoSubido = [];
+    this.isChecked = false;
+    this.LimpiarNombreArchivo();
   }
 
 
@@ -131,7 +148,9 @@ export class EditarContratoComponent implements OnInit {
       const name = this.archivoSubido[0].name;
       console.log(this.archivoSubido[0].name);
       this.ContratoForm.patchValue({ nombreContratoForm: name });
+      this.HabilitarBtn = true;
     }
+    
   }
 
   CargarContrato(id: number) {

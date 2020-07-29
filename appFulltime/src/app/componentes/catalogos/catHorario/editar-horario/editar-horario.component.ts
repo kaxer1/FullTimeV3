@@ -35,6 +35,8 @@ export class EditarHorarioComponent implements OnInit {
 
   contador: number = 0;
 
+  isChecked: boolean = false;
+
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
@@ -51,7 +53,15 @@ export class EditarHorarioComponent implements OnInit {
       horarioFlexibleForm: this.data.horario.flexible,
       horarioPorHorasForm: this.data.horario.por_horas,
       nombreCertificadoForm: this.data.horario.doc_nombre,
-    })
+    });
+    if (this.data.horario.doc_nombre != '' && this.data.horario.doc_nombre != null) {
+      this.HabilitarBtn = true;
+      this.isChecked = true;
+    }
+    else {
+      this.HabilitarBtn = false;
+      this.isChecked = false;
+    }
   }
 
   ModificarHorario(form) {
@@ -99,6 +109,13 @@ export class EditarHorarioComponent implements OnInit {
     else {
       this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
     }
+  }
+
+  HabilitarBtn: boolean = false;
+  deseleccionarArchivo() {
+    this.archivoSubido = [];
+    this.isChecked = false;
+    this.LimpiarNombreArchivo();
   }
 
   ModificarDocumento() {
@@ -184,6 +201,7 @@ export class EditarHorarioComponent implements OnInit {
       const name = this.archivoSubido[0].name;
       console.log(this.archivoSubido[0].name);
       this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
+      this.HabilitarBtn = true
     }
   }
 

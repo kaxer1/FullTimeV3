@@ -25,7 +25,8 @@
                 </form>
                 <mat-card-actions style="text-align: center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
-                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrar()">Subir Documento</button>
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrar()">Subir
+                        Documento</button>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -61,7 +62,7 @@
                             matTooltip="Modificar los datos generales de este registro">
                             <p>Editar</p>
                         </i>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                        <i class="far fa-trash-alt" (click)="ConfirmarDelete(ld)" matSuffix matTooltipPosition="right"
                             matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                             <p>Eliminar</p>
                         </i>
