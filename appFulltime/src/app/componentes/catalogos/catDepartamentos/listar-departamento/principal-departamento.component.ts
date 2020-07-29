@@ -88,7 +88,9 @@ export class PrincipalDepartamentoComponent implements OnInit {
   ListaDepartamentos() {
     this.departamentos = []
     this.rest.ConsultarDepartamentos().subscribe(datos => {
-      this.departamentos = datos
+      this.departamentos = datos;
+      console.log(this.departamentos);
+      
     })
   }
 

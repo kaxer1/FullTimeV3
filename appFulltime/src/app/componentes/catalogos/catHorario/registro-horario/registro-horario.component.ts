@@ -178,7 +178,6 @@ export class RegistroHorarioComponent implements OnInit {
   CerrarVentanaRegistroHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

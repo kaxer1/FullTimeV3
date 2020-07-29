@@ -81,13 +81,16 @@ export class ListaSucursalesComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarSucursal() {
-    this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px' }).afterClosed().subscribe(items => {
+      this.ObtenerSucursal();
+    });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarSucursalComponent, { width: '900px', data: datosSeleccionados }).disableClose = true;
-    //console.log(datosSeleccionados.fecha);
+    this.vistaRegistrarDatos.open(EditarSucursalComponent, { width: '900px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.ObtenerSucursal();
+    });
   }
 
   LimpiarCampoBuscar() {

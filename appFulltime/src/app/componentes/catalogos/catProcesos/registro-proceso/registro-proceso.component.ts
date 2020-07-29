@@ -135,7 +135,6 @@ export class RegistroProcesoComponent implements OnInit {
   CerrarVentanaRegistroProceso() {
     this.limpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

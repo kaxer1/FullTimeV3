@@ -15,6 +15,7 @@ import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFer
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EliminarFeriadoComponent } from '../eliminar-feriado/eliminar-feriado.component';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -105,6 +106,13 @@ export class ListarFeriadosComponent implements OnInit {
     console.log(datosSeleccionados);
     this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: false } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
+  }
+
+  ConfirmarDelete(datoSelect) {
+    console.log(datoSelect);
+    this.vistaRegistrarFeriado.open(EliminarFeriadoComponent, { width: '400px', data: datoSelect}).afterClosed().subscribe(items => {
+      this.ObtenerFeriados();
+    });
   }
 
   LimpiarCampos() {

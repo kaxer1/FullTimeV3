@@ -96,7 +96,7 @@ export class RegistroDepartamentoComponent implements OnInit {
       depa_padre: departamentoPadreNombre,
       id_sucursal: form.idSucursalForm
     };
-    if (departamentoPadreNombre === 0) {
+    if (departamentoPadreNombre === null) {
       datosDepartamento.depa_padre = null;
       this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Departamento registrado');

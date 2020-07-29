@@ -92,13 +92,16 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '900px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '900px' }).afterClosed().subscribe(items => {
+      this.ObtenerHorarios();
+    });
   }
 
   AbrirRegistraDetalle(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).disableClose = true;
-    console.log(datosSeleccionados.fecha);
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
+      this.ObtenerHorarios();
+    });
   }
 
   LimpiarCampos() {
@@ -109,7 +112,9 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaEditarHorario(datosSeleccionados: any): void {
-    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: false } }).afterClosed().subscribe(items => {
+      this.ObtenerHorarios();
+    });
   }
 
   /****************************************************************************************************** 

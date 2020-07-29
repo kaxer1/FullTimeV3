@@ -111,6 +111,13 @@ class FeriadosControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
+    EliminarFeriado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_feriados WHERE id = $1', [id]);
+            res.jsonp({ text: 'registro eliminado' });
+        });
+    }
 }
 const FERIADOS_CONTROLADOR = new FeriadosControlador();
 exports.default = FERIADOS_CONTROLADOR;

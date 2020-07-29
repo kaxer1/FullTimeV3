@@ -1,4 +1,6 @@
-.example-match { margin: 0 15px; }
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
+mat-radio-group { width: 210px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
 

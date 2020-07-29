@@ -90,10 +90,15 @@
                                 [routerLink]="['/verFeriados/', f.id]">
                                 <p>Ver</p>
                             </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix matTooltipPosition="right"
                                 matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
                                 (click)="AbrirVentanaEditarFeriado(f)">
                                 <p>Editar</p>
+                            </i>
+                            <i  matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
+                                class="far fa-trash-alt" (click)="ConfirmarDelete(f)"
+                                style="color:red; margin-left: 15px;">
+                                <p>Eliminar</p>
                             </i>
                         </td>
                     </tr>
