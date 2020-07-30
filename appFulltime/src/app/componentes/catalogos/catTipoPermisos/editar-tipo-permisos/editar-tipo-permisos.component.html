@@ -126,8 +126,8 @@
         </form>
         <br>
         <div>
-            <button mat-button matStepperNext class="btn">Siguiente</button>
-            <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-danger">Salir</button>
+            <button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-sm">Salir</button>
+            <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
         </div>
     </mat-step>
     <mat-step [stepControl]="segundoFormGroup">
@@ -263,9 +263,9 @@
         </form>
         <br>
         <div>
-            <button mat-button matStepperPrevious class="btn">Atrás</button>
-            <button mat-button matStepperNext class="btn">Siguiente</button>
-            <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-danger">Salir</button>
+            <button matStepperPrevious class="btn btn-sm">Atrás</button>
+            <button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-sm">Salir</button>
+            <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
         </div>
     </mat-step>
     <mat-step [stepControl]="terceroFormGroup">
@@ -400,11 +400,11 @@
             </div>
             <br>
             <div>
-                <button mat-button matStepperPrevious class="btn">Atrás</button>
-                <input mat-button type="submit" class="btn"
+                <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                <input type="submit" class="btn btn-sm"
                     (click)="ModificarTipoPermiso(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
                     value="Guardar">
-                <button mat-button (click)="CerrarVentanaEditarTipoPermiso()" class="btn">Salir</button>
+                <button (click)="CerrarVentanaEditarTipoPermiso()" class="btn btn-sm float-right">Salir</button>
             </div>
         </form>
     </mat-step>

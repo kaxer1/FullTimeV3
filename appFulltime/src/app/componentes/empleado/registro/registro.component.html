@@ -28,7 +28,8 @@
                                         formControlName="nombreForm" (keypress)="IngresarSoloLetras($event)" required>
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
-                                        matTooltip="Es obligatorio ingresar los dos nombres del nuevo empleado">help_outline</mat-icon>
+                                        matTooltip="Es obligatorio ingresar los dos nombres del nuevo empleado">
+                                        help_outline</mat-icon>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
@@ -37,7 +38,8 @@
                                         formControlName="apellidoForm" (keypress)="IngresarSoloLetras($event)" required>
                                     <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                         matTooltipPosition="right"
-                                        matTooltip="Es obligatorio ingresar los dos apellidos del nuevo empleado">help_outline
+                                        matTooltip="Es obligatorio ingresar los dos apellidos del nuevo empleado">
+                                        help_outline
                                     </mat-icon>
                                 </mat-form-field>
                                 <br>
@@ -45,7 +47,8 @@
                                     <mat-label>Código</mat-label>
                                     <input matInput type="text" formControlName="codigoForm">
                                     <mat-icon id="icono_emple" matSuffix matTooltipPosition="right"
-                                        matTooltip="Ingrese un Código de identificacion, este campo es alternativo.">help_outline
+                                        matTooltip="Ingrese un Código de identificacion, este campo es alternativo.">
+                                        help_outline
                                     </mat-icon>
                                 </mat-form-field>
                             </div>
@@ -66,7 +69,7 @@
                                     <mat-label>Fecha de nacimiento</mat-label>
                                     <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
                                         formControlName="fechaForm" required>
-                                    <mat-datepicker-toggle  matSuffix [for]="picker" id="icono_emple"
+                                    <mat-datepicker-toggle matSuffix [for]="picker" id="icono_emple"
                                         matTooltipClass="empleadoR-tooltip" matTooltipPosition="right"
                                         matTooltip="Seleccione la fecha de nacimiento dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                                     </mat-datepicker-toggle>
@@ -97,8 +100,8 @@
                     </div>
                 </form>
                 <div>
-                    <a mat-button [routerLink]="['/empleado']" class="btn">Regresar a Empleado</a>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>  
+                    <a [routerLink]="['/empleado']" class="btn btn-sm">Regresar a Empleado</a>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -201,8 +204,8 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperPrevious class="btn">Atrás</button>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>
+                    <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
@@ -268,12 +271,12 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button matStepperPrevious class="btn">Atrás</button>
-                        <button mat-button
+                        <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                        <button
                             (click)="insertarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
-                            type="submit" class="btn btn-primary" [disabled]="!terceroFormGroup.valid">Guardar
+                            type="submit" class="btn btn-sm" [disabled]="!terceroFormGroup.valid">Guardar
                         </button>
-                        <button mat-button (click)="stepper.reset()" class="btn">Cancelar</button>
+                        <button (click)="stepper.reset()" class="btn btn-sm float-right">Cancelar</button>
                     </div>
                 </form>
             </mat-step>

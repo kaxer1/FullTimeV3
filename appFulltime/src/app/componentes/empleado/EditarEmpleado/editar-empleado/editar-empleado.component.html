@@ -100,12 +100,12 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button
+                    <button
                         (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
-                        type="submit" class="btn btn-primary" [disabled]="!primeroFormGroup.valid">Guardar
+                        type="submit" class="btn btn-sm" [disabled]="!primeroFormGroup.valid">Guardar
                     </button>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>
-                    <button mat-button (click)="cancelar()" class="btn">Cancelar</button>
+                    <button (click)="cancelar()" class="btn btn-sm">Cancelar</button>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -208,13 +208,13 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperPrevious class="btn">Atrás</button>
-                    <button mat-button
+                    <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                    <button
                         (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
-                        type="submit" class="btn btn-primary" [disabled]="!segundoFormGroup.valid">Guardar
+                        type="submit" class="btn btn-sm btn btn-sm-primary" [disabled]="!segundoFormGroup.valid">Guardar
                     </button>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>
-                    <button mat-button (click)="cancelar()" class="btn">Cancelar</button>
+                    <button (click)="cancelar()" class="btn btn-sm">Cancelar</button>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="terceroFormGroup">
@@ -280,12 +280,12 @@
                         </div>
                     </div>
                     <div>
-                        <button mat-button matStepperPrevious class="btn">Atrás</button>
-                        <button mat-button
+                        <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                        <button
                             (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
-                            type="submit" class="btn btn-primary" [disabled]="!terceroFormGroup.valid">Guardar
+                            type="submit" class="btn btn-sm" [disabled]="!terceroFormGroup.valid">Guardar
                         </button>
-                        <button mat-button (click)="cancelar()" class="btn">Cancelar</button>
+                        <button (click)="cancelar()" class="btn btn-sm float-right">Cancelar</button>
                     </div>
                 </form>
             </mat-step>
