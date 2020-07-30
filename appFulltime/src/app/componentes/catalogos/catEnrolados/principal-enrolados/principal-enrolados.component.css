@@ -10,7 +10,7 @@ p { font-size: x-small; }
 
 .far { color:red; margin-left: 20px; cursor: pointer; }
 
-/*.enrolado-tooltip { background-color : rgb(3, 167, 167); }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 .TituloEnrolado { 
     font-size: 20px; 
