@@ -31,6 +31,19 @@ class EnroladoRelojControlador {
         }
     }
 
+    public async ActualizarRelojEnrolado(req: Request, res: Response): Promise<void> {
+        const { id_reloj, id_enrolado, id } = req.body;
+        await pool.query('UPDATE relj_enrolados SET id_reloj = $1, id_enrolado = $2 WHERE id = $3', [id_reloj, id_enrolado, id]);
+        res.jsonp({ message: 'Registro Actualizado' });
+    }
+
+    public async EliminarRelojEnrolado(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM relj_enrolados WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
+
 }
 
 export const ENROLADO_RELOJ_CONTROLADOR = new EnroladoRelojControlador();

@@ -44,8 +44,9 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <i id="iconoEditar" (click)="AbrirVentanaEditar(dE)" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar dispositivo en el que esta enrolado el usuario" class="fas fa-edit">
+                    <i id="iconoEditar" (click)="AbrirVentanaEditar(dE)" matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right" matTooltip="Modificar dispositivo en el que esta enrolado el usuario"
+                        class="fas fa-edit">
                         <p>Editar</p>
                     </i>
                 </div>
@@ -75,13 +76,19 @@
                 <td>{{dr.nombre_enrolado}}</td>
                 <td>{{dr.nombre_reloj}}</td>
                 <td>{{dr.ip_reloj}}</td>
-                <td>{{dr.nomsucursal}}</td>
-                <td>{{dr.nomdepar}}</td>
-                <td>{{dr.nomempresa}}</td>
+                <td>{{dr.nom_sucursal}}</td>
+                <td>{{dr.nom_departamento}}</td>
+                <td>{{dr.nom_empresa}}</td>
                 <td>
-                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar dispositivo en el que esta enrolado el usuario" class="fas fa-edit">
+                    <i (click)="AbrirVentanaEditarReloj(dr)" matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right" matTooltip="Modificar dispositivo en el que esta enrolado el usuario"
+                        class="fas fa-edit">
                         <p>Editar</p>
+                    </i>
+                    <i (click)="ConfirmarDeleteReloj(dr)" matSuffix matTooltipClass="enrolado-tooltip"
+                        matTooltipPosition="right" matTooltip="Eliminar registro de empleado enrolado"
+                        class="far fa-trash-alt">
+                        <p>Eliminar</p>
                     </i>
                 </td>
             </tr>

@@ -52,8 +52,8 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label id="fec">Fecha de inicio de período</mat-label>
-                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
-                                [formControl]="fechaInicioF" required>
+                            <input matInput [matDatepicker]="picker" (dateInput)="validarFecha($event)"
+                                placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" required>
                             <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
                                 matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar la fecha de inicio de período de vacaciones. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">

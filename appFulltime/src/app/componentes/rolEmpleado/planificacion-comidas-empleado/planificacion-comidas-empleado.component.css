@@ -1,0 +1,13 @@
+.barraTitulo { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 14px; 
+    padding-bottom: 6px; 
+}
+
+p { font-size: x-small; }
+
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center; }
+
+#delete { color:red;  cursor: pointer; text-align: center; }

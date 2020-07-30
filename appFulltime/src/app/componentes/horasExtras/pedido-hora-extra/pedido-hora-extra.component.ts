@@ -40,7 +40,7 @@ export class PedidoHoraExtraComponent implements OnInit {
   FechaFinF = new FormControl('', [Validators.required]);
   horaInicioF = new FormControl('');
   horaFinF = new FormControl('', [Validators.required]);
-  horasF = new FormControl('', [Validators.required]); 
+  horasF = new FormControl('', [Validators.required]);
   estadoF = new FormControl('', [Validators.required]);
   funcionF = new FormControl('', [Validators.required]);
 
@@ -111,13 +111,13 @@ export class PedidoHoraExtraComponent implements OnInit {
       this.HoraExtraResponse = res;
       console.log(this.HoraExtraResponse);
       var f = new Date();
-      let notificacion = { 
+      let notificacion = {
         id: null,
         id_send_empl: this.id_user_loggin,
         id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
         id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
-        estado: this.HoraExtraResponse.estado, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+        estado: this.HoraExtraResponse.estado,
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
         id_permiso: null,
         id_vacaciones: null,
         id_hora_extra: this.HoraExtraResponse.id
@@ -131,7 +131,7 @@ export class PedidoHoraExtraComponent implements OnInit {
         }
       });
     });
-    
+
   }
 
   IngresarDatos(datos) {
@@ -177,6 +177,40 @@ export class PedidoHoraExtraComponent implements OnInit {
       this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
       return false;
     }
+  }
+
+  CalcularTiempo(form) {
+    this.PedirHoraExtraForm.patchValue({ horasForm: '' })
+    if (form.horaInicioForm != '' && form.horaFinForm != '') {
+      console.log('revisando horas', form.horaInicioForm, form.horaFinForm)
+      var hora1 = (String(form.horaInicioForm) + ':00').split(":"),
+        hora2 = (String(form.horaFinForm) + ':00').split(":"),
+        t1 = new Date(),
+        t2 = new Date();
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+      //Aquí hago la resta
+      t1.setHours(t2.getHours() - t1.getHours(), t2.getMinutes() - t1.getMinutes(), t2.getSeconds() - t1.getSeconds());
+      if (t1.getHours() < 10 && t1.getMinutes() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + '0' + t1.getMinutes();
+        this.PedirHoraExtraForm.patchValue({ horasForm: tiempoTotal })
+      }
+      else if (t1.getHours() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + t1.getMinutes();
+        this.PedirHoraExtraForm.patchValue({ horasForm: tiempoTotal })
+      }
+      else if (t1.getMinutes() < 10) {
+        var tiempoTotal: string = t1.getHours() + ':' + '0' + t1.getMinutes();
+        this.PedirHoraExtraForm.patchValue({ horasForm: tiempoTotal })
+      }
+    }
+    else {
+      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR')
+    }
+  }
+
+  LimpiarCampoHoras() {
+    this.PedirHoraExtraForm.patchValue({ horasForm: '' })
   }
 
 }

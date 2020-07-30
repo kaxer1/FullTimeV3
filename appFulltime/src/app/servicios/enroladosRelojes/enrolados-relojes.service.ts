@@ -14,15 +14,24 @@ export class EnroladosRelojesService {
 
   // Asignar Ciudad Feriado
 
-  CrearEnroladoReloj(datos: any){ 
+  CrearEnroladoReloj(datos: any) {
     return this.http.post(`${this.API_URL}/enroladosRelojes/insertar`, datos);
   }
 
-  BuscarIdReloj(datos: any){ 
+  BuscarIdReloj(datos: any) {
     return this.http.post(`${this.API_URL}/enroladosRelojes/buscar`, datos);
   }
 
-  BuscarEnroladosReloj(id: number){
+  BuscarEnroladosReloj(id: number) {
     return this.http.get(`${this.API_URL}/enroladosRelojes/nombresReloj/${id}`);
   }
+
+  ActualizarDatos(datos: any) {
+    return this.http.put(`${this.API_URL}/enroladosRelojes`, datos);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/enroladosRelojes/eliminar/${id}`);
+  }
+
 }

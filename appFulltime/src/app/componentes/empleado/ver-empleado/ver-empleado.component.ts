@@ -43,6 +43,7 @@ import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
+import { EditarAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -670,6 +671,27 @@ export class VerEmpleadoComponent implements OnInit {
       });
   }
 
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarAutorizacion(id_auto: number) {
+    this.restAutoridad.EliminarRegistro(id_auto).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDeleteAutorizacion(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarAutorizacion(datos.id);
+        } else {
+          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+        }
+      });
+  }
+
   /* 
   ****************************************************************************************************
   *                               ACCIONES BOTONES
@@ -921,16 +943,26 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirEditarPlanificacion(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarPlanificacionComponent,
-      { width: '300px', data: {idEmpleado: this.idEmpleado, datosPlan: datoSeleccionado} }).afterClosed().subscribe(item => {
+      { width: '300px', data: { idEmpleado: this.idEmpleado, datosPlan: datoSeleccionado } }).afterClosed().subscribe(item => {
         this.obtenerPlanHorarios(parseInt(this.idEmpleado));
       });
   }
+  
   /* Ventana para editar planificación de comidas */
   AbrirEditarPlanComidas(datoSeleccionado): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarPlanComidasComponent, { width: '600px', data: datoSeleccionado })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+      });
+  }
+
+  /* Ventana para editar autorizaciones de diferentes departamentos */
+  AbrirEditarAutorizar(datoSeleccionado): void {
+    console.log('datos auto', datoSeleccionado);
+    this.vistaRegistrarDatos.open(EditarAutorizacionDepaComponent,
+      { width: '600px', data: { idEmpleado: this.idEmpleado, datosAuto: datoSeleccionado } }).afterClosed().subscribe(item => {
+        this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
       });
   }
 

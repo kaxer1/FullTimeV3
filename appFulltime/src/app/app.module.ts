@@ -239,6 +239,9 @@ import { EditarHorarioEmpleadoComponent } from './componentes/empleadoHorario/ed
 import { EditarPlanificacionComponent } from './componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarDetallePlanComponent } from './componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
 import { EditarPlanComidasComponent } from './componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
+import { EditarAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
+import { EditarDispositivoEnroladoComponent } from './componentes/catalogos/catEnrolados/editar-dispositivo-enrolado/editar-dispositivo-enrolado.component';
+import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -409,6 +412,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarPlanificacionComponent,
     EditarDetallePlanComponent,
     EditarPlanComidasComponent,
+    EditarAutorizacionDepaComponent,
+    EditarDispositivoEnroladoComponent,
+    PlanificacionComidasEmpleadoComponent,
   ],
 
   imports: [

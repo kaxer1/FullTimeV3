@@ -50,7 +50,7 @@
                     <div class="col">
                         <mat-form-field>
                             <mat-label id="fec">Fecha de inicio de período</mat-label>
-                            <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                            <input matInput [matDatepicker]="picker" (dateInput)="validarFecha($event)" placeholder="dd/mm/aaaa"
                                 [formControl]="fechaInicioF" required>
                             <mat-datepicker-toggle matSuffix [for]="picker" id="contratoE"
                                 matTooltipClass="contratoE-tooltip" matTooltipPosition="right"
