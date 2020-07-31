@@ -9,6 +9,8 @@ import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.s
 import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
 import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -134,6 +136,27 @@ export class ListarRelojesComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarRelojComponent, { width: '1200px', data: { datosReloj: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarRelojes(id_reloj: number) {
+    this.rest.EliminarRegistro(id_reloj).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerReloj();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarRelojes(datos.id);
+        } else {
+          this.router.navigate(['/listarRelojes/']);
+        }
+      });
+  }
+
   /** Ventana para registrar datos de un nuevo dispositivo */
   AbrirVentanaRegistrarReloj(): void {
     this.vistaRegistrarDatos.open(RelojesComponent, { width: '1200px' }).disableClose = true;
@@ -212,15 +235,15 @@ export class ListarRelojesComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

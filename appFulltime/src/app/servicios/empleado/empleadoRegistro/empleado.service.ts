@@ -109,6 +109,21 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha/contrato`, datos);
   }
 
+
+  // GUARDAR CODIGO
+
+  CrearCodigo(datos: any) {
+    return this.http.post(`${this.API_URI}/empleado/crearCodigo`, datos);
+  }
+
+  ObtenerCodigo() {
+    return this.http.get(`${this.API_URI}/empleado/encontrarDato/codigo`);
+  }
+
+  ActualizarCodigo(datos: any) {
+    return this.http.put(`${this.API_URI}/empleado/cambiarCodigo`, datos);
+  }
+
   // servicio para obtener la lista de las nacionalidades
   getListaNacionalidades() {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)

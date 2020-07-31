@@ -29,6 +29,7 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
   }
 
   /** Método para mostrar datos de planificación de almuerzos */

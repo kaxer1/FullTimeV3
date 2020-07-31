@@ -16,59 +16,27 @@
         <mat-card-content>
             <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
                 <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Fecha de Solicitud:</label>
+                    <div class="col-3">
+                        <label id="datosF" class="col-sm col-form-label">Fecha de Solicitud:</label>
+                        <label id="datosF" class="col-sm col-form-label">Hora Inicio:</label>
+                        <label id="datosF" class="col-sm col-form-label">Nombre Plato:</label>
+                        <label id="datosF" class="col-sm col-form-label">Precio Plato:</label>
                     </div>
-                    <div class="col">
+                    <div class="col-2">
                         <label class="col col-form-label">{{pc.fecha.split("T")[0]}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Fecha Planificación:</label>
-                    </div>
-                    <div class="col">
-                        <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Hora Inicio:</label>
-                    </div>
-                    <div class="col">
                         <label class="col col-form-label">{{pc.hora_inicio}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Hora Fin:</label>
-                    </div>
-                    <div class="col">
-                        <label class="col col-form-label">{{pc.hora_fin}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Nombre Plato:</label>
-                    </div>
-                    <div class="col">
                         <label class="col col-form-label">{{pc.nombre}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Observación:</label>
-                    </div>
-                    <div class="col">
-                        <label class="col col-form-label">{{pc.observacion}}</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <label class="col-sm col-form-label">Precio Plato:</label>
-                    </div>
-                    <div class="col">
                         <label class="col col-form-label">$ {{pc.valor}}</label>
+                    </div>
+                    <div class="col-3" id="verticalLine">
+                        <label id="datosF" class="col-sm col-form-label">Fecha Planificación:</label>
+                        <label id="datosF" class="col-sm col-form-label">Hora Fin:</label>
+                        <label id="datosF" class="col-sm col-form-label">Observación:</label>
+                    </div>
+                    <div class="col-2">
+                        <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
+                        <label class="col col-form-label">{{pc.hora_fin}}</label>
+                        <label class="col col-form-label">{{pc.observacion}}</label>
                     </div>
                 </div>
                 <div style="text-align: right;">

@@ -16,6 +16,8 @@ td { padding-top: 10px; text-align: center; }
 
 .fa-edit { color:green; margin-left: 20px; cursor: pointer; }
 
+#ver { color: indianred; cursor: pointer; }
+
 #nombre { font-size: x-small; }
 
 h4 { font-weight: bold; text-align: center; }

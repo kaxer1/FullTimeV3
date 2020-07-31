@@ -65,6 +65,18 @@ class DetalleCatalogoHorarioControlador {
         fs.unlinkSync(filePath);
     }
 
+    public async ActualizarDetalleHorarios(req: Request, res: Response): Promise<void> {
+        const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id } = req.body;
+        await pool.query('UPDATE deta_horarios SET orden = $1, hora = $2, minu_espera = $3, nocturno = $4, id_horario = $5, tipo_accion = $6 WHERE id = $7', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id]);
+        res.jsonp({ message: 'Detalle de Horario se registró con éxito' });
+    }
+
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM deta_horarios WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 }
 
 export const DETALLE_CATALOGO_HORARIO_CONTROLADOR = new DetalleCatalogoHorarioControlador();

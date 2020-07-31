@@ -68,7 +68,7 @@ export class RegimenComponent implements OnInit {
     if (nombreRegimen === 'OTRO') {
       this.LimpiarDiasMeses();
       this.IngresarDatosOtro();
-      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;;
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
       this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Etiqueta Régimen Laboral Activa')
     }
     else if (nombreRegimen === 'CODIGO DE TRABAJO') {

@@ -79,6 +79,20 @@ class DetalleCatalogoHorarioControlador {
             fs_1.default.unlinkSync(filePath);
         });
     }
+    ActualizarDetalleHorarios(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id } = req.body;
+            yield database_1.default.query('UPDATE deta_horarios SET orden = $1, hora = $2, minu_espera = $3, nocturno = $4, id_horario = $5, tipo_accion = $6 WHERE id = $7', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id]);
+            res.jsonp({ message: 'Detalle de Horario se registró con éxito' });
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM deta_horarios WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.DETALLE_CATALOGO_HORARIO_CONTROLADOR = new DetalleCatalogoHorarioControlador();
 exports.default = exports.DETALLE_CATALOGO_HORARIO_CONTROLADOR;
