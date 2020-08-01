@@ -60,7 +60,9 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTitulo(): void {
-    this.vistaRegistrarDatos.open(TitulosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(TitulosComponent, { width: '400px' }).afterClosed().subscribe(items => {
+      this.ObtenerTitulos();
+    });
   }
 
   LimpiarCampos() {
@@ -105,8 +107,9 @@ export class ListarTitulosComponent implements OnInit {
 
   AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
-    //console.log(datosSeleccionados.fecha);
+    this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.ObtenerTitulos();
+    });
   }
   
 }

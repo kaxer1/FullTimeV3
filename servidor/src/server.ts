@@ -74,7 +74,7 @@ class Servidor {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
-        this.app.use(express.raw({ type: 'image/*', limit: '1Mb' }));
+        this.app.use(express.raw({ type: 'image/*', limit: '2Mb' }));
 
     }
 
@@ -188,9 +188,12 @@ setInterval(async () => {
     console.log(date.toLocaleDateString());
     console.log(date.toLocaleTimeString());
     const hora = date.getHours();
-
-    if (hora === 12) {
-        const felizCumple = await pool.query('SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE fec_nacimiento = $1', [date]);
+    const fecha = date.toJSON().slice(4).split("T")[0];
+    console.log(fecha)
+    // SERVIDOR.app.use()
+    if (hora === 15) {
+        const felizCumple = await pool.query("SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE CAST(empleados.fec_nacimiento AS VARCHAR) LIKE '%' || $1", [fecha]);
+        console.log(felizCumple.rows);
         if (felizCumple.rowCount > 0) {
             const email = process.env.EMAIL;
             const pass = process.env.PASSWORD;
@@ -201,7 +204,7 @@ setInterval(async () => {
                 auth: {
                     user: email,
                     pass: pass
-                }
+                },
             });
             // Enviar mail a todos los que nacieron en la fecha seleccionada
             felizCumple.rows.forEach(obj => {
@@ -216,11 +219,11 @@ setInterval(async () => {
                     <p>Sabemos que es un dia especial para ti <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> 
                     , esperamos que la pases muy bien en compañia de tus seres queridos.
                         </p>
-                    <img src="cid:unique@kreata.ee"/>`,
+                    <img src="cid:cumple"/>`,
                     attachments: [{
-                        // filename: 'birthday1.jpg',
+                        filename: 'birthday1.jpg',
                         path: `${path}/cumpleanios/birthday1.jpg`,
-                        cid: 'unique@kreata.ee' //same cid value as in the html img src
+                        cid: 'cumple' //same cid value as in the html img src
                     }]
                 };
                 console.log(data)
@@ -235,7 +238,7 @@ setInterval(async () => {
             })
         }
     }
-}, 3600000);
+}, 60000);
 
 function sumaDias(fecha: Date, dias: number) {
     fecha.setDate(fecha.getDate() + dias);

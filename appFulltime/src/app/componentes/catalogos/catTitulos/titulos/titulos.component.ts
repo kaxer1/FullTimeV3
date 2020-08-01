@@ -150,7 +150,6 @@ export class TitulosComponent implements OnInit {
   CerrarVentanaRegistroTitulo() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }
