@@ -49,6 +49,9 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
+          <a mat-list-item [routerLink]="['/codigo']" class="texcol">
+            <span matLine>Configurar Código</span>
+          </a>
           <a mat-list-item [routerLink]="['/empleado']" class="texcol">
             <span matLine>Crear Empleado</span>
           </a>
@@ -223,7 +226,7 @@
         <mat-expansion-panel-header class="selec1">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">account_circle</mat-icon>
-            <span class="item-menu" id="accion">Perfil</span>
+            <span class="item-menu">Perfil</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -241,7 +244,7 @@
         <mat-expansion-panel-header class="selec2">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">mobile_friendly</mat-icon>
-            <span class="item-menu" id="accion">Asistencia</span>
+            <span class="item-menu">Asistencia</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -259,7 +262,7 @@
         <mat-expansion-panel-header class="selec3">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">hourglass_full</mat-icon>
-            <span class="item-menu" id="accion">Horas Extras</span>
+            <span class="item-menu">Horas Extras</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -274,7 +277,7 @@
         <mat-expansion-panel-header class="selec4">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">flight</mat-icon>
-            <span class="item-menu" id="accion">Vacaciones</span>
+            <span class="item-menu">Vacaciones</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -289,7 +292,7 @@
         <mat-expansion-panel-header class="selec6">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">transfer_within_a_station</mat-icon>
-            <span class="item-menu" id="accion">Permisos</span>
+            <span class="item-menu">Permisos</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -299,12 +302,58 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
+      <!-- ALMUERZOS -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">restaurant</mat-icon>
+            <span class="item-menu">Almuerzos</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/almuerzosEmpleado']" class="texcol">
+            <span matLine>Planificación</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- PROCESOS -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Acción de Personal</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/procesosEmpleado']" class="texcol">
+            <span matLine>Procesos</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+
+      <!-- AUTORIZACION -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">lock_open</mat-icon>
+            <span class="item-menu" id="accion">Autorización</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/autorizaEmpleado']" class="texcol">
+            <span matLine>Autoridad</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
       <!-- INFORMACIÓN -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec7">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">info</mat-icon>
-            <span class="item-menu" id="accion">Información</span>
+            <span class="item-menu">Información</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -381,9 +430,11 @@
                 [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     un permiso</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -392,9 +443,11 @@
                 [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     vacaciones</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -403,9 +456,11 @@
                 [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     hora extra</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -416,9 +471,11 @@
                 [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     un permiso</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -427,9 +484,11 @@
                 [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     vacaciones</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -438,9 +497,11 @@
                 [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
+                  <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                    solicitado
                     hora extra</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -448,14 +509,15 @@
             </div>
             <!-- Notificaicones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO-->
             <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-              <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
+              <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null"
+                mat-menu-item [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -467,7 +529,8 @@
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -479,21 +542,23 @@
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
               </a>
             </div>
             <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-              <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
+              <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null"
+                mat-menu-item [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
                 (click)="CambiarVistaNotificacion(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -505,7 +570,8 @@
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -517,7 +583,8 @@
                   <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
                     estado de la</li>
                   <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
-                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
+                  <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b>
                     {{n.create_at.slice(11,16)}}</li>
                 </ul>
                 <mat-divider class="divider"></mat-divider>
@@ -526,8 +593,8 @@
           </div>
         </div>
         <div class="d-flex justify-content-center" *ngIf="loginService.getRolMenu()">
-          <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti" >
-            Mostrar todas las notificaciones            
+          <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
+            Mostrar todas las notificaciones
           </a>
         </div>
       </mat-menu>
@@ -536,13 +603,15 @@
         <mat-icon id="iconos-navegador" style="margin-left: 8px;">settings</mat-icon>
       </button>
       <mat-menu #settings="matMenu">
-        <div><h4 style="text-align: center;">Ajustes</h4></div>
+        <div>
+          <h4 style="text-align: center;">Ajustes</h4>
+        </div>
         <button mat-menu-item (click)="AbrirSettings()">
           <mat-icon>mark_email_unread</mat-icon>
           <span>Correo y notificaciones</span>
         </button>
       </mat-menu>
-      
+
       <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
         <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>
       </button>

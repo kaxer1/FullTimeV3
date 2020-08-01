@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
 
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarHorarioComponent } from 'src/app/componentes/catalogos/catHorario/editar-horario/editar-horario.component';
-
+import { EditarDetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/editar-detalle-cat-horario/editar-detalle-cat-horario.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-ver-horario-detalle',
@@ -29,6 +31,7 @@ export class VerHorarioDetalleComponent implements OnInit {
     public router: Router,
     private rest: HorarioService,
     private restD: DetalleCatHorariosService,
+    private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
   ) {
     var cadena = this.router.url;
@@ -77,12 +80,44 @@ export class VerHorarioDetalleComponent implements OnInit {
   }
 
   AbrirVentanaDetalles(datosSeleccionados): void {
-    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent, { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(DetalleCatHorarioComponent,
+      { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true} }).disableClose = true; 
+  }
+
+  AbrirVentanaEditarDetalle(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarDetalleCatHorarioComponent,
+      { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(item => {
+        this.BuscarDatosHorario(this.idHorario);
+        this.ListarDetalles(this.idHorario);
+      });
+  }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarDetalle(id_detalle: number) {
+    this.restD.EliminarRegistro(id_detalle).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.BuscarDatosHorario(this.idHorario);
+      this.ListarDetalles(this.idHorario);
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarDetalle(datos.id);
+        } else {
+          this.router.navigate(['/verHorario/', this.idHorario]);
+        }
+      });
   }
 
 }

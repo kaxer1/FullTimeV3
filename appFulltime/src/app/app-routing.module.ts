@@ -36,8 +36,6 @@ import { ListaSucursalesComponent } from './componentes/sucursales/lista-sucursa
 import { ListarEmpresasComponent } from './componentes/catalogos/catEmpresa/listar-empresas/listar-empresas.component';
 import { ListarNivelTitulosComponent } from './componentes/nivelTitulos/listar-nivel-titulos/listar-nivel-titulos.component';
 import { DispositivosEnroladosComponent } from './componentes/catalogos/catEnrolados/dispositivos-enrolados/dispositivos-enrolados.component';
-// import { NotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/Registro/noti-autorizaciones/noti-autorizaciones.component';
-// import { AutorizacionesComponent } from './componentes/autorizaciones/autorizaciones/autorizaciones.component';
 import { OlvidarContraseniaComponent } from './componentes/login/olvidar-contrasenia/olvidar-contrasenia.component';
 import { ConfirmarContraseniaComponent } from './componentes/login/confirmar-contrasenia/confirmar-contrasenia.component';
 import { PlanificacionMultipleComponent } from './componentes/planificacion-multiple/planificacion-multiple.component';
@@ -53,7 +51,9 @@ import { VerVacacionComponent } from './componentes/vacaciones/ver-vacacion/ver-
 import { ListarVacacionesComponent } from './componentes/vacaciones/listar-vacaciones/listar-vacaciones.component';
 import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/ver-documentos.component';
 import { SucListaNotiComponent } from './componentes/catalogos/catNotificaciones/suc-lista-noti/suc-lista-noti.component';
+import { VerDipositivoComponent } from './componentes/catalogos/catRelojes/ver-dipositivo/ver-dipositivo.component';
 import { AuthGuard } from "./guards/auth.guard";
+import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
 
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
@@ -68,6 +68,9 @@ import { RealtimeNotificacionComponent } from './componentes/notificaciones/real
 import { VerDocumentacionComponent } from './componentes/rolEmpleado/ver-documentacion/ver-documentacion.component';
 import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
 import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/hora-extra-empleado.component';
+import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
+import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
+import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 
 
 
@@ -112,20 +115,19 @@ const routes: Routes = [
   { path: 'nivelTitulos', component: ListarNivelTitulosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'empresa', component: ListarEmpresasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  // { path: 'noti-autorizaciones', component: NotiAutorizacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
-  // { path: 'autorizaciones', component: AutorizacionesComponent, canActivate: [AuthGuard], data: { roles: 1 }},
-  { path: 'planificacion', component: PlanificacionMultipleComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+ { path: 'planificacion', component: PlanificacionMultipleComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'verHorario/:id', component: VerHorarioDetalleComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'permisos-solicitados', component: ListarEmpleadoPermisoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'vacaciones-solicitados', component: ListarVacacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'horas-extras-solicitadas', component: ListaPedidoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'timbres', component: RegistrarTimbreComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'asistencia', component: RegistrarAsistenciaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  // { path: 'pedirHoraExtra', component: VerPedidoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'calcularHoraExtra', component: CalculoHoraExtraComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'verDetalles/:id/:id_empleado', component: VerDetallePlanHorariosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'archivos', component: VerDocumentosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'verDispositivos/:id', component: VerDipositivoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'codigo', component: ConfigurarCodigoComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   
   { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'estadisticas', component: HomeEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
@@ -138,6 +140,9 @@ const routes: Routes = [
   { path: 'solicitarPermiso', component: SolicitarPermisosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'verDocumentacion', component: VerDocumentacionComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'horaExtraEmpleado', component: HoraExtraEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'almuerzosEmpleado', component: PlanificacionComidasEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'procesosEmpleado', component: ProcesosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'autorizaEmpleado', component: AutorizaEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
 
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard], data: { log: false } },
   { path: 'olvidar-contrasenia', component: OlvidarContraseniaComponent, canActivate: [AuthGuard], data: { log: false } },

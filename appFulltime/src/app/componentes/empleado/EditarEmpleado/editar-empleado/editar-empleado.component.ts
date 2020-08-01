@@ -89,7 +89,6 @@ export class EditarEmpleadoComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
-
   }
 
   private _filter(value: string): string[] {

@@ -4,17 +4,16 @@
 <div class="container" style="padding-bottom: 35px;">
     <br>
     <div class="nota">
-        <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+        <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+            Guardar.</span>
     </div>
     <form [formGroup]="PedirHoraExtraForm">
         <div class="d-flex flex-wrap justify-content-around">
             <mat-form-field>
                 <mat-label>Fecha de Solicitud</mat-label>
-                <input matInput [matDatepicker]="picker1" [formControl]="fechaSolicitudF" required
-                    [disabled]="true">
-                <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
-                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                    matTooltip="Fecha de solicitud">
+                <input matInput [matDatepicker]="picker1" [formControl]="fechaSolicitudF" required [disabled]="true">
+                <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                    matTooltipPosition="right" matTooltip="Fecha de solicitud">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker1></mat-datepicker>
             </mat-form-field>
@@ -30,8 +29,8 @@
             <mat-form-field>
                 <mat-label>Estado</mat-label>
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
-                help_outline</mat-icon>
+                    matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
+                    help_outline</mat-icon>
                 <mat-select [formControl]="estadoF" required>
                     <mat-option *ngFor="let e of estados" [value]="e.id">
                         {{e.nombre}}
@@ -42,8 +41,8 @@
             <mat-form-field>
                 <mat-label>Fecha Inicio Actividades</mat-label>
                 <input matInput [matDatepicker]="picker2" [formControl]="fechaInicioF" required>
-                <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso"
-                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                    matTooltipPosition="right"
                     matTooltip="Fecha de inicio de horas extras. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker2></mat-datepicker>
@@ -51,7 +50,8 @@
             <br>
             <mat-form-field>
                 <mat-label>Hora de Inicio</mat-label>
-                <input matInput [formControl]="horaInicioF" type="time" (keypress)="IngresarSoloNumeros($event)">
+                <input matInput [formControl]="horaInicioF" type="time" (keypress)="IngresarSoloNumeros($event)"
+                    (click)="LimpiarCampoHoras()">
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                     matTooltip="Hora en la que inicia actividades de horas extras">
                     help_outline</mat-icon>
@@ -60,8 +60,8 @@
             <mat-form-field>
                 <mat-label>Fecha Fin Actividades</mat-label>
                 <input matInput [matDatepicker]="picker3" [formControl]="FechaFinF" required>
-                <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso"
-                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
+                    matTooltipPosition="right"
                     matTooltip="Fecha en la que finaliza actividades de horas extras. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker3></mat-datepicker>
@@ -69,7 +69,8 @@
             <br>
             <mat-form-field>
                 <mat-label>Hora de Finalización</mat-label>
-                <input matInput [formControl]="horaFinF" type="time" (keypress)="IngresarSoloNumeros($event)">
+                <input matInput [formControl]="horaFinF" type="time" (keypress)="IngresarSoloNumeros($event)"
+                    (click)="LimpiarCampoHoras()">
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                     matTooltip="Hora en la que finaliza las actividades de horas extras">
                     help_outline</mat-icon>
@@ -77,10 +78,11 @@
             <br>
             <mat-form-field>
                 <mat-label>Número de horas y minutos</mat-label>
-                <input matInput [formControl]="horasF" type="time" (keypress)="IngresarSoloNumeros($event)">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Indicar cuantas horas y minutos solicita de horas extras">
-                    help_outline</mat-icon>
+                <input matInput [formControl]="horasF" type="time" (keypress)="IngresarSoloNumeros($event)" readonly>
+                <mat-icon (click)="CalcularTiempo(PedirHoraExtraForm.value)" id="permiso" matSuffix
+                    matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Dar click para calcular total de horas extras a solicitar" style="color:blue">
+                    touch_app</mat-icon>
             </mat-form-field>
             <br>
             <mat-form-field>
@@ -94,7 +96,7 @@
     </form>
     <br>
     <div class="d-flex justify-content-center">
-        <button mat-button class="btn btn-sm" (click)="insertarTipoPermiso(PedirHoraExtraForm.value)" 
+        <button mat-button class="btn btn-sm" (click)="insertarTipoPermiso(PedirHoraExtraForm.value)"
             [disabled]="!PedirHoraExtraForm.valid">Guardar</button>
         <button mat-button class="btn btn-sm" (click)="dialogRef.close()">Salir</button>
     </div>

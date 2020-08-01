@@ -40,6 +40,18 @@ class RelojesControlador {
             }
         });
     }
+    ListarDatosUnReloj(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const RELOJES = yield database_1.default.query('SELECT * FROM NombreDispositivos WHERE id = $1', [id]);
+            if (RELOJES.rowCount > 0) {
+                return res.jsonp(RELOJES.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     CrearRelojes(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento } = req.body;
@@ -98,6 +110,13 @@ class RelojesControlador {
             const name = req.params.nameXML;
             let filePath = `servidor\\xmlDownload\\${name}`;
             res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_relojes WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
 }

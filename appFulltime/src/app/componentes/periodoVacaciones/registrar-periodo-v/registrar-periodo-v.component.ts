@@ -2,8 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
@@ -148,6 +149,36 @@ export class RegistrarPeriodoVComponent implements OnInit {
       this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
       return false;
     }
+  }
+
+  dInicio: any;
+  validarFecha(event) {
+    this.PerVacacionesForm.patchValue({
+      fechaFinForm: ''
+    });
+    this.dInicio = event.value._i;
+    var fecha = new Date(String(moment(this.dInicio)));
+    var ingreso = String(moment(fecha, "YYYY/MM/DD").format("YYYY-MM-DD"));
+    this.rest.BuscarDatosContrato(this.datoEmpleado.idContrato).subscribe(data => {
+      if (Date.parse(data[0].fec_ingreso.split('T')[0]) <= Date.parse(ingreso)) {
+        if (data[0].descripcion === 'CODIGO DE TRABAJO') {
+          fecha.setMonth(fecha.getMonth() + 12);
+          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+        }
+        else if (data[0].descripcion === 'LOSEP') {
+          fecha.setMonth(fecha.getMonth() + 11);
+          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+        }
+        else if (data[0].descripcion === 'LOES') {
+          fecha.setMonth(fecha.getMonth() + 11);
+          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+        }
+      }
+      else {
+        this.PerVacacionesForm.patchValue({ fechaInicioForm: '' });
+        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.');
+      }
+    })
   }
 
 }

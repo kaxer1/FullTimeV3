@@ -10,7 +10,7 @@ class EmpleadoControlador {
   public async list(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
     res.jsonp(empleado.rows);
-   
+
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
@@ -109,11 +109,11 @@ class EmpleadoControlador {
       const contrasena = md5.appendStr(data.contrasena).end();
 
       const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, codigo, usuario, estado_user, rol, app_habilita } = data;
-      
+
       //obtener id del rol
       const id_rol = await pool.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
       //var id_horario = id_rol.rows[0]['id'];
-     
+
       if (cedula != undefined) {
         await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
         const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
@@ -186,7 +186,27 @@ class EmpleadoControlador {
     }
   }
 
+  public async CrearCodigo(req: Request, res: Response) {
+    const { id, valor, cedula } = req.body;
+    await pool.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+    res.jsonp({ message: 'Codigo guardado' });
+  }
 
+  public async ActualizarCodigo(req: Request, res: Response) {
+    const { valor, id } = req.body;
+    await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [valor, id]);
+    res.jsonp({ message: 'Codigo actualizado' });
+  }
+
+  public async ObtenerCodigo(req: Request, res: Response): Promise<any> {
+    const VALOR = await pool.query('SELECT *FROM codigo');
+    if (VALOR.rowCount > 0) {
+      return res.jsonp(VALOR.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registros no encontrados' });
+    }
+  }
 
 }
 

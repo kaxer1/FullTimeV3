@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
@@ -66,6 +67,7 @@ export class EditarRelojComponent implements OnInit {
     private restSucursales: SucursalService,
     private restE: EmpresaService,
     private toastr: ToastrService,
+    public router: Router,
     public dialogRef: MatDialogRef<EditarRelojComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -197,10 +199,10 @@ export class EditarRelojComponent implements OnInit {
         this.rest.ActualizarDispositivo(datosReloj).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Dispositivo actualizado')
           this.CerrarVentanaRegistroReloj();
-          if(this.data.actualizar === true){
+          if (this.data.actualizar === true) {
             window.location.reload();
           } else {
-            //this.router.navigate(['/verFeriados/', datosFeriado.id]);
+            this.router.navigate(['/verDispositivos/', this.data.datosReloj.id]);
           }
         }, error => { });
       }

@@ -239,6 +239,14 @@ import { EditarHorarioEmpleadoComponent } from './componentes/empleadoHorario/ed
 import { EditarPlanificacionComponent } from './componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarDetallePlanComponent } from './componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
 import { EditarPlanComidasComponent } from './componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
+import { EditarAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
+import { EditarDispositivoEnroladoComponent } from './componentes/catalogos/catEnrolados/editar-dispositivo-enrolado/editar-dispositivo-enrolado.component';
+import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
+import { EditarDetalleCatHorarioComponent } from './componentes/catalogos/catHorario/editar-detalle-cat-horario/editar-detalle-cat-horario.component';
+import { VerDipositivoComponent } from './componentes/catalogos/catRelojes/ver-dipositivo/ver-dipositivo.component';
+import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
+import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
+import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -409,6 +417,14 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarPlanificacionComponent,
     EditarDetallePlanComponent,
     EditarPlanComidasComponent,
+    EditarAutorizacionDepaComponent,
+    EditarDispositivoEnroladoComponent,
+    PlanificacionComidasEmpleadoComponent,
+    EditarDetalleCatHorarioComponent,
+    VerDipositivoComponent,
+    ProcesosEmpleadoComponent,
+    AutorizaEmpleadoComponent,
+    ConfigurarCodigoComponent,
   ],
 
   imports: [

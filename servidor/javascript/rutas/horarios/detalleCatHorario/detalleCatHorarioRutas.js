@@ -19,6 +19,8 @@ class PermisosRutas {
         this.router.post('/', detalleCatHorarioControlador_1.default.CrearDetalleHorarios);
         this.router.get('/:id_horario', detalleCatHorarioControlador_1.default.ListarUnDetalleHorario);
         this.router.post('/upload', multipartMiddleware, detalleCatHorarioControlador_1.default.CrearHorarioDetallePlantilla);
+        this.router.put('/', detalleCatHorarioControlador_1.default.ActualizarDetalleHorarios);
+        this.router.delete('/eliminar/:id', detalleCatHorarioControlador_1.default.EliminarRegistros);
     }
 }
 const DETALLE_CATALOGO_HORARIO_RUTAS = new PermisosRutas();

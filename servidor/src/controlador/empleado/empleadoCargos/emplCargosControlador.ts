@@ -74,7 +74,6 @@ class EmpleadoCargosControlador {
       else {
         return res.status(404).jsonp({ text: 'Registro no encontrado' });
       }
-
     }
     else {
       return res.status(404).jsonp({ text: 'Registro no encontrado' });
@@ -90,7 +89,7 @@ class EmpleadoCargosControlador {
     else {
       return res.status(404).jsonp({ message: 'error' });
     }
-    
+
   }
 
   public async EditarCargo(req: Request, res: Response): Promise<any> {

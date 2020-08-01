@@ -15,8 +15,7 @@
                                 <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
                                     [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
                                 <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dipositivo por el nombre">
+                                    matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
                                     help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos
                                     letras
@@ -51,9 +50,8 @@
                             </mat-form-field>
                             <mat-form-field>
                                 <mat-label>IP</mat-label>
-                                <input matInput placeholder="Ingresar IP" [formControl]="ipF"
-                                    name="filtroIpReloj" [(ngModel)]="filtroIpReloj"
-                                    (keypress)="IngresarIp($event)">
+                                <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
+                                    [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
                                 <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                     matTooltipPosition="right"
                                     matTooltip="Búsqueda del dispositivo por la dirección IP">
@@ -65,8 +63,7 @@
                                 <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
                                     name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
                                 <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dispositivo por el modelo">
+                                    matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
                                     help_outline</mat-icon>
                                 <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos
                                     letras
@@ -75,9 +72,8 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Departamento</mat-label>
-                                <input matInput name="filtroDepartamentoReloj"
-                                    placeholder="Nombre del Departamento" [formControl]="departamentoF"
-                                    [(ngModel)]="filtroDepartamentoReloj">
+                                <input matInput name="filtroDepartamentoReloj" placeholder="Nombre del Departamento"
+                                    [formControl]="departamentoF" [(ngModel)]="filtroDepartamentoReloj">
                                 <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                     matTooltipPosition="right"
                                     matTooltip="Búsqueda del dipositivo por el nombre del departamento en el que se encuentra">
@@ -139,7 +135,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
                         <td>{{reloj.nomempresa}}</td>
                         <td>{{reloj.nomsucursal}}</td>
@@ -152,10 +149,20 @@
                         <td *ngIf="reloj.tien_funciones == true">Sí</td>
                         <td *ngIf="reloj.tien_funciones == false">No</td>
                         <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verDispositivos/',reloj.id]">
+                                <p>Ver</p>
+                            </i>
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(reloj)" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
+                            </i>
+                            <i matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
+                                class="far fa-trash-alt" (click)="ConfirmarDelete(reloj)"
+                                style="color:red; margin-left: 15px;">
+                                <p>Eliminar</p>
                             </i>
                         </td>
                     </tr>

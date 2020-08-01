@@ -1134,158 +1134,66 @@
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">settings</mat-icon>
-            Procesos y Almuerzo
+            Almuerzos
         </ng-template>
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-            <div class="row">
-                <div class="col-md">
-                    <mat-card class="mat-elevation-z8">
-                        <div class="barraTitulo">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col" style="text-align: right;">
-                                        <h5>Procesos del empleado</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaProcesos()">Añadir</button>
-                                    </div>
+            <div class="col-md">
+                <mat-card class="mat-elevation-z8">
+                    <div class="barraTitulo">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col" style="text-align: left;">
+                                    <h5>Planificación Comidas</h5>
+                                </div>
+                                <div class="col" style="text-align: right;">
+                                    <button type="submit" class="btn btn-outline-light btn-sm"
+                                        (click)="AbrirVentanaPlanificacion()">Añadir</button>
                                 </div>
                             </div>
                         </div>
-                        <mat-card-content>
-                            <div class="container" *ngFor="let e of empleadoProcesos" style="padding-top: 15px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Proceso:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{e.proceso}}</label>
-                                    </div>
+                    </div>
+                    <mat-card-content>
+                        <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label id="datosF" class="col-sm col-form-label">Fecha de Solicitud:</label>
+                                    <label id="datosF" class="col-sm col-form-label">Hora Inicio:</label>
+                                    <label id="datosF" class="col-sm col-form-label">Nombre Plato:</label>
+                                    <label id="datosF" class="col-sm col-form-label">Precio Plato:</label>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Inicio:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{e.fec_inicio.split("T")[0]}}</label>
-                                    </div>
+                                <div class="col-2">
+                                    <label class="col col-form-label">{{pc.fecha.split("T")[0]}}</label>
+                                    <label class="col col-form-label">{{pc.hora_inicio}}</label>
+                                    <label class="col col-form-label">{{pc.nombre}}</label>
+                                    <label class="col col-form-label">$ {{pc.valor}}</label>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Final:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
-                                    </div>
+                                <div class="col-3" id="verticalLine">
+                                    <label id="datosF" class="col-sm col-form-label">Fecha Planificación:</label>
+                                    <label id="datosF" class="col-sm col-form-label">Hora Fin:</label>
+                                    <label id="datosF" class="col-sm col-form-label">Observación:</label>
                                 </div>
-                                <div style="text-align: right;">
-                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                        matTooltip="Modificar los datos generales de este registro">
-                                        <p>Editar</p>
-                                    </i>
-                                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeleteProceso(e)" class=" far fa-trash-alt"
-                                    matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
+                                <div class="col-2">
+                                    <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
+                                    <label class="col col-form-label">{{pc.hora_fin}}</label>
+                                    <label class="col col-form-label">{{pc.observacion}}</label>
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
+                                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matTooltip="Modificar los datos generales de este registro">
+                                    <p>Editar</p>
+                                </i>
+                                <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)"
+                                    class=" far fa-trash-alt" matTooltipPosition="right" id="delete"
+                                    matTooltip="Eliminar registro">
                                     <p>Eliminar</p>
                                 </i>
-                                </div>
-                                <mat-divider></mat-divider>
                             </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-
-                <div class="col-md">
-                    <mat-card class="mat-elevation-z8">
-                        <div class="barraTitulo">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col" style="text-align: left;">
-                                        <h5>Planificación Comidas</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaPlanificacion()">Añadir</button>
-                                    </div>
-                                </div>
-                            </div>
+                            <mat-divider></mat-divider>
                         </div>
-                        <mat-card-content>
-                            <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha de Solicitud:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.fecha.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Planificación:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.fec_solicita.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Hora Inicio:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.hora_inicio}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Hora Fin:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.hora_fin}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Nombre:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.nombre}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Observación:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pc.observacion}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Precio Plato:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">$ {{pc.valor}}</label>
-                                    </div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                        matTooltip="Modificar los datos generales de este registro">
-                                        <p>Editar</p>
-                                    </i>
-                                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)" class=" far fa-trash-alt"
-                                        matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
-                                        <p>Eliminar</p>
-                                    </i>
-                                </div>
-
-                                <mat-divider></mat-divider>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
+                    </mat-card-content>
+                </mat-card>
             </div>
         </div>
     </mat-tab>
@@ -1294,58 +1202,10 @@
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">settings</mat-icon>
-            Autorización y Permisos
+            Permisos
         </ng-template>
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <div class="row">
-                <div class="col-md">
-                    <mat-card class="mat-elevation-z8">
-                        <div class="barraTitulo">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col" style="text-align: right;">
-                                        <h5>Autorizaciones</h5>
-                                    </div>
-                                    <div class="col" style="text-align: right;">
-                                        <button type="submit" class="btn btn-outline-light btn-sm"
-                                            (click)="AbrirVentanaAutorizar()">Añadir</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <mat-card-content>
-                            <div class="container" *ngFor="let autoD of autorizacionesTotales"
-                                style="padding-top: 15px;">
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Departamento de:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{autoD.nom_depar}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Autoriza:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label" *ngIf="autoD.estado == true">Si</label>
-                                        <label class="col col-form-label" *ngIf="autoD.estado == false">No</label>
-                                    </div>
-                                </div>
-                                <!--  <div style="text-align: right;">
-                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                        matTooltip="Modificar los datos generales de este registro">
-                                        <p>Editar</p>
-                                    </i>
-                                </div>-->
-                                <mat-divider></mat-divider>
-                            </div>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
-
                 <div class="col-md">
                     <mat-card class="mat-elevation-z8">
                         <div class="barraTitulo">
@@ -1425,6 +1285,135 @@
                                             <p>{{pt.docu_nombre}}</p>
                                         </a>
                                     </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- AUTORIZACIONES -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Autorización
+        </ng-template>
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: right;">
+                                        <h5>Autorizaciones</h5>
+                                    </div>
+                                    <div class="col" style="text-align: right;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaAutorizar()">Añadir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let autoD of autorizacionesTotales"
+                                style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col">
+                                        <label id="datosF" class="col-sm col-form-label">Departamento de:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label">{{autoD.nom_depar}}</label>
+                                    </div>
+                                    <div class="col">
+                                        <label id="datosF" class="col-sm col-form-label">Autoriza:</label>
+                                    </div>
+                                    <div class="col">
+                                        <label class="col col-form-label" *ngIf="autoD.estado == true">Si</label>
+                                        <label class="col col-form-label" *ngIf="autoD.estado == false">No</label>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <i class="fas fa-edit" id="edit" (click)="AbrirEditarAutorizar(autoD)" matSuffix
+                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
+                                    <i style="color:red; margin-left: 15px;"
+                                        (click)="ConfirmarDeleteAutorizacion(autoD)" class=" far fa-trash-alt"
+                                        matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
+                                        <p>Eliminar</p>
+                                    </i>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- PROCESOS DEL EMPLEADO -->
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">settings</mat-icon>
+            Acción Personal
+        </ng-template>
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: right;">
+                                        <h5>Procesos del empleado</h5>
+                                    </div>
+                                    <div class="col" style="text-align: right;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaProcesos()">Añadir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let e of empleadoProcesos" style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <label id="datosF" class="col-sm col-form-label">Proceso:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="col col-form-label">{{e.proceso}}</label>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="col col-form-label">{{e.fec_inicio.split("T")[0]}}</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <i class="fas fa-edit" id="edit" (click)="AbrirVentanaEditarProceso(e)" matSuffix
+                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
+                                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeleteProceso(e)"
+                                        class=" far fa-trash-alt" matTooltipPosition="right" id="delete"
+                                        matTooltip="Eliminar registro">
+                                        <p>Eliminar</p>
+                                    </i>
                                 </div>
                                 <mat-divider></mat-divider>
                             </div>

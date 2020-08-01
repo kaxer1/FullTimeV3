@@ -203,6 +203,31 @@ class EmpleadoControlador {
             }
         });
     }
+    CrearCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, valor, cedula } = req.body;
+            yield database_1.default.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+            res.jsonp({ message: 'Codigo guardado' });
+        });
+    }
+    ActualizarCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { valor, id } = req.body;
+            yield database_1.default.query('UPDATE codigo SET valor = $1 WHERE id = $2', [valor, id]);
+            res.jsonp({ message: 'Codigo actualizado' });
+        });
+    }
+    ObtenerCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+            if (VALOR.rowCount > 0) {
+                return res.jsonp(VALOR.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_CONTROLADOR = new EmpleadoControlador();
 exports.default = exports.EMPLEADO_CONTROLADOR;
