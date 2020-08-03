@@ -50,9 +50,11 @@
                         <p>Eliminar</p>
                     </i>
                 </div>
-
                 <mat-divider></mat-divider>
             </div>
+            <mat-paginator [length]="planComidas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+                id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            </mat-paginator>
         </mat-card-content>
     </mat-card>
 </div>

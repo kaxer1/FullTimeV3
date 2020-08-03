@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { PageEvent } from '@angular/material/paginator';
 
 import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
@@ -19,6 +20,10 @@ export class ProcesosEmpleadoComponent implements OnInit {
   idEmpleado: string;
   idCargo: any = [];
   cont: number = 0;
+  /* Items de paginación de la tabla */
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public restEmpleadoProcesos: EmpleadoProcesosService,
@@ -32,6 +37,11 @@ export class ProcesosEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   /** Método para mostrar datos de los procesos del empleado */

@@ -46,7 +46,7 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
 
   ValidarMinEspera(form, datos) {
     if (form.minEsperaForm === '') {
-      datos.minu_espera = '00:00';
+      datos.minu_espera = 0;
     }
   }
 

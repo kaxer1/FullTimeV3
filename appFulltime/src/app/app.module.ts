@@ -246,6 +246,7 @@ import { VerDipositivoComponent } from './componentes/catalogos/catRelojes/ver-d
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
+import { VerRegimenComponent } from './componentes/catalogos/catRegimen/ver-regimen/ver-regimen.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -423,6 +424,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ProcesosEmpleadoComponent,
     AutorizaEmpleadoComponent,
     ConfigurarCodigoComponent,
+    VerRegimenComponent,
   ],
 
   imports: [

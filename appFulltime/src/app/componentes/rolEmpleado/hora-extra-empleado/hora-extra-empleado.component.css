@@ -13,3 +13,9 @@ p { font-size: x-small; }
 .col-sm { font-weight: bold;}
 
 #iconos { text-align: center; }
+
+#datosF { font-weight: bold; font-size: 15px; }
+
+#verticalLine { border-left: 1px solid rgb(52,65,84); }
+
+#estilo { color: rgb(0, 0, 0); font-size: 13px; }

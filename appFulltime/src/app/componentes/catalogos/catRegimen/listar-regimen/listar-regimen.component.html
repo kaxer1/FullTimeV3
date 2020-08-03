@@ -64,6 +64,11 @@
                         <td>{{regimenL.max_dia_acumulacion}}</td>
                         <td>{{regimenL.dia_libr_anio_vacacion}}</td>
                         <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verRegimen/',regimenL.id]">
+                                <p>Ver</p>
+                            </i>
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(regimenL)" matSuffix
                                 matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
                                 matTooltip="Editar los datos generales de este registro">

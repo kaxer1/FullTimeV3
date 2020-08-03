@@ -15,6 +15,7 @@ class DepartamentoRutas {
         this.router.put('/', EMPRESA_CONTROLADOR.ActualizarEmpresa);
         this.router.post('/xmlDownload/', EMPRESA_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', EMPRESA_CONTROLADOR.downloadXML);
+        this.router.delete('/eliminar/:id', EMPRESA_CONTROLADOR.EliminarRegistros);
     }
 }
 

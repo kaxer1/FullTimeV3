@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -12,6 +14,7 @@ import * as FileSaver from 'file-saver';
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-vista-elementos',
@@ -44,7 +47,9 @@ export class VistaElementosComponent implements OnInit {
   constructor(
     private rest: TipoPermisosService,
     public restE: EmpleadoService,
-    public vistaTipoPermiso: MatDialog
+    public vistaTipoPermiso: MatDialog,
+    private toastr: ToastrService,
+    private router: Router,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -89,6 +94,27 @@ export class VistaElementosComponent implements OnInit {
     DIALOG_REF.disableClose = true;
   }
 
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_permiso: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarRegistro(id_permiso).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerTipoPermiso();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaTipoPermiso.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/verTipoPermiso']);
+        }
+      });
+  }
+
   /****************************************************************************************************** 
  *                                         MÉTODO PARA EXPORTAR A PDF
  ******************************************************************************************************/
@@ -123,15 +149,15 @@ export class VistaElementosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

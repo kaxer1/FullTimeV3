@@ -1192,6 +1192,10 @@
                             </div>
                             <mat-divider></mat-divider>
                         </div>
+                        <mat-paginator [length]="planComidas.length" [pageSize]="tamanio_pagina"
+                            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                            showFirstLastButtons>
+                        </mat-paginator>
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -1254,8 +1258,13 @@
                                         <label class="col col-form-label">{{pt.estado}}</label>
                                     </div>
                                 </div>
+                                <br>
                                 <mat-divider></mat-divider>
                             </div>
+                            <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
+                                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                                showFirstLastButtons>
+                            </mat-paginator>
                         </mat-card-content>
                     </mat-card>
                 </div>
@@ -1326,7 +1335,7 @@
     </mat-tab>
 
     <!-- PROCESOS DEL EMPLEADO -->
-    <mat-tab>
+    <mat-tab *ngIf="!HabilitarAccion">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">settings</mat-icon>
             Acción Personal
@@ -1385,6 +1394,10 @@
                                 </div>
                                 <mat-divider></mat-divider>
                             </div>
+                            <mat-paginator [length]="empleadoProcesos.length" [pageSize]="tamanio_pagina"
+                                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                                showFirstLastButtons>
+                            </mat-paginator>
                         </mat-card-content>
                     </mat-card>
                 </div>

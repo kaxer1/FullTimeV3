@@ -52,10 +52,10 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Minutos de espera</mat-label>
-                        <input type="time" matInput placeholder="Ej: 60" [formControl]="minEsperaF"
+                        <input matInput placeholder="Ej: 60" [formControl]="minEsperaF"
                             (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
-                            matTooltip="Indicar los minutos de espera para ingresar">
+                            matTooltip="Indicar los minutos de tolerancia de espera para ingreso">
                             help_outline</mat-icon>
                     </mat-form-field>
                     <br>

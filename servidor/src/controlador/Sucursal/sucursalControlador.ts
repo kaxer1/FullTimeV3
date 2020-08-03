@@ -65,19 +65,25 @@ class SucursalControlador {
     console.log(req.body.userName);
     let filename = "Sucursales-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
     fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log("Archivo guardado");
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Archivo guardado");
     });
     res.jsonp({ text: 'XML creado', name: filename });
-}
+  }
 
-public async downloadXML(req: Request, res: Response): Promise<any> {
+  public async downloadXML(req: Request, res: Response): Promise<any> {
     const name = req.params.nameXML;
     let filePath = `servidor\\xmlDownload\\${name}`
     res.sendFile(__dirname.split("servidor")[0] + filePath);
-}
+  }
+
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM sucursales WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
 
 }
 

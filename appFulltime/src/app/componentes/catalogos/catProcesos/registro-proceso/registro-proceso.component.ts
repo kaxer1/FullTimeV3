@@ -123,6 +123,7 @@ export class RegistroProcesoComponent implements OnInit {
 
   limpiarCampos() {
     this.nuevoProcesoForm.reset();
+    this.getProcesos();
   }
 
   getProcesos() {

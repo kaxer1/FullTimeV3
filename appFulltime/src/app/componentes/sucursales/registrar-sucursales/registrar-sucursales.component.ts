@@ -131,8 +131,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.paises = [];
     this.restP.BuscarPais(continente).subscribe(datos => {
       this.paises = datos;
-      this.paises[this.paises.length] = { nombre: "Seleccionar" };
-      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+      this.seleccionarPaises = '';
     })
   }
 
@@ -154,8 +153,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.provincias = [];
     this.restP.BuscarUnaProvincia(pais).subscribe(datos => {
       this.provincias = datos;
-      this.provincias[this.provincias.length] = { nombre: "Seleccionar" };
-      this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
+      this.seleccionarProvincia = '';
     }, error => {
       this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
     })
@@ -182,8 +180,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.nombreCiudades = [];
     this.restF.BuscarCiudadProvincia(provincia).subscribe(datos => {
       this.nombreCiudades = datos;
-      this.nombreCiudades[this.nombreCiudades.length] = { descripcion: "Seleccionar" };
-      this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
+      this.seleccionarCiudad = '';
     }, error => {
       this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
     })

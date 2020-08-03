@@ -12,6 +12,8 @@ th { font-size: small; }
 
 #iRegL { cursor: pointer; }
 
+#ver { color: indianred; cursor: pointer; }
+
 /*.regimenL-tooltip { background-color : rgb(35, 3, 122); }*/
 
 .tituloRegL { 

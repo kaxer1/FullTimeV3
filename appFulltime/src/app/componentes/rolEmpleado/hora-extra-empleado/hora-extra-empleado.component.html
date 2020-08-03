@@ -18,63 +18,36 @@
                 <mat-card-content>
                     <div class="container" *ngFor="let h of hora_extra" style="padding-top: 15px;">
                         <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Código:</label>
+                            <div class="col-3">
+                                <label id="datosF" class="col-sm col-form-label">Código:</label>
+                                <label id="datosF" class="col-sm col-form-label">Descripción:</label>
+                                <label id="datosF" class="col-sm col-form-label">Estado:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Solicita:</label>
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <label class="col col-form-label">{{h.id}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Descripción:</label>
-                            </div>
-                            <div class="col">
                                 <label class="col col-form-label">{{h.descripcion}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
                                 <label class="col col-form-label">{{h.estado}}</label>
+                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Tiempo hora extra:</label>
+                            <div class="col-3" id="verticalLine">
+                                <label id="datosF" class="col-sm col-form-label">Tiempo hora extra:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
                             </div>
-                            <div class="col">
+                            <div class="col-3">
                                 <label class="col col-form-label">{{h.num_hora}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col">
                                 <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col">
                                 <label class="col col-form-label">{{h.fec_final.split("T")[0]}}</label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Solicita:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
-                            </div>
-                        </div>
+                        <br>
                         <mat-divider></mat-divider>
                     </div>
+                    <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        [showFirstLastButtons]="true">
+                    </mat-paginator>
                 </mat-card-content>
             </mat-card>
         </div>

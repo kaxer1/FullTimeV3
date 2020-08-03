@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
+
 import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pedido-hora-extra.component';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 
@@ -11,6 +13,10 @@ import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.
 export class HoraExtraEmpleadoComponent implements OnInit {
 
   id_user_loggin: number;
+  /* Items de paginación de la tabla */
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     private restHE: PedHoraExtraService,
@@ -20,6 +26,11 @@ export class HoraExtraEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.ObtenerlistaHorasExtrasEmpleado();
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   hora_extra: any = [];

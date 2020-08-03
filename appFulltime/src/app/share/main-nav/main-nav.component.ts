@@ -1,17 +1,19 @@
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { LoginService } from 'src/app/servicios/login/login.service';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { Socket } from 'ngx-socket-io';
-import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { MatDialog } from '@angular/material/dialog';
-import { SettingsComponent } from "src/app/componentes/settings/settings.component";
 import { ToastrService } from 'ngx-toastr';
+
+import { SettingsComponent } from "src/app/componentes/settings/settings.component";
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -27,6 +29,7 @@ export class MainNavComponent implements OnInit {
   urlImagen: any;
   mostrarImagen: boolean = false;
   mostrarIniciales: boolean = false;
+  HabilitarAccion: boolean;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -50,6 +53,7 @@ export class MainNavComponent implements OnInit {
     public location: Location,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
+    public restEmpresa: EmpresaService,
     public vistaFlotante: MatDialog,
     private roter: Router,
     private toaster: ToastrService,
@@ -62,7 +66,7 @@ export class MainNavComponent implements OnInit {
         this.realTime.ObtenerUnaNotificaciones(data.id).subscribe(res => {
           console.log(res);
           this.estadoNotificacion = false;
-          if (this.noti_real_time.length < 5){
+          if (this.noti_real_time.length < 5) {
             this.noti_real_time.unshift(res[0]);
           } else if (this.noti_real_time.length >= 5) {
             this.noti_real_time.unshift(res[0]);
@@ -98,11 +102,12 @@ export class MainNavComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
-    this.id_empleado_logueado = parseInt(localStorage.getItem('empleado')); 
-    this.LlamarNotificaicones(this.id_empleado_logueado);    
+    this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
+    this.LlamarNotificaicones(this.id_empleado_logueado);
+    this.VerAccionPersonal();
   }
 
-  confRes: any = [] ;
+  confRes: any = [];
   LlamarNotificaicones(id: number) {
     this.realTime.ObtenerNotificacionesReceives(id).subscribe(res => {
       this.noti_real_time = res;
@@ -110,7 +115,7 @@ export class MainNavComponent implements OnInit {
       if (!this.noti_real_time.text) {
         if (this.noti_real_time.length > 0) {
           this.noti_real_time.forEach(obj => {
-            if(obj.visto === false) {
+            if (obj.visto === false) {
               this.num_noti_false = this.num_noti_false + 1;
               this.estadoNotificacion = false
             }
@@ -121,7 +126,7 @@ export class MainNavComponent implements OnInit {
     this.realTime.ObtenerConfigNotiEmpleado(id).subscribe(res => {
       console.log(res);
       this.confRes = res;
-      if (!this.confRes.text) {   
+      if (!this.confRes.text) {
         if (res[0].vaca_noti === false || res[0].permiso_noti === false || res[0].hora_extra_noti === false) {
           this.num_noti_false = 0;
           this.estadoNotificacion = true
@@ -151,21 +156,21 @@ export class MainNavComponent implements OnInit {
       this.estadoNotificacion = !this.estadoNotificacion;
     }
   }
-  
-  infoUser(){
+
+  infoUser() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    if(id_empleado.toString() === 'NaN') return id_empleado;
+    if (id_empleado.toString() === 'NaN') return id_empleado;
 
     this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
-      
+
       this.UserEmail = res[0].correo;
       this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
-      if ( res[0]['imagen'] != null){
+      if (res[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + res[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
       } else {
-        this.iniciales = res[0].nombre.split(" ")[0].slice(0,1) + res[0].apellido.split(" ")[0].slice(0,1);
+        this.iniciales = res[0].nombre.split(" ")[0].slice(0, 1) + res[0].apellido.split(" ")[0].slice(0, 1);
         this.mostrarIniciales = true
         this.mostrarImagen = false;
       }
@@ -174,7 +179,18 @@ export class MainNavComponent implements OnInit {
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: {id_empleado} });
+    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: { id_empleado } });
+  }
+
+  VerAccionPersonal() {
+    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
+      if (res[0].tipo_empresa === 'Pública') {
+        this.HabilitarAccion = false;
+      }
+      else {
+        this.HabilitarAccion = true;
+      }
+    })
   }
 
 }

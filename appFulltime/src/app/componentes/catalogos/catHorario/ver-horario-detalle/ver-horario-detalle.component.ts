@@ -81,12 +81,16 @@ export class VerHorarioDetalleComponent implements OnInit {
 
   AbrirVentanaDetalles(datosSeleccionados): void {
     this.vistaRegistrarDatos.open(DetalleCatHorarioComponent,
-      { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: true } }).disableClose = true;
+      { width: '600px', data: { datosHorario: datosSeleccionados, actualizar: true } })
+      .afterClosed().subscribe(item => {
+        this.BuscarDatosHorario(this.idHorario);
+        this.ListarDetalles(this.idHorario);
+      });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true} }).disableClose = true; 
+    this.vistaRegistrarDatos.open(EditarHorarioComponent, { width: '900px', data: { horario: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
   AbrirVentanaEditarDetalle(datosSeleccionados: any): void {

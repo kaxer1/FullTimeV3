@@ -74,6 +74,13 @@ class EmpresaControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_empresa WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.EMPRESA_CONTROLADOR = new EmpresaControlador();
 exports.default = exports.EMPRESA_CONTROLADOR;

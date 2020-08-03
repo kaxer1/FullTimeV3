@@ -34,7 +34,8 @@
             </form>
         </mat-card-content>
         <mat-card-actions class="d-flex justify-content-center">
-            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva Empresa</button>
+            <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva
+                Empresa</button>
             <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
         </mat-card-actions>
     </mat-card>
@@ -57,7 +58,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let e of empresas | filtrosNombres: filtroNomEmpresa | filtrarRuc: filtroRucEmpresa | paginate:tamanio_pagina:numero_pagina">
                         <td>{{e.id}}</td>
                         <td>{{e.nombre}}</td>
                         <td>{{e.tipo_empresa}}</td>
@@ -65,12 +67,12 @@
                         <td>{{e.ruc}}</td>
                         <td>{{e.direccion}}</td>
                         <td class="d-flex justify-content-center">
-                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i id="eliminar" class="far fa-trash-alt" matSuffix
+                            <i (click)="ConfirmarDelete(e)" id="eliminar" class="far fa-trash-alt" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
@@ -82,7 +84,7 @@
         </div>
         <mat-paginator [length]="empresas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
-        <div class="d-flex justify-content-end" style="margin-right: 5%;">        
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato PDF">
                 <p>PDF</p>
@@ -96,8 +98,7 @@
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip"
-                matTooltip="Descargar Lista de Empresas en formato XML">
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato XML">
                 <p>XML</p>
             </i>
         </div>

@@ -18,6 +18,7 @@ class SucursalRutas {
         this.router.put('/', SUCURSAL_CONTROLADOR.ActualizarSucursal);
         this.router.post('/xmlDownload/', SUCURSAL_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', SUCURSAL_CONTROLADOR.downloadXML);
+        this.router.delete('/eliminar/:id', SUCURSAL_CONTROLADOR.EliminarRegistros);
     }
 }
 
