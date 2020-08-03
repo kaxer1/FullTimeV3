@@ -191,7 +191,7 @@ setInterval(async () => {
     const fecha = date.toJSON().slice(4).split("T")[0];
     console.log(fecha)
     // SERVIDOR.app.use()
-    if (hora === 15) {
+    if (hora === 12) {
         const felizCumple = await pool.query("SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE CAST(empleados.fec_nacimiento AS VARCHAR) LIKE '%' || $1", [fecha]);
         console.log(felizCumple.rows);
         if (felizCumple.rowCount > 0) {
@@ -238,7 +238,7 @@ setInterval(async () => {
             })
         }
     }
-}, 60000);
+}, 3600000);
 
 function sumaDias(fecha: Date, dias: number) {
     fecha.setDate(fecha.getDate() + dias);

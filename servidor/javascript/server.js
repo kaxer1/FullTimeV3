@@ -176,7 +176,7 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
     const fecha = date.toJSON().slice(4).split("T")[0];
     console.log(fecha);
     // SERVIDOR.app.use()
-    if (hora === 15) {
+    if (hora === 12) {
         const felizCumple = yield database_1.default.query("SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE CAST(empleados.fec_nacimiento AS VARCHAR) LIKE '%' || $1", [fecha]);
         console.log(felizCumple.rows);
         if (felizCumple.rowCount > 0) {
@@ -203,20 +203,6 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
                     , esperamos que la pases muy bien en compañia de tus seres queridos.
                         </p>
                     <img src="cid:cumple"/>`,
-                    amp: `<!doctype html>
-                    <html ⚡4email>
-                    <head>
-                        <meta charset="utf-8">
-                        <style amp4email-boilerplate>body{visibility:hidden}</style>
-                        <script async src="https://cdn.ampproject.org/v0.js"></script>
-                        <script async custom-element="amp-anim" src="https://cdn.ampproject.org/v0/amp-anim-0.1.js"></script>
-                    </head>
-                    <body>
-                        <p>Image: <amp-img src="https://cldup.com/P0b1bUmEet.png" width="16" height="16"/></p>
-                        <p>GIF (requires "amp-anim" script in header):<br/>
-                        <amp-anim src="https://cldup.com/D72zpdwI-i.gif" width="500" height="350"/></p>
-                    </body>
-                    </html>`,
                     attachments: [{
                             filename: 'birthday1.jpg',
                             path: `${path}/cumpleanios/birthday1.jpg`,
@@ -235,7 +221,7 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
             });
         }
     }
-}), 60000);
+}), 3600000);
 function sumaDias(fecha, dias) {
     fecha.setDate(fecha.getDate() + dias);
     return fecha;
