@@ -54,7 +54,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let regimenL of regimen | filtroRegion: filtroRegimenLaboral | paginate:tamanio_pagina:numero_pagina">
                         <td>{{regimenL.descripcion}}</td>
                         <td>{{regimenL.dia_anio_vacacion}}</td>
                         <td>{{regimenL.dia_mes_vacacion}}</td>
@@ -68,8 +69,9 @@
                                 matTooltip="Editar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i class="far fa-trash-alt" matSuffix matTooltipClass="regimenL-tooltip"
-                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(regimenL)" class="far fa-trash-alt" matSuffix
+                                matTooltipClass="regimenL-tooltip" matTooltipPosition="right"
+                                matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>
@@ -82,19 +84,23 @@
         </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Regímenes Laborales en formato PDF">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Regímenes Laborales en formato PDF">
                 <p>PDF</p>
             </i>
             <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Regímenes Laborales en formato EXCEL">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Regímenes Laborales en formato EXCEL">
                 <p>XLSL</p>
             </i>
             <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Regímenes Laborales en formato CSV">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Regímenes Laborales en formato CSV">
                 <p>CSV</p>
             </i>
             <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
-                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Regímenes Laborales en formato XML">
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Regímenes Laborales en formato XML">
                 <p>XML</p>
             </i>
         </div>

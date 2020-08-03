@@ -125,6 +125,12 @@ class DepartamentoControlador {
       return res.status(404).json({ text: 'No se encuentran registros' });
     }
   }
+
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_departamentos WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();

@@ -39,7 +39,7 @@
                                         <label class="col-sm col-form-label">Código:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label">{{e.id}}</label>
+                                        <label class="col col-form-label">{{e.codigo}}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -1224,58 +1224,16 @@
                         <mat-card-content>
                             <div class="container" *ngFor="let pt of permisosTotales" style="padding-top: 15px;">
                                 <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">N° Permiso:</label>
+                                    <div class="col-3">
+                                        <label id="datosF" class="col-sm col-form-label">N° Permiso:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Tipo Permiso:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Descripción:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Documento:</label>
                                     </div>
-                                    <div class="col">
+                                    <div class="col-3">
                                         <label class="col col-form-label">{{pt.num_permiso}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Tipo Permiso:</label>
-                                    </div>
-                                    <div class="col">
                                         <label class="col col-form-label">{{pt.nom_permiso}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Descripción:</label>
-                                    </div>
-                                    <div class="col">
                                         <label class="col col-form-label">{{pt.descripcion}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Salida:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pt.fec_inicio.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Fecha Ingreso:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pt.fec_final.split("T")[0]}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Estado:</label>
-                                    </div>
-                                    <div class="col">
-                                        <label class="col col-form-label">{{pt.estado}}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label class="col-sm col-form-label">Documento:</label>
-                                    </div>
-                                    <div class="col">
                                         <a id="doc" class="fas fa-file-alt"
                                             style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px"
                                             matSuffix matTooltipPosition="right"
@@ -1284,6 +1242,16 @@
                                             target="_blank">
                                             <p>{{pt.docu_nombre}}</p>
                                         </a>
+                                    </div>
+                                    <div class="col-3" id="verticalLine">
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Salida:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Ingreso:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Estado:</label>
+                                    </div>
+                                    <div class="col-2">
+                                        <label class="col col-form-label">{{pt.fec_inicio.split("T")[0]}}</label>
+                                        <label class="col col-form-label">{{pt.fec_final.split("T")[0]}}</label>
+                                        <label class="col col-form-label">{{pt.estado}}</label>
                                     </div>
                                 </div>
                                 <mat-divider></mat-divider>

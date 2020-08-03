@@ -15,6 +15,7 @@ class TituloRutas {
         this.router.get('/:id', TITULO_CONTROLADOR.getOne);
         this.router.post('/', TITULO_CONTROLADOR.create);
         this.router.put('/', TITULO_CONTROLADOR.ActualizarTitulo);
+        this.router.delete('/eliminar/:id', TITULO_CONTROLADOR.EliminarRegistros);
     }
 }
 

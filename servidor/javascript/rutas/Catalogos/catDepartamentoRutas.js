@@ -22,6 +22,7 @@ class DepartamentoRutas {
         this.router.put('/:id', catDepartamentoControlador_1.default.ActualizarDepartamento);
         this.router.post('/xmlDownload/', catDepartamentoControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catDepartamentoControlador_1.default.downloadXML);
+        this.router.delete('/eliminar/:id', catDepartamentoControlador_1.default.EliminarRegistros);
     }
 }
 const DEPARTAMENTO_RUTAS = new DepartamentoRutas();

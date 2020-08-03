@@ -9,6 +9,7 @@ import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/t
 import { TipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { EditarTipoComidasComponent } from 'src/app/componentes/catalogos/catTipoComidas/editar-tipo-comidas/editar-tipo-comidas.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -100,6 +101,28 @@ export class ListarTipoComidasComponent implements OnInit {
     this.ObtenerTipoComidas();
   }
 
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_tipo: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarRegistro(id_tipo).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerTipoComidas();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/listarTipoComidas']);
+        }
+      });
+  }
+
+
   /****************************************************************************************************** 
    *                                         MÉTODO PARA EXPORTAR A PDF
    ******************************************************************************************************/
@@ -134,15 +157,15 @@ export class ListarTipoComidasComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

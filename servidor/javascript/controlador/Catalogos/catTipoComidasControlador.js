@@ -97,6 +97,13 @@ class TipoComidasControlador {
             fs_1.default.unlinkSync(filePath);
         });
     }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_tipo_comidas WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 const TIPO_COMIDAS_CONTROLADOR = new TipoComidasControlador();
 exports.default = TIPO_COMIDAS_CONTROLADOR;

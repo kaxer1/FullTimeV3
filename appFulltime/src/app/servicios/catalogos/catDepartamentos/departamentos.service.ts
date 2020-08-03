@@ -59,4 +59,8 @@ export class DepartamentosService {
     return this.http.post(`${this.API_URL}/departamento/xmlDownload`, data);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/departamento/eliminar/${id}`);
+  }
+
 }

@@ -13,21 +13,25 @@ export class TituloService {
 
   // Catálogo de títulos
 
-  getOneTituloRest(id: number){
+  getOneTituloRest(id: number) {
     return this.http.get(`${this.TITULO_URL}/titulo/${id}`);
   }
 
-  getTituloRest(){
+  getTituloRest() {
     return this.http.get(`${this.TITULO_URL}/titulo/`);
   }
 
-  postTituloRest(data: any){
-    console.log(data); 
+  postTituloRest(data: any) {
+    console.log(data);
     return this.http.post(`${this.TITULO_URL}/titulo`, data);
   }
 
-  ActualizarUnTitulo(datos:any){
+  ActualizarUnTitulo(datos: any) {
     return this.http.put(`${this.TITULO_URL}/titulo`, datos);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.TITULO_URL}/titulo/eliminar/${id}`);
   }
 
 }

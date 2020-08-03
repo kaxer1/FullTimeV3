@@ -7,3 +7,7 @@
 }
 
 p { font-size: x-small; }
+
+#datosF { font-weight: bold; font-size: 15px; }
+
+#verticalLine { border-left: 1px solid rgb(52,65,84); }

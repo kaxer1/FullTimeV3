@@ -35,4 +35,8 @@ export class RegimenService {
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/regimenLaboral/xmlDownload`, data);
   }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/regimenLaboral/eliminar/${id}`);
+  }
 }
