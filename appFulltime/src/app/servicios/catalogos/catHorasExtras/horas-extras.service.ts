@@ -13,11 +13,19 @@ export class HorasExtrasService {
 
   // catalogo de horas extras
 
-  postHoraExtraRest(data: any){
-      return this.http.post(`${this.HORA_EXTRA_URL}/horasExtras`, data);
+  postHoraExtraRest(data: any) {
+    return this.http.post(`${this.HORA_EXTRA_URL}/horasExtras`, data);
   }
 
-  ListarHorasExtras(){
+  ListarHorasExtras() {
     return this.http.get(`${this.HORA_EXTRA_URL}/horasExtras`);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.HORA_EXTRA_URL}/horasExtras/eliminar/${id}`);
+  }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.HORA_EXTRA_URL}/horasExtras/xmlDownload`, data);
   }
 }

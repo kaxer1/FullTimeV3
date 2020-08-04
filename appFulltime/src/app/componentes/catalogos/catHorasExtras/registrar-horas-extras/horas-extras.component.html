@@ -93,6 +93,8 @@
                     </div>
                 </form>
                 <div>
+                    <button class="btn btn-sm" [routerLink]="['/listaHorasExtras']">Lista de Horas Extras
+                    </button>
                     <button (click)="stepper.reset()" class="btn btn-sm">Cancelar</button>
                     <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
@@ -175,6 +177,8 @@
                     </div>
                 </form>
                 <div>
+                    <button class="btn btn-sm" [routerLink]="['/listaHorasExtras']">Lista de Horas Extras
+                    </button>
                     <button matStepperPrevious class="btn btn-sm">Atrás</button>
                     <button type="submit" class="btn btn-sm"
                         (click)="insertarHoraExtra(primeroFormGroup.value, segundoFormGroup.value); stepper.reset()"

@@ -11,21 +11,19 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
-import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
+import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
+import { EditarTipoPermisosComponent } from 'src/app/componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
-  selector: 'app-vista-elementos',
-  templateUrl: './vista-elementos.component.html',
-  styleUrls: ['./vista-elementos.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  selector: 'app-lista-horas-extras',
+  templateUrl: './lista-horas-extras.component.html',
+  styleUrls: ['./lista-horas-extras.component.css']
 })
+export class ListaHorasExtrasComponent implements OnInit {
 
-export class VistaElementosComponent implements OnInit {
-
-  tipoPermiso: any = [];
+  horasExtras: any = [];
   filtroDescripcion = '';
 
   // items de paginacion de la tabla
@@ -40,12 +38,12 @@ export class VistaElementosComponent implements OnInit {
   nombreF = new FormControl('', [Validators.minLength(2)]);
 
   // Asignación de validaciones a inputs del formulario
-  public BuscarTipoPermisoForm = new FormGroup({
+  public BuscarHoraExtraForm = new FormGroup({
     nombreForm: this.nombreF,
   });
 
   constructor(
-    private rest: TipoPermisosService,
+    private rest: HorasExtrasService,
     public restE: EmpleadoService,
     public vistaTipoPermiso: MatDialog,
     private toastr: ToastrService,
@@ -55,7 +53,7 @@ export class VistaElementosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ObtenerTipoPermiso();
+    this.ObtenerHorasExtras();
     this.ObtenerEmpleados(this.idEmpleado);
   }
 
@@ -64,7 +62,6 @@ export class VistaElementosComponent implements OnInit {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
   }
 
@@ -73,25 +70,49 @@ export class VistaElementosComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  ObtenerTipoPermiso() {
-    this.rest.getTipoPermisoRest().subscribe(datos => {
-      this.tipoPermiso = datos;
-      console.log(this.tipoPermiso);
-    }, error => {
-    });
+  ObtenerHorasExtras() {
+    this.rest.ListarHorasExtras().subscribe(datos => {
+      this.horasExtras = datos;
+      for (var i = 0; i <= this.horasExtras.length - 1; i++) {
+        if (this.horasExtras[i].tipo_descuento === 1) {
+          this.horasExtras[i].tipo_descuento = 'Horas Extras';
+        }
+        else {
+          this.horasExtras[i].tipo_descuento = 'Recargo Nocturno';
+        }
+        if (this.horasExtras[i].hora_jornada === 1) {
+          this.horasExtras[i].hora_jornada = 'Matutina';
+        }
+        else if (this.horasExtras[i].hora_jornada === 2) {
+          this.horasExtras[i].tipo_descuento = 'Vespertina';
+        }
+        else {
+          this.horasExtras[i].tipo_descuento = 'Nocturna';
+        }
+        if (this.horasExtras[i].tipo_dia === 1) {
+          this.horasExtras[i].tipo_dia = 'Libre';
+        }
+        else if (this.horasExtras[i].tipo_dia === 2) {
+          this.horasExtras[i].tipo_dia = 'Feriado';
+        }
+        else {
+          this.horasExtras[i].tipo_dia = 'Normal';
+        }
+      }
+    }, error => { });
   }
 
   LimpiarCampos() {
-    this.BuscarTipoPermisoForm.setValue({
+    this.BuscarHoraExtraForm.setValue({
       nombreForm: '',
     });
-    this.ObtenerTipoPermiso();
+    this.ObtenerHorasExtras();
   }
 
-  AbrirVentanaEditarTipoPermisos(tipoPermiso: any): void {
+  AbrirVentanaEditar(tipoPermiso: any): void {
     const DIALOG_REF = this.vistaTipoPermiso.open(EditarTipoPermisosComponent,
       { width: '900px', data: tipoPermiso }).afterClosed().subscribe(item => {
-        this.ObtenerTipoPermiso();
+        this.ObtenerHorasExtras();
       });
   }
 
@@ -100,7 +121,7 @@ export class VistaElementosComponent implements OnInit {
     //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_permiso).subscribe(res => {
       this.toastr.error('Registro eliminado');
-      this.ObtenerTipoPermiso();
+      this.ObtenerHorasExtras();
     });
   }
 
@@ -111,7 +132,7 @@ export class VistaElementosComponent implements OnInit {
         if (confirmado) {
           this.Eliminar(datos.id);
         } else {
-          this.router.navigate(['/verTipoPermiso']);
+          this.router.navigate(['/listaHorasExtras']);
         }
       });
   }
@@ -133,7 +154,7 @@ export class VistaElementosComponent implements OnInit {
   }
 
   getDocumentDefinicion() {
-    sessionStorage.setItem('TipoPermisos', this.tipoPermiso);
+    sessionStorage.setItem('HorasExtras', this.horasExtras);
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
@@ -171,13 +192,13 @@ export class VistaElementosComponent implements OnInit {
       },
       content: [
         {
-          text: 'Lista de Tipos de Permisos',
+          text: 'Lista de Horas Extras Configuradas',
           bold: true,
           fontSize: 20,
           alignment: 'center',
           margin: [0, 0, 0, 20]
         },
-        this.presentarDataPDFTipoPermisos(),
+        this.presentarDataPDFHorasExtras(),
       ],
       styles: {
         header: {
@@ -209,57 +230,39 @@ export class VistaElementosComponent implements OnInit {
     };
   }
 
-  DescuentoSelect: any = ['Vacaciones', 'Ninguno'];
-  AccesoEmpleadoSelect: any = ['Si', 'No'];
-  presentarDataPDFTipoPermisos() {
+  Almuerzo: any = ['Si', 'No'];
+  presentarDataPDFHorasExtras() {
     return {
       columns: [
         { width: '*', text: '' },
         {
           width: 'auto',
           table: {
-            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
                 { text: 'Id', style: 'tableHeader' },
-                { text: 'Permiso', style: 'tableHeader' },
-                { text: 'Días de permiso', style: 'tableHeader' },
-                { text: 'Horas de permiso', style: 'tableHeader' },
-                { text: 'Solicita Empleado', style: 'tableHeader' },
-                { text: 'Días para solicitar', style: 'tableHeader' },
-                { text: 'Incluye almuerzo', style: 'tableHeader' },
-                { text: 'Afecta Vacaciones', style: 'tableHeader' },
-                { text: 'Acumular', style: 'tableHeader' },
-                { text: 'Notificar por correo', style: 'tableHeader' },
-                { text: 'Descuento', style: 'tableHeader' },
-                { text: 'Actualizar', style: 'tableHeader' },
-                { text: 'Eliminar', style: 'tableHeader' },
-                { text: 'Preautorizar', style: 'tableHeader' },
-                { text: 'Autorizar', style: 'tableHeader' },
-                { text: 'Legalizar', style: 'tableHeader' },
-                { text: 'Días para Justificar', style: 'tableHeader' }
+                { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Tipo Recargo', style: 'tableHeader' },
+                { text: 'Recargo Porcentual', style: 'tableHeader' },
+                { text: 'Hora Inicio', style: 'tableHeader' },
+                { text: 'Hora Final', style: 'tableHeader' },
+                { text: 'Jornada', style: 'tableHeader' },
+                { text: 'Tipo Día', style: 'tableHeader' },
+                { text: 'Incluir Almuerzo', style: 'tableHeader' },
               ],
-              ...this.tipoPermiso.map(obj => {
-                var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
-                var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
+              ...this.horasExtras.map(obj => {
+                var incluirAlmuerzo = this.Almuerzo[obj.incl_almuerzo - 1];
                 return [
                   { text: obj.id, style: 'itemsTable' },
                   { text: obj.descripcion, style: 'itemsTable' },
-                  { text: obj.num_dia_maximo, style: 'itemsTable' },
-                  { text: obj.num_hora_maximo, style: 'itemsTable' },
-                  { text: acceso, style: 'itemsTable' },
-                  { text: obj.num_dia_ingreso, style: 'itemsTable' },
-                  { text: obj.almu_incluir, style: 'itemsTable' },
-                  { text: obj.vaca_afecta, style: 'itemsTable' },
-                  { text: obj.anio_acumula, style: 'itemsTable' },
-                  { text: obj.correo, style: 'itemsTable' },
-                  { text: descuento, style: 'itemsTable' },
-                  { text: obj.actualizar, style: 'itemsTable' },
-                  { text: obj.eliminar, style: 'itemsTable' },
-                  { text: obj.preautorizar, style: 'itemsTable' },
-                  { text: obj.autorizar, style: 'itemsTable' },
-                  { text: obj.legalizar, style: 'itemsTable' },
-                  { text: obj.gene_justificacion, style: 'itemsTable' },
+                  { text: obj.tipo_descuento, style: 'itemsTable' },
+                  { text: obj.reca_porcentaje, style: 'itemsTable' },
+                  { text: obj.hora_inicio, style: 'itemsTable' },
+                  { text: obj.hora_final, style: 'itemsTable' },
+                  { text: obj.hora_jornada, style: 'itemsTable' },
+                  { text: obj.tipo_dia, style: 'itemsTable' },
+                  { text: incluirAlmuerzo, style: 'itemsTable' },
                 ];
               })
             ]
@@ -274,10 +277,10 @@ export class VistaElementosComponent implements OnInit {
    *                                       MÉTODO PARA EXPORTAR A EXCEL
    ******************************************************************************************************/
   exportToExcel() {
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoPermiso);
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.horasExtras);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'TipoPermisos');
-    xlsx.writeFile(wb, "TipoPermisos" + new Date().getTime() + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wsr, 'HorasExtras');
+    xlsx.writeFile(wb, "HorasExtras" + new Date().getTime() + '.xlsx');
   }
 
   /****************************************************************************************************** 
@@ -285,10 +288,10 @@ export class VistaElementosComponent implements OnInit {
    ******************************************************************************************************/
 
   exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoPermiso);
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.horasExtras);
     const csvDataH = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "TipoPermisosCSV" + new Date().getTime() + '.csv');
+    FileSaver.saveAs(data, "HorasExtrasCSV" + new Date().getTime() + '.csv');
   }
 
   /* ****************************************************************************************************
@@ -299,39 +302,29 @@ export class VistaElementosComponent implements OnInit {
   data: any = [];
   exportToXML() {
     var objeto;
-    var arregloTipoPermisos = [];
-    this.tipoPermiso.forEach(obj => {
-      var descuento = this.DescuentoSelect[obj.tipo_descuento - 1];
-      var acceso = this.AccesoEmpleadoSelect[obj.acce_empleado - 1];
+    var arreglohorasExtras = [];
+    this.horasExtras.forEach(obj => {
+      var incluirAlmuerzo = this.Almuerzo[obj.incl_almuerzo - 1];
       objeto = {
-        "tipo_permiso": {
+        "horas_extras": {
           '@id': obj.id,
           "descripcion": obj.descripcion,
-          "num_dia_maximo": obj.num_dia_maximo,
-          "num_hora_maximo": obj.num_hora_maximo,
-          "acce_empleado": acceso,
-          "num_dia_ingreso": obj.num_dia_ingreso,
-          "almu_incluir": obj.almu_incluir,
-          "vaca_afecta": obj.vaca_afecta,
-          "anio_acumula": obj.anio_acumula,
-          "correo": obj.correo,
-          "tipo_descuento": descuento,
-          "actualizar": obj.actualizar,
-          "eliminar": obj.eliminar,
-          "preautorizar": obj.preautorizar,
-          "autorizar": obj.autorizar,
-          "legalizar": obj.legalizar,
-          "fec_validar": obj.fec_validar,
-          "gene_justificacion": obj.gene_justificacion,
+          "tipo_descuento": obj.tipo_descuento,
+          "reca_porcentaje": obj.reca_porcentaje,
+          "hora_inicio": obj.hora_inicio,
+          "hora_final": obj.hora_final,
+          "hora_jornada": obj.hora_jornada,
+          "tipo_dia": obj.tipo_dia,
+          "incl_almuerzo": incluirAlmuerzo,
         }
       }
-      arregloTipoPermisos.push(objeto)
+      arreglohorasExtras.push(objeto)
     });
 
-    this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
+    this.rest.DownloadXMLRest(arreglohorasExtras).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      this.urlxml = 'http://localhost:3000/horasExtras/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -28,7 +28,7 @@ import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvinci
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/catProcesos/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/catProcesos/registro-proceso/registro-proceso.component';
-import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/horas-extras.component';
+import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/registrar-horas-extras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
@@ -247,6 +247,10 @@ import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-em
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
 import { VerRegimenComponent } from './componentes/catalogos/catRegimen/ver-regimen/ver-regimen.component';
+import { VerTipoPermisoComponent } from './componentes/catalogos/catTipoPermisos/ver-tipo-permiso/ver-tipo-permiso.component';
+import { ListaHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/lista-horas-extras/lista-horas-extras.component';
+import { EditarHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
+import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -425,6 +429,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AutorizaEmpleadoComponent,
     ConfigurarCodigoComponent,
     VerRegimenComponent,
+    VerTipoPermisoComponent,
+    ListaHorasExtrasComponent,
+    EditarHorasExtrasComponent,
+    VerHorasExtrasComponent,
   ],
 
   imports: [
