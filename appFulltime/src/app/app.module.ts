@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ScrollingModule } from '@angular/cdk/scrolling'
-
+import { JwPaginationModule } from 'jw-angular-pagination';
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -472,7 +472,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatNativeDateModule,
     MatTabsModule,
     MatMenuModule,
-    ScrollingModule
+    ScrollingModule,
+    JwPaginationModule
   ],
   providers: [
     AuthGuard,

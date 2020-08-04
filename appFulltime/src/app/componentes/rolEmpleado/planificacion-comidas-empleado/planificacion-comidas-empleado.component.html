@@ -14,7 +14,7 @@
             </div>
         </div>
         <mat-card-content>
-            <div class="container" *ngFor="let pc of planComidas" style="padding-top: 15px;">
+            <div class="container" *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
                 <div class="row">
                     <div class="col-3">
                         <label id="datosF" class="col-sm col-form-label">Fecha de Solicitud:</label>

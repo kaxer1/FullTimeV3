@@ -16,7 +16,8 @@
                     </div>
                 </div>
                 <mat-card-content>
-                    <div class="container" *ngFor="let h of hora_extra" style="padding-top: 15px;">
+                    <div class="container" *ngFor="let h of hora_extra | paginate:tamanio_pagina:numero_pagina"
+                        style="padding-top: 15px;">
                         <div class="row">
                             <div class="col-3">
                                 <label id="datosF" class="col-sm col-form-label">Código:</label>
@@ -46,8 +47,11 @@
                     </div>
                     <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
                         [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                        [showFirstLastButtons]="true">
+                        showFirstLastButtons>
                     </mat-paginator>
+                    <!-- <div class="card-footer pb-0 pt-3">
+                        <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>
+                    </div>-->
                 </mat-card-content>
             </mat-card>
         </div>
