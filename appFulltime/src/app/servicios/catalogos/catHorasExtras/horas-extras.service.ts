@@ -28,4 +28,12 @@ export class HorasExtrasService {
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.HORA_EXTRA_URL}/horasExtras/xmlDownload`, data);
   }
+
+  ObtenerUnaHoraExtra(id: number) {
+    return this.http.get(`${this.HORA_EXTRA_URL}/horasExtras/${id}`);
+  }
+
+  ActualizarDatos(datos: any) {
+    return this.http.put(`${this.HORA_EXTRA_URL}/horasExtras`, datos);
+  }
 }

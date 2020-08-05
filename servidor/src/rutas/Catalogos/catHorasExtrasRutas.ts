@@ -16,6 +16,7 @@ class HorasExtrasRutas {
         this.router.delete('/eliminar/:id', horasExtrasControlador.EliminarRegistros);
         this.router.post('/xmlDownload/', horasExtrasControlador.FileXML);
         this.router.get('/download/:nameXML', horasExtrasControlador.downloadXML);
+        this.router.put('/', horasExtrasControlador.ActualizarHoraExtra);
     }
 }
 

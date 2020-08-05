@@ -12,7 +12,7 @@ import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
-import { EditarTipoPermisosComponent } from 'src/app/componentes/catalogos/catTipoPermisos/editar-tipo-permisos/editar-tipo-permisos.component';
+import { EditarHorasExtrasComponent } from 'src/app/componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
@@ -45,7 +45,7 @@ export class ListaHorasExtrasComponent implements OnInit {
   constructor(
     private rest: HorasExtrasService,
     public restE: EmpleadoService,
-    public vistaTipoPermiso: MatDialog,
+    public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
     private router: Router,
   ) {
@@ -84,10 +84,10 @@ export class ListaHorasExtrasComponent implements OnInit {
           this.horasExtras[i].hora_jornada = 'Matutina';
         }
         else if (this.horasExtras[i].hora_jornada === 2) {
-          this.horasExtras[i].tipo_descuento = 'Vespertina';
+          this.horasExtras[i].hora_jornada = 'Vespertina';
         }
         else {
-          this.horasExtras[i].tipo_descuento = 'Nocturna';
+          this.horasExtras[i].hora_jornada = 'Nocturna';
         }
         if (this.horasExtras[i].tipo_dia === 1) {
           this.horasExtras[i].tipo_dia = 'Libre';
@@ -109,9 +109,11 @@ export class ListaHorasExtrasComponent implements OnInit {
     this.ObtenerHorasExtras();
   }
 
-  AbrirVentanaEditar(tipoPermiso: any): void {
-    const DIALOG_REF = this.vistaTipoPermiso.open(EditarTipoPermisosComponent,
-      { width: '900px', data: tipoPermiso }).afterClosed().subscribe(item => {
+  /* Ventana para editar datos de hora extra seleccionado */
+  EditarDatos(datosSeleccionados: any): void {
+    console.log(datosSeleccionados);
+    this.vistaRegistrarDatos.open(EditarHorasExtrasComponent, { width: '900px', data: datosSeleccionados })
+      .afterClosed().subscribe(item => {
         this.ObtenerHorasExtras();
       });
   }
@@ -127,7 +129,7 @@ export class ListaHorasExtrasComponent implements OnInit {
 
   /** Función para confirmar si se elimina o no un registro */
   ConfirmarDelete(datos: any) {
-    this.vistaTipoPermiso.open(MetodosComponent, { width: '450px' }).afterClosed()
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
           this.Eliminar(datos.id);

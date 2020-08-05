@@ -74,6 +74,13 @@ class HorasExtrasControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
+    ActualizarHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia, codigo, incl_almuerzo, tipo_funcion, id } = req.body;
+            yield database_1.default.query('UPDATE cg_hora_extras SET descripcion = $1, tipo_descuento = $2, reca_porcentaje = $3, hora_inicio = $4, hora_final = $5, hora_jornada = $6, tipo_dia = $7, codigo = $8, incl_almuerzo = $9, tipo_funcion = $10 WHERE id = $11', [descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia, codigo, incl_almuerzo, tipo_funcion, id]);
+            res.jsonp({ message: 'Hora extra actualizada' });
+        });
+    }
 }
 exports.horaExtraControlador = new HorasExtrasControlador();
 exports.default = exports.horaExtraControlador;
