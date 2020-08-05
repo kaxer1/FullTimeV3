@@ -18,7 +18,7 @@ class SucursalControlador {
 
   public async ObtenerUnaSucursal(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const SUCURSAL = await pool.query('SELECT * FROM sucursales WHERE id = $1', [id]);
+    const SUCURSAL = await pool.query('SELECT * FROM NombreCiudadEmpresa WHERE id = $1', [id]);
     if (SUCURSAL.rowCount > 0) {
       return res.jsonp(SUCURSAL.rows)
     }

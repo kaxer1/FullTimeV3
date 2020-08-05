@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
@@ -32,6 +32,8 @@ export class RegistrarSucursalesComponent implements OnInit {
   seleccionarCiudad;
   ultimoId: any = [];
 
+  Habilitar: boolean;
+
   filteredOptPais: Observable<string[]>;
   filteredOptProv: Observable<string[]>;
   filteredOptCiud: Observable<string[]>;
@@ -42,7 +44,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
-  idEmpresaF = new FormControl('', Validators.required);
+  idEmpresaF = new FormControl('');
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -63,6 +65,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     private restD: DepartamentosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistrarSucursalesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
@@ -88,6 +91,13 @@ export class RegistrarSucursalesComponent implements OnInit {
         startWith(''),
         map(value => this._filterEmpresa(value))
       );
+
+    if (this.data != undefined) {
+      this.Habilitar = true;
+    }
+    else {
+      this.Habilitar = false;
+    }
   }
 
   private _filterPais(value: string): string[] {
@@ -213,11 +223,16 @@ export class RegistrarSucursalesComponent implements OnInit {
 
   InsertarSucursal(form) {
     let idEmpr;
-    this.empresas.forEach(obj => {
-      if (obj.nombre === form.idEmpresaForm) {
-        idEmpr = obj.id
-      }
-    });
+    if (this.data != undefined) {
+      idEmpr = this.data;
+    }
+    else {
+      this.empresas.forEach(obj => {
+        if (obj.nombre === form.idEmpresaForm) {
+          idEmpr = obj.id
+        }
+      });
+    }
     let idCiud;
     this.nombreCiudades.forEach(obj => {
       if (obj.descripcion === form.idCiudadForm) {
@@ -229,7 +244,7 @@ export class RegistrarSucursalesComponent implements OnInit {
       id_ciudad: idCiud,
       id_empresa: idEmpr
     };
-    
+
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
@@ -246,11 +261,10 @@ export class RegistrarSucursalesComponent implements OnInit {
         console.log("insertar departamento: ", datosDepartamentos);
         this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
           this.ultimoId = [];
+          console.log('depa-guardado')
         });
-      }, error => {
-      });
-    }, error => {
-    });
+      }, error => { });
+    }, error => { });
   }
 
   LimpiarCampos() {

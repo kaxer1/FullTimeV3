@@ -18,6 +18,7 @@ class DepartamentoRutas {
         this.router.post('/xmlDownload/', catEmpresaControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catEmpresaControlador_1.default.downloadXML);
         this.router.delete('/eliminar/:id', catEmpresaControlador_1.default.EliminarRegistros);
+        this.router.get('/buscar/datos/:id', catEmpresaControlador_1.default.ListarEmpresaId);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

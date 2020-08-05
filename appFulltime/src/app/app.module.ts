@@ -251,6 +251,8 @@ import { VerTipoPermisoComponent } from './componentes/catalogos/catTipoPermisos
 import { ListaHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/lista-horas-extras/lista-horas-extras.component';
 import { EditarHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
 import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
+import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
+import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empresa/ver-empresa.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -433,6 +435,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaHorasExtrasComponent,
     EditarHorasExtrasComponent,
     VerHorasExtrasComponent,
+    VerSucursalComponent,
+    VerEmpresaComponent,
   ],
 
   imports: [

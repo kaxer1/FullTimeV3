@@ -1,8 +1,4 @@
-p { font-size: x-small; }
-
-td { padding-top: 10px; text-align: center; }
-
-hr { background-color: black; }
+p { font-size: x-small; text-align: center; }
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
@@ -15,13 +11,17 @@ hr { background-color: black; }
     padding-bottom: 6px; 
 }
 
-#editarI { color:green; margin-left: 25px; cursor: pointer; }
+#editarF { color:green; cursor: pointer; text-align: center; margin-left: 15px; }
 
-#editarF { color:green; cursor: pointer; }
+#eliminar { color:red; cursor: pointer; margin-left: 20px; }
+
+#editarI { color:green; margin-left: 25px; cursor: pointer; }
 
 #datosF { font-weight: bold; font-size: 18px; }
 
-#resulCiudades { 
+#verticalLine { border-left: 1px solid rgb(52,65,84); }
+
+#resulSucursales { 
     font-size: 17px; 
     text-align: center; 
     background: rgb(52,65,84); 
@@ -31,3 +31,5 @@ hr { background-color: black; }
 }
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
+
+td { padding-top: 10px; text-align: center; }

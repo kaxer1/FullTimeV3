@@ -67,6 +67,11 @@
                         <td>{{e.ruc}}</td>
                         <td>{{e.direccion}}</td>
                         <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/vistaEmpresa/', e.id]">
+                                <p>Ver</p>
+                            </i>
                             <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(e)" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro">

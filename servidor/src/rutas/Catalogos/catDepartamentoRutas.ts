@@ -21,6 +21,7 @@ class DepartamentoRutas {
         this.router.post('/xmlDownload/', DEPARTAMENTO_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', DEPARTAMENTO_CONTROLADOR.downloadXML);
         this.router.delete('/eliminar/:id', DEPARTAMENTO_CONTROLADOR.EliminarRegistros);
+        this.router.get('/buscar/datosDepartamento/:id_sucursal', DEPARTAMENTO_CONTROLADOR.ListarDepartamentosSucursal);
     }
 }
 

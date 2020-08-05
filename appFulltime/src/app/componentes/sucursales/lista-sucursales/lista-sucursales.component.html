@@ -64,18 +64,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let s of sucursales | sucCiudad: filtroCiudadSuc | sucNombre: filtroNombreSuc | sucEmpresa: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
                         <td>{{s.id}}</td>
                         <td>{{s.nomempresa}}</td>
                         <td>{{s.nombre}}</td>
                         <td>{{s.descripcion}}</td>
                         <td class="d-flex justify-content-center">
-                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/vistaSucursales/', s.id]">
+                                <p>Ver</p>
+                            </i>
+                            <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i (click)="ConfirmarDelete(s)" id="eliminar" class="far fa-trash-alt"  matSuffix
+                            <i (click)="ConfirmarDelete(s)" id="eliminar" class="far fa-trash-alt" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>

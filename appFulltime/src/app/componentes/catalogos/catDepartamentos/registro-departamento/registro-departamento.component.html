@@ -10,7 +10,7 @@
                     Guardar.</span>
             </div>
             <div class="row">
-                <div class="col">
+                <div class="col" *ngIf="!Habilitar">
                     <mat-form-field>
                         <mat-label>Seleccionar Empresa</mat-label>
                         <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"

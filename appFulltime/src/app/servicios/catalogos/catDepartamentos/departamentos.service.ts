@@ -63,4 +63,8 @@ export class DepartamentosService {
     return this.http.delete(`${this.API_URL}/departamento/eliminar/${id}`);
   }
 
+  BuscarDepaSucursal(id_sucursal: number) {
+    return this.http.get(`${this.API_URL}/departamento/buscar/datosDepartamento/${id_sucursal}`);
+  }
+
 }

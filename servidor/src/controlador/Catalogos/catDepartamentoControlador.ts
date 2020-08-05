@@ -131,6 +131,17 @@ class DepartamentoControlador {
     await pool.query('DELETE FROM cg_departamentos WHERE id = $1', [id]);
     res.jsonp({ message: 'Registro eliminado' });
   }
+
+  public async ListarDepartamentosSucursal(req: Request, res: Response) {
+    const id = req.params.id_sucursal;
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre WHERE id_sucursal = $1 ORDER BY nombre ASC', [id]);
+    if (DEPARTAMENTOS.rowCount > 0) {
+      res.jsonp(DEPARTAMENTOS.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();

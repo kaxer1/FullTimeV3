@@ -93,7 +93,6 @@ export class PrincipalDepartamentoComponent implements OnInit {
     this.rest.ConsultarDepartamentos().subscribe(datos => {
       this.departamentos = datos;
       console.log(this.departamentos);
-
     })
   }
 
