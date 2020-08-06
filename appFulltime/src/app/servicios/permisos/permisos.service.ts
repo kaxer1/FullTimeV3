@@ -68,4 +68,8 @@ export class PermisosService {
   EliminarPermiso(id_permiso: number, doc: string) {
     return this.http.delete(`${this.API_URL}/empleadoPermiso/eliminar/${id_permiso}/${doc}`);
   }
+
+  SendMailNoti(datos: any) {
+    return this.http.post(`${this.API_URL}/empleadoPermiso/mail-noti`, datos);
+  }
 }

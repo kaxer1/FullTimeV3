@@ -89,6 +89,7 @@ export class PedidoHoraExtraComponent implements OnInit {
 
   HoraExtraResponse: any;
   NotifiRes: any;
+  arrayNivelesDepa: any = [];
   insertarTipoPermiso(form1) {
     let horaI = form1.fechaInicioForm._i.year + "/" + form1.fechaInicioForm._i.month + "/" + form1.fechaInicioForm._i.date + "T" + form1.horaInicioForm + ":00"
     let horaF = form1.FechaFinForm._i.year + "/" + form1.FechaFinForm._i.month + "/" + form1.FechaFinForm._i.date + "T" + form1.horaFinForm + ":00"
@@ -102,34 +103,71 @@ export class PedidoHoraExtraComponent implements OnInit {
       num_hora: form1.horasForm + ":00",
       descripcion: form1.descripcionForm,
       estado: form1.estadoForm,
-      tipo_funcion: form1.funcionForm
+      tipo_funcion: form1.funcionForm,
+      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
     }
 
-    this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+    this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
       this.dialogRef.close()
-      this.HoraExtraResponse = res;
-      console.log(this.HoraExtraResponse);
-      var f = new Date();
-      let notificacion = {
-        id: null,
-        id_send_empl: this.id_user_loggin,
-        id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
-        id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
-        estado: this.HoraExtraResponse.estado,
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
-        id_permiso: null,
-        id_vacaciones: null,
-        id_hora_extra: this.HoraExtraResponse.id
-      }
-      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-        console.log(res);
-        this.NotifiRes = res;
-        notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
-          this.restHE.sendNotiRealTime(notificacion);
-        }
+      this.arrayNivelesDepa = response;
+      console.log(this.arrayNivelesDepa);
+      this.arrayNivelesDepa.forEach(obj => {
+
+        let datosHoraExtraCreada = {
+          id_empl_cargo: dataPedirHoraExtra.id_empl_cargo, 
+          id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
+          fec_inicio: dataPedirHoraExtra.fec_inicio, 
+          fec_final: dataPedirHoraExtra.fec_final, 
+          fec_solicita: dataPedirHoraExtra.fec_solicita,
+          id: obj.id, 
+          estado: obj.estado, 
+          id_dep: obj.id_dep, 
+          depa_padre: obj.depa_padre, 
+          nivel: obj.nivel, 
+          id_suc: obj.id_suc, 
+          departamento: obj.departamento, 
+          sucursal: obj.sucursal, 
+          cargo: obj.cargo, 
+          contrato: obj.contrato, 
+          empleado: obj.empleado, 
+          nombre: obj.nombre, 
+          apellido: obj.apellido, 
+          cedula: obj.cedula, 
+          correo: obj.correo, 
+          hora_extra_mail: obj.hora_extra_mail, 
+          hora_extra_noti: obj.hora_extra_noti
+        } 
+
+        this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
+          this.HoraExtraResponse = res;
+          console.log(this.HoraExtraResponse);
+          var f = new Date();
+          let notificacion = {
+            id: null,
+            id_send_empl: this.id_user_loggin,
+            id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
+            id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
+            estado: this.HoraExtraResponse.estado,
+            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+            id_permiso: null,
+            id_vacaciones: null,
+            id_hora_extra: this.HoraExtraResponse.id
+          }
+          
+          this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+            console.log(resN);
+            this.NotifiRes = resN;
+            notificacion.id = this.NotifiRes._id;
+            if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
+              this.restHE.sendNotiRealTime(notificacion);
+            }
+          });
+
+        })
+        
       });
+      
     });
 
   }

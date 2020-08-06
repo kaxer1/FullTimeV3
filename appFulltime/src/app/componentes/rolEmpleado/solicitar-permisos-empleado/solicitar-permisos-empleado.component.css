@@ -7,3 +7,5 @@
 }
 
 p { font-size: x-small; }
+
+.btn { margin-bottom: 10px; background-color: rgb(80,87,97); color: white; } 

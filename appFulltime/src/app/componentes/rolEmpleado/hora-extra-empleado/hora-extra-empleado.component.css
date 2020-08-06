@@ -13,3 +13,5 @@ p { font-size: x-small; }
 .col-sm { font-weight: bold;}
 
 #iconos { text-align: center; }
+
+.btn { margin-bottom: 10px; background-color: rgb(80,87,97); color: white; } 

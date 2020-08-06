@@ -247,6 +247,11 @@ import { VerDipositivoComponent } from './componentes/catalogos/catRelojes/ver-d
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
+import { EditarPermisoEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
+import { CancelarHoraExtraComponent } from './componentes/rolEmpleado/hora-extra-empleado/cancelar-hora-extra/cancelar-hora-extra.component';
+import { EditarHoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
+import { CancelarVacacionesComponent } from './componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
+import { EditarVacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -425,6 +430,11 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ProcesosEmpleadoComponent,
     AutorizaEmpleadoComponent,
     ConfigurarCodigoComponent,
+    EditarPermisoEmpleadoComponent,
+    CancelarHoraExtraComponent,
+    EditarHoraExtraEmpleadoComponent,
+    CancelarVacacionesComponent,
+    EditarVacacionesEmpleadoComponent,
   ],
 
   imports: [

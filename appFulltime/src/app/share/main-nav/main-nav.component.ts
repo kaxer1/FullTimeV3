@@ -21,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class MainNavComponent implements OnInit {
 
+  estado: boolean = true;
   UserEmail: string;
   UserName: string;
   iniciales: string;
@@ -51,7 +52,7 @@ export class MainNavComponent implements OnInit {
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
     public vistaFlotante: MatDialog,
-    private roter: Router,
+    private router: Router,
     private toaster: ToastrService,
     private socket: Socket,
     private realTime: RealTimeService
@@ -72,9 +73,6 @@ export class MainNavComponent implements OnInit {
         })
       }
     });
-    var tituloPestania = this.location.prepareExternalUrl(this.location.path());
-    tituloPestania = tituloPestania.slice(1);
-    this.pestania = tituloPestania;
   }
 
   isExpanded = true;
@@ -129,7 +127,14 @@ export class MainNavComponent implements OnInit {
       }
     }, error => {
       console.log(error);
-      this.toaster.info('Configure si desea que le lleguen notficaciones y avisos al correo electrónico', 'Falta Ajustes del Sistema');
+      this.router.url
+      if (this.router.url !== '/login') {
+        this.toaster.info('Configure si desea que le lleguen notficaciones y avisos al correo electrónico', 
+        'Falta Ajustes del Sistema').onTap.subscribe(items => {
+          this.AbrirSettings();
+        });
+      }
+      
     });
   }
 
@@ -174,7 +179,7 @@ export class MainNavComponent implements OnInit {
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '300px', data: {id_empleado} });
+    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: {id_empleado} });
   }
 
 }

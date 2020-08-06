@@ -15,6 +15,7 @@ class HorasExtrasPedidasRutas {
         this.router.get('/:id', horaExtraControlador_1.default.ObtenerUnaHoraExtraPedida);
         this.router.get('/lista/:id_user', horaExtraControlador_1.default.ObtenerlistaHora);
         this.router.post('/', horaExtraControlador_1.default.CrearHoraExtraPedida);
+        this.router.post('/mail-noti/', horaExtraControlador_1.default.SendMailNotifiPermiso);
         this.router.get('/datosSolicitud/:id_emple_hora', horaExtraControlador_1.default.ObtenerSolicitudHoraExtra);
         this.router.put('/:id/estado', horaExtraControlador_1.default.ActualizarEstado);
         this.router.get('/datosAutorizacion/:id_hora/:id_empleado', horaExtraControlador_1.default.ObtenerAutorizacionHoraExtra);

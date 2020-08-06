@@ -8,6 +8,7 @@ import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { CancelarPermisoComponent } from './cancelar-permiso/cancelar-permiso.component';
+import { EditarPermisoEmpleadoComponent } from './editar-permiso-empleado/editar-permiso-empleado.component';
 
 @Component({
   selector: 'app-solicitar-permisos-empleado',
@@ -96,10 +97,15 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     });
   }
 
-
   CancelarPermiso(dataPermiso) {
     this.vistaRegistrarDatos.open(CancelarPermisoComponent, {width: '300px', data: dataPermiso}).afterClosed().subscribe(items => {
-      this.obtenerPermisos(parseInt(this.idEmpleado))
+      this.obtenerPermisos(parseInt(this.idEmpleado));
+    });
+  }
+
+  EditarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {width: '600px', data: dataPermiso}).afterClosed().subscribe(items => {
+      this.obtenerPermisos(parseInt(this.idEmpleado));
     });
   }
 }

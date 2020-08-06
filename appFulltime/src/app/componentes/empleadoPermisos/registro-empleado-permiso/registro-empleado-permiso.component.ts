@@ -358,7 +358,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
       hora_numero: form.horasForm,
       num_permiso: this.num,
-      docu_nombre: form.nombreCertificadoForm
+      docu_nombre: form.nombreCertificadoForm,
+      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);
@@ -437,7 +438,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       this.RevisarIngresoDias(form);
     }
   }
-
 
   ValidarConfiguracionHoras(form, hora_empleado) {
     var datoHora = parseInt(hora_empleado.split(":"));
@@ -562,35 +562,69 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   idPermisoRes: any;
   NotifiRes: any;
+  arrayNivelesDepa: any = [];
   GuardarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
-      this.restP.IngresarEmpleadoPermisos(datos).subscribe(res => {
+      this.restP.IngresarEmpleadoPermisos(datos).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Permiso registrado');
+        this.arrayNivelesDepa = response;
         this.LimpiarCampos();
-        this.idPermisoRes = res;
-        console.log(this.idPermisoRes);
-        this.SubirRespaldo(this.idPermisoRes.id)
-        this.ImprimirNumeroPermiso();
-        var f = new Date();
-        let notificacion = { 
-          id: null,
-          id_send_empl: this.datoEmpleado.idEmpleado,
-          id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
-          id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
-          estado: this.idPermisoRes.estado, 
-          create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-          id_permiso: this.idPermisoRes.id,
-          id_vacaciones: null,
-          id_hora_extra: null
-        }
-        this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-          console.log(res);
-          this.NotifiRes = res;
-          notificacion.id = this.NotifiRes._id;
-          if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
-            this.restP.sendNotiRealTime(notificacion);
+        console.log(this.arrayNivelesDepa);
+        
+        this.arrayNivelesDepa.forEach(obj => {
+          let datosPermisoCreado = {
+            fec_creacion: datos.fec_creacion, 
+            id_tipo_permiso: datos.id_tipo_permiso, 
+            id_empl_contrato: datos.id_empl_contrato,
+            id: obj.id, 
+            estado: obj.estado, 
+            id_dep: obj.id_dep, 
+            depa_padre: obj.depa_padre, 
+            nivel: obj.nivel, 
+            id_suc: obj.id_suc, 
+            departamento: obj.departamento, 
+            sucursal: obj.sucursal, 
+            cargo: obj.cargo, 
+            contrato: obj.contrato, 
+            empleado: obj.empleado, 
+            nombre: obj.nombre, 
+            apellido: obj.apellido, 
+            cedula: obj.cedula, 
+            correo: obj.correo, 
+            permiso_mail: obj.permiso_mail, 
+            permiso_noti: obj.permiso_noti
           }
+
+          this.restP.SendMailNoti(datosPermisoCreado).subscribe(res => {
+          this.idPermisoRes = res;
+          console.log(this.idPermisoRes);
+          this.SubirRespaldo(this.idPermisoRes.id)
+          this.ImprimirNumeroPermiso();
+          var f = new Date();
+          let notificacion = { 
+            id: null,
+            id_send_empl: this.datoEmpleado.idEmpleado,
+            id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
+            id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
+            estado: this.idPermisoRes.estado, 
+            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+            id_permiso: this.idPermisoRes.id,
+            id_vacaciones: null,
+            id_hora_extra: null
+          }
+          this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+            console.log(resN);
+            this.NotifiRes = resN;
+            notificacion.id = this.NotifiRes._id;
+            if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
+              this.restP.sendNotiRealTime(notificacion);
+            }
+          });
         });
+          
+        });
+
+        
       });
     }
     else {

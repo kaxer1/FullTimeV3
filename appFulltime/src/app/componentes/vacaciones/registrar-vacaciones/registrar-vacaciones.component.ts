@@ -233,8 +233,8 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   responseVacacion: any = [];
   NotifiRes: any;
+  arrayNivelesDepa: any = [];
   InsertarVacaciones(form) {
-    console.log(this.datoEmpleado)
     let datosVacaciones = {
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
@@ -244,32 +244,64 @@ export class RegistrarVacacionesComponent implements OnInit {
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
-      idContrato: this.datoEmpleado.idContrato
+      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
     };
     console.log(datosVacaciones);
     this.restV.RegistrarVacaciones(datosVacaciones).subscribe(response => {
-      console.log(response);
-      this.responseVacacion = response
-      var f = new Date();
-      let notificacion = { 
-        id: null,
-        id_send_empl: this.datoEmpleado.idEmpleado,
-        id_receives_empl: this.responseVacacion.id_empleado_autoriza,
-        id_receives_depa: this.responseVacacion.id_departamento_autoriza,
-        estado: this.responseVacacion.estado, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-        id_permiso: null,
-        id_vacaciones: this.responseVacacion.id_vacacion,
-        id_hora_extra: null,
-      }
-      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-        console.log(res);
-        this.NotifiRes = res;
-        notificacion.id = this.NotifiRes._id;
-        if (this.NotifiRes._id > 0 && this.responseVacacion.notificacion === true) {
-          this.restV.sendNotiRealTime(notificacion);
+      this.arrayNivelesDepa = response;
+
+      this.arrayNivelesDepa.forEach(obj => {
+        let dataVacacionCreada = {
+          fec_inicio: datosVacaciones.fec_inicio,
+          fec_final: datosVacaciones.fec_final,
+          idContrato: this.datoEmpleado.idContrato,
+          id: obj.id, 
+          estado: obj.estado, 
+          id_dep: obj.id_dep, 
+          depa_padre: obj.depa_padre, 
+          nivel: obj.nivel, 
+          id_suc: obj.id_suc, 
+          departamento: obj.departamento, 
+          sucursal: obj.sucursal, 
+          cargo: obj.cargo, 
+          contrato: obj.contrato, 
+          empleado: obj.empleado, 
+          nombre: obj.nombre, 
+          apellido: obj.apellido, 
+          cedula: obj.cedula, 
+          correo: obj.correo, 
+          vaca_mail: obj.vaca_mail,
+          vaca_noti: obj.vaca_noti
         }
+
+        this.restV.SendMailNoti(dataVacacionCreada).subscribe(res => {
+          console.log(response);
+          this.responseVacacion = res
+          var f = new Date();
+          let notificacion = { 
+            id: null,
+            id_send_empl: this.datoEmpleado.idEmpleado,
+            id_receives_empl: this.responseVacacion.id_empleado_autoriza,
+            id_receives_depa: this.responseVacacion.id_departamento_autoriza,
+            estado: this.responseVacacion.estado, 
+            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+            id_permiso: null,
+            id_vacaciones: this.responseVacacion.id_vacacion,
+            id_hora_extra: null,
+          }
+          this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+            console.log(resN);
+            this.NotifiRes = resN;
+            notificacion.id = this.NotifiRes._id;
+            if (this.NotifiRes._id > 0 && this.responseVacacion.notificacion === true) {
+              this.restV.sendNotiRealTime(notificacion);
+            }
+          });
+
+        })
+
       });
+      
       this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas')
       this.CerrarVentanaRegistroVacaciones();
     }, error => {

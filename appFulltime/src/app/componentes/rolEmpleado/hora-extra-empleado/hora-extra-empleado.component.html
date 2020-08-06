@@ -73,6 +73,11 @@
                                 <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
                             </div>
                         </div>
+                        <br>
+                        <div class="d-flex flex-wrap justify-content-around" *ngIf="h.estado === 'Pendiente'">
+                            <button class="btn" type="submit" (click)="CancelarHoraExtra(h)">Cancelar Hora Extra</button>
+                            <button class="btn" type="submit" (click)="EditarHoraExtra(h)">Editar</button>
+                        </div>
                         <mat-divider></mat-divider>
                     </div>
                 </mat-card-content>

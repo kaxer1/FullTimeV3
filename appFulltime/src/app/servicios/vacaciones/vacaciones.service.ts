@@ -51,4 +51,7 @@ export class VacacionesService {
     return this.http.get(`${this.API_URL}/vacaciones/datosAutorizacion/${id_vacaciones}/${id_empleado}`);
   }
 
+  SendMailNoti(datos: any) {
+    return this.http.post(`${this.API_URL}/vacaciones/mail-noti`, datos);
+  }
 }

@@ -50,6 +50,9 @@ class NotificacionTiempoRealControlador {
 
   public async create(req: Request, res: Response): Promise<void> {
     const { id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra } = req.body;
+    
+    
+    
     await pool.query('INSERT INTO realtime_noti ( id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [id_send_empl, id_receives_empl, id_receives_depa, estado, create_at, id_permiso, id_vacaciones, id_hora_extra]);
     const REAL_TIME_NOTIFICACION = await pool.query('SELECT id FROM realtime_noti ORDER BY id DESC LIMIT 1');
     res.jsonp({ message: 'Notificacion guardada', _id: REAL_TIME_NOTIFICACION.rows[0].id });

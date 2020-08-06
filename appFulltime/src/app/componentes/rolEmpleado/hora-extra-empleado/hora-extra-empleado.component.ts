@@ -52,4 +52,12 @@ export class HoraExtraEmpleadoComponent implements OnInit {
     });
   }
 
+  CancelarHoraExtra(h) {
+    console.log(h);
+  }
+  
+  EditarHoraExtra(h) {
+    console.log(h);
+  }
+
 }

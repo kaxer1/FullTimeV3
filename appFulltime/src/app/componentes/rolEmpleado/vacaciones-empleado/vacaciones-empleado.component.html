@@ -165,6 +165,11 @@
                                 <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
                             </div>
                         </div>
+                        <br>
+                        <div class="d-flex flex-wrap justify-content-around" *ngIf="v.estado === 'Solicitado'">
+                            <button class="btn" type="submit" (click)="CancelarVacaciones(v)">Cancelar Vacacion</button>
+                            <button class="btn" type="submit" (click)="EditarVacaciones(v)">Editar</button>
+                        </div>
                         <mat-divider></mat-divider>
                     </div>
                 </mat-card-content>

@@ -74,12 +74,11 @@
                                     target="_blank">ver</a>
                             </div>
                         </div>
-                        <div class="row" *ngIf="pt.estado === 'Pendiente'">
-                            <div class="col">
-                                <button class="bnt btn-primary" type="submit" (click)="CancelarPermiso(pt)">Cancelar Permiso</button>
-                            </div>
-                        </div>
                         <br>
+                        <div class="d-flex flex-wrap justify-content-around" *ngIf="pt.estado === 'Pendiente'">
+                            <button class="btn" type="submit" (click)="CancelarPermiso(pt)">Cancelar Permiso</button>
+                            <button class="btn" type="submit" (click)="EditarPermiso(pt)">Editar</button>
+                        </div>
                         <mat-divider></mat-divider>
                     </div>
                 </mat-card-content>

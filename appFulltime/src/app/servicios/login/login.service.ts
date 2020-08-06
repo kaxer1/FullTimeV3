@@ -29,6 +29,14 @@ export class LoginService {
     return parseInt(localStorage.getItem('rol'));//Empleado
   }
 
+  getEstado() {
+    let estado = localStorage.getItem('autoriza');
+    if (estado == 'true') {
+      return true;
+    } 
+    return false;
+  }
+
   loggedRol() {
     return !!localStorage.getItem('rol');
   }

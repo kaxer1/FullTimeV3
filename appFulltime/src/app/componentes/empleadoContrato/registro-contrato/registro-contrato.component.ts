@@ -127,7 +127,9 @@ export class RegistroContratoComponent implements OnInit {
   deseleccionarArchivo() {
     this.archivoSubido = [];
     this.isChecked = false;
+    this.HabilitarBtn = false;
     this.LimpiarNombreArchivo();
+    this.archivoForm.patchValue('');
   }
 
   nameFile: string;

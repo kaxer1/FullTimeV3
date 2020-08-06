@@ -48,4 +48,7 @@ export class PedHoraExtraService {
     return this.http.get(`${this.API_URL}/horas-extras-pedidas/datosAutorizacion/${id_hora}/${id_empleado}`);
   }
 
+  SendMailNoti(datos: any) {
+    return this.http.post(`${this.API_URL}/horas-extras-pedidas/mail-noti`, datos);
+  }
 }

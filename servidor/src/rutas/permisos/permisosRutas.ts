@@ -20,6 +20,7 @@ class PermisosRutas {
         this.router.get('/:id', PERMISOS_CONTROLADOR.ObtenerUnPermiso);
         this.router.get('/un-permiso/:id_permiso', PERMISOS_CONTROLADOR.ListarUnPermisoInfo);
         this.router.post('/', PERMISOS_CONTROLADOR.CrearPermisos);
+        this.router.post('/mail-noti/', PERMISOS_CONTROLADOR.SendMailNotifiPermiso);
         this.router.get('/documentos/:docs', PERMISOS_CONTROLADOR.getDoc);
         this.router.get('/numPermiso/:id_empleado', PERMISOS_CONTROLADOR.ObtenerNumPermiso);
         this.router.get('/permisoContrato/:id_empl_contrato', PERMISOS_CONTROLADOR.ObtenerPermisoContrato);
