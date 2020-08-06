@@ -40,73 +40,6 @@
                         <label class="col col-form-label">{{p.dia_perdido}}</label>
                     </div>
                 </div>
-<<<<<<< HEAD
-                <mat-card-content>
-                    <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Días Libres:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.dia_libre}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Días Laborables:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.dia_laborable}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Legalizado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.legalizado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.estado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="d-flex flex-wrap justify-content-around" *ngIf="v.estado === 'Solicitado'">
-                            <button class="btn" type="submit" (click)="CancelarVacaciones(v)">Cancelar Vacacion</button>
-                            <button class="btn" type="submit" (click)="EditarVacaciones(v)">Editar</button>
-                        </div>
-                        <mat-divider></mat-divider>
-=======
-                <mat-divider></mat-divider>
             </div>
         </mat-card-content>
     </mat-card>
@@ -119,7 +52,6 @@
                 <div class="row">
                     <div class="col" style="text-align: left;">
                         <h5>Solicitar Vacaciones</h5>
->>>>>>> 53370a2de3e91c7016c044c531a67fa1a59c3f57
                     </div>
                     <div class="col" style="text-align: center;">
                         <button type="submit" class="btn btn-outline-light btn-sm"
@@ -140,11 +72,8 @@
                     <div class="col-3">
                         <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
                         <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
-                        <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 1">Solicitado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 2">Rechazado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 3">Aceptado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 4">Eliminado</label>
+                        <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}} </label>
+                        <label class="col col-form-label">{{v.estado}}</label>
                     </div>
                     <div class="col-3" id="verticalLine">
                         <label id="datosF" class="col-sm col-form-label">Días Laborables:</label>
@@ -157,6 +86,11 @@
                         <label class="col col-form-label" *ngIf="v.legalizado == true">Sí</label>
                         <label class="col col-form-label" *ngIf="v.legalizado == false">No</label>
                     </div>
+                </div>
+                <br>
+                <div class="d-flex flex-wrap justify-content-around" *ngIf="v.estado === 'Solicitado'">
+                    <button class="btn btn-sm" type="submit" (click)="CancelarVacaciones(v)">Cancelar Vacacion</button>
+                    <button class="btn btn-sm" type="submit" (click)="EditarVacaciones(v)">Editar</button>
                 </div>
                 <br>
                 <mat-divider></mat-divider>

@@ -950,10 +950,7 @@
                                 <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
                                 <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
                                 <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 1">Solicitado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 2">Rechazado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 3">Aceptado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 4">Eliminado</label>
+                                <label class="col col-form-label">{{v.estado}}</label>
                             </div>
                             <div class="col-3" id="verticalLine">
                                 <label id="datosF" class="col-sm col-form-label">Días Laborables:</label>
