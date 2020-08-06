@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
@@ -17,6 +18,10 @@ import { PlanificacionComidasComponent } from 'src/app/componentes/planificacion
 export class PlanificacionComidasEmpleadoComponent implements OnInit {
 
   idEmpleado: string;
+  /* Items de paginación de la tabla */
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public restPlanComidas: PlanComidasService,
@@ -30,6 +35,11 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   /** Método para mostrar datos de planificación de almuerzos */

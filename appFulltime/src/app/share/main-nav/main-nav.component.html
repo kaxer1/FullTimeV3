@@ -157,7 +157,7 @@
           <a mat-list-item [routerLink]="['/horario']" class="texcol">
             <span matLine>Crear Horario</span>
           </a>
-          <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
+          <a mat-list-item [routerLink]="['/listaHorasExtras']" class="texcol">
             <span matLine>Configurar Horas Extras</span>
           </a>
           <a mat-list-item [routerLink]="['/planificacion']" class="texcol">
@@ -203,7 +203,7 @@
       </mat-expansion-panel>
 
       <!-- Acciones de Personal-->
-      <mat-expansion-panel class="menus">
+      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
         <mat-expansion-panel-header class="selec8">
           <mat-panel-title>
             <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
@@ -318,7 +318,7 @@
       </mat-expansion-panel>
 
       <!-- PROCESOS -->
-      <mat-expansion-panel class="menus">
+      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
         <mat-expansion-panel-header class="selec8">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>

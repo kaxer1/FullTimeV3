@@ -5,7 +5,7 @@
             <div class="barraTituloF">
                 <span>FERIADOS</span>
             </div>
-            <mat-card class="example-card mat-elevation-z9" >
+            <mat-card class="example-card mat-elevation-z9">
                 <h5>Críterios de Búsqueda</h5>
                 <mat-card-content>
                     <form [formGroup]="BuscarFeriadosForm">
@@ -25,10 +25,8 @@
                             <mat-form-field>
                                 <mat-label>Fecha</mat-label>
                                 <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
-                                    [formControl]="fechaF" [(ngModel)]="filtradoFecha">
-                                <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del feriado por la fecha">
-                                    event</mat-icon>
+                                    [formControl]="fechaF" [(ngModel)]="filtradoFecha" id="feriado"
+                                    matTooltip="Búsqueda del feriado por la fecha">
                             </mat-form-field>
                         </div>
                     </form>
@@ -49,8 +47,8 @@
                     <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                    matTooltipPosition="right"
-                    matTooltip="Presionar para seleccionar Plantilla con nombre Feriados">Subir Feriados</label>
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Feriados">Subir Feriados</label>
                 </form>
                 <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
                     matTooltip="Dar click para ver o descargar el documento"
@@ -75,7 +73,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr  *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
+                    <tr
+                        *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
                         <td id="desc" style="font-size: 14px;">{{f.descripcion}}</td>
                         <td style="font-size: 12px;">{{f.fecha}}</td>
                         <td style="font-size: 12px;">{{f.fec_recuperacion}}</td>
@@ -95,7 +94,7 @@
                                 (click)="AbrirVentanaEditarFeriado(f)">
                                 <p>Editar</p>
                             </i>
-                            <i  matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
+                            <i matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
                                 class="far fa-trash-alt" (click)="ConfirmarDelete(f)"
                                 style="color:red; margin-left: 15px;">
                                 <p>Eliminar</p>

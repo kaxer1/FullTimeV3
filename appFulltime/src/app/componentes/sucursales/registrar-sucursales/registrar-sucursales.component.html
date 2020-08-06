@@ -67,9 +67,9 @@
                     </mat-form-field>
                 </div>
                 <div class="col">
-                    <mat-form-field>
+                    <mat-form-field *ngIf="!Habilitar">
                         <input type="text" placeholder="Escribir Empresa" aria-label="Number" matInput
-                            [formControl]="idEmpresaF" [matAutocomplete]="auto3" required>
+                            [formControl]="idEmpresaF" [matAutocomplete]="auto3">
                         <mat-autocomplete #auto3="matAutocomplete">
                             <mat-option *ngFor="let option of filteredOptEmpr | async" [value]="option.nombre">
                                 {{option.nombre}}
@@ -79,7 +79,7 @@
                             matTooltip="Lista de Empresas">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <br>
+                    <br *ngIf="!Habilitar">
                     <mat-form-field>
                         <mat-label>Nueva Sucursal</mat-label>
                         <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre" required>

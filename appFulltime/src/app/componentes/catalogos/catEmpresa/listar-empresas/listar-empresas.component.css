@@ -26,6 +26,8 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
+#ver { color: indianred; margin-left: 20px; }
+
 #editar { color:green; cursor: pointer; margin-left: 20px; }
 
 #eliminar { color:red; cursor: pointer; margin-left: 20px; }

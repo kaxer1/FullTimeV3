@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
@@ -21,6 +22,10 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
   idContrato: any = [];
   idPerVacacion: any = [];
   cont: number;
+  /* Items de paginación de la tabla */
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public restEmpleado: EmpleadoService,
@@ -35,6 +40,11 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerPermisos(parseInt(this.idEmpleado))
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
   /* 

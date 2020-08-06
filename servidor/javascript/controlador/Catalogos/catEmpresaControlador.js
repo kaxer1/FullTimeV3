@@ -74,6 +74,25 @@ class EmpresaControlador {
             res.sendFile(__dirname.split("servidor")[0] + filePath);
         });
     }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_empresa WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    ListarEmpresaId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
+            if (EMPRESA.rowCount > 0) {
+                return res.jsonp(EMPRESA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.EMPRESA_CONTROLADOR = new EmpresaControlador();
 exports.default = exports.EMPRESA_CONTROLADOR;

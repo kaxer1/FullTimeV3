@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ScrollingModule } from '@angular/cdk/scrolling'
-
+import { JwPaginationModule } from 'jw-angular-pagination';
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -28,7 +28,7 @@ import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvinci
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/catProcesos/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/catProcesos/registro-proceso/registro-proceso.component';
-import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/horas-extras.component';
+import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/registrar-horas-extras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
@@ -233,7 +233,6 @@ import { HoraExtraAutorizacionesComponent } from './componentes/autorizaciones/h
 import { EditarEstadoHoraExtraAutorizacionComponent } from './componentes/autorizaciones/editar-estado-hora-extra-autorizacion/editar-estado-hora-extra-autorizacion.component';
 import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-extra/estado-hora-extra.component';
 import { CancelarPermisoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/cancelar-permiso/cancelar-permiso.component';
-import { EliminarFeriadoComponent } from './componentes/catalogos/catFeriados/eliminar-feriado/eliminar-feriado.component';
 import { EditarCiudadComponent } from './componentes/catalogos/catFeriados/editar-ciudad/editar-ciudad.component';
 import { EditarHorarioEmpleadoComponent } from './componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from './componentes/planHorarios/editar-planificacion/editar-planificacion.component';
@@ -252,6 +251,13 @@ import { CancelarHoraExtraComponent } from './componentes/rolEmpleado/hora-extra
 import { EditarHoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
 import { CancelarVacacionesComponent } from './componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
+import { VerRegimenComponent } from './componentes/catalogos/catRegimen/ver-regimen/ver-regimen.component';
+import { VerTipoPermisoComponent } from './componentes/catalogos/catTipoPermisos/ver-tipo-permiso/ver-tipo-permiso.component';
+import { ListaHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/lista-horas-extras/lista-horas-extras.component';
+import { EditarHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
+import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
+import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
+import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empresa/ver-empresa.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -416,7 +422,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarEstadoHoraExtraAutorizacionComponent,
     EstadoHoraExtraComponent,
     CancelarPermisoComponent,
-    EliminarFeriadoComponent,
     EditarCiudadComponent,
     EditarHorarioEmpleadoComponent,
     EditarPlanificacionComponent,
@@ -435,6 +440,13 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarHoraExtraEmpleadoComponent,
     CancelarVacacionesComponent,
     EditarVacacionesEmpleadoComponent,
+    VerRegimenComponent,
+    VerTipoPermisoComponent,
+    ListaHorasExtrasComponent,
+    EditarHorasExtrasComponent,
+    VerHorasExtrasComponent,
+    VerSucursalComponent,
+    VerEmpresaComponent,
   ],
 
   imports: [
@@ -482,7 +494,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatNativeDateModule,
     MatTabsModule,
     MatMenuModule,
-    ScrollingModule
+    ScrollingModule,
+    JwPaginationModule
   ],
   providers: [
     AuthGuard,

@@ -40,4 +40,8 @@ export class TipoPermisosService {
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos/xmlDownload`, data);
   }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.TIPO_PERMISOS_URL}/tipoPermisos/eliminar/${id}`);
+  }
 }

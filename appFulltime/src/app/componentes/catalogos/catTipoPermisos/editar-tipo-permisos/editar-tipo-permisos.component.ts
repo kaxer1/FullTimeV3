@@ -326,7 +326,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       console.log(res);
       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
       this.dialogRef.close();
-      window.location.reload();
+      //window.location.reload();
     }, error => {
     });
   }

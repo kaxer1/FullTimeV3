@@ -1,0 +1,72 @@
+mat-slider { width: 190px; }
+
+#horaExtra { font-size: small; }
+
+#codigoP { font-size: small; }
+
+#tipoRecargo { font-size: small; }
+
+/*.horaE-tooltip { background-color : chocolate; }*/
+
+/*.horaS-tooltip { background-color : chocolate; font-size: 11px; border-radius: 25px; }*/
+
+#iHora { cursor: pointer; }
+
+.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
+
+.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+
+#iconoG { margin-left: 15px; }
+
+.mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
+
+.example-margin { margin: 0 10px; }
+
+.tituloExtra { 
+  font-size: 20px; 
+  text-align: center; 
+  background: rgb(52,65,84); 
+  color: white; 
+  padding-top: 10px;
+}
+
+.titulo_horaE { 
+  position: relative; 
+  float: left; 
+  font-size: 19px; 
+  font-weight: bold; 
+  text-align: center; 
+  color: rgb(0, 0, 0);
+}
+
+.subtitulo_horaE {
+  font-size: 14px; 
+  font-weight: bold; 
+  padding-left: 5px; 
+  padding-top: 25px; 
+  padding-bottom: 25px; 
+  text-align: justify;
+}
+
+#seccion_horaE { color: rgba(8, 10, 124, 0.828); }
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    font-size: 20px;
+}
+
+.scrollbar {
+    float: left;
+    height: 450px;
+    width: 100%;
+    background: #fff;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-bottom: 25px;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5; 
+}

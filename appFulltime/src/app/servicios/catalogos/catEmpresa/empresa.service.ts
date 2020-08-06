@@ -35,4 +35,12 @@ export class EmpresaService {
     return this.http.post(`${this.API_URL}/empresas/xmlDownload`, data);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/empresas/eliminar/${id}`);
+  }
+
+  ConsultarDatosEmpresa(id: number) {
+    return this.http.get(`${this.API_URL}/empresas/buscar/datos/${id}`);
+  }
+
 }

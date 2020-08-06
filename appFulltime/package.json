@@ -41,6 +41,7 @@
     "jquery": "^3.5.1",
     "js2xmlparser": "^4.0.1",
     "jtx": "^1.0.4",
+    "jw-angular-pagination": "^1.2.0",
     "ng-material-multilevel-menu": "^4.11.3",
     "ng2-charts": "^2.3.0",
     "ngx-echarts": "^4.2.2",

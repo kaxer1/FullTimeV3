@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EliminarFeriadoComponent } from './eliminar-feriado.component';
+import { ListaHorasExtrasComponent } from './lista-horas-extras.component';
 
-describe('EliminarFeriadoComponent', () => {
-  let component: EliminarFeriadoComponent;
-  let fixture: ComponentFixture<EliminarFeriadoComponent>;
+describe('ListaHorasExtrasComponent', () => {
+  let component: ListaHorasExtrasComponent;
+  let fixture: ComponentFixture<ListaHorasExtrasComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EliminarFeriadoComponent ]
+      declarations: [ ListaHorasExtrasComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EliminarFeriadoComponent);
+    fixture = TestBed.createComponent(ListaHorasExtrasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

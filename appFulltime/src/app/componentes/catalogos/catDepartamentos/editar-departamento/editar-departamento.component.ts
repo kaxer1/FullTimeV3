@@ -96,20 +96,37 @@ export class EditarDepartamentoComponent implements OnInit {
     }
   }
 
+  revisarNombre: any = [];
+  contador: number = 0;
   GuardarDatos(datos) {
-    this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
-      if (response.message === 'error') {
-        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'Departamento ya existe');
+    this.revisarNombre = [];
+    let idSucursal = datos.id_sucursal;
+    this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
+      this.revisarNombre = data;
+      for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
+        if (this.revisarNombre[i].nombre === datos.nombre) {
+          this.contador = 1;
+        }
+      }
+      if (this.contador === 1) {
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO');
+        this.contador = 0;
       }
       else {
-        this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-        window.location.reload();
-        this.dialogRef.close();
+        this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('Existe un error en los datos.');
+          }
+          else {
+            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+            window.location.reload();
+            this.dialogRef.close();
+          }
+        });
       }
     }, error => {
-      console.log(error);
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
     });
-
   }
 
   CerrarVentanaRegistroDepartamento() {
@@ -120,6 +137,7 @@ export class EditarDepartamentoComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoDepartamentoForm.reset();
+    this.contador = 0;
   }
 
   ValidarCamposModificar() {

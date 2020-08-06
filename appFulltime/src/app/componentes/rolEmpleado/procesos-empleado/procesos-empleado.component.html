@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 <mat-card-content>
-                    <div class="container" *ngFor="let e of empleadoProcesos" style="padding-top: 15px;">
+                    <div class="container" *ngFor="let e of empleadoProcesos | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col-2">
                                 <label id="datosF" class="col-sm col-form-label">Proceso:</label>
@@ -52,6 +52,10 @@
                         </div>
                         <mat-divider></mat-divider>
                     </div>
+                    <mat-paginator [length]="empleadoProcesos.length" [pageSize]="tamanio_pagina"
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        showFirstLastButtons>
+                    </mat-paginator>
                 </mat-card-content>
             </mat-card>
         </div>

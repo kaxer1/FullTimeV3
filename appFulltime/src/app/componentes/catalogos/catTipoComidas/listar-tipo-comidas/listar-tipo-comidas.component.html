@@ -9,7 +9,7 @@
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <mat-card-content>
                     <form [formGroup]="BuscarTipoComidaForm">
-                        <div class="d-flex flex-wrap justify-content-center">                        
+                        <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
                                 <mat-label>Nombre del plato</mat-label>
                                 <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
@@ -39,11 +39,12 @@
                     <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                    matTooltipPosition="right"
-                    matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo Comidas</label>
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Tipo Comidas">Subir Tipo
+                        Comidas</label>
                 </form>
-                <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
-                    matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                    matTooltip="Dar click para ver o descargar el documento"
                     href="http://localhost:3000/plantillaD/documento/Tipo Comidas.xlsx">
                     <span class="material-icons">cloud_download</span> Descargar Plantilla Tipo Comidas
                 </a>
@@ -65,18 +66,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
                         <td id="centrar">{{comida.nombre}}</td>
                         <td id="fila">$ {{comida.valor}}</td>
                         <td id="centrar">{{comida.observacion}}</td>
-                        <td class="d-flex justify-content-center">                        
+                        <td class="d-flex justify-content-center">
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
                                 matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
                                 matTooltip="Editar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i class="far fa-trash-alt" matSuffix matTooltipClass="comidasL-tooltip"
-                                matTooltipPosition="right" matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(comida)" class="far fa-trash-alt" matSuffix
+                                matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
+                                matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>

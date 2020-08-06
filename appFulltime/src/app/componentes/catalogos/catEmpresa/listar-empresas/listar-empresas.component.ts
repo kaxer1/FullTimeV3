@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -14,6 +15,7 @@ import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpre
 import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-listar-empresas',
@@ -47,7 +49,8 @@ export class ListarEmpresasComponent implements OnInit {
     public restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-  ) { 
+    private router: Router,
+  ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
@@ -135,6 +138,27 @@ export class ListarEmpresasComponent implements OnInit {
     }
   }
 
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_empresa: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarRegistro(id_empresa).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerEmpresa();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/empresa']);
+        }
+      });
+  }
+
   /****************************************************************************************************** 
   *                                         MÉTODO PARA EXPORTAR A PDF
   ******************************************************************************************************/
@@ -170,15 +194,15 @@ export class ListarEmpresasComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

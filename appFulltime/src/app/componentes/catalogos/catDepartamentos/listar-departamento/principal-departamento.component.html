@@ -16,8 +16,7 @@
                                     [formControl]="departamentoF" (keypress)="IngresarSoloLetras($event)"
                                     [(ngModel)]="filtroNombre">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
-                                    matTooltip="Búsqueda por Departamento">
+                                    matTooltipClass="departamento-tooltip" matTooltip="Búsqueda por Departamento">
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="departamentoF.invalid">{{ObtenerMensajeDepartamentoLetras()}}
                                 </mat-error>
@@ -25,9 +24,8 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Empresa</mat-label>
-                                <input matInput id="depPadre" name="filtroEmpresaSuc"
-                                    placeholder="Nombre de Empresa" [formControl]="buscarEmpresa"
-                                    [(ngModel)]="filtroEmpresaSuc">
+                                <input matInput id="depPadre" name="filtroEmpresaSuc" placeholder="Nombre de Empresa"
+                                    [formControl]="buscarEmpresa" [(ngModel)]="filtroEmpresaSuc">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip"
                                     matTooltip="Búsqueda del Departamento por nombre de Empresa">
@@ -38,9 +36,8 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Sucursal</mat-label>
-                                <input matInput id="depPadre" name="filtroNombreSuc"
-                                    placeholder="Nombre de Sucursal" [formControl]="buscarNombre"
-                                    [(ngModel)]="filtroNombreSuc">
+                                <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
+                                    [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
                                 <mat-icon id="color" matSuffix matTooltipPosition="right"
                                     matTooltipClass="departamento-tooltip"
                                     matTooltip="Búsqueda del Departamento por nombre de Sucursal">
@@ -60,7 +57,7 @@
                                     help_outline</mat-icon>
                                 <mat-error *ngIf="departamentoPadreF.invalid">
                                     {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
-                            </mat-form-field> 
+                            </mat-form-field>
                         </div>
                     </form>
                 </mat-card-content>
@@ -89,12 +86,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomempresa}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomsucursal}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nombre | titlecase}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nivel}}</td>
-                        <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.departamento_padre}}</td>
+                        <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.departamento_padre | titlecase}}
+                        </td>
                         <td *ngIf="departamento.nombre != 'Ninguno'" class="d-flex justify-content-center">
                             <i class="fas fa-edit" matSuffix matTooltipPosition="right"
                                 matTooltipClass="departamento-tooltip"
@@ -102,8 +101,9 @@
                                 (click)="AbrirVentanaEditarDepartamento(departamento)">
                                 <p>Editar</p>
                             </i>
-                            <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(departamento)" class="far fa-trash-alt" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>

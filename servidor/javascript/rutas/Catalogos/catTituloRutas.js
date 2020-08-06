@@ -15,6 +15,7 @@ class TituloRutas {
         this.router.get('/:id', catTituloControlador_1.default.getOne);
         this.router.post('/', catTituloControlador_1.default.create);
         this.router.put('/', catTituloControlador_1.default.ActualizarTitulo);
+        this.router.delete('/eliminar/:id', catTituloControlador_1.default.EliminarRegistros);
     }
 }
 const TITULO_RUTAS = new TituloRutas();

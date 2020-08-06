@@ -24,6 +24,7 @@ import { ScriptService } from 'src/app/servicios/empleado/script.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
@@ -102,6 +103,8 @@ export class VerEmpleadoComponent implements OnInit {
   empleadoLogueado: any = [];
   idEmpleadoLogueado: number;
 
+  HabilitarAccion: boolean;
+
   constructor(
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
@@ -117,6 +120,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restEmpleHorario: EmpleadoHorariosService,
     public restPermiso: PermisosService,
     public restAutoridad: AutorizaDepartamentoService,
+    public restEmpresa: EmpresaService,
     public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
@@ -148,6 +152,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerVacaciones(parseInt(this.idEmpleado));
     this.obtenerPlanHorarios(parseInt(this.idEmpleado));
     this.obtenerContratosEmpleado();
+    this.VerAccionPersonal();
   }
 
   // metodo para ver la informacion del empleado 
@@ -305,17 +310,12 @@ export class VerEmpleadoComponent implements OnInit {
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
-    this.restEmpleado.BuscarIDContratoActual(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
-        this.cargosTotalesEmpleado = datos;
-        let cargoIdActual = this.cargosTotalesEmpleado[this.cargosTotalesEmpleado.length - 1].id;
-        this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
-          this.cargoEmpleado = datos;
-        }, error => { });
-      }, error => {
-        this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
-      });
+    this.restCargo.BuscarIDCargoActual(id_empleado).subscribe(datos => {
+      this.cargosTotalesEmpleado = datos;
+      let cargoIdActual = this.cargosTotalesEmpleado[0].max;
+      this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
+        this.cargoEmpleado = datos;
+      }, error => { });
     });
   }
 
@@ -947,7 +947,7 @@ export class VerEmpleadoComponent implements OnInit {
         this.obtenerPlanHorarios(parseInt(this.idEmpleado));
       });
   }
-  
+
   /* Ventana para editar planificación de comidas */
   AbrirEditarPlanComidas(datoSeleccionado): void {
     console.log(datoSeleccionado);
@@ -1395,6 +1395,20 @@ export class VerEmpleadoComponent implements OnInit {
       this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
+  }
+
+
+
+  /** HABILITAR O DESHABILITAR VISTA DE ACCIONES DE PERSONAL */
+  VerAccionPersonal() {
+    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
+      if (res[0].tipo_empresa === 'Pública') {
+        this.HabilitarAccion = false;
+      }
+      else {
+        this.HabilitarAccion = true;
+      }
+    })
   }
 
 }
