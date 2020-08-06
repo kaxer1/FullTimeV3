@@ -42,18 +42,15 @@
                                 <label class="col col-form-label">{{h.fec_final.split("T")[0]}}</label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Solicita:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
-                            </div>
-                        </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-around" *ngIf="h.estado === 'Pendiente'">
-                            <button class="btn" type="submit" (click)="CancelarHoraExtra(h)">Cancelar Hora Extra</button>
-                            <button class="btn" type="submit" (click)="EditarHoraExtra(h)">Editar</button>
+                            <button class="btn btn-sm" type="submit" (click)="CancelarHoraExtra(h)">Cancelar Hora
+                                Extra</button>
+                            <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
                         </div>
                         <mat-divider></mat-divider>
                     </div>
@@ -61,9 +58,6 @@
                         [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
                         showFirstLastButtons>
                     </mat-paginator>
-                    <!-- <div class="card-footer pb-0 pt-3">
-                        <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>
-                    </div>-->
                 </mat-card-content>
             </mat-card>
         </div>

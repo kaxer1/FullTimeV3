@@ -25,6 +25,7 @@ import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHora
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
@@ -45,6 +46,7 @@ import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHora
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 import { EditarAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
+import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pedido-hora-extra.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -104,6 +106,7 @@ export class VerEmpleadoComponent implements OnInit {
   idEmpleadoLogueado: number;
 
   HabilitarAccion: boolean;
+  HabilitarHorasE: boolean;
 
   constructor(
     public restTitulo: TituloService,
@@ -121,6 +124,7 @@ export class VerEmpleadoComponent implements OnInit {
     public restPermiso: PermisosService,
     public restAutoridad: AutorizaDepartamentoService,
     public restEmpresa: EmpresaService,
+    private restHE: PedHoraExtraService,
     public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
@@ -151,8 +155,10 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
     this.obtenerPlanHorarios(parseInt(this.idEmpleado));
+    this.ObtenerlistaHorasExtrasEmpleado();
     this.obtenerContratosEmpleado();
     this.VerAccionPersonal();
+    this.VerHorasExtras();
   }
 
   // metodo para ver la informacion del empleado 
@@ -538,6 +544,30 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  hora_extra: any = [];
+  ObtenerlistaHorasExtrasEmpleado() {
+    this.hora_extra = [];
+    this.restHE.ObtenerListaEmpleado(parseInt(this.idEmpleado)).subscribe(res => {
+      console.log('estado', res);
+      this.hora_extra = res;
+      for (var i = 0; i <= this.hora_extra.length - 1; i++) {
+        if (this.hora_extra[i].estado === 1) {
+          this.hora_extra[i].estado = 'Pendiente';
+        }
+        else if (this.hora_extra[i].estado === 2) {
+          this.hora_extra[i].estado = 'Pre-autorizado';
+        }
+        else if (this.hora_extra[i].estado === 3) {
+          this.hora_extra[i].estado = 'Autorizado';
+        }
+        else if (this.hora_extra[i].estado === 4) {
+          this.hora_extra[i].estado = 'Negado';
+        }
+      }
+
+    });
+  }
+
   /* 
  ****************************************************************************************************
  *                               ABRIR VENTANAS PARA ELIMINAR DATOS DEL EMPLEADO
@@ -690,6 +720,10 @@ export class VerEmpleadoComponent implements OnInit {
           this.router.navigate(['/verEmpleado/', this.idEmpleado]);
         }
       });
+  }
+
+  CancelarHoraExtra(h) {
+    console.log(h);
   }
 
   /* 
@@ -904,6 +938,13 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  AbrirVentanaHoraExtra() {
+    this.vistaRegistrarDatos.open(PedidoHoraExtraComponent, { width: '9iipx' })
+      .afterClosed().subscribe(items => {
+        this.ObtenerlistaHorasExtrasEmpleado();
+      });
+  }
+
   /* 
    * ***************************************************************************************************
    *                               VENTANA PARA EDITAR DATOS
@@ -964,6 +1005,10 @@ export class VerEmpleadoComponent implements OnInit {
       { width: '600px', data: { idEmpleado: this.idEmpleado, datosAuto: datoSeleccionado } }).afterClosed().subscribe(item => {
         this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
       });
+  }
+
+  EditarHoraExtra(h) {
+    console.log(h);
   }
 
   /* 
@@ -1409,6 +1454,15 @@ export class VerEmpleadoComponent implements OnInit {
         this.HabilitarAccion = true;
       }
     })
+  }
+
+  VerHorasExtras() {
+    if (this.idEmpleadoLogueado === parseInt(this.idEmpleado)) {
+      this.HabilitarHorasE = false;
+    }
+    else {
+      this.HabilitarHorasE = true;
+    }
   }
 
 }

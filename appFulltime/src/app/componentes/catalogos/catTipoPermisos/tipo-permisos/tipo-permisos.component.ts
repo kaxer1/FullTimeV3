@@ -78,6 +78,15 @@ export class TipoPermisosComponent implements OnInit {
     private _formBuilder: FormBuilder,
   ) { }
 
+  HabilitarOtro: boolean = true;
+  estiloOtro: any;
+  HabilitarJustifica: boolean = true;
+  estiloJustifica: any;
+  HabilitarDias: boolean = true;
+  estiloDias: any;
+  HabilitarHoras: boolean = true;
+  estiloHoras: any;
+
   ngOnInit(): void {
     this.primeroFormGroup = this._formBuilder.group({
       descripcionForm: ['', Validators.required],
@@ -163,31 +172,31 @@ export class TipoPermisosComponent implements OnInit {
   ActivarDesactivarNombre(form1) {
     var nombreTipoPermiso = form1.descripcionForm;
     if (nombreTipoPermiso === 'OTRO') {
-      (<HTMLInputElement>document.getElementById('nombreTP')).style.visibility = 'visible';
+      this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
       this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Etiqueta Descripción activa')
     }
     else if (nombreTipoPermiso === 'Seleccionar') {
       this.LimpiarCampoNombre();
-      (<HTMLInputElement>document.getElementById('nombreTP')).style.visibility = 'hidden';
+      this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
       this.toastr.info('No ha seleccionado ninguna opción');
     }
     else {
       this.LimpiarCampoNombre();
-      (<HTMLInputElement>document.getElementById('nombreTP')).style.visibility = 'hidden';
+      this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
     }
 
   }
 
   ActivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
-      (<HTMLInputElement>document.getElementById('diasJustificar')).style.visibility = 'visible';
+      this.estiloJustifica = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
       this.toastr.info('Ingresar número de días para presentar justificación')
     }
   }
 
   DesactivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('no')).value = 'false') {
-      (<HTMLInputElement>document.getElementById('diasJustificar')).style.visibility = 'hidden';
+      this.estiloJustifica = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
       this.terceroFormGroup.patchValue({
         numDiaJustificaForm: '',
       })
@@ -214,16 +223,16 @@ export class TipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({
         numDiaMaximoForm: '',
       });
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
       this.toastr.info('Ingresar número de días máximos de permiso');
     }
     else if (form.diasHorasForm === 'Horas') {
       this.primeroFormGroup.patchValue({
         numHoraMaximoForm: '',
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras= false;
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
       this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
     }
     else {
@@ -231,8 +240,8 @@ export class TipoPermisosComponent implements OnInit {
         numHoraMaximoForm: '',
         numDiaMaximoForm: ''
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras= false;
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
     }
   }

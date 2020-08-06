@@ -37,12 +37,12 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <br>
-                                <mat-form-field>
+                                <br *ngIf="!HabilitarOtro">
+                                <mat-form-field *ngIf="!HabilitarOtro">
                                     <mat-label>Descripción</mat-label>
                                     <input matInput placeholder="Ej: Descripcion del tipo de permiso"
                                         (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm"
-                                        id="nombreTP" style="visibility:hidden">
+                                        id="nombreTP" [ngStyle]="estiloOtro">
                                     <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
                                         matTooltipPosition="right" matTooltip="Ingresar nombre del nuevo permiso">
                                         help_outline</mat-icon>
@@ -63,22 +63,22 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                                <br>
-                                <mat-form-field>
+                                <br *ngIf="!HabilitarDias">
+                                <mat-form-field *ngIf="!HabilitarDias">
                                     <mat-label>Días máximos de permiso</mat-label>
                                     <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
-                                        formControlName="numDiaMaximoForm" style="visibility:hidden" id="dias">
+                                        formControlName="numDiaMaximoForm" [ngStyle]="estiloDias" id="dias">
                                     <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
                                         matTooltipPosition="right"
                                         matTooltip="Ingresar número de días máximos de permiso">
                                         help_outline</mat-icon>
                                 </mat-form-field>
-                                <br>
-                                <mat-form-field>
+                                <br *ngIf="!HabilitarHoras">
+                                <mat-form-field *ngIf="!HabilitarHoras">
                                     <mat-label>Horas y minutos de permiso</mat-label>
                                     <input matInput type="time" placeholder="Ej: 4"
                                         (keypress)="IngresarSoloNumeros($event)" formControlName="numHoraMaximoForm"
-                                        style="visibility:hidden" id="horas">
+                                        [ngStyle]="estiloHoras" id="horas">
                                     <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
                                         matTooltipPosition="right"
                                         matTooltip="Ingresar número de horas y minutos máximos de permiso">
@@ -323,10 +323,10 @@
                                 </mat-radio-button>
                             </div>
                         </mat-radio-group>
-                        <mat-form-field>
+                        <mat-form-field *ngIf="!HabilitarJustifica">
                             <mat-label>Días para justificar</mat-label>
                             <input matInput placeholder="Ej: 2" (keypress)="IngresarSoloNumeros($event)"
-                                formControlName="numDiaJustificaForm" style="visibility:hidden" id="diasJustificar">
+                                formControlName="numDiaJustificaForm" [ngStyle]="estiloJustifica" id="diasJustificar">
                             <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar el número de días que tendrá el empleado para justificar">
                                 help_outline</mat-icon>

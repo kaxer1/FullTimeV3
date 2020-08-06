@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 
@@ -58,6 +60,7 @@ export class EditarContratoComponent implements OnInit {
   ObtenerContratoSeleccionado(id: number) {
     this.rest.ObtenerUnContrato(id).subscribe(res => {
       this.UnContrato = res;
+
       this.ContratoForm.setValue({
         idRegimenForm: this.UnContrato.id_regimen,
         fechaIngresoForm: this.UnContrato.fec_ingreso,
@@ -66,7 +69,7 @@ export class EditarContratoComponent implements OnInit {
         controlAsistenciaForm: this.UnContrato.asis_controla,
         nombreContratoForm: this.UnContrato.doc_nombre
       })
-      if(this.UnContrato.doc_nombre != '' && this.UnContrato.doc_nombre != null){
+      if (this.UnContrato.doc_nombre != '' && this.UnContrato.doc_nombre != null) {
         this.HabilitarBtn = true;
         this.isChecked = true;
       }
@@ -117,25 +120,49 @@ export class EditarContratoComponent implements OnInit {
       id_regimen: form.idRegimenForm,
       doc_nombre: form.nombreContratoForm
     };
-    if (form.nombreCertificadoForm === '') {
-      datosContrato.doc_nombre = null;
-      this.rest.ActualizarContratoEmpleado(this.idSelectContrato, this.idEmpleado, datosContrato).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Datos de Contrato Actualizado');
-        this.ModificarDocumento();
-        this.verEmpleado.obtenerContratoEmpleadoRegimen();
-        this.cancelar();
-      }, error => {
-        this.toastr.error('Operación Fallida', 'Datos de Contrato no fueron actualizados')
-      });
-    }
-    else {
-      if (this.contador === 0) {
-        this.GuardarDatos(datosContrato);
+    this.ValidarDuplicidad(datosContrato, form);
+  }
+
+  revisarFecha: any = [];
+  duplicado: number = 0;
+  ValidarDuplicidad(datos, form): any {
+    this.revisarFecha = [];
+    this.rest.BuscarContratoEmpleadoRegimen(this.UnContrato.id_empleado).subscribe(data => {
+      this.revisarFecha = data;
+      var ingreso = String(moment(datos.fec_ingreso, "YYYY/MM/DD").format("YYYY-MM-DD"));
+      console.log('fechas', ingreso, ' ', this.revisarFecha);
+      for (var i = 0; i <= this.revisarFecha.length - 1; i++) {
+        console.log('fechas1', this.revisarFecha[i].fec_ingreso.split('T')[0]);
+        if (this.revisarFecha[i].fec_ingreso.split('T')[0] === ingreso) {
+          this.duplicado = 1;
+        }
+      }
+      if (this.duplicado === 1) {
+        this.toastr.error('La fecha de ingreso de contrato ya se encuentra registrada.', 'Contrato ya existe.')
+        this.duplicado = 0;
       }
       else {
-        this.ActualizarDatos(datosContrato);
+        if (form.nombreContratoForm === '') {
+          datos.doc_nombre = null;
+          this.rest.ActualizarContratoEmpleado(this.idSelectContrato, this.idEmpleado, datos).subscribe(response => {
+            this.toastr.success('Operación Exitosa', 'Datos de Contrato Actualizado');
+            this.ModificarDocumento();
+            this.verEmpleado.obtenerContratoEmpleadoRegimen();
+            this.cancelar();
+          }, error => {
+            this.toastr.error('Operación Fallida', 'Datos de Contrato no fueron actualizados')
+          });
+        }
+        else {
+          if (this.contador === 0) {
+            this.GuardarDatos(datos);
+          }
+          else {
+            this.ActualizarDatos(datos);
+          }
+        }
       }
-    }
+    });
   }
 
   nameFile: string;
@@ -150,7 +177,7 @@ export class EditarContratoComponent implements OnInit {
       this.ContratoForm.patchValue({ nombreContratoForm: name });
       this.HabilitarBtn = true;
     }
-    
+
   }
 
   CargarContrato(id: number) {

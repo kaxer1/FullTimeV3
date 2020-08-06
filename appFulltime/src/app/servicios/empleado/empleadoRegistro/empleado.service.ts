@@ -109,6 +109,12 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha/contrato`, datos);
   }
 
+  ObtenerContratos() {
+    return this.http.get<any>(`${this.API_URI}/contratoEmpleado`);
+  }
+
+
+
 
   // GUARDAR CODIGO
 

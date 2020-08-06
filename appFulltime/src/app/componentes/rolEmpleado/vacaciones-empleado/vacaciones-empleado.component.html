@@ -90,7 +90,11 @@
                 <br>
                 <div class="d-flex flex-wrap justify-content-around" *ngIf="v.estado === 'Solicitado'">
                     <button class="btn btn-sm" type="submit" (click)="CancelarVacaciones(v)">Cancelar Vacacion</button>
-                    <button class="btn btn-sm" type="submit" (click)="EditarVacaciones(v)">Editar</button>
+                    <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
+                        matTooltipClass="departamento-tooltip"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
                 </div>
                 <br>
                 <mat-divider></mat-divider>

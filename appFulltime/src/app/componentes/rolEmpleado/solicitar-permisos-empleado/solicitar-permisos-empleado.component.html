@@ -16,7 +16,8 @@
                     </div>
                 </div>
                 <mat-card-content>
-                    <div class="container" *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
+                    <div class="container" *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina"
+                        style="padding-top: 15px;">
                         <div class="row">
                             <div class="col-3">
                                 <label id="datosF" class="col-sm col-form-label">N° Permiso:</label>
@@ -47,19 +48,15 @@
                                 <label class="col col-form-label">{{pt.estado}}</label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Documento:</label>
-                            </div>
-                            <div class="col">
-                                <a href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
-                                    target="_blank">ver</a>
-                            </div>
-                        </div>
                         <br>
                         <div class="d-flex flex-wrap justify-content-around" *ngIf="pt.estado === 'Pendiente'">
-                            <button class="btn" type="submit" (click)="CancelarPermiso(pt)">Cancelar Permiso</button>
-                            <button class="btn" type="submit" (click)="EditarPermiso(pt)">Editar</button>
+                            <button class="btn btn-sm" type="submit" (click)="CancelarPermiso(pt)">Cancelar
+                                Permiso</button>
+                            <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
                         </div>
                         <mat-divider></mat-divider>
                     </div>
