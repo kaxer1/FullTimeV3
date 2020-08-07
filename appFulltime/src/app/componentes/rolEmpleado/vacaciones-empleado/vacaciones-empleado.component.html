@@ -10,102 +10,46 @@
             </div>
         </div>
         <mat-card-content>
-            <div class="container" *ngFor="let p of peridoVacaciones" style="padding-top: 15px;">
-                <div class="row">
-                    <div class="col-3">
-                        <label id="datosF" class="col-sm col-form-label">Descripción:</label>
-                        <label id="datosF" class="col-sm col-form-label">Inicio de Periodo:</label>
-                        <label id="datosF" class="col-sm col-form-label">Fin de Periodo:</label>
-                        <label id="datosF" class="col-sm col-form-label">Horas de Vacaciones:</label>
-                        <label id="datosF" class="col-sm col-form-label">Minutos de Vacaciones:</label>
+            <div *ngFor="let p of peridoVacaciones" style="padding-top: 15px;">
+                <div class="d-flex flex-wrap justify-content-center" style="margin-bottom: 10px;">
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Descripción:</label>
+                        <label>{{p.descripcion}}</label>
                     </div>
-                    <div class="col-3">
-                        <label class="col col-form-label">{{p.descripcion}}</label>
-                        <label class="col col-form-label">{{p.fec_inicio.split("T")[0]}}</label>
-                        <label class="col col-form-label">{{p.fec_final.split("T")[0]}}</label>
-                        <label class="col col-form-label">{{p.horas_vacaciones}}</label>
-                        <label class="col col-form-label">{{p.min_vacaciones}}</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Inicio de Periodo:</label>
+                        <label>{{p.fec_inicio.split("T")[0]}}</label>
                     </div>
-                    <div class="col-3" id="verticalLine">
-                        <label id="datosF" class="col-sm col-form-label">Vacaciones usadas:</label>
-                        <label id="datosF" class="col-sm col-form-label">Días por Antiguedad:</label>
-                        <label id="datosF" class="col-sm col-form-label">Días de Vacaciones:</label>
-                        <label id="datosF" class="col-sm col-form-label">Días Perdidos:</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fin de Periodo:</label>
+                        <label>{{p.fec_final.split("T")[0]}}</label>
                     </div>
-                    <div class="col-3">
-                        <label class="col col-form-label" *ngIf="p.estado == 1">Sí</label>
-                        <label class="col col-form-label" *ngIf="p.estado == 2">No</label>
-                        <label class="col col-form-label">{{p.dia_antiguedad}}</label>
-                        <label class="col col-form-label">{{p.dia_vacacion}}</label>
-                        <label class="col col-form-label">{{p.dia_perdido}}</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Horas de Vacaciones:</label>
+                        <label>{{p.horas_vacaciones}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Minutos de Vacaciones:</label>
+                        <label>{{p.min_vacaciones}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Vacaciones usadas:</label>
+                        <label *ngIf="p.estado == 1">Sí</label>
+                        <label *ngIf="p.estado == 2">No</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Días por Antiguedad:</label>
+                        <label>{{p.dia_antiguedad}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Días de Vacaciones:</label>
+                        <label>{{p.dia_vacacion}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Días Perdidos:</label>
+                        <label>{{p.dia_perdido}}</label>
                     </div>
                 </div>
-<<<<<<< HEAD
-                <mat-card-content>
-                    <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Días Libres:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.dia_libre}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Días Laborables:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.dia_laborable}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Legalizado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.legalizado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.estado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="d-flex flex-wrap justify-content-around" *ngIf="v.estado === 'Solicitado'">
-                            <button class="btn" type="submit" (click)="CancelarVacaciones(v)">Cancelar Vacacion</button>
-                            <button class="btn" type="submit" (click)="EditarVacaciones(v)">Editar</button>
-                        </div>
-                        <mat-divider></mat-divider>
-=======
                 <mat-divider></mat-divider>
             </div>
         </mat-card-content>
@@ -119,7 +63,6 @@
                 <div class="row">
                     <div class="col" style="text-align: left;">
                         <h5>Solicitar Vacaciones</h5>
->>>>>>> 53370a2de3e91c7016c044c531a67fa1a59c3f57
                     </div>
                     <div class="col" style="text-align: center;">
                         <button type="submit" class="btn btn-outline-light btn-sm"
@@ -129,36 +72,46 @@
             </div>
         </div>
         <mat-card-content>
-            <div class="container" *ngFor="let v of vacaciones" style="padding-top: 15px;">
-                <div class="row">
-                    <div class="col-3">
-                        <label id="datosF" class="col-sm col-form-label">Fecha de Inicio:</label>
-                        <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
-                        <label id="datosF" class="col-sm col-form-label">Fecha de Ingreso:</label>
-                        <label id="datosF" class="col-sm col-form-label">Estado:</label>
+            <div *ngFor="let v of vacaciones" style="padding-top: 15px;">
+                <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Codigo:</label>
+                        <label>{{v.id}}</label>
                     </div>
-                    <div class="col-3">
-                        <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
-                        <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
-                        <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 1">Solicitado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 2">Rechazado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 3">Aceptado</label>
-                        <label class="col col-form-label" *ngIf="v.estado == 4">Eliminado</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha de Inicio:</label>
+                        <label>{{v.fec_inicio.split("T")[0]}}</label>
                     </div>
-                    <div class="col-3" id="verticalLine">
-                        <label id="datosF" class="col-sm col-form-label">Días Laborables:</label>
-                        <label id="datosF" class="col-sm col-form-label">Días Libres:</label>
-                        <label id="datosF" class="col-sm col-form-label">Legalizado:</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha Final:</label>
+                        <label>{{v.fec_final.split("T")[0]}}</label>
                     </div>
-                    <div class="col-3">
-                        <label class="col col-form-label">{{v.dia_laborable}}</label>
-                        <label class="col col-form-label">{{v.dia_libre}}</label>
-                        <label class="col col-form-label" *ngIf="v.legalizado == true">Sí</label>
-                        <label class="col col-form-label" *ngIf="v.legalizado == false">No</label>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha de Ingreso:</label>
+                        <label>{{v.fec_ingreso.split("T")[0]}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Estado:</label>
+                        <label>{{v.estado}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Días Laborables:</label>
+                        <label>{{v.dia_laborable}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Días Libres:</label>
+                        <label>{{v.dia_libre}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Legalizado:</label>
+                        <label *ngIf="v.legalizado == true">Sí</label>
+                        <label *ngIf="v.legalizado == false">No</label>
+                    </div>
+                    <div class="caja1 align-self-center" *ngIf="v.estado === 'Solicitado'">
+                        <button class="btn btn-sm" type="submit" (click)="CancelarVacaciones(v)">Cancelar</button>
+                        <button class="btn btn-sm" type="submit" (click)="EditarVacaciones(v)" style="margin-left: 10px;">Editar</button>
                     </div>
                 </div>
-                <br>
                 <mat-divider></mat-divider>
             </div>
             <mat-paginator [length]="vacaciones.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"

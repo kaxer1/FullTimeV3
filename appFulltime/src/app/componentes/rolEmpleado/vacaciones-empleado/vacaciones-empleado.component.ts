@@ -7,6 +7,8 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
+import { CancelarVacacionesComponent } from './cancelar-vacaciones/cancelar-vacaciones.component';
+import { EditarVacacionesEmpleadoComponent } from './editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
 
 
@@ -115,11 +117,15 @@ export class VacacionesEmpleadoComponent implements OnInit {
   }
 
   CancelarVacaciones(v) {
-    console.log(v);
+    this.vistaRegistrarDatos.open(CancelarVacacionesComponent, { width: '300px', data: v.id }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
+    });
   }
   
   EditarVacaciones(v) {
-    console.log(v);
+    this.vistaRegistrarDatos.open(EditarVacacionesEmpleadoComponent, { width: '900px', data: v }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
+    });
   }
 
 }

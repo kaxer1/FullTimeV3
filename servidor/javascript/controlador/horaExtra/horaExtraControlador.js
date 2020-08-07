@@ -256,6 +256,23 @@ class HorasExtrasPedidasControlador {
             }
         });
     }
+    EliminarHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_hora_extra } = req.params;
+            yield database_1.default.query('DELETE FROM realtime_noti WHERE id_hora_extra = $1', [id_hora_extra]);
+            yield database_1.default.query('DELETE FROM hora_extr_pedidos WHERE id = $1', [id_hora_extra]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    EditarHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion } = req.body;
+            console.log(fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion);
+            yield database_1.default.query('UPDATE hora_extr_pedidos SET fec_inicio = $1, fec_final = $2, num_hora = $3, descripcion = $4, estado = $5, tipo_funcion = $6 WHERE id = $7', [fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion, id]);
+            res.jsonp({ message: 'Hora Extra editado' });
+        });
+    }
 }
 exports.horaExtraPedidasControlador = new HorasExtrasPedidasControlador();
 exports.default = exports.horaExtraPedidasControlador;

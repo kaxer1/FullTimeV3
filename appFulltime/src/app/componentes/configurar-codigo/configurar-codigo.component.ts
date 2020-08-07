@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service'
-import { format } from 'path';
+
 @Component({
   selector: 'app-configurar-codigo',
   templateUrl: './configurar-codigo.component.html',

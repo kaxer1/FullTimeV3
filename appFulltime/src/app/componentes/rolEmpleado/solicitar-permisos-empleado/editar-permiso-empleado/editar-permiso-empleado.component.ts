@@ -10,7 +10,6 @@ import { ToastrService } from 'ngx-toastr';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import * as moment from 'moment';
 
-
 interface opcionesDiasHoras {
   valor: string;
   nombre: string
@@ -39,17 +38,15 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     { valor: 'Horas', nombre: 'Horas' },
     { valor: 'Días y Horas', nombre: 'Días y Horas' },
   ];
-  selec1 = false;
-  selec2 = false;
   Tdias = 0;
   Thoras;
   num: number;
   tipoPermisoSelec: string;
   horasTrabajo: any = [];
+  isChecked: boolean = false;
 
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
-  fecCreacionF = new FormControl('', [Validators.required]);
   descripcionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
   solicitarF = new FormControl('', [Validators.required]);
   diasF = new FormControl('');
@@ -57,15 +54,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   fechaInicioF = new FormControl('', [Validators.required]);
   fechaFinalF = new FormControl('', [Validators.required]);
   diaLibreF = new FormControl('');
-  estadoF = new FormControl('');
-  legalizarF = new FormControl('', [Validators.required]);
-  nombreCertificadoF = new FormControl('', Validators.required);
+  nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
     idPermisoForm: this.idPermisoF,
-    fecCreacionForm: this.fecCreacionF,
     descripcionForm: this.descripcionF,
     solicitarForm: this.solicitarF,
     diasForm: this.diasF,
@@ -73,8 +67,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     fechaInicioForm: this.fechaInicioF,
     fechaFinalForm: this.fechaFinalF,
     diaLibreForm: this.diaLibreF,
-    estadoForm: this.estadoF,
-    legalizarForm: this.legalizarF,
     nombreCertificadoForm: this.nombreCertificadoF
   });
 
@@ -84,7 +76,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     private restH: EmpleadoHorariosService,
     private toastr: ToastrService,
     private loginServise: LoginService,
-    private dialogRef: MatDialogRef<EditarPermisoEmpleadoComponent>,
+    public dialogRef: MatDialogRef<EditarPermisoEmpleadoComponent>,
     @Inject(MAT_DIALOG_DATA) public datos: any
   ) { }
 
@@ -93,20 +85,28 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     this.num = this.datos.num_permiso
     this.ObtenerTiposPermiso();
     this.SettingData();
+    this.comparacionSolicitud();
+  }
+
+  comparacionSolicitud() {
+    if (this.datos.dia > 0 && this.datos.hora_numero === '00:00:00') {
+      this.PermisoForm.patchValue({ solicitarForm: 'Días' });
+    } else if (this.datos.dia > 0 && this.datos.hora_numero != '00:00:00') {
+      this.PermisoForm.patchValue({ solicitarForm: 'Días y Horas' });
+    } else if (this.datos.dia === 0 && this.datos.hora_numero != '00:00:00') {
+      this.PermisoForm.patchValue({ solicitarForm: 'Horas' });
+    }
   }
 
   SettingData() {
     this.PermisoForm.patchValue({
       idPermisoForm: this.datos.id_tipo_permiso,
-      fecCreacionForm: this.datos.fec_creacion,
       descripcionForm: this.datos.descripcion,
       diasForm: this.datos.dia,
       horasForm: this.datos.hora_numero,
       fechaInicioForm: this.datos.fec_inicio,
       fechaFinalForm: this.datos.fec_final,
       diaLibreForm: this.datos.dia_libre,
-      estadoForm: this.datos.estado,
-      legalizarForm: this.datos.legalizado,
       nombreCertificadoForm: this.datos.docu_nombre
     })
   }
@@ -167,7 +167,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     if (form.fechaInicioForm != '' && form.idPermisoForm != '') {
       this.horasTrabajo = [];
       let datosFechas = {
-        // id_emple: this.datoEmpleado.idEmpleado,
+        id_emple: parseInt(localStorage.getItem('empleado')),
         fecha: form.fechaInicioForm
       }
       this.dIngreso = event.value;
@@ -188,8 +188,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   ImprimirDatos(form) {
     this.LimpiarCamposFecha();
-    this.selec1 = false;
-    this.selec2 = false;
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
@@ -233,15 +231,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.Thoras = this.datosPermiso[0].num_hora_maximo;
         this.tipoPermisoSelec = 'Días y Horas';
       }
-      if (this.datosPermiso[0].legalizar === true) {
-        this.selec1 = true;
-      }
-      else if (this.datosPermiso[0].legalizar === false) {
-        this.selec2 = true;
-      }
-      this.PermisoForm.patchValue({
-        legalizarForm: this.datosPermiso[0].legalizar
-      });
     })
   }
 
@@ -329,21 +318,20 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   InsertarPermiso(form) {
     let datosPermiso = {
-      fec_creacion: form.fecCreacionForm,
       descripcion: form.descripcionForm,
       fec_inicio: form.fechaInicioForm,
       fec_final: form.fechaFinalForm,
       dia: parseInt(form.diasForm),
-      legalizado: form.legalizarForm,
-      estado: form.estadoForm,
       dia_libre: form.diaLibreForm,
       id_tipo_permiso: form.idPermisoForm,
-      // id_empl_contrato: this.datoEmpleado.idContrato,
-      // id_peri_vacacion: this.datoEmpleado.idPerVacacion,
       hora_numero: form.horasForm,
       num_permiso: this.num,
+      anterior_doc: this.datos.documento,
       docu_nombre: form.nombreCertificadoForm,
-      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
+    }
+    if (this.isChecked === false) {
+      datosPermiso.anterior_doc = null,
+      datosPermiso.docu_nombre = null
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);
@@ -543,38 +531,35 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     }
   }
 
-
-  idPermisoRes: any;
   NotifiRes: any;
-  arrayNivelesDepa: any = [];
   ActualizarDatos(datos) {
-    console.log(datos);
-    
-    // if (this.archivoSubido[0].size <= 2e+6) {
-    //   this.restP.IngresarEmpleadoPermisos(datos).subscribe(response => {
-    //     this.toastr.success('Operación Exitosa', 'Permiso registrado');
-    //     this.arrayNivelesDepa = response;
-    //     this.LimpiarCampos();
-    //     console.log(this.arrayNivelesDepa);
-        
-    //     this.arrayNivelesDepa.forEach(obj => {
-          
-
-    //       this.idPermisoRes = res;
-    //       console.log(this.idPermisoRes);
-    //       this.SubirRespaldo(this.idPermisoRes.id)
-    //       this.ImprimirNumeroPermiso();
-          
-    //     });
-          
-    //     });
-
-        
-    //   });
-    // }
-    // else {
-    //   this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
-    // }
+    if (this.isChecked === true) {
+      this.LimpiarNombreArchivo();
+      if (this.archivoSubido != undefined) {
+        if (this.archivoSubido[0].size <= 2e+6) {
+          this.restP.EditarPermiso(this.datos.id ,datos).subscribe(response => {
+            this.toastr.success('Operación Exitosa', 'Permiso Editado');
+            this.LimpiarCampos();
+            console.log(response);
+            this.SubirRespaldo(this.datos.id)
+          });
+        }
+        else {
+          this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+        }
+      } else {
+        this.toastr.info('Falta que suba un archivo', 'Seleccione un archivo');
+      }
+      
+    } else {
+      console.log(datos);
+      this.restP.EditarPermiso(this.datos.id ,datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Permiso Editado');
+        this.LimpiarCampos();
+        this.dialogRef.close(true)
+        console.log(response);
+      });
+    }
 
   }
 
@@ -597,8 +582,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   CerrarVentanaPermiso() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    //window.location.reload();
+    this.dialogRef.close(false);
   }
 
 
@@ -629,6 +613,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Documento subido con exito');
       this.archivoForm.reset();
       this.nameFile = '';
+      this.dialogRef.close(true);
     });
   }
 

@@ -245,6 +245,20 @@ class HorasExtrasPedidasControlador {
     }
   }
 
+  public async EliminarHoraExtra(req: Request, res: Response) {
+    const {id_hora_extra} = req.params;
+    await pool.query('DELETE FROM realtime_noti WHERE id_hora_extra = $1',[id_hora_extra])
+    await pool.query('DELETE FROM hora_extr_pedidos WHERE id = $1',[id_hora_extra]);
+    res.jsonp({message: 'Registro eliminado'});
+  }
+
+  public async EditarHoraExtra(req: Request, res: Response): Promise<void> {
+    const id = req.params.id
+    const {fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion} = req.body;
+    console.log(fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion);
+    await pool.query('UPDATE hora_extr_pedidos SET fec_inicio = $1, fec_final = $2, num_hora = $3, descripcion = $4, estado = $5, tipo_funcion = $6 WHERE id = $7', [fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion, id]);
+    res.jsonp({message: 'Hora Extra editado'});    
+  }
 }
 
 export const horaExtraPedidasControlador = new HorasExtrasPedidasControlador();

@@ -18,7 +18,9 @@ class HorasExtrasPedidasRutas {
         this.router.post('/mail-noti/', horaExtraControlador_1.default.SendMailNotifiPermiso);
         this.router.get('/datosSolicitud/:id_emple_hora', horaExtraControlador_1.default.ObtenerSolicitudHoraExtra);
         this.router.put('/:id/estado', horaExtraControlador_1.default.ActualizarEstado);
+        this.router.put('/:id/hora-extra-solicitada', horaExtraControlador_1.default.EditarHoraExtra);
         this.router.get('/datosAutorizacion/:id_hora/:id_empleado', horaExtraControlador_1.default.ObtenerAutorizacionHoraExtra);
+        this.router.delete('/eliminar/:id_hora_extra', horaExtraControlador_1.default.EliminarHoraExtra);
     }
 }
 const HORA_EXTRA_PEDIDA_RUTA = new HorasExtrasPedidasRutas();

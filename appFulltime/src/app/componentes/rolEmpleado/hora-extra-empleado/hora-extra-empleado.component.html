@@ -1,71 +1,63 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <div class="row">
-        <div class="col-md">
-            <mat-card class="mat-elevation-z8">
-                <div class="barraTitulo">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col" style="text-align: left;">
-                                <h5>Solicitar Hora Extra</h5>
-                            </div>
-                            <div class="col" style="text-align: center;">
-                                <button type="submit" class="btn btn-outline-light btn-sm"
-                                    (click)="AbrirVentanaHoraExtra()">Añadir</button>
-                            </div>
-                        </div>
+    <mat-card class="mat-elevation-z8">
+        <div class="barraTitulo">
+            <div class="container">
+                <div class="row">
+                    <div class="col" style="text-align: left;">
+                        <h5>Solicitar Hora Extra</h5>
+                    </div>
+                    <div class="col" style="text-align: center;">
+                        <button type="submit" class="btn btn-outline-light btn-sm"
+                            (click)="AbrirVentanaHoraExtra()">Añadir</button>
                     </div>
                 </div>
-                <mat-card-content>
-                    <div class="container" *ngFor="let h of hora_extra | paginate:tamanio_pagina:numero_pagina"
-                        style="padding-top: 15px;">
-                        <div class="row">
-                            <div class="col-3">
-                                <label id="datosF" class="col-sm col-form-label">Código:</label>
-                                <label id="datosF" class="col-sm col-form-label">Descripción:</label>
-                                <label id="datosF" class="col-sm col-form-label">Estado:</label>
-                                <label id="datosF" class="col-sm col-form-label">Fecha Solicita:</label>
-                            </div>
-                            <div class="col-3">
-                                <label class="col col-form-label">{{h.id}}</label>
-                                <label class="col col-form-label">{{h.descripcion}}</label>
-                                <label class="col col-form-label">{{h.estado}}</label>
-                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
-                            </div>
-                            <div class="col-3" id="verticalLine">
-                                <label id="datosF" class="col-sm col-form-label">Tiempo hora extra:</label>
-                                <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
-                                <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col-3">
-                                <label class="col col-form-label">{{h.num_hora}}</label>
-                                <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}</label>
-                                <label class="col col-form-label">{{h.fec_final.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Solicita:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="d-flex flex-wrap justify-content-around" *ngIf="h.estado === 'Pendiente'">
-                            <button class="btn" type="submit" (click)="CancelarHoraExtra(h)">Cancelar Hora Extra</button>
-                            <button class="btn" type="submit" (click)="EditarHoraExtra(h)">Editar</button>
-                        </div>
-                        <mat-divider></mat-divider>
-                    </div>
-                    <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
-                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                        showFirstLastButtons>
-                    </mat-paginator>
-                    <!-- <div class="card-footer pb-0 pt-3">
-                        <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>
-                    </div>-->
-                </mat-card-content>
-            </mat-card>
+            </div>
         </div>
-    </div>
+        <mat-card-content>
+            <div *ngFor="let h of hora_extra | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
+                <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Código:</label>
+                        <label>{{h.id}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Descripción:</label>
+                        <label>{{h.descripcion}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Estado:</label>
+                        <label>{{h.estado}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha Solicita:</label>
+                        <label>{{h.fec_solicita.split("T")[0]}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Tiempo hora extra:</label>
+                        <label>{{h.num_hora}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha Inicio:</label>
+                        <label>{{h.fec_inicio.split("T")[0]}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Fecha Final:</label>
+                        <label>{{h.fec_final.split("T")[0]}}</label>
+                    </div>
+                    <div class="caja1 align-self-center" *ngIf="h.estado === 'Pendiente'">
+                        <button class="btn btn-sm" type="submit" (click)="CancelarHoraExtra(h)">Cancelar</button>
+                        <button class="btn btn-sm" type="submit" (click)="EditarHoraExtra(h)" style="margin-left: 10px;">Editar</button>
+                    </div>
+                </div>
+                <mat-divider></mat-divider>
+            </div>
+            <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
+                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                showFirstLastButtons>
+            </mat-paginator>
+            <!-- <div class="card-footer pb-0 pt-3">
+                <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>
+            </div>-->
+        </mat-card-content>
+    </mat-card>
 </div>

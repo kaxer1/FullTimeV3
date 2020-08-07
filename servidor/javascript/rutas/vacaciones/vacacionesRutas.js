@@ -18,8 +18,10 @@ class SucursalRutas {
         this.router.post('/fechasFeriado', vacacionesControlador_1.default.ObtenerFechasFeriado);
         this.router.post('/mail-noti/', vacacionesControlador_1.default.SendMailNotifiPermiso);
         this.router.put('/:id/estado', vacacionesControlador_1.default.ActualizarEstado);
+        this.router.put('/:id/vacacion-solicitada', vacacionesControlador_1.default.EditarVacaciones);
         this.router.get('/datosSolicitud/:id_emple_vacacion', vacacionesControlador_1.default.ObtenerSolicitudVacaciones);
         this.router.get('/datosAutorizacion/:id_vacaciones/:id_empleado', vacacionesControlador_1.default.ObtenerAutorizacionVacaciones);
+        this.router.delete('/eliminar/:id_vacacion', vacacionesControlador_1.default.EliminarVacaciones);
     }
 }
 const SUCURSAL_RUTAS = new SucursalRutas();

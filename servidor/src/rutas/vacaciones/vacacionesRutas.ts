@@ -17,8 +17,10 @@ class SucursalRutas {
         this.router.post('/fechasFeriado', VACACIONES_CONTROLADOR.ObtenerFechasFeriado);
         this.router.post('/mail-noti/', VACACIONES_CONTROLADOR.SendMailNotifiPermiso);
         this.router.put('/:id/estado', VACACIONES_CONTROLADOR.ActualizarEstado);
+        this.router.put('/:id/vacacion-solicitada', VACACIONES_CONTROLADOR.EditarVacaciones);
         this.router.get('/datosSolicitud/:id_emple_vacacion', VACACIONES_CONTROLADOR.ObtenerSolicitudVacaciones);
         this.router.get('/datosAutorizacion/:id_vacaciones/:id_empleado', VACACIONES_CONTROLADOR.ObtenerAutorizacionVacaciones);
+        this.router.delete('/eliminar/:id_vacacion', VACACIONES_CONTROLADOR.EliminarVacaciones);
     }
 }
 

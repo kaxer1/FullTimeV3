@@ -20,10 +20,9 @@ export class CancelarPermisoComponent implements OnInit {
   }
 
   aceptarAdvertencia() {
-    console.log("precionaste aqui!");
     this.restP.EliminarPermiso(this.data.id, this.data.documento).subscribe(res => {
       console.log(res);
-      this.dialogRef.close();
+      this.dialogRef.close(true);
     });
   }
 

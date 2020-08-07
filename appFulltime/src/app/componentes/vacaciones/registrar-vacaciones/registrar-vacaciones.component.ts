@@ -4,10 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import * as moment from 'moment'
+import * as moment from 'moment';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
-import { promise } from 'protractor';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 @Component({

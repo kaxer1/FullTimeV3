@@ -4,6 +4,8 @@ import { PageEvent } from '@angular/material/paginator';
 
 import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pedido-hora-extra.component';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
+import { CancelarHoraExtraComponent } from './cancelar-hora-extra/cancelar-hora-extra.component';
+import { EditarHoraExtraEmpleadoComponent } from './editar-hora-extra-empleado/editar-hora-extra-empleado.component';
 
 @Component({
   selector: 'app-hora-extra-empleado',
@@ -58,17 +60,27 @@ export class HoraExtraEmpleadoComponent implements OnInit {
   }
 
   AbrirVentanaHoraExtra() {
-    this.vistaRegistrarDatos.open(PedidoHoraExtraComponent, { width: '9iipx' }).afterClosed().subscribe(items => {
+    this.vistaRegistrarDatos.open(PedidoHoraExtraComponent, { width: '900px' }).afterClosed().subscribe(items => {
       this.ObtenerlistaHorasExtrasEmpleado();
     });
   }
 
   CancelarHoraExtra(h) {
-    console.log(h);
+    this.vistaRegistrarDatos.open(CancelarHoraExtraComponent, {width: '300px', data: h.id}).afterClosed().subscribe(items => {
+      console.log(items);
+      if (items === true) {
+        this.ObtenerlistaHorasExtrasEmpleado();
+      }
+    });
   }
   
   EditarHoraExtra(h) {
-    console.log(h);
+    this.vistaRegistrarDatos.open(EditarHoraExtraEmpleadoComponent, {width: '900px', data: h}).afterClosed().subscribe(items => {
+      console.log(items);
+      if (items === true) {
+        this.ObtenerlistaHorasExtrasEmpleado();
+      }
+    });
   }
 
 }

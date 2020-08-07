@@ -244,6 +244,22 @@ class VacacionesControlador {
     }
   }
 
+  public async EliminarVacaciones(req: Request, res: Response) {
+    const {id_vacacion} = req.params;
+    await pool.query('DELETE FROM realtime_noti WHERE id_vacaciones = $1',[id_vacacion]);
+    await pool.query('DELETE FROM vacaciones WHERE id = $1',[id_vacacion]);
+    res.jsonp({message: 'Registro eliminado'});
+  }
+
+  public async EditarVacaciones(req: Request, res: Response): Promise<void> {
+    const id = req.params.id
+    const {fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable} = req.body;
+    
+    console.log(fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable);
+    await pool.query('UPDATE vacaciones SET fec_inicio = $1, fec_final = $2, fec_ingreso = $3, estado = $4, dia_libre = $5, dia_laborable = $6 WHERE id = $7', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, id]);
+    res.jsonp({message: 'Vacaciones editadas'});    
+  }
+
 }
 
 export const VACACIONES_CONTROLADOR = new VacacionesControlador();

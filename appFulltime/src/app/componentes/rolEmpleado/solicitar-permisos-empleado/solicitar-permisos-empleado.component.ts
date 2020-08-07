@@ -109,13 +109,17 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
 
   CancelarPermiso(dataPermiso) {
     this.vistaRegistrarDatos.open(CancelarPermisoComponent, {width: '300px', data: dataPermiso}).afterClosed().subscribe(items => {
-      this.obtenerPermisos(parseInt(this.idEmpleado));
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }
     });
   }
 
   EditarPermiso(dataPermiso) {
-    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {width: '600px', data: dataPermiso}).afterClosed().subscribe(items => {
-      this.obtenerPermisos(parseInt(this.idEmpleado));
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {width: '1200px', data: dataPermiso}).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }      
     });
   }
 }
