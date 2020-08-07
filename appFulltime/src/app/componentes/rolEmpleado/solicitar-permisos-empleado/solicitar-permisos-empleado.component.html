@@ -54,7 +54,11 @@
                             </div>
                             <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
                                 <button class="btn btn-sm" type="submit" (click)="CancelarPermiso(pt)">Cancelar</button>
-                                <button class="btn btn-sm" type="submit" (click)="EditarPermiso(pt)" style="margin-left: 10px;">Editar</button>
+                                <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
+                                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                    matTooltip="Modificar los datos generales de este registro">
+                                    <p>Editar</p>
+                                </i>
                             </div>
                         </div>
                         <mat-divider style="margin-bottom: 10px;"></mat-divider>

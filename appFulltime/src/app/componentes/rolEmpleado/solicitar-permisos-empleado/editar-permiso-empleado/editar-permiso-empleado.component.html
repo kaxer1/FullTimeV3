@@ -47,19 +47,19 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="!HabilitarDias">
                         <mat-label>Días de permiso</mat-label>
                         <input matInput placeholder="Ej: 3" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="diasF" style="visibility:visible" id="dias"
+                            [formControl]="diasF" [ngStyle]="estiloDias" id="dias"
                             (click)="LimpiarCamposFecha()">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar número de días solicitados de permiso">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="!HabilitarHoras">
                         <mat-label>Horas y minutos de permiso</mat-label>
                         <input matInput type="time" placeholder="Ej: 4" (keypress)="IngresarSoloNumeros($event)"
-                            max="7:30" [formControl]="horasF" style="visibility:visible" id="horas"
+                            max="7:30" [formControl]="horasF" [ngStyle]="estiloHoras" id="horas"
                             (click)="LimpiarCamposFecha()">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar número de horas y minutos solicitados de permiso. Se le recuerda que debe ingresar menos de 8 horas. En caso de necesitar más tiempo seleccionar Días.">
@@ -88,10 +88,10 @@
                         <mat-datepicker touchUi #picker3></mat-datepicker>
                         <mat-error *ngIf="fechaFinalF.invalid">{{ObtenerMensajeFecha()}}</mat-error>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
                         <input matInput placeholder="Días libres" [formControl]="diaLibreF"
-                            (keypress)="IngresarSoloNumeros($event)" style="visibility:visible" id="Dlibres">
+                            (keypress)="IngresarSoloNumeros($event)" [ngStyle]="estiloDiasL" id="Dlibres">
                         <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
                             matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">

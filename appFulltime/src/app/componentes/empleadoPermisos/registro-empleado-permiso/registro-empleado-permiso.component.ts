@@ -50,6 +50,13 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   FechaActual: any;
   horasTrabajo: any = [];
 
+  HabilitarDias: boolean = true;
+  estiloDias: any;
+  HabilitarHoras: boolean = true;
+  estiloHoras: any;
+  HabilitarDiasL: boolean = true;
+  estiloDiasL: any;
+
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
   fecCreacionF = new FormControl('', [Validators.required]);
@@ -211,9 +218,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       this.datosPermiso = datos;
       console.log(this.datosPermiso);
       if (this.datosPermiso[0].num_dia_maximo === 0) {
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'hidden';
+        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+        this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+        this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
         this.PermisoForm.patchValue({
           solicitarForm: 'Horas',
           horasForm: this.datosPermiso[0].num_hora_maximo,
@@ -223,9 +230,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.tipoPermisoSelec = 'Horas';
       }
       else if (this.datosPermiso[0].num_hora_maximo === '00:00:00') {
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+        this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+        this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
         this.PermisoForm.patchValue({
           solicitarForm: 'Días',
           diasForm: this.datosPermiso[0].num_dia_maximo,
@@ -236,9 +243,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.tipoPermisoSelec = 'Días';
       }
       else {
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
+        this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
         this.PermisoForm.patchValue({
           solicitarForm: 'Días y Horas',
           diasForm: this.datosPermiso[0].num_dia_maximo,
@@ -267,9 +274,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       this.PermisoForm.patchValue({
         diasForm: '',
       });
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
       this.toastr.info('Ingresar número de días de permiso');
     }
     else if (form.solicitarForm === 'Horas') {
@@ -278,9 +285,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         horasForm: '',
         diaLibreForm: '',
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'hidden';
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+      this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
       this.toastr.info('Ingresar número de horas y minutos de permiso');
     }
     else {
@@ -290,9 +297,9 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         horasForm: '',
         diaLibreForm: '',
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
     }
   }
@@ -570,61 +577,61 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.arrayNivelesDepa = response;
         this.LimpiarCampos();
         console.log(this.arrayNivelesDepa);
-        
+
         this.arrayNivelesDepa.forEach(obj => {
           let datosPermisoCreado = {
-            fec_creacion: datos.fec_creacion, 
-            id_tipo_permiso: datos.id_tipo_permiso, 
+            fec_creacion: datos.fec_creacion,
+            id_tipo_permiso: datos.id_tipo_permiso,
             id_empl_contrato: datos.id_empl_contrato,
-            id: obj.id, 
-            estado: obj.estado, 
-            id_dep: obj.id_dep, 
-            depa_padre: obj.depa_padre, 
-            nivel: obj.nivel, 
-            id_suc: obj.id_suc, 
-            departamento: obj.departamento, 
-            sucursal: obj.sucursal, 
-            cargo: obj.cargo, 
-            contrato: obj.contrato, 
-            empleado: obj.empleado, 
-            nombre: obj.nombre, 
-            apellido: obj.apellido, 
-            cedula: obj.cedula, 
-            correo: obj.correo, 
-            permiso_mail: obj.permiso_mail, 
+            id: obj.id,
+            estado: obj.estado,
+            id_dep: obj.id_dep,
+            depa_padre: obj.depa_padre,
+            nivel: obj.nivel,
+            id_suc: obj.id_suc,
+            departamento: obj.departamento,
+            sucursal: obj.sucursal,
+            cargo: obj.cargo,
+            contrato: obj.contrato,
+            empleado: obj.empleado,
+            nombre: obj.nombre,
+            apellido: obj.apellido,
+            cedula: obj.cedula,
+            correo: obj.correo,
+            permiso_mail: obj.permiso_mail,
             permiso_noti: obj.permiso_noti
           }
 
           this.restP.SendMailNoti(datosPermisoCreado).subscribe(res => {
-          this.idPermisoRes = res;
-          console.log(this.idPermisoRes);
-          this.SubirRespaldo(this.idPermisoRes.id)
-          this.ImprimirNumeroPermiso();
-          var f = new Date();
-          let notificacion = { 
-            id: null,
-            id_send_empl: this.datoEmpleado.idEmpleado,
-            id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
-            id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
-            estado: this.idPermisoRes.estado, 
-            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-            id_permiso: this.idPermisoRes.id,
-            id_vacaciones: null,
-            id_hora_extra: null
-          }
-          this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
-            console.log(resN);
-            this.NotifiRes = resN;
-            notificacion.id = this.NotifiRes._id;
-            if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
-              this.restP.sendNotiRealTime(notificacion);
+            this.idPermisoRes = res;
+            console.log(this.idPermisoRes);
+            this.SubirRespaldo(this.idPermisoRes.id)
+            this.ImprimirNumeroPermiso();
+            var f = new Date();
+            let notificacion = {
+              id: null,
+              id_send_empl: this.datoEmpleado.idEmpleado,
+              id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
+              id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
+              estado: this.idPermisoRes.estado,
+              create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+              id_permiso: this.idPermisoRes.id,
+              id_vacaciones: null,
+              id_hora_extra: null
             }
+            this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+              console.log(resN);
+              this.NotifiRes = resN;
+              notificacion.id = this.NotifiRes._id;
+              if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
+                this.restP.sendNotiRealTime(notificacion);
+              }
+            });
           });
-        });
-          
+
         });
 
-        
+
       });
     }
     else {

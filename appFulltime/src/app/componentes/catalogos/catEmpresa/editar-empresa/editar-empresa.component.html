@@ -110,9 +110,9 @@
                             </div>
                         </mat-radio-group>
                     </div>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="!HabilitarOtro">
                         <mat-label>Tipo de Empresa</mat-label>
-                        <input matInput placeholder="Ingresar nombre" [formControl]="otroF" style="visibility:hidden"
+                        <input matInput placeholder="Ingresar nombre" [formControl]="otroF" [ngStyle]="estiloOtro"
                             id="otro">
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
                             matTooltip="Ingresar el nombre del tipo de empresa">
@@ -120,12 +120,12 @@
                         </mat-icon>
                         <mat-error *ngIf="otroF.invalid">Ingresar un nombre válido</mat-error>
                     </mat-form-field>
-                    <br>
-                    <mat-form-field>
+                    <br *ngIf="!HabilitarOtro">
+                    <mat-form-field *ngIf="!HabilitarRepre">
                         <mat-label ngDefaultControl [(ngModel)]="valor" [ngModelOptions]="{standalone: true}">{{valor}}
                         </mat-label>
                         <input matInput placeholder="Ingresar nombre" [formControl]="representanteF" required
-                            style="visibility:hidden" id="repre">
+                            [ngStyle]="estiloRepre" id="repre">
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar el nombre del representante de la empresa">
                             help_outline

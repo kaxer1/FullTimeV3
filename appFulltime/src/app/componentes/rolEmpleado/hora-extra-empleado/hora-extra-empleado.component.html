@@ -46,7 +46,11 @@
                     </div>
                     <div class="caja1 align-self-center" *ngIf="h.estado === 'Pendiente'">
                         <button class="btn btn-sm" type="submit" (click)="CancelarHoraExtra(h)">Cancelar</button>
-                        <button class="btn btn-sm" type="submit" (click)="EditarHoraExtra(h)" style="margin-left: 10px;">Editar</button>
+                        <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix
+                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                     </div>
                 </div>
                 <mat-divider></mat-divider>

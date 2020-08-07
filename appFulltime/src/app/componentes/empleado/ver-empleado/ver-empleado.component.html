@@ -950,10 +950,7 @@
                                 <label class="col col-form-label">{{v.fec_inicio.split("T")[0]}}</label>
                                 <label class="col col-form-label">{{v.fec_final.split("T")[0]}}</label>
                                 <label class="col col-form-label">{{v.fec_ingreso.split("T")[0]}}</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 1">Solicitado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 2">Rechazado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 3">Aceptado</label>
-                                <label class="col col-form-label" *ngIf="v.estado == 4">Eliminado</label>
+                                <label class="col col-form-label">{{v.estado}}</label>
                             </div>
                             <div class="col-3" id="verticalLine">
                                 <label id="datosF" class="col-sm col-form-label">Días Laborables:</label>
@@ -1193,6 +1190,81 @@
                                 <mat-divider></mat-divider>
                             </div>
                             <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
+                                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                                showFirstLastButtons>
+                            </mat-paginator>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+
+    <!-- HORAS EXTRAS -->
+    <mat-tab *ngIf="!HabilitarHorasE">
+        <ng-template mat-tab-label>
+            <mat-icon class="example-tab-icon">query_builder</mat-icon>
+            Horas Extras
+        </ng-template>
+        <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: left;">
+                                        <h5>Solicitar Hora Extra</h5>
+                                    </div>
+                                    <div class="col" style="text-align: center;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaHoraExtra()">Añadir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let h of hora_extra | paginate:tamanio_pagina:numero_pagina"
+                                style="padding-top: 15px;">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label id="datosF" class="col-sm col-form-label">Código:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Descripción:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Estado:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Solicita:</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="col col-form-label">{{h.id}}</label>
+                                        <label class="col col-form-label">{{h.descripcion}}</label>
+                                        <label class="col col-form-label">{{h.estado}}</label>
+                                        <label class="col col-form-label">{{h.fec_solicita.split("T")[0]}}</label>
+                                    </div>
+                                    <div class="col-3" id="verticalLine">
+                                        <label id="datosF" class="col-sm col-form-label">Tiempo hora extra:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
+                                        <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="col col-form-label">{{h.num_hora}}</label>
+                                        <label class="col col-form-label">{{h.fec_inicio.split("T")[0]}}</label>
+                                        <label class="col col-form-label">{{h.fec_final.split("T")[0]}}</label>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-wrap justify-content-around" style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
+                                    <button class="btn btn-sm" id="boton" type="submit"
+                                        (click)="CancelarHoraExtra(h)">Cancelar Hora
+                                        Extra</button>
+                                    <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix
+                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        matTooltip="Modificar los datos generales de este registro">
+                                        <p>Editar</p>
+                                    </i>
+                                </div>
+                                <br>
+                                <mat-divider></mat-divider>
+                            </div>
+                            <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
                                 [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
                                 showFirstLastButtons>
                             </mat-paginator>

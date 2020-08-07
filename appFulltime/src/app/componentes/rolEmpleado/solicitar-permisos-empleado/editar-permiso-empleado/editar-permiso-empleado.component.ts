@@ -45,6 +45,13 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   horasTrabajo: any = [];
   isChecked: boolean = false;
 
+  HabilitarDias: boolean = true;
+  estiloDias: any;
+  HabilitarHoras: boolean = true;
+  estiloHoras: any;
+  HabilitarDiasL: boolean = true;
+  estiloDiasL: any;
+
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
   descripcionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
@@ -108,7 +115,40 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       fechaFinalForm: this.datos.fec_final,
       diaLibreForm: this.datos.dia_libre,
       nombreCertificadoForm: this.datos.docu_nombre
-    })
+    });
+    if (this.datos.dia === 0) {
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+      this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
+      this.tipoPermisoSelec = 'Horas';
+      this.PermisoForm.patchValue({
+        solicitarForm: 'Horas',
+      });
+    }
+    else if (this.datos.hora_numero === '00:00:00') {
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
+      this.tipoPermisoSelec = 'Días';
+      this.PermisoForm.patchValue({
+        solicitarForm: 'Días',
+      });
+    }
+    else {
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.tipoPermisoSelec = 'Días y Horas';
+      this.PermisoForm.patchValue({
+        solicitarForm: 'Días y Horas',
+      });
+    }
+    // if (this.datos.legalizado === true) {
+    //   this.selec1 = true;
+    // }
+    // else if (this.datos.legalizado === false) {
+    //   this.selec2 = true;
+    // }
   }
 
   ObtenerTiposPermiso() {
@@ -193,9 +233,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.datosPermiso = datos;
       console.log(this.datosPermiso);
       if (this.datosPermiso[0].num_dia_maximo === 0) {
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'hidden';
+        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+        this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+        this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
         this.PermisoForm.patchValue({
           solicitarForm: 'Horas',
           horasForm: this.datosPermiso[0].num_hora_maximo,
@@ -205,9 +245,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.tipoPermisoSelec = 'Horas';
       }
       else if (this.datosPermiso[0].num_hora_maximo === '00:00:00') {
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+        this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+        this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
         this.PermisoForm.patchValue({
           solicitarForm: 'Días',
           diasForm: this.datosPermiso[0].num_dia_maximo,
@@ -218,9 +258,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.tipoPermisoSelec = 'Días';
       }
       else {
-        (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-        (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
+        this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
         this.PermisoForm.patchValue({
           solicitarForm: 'Días y Horas',
           diasForm: this.datosPermiso[0].num_dia_maximo,
@@ -240,9 +280,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.PermisoForm.patchValue({
         diasForm: '',
       });
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'hidden';
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
       this.toastr.info('Ingresar número de días de permiso');
     }
     else if (form.solicitarForm === 'Horas') {
@@ -251,9 +291,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         horasForm: '',
         diaLibreForm: '',
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'hidden';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'hidden';
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
+      this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
       this.toastr.info('Ingresar número de horas y minutos de permiso');
     }
     else {
@@ -263,9 +303,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         horasForm: '',
         diaLibreForm: '',
       });
-      (<HTMLInputElement>document.getElementById('horas')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('dias')).style.visibility = 'visible';
-      (<HTMLInputElement>document.getElementById('Dlibres')).style.visibility = 'visible';
+      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
     }
   }

@@ -50,7 +50,10 @@
                         <label>{{p.dia_perdido}}</label>
                     </div>
                 </div>
+<<<<<<< HEAD
                 <mat-divider></mat-divider>
+=======
+>>>>>>> 72ccf593cbddc0b99926191018c8f882822316c2
             </div>
         </mat-card-content>
     </mat-card>
@@ -109,7 +112,11 @@
                     </div>
                     <div class="caja1 align-self-center" *ngIf="v.estado === 'Solicitado'">
                         <button class="btn btn-sm" type="submit" (click)="CancelarVacaciones(v)">Cancelar</button>
-                        <button class="btn btn-sm" type="submit" (click)="EditarVacaciones(v)" style="margin-left: 10px;">Editar</button>
+                        <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
+                            matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
                     </div>
                 </div>
                 <mat-divider></mat-divider>

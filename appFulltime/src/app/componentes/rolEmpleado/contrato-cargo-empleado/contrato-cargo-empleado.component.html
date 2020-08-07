@@ -15,7 +15,7 @@
                     <div class="container" *ngFor="let ce of contratoEmpleado" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código:</label>
+                                <label id="datosF" class="col-sm col-form-label">Código:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.id}}</label>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Regimen:</label>
+                                <label id="datosF" class="col-sm col-form-label">Regimen:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.descripcion}}</label>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Ingreso:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.fec_ingreso.split("T")[0]}}</label>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Salida:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Salida:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.fec_salida === null ">Sin
@@ -50,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Control de Asistencia:</label>
+                                <label id="datosF" class="col-sm col-form-label">Control de Asistencia:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.asis_controla == true">Si</label>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Control de Vacaciones:</label>
+                                <label id="datosF" class="col-sm col-form-label">Control de Vacaciones:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.vaca_controla == true">Si</label>
@@ -68,7 +68,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Contrato:</label>
+                                <label id="datosF" class="col-sm col-form-label">Contrato:</label>
                             </div>
                             <div class="col">
                                 <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
@@ -117,7 +117,7 @@
                     <div class="container" *ngFor="let ce of contratoSeleccionado" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código:</label>
+                                <label id="datosF" class="col-sm col-form-label">Código:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.id}}</label>
@@ -125,7 +125,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Regimen:</label>
+                                <label id="datosF" class="col-sm col-form-label">Regimen:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.descripcion}}</label>
@@ -133,7 +133,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Ingreso:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Ingreso:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{ce.fec_ingreso.split("T")[0]}}</label>
@@ -141,7 +141,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Salida:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Salida:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.fec_salida === null ">Sin
@@ -152,7 +152,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Controla Asistencia:</label>
+                                <label id="datosF" class="col-sm col-form-label">Controla Asistencia:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.asis_controla == true">Si</label>
@@ -161,7 +161,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Controla Vacaciones:</label>
+                                <label id="datosF" class="col-sm col-form-label">Controla Vacaciones:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label" *ngIf="ce.vaca_controla == true">Si</label>
@@ -170,7 +170,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Contrato:</label>
+                                <label id="datosF" class="col-sm col-form-label">Contrato:</label>
                             </div>
                             <div class="col">
                                 <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''" class="fas fa-file-alt"
@@ -214,7 +214,7 @@
                     <div class="container" *ngFor="let c of cargoEmpleado" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código:</label>
+                                <label id="datosF" class="col-sm col-form-label">Código:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.id}}</label>
@@ -222,7 +222,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.fec_inicio.split("T")[0]}}</label>
@@ -230,7 +230,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
@@ -238,7 +238,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Cargo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Cargo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.cargo}}</label>
@@ -246,7 +246,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Sucursal:</label>
+                                <label id="datosF" class="col-sm col-form-label">Sucursal:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.sucursal}}</label>
@@ -254,7 +254,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Departamento:</label>
+                                <label id="datosF" class="col-sm col-form-label">Departamento:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.departamento}}</label>
@@ -262,7 +262,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Sueldo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Sueldo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.sueldo}}</label>
@@ -270,7 +270,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Horas de Trabajo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Horas de Trabajo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.hora_trabaja}}</label>
@@ -311,7 +311,7 @@
                     <div class="container" *ngFor="let c of cargoSeleccionado" style="padding-top: 15px;">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código:</label>
+                                <label id="datosF" class="col-sm col-form-label">Código:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.id}}</label>
@@ -319,7 +319,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Cargo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Cargo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.cargo}}</label>
@@ -327,7 +327,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Sucursal:</label>
+                                <label id="datosF" class="col-sm col-form-label">Sucursal:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.sucursal}}</label>
@@ -335,7 +335,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Departamento:</label>
+                                <label id="datosF" class="col-sm col-form-label">Departamento:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.departamento}}</label>
@@ -343,7 +343,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Sueldo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Sueldo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.sueldo}}</label>
@@ -351,7 +351,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Horas de Trabajo:</label>
+                                <label id="datosF" class="col-sm col-form-label">Horas de Trabajo:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.hora_trabaja}}</label>
@@ -359,7 +359,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.fec_inicio.split("T")[0]}}</label>
@@ -367,7 +367,7 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
+                                <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
                             </div>
                             <div class="col">
                                 <label class="col col-form-label">{{c.fec_final.split("T")[0]}}</label>
