@@ -10,8 +10,6 @@ import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/reg
 import { CancelarVacacionesComponent } from './cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from './editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
-
-
 @Component({
   selector: 'app-vacaciones-empleado',
   templateUrl: './vacaciones-empleado.component.html',

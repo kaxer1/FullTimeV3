@@ -25,12 +25,12 @@
                         <label>{{h.descripcion}}</label>
                     </div>
                     <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Estado:</label>
-                        <label>{{h.estado}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
                         <label id="datosF">Fecha Solicita:</label>
                         <label>{{h.fec_solicita.split("T")[0]}}</label>
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Estado:</label>
+                        <label>{{h.estado}}</label>
                     </div>
                     <div class="caja1 d-flex justify-content-start">
                         <label id="datosF">Tiempo hora extra:</label>
@@ -44,24 +44,26 @@
                         <label id="datosF">Fecha Final:</label>
                         <label>{{h.fec_final.split("T")[0]}}</label>
                     </div>
-                    <div class="caja1 align-self-center" *ngIf="h.estado === 'Pendiente'">
-                        <button class="btn btn-sm" type="submit" (click)="CancelarHoraExtra(h)">Cancelar</button>
-                        <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
+                    <div class="caja1 d-flex justify-content-start">
                     </div>
+                </div>
+                <div style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
+                    <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix matTooltipPosition="right"
+                        matTooltipClass="departamento-tooltip"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
+                    <i class="fas fa-backspace" id="cancel" (click)="CancelarHoraExtra(h)" matSuffix
+                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        matTooltip="Cancelar solicitud de horas extras">
+                        <p>Cancelar</p>
+                    </i>
                 </div>
                 <mat-divider></mat-divider>
             </div>
-            <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina"
-                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                showFirstLastButtons>
+            <mat-paginator [length]="hora_extra.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+                id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
             </mat-paginator>
-            <!-- <div class="card-footer pb-0 pt-3">
-                <jw-pagination [items]="hora_extra" (changePage)="onChangePage($event)"></jw-pagination>
-            </div>-->
         </mat-card-content>
     </mat-card>
 </div>

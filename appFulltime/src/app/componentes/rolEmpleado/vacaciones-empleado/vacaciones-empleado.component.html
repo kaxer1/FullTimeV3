@@ -49,11 +49,14 @@
                         <label id="datosF">Días Perdidos:</label>
                         <label>{{p.dia_perdido}}</label>
                     </div>
+                    <div class="caja1 d-flex justify-content-start">
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                    </div>
+                    <div class="caja1 d-flex justify-content-start">
+                    </div>
                 </div>
-<<<<<<< HEAD
                 <mat-divider></mat-divider>
-=======
->>>>>>> 72ccf593cbddc0b99926191018c8f882822316c2
             </div>
         </mat-card-content>
     </mat-card>
@@ -75,7 +78,7 @@
             </div>
         </div>
         <mat-card-content>
-            <div *ngFor="let v of vacaciones" style="padding-top: 15px;">
+            <div *ngFor="let v of vacaciones | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
                 <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                     <div class="caja1 d-flex justify-content-start">
                         <label id="datosF">Codigo:</label>
@@ -94,10 +97,6 @@
                         <label>{{v.fec_ingreso.split("T")[0]}}</label>
                     </div>
                     <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Estado:</label>
-                        <label>{{v.estado}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
                         <label id="datosF">Días Laborables:</label>
                         <label>{{v.dia_laborable}}</label>
                     </div>
@@ -110,15 +109,24 @@
                         <label *ngIf="v.legalizado == true">Sí</label>
                         <label *ngIf="v.legalizado == false">No</label>
                     </div>
-                    <div class="caja1 align-self-center" *ngIf="v.estado === 'Solicitado'">
-                        <button class="btn btn-sm" type="submit" (click)="CancelarVacaciones(v)">Cancelar</button>
-                        <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
+                    <div class="caja1 d-flex justify-content-start">
+                        <label id="datosF">Estado:</label>
+                        <label>{{v.estado}}</label>
                     </div>
                 </div>
+                <div class="float-right" *ngIf="v.estado === 'Solicitado'">
+                    <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
+                        matTooltipClass="departamento-tooltip"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
+                    <i class="fas fa-backspace" id="cancel" (click)="CancelarVacaciones(v)" matSuffix
+                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        matTooltip="Cancelar solicitud de vacaciones">
+                        <p>Cancelar</p>
+                    </i>
+                </div>
+                <br><br>
                 <mat-divider></mat-divider>
             </div>
             <mat-paginator [length]="vacaciones.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"

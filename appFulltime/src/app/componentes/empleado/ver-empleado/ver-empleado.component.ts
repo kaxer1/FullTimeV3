@@ -47,6 +47,12 @@ import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/e
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 import { EditarAutorizacionDepaComponent } from 'src/app/componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
 import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pedido-hora-extra.component';
+import { EditarPermisoEmpleadoComponent } from 'src/app/componentes/rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
+import { CancelarPermisoComponent } from 'src/app/componentes/rolEmpleado/solicitar-permisos-empleado/cancelar-permiso/cancelar-permiso.component';
+import { CancelarHoraExtraComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/cancelar-hora-extra/cancelar-hora-extra.component';
+import { EditarHoraExtraEmpleadoComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
+import { CancelarVacacionesComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
+import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -723,7 +729,26 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   CancelarHoraExtra(h) {
-    console.log(h);
+    this.vistaRegistrarDatos.open(CancelarHoraExtraComponent, { width: '300px', data: h.id }).afterClosed().subscribe(items => {
+      console.log(items);
+      if (items === true) {
+        this.ObtenerlistaHorasExtrasEmpleado();
+      }
+    });
+  }
+
+  CancelarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(CancelarPermisoComponent, { width: '300px', data: dataPermiso }).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }
+    });
+  }
+
+  CancelarVacaciones(v) {
+    this.vistaRegistrarDatos.open(CancelarVacacionesComponent, { width: '300px', data: v.id }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
+    });
   }
 
   /* 
@@ -1008,7 +1033,26 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   EditarHoraExtra(h) {
-    console.log(h);
+    this.vistaRegistrarDatos.open(EditarHoraExtraEmpleadoComponent, { width: '900px', data: h }).afterClosed().subscribe(items => {
+      console.log(items);
+      if (items === true) {
+        this.ObtenerlistaHorasExtrasEmpleado();
+      }
+    });
+  }
+
+  EditarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, { width: '1200px', data: dataPermiso }).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }
+    });
+  }
+
+  EditarVacaciones(v) {
+    this.vistaRegistrarDatos.open(EditarVacacionesEmpleadoComponent, { width: '900px', data: v }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
+    });
   }
 
   /* 
