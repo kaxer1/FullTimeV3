@@ -94,6 +94,7 @@ export class VistaRolesComponent implements OnInit {
   }
 
   obtenerRoles() {
+    this.roles = [];
     this.rest.getRoles().subscribe(res => {
       this.roles = res;
     },
@@ -107,11 +108,19 @@ export class VistaRolesComponent implements OnInit {
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.obtenerRoles();
+      }
+    });
   }
 
   AbrirVentanaRegistrarRol() {
-    this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.obtenerRoles();
+      }
+    });
   }
 
   limpiarCampoBuscar() {

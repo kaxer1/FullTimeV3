@@ -81,19 +81,22 @@ export class MainNavComponent implements OnInit {
 
   isExpanded = true;
   isShowing = false;
+  barraInicial = false;
+  barraUno = false;
+  barraDos = false;
 
   mouseenter() {
     if (!this.isExpanded) {
       this.isShowing = true;
     }
   }
-
+  
   mouseleave() {
     if (!this.isExpanded) {
       this.isShowing = false;
     }
   }
-
+  
   ngOnInit() {
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -103,6 +106,11 @@ export class MainNavComponent implements OnInit {
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
     this.LlamarNotificaicones(this.id_empleado_logueado);
     this.VerAccionPersonal();
+    this.breakpointObserver.observe('(max-width: 663px)').subscribe(result => {
+      this.barraInicial = result.matches;
+      this.barraUno = result.matches;
+      this.barraDos = result.matches;
+    });
   }
 
   confRes: any = [];

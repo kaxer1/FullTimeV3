@@ -1,74 +1,69 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <div class="row">
-        <div class="col-md">
-            <mat-card class="mat-elevation-z8">
-                <div class="barraTitulo">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col" style="text-align: left;">
-                                <h5>Solicitar Permiso</h5>
-                            </div>
-                            <div class="col" style="text-align: right;">
-                                <button type="submit" class="btn btn-outline-light btn-sm"
-                                    (click)="AbrirVentanaPermiso()">Añadir</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <mat-card-content>
-                    <div *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
-                        <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">N° Permiso:</label>
-                                <label>{{pt.num_permiso}}</label>
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Tipo Permiso:</label>
-                                <label>{{pt.nom_permiso}}</label>
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Descripción:</label>
-                                <label>{{pt.descripcion}}</label>
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Fecha Salida:</label>
-                                <label>{{pt.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Fecha Ingreso:</label>
-                                <label>{{pt.fec_final.split("T")[0]}}</label>    
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Estado:</label>
-                                <label>{{pt.estado}}</label>
-                            </div>
-                            <div class="caja1 d-flex justify-content-start">
-                                <label id="datosF">Documento:</label>
-                                <a id="doc" class="fas fa-file-alt"
-                                    style="color:rgb(11, 70, 197); text-align: center;" matSuffix
-                                    matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
-                                    href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
-                                    target="_blank">
-                                    <p>{{pt.docu_nombre}}</p>
-                                </a>
-                            </div>
-                            <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
-                                <button class="btn btn-sm" type="submit" (click)="CancelarPermiso(pt)">Cancelar</button>
-                                <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
-                                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                    matTooltip="Modificar los datos generales de este registro">
-                                    <p>Editar</p>
-                                </i>
-                            </div>
-                        </div>
-                        <mat-divider style="margin-bottom: 10px;"></mat-divider>
-                    </div>
-                    <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
-                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                        showFirstLastButtons>
-                    </mat-paginator>
-                </mat-card-content>
-            </mat-card>
+<br>
+<div class="container" style="padding-bottom: 25px;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div class="barraTitulo d-flex bd-highlight">
+            <div class="w-100 bd-highlight">
+                <h5>Solicitar Permiso</h5>
+            </div>
+            <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
+                <button type="submit" class="btn btn-outline-light btn-sm"
+                    (click)="AbrirVentanaPermiso()">Añadir</button>
+            </div>
         </div>
+        <div *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
+            <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                <div class="caja1 d-flex justify-content-start" style="width: 300px;">
+                    <label id="datosF">Tipo Permiso:</label>
+                    <label>{{pt.nom_permiso}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">N° Permiso:</label>
+                    <label>{{pt.num_permiso}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Descripción:</label>
+                    <label>{{pt.descripcion}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Fecha Salida:</label>
+                    <label>{{pt.fec_inicio.split("T")[0]}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Fecha Ingreso:</label>
+                    <label>{{pt.fec_final.split("T")[0]}}</label>    
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Estado:</label>
+                    <label>{{pt.estado}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Documento:</label>
+                    <a id="doc" class="fas fa-file-alt"
+                        style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                        matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
+                        href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
+                        target="_blank">
+                        <p>{{pt.docu_nombre}}</p>
+                    </a>
+                </div>
+                <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
+                    <i class="far fa-window-close" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
+                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        matTooltip="Puede cancelar la solicitud antes de que cambien el estado">
+                        <p>Cancelar</p>
+                    </i>
+                    <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
+                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
+                </div>
+            </div>
+            <mat-divider style="margin-bottom: 10px;"></mat-divider>
+        </div>
+        <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
+            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+            showFirstLastButtons>
+        </mat-paginator>
     </div>
 </div>

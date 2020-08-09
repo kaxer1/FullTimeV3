@@ -95,12 +95,16 @@ export class ListarFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarFeriado(): void {
-    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '350px' }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.ObtenerFeriados();
+      }
+    });
   }
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '350px', data: { datosFeriado: datosSeleccionados, actualizar: true } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 

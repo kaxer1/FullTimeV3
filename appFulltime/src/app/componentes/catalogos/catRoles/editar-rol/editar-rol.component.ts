@@ -11,6 +11,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditarRolComponent implements OnInit {
 
+  salir: boolean = false;
+
   descripcion = new FormControl('', Validators.required);
 
   public nuevoRolForm = new FormGroup({
@@ -49,8 +51,8 @@ export class EditarRolComponent implements OnInit {
     this.rest.ActualizarRol(dataRol).subscribe(response => {
       this.toastr.success('Operacion Exitosa', 'Rol actualizado');
       this.limpiarCampos();
-      this.dialogRef.close();
-      window.location.reload();
+      this.salir = true;
+      this.dialogRef.close(this.salir);
     }, error => {
     });
   }
@@ -77,8 +79,7 @@ export class EditarRolComponent implements OnInit {
 
   CerrarVentanaRegistroRol() {
     this.limpiarCampos();
-    this.dialogRef.close();
-    //window.location.reload();
+    this.dialogRef.close(this.salir);
   }
 
 }

@@ -21,13 +21,13 @@ import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.servi
 export class EditarVacacionesEmpleadoComponent implements OnInit {
 
   calcular = false;
+  habilitarCalculados: boolean = false;
 
   fechaInicio = new FormControl('', Validators.required);
   fechaFinal = new FormControl('', Validators.required);
   fechaIngreso = new FormControl('', Validators.required);
   dialibreF = new FormControl('', [Validators.required]);
   dialaborableF = new FormControl('', [Validators.required]);
-  estadoF = new FormControl('', [Validators.required]);
   calcularF = new FormControl('');
   totalF = new FormControl('');
   diasTF = new FormControl('');
@@ -38,7 +38,6 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
     fechaIngresoForm: this.fechaIngreso,
     diaLibreForm: this.dialibreF,
     dialaborableForm: this.dialaborableF,
-    estadoForm: this.estadoF,
     calcularForm: this.calcularF,
     totalForm: this.totalF,
     diasTForm: this.diasTF
@@ -59,7 +58,6 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
       fechaIngresoForm: this.dato.fec_ingreso,
       diaLibreForm: this.dato.dia_libre,
       dialaborableForm: this.dato.dia_laborable,
-      estadoForm: 'Solicitado',
       calcularForm: true
     });
   }
@@ -104,6 +102,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
         totalForm: totalDias,
         diasTForm: totalF
       });
+      this.habilitarCalculados = true;
 
     }, error => {
       var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
@@ -115,6 +114,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
         totalForm: totalDias,
         diasTForm: 0
       });
+      this.habilitarCalculados = true;
     })
   }
 
@@ -206,7 +206,6 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
       fec_inicio: form.fecInicioForm,
       fec_final: form.fecFinalForm,
       fec_ingreso: form.fechaIngresoForm,
-      estado: form.estadoForm,
       dia_libre: form.diaLibreForm + form.diasTForm,
       dia_laborable: form.dialaborableForm,
     };
@@ -227,7 +226,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
 
   CerrarVentanaRegistroVacaciones() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close(true);
   }
 
   IngresarSoloNumeros(evt) {

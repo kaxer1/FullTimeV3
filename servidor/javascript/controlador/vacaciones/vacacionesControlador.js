@@ -267,9 +267,8 @@ class VacacionesControlador {
     EditarVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable } = req.body;
-            console.log(fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable);
-            yield database_1.default.query('UPDATE vacaciones SET fec_inicio = $1, fec_final = $2, fec_ingreso = $3, estado = $4, dia_libre = $5, dia_laborable = $6 WHERE id = $7', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, id]);
+            const { fec_inicio, fec_final, fec_ingreso, dia_libre, dia_laborable } = req.body;
+            yield database_1.default.query('UPDATE vacaciones SET fec_inicio = $1, fec_final = $2, fec_ingreso = $3, dia_libre = $4, dia_laborable = $5 WHERE id = $6', [fec_inicio, fec_final, fec_ingreso, dia_libre, dia_laborable, id]);
             res.jsonp({ message: 'Vacaciones editadas' });
         });
     }

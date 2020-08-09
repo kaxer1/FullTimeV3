@@ -38,9 +38,8 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 .nota {
     font-size: 12px; 
     font-weight: bold; 
-    padding-left: 5px;  
     text-align: justify;
-    padding-bottom: 10px; 
+    padding: 0px 5px 10px 5px; 
     color: rgb(52,65,84);
 }
 
@@ -48,7 +47,7 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 
 .scrollbar {
     float: left;
-    height: 500px;
+    height: 380px;
     width: 100%;
     background: #fff;
     overflow-y: scroll;

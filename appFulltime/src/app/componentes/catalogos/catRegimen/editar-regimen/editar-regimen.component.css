@@ -1,5 +1,9 @@
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
 
+mat-form-field {width: 250px; padding: 10px 10px 0px 10px;}
+
+.button {margin: 5px 10px 5px 10px;}
+
 #movilidad { 
     cursor: grab;
     color: blue;
@@ -13,11 +17,10 @@ label { font-size: small; }
 #anioAnti { font-size: 12px; }
 
 .tituloRegimen { 
-    font-size: 20px; 
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
-    padding-top: 10px; 
+    height: 50px; 
 }
 
 #iReg { cursor: pointer; }
@@ -31,15 +34,14 @@ label { font-size: small; }
 .nota {
     font-size: 12px; 
     font-weight: bold; 
-    padding-left: 5px;  
     text-align: justify;
-    padding-bottom: 10px; 
+    padding: 13px 5px 10px 5px; 
     color: rgb(52,65,84);
 }
 
 .scrollbar {
     float: left;
-    height: 400px;
+    height: 360px;
     width: 100%;
     background: #fff;
     overflow-y: scroll;

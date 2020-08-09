@@ -114,9 +114,11 @@
             </div>
         </mat-card-content>
     </form>
+    <br>
     <span class="nota">Desea editar el archivo anteriormente subido (opcional) </span>
     <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
     <div style="text-align: center;">
+        <br>
         <button type="submit" class="btn btn-sm" (click)="RegistrarPermiso(PermisoForm.value)"
             [disabled]="!PermisoForm.valid"> Guardar </button>
         <button type="submit" class="btn btn-sm" (click)="dialogRef.close(false)"> Salir </button>

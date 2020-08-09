@@ -8,30 +8,28 @@
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarRegimenForm">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
-                            <mat-form-field>
-                                <mat-label>Descripción</mat-label>
-                                <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF"
-                                    [(ngModel)]="filtroRegimenLaboral">
-                                <mat-icon id="iRegL" matSuffix matTooltipClass="regimenL-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda de Régimen Laboral por la descripción">
-                                    help_outline
-                                </mat-icon>
-                                <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </mat-card-content>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Descripción</mat-label>
+                            <input matInput nombre="filtroRegimenLaboral" placeholder="Ingresar nombre"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="descripcionF"
+                                [(ngModel)]="filtroRegimenLaboral">
+                            <mat-icon id="iRegL" matSuffix matTooltipClass="regimenL-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de Régimen Laboral por la descripción">
+                                help_outline
+                            </mat-icon>
+                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeNombreValido()}}</mat-error>
+                        </mat-form-field>
+                    </div>
                 </form>
-                <mat-card-actions style="text-align: center">
+                <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarRegimen()">Crear
                         nuevo Régimen Laboral
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
                     </button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
     </div>

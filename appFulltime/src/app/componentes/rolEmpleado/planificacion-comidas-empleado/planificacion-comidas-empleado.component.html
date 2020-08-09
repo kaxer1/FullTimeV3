@@ -1,66 +1,61 @@
-<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-    <mat-card class="mat-elevation-z8">
-        <div class="barraTitulo">
-            <div class="container">
-                <div class="row">
-                    <div class="col" style="text-align: left;">
-                        <h5>Planificación Comidas</h5>
-                    </div>
-                    <div class="col" style="text-align: right;">
-                        <button type="submit" class="btn btn-outline-light btn-sm"
-                            (click)="AbrirVentanaPlanificacion()">Añadir</button>
-                    </div>
-                </div>
+<br>
+<div class="container" style="padding-bottom: 25px;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div class="barraTitulo d-flex bd-highlight">
+            <div class="w-100 bd-highlight">
+                <h5>Planificación Comidas</h5>
+            </div>
+            <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
+                <button type="submit" class="btn btn-outline-light btn-sm"
+                    (click)="AbrirVentanaPlanificacion()">Añadir</button>
             </div>
         </div>
-        <mat-card-content>
-            <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
-                <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Fecha de Solicitud:</label>
-                        <label>{{pc.fecha.split("T")[0]}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Hora Inicio:</label>
-                        <label>{{pc.hora_inicio}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Nombre Plato:</label>
-                        <label>{{pc.nombre}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Precio Plato:</label>
-                        <label>$ {{pc.valor}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Fecha Planificación:</label>
-                        <label>{{pc.fec_solicita.split("T")[0]}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Hora Fin:</label>
-                        <label>{{pc.hora_fin}}</label>
-                    </div>
-                    <div class="caja1 d-flex justify-content-start">
-                        <label id="datosF">Observación:</label>
-                        <label>{{pc.observacion}}</label>
-                    </div>
-                    <div class="caja1 align-self-center" style="text-align: center;">
-                        <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
-                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)"
-                            class=" far fa-trash-alt" matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </div>
+        <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
+            <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Fecha de Solicitud:</label>
+                    <label>{{pc.fecha.split("T")[0]}}</label>
                 </div>
-                <mat-divider></mat-divider>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Hora Inicio:</label>
+                    <label>{{pc.hora_inicio}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Nombre Plato:</label>
+                    <label>{{pc.nombre}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Precio Plato:</label>
+                    <label>$ {{pc.valor}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start" style="width: 300px;">
+                    <label id="datosF">Fecha Planificación:</label>
+                    <label>{{pc.fec_solicita.split("T")[0]}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Hora Fin:</label>
+                    <label>{{pc.hora_fin}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Observación:</label>
+                    <label>{{pc.observacion}}</label>
+                </div>
+                <div class="caja1 align-self-center">
+                    <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
+                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                        matTooltip="Modificar los datos generales de este registro">
+                        <p>Editar</p>
+                    </i>
+                    <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)"
+                        class=" far fa-trash-alt" matTooltipPosition="right" id="delete" matTooltip="Eliminar registro">
+                        <p>Eliminar</p>
+                    </i>
+                </div>
             </div>
-            <mat-paginator [length]="planComidas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-                id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-            </mat-paginator>
-        </mat-card-content>
-    </mat-card>
+            <mat-divider></mat-divider>
+        </div>
+        <mat-paginator [length]="planComidas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
 </div>

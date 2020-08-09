@@ -1,4 +1,4 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.btn { background-color: rgb(80,87,97); color: white; }
 
 p { font-size: x-small; }
 
@@ -13,6 +13,10 @@ th { font-size: small; }
 #iRegL { cursor: pointer; }
 
 #ver { color: indianred; cursor: pointer; }
+
+mat-form-field {width: 250px;}
+
+button {margin: 5px 10px 5px 10px;}
 
 /*.regimenL-tooltip { background-color : rgb(35, 3, 122); }*/
 

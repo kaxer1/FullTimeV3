@@ -2,26 +2,18 @@
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
-    padding-top: 14px; 
+    padding-top: 10px; 
     padding-bottom: 6px; 
 }
 
 p { font-size: x-small; }
 
-.fas { cursor: pointer; }
-
-.col-sm { font-weight: bold;}
-
-#iconos { text-align: center; }
-
-.btn { margin-bottom: 10px; background-color: rgb(80,87,97); color: white; } 
-
 #datosF { font-weight: bold; font-size: 15px; padding-right: 5px;}
-
-#verticalLine { border-left: 1px solid rgb(52,65,84); }
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
-.caja1 {padding: 0px 10px 0px 10px; width: 250px;}
+.caja1 {padding: 0px 15px 0px 15px; width: 250px;}
 
-#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center; }
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}
+
+#cancel { color:rgb(192, 36, 9); margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}

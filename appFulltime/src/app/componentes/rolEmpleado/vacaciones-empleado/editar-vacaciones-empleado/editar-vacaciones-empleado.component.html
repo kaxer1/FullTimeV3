@@ -1,7 +1,7 @@
 <div class="scrollbar scrollbar-primary">
     <div class="d-flex bd-highlight vacacionesE">
         <mat-icon class="flex-shrink-1 bd-highlight" id="movilidad">open_with</mat-icon>
-        <h5 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Editar vacación</h5>
+        <h4 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Editar vacación</h4>
     </div>
     <!-- Formulario Completo -->
     <form [formGroup]="VacacionesForm">
@@ -50,7 +50,7 @@
                         <label style="margin-right: 12px;" id="calculo">Calcular días hábiles,
                             libres y totales</label>
                     </div>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="habilitarCalculados">
                         <mat-label id="dias">Vacaciones: días laborables</mat-label>
                         <input readonly="readonly" matInput placeholder="Días de incremento"
                             [formControl]="dialaborableF" required (keypress)="IngresarSoloNumeros($event)">
@@ -58,7 +58,7 @@
                             matTooltip="Número de días laborables que se toman para vacaciones">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="habilitarCalculados">
                         <mat-label>Vacaciones: días libres</mat-label>
                         <input readonly="readonly" matInput placeholder="Días de incremento"
                             [formControl]="dialibreF" required (keypress)="IngresarSoloNumeros($event)">
@@ -66,7 +66,7 @@
                             matTooltip="Número de días libres que estan dentro de las vacaciones">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="habilitarCalculados">
                         <mat-label id="Feriado">Vacaciones: días Feriados</mat-label>
                         <input readonly="readonly" matInput placeholder="Días de incremento" [formControl]="diasTF"
                             required (keypress)="IngresarSoloNumeros($event)">
@@ -74,26 +74,13 @@
                             matTooltip="Número de días Feriados que estan dentro de las vacaciones">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <mat-form-field>
+                    <mat-form-field *ngIf="habilitarCalculados">
                         <mat-label>Días totales</mat-label>
                         <input readonly="readonly" matInput placeholder="Días de incremento" [formControl]="totalF"
                             required (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
                             matTooltip="Número de días totales que se toman de vacaciones">
                             help_outline</mat-icon>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>Estado</mat-label>
-                        <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
-                            matTooltipPosition="right" matTooltip="Indicar el estado de vacaciones">
-                            help_outline
-                        </mat-icon>
-                        <mat-select required [formControl]="estadoF" [disabled]="true">
-                            <mat-option value="Solicitado">Solicitado</mat-option>
-                            <mat-option value="Rechazado">Rechazado</mat-option>
-                            <mat-option value="Aceptado">Aceptado</mat-option>
-                            <mat-option value="Eliminado">Eliminado</mat-option>
-                        </mat-select>
                     </mat-form-field>
                 </div>
             </div>
@@ -102,6 +89,6 @@
     <div style="text-align: center;">
         <button type="submit" class="btn btn-sm" (click)="ValidarDatosVacacion(VacacionesForm.value)"
             [disabled]="!VacacionesForm.valid">Guardar</button>
-        <button type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroVacaciones()">Salir</button>
+        <button type="submit" class="btn btn-sm" (click)="dialogRef.close(false)">Salir</button>
     </div>
 </div>

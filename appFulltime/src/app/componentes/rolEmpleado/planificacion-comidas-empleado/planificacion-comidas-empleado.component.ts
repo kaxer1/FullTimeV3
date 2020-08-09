@@ -54,7 +54,7 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   /* Ventana para editar planificación de comidas */
   AbrirEditarPlanComidas(datoSeleccionado): void {
     console.log(datoSeleccionado);
-    this.vistaRegistrarDatos.open(EditarPlanComidasComponent, { width: '600px', data: datoSeleccionado })
+    this.vistaRegistrarDatos.open(EditarPlanComidasComponent, { width: '1200px', data: datoSeleccionado })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
       });
@@ -84,7 +84,7 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   /* Ventana para ingresar planificación de comidas */
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado })
+    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '1200px', data: this.idEmpleado })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
       });

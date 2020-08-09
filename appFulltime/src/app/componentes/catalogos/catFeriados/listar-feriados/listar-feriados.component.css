@@ -4,11 +4,15 @@ h5 { text-align: center; }
 
 p { font-size: x-small;}
 
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.btn { background-color: rgb(80,87,97); color: white; }
 
-.fas { color:green; margin-left: 25px;}
+.fas { color:green; margin-left: 25px; cursor: pointer;}
 
-mat-form-field { padding: 10px 15px 0px 15px;}
+.far {cursor: pointer;}
+
+mat-form-field { padding: 10px 15px 0px 15px; width: 220px; }
+
+.button {margin: 5px 10px 5px 10px;}
 
 .upload {cursor: pointer; }
 
