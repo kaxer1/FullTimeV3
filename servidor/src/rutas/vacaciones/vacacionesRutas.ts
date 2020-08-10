@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import VACACIONES_CONTROLADOR from '../../controlador/vacaciones/vacacionesControlador';
 
-class SucursalRutas {
+class VacacionesRutas {
     public router: Router = Router();
 
     constructor() {
@@ -24,6 +24,6 @@ class SucursalRutas {
     }
 }
 
-const SUCURSAL_RUTAS = new SucursalRutas();
+const VACACIONES_RUTAS = new VacacionesRutas();
 
-export default SUCURSAL_RUTAS.router;
+export default VACACIONES_RUTAS.router;

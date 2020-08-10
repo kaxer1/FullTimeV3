@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const vacacionesControlador_1 = __importDefault(require("../../controlador/vacaciones/vacacionesControlador"));
-class SucursalRutas {
+class VacacionesRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
@@ -24,5 +24,5 @@ class SucursalRutas {
         this.router.delete('/eliminar/:id_vacacion', vacacionesControlador_1.default.EliminarVacaciones);
     }
 }
-const SUCURSAL_RUTAS = new SucursalRutas();
-exports.default = SUCURSAL_RUTAS.router;
+const VACACIONES_RUTAS = new VacacionesRutas();
+exports.default = VACACIONES_RUTAS.router;

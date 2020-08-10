@@ -50,6 +50,7 @@ import PLANTILLA_RUTAS from './rutas/descargarPlantilla/plantillaRutas';
 import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacionesRutas';
 import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
 import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
+import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -142,7 +143,10 @@ class Servidor {
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
 
         // Documentos
-        this.app.use('/archivosCargados', DOCUMENTOS_RUTAS)
+        this.app.use('/archivosCargados', DOCUMENTOS_RUTAS);
+        
+        // Mensaje de cumpleaños empresas
+        this.app.use('/birthday', BIRTHDAY_RUTAS);
 
     }
 
@@ -191,13 +195,12 @@ setInterval(async () => {
     const fecha = date.toJSON().slice(4).split("T")[0];
     console.log(fecha)
     // SERVIDOR.app.use()
-    if (hora === 12) {
-        const felizCumple = await pool.query("SELECT nombre, apellido, correo, fec_nacimiento, mail_alternativo FROM empleados WHERE CAST(empleados.fec_nacimiento AS VARCHAR) LIKE '%' || $1", [fecha]);
+    if (hora === 15) {
+        const felizCumple = await pool.query("SELECT e.nombre, e.apellido, e.correo, e.fec_nacimiento, em.nombre AS empresa, m.titulo, m.mensaje, m.img FROM empleados AS e, empl_contratos AS cn, empl_cargos AS cr, sucursales AS s, cg_empresa AS em, message_birthday AS m WHERE CAST(e.fec_nacimiento AS VARCHAR) LIKE '%' || $1 AND cn.id_empleado = e.id AND cr.id_empl_contrato = cn.id AND s.id = cr.id_sucursal AND em.id = s.id_empresa AND m.id_empresa = em.id", [fecha]);
         console.log(felizCumple.rows);
         if (felizCumple.rowCount > 0) {
             const email = process.env.EMAIL;
             const pass = process.env.PASSWORD;
-            const organizacion = process.env.EMPRESA
 
             let smtpTransport = nodemailer.createTransport({
                 service: 'Gmail',
@@ -209,20 +212,22 @@ setInterval(async () => {
             // Enviar mail a todos los que nacieron en la fecha seleccionada
             felizCumple.rows.forEach(obj => {
 
+                // <p>Sabemos que es un dia especial para ti <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> 
+                // , esperamos que la pases muy bien en compañia de tus seres queridos.
+                //     </p>
                 let data = {
                     to: obj.correo,
                     from: email,
                     subject: 'Felicidades',
                     html: `
-                    <h2> <b> ${organizacion} </b> </h2>
+                    <h2> <b> ${obj.empresa} </b> </h2>
                     <h3 style="text-align-center"><b>¡Feliz Cumpleaños ${obj.nombre.split(" ")[0]}!</b></h3>
-                    <p>Sabemos que es un dia especial para ti <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> 
-                    , esperamos que la pases muy bien en compañia de tus seres queridos.
-                        </p>
+                    <h4>${obj.titulo}</h4>
+                    <p>${obj.mensaje}</p>
                     <img src="cid:cumple"/>`,
                     attachments: [{
                         filename: 'birthday1.jpg',
-                        path: `${path}/cumpleanios/birthday1.jpg`,
+                        path: `${path}/cumpleanios/${obj.img}`,
                         cid: 'cumple' //same cid value as in the html img src
                     }]
                 };
@@ -245,7 +250,7 @@ function sumaDias(fecha: Date, dias: number) {
     return fecha;
 }
 
-// Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.
+// Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.  Tiempo de aviso 5 dias antes. 
 setInterval(async () => {
 
     const path = __dirname.split("javascript")[0]
@@ -291,6 +296,55 @@ setInterval(async () => {
                 };
                 console.log(data)
 
+                smtpTransport.sendMail(data, async (error: any, info: any) => {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log('Email sent: ' + info.response);
+                    }
+                });
+            })
+        }
+    }
+}, 3600000); 
+
+// Aviso de toma de vacaciones en 2 dias.
+setInterval(async () => {
+
+    const date = new Date();
+    const hora = date.getHours();
+    const diaIncrementado = sumaDias(date, 2).toLocaleDateString().split("T")[0];
+
+    if (hora === 0) {
+        const avisoVacacion = await pool.query('SELECT pv.fec_inicio, pv.fec_final, e.nombre, e.apellido, e.correo FROM peri_vacaciones AS pv, empl_contratos AS ec, empleados AS e WHERE pv.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND pv.fec_inicio = $1', [diaIncrementado]);
+        console.log(avisoVacacion.rows);
+
+        if (avisoVacacion.rowCount > 0) {
+            const email = process.env.EMAIL;
+            const pass = process.env.PASSWORD;
+
+            let smtpTransport = nodemailer.createTransport({
+                service: 'Gmail',
+                auth: {
+                    user: email,
+                    pass: pass
+                }
+            });
+            // Enviar mail a todos los que nacieron en la fecha seleccionada
+            avisoVacacion.rows.forEach(obj => {
+
+                let data = {
+                    to: obj.correo,
+                    from: email,
+                    subject: 'Aviso toma de vacaciones',
+                    html: `
+                    <h2> <b> ¡Tienes 2 días para tomar vacaciones! </b> </h2>
+                    <p> <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> se le da un aviso de que en 5 días, usted debe
+                    tomar vacaciones como esta prestablecido desde el dia <b> ${obj.fec_inicio.toLocaleDateString().split("T")[0]} </b>
+                    hasta el dia <b>${obj.fec_final.toLocaleDateString().split("T")[0]}</b>.</p>
+                    `
+                };
+                console.log(data)
                 smtpTransport.sendMail(data, async (error: any, info: any) => {
                     if (error) {
                         console.log(error);

@@ -77,6 +77,7 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
+import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -138,6 +139,7 @@ const routes: Routes = [
   { path: 'verHoraExtra/:id', component: VerHorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'vistaEmpresa/:id', component: VerEmpresaComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'vistaSucursales/:id', component: VerSucursalComponent, canActivate: [AuthGuard], data: { roles: 1 }},
+  { path: 'cumpleanios', component: VerBirthdayComponent, canActivate: [AuthGuard], data: { roles: 1 }},
 
   { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'estadisticas', component: HomeEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },

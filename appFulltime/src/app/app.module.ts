@@ -258,6 +258,9 @@ import { EditarHorasExtrasComponent } from './componentes/catalogos/catHorasExtr
 import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
 import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
 import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empresa/ver-empresa.component';
+import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
+import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
+import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -447,6 +450,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     VerHorasExtrasComponent,
     VerSucursalComponent,
     VerEmpresaComponent,
+    RegistrarBirthdayComponent,
+    EditarBirthdayComponent,
+    VerBirthdayComponent,
   ],
 
   imports: [
