@@ -16,26 +16,20 @@
                     </div>
                 </div>
                 <mat-card-content>
-                    <div class="container" *ngFor="let e of empleadoProcesos | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
-                        <div class="row">
-                            <div class="col-2">
-                                <label id="datosF" class="col-sm col-form-label">Proceso:</label>
+                    <div class="container" *ngFor="let e of empleadoProcesos | paginate:tamanio_pagina:numero_pagina"
+                        style="padding-top: 15px;">
+                        <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                            <div class="caja1 d-flex justify-content-start">
+                                <label id="datosF">Proceso:</label>
+                                <label>{{e.proceso}}</label>
                             </div>
-                            <div class="col-2">
-                                <label class="col col-form-label">{{e.proceso}}</label>
+                            <div class="caja1 d-flex justify-content-start">
+                                <label id="datosF">Fecha Inicio:</label>
+                                <label>{{e.fec_inicio.split("T")[0]}}</label>
                             </div>
-
-                            <div class="col-2">
-                                <label id="datosF" class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col-2">
-                                <label class="col col-form-label">{{e.fec_inicio.split("T")[0]}}</label>
-                            </div>
-                            <div class="col-2">
-                                <label id="datosF" class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col-2">
-                                <label class="col col-form-label">{{e.fec_final.split("T")[0]}}</label>
+                            <div class="caja1 d-flex justify-content-start">
+                                <label id="datosF">Fecha Final:</label>
+                                <label>{{e.fec_final.split("T")[0]}}</label>
                             </div>
                         </div>
                         <div style="text-align: right;">

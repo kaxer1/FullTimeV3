@@ -69,7 +69,7 @@ export class DispositivosEnroladosComponent implements OnInit {
 
   AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '400px', data: { datosEnrolado: datosSeleccionados, actualizar: true } }).disableClose = true;
     console.log(datosSeleccionados.nombre);
   }
 
@@ -83,7 +83,7 @@ export class DispositivosEnroladosComponent implements OnInit {
   AbrirVentanaEditarReloj(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarDispositivoEnroladoComponent,
-      { width: '600px', data: datosSeleccionados })
+      { width: '400px', data: datosSeleccionados })
       .afterClosed().subscribe(item => {
         this.BuscarDatosEnrolado(this.idEnrolado);
         this.ListarEnroladoDispositivo(this.idEnrolado);

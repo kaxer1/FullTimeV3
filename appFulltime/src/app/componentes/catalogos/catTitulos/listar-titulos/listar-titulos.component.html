@@ -7,43 +7,41 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarTitulosForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Búsqueda por nombre</mat-label>
-                                <input matInput placeholder="Nombre Título" name="filtradoNombre"
-                                    [formControl]="nombreF" [(ngModel)]="filtradoNombre"
-                                    (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda de un título profesional por su nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
-                                </mat-error>
-                            </mat-form-field>
-                            <br>                             
-                            <mat-form-field>
-                                <mat-label>Búsqueda por nivel</mat-label>
-                                <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
-                                    [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda de un título profesional por su nivel">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
+                <form [formGroup]="BuscarTitulosForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Búsqueda por nombre</mat-label>
+                            <input matInput placeholder="Nombre Título" name="filtradoNombre"
+                                [formControl]="nombreF" [(ngModel)]="filtradoNombre"
+                                (keypress)="IngresarSoloLetras($event)">
+                            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de un título profesional por su nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombre()}}
+                            </mat-error>
+                        </mat-form-field>
+                        <br>                             
+                        <mat-form-field>
+                            <mat-label>Búsqueda por nivel</mat-label>
+                            <input matInput name="filtradoFecha" placeholder="Nivel" [formControl]="nivelF"
+                                [(ngModel)]="filtradoNivel" (keypress)="IngresarSoloLetras($event)">
+                            <mat-icon id="itituloL" matSuffix matTooltipClass="tituloL-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de un título profesional por su nivel">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nivelF.invalid">{{ObtenerMensajeErrorNivel()}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarTitulo()">Crear
                         Título Profesional
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
                     </button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
     </div>

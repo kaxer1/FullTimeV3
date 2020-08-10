@@ -7,89 +7,83 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarRelojesForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Nombre</mat-label>
-                                <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
-                                    [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
-                                    help_outline</mat-icon>
-                                <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos
-                                    letras
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Empresa</mat-label>
-                                <input matInput name="filtroEmpresaReloj" placeholder="Nombre de Empresa"
-                                    [formControl]="empresaF" [(ngModel)]="filtroEmpresaReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dipositivo por el nombre de la Empresa en la que se encunetra">
-                                    help_outline</mat-icon>
-                                <mat-error id="nombre" *ngIf="empresaF.invalid">Indispensable ingresar más de
-                                    dos letras
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Sucursal</mat-label>
-                                <input matInput name="filtroSucursalReloj" placeholder="Nombre de Sucursal"
-                                    [formControl]="sucursalF" [(ngModel)]="filtroSucursalReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dipositivo por el nombre de la Sucursal en la que se encuentra">
-                                    help_outline</mat-icon>
-                                <mat-error id="nombre" *ngIf="sucursalF.invalid">Indispensable ingresar más de
-                                    dos
-                                    letras
-                                </mat-error>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>IP</mat-label>
-                                <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
-                                    [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dispositivo por la dirección IP">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Modelo</mat-label>
-                                <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
-                                    name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
-                                    help_outline</mat-icon>
-                                <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos
-                                    letras
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Departamento</mat-label>
-                                <input matInput name="filtroDepartamentoReloj" placeholder="Nombre del Departamento"
-                                    [formControl]="departamentoF" [(ngModel)]="filtroDepartamentoReloj">
-                                <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del dipositivo por el nombre del departamento en el que se encuentra">
-                                    help_outline</mat-icon>
-                                <mat-error id="nombre" *ngIf="departamentoF.invalid">Indispensable ingresar más
-                                    de dos letras
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
+                <form [formGroup]="BuscarRelojesForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
+                                [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Empresa</mat-label>
+                            <input matInput name="filtroEmpresaReloj" placeholder="Nombre de Empresa"
+                                [formControl]="empresaF" [(ngModel)]="filtroEmpresaReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre de la Empresa en la que se encunetra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="empresaF.invalid">Indispensable ingresar más de
+                                dos letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Sucursal</mat-label>
+                            <input matInput name="filtroSucursalReloj" placeholder="Nombre de Sucursal"
+                                [formControl]="sucursalF" [(ngModel)]="filtroSucursalReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre de la Sucursal en la que se encuentra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="sucursalF.invalid">Indispensable ingresar más de
+                                dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>IP</mat-label>
+                            <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
+                                [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dispositivo por la dirección IP">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Modelo</mat-label>
+                            <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
+                                name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Departamento</mat-label>
+                            <input matInput name="filtroDepartamentoReloj" placeholder="Nombre del Departamento"
+                                [formControl]="departamentoF" [(ngModel)]="filtroDepartamentoReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre del departamento en el que se encuentra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="departamentoF.invalid">Indispensable ingresar más
+                                de dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
                     <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarReloj()"
                         value="Crear nuevo Dispositivo">
                     <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
         <div class="col-md">
@@ -135,8 +129,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
+                    <tr *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
                         <td>{{reloj.nomempresa}}</td>
                         <td>{{reloj.nomsucursal}}</td>

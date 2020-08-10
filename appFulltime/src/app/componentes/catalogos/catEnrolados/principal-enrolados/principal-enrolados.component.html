@@ -8,45 +8,41 @@
             <mat-card class="example-card mat-elevation-z8">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <!-- Formulario Completo -->
-                <mat-card-content>
-                    <form>
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Ingresar ID de usuario</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser"
-                                    [formControl]="idUser" (keypress)="IngresarSoloNumeros($event)">
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el ID de usuario">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Nombre</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre"
-                                    [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el nombre">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Seleccionar Estado</mat-label>
-                                <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda del empleado enrolado por el estado">
-                                    help_outline</mat-icon>
-                                <mat-select [formControl]="activo" [(ngModel)]="filtroActivo">
-                                    <mat-option *ngFor="let d of activoBus" [value]="d.value">
-                                        {{d.viewValue}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <div class="d-flex justify-content-around">
+                <form>
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Ingresar ID de usuario</mat-label>
+                            <input matInput placeholder="Ej: " [(ngModel)]="filtroIdUser"
+                                [formControl]="idUser" (keypress)="IngresarSoloNumeros($event)">
+                            <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del empleado enrolado por el ID de usuario">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Ingresar Nombre</mat-label>
+                            <input matInput placeholder="Ej: " [(ngModel)]="filtroEnrNombre"
+                                [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                            <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del empleado enrolado por el nombre">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Seleccionar Estado</mat-label>
+                            <mat-icon id="i_enrolado" matSuffix matTooltipClass="enrolado-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del empleado enrolado por el estado">
+                                help_outline</mat-icon>
+                            <mat-select [formControl]="activo" [(ngModel)]="filtroActivo">
+                                <mat-option *ngFor="let d of activoBus" [value]="d.value">
+                                    {{d.viewValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-around">
                     <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarEnrolado()">Enrolar a un
                         empleado
                     </button>

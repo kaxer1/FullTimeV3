@@ -177,13 +177,12 @@ export class DatosEmpleadoComponent implements OnInit {
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
-    this.restEmpleado.BuscarIDContratoActual(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
-        this.cargosTotalesEmpleado = datos;
-      }, error => {
-        this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
-      });
+    this.restCargo.BuscarIDCargoActual(id_empleado).subscribe(datos => {
+      this.cargosTotalesEmpleado = datos;
+      let cargoIdActual = this.cargosTotalesEmpleado[0].max;
+      this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
+        this.cargoEmpleado = datos;
+      }, error => { });
     });
   }
 

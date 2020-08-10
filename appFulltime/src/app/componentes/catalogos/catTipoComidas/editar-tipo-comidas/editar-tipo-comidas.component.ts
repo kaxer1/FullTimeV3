@@ -101,7 +101,6 @@ export class EditarTipoComidasComponent implements OnInit {
   CerrarVentanaRegistroTipoComidas() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   Salir() {

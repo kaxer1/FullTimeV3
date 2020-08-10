@@ -7,27 +7,25 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarTipoComidaForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Nombre del plato</mat-label>
-                                <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
-                                    [formControl]="nombreF" [(ngModel)]="filtroNombre">
-                                <mat-icon id="iComidasL" matSuffix matTooltipClass="comidasL-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda de un platillo por su nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarTipoComidas()"
+                <form [formGroup]="BuscarTipoComidaForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Nombre del plato</mat-label>
+                            <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
+                                [formControl]="nombreF" [(ngModel)]="filtroNombre">
+                            <mat-icon id="iComidasL" matSuffix matTooltipClass="comidasL-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda de un platillo por su nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <input type="submit" class="btn btn-sm button" (click)="AbrirVentanaRegistrarTipoComidas()"
                         value="Crear nuevo Tipo de Comida">
-                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                </mat-card-actions>
+                    <input type="submit" class="btn btn-sm button" (click)="LimpiarCampos()" value="Cancelar">
+                </div>
             </mat-card>
         </div>
         <div class="col-md">
@@ -66,12 +64,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                    <tr                         *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
                         <td id="centrar">{{comida.nombre}}</td>
                         <td id="fila">$ {{comida.valor}}</td>
                         <td id="centrar">{{comida.observacion}}</td>
-                        <td class="d-flex justify-content-center">
+                        <td class="d-flex justify-content-center align-self-center">
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
                                 matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
                                 matTooltip="Editar los datos generales de este registro">

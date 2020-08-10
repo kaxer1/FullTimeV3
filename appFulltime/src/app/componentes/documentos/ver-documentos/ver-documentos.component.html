@@ -7,27 +7,25 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="buscarDocumentoForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Nombre</mat-label>
-                                <input matInput name="filtroNombreDocumento" placeholder="Nombre Documento"
-                                    [formControl]="nombreDocF" [(ngModel)]="filtroNombreDocumento">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del documento por el nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="nombreDocF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions style="text-align: center">
+                <form [formGroup]="buscarDocumentoForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput name="filtroNombreDocumento" placeholder="Nombre Documento"
+                                [formControl]="nombreDocF" [(ngModel)]="filtroNombreDocumento">
+                            <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del documento por el nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nombreDocF.invalid">Indispensable ingresar dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrar()">Subir
                         Documento</button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
     </div>
@@ -47,7 +45,7 @@
                 <tbody>
                     <tr *ngFor="let ld of listaDocumentos | filtrarNombreDocu: filtroNombreDocumento | paginate:tamanio_pagina:numero_pagina">
                         <td>{{ld.doc_nombre}}</td>
-                        <td class="d-flex justify-content-center">                        
+                        <td>                        
                             <a class="fas fa-file-alt"
                                 style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
                                 matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"

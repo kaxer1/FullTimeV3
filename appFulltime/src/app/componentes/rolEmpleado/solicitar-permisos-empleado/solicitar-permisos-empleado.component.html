@@ -46,7 +46,7 @@
                         <p>{{pt.docu_nombre}}</p>
                     </a>
                 </div>
-                <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
+                <!-- <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
                     <i class="far fa-window-close" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
                         matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                         matTooltip="Puede cancelar la solicitud antes de que cambien el estado">
@@ -57,9 +57,21 @@
                         matTooltip="Modificar los datos generales de este registro">
                         <p>Editar</p>
                     </i>
-                </div>
+                </div> -->
             </div>
-            <mat-divider style="margin-bottom: 10px;"></mat-divider>
+            <div style="text-align: right;" *ngIf="pt.estado === 'Pendiente'">
+                <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
+                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltip="Modificar los datos generales de este registro">
+                    <p>Editar</p>
+                </i>
+                <i class="fas fa-backspace" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
+                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltip="Cancelar solicitud de permiso">
+                    <p>Cancelar</p>
+                </i>
+            </div>
+            <mat-divider></mat-divider>
         </div>
         <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
             [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"

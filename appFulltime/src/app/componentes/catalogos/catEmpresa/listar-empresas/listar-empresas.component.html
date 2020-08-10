@@ -6,38 +6,35 @@
         <div style="text-align: center;">
             <h5 style="text-align: center;">Criterios de Búsqueda</h5>
         </div>
-        <mat-card-content>
-            <form [formGroup]="BuscarEmpresaForm">
-                <div class="d-flex flex-wrap justify-content-center">
-                    <mat-form-field>
-                        <mat-label>Nombre</mat-label>
-                        <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
-                            [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
-                        <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
-                        <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                            matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field>
-                        <mat-label>RUC</mat-label>
-                        <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa" maxlength="13"
-                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                            (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
-                            [(ngModel)]="filtroRucEmpresa">
-                        <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
-                        <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                            matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
-                            help_outline</mat-icon>
-                    </mat-form-field>
-                </div>
-            </form>
-        </mat-card-content>
-        <mat-card-actions class="d-flex justify-content-center">
+        <form [formGroup]="BuscarEmpresaForm">
+            <div class="d-flex flex-wrap justify-content-center">
+                <mat-form-field>
+                    <mat-label>Nombre</mat-label>
+                    <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
+                        [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
+                    <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
+                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                        matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
+                        help_outline</mat-icon>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>RUC</mat-label>
+                    <input matInput name="filtroRucEmpresa" placeholder="RUC de Empresa" maxlength="13"
+                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
+                        [(ngModel)]="filtroRucEmpresa">
+                    <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
+                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
+                        matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
+                        help_outline</mat-icon>
+                </mat-form-field>
+            </div>
+        </form>
+        <div class="d-flex flex-wrap justify-content-center">
             <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarEmpresa()">Crear nueva
                 Empresa</button>
             <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampoBuscar()">Cancelar</button>
-        </mat-card-actions>
+        </div>
     </mat-card>
 </div>
 

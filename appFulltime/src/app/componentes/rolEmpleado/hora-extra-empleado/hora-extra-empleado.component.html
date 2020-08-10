@@ -39,18 +39,18 @@
                     <label id="datosF">Fecha Final:</label>
                     <label>{{h.fec_final.split("T")[0]}}</label>
                 </div>
-                <div class="caja1 align-self-center" *ngIf="h.estado === 'Pendiente'">
-                    <i class="far fa-window-close" id="cancel" (click)="CancelarHoraExtra(h)" matSuffix
-                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                        matTooltip="Puede cancelar la solicitud antes de que cambien el estado">
-                        <p>Cancelar</p>
-                    </i>
-                    <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix
-                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                        matTooltip="Modificar los datos generales de este registro">
-                        <p>Editar</p>
-                    </i>
-                </div>
+            </div>
+            <div style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
+                <i class="fas fa-edit" id="edit" (click)="EditarHoraExtra(h)" matSuffix matTooltipPosition="right"
+                    matTooltipClass="departamento-tooltip"
+                    matTooltip="Modificar los datos generales de este registro">
+                    <p>Editar</p>
+                </i>
+                <i class="fas fa-backspace" id="cancel" (click)="CancelarHoraExtra(h)" matSuffix
+                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltip="Cancelar solicitud de horas extras">
+                    <p>Cancelar</p>
+                </i>
             </div>
             <mat-divider></mat-divider>
         </div>

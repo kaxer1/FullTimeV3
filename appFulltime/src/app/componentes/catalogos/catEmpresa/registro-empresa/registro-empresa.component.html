@@ -1,13 +1,12 @@
-<mat-icon id="movilidad">open_with</mat-icon>
-<div class="tituloEmpresaR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Empresa</span>
+<div class="d-flex bd-highlight tituloEmpresaR">
+    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
+    <h5 class="w-100 bd-highlight align-self-center">Registrar Empresa</h5>
 </div>
 <form [formGroup]="RegistroEmpresaForm">
     <mat-card-content>
         <div class="container" style="text-align: center">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                    Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
             </div>
             <div class="row">
                 <div class="col">
@@ -129,8 +128,8 @@
         </div>
     </mat-card-content>
 </form>
-<mat-card-actions style="text-align: center">
-    <input type="submit" class="btn btn-sm" [disabled]="!RegistroEmpresaForm.valid" value="Guardar"
+<div class="d-flex flex-wrap justify-content-center">
+    <input type="submit" class="btn btn-sm button" [disabled]="!RegistroEmpresaForm.valid" value="Guardar"
         (click)="InsertarEmpresa(RegistroEmpresaForm.value)">
-    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroEmpresa()" value="Salir">
-</mat-card-actions>
+    <input type="submit" class="btn btn-sm button" (click)="CerrarVentanaRegistroEmpresa()" value="Salir">
+</div>

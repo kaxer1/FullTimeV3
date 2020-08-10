@@ -4,7 +4,7 @@ h5 { text-align: center; }
 
 p { font-size: x-small; }
 
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { margin: 5px 10px 5px 10px; background-color: rgb(80,87,97); color: white; } 
 
 .fas { color:green; margin-left: 20px; cursor: pointer; }
 

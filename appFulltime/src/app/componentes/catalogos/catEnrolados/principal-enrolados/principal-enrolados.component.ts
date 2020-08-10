@@ -100,7 +100,7 @@ export class PrincipalEnroladosComponent implements OnInit {
 
   AbrirVentanaAsignarReloj(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '600px', data: { datosEnrolado: datosSeleccionados, actualizar: false } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EnroladoRelojComponent, { width: '400px', data: { datosEnrolado: datosSeleccionados, actualizar: false } }).disableClose = true;
     console.log(datosSeleccionados.nombre);
   }
 

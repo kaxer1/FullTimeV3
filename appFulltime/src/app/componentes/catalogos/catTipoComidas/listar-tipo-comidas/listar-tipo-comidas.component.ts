@@ -85,13 +85,16 @@ export class ListarTipoComidasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTipoComidas(): void {
-    this.vistaRegistrarDatos.open(TipoComidasComponent, { width: '350px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(TipoComidasComponent, { width: '350px' }).afterClosed().subscribe(items => {
+      this.ObtenerTipoComidas();
+    });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarTipoComidasComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
-    //console.log(datosSeleccionados.fecha);
+    this.vistaRegistrarDatos.open(EditarTipoComidasComponent, { width: '350px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.ObtenerTipoComidas();
+    });
   }
 
   LimpiarCampos() {

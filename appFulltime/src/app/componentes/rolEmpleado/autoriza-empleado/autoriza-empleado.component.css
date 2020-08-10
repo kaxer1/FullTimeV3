@@ -6,4 +6,6 @@
     padding-bottom: 6px; 
 }
 
-#datosF { font-weight: bold; font-size: 16px; }
+#datosF { font-weight: bold; font-size: 15px; padding-right: 5px; }
+
+.caja1 {padding: 0px 10px 0px 10px; width: 250px; }

@@ -62,7 +62,7 @@
                     (click)="AbrirVentanaVacaciones()">Añadir</button>
             </div>
         </div>
-        <div *ngFor="let v of vacaciones" style="padding-top: 15px;">
+        <div *ngFor="let v of vacaciones | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
             <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Codigo:</label>
@@ -81,10 +81,6 @@
                     <label>{{v.fec_ingreso.split("T")[0]}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">Estado:</label>
-                    <label>{{v.estado}}</label>
-                </div>
-                <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Días Laborables:</label>
                     <label>{{v.dia_laborable}}</label>
                 </div>
@@ -97,18 +93,22 @@
                     <label *ngIf="v.legalizado == true">Sí</label>
                     <label *ngIf="v.legalizado == false">No</label>
                 </div>
-                <div class="caja1 align-self-center" *ngIf="v.estado === 'Solicitado'">
-                    <i class="far fa-window-close" id="cancel" (click)="CancelarVacaciones(v)" matSuffix
-                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                        matTooltip="Puede cancelar la solicitud antes de que cambien el estado">
-                        <p>Cancelar</p>
-                    </i>
-                    <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
-                        matTooltipClass="departamento-tooltip"
-                        matTooltip="Modificar los datos generales de este registro">
-                        <p>Editar</p>
-                    </i>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Estado:</label>
+                    <label>{{v.estado}}</label>
                 </div>
+            </div>
+            <div class="float-right" *ngIf="v.estado === 'Solicitado'">
+                <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
+                    matTooltipClass="departamento-tooltip"
+                    matTooltip="Modificar los datos generales de este registro">
+                    <p>Editar</p>
+                </i>
+                <i class="fas fa-backspace" id="cancel" (click)="CancelarVacaciones(v)" matSuffix
+                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltip="Cancelar solicitud de vacaciones">
+                    <p>Cancelar</p>
+                </i>
             </div>
             <mat-divider></mat-divider>
         </div>
