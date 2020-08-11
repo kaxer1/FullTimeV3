@@ -724,13 +724,13 @@
 
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <mat-card class="mat-elevation-z8">
-                <div class="barraTitulo">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col" style="text-align: center;">
-                                <h5>Periodo de Vacaciones</h5>
-                            </div>
-                        </div>
+                <div class="d-flex bd-highlight barraTitulo">
+                    <div class="w-100 bd-highlight">
+                        <h5>Periodo de Vacaciones</h5>
+                    </div>
+                    <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
+                        <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;"
+                            (click)="AbrirVentanaPerVacaciones()">Añadir</button>
                     </div>
                 </div>
                 <mat-card-content>
@@ -779,6 +779,13 @@
                             </div>
                             <div class="caja1 d-flex justify-content-start">
                             </div>
+                        </div>
+                        <div style="text-align: right; margin-right: 1px;">
+                            <i (click)="AbrirEditarPeriodoVacaciones(p)" class="fas fa-edit" id="edit" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
                         </div>
                         <mat-divider></mat-divider>
                     </div>
@@ -897,14 +904,13 @@
                                         <p>Detalle</p>
                                     </i>
                                     <i *ngFor="let e of empleadoUno" matSuffix matTooltipClass="listaF-tooltip"
-                                        matTooltipPosition="right"
-                                        matTooltip="Ver datos generales de la planificación" class="fas fa-eye"
-                                        id="ver" [routerLink]="['/verDetalles/', h.id, e.id]">
+                                        matTooltipPosition="right" matTooltip="Ver datos generales de la planificación"
+                                        class="fas fa-eye" id="ver" [routerLink]="['/verDetalles/', h.id, e.id]">
                                         <p>Ver</p>
                                     </i>
                                     <i class="fas fa-edit" style="color:green; margin-left: 15px;"
-                                        (click)="AbrirEditarPlanificacion(h)" matSuffix
-                                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        (click)="AbrirEditarPlanificacion(h)" matSuffix matTooltipPosition="right"
+                                        matTooltipClass="departamento-tooltip"
                                         matTooltip="Modificar los datos generales de este registro">
                                         <p>Editar</p>
                                     </i>
@@ -920,8 +926,7 @@
                     </table>
                 </div>
                 <mat-paginator [length]="planHorario.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                    showFirstLastButtons>
+                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
                 </mat-paginator>
             </mat-card>
         </div>
@@ -944,8 +949,7 @@
                             (click)="AbrirVentanaPlanificacion()">{{btnTitulo}}</button>
                     </div>
                 </div>
-                <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina"
-                    style="padding-top: 15px;">
+                <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
                     <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Fecha de Solicitud:</label>
@@ -993,8 +997,7 @@
                     <mat-divider></mat-divider>
                 </div>
                 <mat-paginator [length]="planComidas.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-                    showFirstLastButtons>
+                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
                 </mat-paginator>
             </mat-card>
         </div>
@@ -1019,7 +1022,8 @@
                                     (click)="AbrirVentanaPermiso()">{{btnTitulo}}</button>
                             </div>
                         </div>
-                        <div *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
+                        <div *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina"
+                            style="padding-top: 15px;">
                             <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">N° Permiso:</label>
@@ -1060,9 +1064,8 @@
                                 </div>
                             </div>
                             <div style="text-align: right;" *ngIf="pt.estado === 'Pendiente'">
-                                <i class="fas fa-edit" id="edit" style="margin-right: 20px;"
-                                    (click)="EditarPermiso(pt)" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
+                                <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarPermiso(pt)"
+                                    matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
                                 </i>
@@ -1139,9 +1142,8 @@
                                 </div>
                             </div>
                             <div style="text-align: right;" *ngIf="h.estado === 'Pendiente'">
-                                <i class="fas fa-edit" id="edit" style="margin-right: 20px"
-                                    (click)="EditarHoraExtra(h)" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
+                                <i class="fas fa-edit" id="edit" style="margin-right: 20px" (click)="EditarHoraExtra(h)"
+                                    matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                     matTooltip="Modificar los datos generales de este registro">
                                     <p>Editar</p>
                                 </i>
@@ -1178,6 +1180,10 @@
                                 <div class="row">
                                     <div class="col" style="text-align: center;">
                                         <h5>Autoridad</h5>
+                                    </div>
+                                    <div class="col" style="text-align: right;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaAutorizar()">Añadir</button>
                                     </div>
                                 </div>
                             </div>
