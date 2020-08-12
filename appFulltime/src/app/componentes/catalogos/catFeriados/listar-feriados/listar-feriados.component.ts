@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -15,6 +16,7 @@ import { RegistrarFeriadosComponent } from 'src/app/componentes/catalogos/catFer
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -56,6 +58,7 @@ export class ListarFeriadosComponent implements OnInit {
     public vistaRegistrarFeriado: MatDialog,
     public vistaAsignarCiudad: MatDialog,
     private toastr: ToastrService,
+    private router: Router,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -92,12 +95,16 @@ export class ListarFeriadosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarFeriado(): void {
-    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarFeriado.open(RegistrarFeriadosComponent, { width: '350px' }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.ObtenerFeriados();
+      }
+    });
   }
 
   AbrirVentanaEditarFeriado(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '400px', data: { datosFeriado: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarFeriado.open(EditarFeriadosComponent, { width: '350px', data: { datosFeriado: datosSeleccionados, actualizar: true } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
   }
 
@@ -105,6 +112,27 @@ export class ListarFeriadosComponent implements OnInit {
     console.log(datosSeleccionados);
     this.vistaAsignarCiudad.open(AsignarCiudadComponent, { width: '600px', data: { feriado: datosSeleccionados, actualizar: false } }).disableClose = true;
     console.log(datosSeleccionados.fecha);
+  }
+
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_feriado: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarFeriado(id_feriado).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerFeriados();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarFeriado.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/listarFeriados']);
+        }
+      });
   }
 
   LimpiarCampos() {
@@ -176,10 +204,10 @@ export class ListarFeriadosComponent implements OnInit {
       if (res.message === 'error') {
         this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla');
       }
-      else if(res.error === 'error'){
+      else if (res.error === 'error') {
         this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla');
       }
-      else if (res.message === 'correcto'){
+      else if (res.message === 'correcto') {
         this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
         //this.ObtenerFeriados();
         this.archivoForm.reset();
@@ -222,15 +250,15 @@ export class ListarFeriadosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

@@ -27,6 +27,17 @@ class RelojesControlador {
         }
     }
 
+    public async ListarDatosUnReloj(req: Request, res: Response): Promise<any> {
+        const { id } = req.params;
+        const RELOJES = await pool.query('SELECT * FROM NombreDispositivos WHERE id = $1', [id]);
+        if (RELOJES.rowCount > 0) {
+            return res.jsonp(RELOJES.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
     public async CrearRelojes(req: Request, res: Response): Promise<void> {
         const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento } = req.body;
         await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento]);
@@ -52,7 +63,7 @@ class RelojesControlador {
         plantilla.forEach(async (data: any) => {
 
             const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tiene_funciones, sucursal, departamento } = data;
-            
+
             const id_sucursal = await pool.query('SELECT id FROM sucursales WHERE nombre = $1', [sucursal]);
 
             const id_departamento = await pool.query('SELECT id FROM cg_departamentos WHERE nombre = $1 AND id_sucursal = $2', [departamento, id_sucursal.rows[0]['id']]);
@@ -85,6 +96,12 @@ class RelojesControlador {
         const name = req.params.nameXML;
         let filePath = `servidor\\xmlDownload\\${name}`
         res.sendFile(__dirname.split("servidor")[0] + filePath);
+    }
+
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM cg_relojes WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
     }
 
 }

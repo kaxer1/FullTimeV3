@@ -151,6 +151,12 @@ class HorarioControlador {
     res.jsonp({ message: 'Tipo Permiso Actualizado' });
   }
 
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_horarios WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
+
 }
 
 export const HORARIO_CONTROLADOR = new HorarioControlador();

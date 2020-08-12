@@ -24,7 +24,6 @@ import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHora
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
 
-import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
@@ -178,13 +177,12 @@ export class DatosEmpleadoComponent implements OnInit {
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
-    this.restEmpleado.BuscarIDContratoActual(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      this.restCargo.getInfoCargoEmpleadoRest(this.idContrato[0].max).subscribe(datos => {
-        this.cargosTotalesEmpleado = datos;
-      }, error => {
-        this.toastr.info('Debe registrar un cargo para el nuevo contrato registrado', 'REVISAR CARGO');
-      });
+    this.restCargo.BuscarIDCargoActual(id_empleado).subscribe(datos => {
+      this.cargosTotalesEmpleado = datos;
+      let cargoIdActual = this.cargosTotalesEmpleado[0].max;
+      this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
+        this.cargoEmpleado = datos;
+      }, error => { });
     });
   }
 
@@ -388,14 +386,6 @@ export class DatosEmpleadoComponent implements OnInit {
   CambiarContrasena(): void {
     console.log(this.idEmpleado);
     this.vistaRegistrarDatos.open(CambiarContrasenaComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
-  }
-
-  /* Ventana para ingresar planificación de comidas */
-  AbrirVentanaPlanificacion(): void {
-    console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado }).afterClosed().subscribe(item => {
-      this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
-    });
   }
 
   /* Ventana para registrar vacaciones del empleado */

@@ -71,6 +71,9 @@ export class EditarTipoPermisosComponent implements OnInit {
   segundoFormGroup: FormGroup;
   terceroFormGroup: FormGroup;
 
+  estiloJustifica: any;
+  HabilitarJustifica: boolean = true;
+
   constructor(
     private rest: TipoPermisosService,
     private toastr: ToastrService,
@@ -134,7 +137,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       numHoraMaximoForm: this.tipoPermiso.num_hora_maximo,
       almuIncluirForm: this.tipoPermiso.almu_incluir,
     });
-    this.segundoFormGroup.setValue({
+    this.segundoFormGroup.patchValue({
       vacaAfectaForm: this.tipoPermiso.vaca_afecta,
       anioAcumulaForm: this.tipoPermiso.anio_acumula,
       correoForm: this.tipoPermiso.correo,
@@ -142,7 +145,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       eliminarForm: this.tipoPermiso.eliminar,
       tipoDescuentoForm: this.tipoPermiso.tipo_descuento
     });
-    this.terceroFormGroup.setValue({
+    this.terceroFormGroup.patchValue({
       autorizarForm: this.tipoPermiso.autorizar,
       legalizarForm: this.tipoPermiso.legalizar,
       preautorizarForm: this.tipoPermiso.preautorizar,
@@ -176,7 +179,6 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ nombreForm: '' });
       this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
     }
-
   }
 
   ActivarDesactivarNombreSet(nombreTipoPermiso) {
@@ -237,12 +239,12 @@ export class EditarTipoPermisosComponent implements OnInit {
   estiloJustificacion: any;
   ActivarJustificacionSet(generarJustificacion: boolean) {
     if (generarJustificacion === true) {
-      this.estiloJustificacion = { 'visibility': 'visible' }; this.HabilitarJustificacion = false;
+      this.estiloJustificacion = { 'visibility': 'visible' }; this.HabilitarJustificacion = true;
       this.terceroFormGroup.patchValue({
         numDiaJustificaForm: this.tipoPermiso.num_dia_justifica
       });
     } else if (generarJustificacion === false) {
-      this.estiloJustificacion = { 'visibility': 'hidden' }; this.HabilitarJustificacion = true;
+      this.estiloJustificacion = { 'visibility': 'hidden' }; this.HabilitarJustificacion = false;
       this.terceroFormGroup.patchValue({
         numDiaJustificaForm: 0
       });
@@ -327,13 +329,27 @@ export class EditarTipoPermisosComponent implements OnInit {
       console.log(res);
       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
       this.dialogRef.close();
-      window.location.reload();
     }, error => {
     });
   }
 
   CerrarVentanaEditarTipoPermiso() {
     this.dialogRef.close();
-    //window.location.reload();
+  }
+
+  ActivarJustificacion() {
+    if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
+      this.estiloJustifica = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
+      this.toastr.info('Ingresar número de días para presentar justificación')
+    }
+  }
+
+  DesactivarJustificacion() {
+    if ((<HTMLInputElement>document.getElementById('no')).value = 'false') {
+      this.estiloJustifica = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
+      this.terceroFormGroup.patchValue({
+        numDiaJustificaForm: '',
+      })
+    }
   }
 }

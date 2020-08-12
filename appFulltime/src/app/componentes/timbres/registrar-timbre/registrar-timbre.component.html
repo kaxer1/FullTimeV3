@@ -7,83 +7,69 @@
             <div class="container">
                 <br>
                 <div class="nota">
-                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                        Guardar.</span>
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <mat-form-field>
-                            <mat-label>Empleado</mat-label>
-                            <input matInput [formControl]="nombreEmpleadoF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Nombre del empleado que realizó el timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Fecha y Hora</mat-label>
-                            <input matInput [matDatepicker]="picker1" [formControl]="fechaHoraF" required
-                                [disabled]="true">
-                            <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
-                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
-                                matTooltip="Fecha y hora en la que se realizo el timbre en el dispositivo">
-                            </mat-datepicker-toggle>
-                            <mat-datepicker touchUi #picker1></mat-datepicker>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Dispositivo</mat-label>
-                            <input matInput [formControl]="dispositivoF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Indica el dispositivo desde el cual se realizo el timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Acción</mat-label>
-                            <input matInput [formControl]="accionF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Acción con la que se realizó el timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Tecla de Función</mat-label>
-                            <input matInput [formControl]="teclaFuncionF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Indica la tecla de función usada para este timbre">
-                                help_outline</mat-icon>
+                <div class="d-flex flex-wrap justify-content-between">
+                    <mat-form-field>
+                        <mat-label>Empleado</mat-label>
+                        <input matInput [formControl]="nombreEmpleadoF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Nombre del empleado que realizó el timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Fecha y Hora</mat-label>
+                        <input matInput [matDatepicker]="picker1" [formControl]="fechaHoraF" required
+                            [disabled]="true">
+                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
+                            matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                            matTooltip="Fecha y hora en la que se realizo el timbre en el dispositivo">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Dispositivo</mat-label>
+                        <input matInput [formControl]="dispositivoF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Indica el dispositivo desde el cual se realizo el timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Acción</mat-label>
+                        <input matInput [formControl]="accionF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Acción con la que se realizó el timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Tecla de Función</mat-label>
+                        <input matInput [formControl]="teclaFuncionF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Indica la tecla de función usada para este timbre">
+                            help_outline</mat-icon>
 
-                        </mat-form-field>
-                    </div>
-                    <div class="col">
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Latitud</mat-label>
-                            <input matInput [formControl]="latitudF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Indica la latitud del sitio desde el cual se realizó el respectivo timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Longitud</mat-label>
-                            <input matInput [formControl]="longitudF" readonly>
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Indica la longitud del sitio desde el cual se realizó el respectivo timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
-                            <mat-label>Observación</mat-label>
-                            <input matInput [formControl]="observacionF">
-                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                matTooltip="Ingresar una nota que indique el motivo del timbre">
-                                help_outline</mat-icon>
-                        </mat-form-field>
-                    </div>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Latitud</mat-label>
+                        <input matInput [formControl]="latitudF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Indica la latitud del sitio desde el cual se realizó el respectivo timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Longitud</mat-label>
+                        <input matInput [formControl]="longitudF" readonly>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Indica la longitud del sitio desde el cual se realizó el respectivo timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Observación</mat-label>
+                        <input matInput [formControl]="observacionF">
+                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar una nota que indique el motivo del timbre">
+                            help_outline</mat-icon>
+                    </mat-form-field>
                 </div>
             </div>
         </form>

@@ -38,6 +38,12 @@ class RolesControlador {
     res.jsonp({ message: 'Registro Actualizado' });
   }
 
+  public async EliminarRol(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_roles WHERE id = $1', [id]);
+      res.jsonp({ message: 'Registro eliminado' });
+  }
+
   // public async update(req: Request, res: Response): Promise<void> {
   //   const { id } = req.params;
   //   const { descripcion, usuarios } = req.body;

@@ -68,6 +68,20 @@ class PlanHorarioControlador {
             }
         });
     }
+    ActualizarPlanHorario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_cargo, fec_inicio, fec_final, id } = req.body;
+            yield database_1.default.query('UPDATE plan_horarios SET id_cargo = $1, fec_inicio = $2, fec_final = $3 WHERE id = $4', [id_cargo, fec_inicio, fec_final, id]);
+            res.jsonp({ message: 'Plan Horario Registrado' });
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM plan_horarios WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.PLAN_HORARIO_CONTROLADOR = new PlanHorarioControlador();
 exports.default = exports.PLAN_HORARIO_CONTROLADOR;

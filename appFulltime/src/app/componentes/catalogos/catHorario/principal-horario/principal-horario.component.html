@@ -1,33 +1,30 @@
 <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
     <div class="row">
-        <div class="col-sm">
-            <!--  <br><br><br><br> -->
+        <div class="col-sm" style="margin-bottom: 25px;">
             <div class="tituloHorarioL">
                 <span>HORARIOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="buscarHorarioForm">
-                    <mat-card-content>
-                        <div class="container" style="text-align: center">
-                            <mat-form-field>
-                                <mat-label>Nombre</mat-label>
-                                <input matInput name="filtroNombreHorario" placeholder="Nombre Horario"
-                                    [formControl]="nombreHorarioF" [(ngModel)]="filtroNombreHorario">
-                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda de horario por el nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="nombreHorarioF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </mat-card-content>
+                    <div class="container" style="text-align: center">
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput name="filtroNombreHorario" placeholder="Nombre Horario"
+                                [formControl]="nombreHorarioF" [(ngModel)]="filtroNombreHorario">
+                            <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip" matTooltipPosition="right"
+                                matTooltip="Búsqueda de horario por el nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="nombreHorarioF.invalid">Indispensable ingresar dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
                 </form>
-                <mat-card-actions style="text-align: center">
+                <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarHorario()">Crear
                         nuevo Horario</button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
         <div class="col-md">
@@ -36,116 +33,106 @@
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
                 <p id="lista">- Horarios</p>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md" style="width: 600px;">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChangeCatalogoHorario($event)" type="file"
-                                    [formControl]="archivo1Form" id="file1"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios">Cargar
-                                    Horarios</label>
-                            </form>
-                        </div>
-                        <div class="col-md">
-                            <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
-                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                                href="http://192.168.0.192:3001/plantillaD/documento/Catalogo Horarios.xlsx">
-                                <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
-                            </a>
-                        </div>
-                    </div>
+                <div class="d-flex flex-wrap justify-content-around" style="margin-right: 5%;">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangeCatalogoHorario($event)" type="file" [formControl]="archivo1Form"
+                            id="file1"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file1" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Catalogo Horarios">Cargar
+                            Horarios</label>
+                    </form>
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://192.168.0.192:3001/plantillaD/documento/Catalogo Horarios.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
+                    </a>
                 </div>
                 <p id="lista">- Detalles de Horarios</p>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md" style="width: 600px;">
-                            <form method="post" enctype="multipart/form-data">
-                                <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form"
-                                    id="file2"
-                                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                                <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios">Cargar
-                                    Detalles</label>
-                            </form>
-                        </div>
-                        <div class="col-md">
-                            <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix
-                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                                href="http://192.168.0.192:3001/plantillaD/documento/Detalles Horarios.xlsx">
-                                <span class="material-icons">cloud_download</span> Descargar Plantilla Detalles
-                            </a>
-                        </div>
-                    </div>
+                <div class="d-flex flex-wrap justify-content-around" style="margin-right: 5%;">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form" id="file2"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file2" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre Detalles Horarios">Cargar
+                            Detalles</label>
+                    </form>
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://192.168.0.192:3001/plantillaD/documento/Detalles Horarios.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Detalles
+                    </a>
                 </div>
             </mat-card>
         </div>
     </div>
 </div>
 <br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
-    <div id="resulHorario">Resultado de búsqueda</div>
-    <mat-card class="mat-elevation-z8">
-        <table class="table table-hover table-sm ">
-            <thead class="thead-light">
-                <tr style="text-align: center;">
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Minutos de almuerzo</th>
-                    <th scope="col">Horas de trabajo</th>
-                    <th scope="col">Flexible</th>
-                    <th scope="col">Por horas</th>
-                    <th scope="col">Documento</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let horario of horarios | filtrosNombres: filtroNombreHorario | paginate:tamanio_pagina:numero_pagina">
-                    <td>{{horario.nombre}}</td>
-                    <td>{{horario.min_almuerzo}}</td>
-                    <td>{{horario.hora_trabajo}}</td>
-                    <td *ngIf="horario.flexible == true">Sí</td>
-                    <td *ngIf="horario.flexible == false">No</td>
-                    <td *ngIf="horario.por_horas == true">Sí</td>
-                    <td *ngIf="horario.por_horas == false">No</td>
-                    <td *ngIf="horario.doc_nombre == '' || horario.doc_nombre == null"></td>
-                    <td *ngIf="horario.doc_nombre != '' && horario.doc_nombre != null"> <a class="fas fa-file-alt"
-                            style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
-                            matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
-                            href="http://192.168.0.192:3001/horario/documentos/{{horario.documento}}" target="_blank">
-                            <p>{{horario.doc_nombre}}</p>
-                        </a></td>
-                    <td>
-                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                            matTooltip="Agregar Detalles de Horario" class="far fa-list-alt"
-                            id="detalleH" (click)="AbrirRegistraDetalle(horario)">
-                            <p>Detalle</p>
-                        </i>
-                        <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                            matTooltip="Ver datos generales de este horario" class="fas fa-eye" id="ver"
-                            [routerLink]="['/verHorario/', horario.id]">
-                            <p>Ver</p>
-                        </i>
-                        <i class="fas fa-edit" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip" (click)="AbrirVentanaEditarHorario(horario)"
-                            matTooltip="Modificar los datos generales de este registro">
-                            <p>Editar</p>
-                        </i>
-                        <i class="far fa-trash-alt" matSuffix matTooltipPosition="right"
-                            matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
-                            <p>Eliminar</p>
-                        </i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulHorario">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm ">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Minutos de almuerzo</th>
+                        <th scope="col">Horas de trabajo</th>
+                        <th scope="col">Flexible</th>
+                        <th scope="col">Por horas</th>
+                        <th scope="col">Documento</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let horario of horarios | filtrosNombres: filtroNombreHorario | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{horario.nombre}}</td>
+                        <td>{{horario.min_almuerzo}}</td>
+                        <td>{{horario.hora_trabajo}}</td>
+                        <td *ngIf="horario.flexible == true">Sí</td>
+                        <td *ngIf="horario.flexible == false">No</td>
+                        <td *ngIf="horario.por_horas == true">Sí</td>
+                        <td *ngIf="horario.por_horas == false">No</td>
+                        <td *ngIf="horario.doc_nombre == '' || horario.doc_nombre == null"></td>
+                        <td *ngIf="horario.doc_nombre != '' && horario.doc_nombre != null"> <a class="fas fa-file-alt"
+                                style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix
+                                matTooltipPosition="right" matTooltip="Dar click para ver o descargar el documento"
+                                href="http://192.168.0.192:3001/horario/documentos/{{horario.documento}}" target="_blank">
+                                <p>{{horario.doc_nombre}}</p>
+                            </a></td>
+                        <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Agregar Detalles de Horario" class="far fa-list-alt" id="detalleH"
+                                (click)="AbrirRegistraDetalle(horario)">
+                                <p>Detalle</p>
+                            </i>
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este horario" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verHorario/', horario.id]">
+                                <p>Ver</p>
+                            </i>
+                            <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip" (click)="AbrirVentanaEditarHorario(horario)"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i (click)="ConfirmarDelete(horario)" class="far fa-trash-alt" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <mat-paginator [length]="horarios.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-        <div style="text-align: right;">
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Horarios en formato PDF">
                 <p>PDF</p>
@@ -163,5 +150,5 @@
                 <p>XML</p>
             </i>
         </div>
-    </mat-card>
+    </div>
 </div>

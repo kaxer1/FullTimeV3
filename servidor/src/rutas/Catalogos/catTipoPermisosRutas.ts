@@ -16,6 +16,7 @@ class TipoPermisosRutas {
         this.router.post('/xmlDownload/', TIPO_PERMISOS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', TIPO_PERMISOS_CONTROLADOR.downloadXML);
         this.router.get('/acceso/:acce_empleado', TIPO_PERMISOS_CONTROLADOR.listAccess);
+        this.router.delete('/eliminar/:id', TIPO_PERMISOS_CONTROLADOR.EliminarRegistros);
     }
 }
 

@@ -15,7 +15,7 @@ class RegimenRuta {
         this.router.get('/:id', catRegimenControlador_1.default.ListarUnRegimen);
         this.router.post('/', catRegimenControlador_1.default.CrearRegimen);
         this.router.put('/', catRegimenControlador_1.default.ActualizarRegimen);
-        // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.delete('/eliminar/:id', catRegimenControlador_1.default.EliminarRegistros);
         this.router.post('/xmlDownload/', catRegimenControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catRegimenControlador_1.default.downloadXML);
     }

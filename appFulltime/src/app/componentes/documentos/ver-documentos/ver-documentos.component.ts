@@ -3,10 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { DocumentosService } from 'src/app/servicios/documentos/documentos.service';
 import { EditarDocumentoComponent } from 'src/app/componentes/documentos/editar-documento/editar-documento.component'
 import { SubirDocumentoComponent } from 'src/app/componentes/documentos/subir-documento/subir-documento.component'
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-ver-documentos',
@@ -38,6 +40,7 @@ export class VerDocumentosComponent implements OnInit {
   constructor(
     private rest: DocumentosService,
     private toastr: ToastrService,
+    public router: Router,
     public vistaRegistrarDatos: MatDialog,
   ) { }
 
@@ -77,5 +80,26 @@ export class VerDocumentosComponent implements OnInit {
         this.ObtenerDocumentacion();
       });
   }
+
+    /** Función para eliminar registro seleccionado Planificación*/
+    EliminarDocumento(id_detalle: number) {
+      this.rest.EliminarRegistro(id_detalle).subscribe(res => {
+        this.toastr.error('Registro eliminado');
+        this.ObtenerDocumentacion();
+      });
+    }
+  
+    /** Función para confirmar si se elimina o no un registro */
+    ConfirmarDelete(datos: any) {
+      console.log(datos);
+      this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+        .subscribe((confirmado: Boolean) => {
+          if (confirmado) {
+            this.EliminarDocumento(datos.id);
+          } else {
+            this.router.navigate(['/archivos/']);
+          }
+        });
+    }
 
 }

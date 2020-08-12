@@ -6,6 +6,7 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { ToastrService } from 'ngx-toastr';
 import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-editar-cargo',
@@ -47,6 +48,7 @@ export class EditarCargoComponent implements OnInit {
     private restEmplCargos: EmplCargosService,
     private restSucursales: SucursalService,
     private restE: EmpresaService,
+    private restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     private verEmpleado: VerEmpleadoComponent,
   ) { }
@@ -65,7 +67,7 @@ export class EditarCargoComponent implements OnInit {
         this.FiltrarSucursalesSet(obj.id_empresa);
         this.ObtenerDepartamentosSet(obj.id_sucursal);
         console.log(obj);
-        this.nuevoEmplCargosForm.setValue({
+        this.nuevoEmplCargosForm.patchValue({
           idDeparForm: obj.id_departamento,
           fecInicioForm: obj.fec_inicio,
           fecFinalForm: obj.fec_final,
@@ -78,6 +80,8 @@ export class EditarCargoComponent implements OnInit {
       });
     })
   }
+
+
 
   BuscarEmpresas() {
     this.empresas = [];
@@ -140,6 +144,28 @@ export class EditarCargoComponent implements OnInit {
       this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
       return false;
     }
+  }
+
+  ValidarDatosRegistro(form) {
+      console.log('id contrato', this.cargo[0].id_empl_contrato);
+      let datosBusqueda = {
+        id_contrato: this.id_empl_contrato
+      }
+      this.restEmpleado.BuscarFechaIdContrato(datosBusqueda).subscribe(response => {
+        console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fecInicioForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
+        if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fecInicioForm)) {
+          if (Date.parse(form.fecInicioForm) < Date.parse(form.fecFinalForm)) {
+            this.ActualizarEmpleadoCargo(form);
+          }
+          else {
+            this.toastr.info('La fecha de finalización de actividades debe ser posterior a la fecha de inicio de actividades')
+          }
+        }
+        else {
+          this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+        }
+      }, error => { });
+
   }
 
   ActualizarEmpleadoCargo(form) {

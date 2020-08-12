@@ -19,7 +19,7 @@ class TipoComidasRuta {
         this.router.get('/:id', catTipoComidasControlador_1.default.ListarUnTipoComida);
         this.router.post('/', catTipoComidasControlador_1.default.CrearTipoComidas);
         this.router.put('/', catTipoComidasControlador_1.default.ActualizarComida);
-        // this.router.delete('/:id', pruebaControlador.delete);
+        this.router.delete('/eliminar/:id', catTipoComidasControlador_1.default.EliminarRegistros);
         this.router.post('/xmlDownload/', catTipoComidasControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catTipoComidasControlador_1.default.downloadXML);
         this.router.post('/upload', multipartMiddleware, catTipoComidasControlador_1.default.CrearTipoComidasPlantilla);

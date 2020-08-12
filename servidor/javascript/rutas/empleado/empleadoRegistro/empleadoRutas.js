@@ -33,6 +33,9 @@ class EmpleadoRutas {
         this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargaPlantillaEmpleadoUsuario);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', this.verifyToken, empleadoControlador_1.default.eliminarTituloDelEmpleado);
         this.router.post('/buscarDepartamento', empleadoControlador_1.default.ObtenerDepartamentoEmpleado);
+        this.router.get('/encontrarDato/codigo', empleadoControlador_1.default.ObtenerCodigo);
+        this.router.post('/crearCodigo', empleadoControlador_1.default.CrearCodigo);
+        this.router.put('/cambiarCodigo', empleadoControlador_1.default.ActualizarCodigo);
     }
     verifyToken(req, res, next) {
         // verifica si en la peticion existe la cabecera autorizacion 

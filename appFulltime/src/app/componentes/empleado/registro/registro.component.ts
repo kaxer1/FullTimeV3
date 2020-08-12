@@ -53,6 +53,8 @@ export class RegistroComponent implements OnInit {
   ) { }
 
   date: any;
+  HabilitarDescrip: boolean = true;
+  estilo: any;
 
   ngOnInit(): void {
     this.cargarRoles();
@@ -84,6 +86,21 @@ export class RegistroComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
+
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      if (datos[0].cedula === false) {
+        this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
+        this.primeroFormGroup.patchValue({
+          codigoForm: parseInt(datos[0].valor) + 1
+        })
+      }
+      else {
+        this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
+      }
+    }, error => {
+      this.toastr.info('Primero configurar el código de empleado.');
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   private _filter(value: string): string[] {
@@ -179,37 +196,41 @@ export class RegistroComponent implements OnInit {
       codigo: form1.codigoForm
     };
 
-    console.log(dataEmpleado);
-    this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-      if (response.message === 'error') {
-        this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      if (datos[0].cedula === true) {
+        dataEmpleado.codigo = form1.cedulaForm;
+        console.log(dataEmpleado);
+        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
+          }
+          else {
+            this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+            this.empleadoGuardado = response;
+            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
+            this.limpliarCampos();
+          }
+        },
+          error => {
+            console.log(error);
+          });
       }
       else {
-        this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-        this.empleadoGuardado = response;
-        //Cifrado de contraseña
-        const md5 = new Md5();
-        let clave = md5.appendStr(form3.passForm).end();
-        console.log("pass", clave);
-
-        let dataUser = {
-          usuario: form3.userForm,
-          contrasena: clave,
-          estado: true,
-          id_rol: form3.rolForm,
-          id_empleado: this.empleadoGuardado.id,
-          app_habilita: true
-        }
-
-        this.user.postUsuarioRest(dataUser).subscribe(data => {
-          this.agregarDiscapacidad(this.empleadoGuardado.id);
-        });
-        this.limpliarCampos();
+        console.log(dataEmpleado);
+        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
+          }
+          else {
+            this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+            this.empleadoGuardado = response;
+            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
+            this.ActualizarCodigo(form1.codigoForm);
+            this.limpliarCampos();
+          }
+        }, error => { });
       }
-    },
-      error => {
-        console.log(error);
-      });
+    }, error => { });
   }
 
   agregarDiscapacidad(id: string) {
@@ -220,6 +241,33 @@ export class RegistroComponent implements OnInit {
     this.rest.getListaNacionalidades().subscribe(res => {
       this.nacionalidades = res;
     });
+  }
+
+  GuardarDatosUsuario(form3, id) {
+    //Cifrado de contraseña
+    const md5 = new Md5();
+    let clave = md5.appendStr(form3.passForm).end();
+    console.log("pass", clave);
+    let dataUser = {
+      usuario: form3.userForm,
+      contrasena: clave,
+      estado: true,
+      id_rol: form3.rolForm,
+      id_empleado: id,
+      app_habilita: true
+    }
+    this.user.postUsuarioRest(dataUser).subscribe(data => {
+      this.agregarDiscapacidad(id);
+    });
+  }
+
+  ActualizarCodigo(codigo) {
+    let dataCodigo = {
+      valor: codigo,
+      id: 1
+    }
+    this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
+    })
   }
 
 }

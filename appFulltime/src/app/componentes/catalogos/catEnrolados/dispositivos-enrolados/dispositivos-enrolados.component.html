@@ -44,8 +44,9 @@
                     </div>
                 </div>
                 <div style="text-align: right;">
-                    <i id="iconoEditar" (click)="AbrirVentanaEditar(dE)" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar dispositivo en el que esta enrolado el usuario" class="fas fa-edit">
+                    <i id="iconoEditar" (click)="AbrirVentanaEditar(dE)" matSuffix matTooltipClass="color-tooltip"
+                        matTooltipPosition="right" matTooltip="Modificar dispositivo en el que esta enrolado el usuario"
+                        class="fas fa-edit">
                         <p>Editar</p>
                     </i>
                 </div>
@@ -56,41 +57,53 @@
 <br>
 <hr>
 <br>
-<div class="container table-responsive" style="padding-bottom: 50px;">
-    <div id="resulDis">DISPOSITIVOS EN LOS QUE ESTA ENROLADO EL USUARIO</div>
-    <table class="mat-elevation-z8 table table-hover table-sm">
-        <thead class="thead-light">
-            <tr style="text-align: center;">
-                <th scope="col">Usuario Enrolado</th>
-                <th scope="col">Dispositivo</th>
-                <th scope="col">IP Dispositivo</th>
-                <th scope="col">Sucursal</th>
-                <th scope="col">Departamento</th>
-                <th scope="col">Empresa</th>
-                <th scope="col">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let dr of datosDispositivos | paginate:tamanio_pagina:numero_pagina">
-                <td>{{dr.nombre_enrolado}}</td>
-                <td>{{dr.nombre_reloj}}</td>
-                <td>{{dr.ip_reloj}}</td>
-                <td>{{dr.nomsucursal}}</td>
-                <td>{{dr.nomdepar}}</td>
-                <td>{{dr.nomempresa}}</td>
-                <td>
-                    <i matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                        matTooltip="Modificar dispositivo en el que esta enrolado el usuario" class="fas fa-edit">
-                        <p>Editar</p>
-                    </i>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <mat-paginator [length]="datosDispositivos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-        id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-    </mat-paginator>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulDis">DISPOSITIVOS EN LOS QUE ESTA ENROLADO EL USUARIO</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Usuario Enrolado</th>
+                        <th scope="col">Dispositivo</th>
+                        <th scope="col">IP Dispositivo</th>
+                        <th scope="col">Sucursal</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Empresa</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let dr of datosDispositivos | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{dr.nombre_enrolado}}</td>
+                        <td>{{dr.nombre_reloj}}</td>
+                        <td>{{dr.ip_reloj}}</td>
+                        <td>{{dr.nom_sucursal}}</td>
+                        <td>{{dr.nom_departamento}}</td>
+                        <td>{{dr.nom_empresa}}</td>
+                        <td class="d-flex justify-content-center" >
+                            <i (click)="AbrirVentanaEditarReloj(dr)" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right" matTooltip="Modificar dispositivo en el que esta enrolado el usuario"
+                                class="fas fa-edit">
+                                <p>Editar</p>
+                            </i>
+                            <i (click)="ConfirmarDeleteReloj(dr)" matSuffix matTooltipClass="enrolado-tooltip"
+                                matTooltipPosition="right" matTooltip="Eliminar registro de empleado enrolado"
+                                class="far fa-trash-alt">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="datosDispositivos.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+        <div class="d-flex flex-wrap justify-content-center">
+            <input type="submit" class="btn btn-sm" [routerLink]="['/enrolados/']" value="Ir a la Lista de Usuarios Enrolados">
+            <input type="submit" class="btn btn-sm" *ngFor="let dE of datosEnrolado" (click)="AbrirVentanaAsignarReloj(dE)"
+                value="Agregar enrolado a dispositivo">
+        </div>
+    </div>
 </div>
-<input type="submit" class="btn btn-sm" [routerLink]="['/enrolados/']" value="Ir a la Lista de Usuarios Enrolados">
-<input type="submit" class="btn btn-sm" *ngFor="let dE of datosEnrolado" (click)="AbrirVentanaAsignarReloj(dE)"
-    value="Agregar enrolado a dispositivo">

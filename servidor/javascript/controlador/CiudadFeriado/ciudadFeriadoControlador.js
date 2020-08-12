@@ -57,6 +57,20 @@ class CiudadFeriadoControlador {
             }
         });
     }
+    ActualizarCiudadFeriado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_feriado, id_ciudad, id } = req.body;
+            yield database_1.default.query('UPDATE ciud_feriados SET id_feriado = $1, id_ciudad = $2 WHERE id = $3', [id_feriado, id_ciudad, id]);
+            res.jsonp({ message: 'Ciudad asignada a feriado' });
+        });
+    }
+    EliminarCiudadFeriado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM ciud_feriados WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.CIUDAD_FERIADO_CONTROLADOR = new CiudadFeriadoControlador();
 exports.default = exports.CIUDAD_FERIADO_CONTROLADOR;

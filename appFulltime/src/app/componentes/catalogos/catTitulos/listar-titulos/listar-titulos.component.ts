@@ -3,11 +3,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import { TitulosComponent } from '../titulos/titulos.component'
 import { EditarTitulosComponent } from '../editar-titulos/editar-titulos.component'
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-listar-titulos',
@@ -42,13 +44,14 @@ export class ListarTitulosComponent implements OnInit {
     public rest: TituloService,
     public restNivelTitulos: NivelTitulosService,
     private toastr: ToastrService,
+    public router: Router,
   ) { }
 
   ngOnInit(): void {
     this.ObtenerTitulos();
   }
 
-  ManejarPagina(e: PageEvent){
+  ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
@@ -60,7 +63,9 @@ export class ListarTitulosComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarTitulo(): void {
-    this.vistaRegistrarDatos.open(TitulosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(TitulosComponent, { width: '400px' }).afterClosed().subscribe(items => {
+      this.ObtenerTitulos();
+    });
   }
 
   LimpiarCampos() {
@@ -105,8 +110,30 @@ export class ListarTitulosComponent implements OnInit {
 
   AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
-    //console.log(datosSeleccionados.fecha);
+    this.vistaRegistrarDatos.open(EditarTitulosComponent, { width: '400px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.ObtenerTitulos();
+    });
   }
-  
+
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_titulo: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarRegistro(id_titulo).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerTitulos();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/titulos']);
+        }
+      });
+  }
+
 }

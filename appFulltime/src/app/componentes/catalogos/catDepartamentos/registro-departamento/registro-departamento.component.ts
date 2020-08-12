@@ -25,8 +25,8 @@ export class RegistroDepartamentoComponent implements OnInit {
   nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   nivel = new FormControl('', Validators.required);
   departamentoPadre = new FormControl('');
-  idEmpresaF = new FormControl('', Validators.required);
-  idSucursalF = new FormControl('', Validators.required);
+  idEmpresaF = new FormControl('');
+  idSucursalF = new FormControl('');
 
   // Datos Departamento
   empresas: any = [];
@@ -38,6 +38,7 @@ export class RegistroDepartamentoComponent implements OnInit {
   selectPadre;
   idD = '';
   nombreD = '';
+  Habilitar: boolean;
 
   // Asignar los campos en un formulario en grupo
   public nuevoDepartamentoForm = new FormGroup({
@@ -64,10 +65,22 @@ export class RegistroDepartamentoComponent implements OnInit {
     private restS: SucursalService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
-    @Inject(MAT_DIALOG_DATA) public descripcionD: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
     this.BuscarEmpresas();
+    if (this.data != undefined) {
+      this.Habilitar = true;
+      this.rest.BuscarDepartamentoSucursal(this.data).subscribe(datos => {
+        this.departamentos = datos;
+        this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
+      }, error => {
+        this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      });
+    }
+    else {
+      this.Habilitar = false;
+    }
   }
 
   BuscarEmpresas() {
@@ -91,28 +104,58 @@ export class RegistroDepartamentoComponent implements OnInit {
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     var datosDepartamento = {
-      nombre: form.departamentoNombreForm,
+      nombre: form.departamentoNombreForm.toUpperCase(),
       nivel: form.departamentoNivelForm,
       depa_padre: departamentoPadreNombre,
       id_sucursal: form.idSucursalForm
     };
-    if (departamentoPadreNombre === 0) {
+    if (this.data != undefined) {
+      datosDepartamento.id_sucursal = this.data;
+    }
+    if (departamentoPadreNombre === null) {
       datosDepartamento.depa_padre = null;
-      this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Departamento registrado');
-        this.LimpiarCampos();
-      });
+      this.GuardarDatos(datosDepartamento);
     }
     else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {
         departamentoPadreId = datos[0].id;
         datosDepartamento.depa_padre = departamentoPadreId;
-        this.rest.postDepartamentoRest(datosDepartamento).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Departamento registrado');
-          this.LimpiarCampos();
-        });
+        this.GuardarDatos(datosDepartamento);
       })
     }
+  }
+
+  revisarNombre: any = [];
+  contador: number = 0;
+  GuardarDatos(datos) {
+    this.revisarNombre = [];
+    let idSucursal = datos.id_sucursal;
+    this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
+      this.revisarNombre = data;
+      console.log('revisando nombres', this.revisarNombre, ' ', datos.nombre);
+      for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
+        if (this.revisarNombre[i].nombre === datos.nombre) {
+          this.contador = 1;
+        }
+      }
+      if (this.contador === 1) {
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO');
+        this.contador = 0;
+      }
+      else {
+        this.rest.postDepartamentoRest(datos).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('Los datos ingresados tienen un error');
+          }
+          else {
+            this.toastr.success('Operación Exitosa', 'Departamento registrado');
+            this.LimpiarCampos();
+          }
+        });
+      }
+    }, error => {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
   }
 
   ObtenerDepartamentos(form) {
@@ -137,6 +180,7 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoDepartamentoForm.reset();
+    this.contador = 0;
   }
 
   CerrarVentanaRegistroDepartamento() {
@@ -170,6 +214,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
     return this.nombre.hasError('pattern') ? 'Ingresar un nombre válido' : '';
   }
-  
+
 }
 

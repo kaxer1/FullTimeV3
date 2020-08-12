@@ -64,7 +64,9 @@ export class PrincipalProvinciaComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarProvincia() {
-    this.vistaRegistrarDatos.open(RegistroProvinciaComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroProvinciaComponent, { width: '400px' }).afterClosed().subscribe(item => {
+      this.ListarProvincias();
+    });
   }
 
   /* **********************************************************************************

@@ -29,6 +29,12 @@ class TituloControlador {
     res.jsonp({ message: 'Título actualizado exitosamente' });
   }
 
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_titulos WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
+
 }
 
 export const TITULO_CONTROLADOR = new TituloControlador();

@@ -33,4 +33,8 @@ export class DocumentosService {
     return this.http.put(`${this.API_URL}/archivosCargados/${id}/documento`, formData)
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/archivosCargados/eliminar/${id}`);
+  }
+
 }

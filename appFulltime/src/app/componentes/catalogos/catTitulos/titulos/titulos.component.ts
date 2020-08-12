@@ -14,17 +14,24 @@ import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulo
 export class TitulosComponent implements OnInit {
 
   // Control de los campos del formulario
-  nombre = new FormControl('',[Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]  );
-  nivel = new FormControl('', Validators.required)
+  nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
+  nivel = new FormControl('');
+  nombreNivel = new FormControl('', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}"))
 
   // asignar los campos en un formulario en grupo
   public nuevoTituloForm = new FormGroup({
     tituloNombreForm: this.nombre,
     tituloNivelForm: this.nivel,
+    nombreNivelForm: this.nombreNivel
   });
 
   // Arreglo de niveles existentes
   niveles: any = [];
+
+  HabilitarDescrip: boolean = true;
+  estilo: any;
+
+  seleccionarNivel;
 
   constructor(
     private rest: TituloService,
@@ -36,12 +43,29 @@ export class TitulosComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerNivelesTitulo();
+    this.niveles[this.niveles.length] = { nombre: "OTRO" };
   }
 
-  obtenerNivelesTitulo(){
+  obtenerNivelesTitulo() {
+    this.niveles = [];
     this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
       this.niveles = res;
+      this.niveles[this.niveles.length] = { nombre: "OTRO" };
+      this.seleccionarNivel = this.niveles[this.niveles.length - 1].nombre;
     });
+  }
+
+  ActivarDesactivarNombre(form1) {
+    console.log('nivel', form1.tituloNivelForm);
+    if (form1.tituloNivelForm === undefined) {
+      this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
+      this.toastr.info('Ingresar nombre de nivel de titulación');
+    }
+    else {
+      this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
+    }
   }
 
   IngresarSoloLetras(e) {
@@ -71,26 +95,61 @@ export class TitulosComponent implements OnInit {
     return this.nombre.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
+  ObtenerMensajeErrorNivel() {
+    if (this.nombreNivel.hasError('pattern')) {
+      return 'Ingrese un nombre válido';
+    }
+  }
+
   InsertarTitulo(form) {
+    if (form.tituloNivelForm === undefined || form.tituloNivelForm === 'OTRO') {
+      if (form.nombreNivelForm != '') {
+        this.GuardarNivel(form);
+
+      }
+      else {
+        this.toastr.info('Ingrese un nombre de nivel o seleccione uno de la lista de niveles');
+      }
+    }
+    else {
+      this.GuardarTitulo(form, form.tituloNivelForm);
+    }
+  }
+
+  GuardarNivel(form) {
+    let dataNivelTitulo = {
+      nombre: form.nombreNivelForm,
+    };
+    this.restNivelTitulo.postNivelTituloRest(dataNivelTitulo).subscribe(response => {
+      this.restNivelTitulo.BuscarNivelID().subscribe(datos => {
+        var idNivel = datos[0].max;
+        console.log('id_nivel', datos[0].max)
+        this.GuardarTitulo(form, idNivel);
+      })
+    });
+  }
+
+  GuardarTitulo(form, idNivel) {
     let dataTitulo = {
       nombre: form.tituloNombreForm,
-      id_nivel: form.tituloNivelForm,
+      id_nivel: idNivel,
     };
     this.rest.postTituloRest(dataTitulo).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Título guardado');
       this.LimpiarCampos();
     }, error => {
-    });;
+    });
   }
 
   LimpiarCampos() {
     this.nuevoTituloForm.reset();
+    this.obtenerNivelesTitulo();
+    this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
   }
 
   CerrarVentanaRegistroTitulo() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

@@ -7,43 +7,41 @@
             </div>
             <mat-card class="example-card mat-elevation-z8">
                 <h5 style="text-align: center;">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarCiudadForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
-                                <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
-                                    [(ngModel)]="filtroProvincia">
-                                <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda de ciudad por el nombre de provincia, departamento o estado seleccionado">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Buscar Ciudad</mat-label>
-                                <input matInput name="filtroCiudad" placeholder="Ej: Quito"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
-                                    [(ngModel)]="filtroCiudad">
-                                <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
-                                    matTooltipPosition="right"
-                                    matTooltip="Búsqueda de una ciudad por su nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
+                <form [formGroup]="BuscarCiudadForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
+                            <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
+                                [(ngModel)]="filtroProvincia">
+                            <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de ciudad por el nombre de provincia, departamento o estado seleccionado">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
+                            </mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field>
+                            <mat-label>Buscar Ciudad</mat-label>
+                            <input matInput name="filtroCiudad" placeholder="Ej: Quito"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="ciudadF"
+                                [(ngModel)]="filtroCiudad">
+                            <mat-icon id="iciudadL" matSuffix matTooltipClass="ciudadL-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de una ciudad por su nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="ciudadF.invalid">{{ObtenerMensajeCiudadLetras()}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-center">
                     <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarCiudad()">Crear
                         nueva Ciudad
                     </button>
-                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                </mat-card-actions>
+                    <button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
+                </div>
             </mat-card>
         </div>
     </div>
@@ -61,8 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        *ngFor="let ciudad of datosCiudades | provincia: filtroProvincia | filtroNombre: filtroCiudad | paginate:tamanio_pagina:numero_pagina">
+                    <tr *ngFor="let ciudad of datosCiudades | provincia: filtroProvincia | filtroNombre: filtroCiudad | paginate:tamanio_pagina:numero_pagina">
                         <td>{{ciudad.nombre}}</td>
                         <td>{{ciudad.descripcion}}</td>
                         <td class="d-flex justify-content-center">                        

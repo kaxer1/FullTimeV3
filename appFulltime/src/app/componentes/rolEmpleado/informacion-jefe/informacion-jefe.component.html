@@ -1,14 +1,15 @@
 <div class="dark-overlay">
-    <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
-        <mat-card class="example-card mat-elevation-z9" id="carta1" style="text-align: center;">
+    <br><br>
+    <div class="container" style="padding-bottom: 25px;">
+        <br><br><br><br>
+        <div class="mat-elevation-z8" style="background: white; text-align: center; border-radius: 1%;">
+            <br>
             <img src="../../../../assets/imagenes/informacion.JPG"> <br><br>
             <div class="tituloHorarioL" *ngFor="let d of departamento">
                 <span>AUTORIZAN EN EL DEPARTAMENTO DE {{d.nombre.toUpperCase()}}</span>
             </div>
-            <br>
-            <div class="container table-responsive" style="padding-bottom: 50px;">
-                <!-- <div id="resulDis">AUTORIDADES</div>-->
-                <table class="mat-elevation-z8 table table-hover table-sm">
+            <div class="table-responsive">
+                <table class="table table-hover table-sm">
                     <thead class="thead-light">
                         <tr style="text-align: center;">
                             <th scope="col">Nombre</th>
@@ -30,10 +31,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <mat-paginator [length]="autorizan.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-                </mat-paginator>
             </div>
-        </mat-card>
+            <mat-paginator [length]="autorizan.length" [pageSize]="tamanio_pagina"
+                [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            </mat-paginator>
+        </div>
     </div>
 </div>

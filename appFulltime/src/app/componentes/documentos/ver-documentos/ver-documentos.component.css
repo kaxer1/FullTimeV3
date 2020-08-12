@@ -8,6 +8,8 @@ td { padding-top: 10px; text-align: center; }
 
 .far { color:red; cursor: pointer; margin-left: 20px; }
 
+mat-form-field { padding: 10px 15px 0px 15px;}
+
 .tituloHorarioL { 
     font-size: 20px; 
     text-align: center; 

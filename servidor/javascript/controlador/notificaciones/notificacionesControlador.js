@@ -17,7 +17,12 @@ class NotificacionTiempoRealControlador {
     ListarNotificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT * FROM realtime_noti ORDER BY id DESC');
-            res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            if (REAL_TIME_NOTIFICACION.rowCount > 0) {
+                return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     ListaPorEmpleado(req, res) {
@@ -27,7 +32,9 @@ class NotificacionTiempoRealControlador {
             if (REAL_TIME_NOTIFICACION.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     ListaNotificacionesRecibidas(req, res) {
@@ -37,18 +44,27 @@ class NotificacionTiempoRealControlador {
             if (REAL_TIME_NOTIFICACION.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     ListaPorJefe(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_receive;
             console.log(id);
-            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC LIMIT 5', [id]);
-            if (REAL_TIME_NOTIFICACION.rowCount > 0) {
-                return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            if (id != 'NaN') {
+                const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC LIMIT 5', [id]);
+                if (REAL_TIME_NOTIFICACION.rowCount > 0) {
+                    return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+                }
+                else {
+                    return res.status(404).jsonp({ text: 'Registro no encontrado' });
+                }
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ message: 'sin registros' });
+            }
         });
     }
     ObtenerUnaNotificacion(req, res) {
@@ -58,7 +74,9 @@ class NotificacionTiempoRealControlador {
             if (REAL_TIME_NOTIFICACION_VACACIONES.rowCount > 0) {
                 return res.jsonp(REAL_TIME_NOTIFICACION_VACACIONES.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     create(req, res) {
@@ -96,10 +114,12 @@ class NotificacionTiempoRealControlador {
                 if (CONFIG_NOTI.rowCount > 0) {
                     return res.jsonp(CONFIG_NOTI.rows);
                 }
-                res.status(404).jsonp({ message: 'Registro no encontrado' });
+                else {
+                    return res.status(404).jsonp({ text: 'Registro no encontrado' });
+                }
             }
             else {
-                res.status(404).jsonp({ message: 'Registro no encontrado' });
+                res.status(404).jsonp({ text: 'Sin registros encontrado' });
             }
         });
     }

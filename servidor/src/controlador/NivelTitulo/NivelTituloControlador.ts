@@ -4,7 +4,12 @@ import pool from '../../database';
 class NivelTituloControlador {
   public async list(req: Request, res: Response) {
     const titulo = await pool.query('SELECT * FROM nivel_titulo ORDER BY nombre ASC');
-    res.jsonp(titulo.rows);
+    if (titulo.rowCount > 0) {
+      return res.jsonp(titulo.rows)
+    }
+    else {
+      res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
@@ -13,7 +18,10 @@ class NivelTituloControlador {
     if (unNivelTitulo.rowCount > 0) {
       return res.jsonp(unNivelTitulo.rows)
     }
-    res.status(404).jsonp({ text: 'Registro no encontrado' });
+    else {
+      res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+
   }
 
   public async ObtenerNivelNombre(req: Request, res: Response): Promise<any> {
@@ -42,6 +50,16 @@ class NivelTituloControlador {
     console.log(id);
     await pool.query('DELETE FROM nivel_titulo WHERE id = $1', [id]);
     res.jsonp({ message: 'Registro eliminado' });
+  }
+
+  public async ObtenerUltimoId(req: Request, res: Response) {
+    const ultimoRegistro = await pool.query('SELECT MAX(id) FROM nivel_titulo');
+    if (ultimoRegistro.rowCount > 0) {
+      return res.jsonp(ultimoRegistro.rows)
+    }
+    else {
+      return res.jsonp({ message: 'Registro no encontrado' })
+    }
   }
 
 }

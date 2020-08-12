@@ -45,9 +45,10 @@
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Código</mat-label>
-                                    <input matInput type="text" formControlName="codigoForm">
+                                    <input matInput type="text" formControlName="codigoForm" readonly>
                                     <mat-icon id="icono_emple" matSuffix matTooltipPosition="right"
-                                        matTooltip="Ingrese un Código de identificacion, este campo es alternativo.">help_outline
+                                        matTooltip="Ingrese un Código de identificacion, este campo es alternativo.">
+                                        help_outline
                                     </mat-icon>
                                 </mat-form-field>
                             </div>
@@ -99,7 +100,12 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperNext class="btn">Siguiente</button>
+                    <button
+                        (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
+                        type="submit" class="btn btn-sm" [disabled]="!primeroFormGroup.valid">Guardar
+                    </button>
+                    <button (click)="cancelar()" class="btn btn-sm">Cancelar</button>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
             </mat-step>
             <mat-step [stepControl]="segundoFormGroup">
@@ -202,13 +208,86 @@
                     </div>
                 </form>
                 <div>
-                    <button mat-button matStepperPrevious class="btn">Atrás</button>
-                    <button mat-button
-                        (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value)"
-                        type="submit" class="btn btn-primary" [disabled]="!segundoFormGroup.valid">Guardar
+                    <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                    <button
+                        (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value)"
+                        type="submit" class="btn btn-sm btn btn-sm-primary" [disabled]="!segundoFormGroup.valid">Guardar
                     </button>
-                    <button mat-button (click)="cancelar()" class="btn">Cancelar</button>
+                    <button (click)="cancelar()" class="btn btn-sm">Cancelar</button>
+                    <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
+            </mat-step>
+            <mat-step [stepControl]="terceroFormGroup">
+                <form [formGroup]="terceroFormGroup">
+                    <ng-template matStepLabel>
+                        <mat-icon id="seccion_emple" matSuffix matTooltipClass="empleadoR-tooltip"
+                            matTooltipPosition="right" matTooltip="Sección 3: Datos de Usuario">insert_emoticon
+                        </mat-icon>
+                    </ng-template>
+                    <div class="titulo_empleR">
+                        <span>Datos de Usuario</span>
+                    </div>
+                    <br>
+                    <div class="subtitulo_empleR">
+                        <span>Llenar todos los campos obligatorios (*) del formulario y dar click en Guardar.</span>
+                        <br>
+                        <span>Recuerde estas son las credenciales que usará el empleado para ingresar al sistema y ver
+                            su información.
+                        </span>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Seleccionar un Rol</mat-label>
+                                    <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="El rol es el nivel de autorización que el usaurio tendra en el sistema">
+                                        help_outline
+                                    </mat-icon>
+                                    <mat-select required formControlName="rolForm">
+                                        <mat-option *ngFor="let r of roles" [value]="r.id">{{r.nombre}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Usuario</mat-label>
+                                    <input matInput placeholder="Ej: kevin.curay" formControlName="userForm" type="text"
+                                        required>
+                                    <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
+                                        matTooltipPosition="right"
+                                        matTooltip="Nombre del usuario con el cual podra ingresar al sistema">
+                                        account_circle</mat-icon>
+                                </mat-form-field>
+                            </div>
+                            <div class="col">
+                                <mat-form-field>
+                                    <mat-label>Contraseña</mat-label>
+                                    <input matInput placeholder="máximo 10 caracteres"
+                                        [type]="hide ? 'password' : 'text'" maxlength="10"
+                                        oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        formControlName="passForm">
+                                    <button mat-icon-button matSuffix (click)="hide = !hide"
+                                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                                        <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
+                                            matTooltipPosition="right"
+                                            matTooltip="Contraseña del usuario con la cual podra ingresar al sistema">
+                                            {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button matStepperPrevious class="btn btn-sm">Atrás</button>
+                        <button
+                            (click)="actualizarEmpleado(primeroFormGroup.value, segundoFormGroup.value, terceroFormGroup.value);"
+                            type="submit" class="btn btn-sm" [disabled]="!terceroFormGroup.valid">Guardar
+                        </button>
+                        <button (click)="cancelar()" class="btn btn-sm float-right">Cancelar</button>
+                    </div>
+                </form>
             </mat-step>
         </mat-horizontal-stepper>
     </mat-card>

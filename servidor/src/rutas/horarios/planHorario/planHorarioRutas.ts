@@ -15,6 +15,8 @@ class PlanHorarioRutas {
         this.router.get('/buscar/:id_empleado', PLAN_HORARIO_CONTROLADOR.EncontrarIdPlanHorario);
         this.router.get('/infoPlan/:id_cargo', PLAN_HORARIO_CONTROLADOR.EncontrarPlanHorarioPorIdCargo);
         this.router.get('/datosPlanHorario/:id', PLAN_HORARIO_CONTROLADOR.EncontrarPlanHorarioPorId);
+        this.router.put('/', PLAN_HORARIO_CONTROLADOR.ActualizarPlanHorario);
+        this.router.delete('/eliminar/:id', PLAN_HORARIO_CONTROLADOR.EliminarRegistros);
     }
 }
 

@@ -1,14 +1,16 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registrar-sucursales',
@@ -30,12 +32,19 @@ export class RegistrarSucursalesComponent implements OnInit {
   seleccionarCiudad;
   ultimoId: any = [];
 
+  Habilitar: boolean;
+
+  filteredOptPais: Observable<string[]>;
+  filteredOptProv: Observable<string[]>;
+  filteredOptCiud: Observable<string[]>;
+  filteredOptEmpr: Observable<string[]>;
+
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
-  idEmpresaF = new FormControl('', Validators.required);
+  idEmpresaF = new FormControl('');
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -56,11 +65,67 @@ export class RegistrarSucursalesComponent implements OnInit {
     private restD: DepartamentosService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistrarSucursalesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
     this.BuscarEmpresas();
+    this.filteredOptPais = this.nombrePaisF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterPais(value))
+      );
+    this.filteredOptProv = this.idProvinciaF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterProvincia(value))
+      );
+    this.filteredOptCiud = this.idCiudad.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterCiudad(value))
+      );
+    this.filteredOptEmpr = this.idEmpresaF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterEmpresa(value))
+      );
+
+    if (this.data != undefined) {
+      this.Habilitar = true;
+    }
+    else {
+      this.Habilitar = false;
+    }
+  }
+
+  private _filterPais(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.paises.filter(pais => pais.nombre.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterProvincia(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.provincias.filter(provincias => provincias.nombre.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterCiudad(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.nombreCiudades.filter(ciudades => ciudades.descripcion.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterEmpresa(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.empresas.filter(empresas => empresas.nombre.toLowerCase().includes(filterValue));
+    }
   }
 
   ObtenerContinentes() {
@@ -69,15 +134,14 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.continentes = datos;
       this.continentes[this.continentes.length] = { continente: "Seleccionar" };
       this.seleccionarContinente = this.continentes[this.continentes.length - 1].continente;
-    })
+    });
   }
 
   ObtenerPaises(continente) {
     this.paises = [];
     this.restP.BuscarPais(continente).subscribe(datos => {
       this.paises = datos;
-      this.paises[this.paises.length] = { nombre: "Seleccionar" };
-      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+      this.seleccionarPaises = '';
     })
   }
 
@@ -99,22 +163,26 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.provincias = [];
     this.restP.BuscarUnaProvincia(pais).subscribe(datos => {
       this.provincias = datos;
-      this.provincias[this.provincias.length] = { nombre: "Seleccionar" };
-      this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
+      this.seleccionarProvincia = '';
     }, error => {
       this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
     })
   }
 
   FiltrarProvincias(form) {
-    var nombrePais = form.nombrePaisForm;
-    if (nombrePais === undefined) {
+    let idPais;
+    this.paises.forEach(obj => {
+      if (obj.nombre === form.nombrePaisForm) {
+        idPais = obj.id
+      }
+    });
+    if (idPais === undefined) {
       this.toastr.info('No ha seleccionado ninguna opción')
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
     else {
-      this.seleccionarProvincia = this.ObtenerProvincias(nombrePais);
+      this.seleccionarProvincia = this.ObtenerProvincias(idPais);
     }
   }
 
@@ -122,15 +190,14 @@ export class RegistrarSucursalesComponent implements OnInit {
     this.nombreCiudades = [];
     this.restF.BuscarCiudadProvincia(provincia).subscribe(datos => {
       this.nombreCiudades = datos;
-      this.nombreCiudades[this.nombreCiudades.length] = { descripcion: "Seleccionar" };
-      this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
+      this.seleccionarCiudad = '';
     }, error => {
       this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
     })
   }
 
   FiltrarCiudades(form) {
-    var nombreProvincia = form.idProvinciaForm;
+    let nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
       this.toastr.info('No ha seleccionado ninguna opción')
       this.seleccionarCiudad = '';
@@ -155,11 +222,29 @@ export class RegistrarSucursalesComponent implements OnInit {
   }
 
   InsertarSucursal(form) {
+    let idEmpr;
+    if (this.data != undefined) {
+      idEmpr = this.data;
+    }
+    else {
+      this.empresas.forEach(obj => {
+        if (obj.nombre === form.idEmpresaForm) {
+          idEmpr = obj.id
+        }
+      });
+    }
+    let idCiud;
+    this.nombreCiudades.forEach(obj => {
+      if (obj.descripcion === form.idCiudadForm) {
+        idCiud = obj.id
+      }
+    });
     let dataSucursal = {
       nombre: form.sucursalNombreForm,
-      id_ciudad: form.idCiudadForm,
-      id_empresa: form.idEmpresaForm
+      id_ciudad: idCiud,
+      id_empresa: idEmpr
     };
+
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Sucursal guardada');
       this.LimpiarCampos();
@@ -176,11 +261,10 @@ export class RegistrarSucursalesComponent implements OnInit {
         console.log("insertar departamento: ", datosDepartamentos);
         this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
           this.ultimoId = [];
+          console.log('depa-guardado')
         });
-      }, error => {
-      });
-    }, error => {
-    });
+      }, error => { });
+    }, error => { });
   }
 
   LimpiarCampos() {
@@ -194,7 +278,6 @@ export class RegistrarSucursalesComponent implements OnInit {
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   ObtenerMensajeErrorNombre() {

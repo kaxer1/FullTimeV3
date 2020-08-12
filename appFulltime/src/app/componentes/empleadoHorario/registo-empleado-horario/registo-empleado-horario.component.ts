@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-registo-empleado-horario',
@@ -63,6 +64,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   constructor(
     public rest: EmpleadoHorariosService,
     public restH: HorarioService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistoEmpleadoHorarioComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any
@@ -82,12 +84,25 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   }
 
   ValidarFechas(form) {
-    if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
-      this.InsertarEmpleadoHorario(form);
+    let datosBusqueda = {
+      id_cargo: this.datoEmpleado.idCargo,
+      id_empleado: this.datoEmpleado.idEmpleado
     }
-    else {
-      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades')
-    }
+    this.restE.BuscarFechaContrato(datosBusqueda).subscribe(response => {
+      console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fechaInicioForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
+      if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fechaInicioForm)) {
+        if (Date.parse(form.fechaInicioForm) < Date.parse(form.fechaFinalForm)) {
+          this.InsertarEmpleadoHorario(form);
+        }
+        else {
+          this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.');
+        }
+      }
+      else {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+      }
+    }, error => {
+    });
   }
 
   InsertarEmpleadoHorario(form) {
@@ -116,6 +131,15 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
 
   LimpiarCampos() {
     this.EmpleadoHorarioForm.reset();
+    this.EmpleadoHorarioForm.patchValue({
+      lunesForm: false,
+      martesForm: false,
+      miercolesForm: false,
+      juevesForm: false,
+      viernesForm: false,
+      sabadoForm: false,
+      domingoForm: false
+    });
   }
 
   CerrarVentanaEmpleadoHorario() {
@@ -123,5 +147,6 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     this.dialogRef.close(this.dataItem);
     //window.location.reload();
   }
+
 
 }

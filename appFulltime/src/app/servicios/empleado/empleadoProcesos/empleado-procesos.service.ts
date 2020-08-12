@@ -26,4 +26,8 @@ export class EmpleadoProcesosService {
     return this.http.put(`${this.API_URL}/empleadoProcesos`, datos);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/empleadoProcesos/eliminar/${id}`);
+  }
+
 }

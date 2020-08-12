@@ -1,4 +1,12 @@
-mat-slider { width: 190px; }
+mat-slider { width: 100%; }
+
+.caja { width: 250px;padding: 10px 10px 0px 10px; }
+
+.btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;} 
+
+mat-form-field {width: 250px; padding: 10px 10px 0px 10px;}
+
+mat-radio-group { width: 210px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
 
 #horaExtra { font-size: small; }
 
@@ -12,15 +20,9 @@ mat-slider { width: 190px; }
 
 #iHora { cursor: pointer; }
 
-.example-section { display: flex; align-content: center; align-items: center; height: 60px; }
-
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
-
 #iconoG { margin-left: 15px; }
 
 .mat-radio-button ~ .mat-radio-button { margin-left: 16px; }
-
-.example-margin { margin: 0 10px; }
 
 .tituloExtra { 
   font-size: 20px; 
@@ -45,7 +47,6 @@ mat-slider { width: 190px; }
   font-weight: bold; 
   padding-left: 5px; 
   padding-top: 25px; 
-  padding-bottom: 25px; 
   text-align: justify;
 }
 

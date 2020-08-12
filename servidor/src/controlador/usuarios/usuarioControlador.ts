@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import { stream } from 'xlsx/types';
 
 class UsuarioControlador {
   public async list(req: Request, res: Response) {
@@ -65,6 +66,12 @@ class UsuarioControlador {
     const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
     await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
     res.jsonp({ message: 'Usuario Guardado' });
+  }
+
+  public async ActualizarUsuario(req: Request, res: Response): Promise<void> {
+    const { usuario, contrasena, id_rol, id_empleado } = req.body;
+    await pool.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
+    res.jsonp({ message: 'Usuario Actualizado' });
   }
 
 }

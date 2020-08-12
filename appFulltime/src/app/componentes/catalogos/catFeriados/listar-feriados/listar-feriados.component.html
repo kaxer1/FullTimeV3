@@ -5,39 +5,34 @@
             <div class="barraTituloF">
                 <span>FERIADOS</span>
             </div>
-            <mat-card class="example-card mat-elevation-z9" >
+            <mat-card class="example-card mat-elevation-z9">
                 <h5>Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarFeriadosForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Descripción</mat-label>
-                                <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
-                                    [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
-                                    (keypress)="IngresarSoloLetras($event)">
-                                <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del feriado por el nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
-                                </mat-error>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Fecha</mat-label>
-                                <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
-                                    [formControl]="fechaF" [(ngModel)]="filtradoFecha">
-                                <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del feriado por la fecha">
-                                    event</mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
-                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarFeriado()"
+                <form [formGroup]="BuscarFeriadosForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Descripción</mat-label>
+                            <input matInput placeholder="Nombre feriado" name="filtroDescripcion"
+                                [formControl]="descripcionF" [(ngModel)]="filtroDescripcion"
+                                (keypress)="IngresarSoloLetras($event)">
+                            <mat-icon id="feriado" matSuffix matTooltipClass="listaF-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del feriado por el nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeDescripcionLetras()}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Fecha</mat-label>
+                            <input matInput name="filtradoFecha" type="date" placeholder="Seleccionar fecha"
+                                [formControl]="fechaF" [(ngModel)]="filtradoFecha" id="feriado"
+                                matTooltip="Búsqueda del feriado por la fecha">
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <input type="submit" class="btn btn-sm button" (click)="AbrirVentanaRegistrarFeriado()"
                         value="Crear nuevo Feriado">
-                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
-                </mat-card-actions>
+                    <input type="submit" class="btn btn-sm button" (click)="LimpiarCampos()" value="Cancelar">
+                </div>
             </mat-card>
         </div>
         <div class="col-md">
@@ -49,8 +44,8 @@
                     <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
                         accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
-                    matTooltipPosition="right"
-                    matTooltip="Presionar para seleccionar Plantilla con nombre Feriados">Subir Feriados</label>
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Feriados">Subir Feriados</label>
                 </form>
                 <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
                     matTooltip="Dar click para ver o descargar el documento"
@@ -75,7 +70,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr  *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
+                    <tr
+                        *ngFor="let f of feriados | filtroNombre: filtroDescripcion | filtroFecha: filtradoFecha | paginate:tamanio_pagina:numero_pagina ">
                         <td id="desc" style="font-size: 14px;">{{f.descripcion}}</td>
                         <td style="font-size: 12px;">{{f.fecha}}</td>
                         <td style="font-size: 12px;">{{f.fec_recuperacion}}</td>
@@ -90,10 +86,15 @@
                                 [routerLink]="['/verFeriados/', f.id]">
                                 <p>Ver</p>
                             </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                            <i matSuffix matTooltipPosition="right"
                                 matTooltip="Modificar datos generales de este feriado" class="fas fa-edit"
                                 (click)="AbrirVentanaEditarFeriado(f)">
                                 <p>Editar</p>
+                            </i>
+                            <i matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
+                                class="far fa-trash-alt" (click)="ConfirmarDelete(f)"
+                                style="color:red; margin-left: 15px;">
+                                <p>Eliminar</p>
                             </i>
                         </td>
                     </tr>

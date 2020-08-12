@@ -38,8 +38,8 @@
                                 matTooltip="Seleccione el tipo de discapacidad que posee el empleado">
                                 help_outline
                             </mat-icon>
-                            <mat-select [formControl]="tipo" required>
-                                <mat-option *ngFor="let td of tipoDiscapacidad" [value]="td.id" (click)="ActivarDesactivarNombre(nuevoCarnetForm.value)">
+                            <mat-select [formControl]="tipo" >
+                                <mat-option  *ngFor="let td of tipoDiscapacidad" [value]="td.id" (click)="ActivarDesactivarNombre(nuevoCarnetForm.value)">
                                     {{td.nombre}}
                                 </mat-option>
                             </mat-select>
@@ -48,11 +48,11 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <mat-form-field>
-                            <mat-label>Nuevo Tipo</mat-label>
+                        <mat-form-field *ngIf="!HabilitarDescrip">
+                            <mat-label>Registrar Tipo</mat-label>
                             <input matInput placeholder="Ej: Descripcion del tipo de permiso"
                                 (keypress)="IngresarSoloLetras($event)" formControlName="nombreForm" id="nombreTD"
-                                style="visibility:hidden">
+                                [ngStyle]="estilo">
                             <mat-icon id="icono" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                 matTooltip="Ingresar nombre del nuevo tipo de discapacidad">
                                 help_outline</mat-icon>

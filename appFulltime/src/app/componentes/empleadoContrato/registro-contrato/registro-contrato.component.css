@@ -2,10 +2,17 @@
 
 .btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
 
+mat-radio-group { width: 210px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
+
+mat-form-field {padding: 10px 10px 0px 10px;}
+
+.separar {padding: 10px 10px 0px 10px}
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
+    margin-left: 10px;
 }
 
 .barraTituloContratoE { 
@@ -14,8 +21,6 @@
     color: white; 
     padding-top: 14px; 
 }
-
-/*.contratoE-tooltip { background-color : rgb(17, 182, 44); }*/
 
 #contratoE { cursor: pointer; }
 

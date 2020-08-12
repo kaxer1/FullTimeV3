@@ -1,0 +1,51 @@
+<div class="container" style="padding-top: 15px; padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-sm" style="margin-bottom: 25px;">
+            <div class="tituloHorarioL">
+                <span>CONFIGURACIÓN DE CÓDIGO</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="nota" style="text-align: center;">
+                    <span>NOTA: Por favor indicar como desea generar el código de empleado.</span>
+                </div>
+                <form [formGroup]="configuracionForm">
+                    <mat-card-content>
+                        <div class="container" style="text-align: center">
+                            <section class="example-section">
+                                <mat-radio-group aria-label="Select an option" formControlName="seleccionForm">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col">
+                                                <mat-radio-button ngDefaultControl [(ngModel)]="selec1"
+                                                    [checked]="selec1" [ngModelOptions]="{standalone: true}"
+                                                    value="false" (click)="VerCampo()">Generar Automáticamente
+                                                </mat-radio-button>
+                                                <mat-radio-button ngDefaultControl [(ngModel)]="selec2"
+                                                    [checked]="selec2" [ngModelOptions]="{standalone: true}"
+                                                    value="true" (click)="QuitarCampo()">Cedúla</mat-radio-button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-radio-group>
+                            </section>
+                            <mat-form-field *ngIf="!HabilitarDescrip">
+                                <mat-label id="letras">Código Automático desde:</mat-label>
+                                <input matInput placeholder="1000" [formControl]="inicioF" [ngStyle]="estilo"
+                                    maxlength="10" (keypress)="IngresarSoloNumeros($event)"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                <mat-icon id="iHorL" matSuffix matTooltipClass="horarioL-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Indicar desde que valor se generará el código del empleado">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                        </div>
+                    </mat-card-content>
+                </form>
+                <mat-card-actions style="text-align: center">
+                    <button mat-button type="submit" class="btn btn-sm"
+                        (click)="RegistrarConfiguracion(configuracionForm.value)">Guardar</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
@@ -22,6 +23,8 @@ import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.s
   ]
 })
 export class RegistroContratoComponent implements OnInit {
+
+  isChecked: boolean = false;
 
   // Datos Régimen
   regimenLaboral: any = [];
@@ -97,6 +100,7 @@ export class RegistroContratoComponent implements OnInit {
     }
   }
 
+  contador: number = 0;
   InsertarContrato(form) {
     let datosContrato = {
       id_empleado: this.datoEmpleado,
@@ -107,18 +111,40 @@ export class RegistroContratoComponent implements OnInit {
       id_regimen: form.idRegimenForm,
       doc_nombre: form.nombreContratoForm
     };
-    if (form.nombreContratoForm === '') {
-      this.rest.CrearContratoEmpleado(datosContrato).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Contrato registrado')
-        this.CerrarVentanaRegistroContrato();
-      }, error => {
-        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
-      });
-    }
-    else {
-      this.GuardarDatos(datosContrato);
-    }
+    this.ValidarDuplicidad(datosContrato, form);
+  }
 
+  ValidarDuplicidad(datos, form): any {
+    this.revisarFecha = [];
+    this.rest.BuscarContratoEmpleadoRegimen(this.datoEmpleado).subscribe(data => {
+      this.revisarFecha = data;
+      var ingreso = String(moment(datos.fec_ingreso, "YYYY/MM/DD").format("YYYY-MM-DD"));
+      console.log('fechas', ingreso, ' ', this.revisarFecha);
+      for (var i = 0; i <= this.revisarFecha.length - 1; i++) {
+        console.log('fechas1', this.revisarFecha[i].fec_ingreso.split('T')[0]);
+        if (this.revisarFecha[i].fec_ingreso.split('T')[0] === ingreso) {
+          this.contador = 1;
+        }
+      }
+      if (this.contador === 1) {
+        this.toastr.error('La fecha de ingreso de contrato ya se encuentra registrada.', 'Contrato ya existe.')
+        this.contador = 0;
+      }
+      else {
+        this.RegistrarContrato(form, datos);
+      }
+    }, error => {
+      this.RegistrarContrato(form, datos);
+    });
+  }
+
+  HabilitarBtn: boolean = false;
+  deseleccionarArchivo() {
+    this.archivoSubido = [];
+    this.isChecked = false;
+    this.HabilitarBtn = false;
+    this.LimpiarNombreArchivo();
+    this.archivoForm.patchValue('');
   }
 
   nameFile: string;
@@ -130,6 +156,7 @@ export class RegistroContratoComponent implements OnInit {
       const name = this.archivoSubido[0].name;
       console.log(this.archivoSubido[0].name);
       this.ContratoForm.patchValue({ nombreContratoForm: name });
+      this.HabilitarBtn = true;
     }
   }
 
@@ -146,6 +173,7 @@ export class RegistroContratoComponent implements OnInit {
   }
 
   idContratoRegistrado: any;
+  revisarFecha: any = [];
   GuardarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.CrearContratoEmpleado(datos).subscribe(response => {
@@ -163,10 +191,23 @@ export class RegistroContratoComponent implements OnInit {
     }
   }
 
-
+  RegistrarContrato(form, datos) {
+    if (form.nombreContratoForm === '') {
+      this.rest.CrearContratoEmpleado(datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.CerrarVentanaRegistroContrato();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+      });
+    }
+    else {
+      this.GuardarDatos(datos);
+    }
+  }
 
   LimpiarCampos() {
     this.ContratoForm.reset();
+    this.contador = 0;
   }
 
   LimpiarNombreArchivo() {

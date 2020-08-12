@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -15,6 +16,8 @@ import { RegistroRolComponent } from 'src/app/componentes/catalogos/catRoles/reg
 import { EditarRolComponent } from 'src/app/componentes/catalogos/catRoles/editar-rol/editar-rol.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
+
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-vista-roles',
@@ -43,7 +46,8 @@ export class VistaRolesComponent implements OnInit {
     private restE: EmpleadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
-    private scriptService: ScriptService
+    private scriptService: ScriptService,
+    private router: Router,
   ) {
     this.obtenerRoles();
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -90,6 +94,7 @@ export class VistaRolesComponent implements OnInit {
   }
 
   obtenerRoles() {
+    this.roles = [];
     this.rest.getRoles().subscribe(res => {
       this.roles = res;
     },
@@ -103,16 +108,44 @@ export class VistaRolesComponent implements OnInit {
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarRolComponent, { width: '400px', data: { datosRol: datosSeleccionados, actualizar: true } }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.obtenerRoles();
+      }
+    });
   }
 
   AbrirVentanaRegistrarRol() {
-    this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistroRolComponent, { width: '400px' }).afterClosed().subscribe(items => {
+      if (items == true) {
+        this.obtenerRoles();
+      }
+    });
   }
 
   limpiarCampoBuscar() {
     this.buscarDescripcion.reset();
   }
+
+    /** Función para eliminar registro seleccionado */
+    Eliminar(id_rol: number) {
+      this.rest.EliminarRoles(id_rol).subscribe(res => {
+        this.toastr.error('Registro eliminado');
+        this.obtenerRoles();
+      });
+    }
+  
+    /** Función para confirmar si se elimina o no un registro */
+    ConfirmarDelete(datos: any) {
+      this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+        .subscribe((confirmado: Boolean) => {
+          if (confirmado) {
+            this.Eliminar(datos.id);
+          } else {
+            this.router.navigate(['/roles']);
+          }
+        });
+    }
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF

@@ -52,6 +52,18 @@ class PlanHorarioControlador {
         }
     }
 
+    public async ActualizarPlanHorario(req: Request, res: Response): Promise<void> {
+        const { id_cargo, fec_inicio, fec_final, id } = req.body;
+        await pool.query('UPDATE plan_horarios SET id_cargo = $1, fec_inicio = $2, fec_final = $3 WHERE id = $4', [id_cargo, fec_inicio, fec_final, id]);
+        res.jsonp({ message: 'Plan Horario Registrado' });
+    }
+
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM plan_horarios WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 }
 
 export const PLAN_HORARIO_CONTROLADOR = new PlanHorarioControlador();

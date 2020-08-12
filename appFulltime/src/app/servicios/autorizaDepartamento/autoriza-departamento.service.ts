@@ -31,4 +31,12 @@ export class AutorizaDepartamentoService {
     return this.http.get(`${this.API_URL}/autorizaDepartamento/empleadosAutorizan/${id}`);
   }
 
+  ActualizarDatos(datos: any) {
+    return this.http.put(`${this.API_URL}/autorizaDepartamento`, datos);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/autorizaDepartamento/eliminar/${id}`);
+  }
+
 }

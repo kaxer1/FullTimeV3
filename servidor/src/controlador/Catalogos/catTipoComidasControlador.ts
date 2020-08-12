@@ -82,6 +82,12 @@ class TipoComidasControlador {
         fs.unlinkSync(filePath);
     }
 
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM cg_tipo_comidas WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 }
 
 const TIPO_COMIDAS_CONTROLADOR = new TipoComidasControlador();

@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { log } from 'console';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 

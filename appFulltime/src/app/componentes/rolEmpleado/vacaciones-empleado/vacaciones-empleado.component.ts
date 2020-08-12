@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/registrar-vacaciones/registrar-vacaciones.component';
-
-
+import { CancelarVacacionesComponent } from './cancelar-vacaciones/cancelar-vacaciones.component';
+import { EditarVacacionesEmpleadoComponent } from './editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
 @Component({
   selector: 'app-vacaciones-empleado',
@@ -20,6 +21,11 @@ export class VacacionesEmpleadoComponent implements OnInit {
   idContrato: any = [];
   idPerVacacion: any = [];
   cont: number;
+
+    /* Items de paginación de la tabla */
+    tamanio_pagina: number = 5;
+    numero_pagina: number = 1;
+    pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public restEmpleado: EmpleadoService,
@@ -34,6 +40,11 @@ export class VacacionesEmpleadoComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
+  }
+
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
   }
 
 /* 
@@ -95,9 +106,23 @@ export class VacacionesEmpleadoComponent implements OnInit {
       this.idPerVacacion = datos;
       console.log(this.idPerVacacion)
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } }).disableClose = true;
+        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } }).afterClosed().subscribe(items => {
+          this.obtenerVacaciones(parseInt(this.idEmpleado));
+        });
     }, error => {
       this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+    });
+  }
+
+  CancelarVacaciones(v) {
+    this.vistaRegistrarDatos.open(CancelarVacacionesComponent, { width: '300px', data: v.id }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
+    });
+  }
+  
+  EditarVacaciones(v) {
+    this.vistaRegistrarDatos.open(EditarVacacionesEmpleadoComponent, { width: '900px', data: v }).afterClosed().subscribe(items => {
+      this.obtenerVacaciones(parseInt(this.idEmpleado));
     });
   }
 

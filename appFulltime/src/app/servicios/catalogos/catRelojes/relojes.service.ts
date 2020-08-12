@@ -36,4 +36,12 @@ export class RelojesService {
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/relojes/xmlDownload`, data);
   }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/relojes/eliminar/${id}`);
+  }
+
+  ConsultarDatosId(id: number) {
+    return this.http.get(`${this.API_URL}/relojes/datosReloj/${id}`);
+  }
 }

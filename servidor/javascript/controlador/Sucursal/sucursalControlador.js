@@ -30,7 +30,7 @@ class SucursalControlador {
     ObtenerUnaSucursal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const SUCURSAL = yield database_1.default.query('SELECT * FROM sucursales WHERE id = $1', [id]);
+            const SUCURSAL = yield database_1.default.query('SELECT * FROM NombreCiudadEmpresa WHERE id = $1', [id]);
             if (SUCURSAL.rowCount > 0) {
                 return res.jsonp(SUCURSAL.rows);
             }
@@ -95,6 +95,13 @@ class SucursalControlador {
             const name = req.params.nameXML;
             let filePath = `servidor\\xmlDownload\\${name}`;
             res.sendFile(__dirname.split("servidor")[0] + filePath);
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM sucursales WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
         });
     }
 }

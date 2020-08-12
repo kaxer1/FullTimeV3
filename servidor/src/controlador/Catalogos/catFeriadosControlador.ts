@@ -93,6 +93,12 @@ class FeriadosControlador {
         let filePath = `servidor\\xmlDownload\\${name}`
         res.sendFile(__dirname.split("servidor")[0] + filePath);
     }
+
+    public async EliminarFeriado(req: Request, res: Response): Promise<any> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM cg_feriados WHERE id = $1', [id]);
+        res.jsonp({text: 'registro eliminado'});
+    }
 }
 
 const FERIADOS_CONTROLADOR = new FeriadosControlador();

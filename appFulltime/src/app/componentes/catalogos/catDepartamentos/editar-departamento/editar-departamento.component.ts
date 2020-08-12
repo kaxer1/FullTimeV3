@@ -76,37 +76,71 @@ export class EditarDepartamentoComponent implements OnInit {
     console.log(form.departamentoDepartamentoPadreForm);
     if (departamentoPadreNombre === 0) {
       let datadepartamento = {
-        nombre: form.departamentoNombreForm,
+        nombre: form.departamentoNombreForm.toUpperCase(),
         nivel: form.departamentoNivelForm,
         depa_padre: null,
         id_sucursal: form.idSucursalForm
       };
-      this.rest.updateDepartamento(this.descripcionD.id, datadepartamento).subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-          window.location.reload();
-          this.dialogRef.close();
-        }, error => {
-          console.log(error);
-        });
+      if (datadepartamento.nombre === this.departamentoModificar.nombre) {
+        this.ActualizarDepartamento(datadepartamento);
+      }
+      else {
+        this.GuardarDatos(datadepartamento);
+      }
     } else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
         departamentoPadreId = data[0].id;
         let datadepartamento = {
-          nombre: form.departamentoNombreForm,
+          nombre: form.departamentoNombreForm.toUpperCase(),
           nivel: form.departamentoNivelForm,
           depa_padre: departamentoPadreId,
           id_sucursal: form.idSucursalForm
         };
-        this.rest.updateDepartamento(this.descripcionD.id, datadepartamento)
-          .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-            window.location.reload();
-            this.dialogRef.close();
-          }, error => {
-            console.log(error);
-          });
+        if (datadepartamento.nombre === this.departamentoModificar.nombre) {
+          this.ActualizarDepartamento(datadepartamento);
+        }
+        else {
+          this.GuardarDatos(datadepartamento);
+        }
       })
     }
+  }
+
+  revisarNombre: any = [];
+  contador: number = 0;
+  GuardarDatos(datos) {
+    this.revisarNombre = [];
+    let idSucursal = datos.id_sucursal;
+    this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
+      this.revisarNombre = data;
+      for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
+        if (this.revisarNombre[i].nombre === datos.nombre) {
+          this.contador = 1;
+        }
+      }
+      if (this.contador === 1) {
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO');
+        this.contador = 0;
+      }
+      else {
+        this.ActualizarDepartamento(datos);
+      }
+    }, error => {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
+  }
+
+  ActualizarDepartamento(datos) {
+    this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('Existe un error en los datos.');
+      }
+      else {
+        this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+        //window.location.reload();
+        this.dialogRef.close();
+      }
+    });
   }
 
   CerrarVentanaRegistroDepartamento() {
@@ -117,6 +151,7 @@ export class EditarDepartamentoComponent implements OnInit {
 
   LimpiarCampos() {
     this.nuevoDepartamentoForm.reset();
+    this.contador = 0;
   }
 
   ValidarCamposModificar() {

@@ -59,7 +59,9 @@ export class ListarNivelTitulosComponent implements OnInit {
   }
 
   AbrirVentanaNivelTitulo(): void {
-    this.vistaRegistrarDatos.open(RegistrarNivelTitulosComponent, { width: '400px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarNivelTitulosComponent, { width: '400px' }).afterClosed().subscribe(items => {
+      this.ObtenerNiveles();
+    });
   }
 
   LimpiarCampos() {
@@ -97,7 +99,9 @@ export class ListarNivelTitulosComponent implements OnInit {
 
   AbrirVentanaEditarTitulo(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarNivelTituloComponent, { width: '400px', data: datosSeleccionados }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarNivelTituloComponent, { width: '400px', data: datosSeleccionados }).afterClosed().subscribe(items => {
+      this.ObtenerNiveles();
+    });
   }
 
   /** Función para eliminar registro seleccionado */

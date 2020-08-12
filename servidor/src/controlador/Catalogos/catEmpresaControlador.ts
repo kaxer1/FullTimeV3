@@ -58,6 +58,23 @@ class EmpresaControlador {
         res.sendFile(__dirname.split("servidor")[0] + filePath);
     }
 
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM cg_empresa WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
+    public async ListarEmpresaId(req: Request, res: Response) {
+        const { id } = req.params;
+        const EMPRESA = await pool.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
+        if (EMPRESA.rowCount > 0) {
+            return res.jsonp(EMPRESA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
 }
 
 export const EMPRESA_CONTROLADOR = new EmpresaControlador();

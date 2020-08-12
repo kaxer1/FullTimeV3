@@ -30,6 +30,10 @@ export class TipoComidasService {
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/tipoComidas/upload', formData)  
+    return this.http.post(this.API_URL + '/tipoComidas/upload', formData)
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/tipoComidas/eliminar/${id}`);
   }
 }

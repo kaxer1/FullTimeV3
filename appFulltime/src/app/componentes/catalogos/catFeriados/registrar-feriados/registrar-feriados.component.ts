@@ -24,6 +24,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 export class RegistrarFeriadosComponent implements OnInit {
 
   idUltimoFeriado: any = [];
+  salir: boolean = false;
 
   // Control de campos y validaciones del formulario
   fechaF = new FormControl('', Validators.required);
@@ -61,7 +62,8 @@ export class RegistrarFeriadosComponent implements OnInit {
       this.rest.ConsultarUltimoId().subscribe(response => {
         this.idUltimoFeriado = response;
         this.LimpiarCampos();
-        this.dialogRef.close();
+        this.salir = true;
+        this.dialogRef.close(this.salir)
         this.router.navigate(['/verFeriados/', this.idUltimoFeriado[0].max]);
       }, error => { });
     }, error => {
@@ -82,8 +84,7 @@ export class RegistrarFeriadosComponent implements OnInit {
 
   CerrarVentanaRegistroFeriado() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close(this.salir);
   }
 
   IngresarSoloLetras(e) {

@@ -18,14 +18,17 @@ const database_1 = __importDefault(require("../../database"));
 class DepartamentoControlador {
     ListarDepartamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
-            const Sin_depa_padre = yield database_1.default.query('SELECT d.id, d.nombre, d.nivel, d.depa_padre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, sucursales AS s, cg_empresa AS e WHERE d.id_sucursal = s.id AND e.id = s.id_empresa AND d.depa_padre IS NULL ORDER BY nombre ASC');
-            const Con_depa_padre = yield database_1.default.query('SELECT d.id, d.nombre, d.nivel, nom_d.nombre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, nombredepartamento AS nom_d, sucursales AS s, cg_empresa AS e WHERE d.depa_padre = nom_d.id AND d.id_sucursal = s.id AND e.id = s.id_empresa ORDER BY nombre ASC');
-            if (Sin_depa_padre.rowCount > 0) {
-                Sin_depa_padre.rows.forEach(obj => {
-                    Con_depa_padre.rows.push(obj);
-                });
-                res.jsonp(Con_depa_padre.rows);
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+            // const Con_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, nom_d.nombre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, nombredepartamento AS nom_d, sucursales AS s, cg_empresa AS e WHERE d.depa_padre = nom_d.id AND d.id_sucursal = s.id AND e.id = s.id_empresa ORDER BY nombre ASC');
+            // const Sin_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, d.depa_padre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, sucursales AS s, cg_empresa AS e WHERE d.id_sucursal = s.id AND e.id = s.id_empresa AND d.depa_padre IS NULL ORDER BY nombre ASC');
+            // if (Sin_depa_padre.rowCount > 0) {
+            //   Sin_depa_padre.rows.forEach(obj => {
+            //     Con_depa_padre.rows.push(obj);
+            //   })
+            //   res.jsonp(Con_depa_padre.rows);
+            // }
+            if (DEPARTAMENTOS.rowCount > 0) {
+                res.jsonp(DEPARTAMENTOS.rows);
             }
             else {
                 return res.status(404).jsonp({ text: 'No se encuentran registros' });
@@ -87,18 +90,28 @@ class DepartamentoControlador {
     }
     CrearDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-            yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
-            res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+            try {
+                const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+                yield database_1.default.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
+                res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     ActualizarDepartamento(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-            const id = req.params.id;
-            console.log(id);
-            yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-            res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+            try {
+                const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+                const id = req.params.id;
+                console.log(id);
+                yield database_1.default.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
+                res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     FileXML(req, res) {
@@ -131,6 +144,25 @@ class DepartamentoControlador {
             }
             else {
                 return res.status(404).json({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_departamentos WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    ListarDepartamentosSucursal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_sucursal;
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT * FROM VistaDepartamentoPadre WHERE id_sucursal = $1 ORDER BY nombre ASC', [id]);
+            if (DEPARTAMENTOS.rowCount > 0) {
+                res.jsonp(DEPARTAMENTOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
         });
     }

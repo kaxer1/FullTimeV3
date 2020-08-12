@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-registrar-ciudad',
@@ -16,9 +18,11 @@ export class RegistrarCiudadComponent implements OnInit {
 
   // Control de los campos del formulario
   nombreF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  idProvinciaF = new FormControl('', [Validators.required]);
+  idProvinciaF = new FormControl('', Validators.required);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
+  filteredOptions: Observable<string[]>;
+  filteredOpt: Observable<string[]>;
 
   // Datos Provincias
   provincias: any = [];
@@ -45,6 +49,30 @@ export class RegistrarCiudadComponent implements OnInit {
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
+    this.filteredOptions = this.nombrePaisF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    this.filteredOpt = this.idProvinciaF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterProvincia(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.paises.filter(pais => pais.nombre.toLowerCase().includes(filterValue));
+    }
+  }
+
+  private _filterProvincia(value: string): string[] {
+    if (value != null) {
+      const filterValue = value.toLowerCase();
+      return this.provincias.filter(provincias => provincias.nombre.toLowerCase().includes(filterValue));
+    }
   }
 
   ObtenerContinentes() {
@@ -60,8 +88,7 @@ export class RegistrarCiudadComponent implements OnInit {
     this.paises = [];
     this.restP.BuscarPais(continente).subscribe(datos => {
       this.paises = datos;
-      this.paises[this.paises.length] = { nombre: "Seleccionar" };
-      this.seleccionarPaises = this.paises[this.paises.length - 1].nombre;
+      this.seleccionarPaises = '';
     })
   }
 
@@ -82,29 +109,36 @@ export class RegistrarCiudadComponent implements OnInit {
     this.provincias = [];
     this.restP.BuscarUnaProvincia(pais).subscribe(datos => {
       this.provincias = datos;
-      this.provincias[this.provincias.length] = { nombre: "Seleccionar" };
-      this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
+      this.seleccionarProvincia = '';
     }, error => {
       this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
     })
   }
 
   FiltrarProvincias(form) {
-    var nombrePais = form.nombrePaisForm;
-    if (nombrePais === undefined) {
+    let idPais;
+    this.paises.forEach(obj => {
+      if (obj.nombre === form.nombrePaisForm) {
+        idPais = obj.id
+      }
+    });
+    if (idPais === undefined) {
       this.toastr.info('No ha seleccionado ninguna opción')
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
     else {
-      this.seleccionarProvincia = this.ObtenerProvincias(nombrePais);
+      this.seleccionarProvincia = this.ObtenerProvincias(idPais);
     }
   }
 
   InsertarCiudad(form) {
-    var provinciaId = form.idProvinciaForm;
-    var nombreCiudad = form.nombreForm;
-    console.log(provinciaId, nombreCiudad)
+    let provinciaId;
+    this.provincias.forEach(obj => {
+      if (obj.nombre === form.idProvinciaForm) {
+        provinciaId = obj.id
+      }
+    });
     if (provinciaId === 'Seleccionar') {
       this.toastr.info('Seleccione una provincia')
     }
@@ -132,7 +166,6 @@ export class RegistrarCiudadComponent implements OnInit {
   CerrarVentanaRegistroCiudad() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
   IngresarSoloLetras(e) {
