@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -17,6 +18,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarHorarioComponent } from '../editar-horario/editar-horario.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-principal-horario',
@@ -60,6 +62,7 @@ export class PrincipalHorarioComponent implements OnInit {
     private restD: DetalleCatHorariosService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
+    public router: Router,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -116,6 +119,28 @@ export class PrincipalHorarioComponent implements OnInit {
       this.ObtenerHorarios();
     });
   }
+
+  /** Función para eliminar registro seleccionado Planificación*/
+  EliminarDetalle(id_horario: number) {
+    this.rest.EliminarRegistro(id_horario).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ObtenerHorarios();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    console.log(datos);
+    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.EliminarDetalle(datos.id);
+        } else {
+          this.router.navigate(['/horario/']);
+        }
+      });
+  }
+
 
   /****************************************************************************************************** 
    * PLANTILLA CARGAR SOLO HORARIOS
@@ -222,15 +247,15 @@ export class PrincipalHorarioComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

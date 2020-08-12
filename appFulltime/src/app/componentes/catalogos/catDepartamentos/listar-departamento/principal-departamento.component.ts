@@ -103,9 +103,10 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
-    const DIALOG_REF = this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
-      { width: '600px', data: departamento });
-    DIALOG_REF.disableClose = true;
+    this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
+      { width: '600px', data: departamento }).afterClosed().subscribe(item => {
+        this.ListaDepartamentos();
+      });
   }
 
   LimpiarCampos() {

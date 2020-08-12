@@ -8,7 +8,7 @@
 
 p { font-size: x-small; }
 
-#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center; }
+#edit { color:green; margin-right: 20px; cursor: pointer; font-size: 15px; text-align: center; }
 
 #delete { color:red;  cursor: pointer; text-align: center; }
 

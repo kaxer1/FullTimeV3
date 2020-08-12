@@ -30,6 +30,7 @@ class HorarioRutas {
         this.router.put('/:id/documento', multipartMiddlewareD, HORARIO_CONTROLADOR.GuardarDocumentoHorario);
         this.router.put('/editar/editarDocumento/:id', HORARIO_CONTROLADOR.EditarDocumento);
         this.router.post('/cargarHorario/upload', multipartMiddleware, HORARIO_CONTROLADOR.CargarHorarioPlantilla);
+        this.router.delete('/eliminar/:id', HORARIO_CONTROLADOR.EliminarRegistros);
 
     }
 }

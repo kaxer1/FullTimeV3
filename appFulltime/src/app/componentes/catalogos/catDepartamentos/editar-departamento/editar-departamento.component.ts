@@ -81,7 +81,12 @@ export class EditarDepartamentoComponent implements OnInit {
         depa_padre: null,
         id_sucursal: form.idSucursalForm
       };
-      this.GuardarDatos(datadepartamento);
+      if (datadepartamento.nombre === this.departamentoModificar.nombre) {
+        this.ActualizarDepartamento(datadepartamento);
+      }
+      else {
+        this.GuardarDatos(datadepartamento);
+      }
     } else {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(data => {
         departamentoPadreId = data[0].id;
@@ -91,7 +96,12 @@ export class EditarDepartamentoComponent implements OnInit {
           depa_padre: departamentoPadreId,
           id_sucursal: form.idSucursalForm
         };
-        this.GuardarDatos(datadepartamento);
+        if (datadepartamento.nombre === this.departamentoModificar.nombre) {
+          this.ActualizarDepartamento(datadepartamento);
+        }
+        else {
+          this.GuardarDatos(datadepartamento);
+        }
       })
     }
   }
@@ -113,19 +123,23 @@ export class EditarDepartamentoComponent implements OnInit {
         this.contador = 0;
       }
       else {
-        this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
-          if (response.message === 'error') {
-            this.toastr.error('Existe un error en los datos.');
-          }
-          else {
-            this.toastr.success('Operacion Exitosa', 'Departamento modificado');
-            window.location.reload();
-            this.dialogRef.close();
-          }
-        });
+        this.ActualizarDepartamento(datos);
       }
     }, error => {
       this.toastr.info('Sucursal no cuenta con departamentos registrados')
+    });
+  }
+
+  ActualizarDepartamento(datos) {
+    this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('Existe un error en los datos.');
+      }
+      else {
+        this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+        //window.location.reload();
+        this.dialogRef.close();
+      }
     });
   }
 

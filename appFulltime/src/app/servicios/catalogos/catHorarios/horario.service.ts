@@ -50,4 +50,8 @@ export class HorarioService {
     return this.http.post(`${this.API_URL}/horario/cargarHorario/upload`, formData);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/horario/eliminar/${id}`);
+  }
+
 }

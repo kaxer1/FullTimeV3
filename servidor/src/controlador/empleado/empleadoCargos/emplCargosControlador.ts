@@ -5,20 +5,20 @@ class EmpleadoCargosControlador {
   public async list(req: Request, res: Response) {
     const Cargos = await pool.query('SELECT * FROM empl_cargos');
     if (Cargos.rowCount > 0) {
-      res.jsonp(Cargos.rows);
+      return res.jsonp(Cargos.rows);
     }
     else {
-      res.status(404).jsonp({ text: 'Registro no encontrado' });
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
     }
   }
 
   public async ListarCargoEmpleado(req: Request, res: Response) {
     const empleadoCargos = await pool.query('SELECT cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY nombre ASC');
     if (empleadoCargos.rowCount > 0) {
-      res.jsonp(empleadoCargos.rows);
+      return res.jsonp(empleadoCargos.rows);
     }
     else {
-      res.status(404).jsonp({ text: 'Registro no encontrado' });
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
     }
   }
 
@@ -26,10 +26,10 @@ class EmpleadoCargosControlador {
     const { id } = req.params;
     const empleadoCargos = await pool.query('SELECT * FROM Lista_empleados_autoriza WHERE id_notificacion = $1', [id]);
     if (empleadoCargos.rowCount > 0) {
-      res.jsonp(empleadoCargos.rows);
+      return res.jsonp(empleadoCargos.rows);
     }
     else {
-      res.status(404).jsonp({ text: 'Registro no encontrado' });
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
     }
   }
 
