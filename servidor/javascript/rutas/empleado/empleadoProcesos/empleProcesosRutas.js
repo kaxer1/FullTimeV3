@@ -15,6 +15,7 @@ class DepartamentoRutas {
         this.router.get('/infoProceso/:id_empl_cargo', empleProcesoControlador_1.default.EncontrarProcesoPorIdCargo);
         this.router.post('/', empleProcesoControlador_1.default.CrearEmpleProcesos);
         this.router.put('/', empleProcesoControlador_1.default.ActualizarProcesoEmpleado);
+        this.router.delete('/eliminar/:id', empleProcesoControlador_1.default.EliminarRegistros);
     }
 }
 const EMPLEADO_PROCESO_RUTAS = new DepartamentoRutas();

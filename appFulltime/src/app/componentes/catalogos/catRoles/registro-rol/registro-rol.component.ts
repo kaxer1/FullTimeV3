@@ -12,6 +12,8 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class RegistroRolComponent implements OnInit {
 
+  salir: boolean = false;
+
   descripcion = new FormControl('', Validators.required);
 
   public nuevoRolForm = new FormGroup({
@@ -51,6 +53,7 @@ export class RegistroRolComponent implements OnInit {
       console.log(response);
       this.toastr.success('Operacion Exitosa', 'Rol guardado');
       this.limpiarCampos();
+      this.salir = true;
     }, error => {
       console.log(error);
     });
@@ -78,7 +81,6 @@ export class RegistroRolComponent implements OnInit {
 
   CerrarVentanaRegistroRol() {
     this.limpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close(this.salir);
   }
 }

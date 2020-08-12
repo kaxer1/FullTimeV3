@@ -41,4 +41,8 @@ export class SucursalService {
     return this.http.post(`${this.API_URL}/sucursales/xmlDownload`, data);
   }
 
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/sucursales/eliminar/${id}`);
+  }
+
 }

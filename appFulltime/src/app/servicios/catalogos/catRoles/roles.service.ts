@@ -32,4 +32,8 @@ export class RolesService {
     return this.http.post(`${this.API_URI}/rol/xmlDownload`, data);
   }
 
+  EliminarRoles(id: number) {
+    return this.http.delete(`${this.API_URI}/rol/eliminar/${id}`);
+  }
+
 }

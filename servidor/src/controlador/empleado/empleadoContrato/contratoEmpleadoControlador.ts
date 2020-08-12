@@ -39,7 +39,9 @@ class ContratoEmpleadoControlador {
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
     }
 
     public async EncontrarIdContratoActual(req: Request, res: Response): Promise<any> {
@@ -50,11 +52,11 @@ class ContratoEmpleadoControlador {
                 return res.jsonp(CONTRATO.rows)
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         }
         else {
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
         }
     }
 
@@ -64,7 +66,10 @@ class ContratoEmpleadoControlador {
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+
     }
 
     public async EncontrarContratoEmpleadoRegimen(req: Request, res: Response): Promise<any> {
@@ -73,7 +78,10 @@ class ContratoEmpleadoControlador {
         if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
             return res.jsonp(CONTRATO_EMPLEADO_REGIMEN.rows)
         }
-        res.status(404).jsonp({ text: 'Registro no encontrado' });
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+
     }
 
     public async EditarContrato(req: Request, res: Response): Promise<any> {
@@ -101,9 +109,31 @@ class ContratoEmpleadoControlador {
         const id = req.params.id;
         const { documento } = req.body;
         await pool.query('UPDATE empl_contratos SET documento = $1 WHERE id = $2', [documento, id]);
-    
+
         res.jsonp({ message: 'Contrato Actualizado' });
-      }
+    }
+
+    public async EncontrarFechaContrato(req: Request, res: Response): Promise<any> {
+        const { id_cargo, id_empleado } = req.body;
+        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato, empl_cargos AS cargo, empleados WHERE contrato.id_empleado = empleados.id AND cargo.id_empl_contrato = contrato.id AND cargo.id = $1 AND empleados.id = $2', [id_cargo, id_empleado]);
+        if (FECHA.rowCount > 0) {
+            return res.jsonp(FECHA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+    }
+
+    public async EncontrarFechaContratoId(req: Request, res: Response): Promise<any> {
+        const { id_contrato } = req.body;
+        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato WHERE contrato.id = $1', [id_contrato]);
+        if (FECHA.rowCount > 0) {
+            return res.jsonp(FECHA.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+    }
 }
 
 const CONTRATO_EMPLEADO_CONTROLADOR = new ContratoEmpleadoControlador();

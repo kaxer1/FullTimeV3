@@ -17,7 +17,12 @@ class NivelTituloControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const titulo = yield database_1.default.query('SELECT * FROM nivel_titulo ORDER BY nombre ASC');
-            res.jsonp(titulo.rows);
+            if (titulo.rowCount > 0) {
+                return res.jsonp(titulo.rows);
+            }
+            else {
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     getOne(req, res) {
@@ -27,7 +32,9 @@ class NivelTituloControlador {
             if (unNivelTitulo.rowCount > 0) {
                 return res.jsonp(unNivelTitulo.rows);
             }
-            res.status(404).jsonp({ text: 'Registro no encontrado' });
+            else {
+                res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
         });
     }
     ObtenerNivelNombre(req, res) {
@@ -60,6 +67,17 @@ class NivelTituloControlador {
             console.log(id);
             yield database_1.default.query('DELETE FROM nivel_titulo WHERE id = $1', [id]);
             res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    ObtenerUltimoId(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ultimoRegistro = yield database_1.default.query('SELECT MAX(id) FROM nivel_titulo');
+            if (ultimoRegistro.rowCount > 0) {
+                return res.jsonp(ultimoRegistro.rows);
+            }
+            else {
+                return res.jsonp({ message: 'Registro no encontrado' });
+            }
         });
     }
 }

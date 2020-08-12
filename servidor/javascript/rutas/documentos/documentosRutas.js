@@ -21,6 +21,7 @@ class DoumentosRutas {
         this.router.put('/editar/:id', documentosControlador_1.default.EditarDocumento);
         this.router.get('/documentos/:docs', documentosControlador_1.default.ObtenerDocumento);
         this.router.put('/:id/documento', multipartMiddleware, documentosControlador_1.default.GuardarDocumentos);
+        this.router.delete('/eliminar/:id', documentosControlador_1.default.EliminarRegistros);
     }
 }
 const DOCUMENTOS_RUTAS = new DoumentosRutas();

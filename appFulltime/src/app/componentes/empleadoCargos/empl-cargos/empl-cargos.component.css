@@ -3,18 +3,19 @@
 .barraTituloCargoE { 
     text-align: center; 
     background: rgb(52,65,84);
-     color: white; 
-     padding-top: 14px; 
+    color: white; 
+    padding-top: 14px; 
 }
 
 .alinear {margin-top: 5px; }
 
-mat-form-field {width: 195px; }
+mat-form-field {width: 195px; padding: 10px 10px 0px 10px;}
 
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
+    margin-left: 10px;
 }
 
 /*.cargoE-tooltip { background-color : rgb(4, 156, 136); }*/

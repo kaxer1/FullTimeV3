@@ -4,13 +4,13 @@ h5 { text-align: center; }
 
 p { font-size: x-small; }
 
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { margin: 5px 10px 5px 10px; background-color: rgb(80,87,97); color: white; } 
 
 .fas { color:green; margin-left: 20px; cursor: pointer; }
 
 .far { color:red; margin-left: 20px; cursor: pointer; }
 
-/*.enrolado-tooltip { background-color : rgb(3, 167, 167); }*/
+mat-form-field { padding: 10px 15px 0px 15px;}
 
 .TituloEnrolado { 
     font-size: 20px; 

@@ -37,4 +37,8 @@ export class NivelTitulosService {
   ActualizarNivelTitulo(datos:any){
     return this.http.put(`${this.NIVEL_TITULO_URL}/nivel-titulo`, datos);
   }
+
+  BuscarNivelID(){
+    return this.http.get<any>(`${this.NIVEL_TITULO_URL}/nivel-titulo/nivel/datos/`);
+  }
 }

@@ -53,6 +53,13 @@ class RolesControlador {
             res.jsonp({ message: 'Registro Actualizado' });
         });
     }
+    EliminarRol(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM cg_roles WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
     // public async update(req: Request, res: Response): Promise<void> {
     //   const { id } = req.params;
     //   const { descripcion, usuarios } = req.body;

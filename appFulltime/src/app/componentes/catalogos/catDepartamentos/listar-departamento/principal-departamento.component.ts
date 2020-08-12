@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -14,6 +15,8 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/registro-departamento/registro-departamento.component';
 import { EditarDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ScriptService } from 'src/app/servicios/empleado/script.service';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -58,10 +61,13 @@ export class PrincipalDepartamentoComponent implements OnInit {
     private rest: DepartamentosService,
     public restE: EmpleadoService,
     private toastr: ToastrService,
-    public vistaRegistrarDepartamento: MatDialog
+    private scriptService: ScriptService,
+    public vistaRegistrarDepartamento: MatDialog,
+    private router: Router,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
-   }
+    this.scriptService.load('pdfMake', 'vfsFonts');
+  }
 
   ngOnInit(): void {
     this.ListaDepartamentos();
@@ -85,7 +91,8 @@ export class PrincipalDepartamentoComponent implements OnInit {
   ListaDepartamentos() {
     this.departamentos = []
     this.rest.ConsultarDepartamentos().subscribe(datos => {
-      this.departamentos = datos
+      this.departamentos = datos;
+      console.log(this.departamentos);
     })
   }
 
@@ -96,9 +103,10 @@ export class PrincipalDepartamentoComponent implements OnInit {
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
-    const DIALOG_REF = this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
-      { width: '600px', data: departamento });
-    DIALOG_REF.disableClose = true;
+    this.vistaRegistrarDepartamento.open(EditarDepartamentoComponent,
+      { width: '600px', data: departamento }).afterClosed().subscribe(item => {
+        this.ListaDepartamentos();
+      });
   }
 
   LimpiarCampos() {
@@ -144,6 +152,27 @@ export class PrincipalDepartamentoComponent implements OnInit {
     }
   }
 
+  /** Función para eliminar registro seleccionado */
+  Eliminar(id_dep: number) {
+    //console.log("probando id", id_prov)
+    this.rest.EliminarRegistro(id_dep).subscribe(res => {
+      this.toastr.error('Registro eliminado');
+      this.ListaDepartamentos();
+    });
+  }
+
+  /** Función para confirmar si se elimina o no un registro */
+  ConfirmarDelete(datos: any) {
+    this.vistaRegistrarDepartamento.open(MetodosComponent, { width: '450px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.Eliminar(datos.id);
+        } else {
+          this.router.navigate(['/departamento']);
+        }
+      });
+  }
+
   /****************************************************************************************************** 
    *                                         MÉTODO PARA EXPORTAR A PDF
    ******************************************************************************************************/
@@ -186,7 +215,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }

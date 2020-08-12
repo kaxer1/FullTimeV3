@@ -41,6 +41,18 @@ class AutorizaDepartamentoControlador {
         }
     }
 
+    public async ActualizarAutorizaDepartamento(req: Request, res: Response): Promise<void> {
+        const { id_departamento, id_empl_cargo, estado, id } = req.body;
+        await pool.query('UPDATE depa_autorizaciones SET id_departamento = $1, id_empl_cargo = $2, estado = $3 WHERE id = $4', [id_departamento, id_empl_cargo, estado, id]);
+        res.jsonp({ message: 'Autorización se registró con éxito' });
+    }
+
+    public async EliminarAutorizacionDepartamento(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM depa_autorizaciones WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 
 
 }

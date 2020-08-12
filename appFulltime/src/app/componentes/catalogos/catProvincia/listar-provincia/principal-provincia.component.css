@@ -1,4 +1,4 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { background-color: rgb(80,87,97); color: white; } 
 
 p { font-size: x-small; }
 
@@ -27,6 +27,8 @@ td { padding-top: 10px; text-align: center; }
 }
 
 mat-form-field { padding: 10px 15px 0px 15px;}
+
+button {margin: 5px 10px 5px 10px;}
 
 #prov { cursor: pointer; }
 

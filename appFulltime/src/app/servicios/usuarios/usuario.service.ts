@@ -38,4 +38,8 @@ export class UsuarioService {
     return this.http.put(`${this.API_URL}/usuarios`, data);
   }
 
+  ActualizarDatos(data: any) {
+    return this.http.put(`${this.API_URL}/usuarios/actualizarDatos`, data);
+  }
+
 }

@@ -32,7 +32,16 @@ class EmpleadoProcesoControlador {
     const { id, id_empl_cargo, fec_inicio, fec_final, id_p } = req.body;
     await pool.query('UPDATE empl_procesos SET id = $1, id_empl_cargo = $2, fec_inicio = $3, fec_final = $4 WHERE id_p = $5', [id, id_empl_cargo, fec_inicio, fec_final, id_p]);
     res.jsonp({ message: 'Proceso actualizado exitosamente' });
-}
+  }
+
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM empl_procesos WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
+
+
+
 
 }
 

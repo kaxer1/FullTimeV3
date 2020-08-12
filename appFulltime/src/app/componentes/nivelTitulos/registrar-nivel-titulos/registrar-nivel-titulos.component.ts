@@ -73,7 +73,6 @@ export class RegistrarNivelTitulosComponent implements OnInit {
   CerrarVentanaRegistroTitulo() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

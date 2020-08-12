@@ -7,23 +7,21 @@
             </div>
             <mat-card class="example-card mat-elevation-z8">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <div class="container" style="text-align: center;">
-                        <form>
-                            <mat-form-field>
-                                <mat-label>Búsqueda por nombre</mat-label>
-                                <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles"
-                                    (keypress)="IngresarSoloLetras($event)" [formControl]="buscarDescripcion">
-                                <mat-icon id="iRolL" matSuffix matTooltipClass="rolL-tooltip" matTooltipPosition="right"
-                                    matTooltip="Búsqueda de Rol por su nombre">
-                                    help_outline</mat-icon>
-                                <mat-error *ngIf="buscarDescripcion.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                            </mat-form-field>
-                        </form>
-                    </div>
-                </mat-card-content>
-                <div style="text-align: center;">
+                <div class="d-flex flex-wrap justify-content-center">
+                    <form>
+                        <mat-form-field>
+                            <mat-label>Búsqueda por nombre</mat-label>
+                            <input matInput placeholder="Ej: Administrador " [(ngModel)]="filtroRoles"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="buscarDescripcion">
+                            <mat-icon id="iRolL" matSuffix matTooltipClass="rolL-tooltip" matTooltipPosition="right"
+                                matTooltip="Búsqueda de Rol por su nombre">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="buscarDescripcion.invalid">Indispensable ingresar dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div class="d-flex flex-wrap justify-content-center">
                     <button mat-button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarRol()">Crear nuevo
                         Rol
                     </button>
@@ -60,6 +58,12 @@
                                 matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
                                 <p>Editar</p>
                             </i>
+                            <i class="far fa-trash-alt" (click)="ConfirmarDelete(rol)"
+                            style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                            matTooltip="Eliminar registro">
+                            <p>Eliminar</p>
+                        </i>
                         </td>
                     </tr>
                 </tbody>

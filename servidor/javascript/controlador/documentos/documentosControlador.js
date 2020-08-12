@@ -69,6 +69,13 @@ class DocumentosControlador {
             res.jsonp({ message: 'Documento Guardado' });
         });
     }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM documentacion WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.DOCUMENTOS_CONTROLADOR = new DocumentosControlador();
 exports.default = exports.DOCUMENTOS_CONTROLADOR;

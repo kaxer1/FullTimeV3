@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material/paginator';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
-import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
 
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
+import { CancelarPermisoComponent } from './cancelar-permiso/cancelar-permiso.component';
+import { EditarPermisoEmpleadoComponent } from './editar-permiso-empleado/editar-permiso-empleado.component';
 
 @Component({
   selector: 'app-solicitar-permisos-empleado',
@@ -19,17 +20,18 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
 
   idEmpleado: string;
   idContrato: any = [];
-  idCargo: any = [];
   idPerVacacion: any = [];
   cont: number;
+  /* Items de paginación de la tabla */
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
 
   constructor(
     public restEmpleado: EmpleadoService,
-    public restCargo: EmplCargosService,
     public restPerV: PeriodoVacacionesService,
     public vistaRegistrarDatos: MatDialog,
     public restPermiso: PermisosService,
-    public restAutoridad: AutorizaDepartamentoService,
     private toastr: ToastrService,
 
   ) {
@@ -38,10 +40,14 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerPermisos(parseInt(this.idEmpleado))
-    this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
   }
 
-/* 
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
+  }
+
+  /* 
    * ***************************************************************************************************
    *                               MÉTODO PARA MOSTRAR DATOS
    * ***************************************************************************************************
@@ -78,36 +84,6 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
     });
   }
 
-  /* Método para mostrar datos de autoridad departamentos */
-  autorizacionEmpleado: any;
-  autorizacionesTotales: any;
-  ObtenerAutorizaciones(id_empleado: number) {
-    this.autorizacionEmpleado = [];
-    this.autorizacionesTotales = [];
-    this.restCargo.BuscarIDCargo(id_empleado).subscribe(datos => {
-      this.idCargo = datos;
-      console.log("idCargo ", this.idCargo[0].id);
-      for (let i = 0; i <= this.idCargo.length - 1; i++) {
-        this.restAutoridad.BuscarAutoridadCargo(this.idCargo[i]['id']).subscribe(datos => {
-          this.autorizacionEmpleado = datos;
-          if (this.autorizacionEmpleado.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.autorizacionesTotales = datos
-              this.cont++;
-            }
-            else {
-              this.autorizacionesTotales = this.autorizacionesTotales.concat(datos);
-              console.log("Datos autorizacion" + i + '', this.autorizacionesTotales)
-            }
-          }
-        })
-      }
-    });
-  }
-
   /* Ventana para registrar permisos del empleado */
   AbrirVentanaPermiso(): void {
     this.restEmpleado.BuscarIDContrato(parseInt(this.idEmpleado)).subscribe(datos => {
@@ -128,6 +104,22 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
       });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+    });
+  }
+
+  CancelarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(CancelarPermisoComponent, {width: '300px', data: dataPermiso}).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }
+    });
+  }
+
+  EditarPermiso(dataPermiso) {
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {width: '1200px', data: dataPermiso}).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.obtenerPermisos(parseInt(this.idEmpleado));
+      }      
     });
   }
 }

@@ -7,27 +7,25 @@
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <mat-card-content>
-                    <form [formGroup]="BuscarTipoPermisoForm">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
-                                <mat-label>Nombre del permiso</mat-label>
-                                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
-                                    matTooltipPosition="right" matTooltip="Búsqueda del permiso por el nombre">
-                                    help_outline</mat-icon>
-                                <input matInput name="filtroDescripcion" placeholder="Ingresar nombre"
-                                    minlength="2" [formControl]="nombreF" [(ngModel)]="filtroDescripcion">
-                                <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras</mat-error>
-                            </mat-form-field>
-                        </div>
-                    </form>
-                </mat-card-content>
-                <mat-card-actions class="d-flex justify-content-center">
-                    <button mat-button class="btn btn-sm" [routerLink]="['/tipoPermisos']">Crear nuevo Permiso
+                <form [formGroup]="BuscarTipoPermisoForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Nombre del permiso</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del permiso por el nombre">
+                                help_outline</mat-icon>
+                            <input matInput name="filtroDescripcion" placeholder="Ingresar nombre" minlength="2"
+                                [formControl]="nombreF" [(ngModel)]="filtroDescripcion">
+                            <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras</mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <button mat-button type="submit"  class="btn btn-sm" [routerLink]="['/tipoPermisos']">Crear nuevo Permiso
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
                     </button>
-                </mat-card-actions>
+                </div>
             </mat-card>
         </div>
     </div>
@@ -47,21 +45,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let tp of tipoPermiso | filtroNombre: filtroDescripcion | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let tp of tipoPermiso | filtroNombre: filtroDescripcion | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{tp.id}}</th>
                         <td style="padding-top: 10px;text-align: center;">{{tp.descripcion}}</td>
                         <td style="padding-top: 10px;text-align: center;">{{tp.actualizar}}</td>
                         <td style="padding-top: 10px;text-align: center;">{{tp.legalizar}}</td>
                         <td style="padding-top: 10px;text-align: center;" class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/vistaPermiso/', tp.id]">
+                                <p>Ver</p>
+                            </i>
                             <i id="permiso" class="fas fa-edit" style="color:green; margin-right: 15px;" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 (click)="AbrirVentanaEditarTipoPermisos(tp)"
                                 matTooltip="Modificar los datos generales de este registro">
                                 <p>Editar</p>
                             </i>
-                            <i id="permiso" class="far fa-trash-alt" style="color:red; margin-right: 15px;" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Eliminar este registro">
+                            <i (click)="ConfirmarDelete(tp)" id="permiso" class="far fa-trash-alt"
+                                style="color:red; margin-right: 15px;" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
                                 <p>Eliminar</p>
                             </i>
                         </td>

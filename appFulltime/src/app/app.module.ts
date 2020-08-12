@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { ScrollingModule } from '@angular/cdk/scrolling'
-
+import { JwPaginationModule } from 'jw-angular-pagination';
 // vistas
 import { VistaRolesComponent } from './componentes/catalogos/catRoles/vista-roles/vista-roles.component';
 import { LoginComponent } from './componentes/login/login.component';
@@ -28,7 +28,7 @@ import { PrincipalProvinciaComponent } from './componentes/catalogos/catProvinci
 import { RegistroProvinciaComponent } from './componentes/catalogos/catProvincia/registro-provincia/registro-provincia.component';
 import { PrincipalProcesoComponent } from './componentes/catalogos/catProcesos/principal-proceso/principal-proceso.component';
 import { RegistroProcesoComponent } from './componentes/catalogos/catProcesos/registro-proceso/registro-proceso.component';
-import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/horas-extras.component';
+import { HorasExtrasComponent } from './componentes/catalogos/catHorasExtras/registrar-horas-extras/horas-extras.component';
 import { RegimenComponent } from './componentes/catalogos/catRegimen/regimen/regimen.component';
 import { TipoComidasComponent } from './componentes/catalogos/catTipoComidas/tipo-comidas/tipo-comidas.component';
 import { RelojesComponent } from './componentes/catalogos/catRelojes/relojes/relojes.component';
@@ -234,6 +234,35 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { HoraExtraAutorizacionesComponent } from './componentes/autorizaciones/hora-extra-autorizaciones/hora-extra-autorizaciones.component';
 import { EditarEstadoHoraExtraAutorizacionComponent } from './componentes/autorizaciones/editar-estado-hora-extra-autorizacion/editar-estado-hora-extra-autorizacion.component';
 import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-extra/estado-hora-extra.component';
+import { CancelarPermisoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/cancelar-permiso/cancelar-permiso.component';
+import { EditarCiudadComponent } from './componentes/catalogos/catFeriados/editar-ciudad/editar-ciudad.component';
+import { EditarHorarioEmpleadoComponent } from './componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
+import { EditarPlanificacionComponent } from './componentes/planHorarios/editar-planificacion/editar-planificacion.component';
+import { EditarDetallePlanComponent } from './componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
+import { EditarPlanComidasComponent } from './componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
+import { EditarAutorizacionDepaComponent } from './componentes/autorizacionDepartamento/editar-autorizacion-depa/editar-autorizacion-depa.component';
+import { EditarDispositivoEnroladoComponent } from './componentes/catalogos/catEnrolados/editar-dispositivo-enrolado/editar-dispositivo-enrolado.component';
+import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
+import { EditarDetalleCatHorarioComponent } from './componentes/catalogos/catHorario/editar-detalle-cat-horario/editar-detalle-cat-horario.component';
+import { VerDipositivoComponent } from './componentes/catalogos/catRelojes/ver-dipositivo/ver-dipositivo.component';
+import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
+import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
+import { ConfigurarCodigoComponent } from './componentes/configurar-codigo/configurar-codigo.component';
+import { EditarPermisoEmpleadoComponent } from './componentes/rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
+import { CancelarHoraExtraComponent } from './componentes/rolEmpleado/hora-extra-empleado/cancelar-hora-extra/cancelar-hora-extra.component';
+import { EditarHoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
+import { CancelarVacacionesComponent } from './componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
+import { EditarVacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
+import { VerRegimenComponent } from './componentes/catalogos/catRegimen/ver-regimen/ver-regimen.component';
+import { VerTipoPermisoComponent } from './componentes/catalogos/catTipoPermisos/ver-tipo-permiso/ver-tipo-permiso.component';
+import { ListaHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/lista-horas-extras/lista-horas-extras.component';
+import { EditarHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/editar-horas-extras/editar-horas-extras.component';
+import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
+import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
+import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empresa/ver-empresa.component';
+import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
+import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
+import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 
 
 @NgModule({
@@ -396,6 +425,35 @@ import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-
     HoraExtraAutorizacionesComponent,
     EditarEstadoHoraExtraAutorizacionComponent,
     EstadoHoraExtraComponent,
+    CancelarPermisoComponent,
+    EditarCiudadComponent,
+    EditarHorarioEmpleadoComponent,
+    EditarPlanificacionComponent,
+    EditarDetallePlanComponent,
+    EditarPlanComidasComponent,
+    EditarAutorizacionDepaComponent,
+    EditarDispositivoEnroladoComponent,
+    PlanificacionComidasEmpleadoComponent,
+    EditarDetalleCatHorarioComponent,
+    VerDipositivoComponent,
+    ProcesosEmpleadoComponent,
+    AutorizaEmpleadoComponent,
+    ConfigurarCodigoComponent,
+    EditarPermisoEmpleadoComponent,
+    CancelarHoraExtraComponent,
+    EditarHoraExtraEmpleadoComponent,
+    CancelarVacacionesComponent,
+    EditarVacacionesEmpleadoComponent,
+    VerRegimenComponent,
+    VerTipoPermisoComponent,
+    ListaHorasExtrasComponent,
+    EditarHorasExtrasComponent,
+    VerHorasExtrasComponent,
+    VerSucursalComponent,
+    VerEmpresaComponent,
+    RegistrarBirthdayComponent,
+    EditarBirthdayComponent,
+    VerBirthdayComponent,
   ],
 
   imports: [
@@ -443,7 +501,8 @@ import { EstadoHoraExtraComponent } from './componentes/horasExtras/estado-hora-
     MatNativeDateModule,
     MatTabsModule,
     MatMenuModule,
-    ScrollingModule
+    ScrollingModule,
+    JwPaginationModule
   ],
   providers: [
     AuthGuard,

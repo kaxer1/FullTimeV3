@@ -21,13 +21,16 @@ class PermisosRutas {
         this.router.get('/:id', permisosControlador_1.default.ObtenerUnPermiso);
         this.router.get('/un-permiso/:id_permiso', permisosControlador_1.default.ListarUnPermisoInfo);
         this.router.post('/', permisosControlador_1.default.CrearPermisos);
+        this.router.post('/mail-noti/', permisosControlador_1.default.SendMailNotifiPermiso);
         this.router.get('/documentos/:docs', permisosControlador_1.default.getDoc);
         this.router.get('/numPermiso/:id_empleado', permisosControlador_1.default.ObtenerNumPermiso);
         this.router.get('/permisoContrato/:id_empl_contrato', permisosControlador_1.default.ObtenerPermisoContrato);
         this.router.put('/:id/documento', multipartMiddleware, permisosControlador_1.default.guardarDocumentoPermiso);
         this.router.put('/:id/estado', permisosControlador_1.default.ActualizarEstado);
+        this.router.put('/:id/permiso-solicitado', permisosControlador_1.default.EditarPermiso);
         this.router.get('/datosSolicitud/:id_emple_permiso', permisosControlador_1.default.ObtenerDatosSolicitud);
         this.router.get('/datosAutorizacion/:id_permiso/:id_empleado', permisosControlador_1.default.ObtenerDatosAutorizacion);
+        this.router.delete('/eliminar/:id_permiso/:doc', permisosControlador_1.default.EliminarPermiso);
     }
 }
 const PERMISOS_RUTAS = new PermisosRutas();

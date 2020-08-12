@@ -61,7 +61,9 @@ export class ListarCiudadComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarCiudad() {
-    this.vistaRegistrarDatos.open(RegistrarCiudadComponent, { width: '600px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RegistrarCiudadComponent, { width: '600px' }).afterClosed().subscribe(item => {
+      this.ListarCiudades();
+    });
   }
 
   /* **********************************************************************************

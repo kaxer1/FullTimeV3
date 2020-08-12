@@ -27,7 +27,15 @@ export class DetalleCatHorariosService {
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/detalleHorario/upload', formData)  
+    return this.http.post(this.API_URL + '/detalleHorario/upload', formData)
   }
-  
+
+  ActualizarRegistro(data: any) {
+    return this.http.put(`${this.API_URL}/detalleHorario`, data);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/detalleHorario/eliminar/${id}`);
+  }
+
 }

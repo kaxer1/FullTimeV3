@@ -49,6 +49,9 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
+          <a mat-list-item [routerLink]="['/codigo']" class="texcol">
+            <span matLine>Configurar Código</span>
+          </a>
           <a mat-list-item [routerLink]="['/empleado']" class="texcol">
             <span matLine>Crear Empleado</span>
           </a>
@@ -118,7 +121,7 @@
           <a mat-list-item [routerLink]="['/horas-extras-solicitadas']" class="texcol">
             <span matLine>Hora Extra Solicitud</span>
           </a>
-          <a mat-list-item [routerLink]="['/tipoPermisos']" class="texcol">
+          <a mat-list-item [routerLink]="['/verTipoPermiso']" class="texcol">
             <span matLine>Configurar Permisos</span>
           </a>
         </mat-nav-list>
@@ -154,7 +157,7 @@
           <a mat-list-item [routerLink]="['/horario']" class="texcol">
             <span matLine>Crear Horario</span>
           </a>
-          <a mat-list-item [routerLink]="['/horasExtras']" class="texcol">
+          <a mat-list-item [routerLink]="['/listaHorasExtras']" class="texcol">
             <span matLine>Configurar Horas Extras</span>
           </a>
           <a mat-list-item [routerLink]="['/planificacion']" class="texcol">
@@ -200,7 +203,7 @@
       </mat-expansion-panel>
 
       <!-- Acciones de Personal-->
-      <mat-expansion-panel class="menus">
+      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
         <mat-expansion-panel-header class="selec8">
           <mat-panel-title>
             <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
@@ -213,17 +216,32 @@
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
+      
+      <!-- Cumpleaños -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec5">
+          <mat-panel-title>
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Cumpleaños</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/cumpleanios']" class="texcol">
+            <span matLine>Cumpleaños</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
 
     </mat-accordion>
 
     <!-- MENU PARA EMPLEADOS -->
-    <!-- PERFIL -->
     <mat-accordion *ngIf="!loginService.getRolMenu()">
+      <!-- PERFIL -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec1">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">account_circle</mat-icon>
-            <span class="item-menu" id="accion">Perfil</span>
+            <span class="item-menu">Perfil</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -241,7 +259,7 @@
         <mat-expansion-panel-header class="selec2">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">mobile_friendly</mat-icon>
-            <span class="item-menu" id="accion">Asistencia</span>
+            <span class="item-menu">Asistencia</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -259,7 +277,7 @@
         <mat-expansion-panel-header class="selec3">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">hourglass_full</mat-icon>
-            <span class="item-menu" id="accion">Horas Extras</span>
+            <span class="item-menu">Horas Extras</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -274,7 +292,7 @@
         <mat-expansion-panel-header class="selec4">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">flight</mat-icon>
-            <span class="item-menu" id="accion">Vacaciones</span>
+            <span class="item-menu">Vacaciones</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -289,7 +307,7 @@
         <mat-expansion-panel-header class="selec6">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">transfer_within_a_station</mat-icon>
-            <span class="item-menu" id="accion">Permisos</span>
+            <span class="item-menu">Permisos</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -299,12 +317,57 @@
         </mat-nav-list>
       </mat-expansion-panel>
 
+      <!-- ALMUERZOS -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">restaurant</mat-icon>
+            <span class="item-menu">Almuerzos</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/almuerzosEmpleado']" class="texcol">
+            <span matLine>Planificación</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- PROCESOS -->
+      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Acción de Personal</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/procesosEmpleado']" class="texcol">
+            <span matLine>Procesos</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- AUTORIZACION -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec8">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">lock_open</mat-icon>
+            <span class="item-menu" id="accion">Autorización</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/autorizaEmpleado']" class="texcol">
+            <span matLine>Autoridad</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
       <!-- INFORMACIÓN -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec7">
           <mat-panel-title class="item">
             <mat-icon mat-list-icon class="color-icon">info</mat-icon>
-            <span class="item-menu" id="accion">Información</span>
+            <span class="item-menu">Información</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -319,241 +382,523 @@
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
+
+      <!-- NOTIFICACIONES PARA QUIENES AUTORIZAN LAS SOLICITUDES -->
+      <mat-expansion-panel class="menus" *ngIf="loginService.getEstado() == estado">
+        <mat-expansion-panel-header class="selec2">
+          <mat-panel-title class="item">
+            <mat-icon mat-list-icon class="color-icon">notifications</mat-icon>
+            <span class="item-menu">Notificaciones</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/lista-notificaciones']" class="texcol">
+            <span matLine>Lista</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
     </mat-accordion>
 
   </mat-sidenav>
 
   <mat-sidenav-content class="degradado">
-    <mat-toolbar>
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-
-      <div id="avatar" *ngIf="mostrarImagen">
-        <img src="{{urlImagen}}" alt="" id="avatarImagen">
-      </div>
-      <div id="avatar" *ngIf="mostrarIniciales">
-        <span class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
-      </div>
-
-      <div class="dos">
-        <div class="card border-0" style="background-color: transparent; margin-top: auto;">
-          <div class="card-body">
-            <h3 class="card-title">{{UserName}}</h3>
-            <p class="card-text" style="font-size: 13px;">{{UserEmail}}</p>
-          </div>
-        </div>
-      </div>
-
-      <form class="example-form">
-        <mat-form-field class="example-full-width">
-          <mat-icon matPrefix>search</mat-icon>
-          <input type="text" placeholder="Buscar" aria-label="Number" matInput [formControl]="myControl"
-            [matAutocomplete]="auto">
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-
-      <!-- <span class="example-spacer">{{pestania}}</span> -->
-      <span class="example-spacer"></span>
-      <!-- <mat-icon>notifications_active</mat-icon>
-      <mat-icon>notifications_none</mat-icon>
-      <mat-icon>notifications_off</mat-icon>
-      <mat-icon>notifications_paused</mat-icon> -->
-      <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
-        <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"
-          matBadgeColor="warn" style="margin-left: 8px;">notifications</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu" style="margin-right: 10px; height: 100px;">
-        <div class="container" style="text-align: center;">
-          <h4>Notificaciones</h4>
-        </div>
-        <div *ngFor="let n of noti_real_time">
-          <!-- Notificaicones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO -->
-          <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-            <a *ngIf="loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  un permiso</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="loginService.getRolMenu() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  vacaciones</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="loginService.getRolMenu() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
-              [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  hora extra</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-          </div>
-          <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-            <a *ngIf="loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  un permiso</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="loginService.getRolMenu() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  vacaciones</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="loginService.getRolMenu() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
-              [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a solicitado
-                  hora extra</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-          </div>
-          <!-- Notificaicones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO-->
-          <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-            <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="!loginService.getRolMenu() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="!loginService.getRolMenu() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-          </div>
-          <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-            <a *ngIf="!loginService.getRolMenu() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="!loginService.getRolMenu() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-            <a *ngIf="!loginService.getRolMenu() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
-              [routerLink]="['/datosEmpleado']" type="submit" class="noti_menu"
-              (click)="CambiarVistaNotificacion(n.id)">
-              <ul style="list-style: none; margin-left: -15%;">
-                <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                  estado de la</li>
-                <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
-                <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}} <b>Hora:</b>
-                  {{n.create_at.slice(11,16)}}</li>
-              </ul>
-              <mat-divider class="divider"></mat-divider>
-            </a>
-          </div>
-        </div>
-        <div class="d-flex justify-content-center" *ngIf="loginService.getRolMenu()">
-          <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti" >
-            Mostrar todas las notificaciones            
-          </a>
-        </div>
-      </mat-menu>
-
-      <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="settings">
-        <mat-icon id="iconos-navegador" style="margin-left: 8px;">settings</mat-icon>
-      </button>
-      <mat-menu #settings="matMenu">
-        <div><h4 style="text-align: center;">Ajustes</h4></div>
-        <button mat-menu-item (click)="AbrirSettings()">
-          <mat-icon>mark_email_unread</mat-icon>
-          <span>Correo y notificaciones</span>
+    <mat-toolbar class="sticky-top">
+      <!-- Primera barra normal -->
+      <mat-toolbar-row *ngIf="!barraInicial">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
-      </mat-menu>
+
+        <div id="avatar" *ngIf="mostrarImagen">
+          <img src="{{urlImagen}}" alt="" id="avatarImagen">
+        </div>
+        <div id="avatar" *ngIf="mostrarIniciales">
+          <span class="btn iniciales d-flex align-items-center justify-content-center">{{iniciales}}</span>
+        </div>
+        <div class="dos">
+          <div class="card border-0" style="background-color: transparent; margin-top: auto;">
+            <div class="card-body">
+              <h3 class="card-title">{{UserName}}</h3>
+              <p class="card-text" style="font-size: 13px;">{{UserEmail}}</p>
+            </div>
+          </div>
+        </div>
       
-      <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
-        <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>
-      </button>
+
+        <form class="example-form">
+          <mat-form-field class="example-full-width">
+            <mat-icon matPrefix>search</mat-icon>
+            <input type="text" placeholder="Buscar" aria-label="Number" matInput [formControl]="myControl"
+              [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+        <span class="example-spacer"></span>
+        <!-- Botón notificación -->
+        <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
+          <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"
+            matBadgeColor="warn" style="margin-left: 8px;">notifications</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" style="margin-right: 10px; height: 100px;">
+          <div class="container" style="text-align: center;">
+            <h4>Notificaciones</h4>
+          </div>
+          <div *ngIf="noti_real_time.text !== 'Registro no encontrado'">
+            <div *ngFor="let n of noti_real_time">
+
+              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      un permiso</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      vacaciones</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      hora extra</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      un permiso</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      vacaciones</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      hora extra</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/vacacionesEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/horaExtraEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item 
+                  [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/vacacionesEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/horaExtraEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+            </div>
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
+            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
+              Mostrar todas las notificaciones
+            </a>
+          </div>
+        </mat-menu>
+        <!-- Botón Configuraciones -->
+        <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="settings">
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;">settings</mat-icon>
+        </button>
+        <mat-menu #settings="matMenu">
+          <div>
+            <h4 style="text-align: center;">Ajustes</h4>
+          </div>
+          <button mat-menu-item (click)="AbrirSettings()">
+            <mat-icon>mark_email_unread</mat-icon>
+            <span>Correo y notificaciones</span>
+          </button>
+        </mat-menu>
+        <!-- Botón Logout  -->
+        <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
+          <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>
+        </button>
+
+      </mat-toolbar-row>
+
+      <mat-toolbar-row *ngIf="barraUno" class="d-flex justify-content-between">
+        <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()"
+          *ngIf="isHandset$ | async">
+          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+
+        <div class="d-flex justify-content-center" style="margin-top: 18px;">
+            <div id="avatar" *ngIf="mostrarImagen">
+              <img src="{{urlImagen}}" alt="" id="avatarImagen">
+            </div>
+            <div id="avatar" *ngIf="mostrarIniciales">
+              <span class="iniciales d-flex align-items-center justify-content-center" style="margin-top: 8px;">{{iniciales}}</span>
+            </div>
+            <div class="d-flex flex-column bd-highlight" style="margin-left: 19px; margin-top: 3px;">
+              <h3 class="bd-highlight">{{UserName}}</h3>
+              <p class="bd-highlight" style="font-size: 13px; margin-top: -10px;">{{UserEmail}}</p>
+            </div>
+        </div>
+
+        <div>
+          <button mat-icon-button [matMenuTriggerFor]="colapsado">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #colapsado="matMenu">
+            <!-- Botón Configuraciones -->
+            <button mat-menu-item (click)="AbrirSettings()">
+              <mat-icon>settings</mat-icon>
+              <span>Ajustes</span>
+            </button>
+            <!-- Botón Logout  -->
+            <button mat-menu-item (click)="loginService.logout()">
+              <mat-icon class="fas fa-sign-out-alt"></mat-icon>
+              <span>Salir</span>
+            </button>
+          </mat-menu>
+        </div>
+
+      </mat-toolbar-row>
+
+      <mat-toolbar-row *ngIf="barraDos" class="d-flex justify-content-start">
+        <!-- Botón notificación -->
+        <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
+          <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"
+            matBadgeColor="warn" style="margin-left: 8px;">notifications</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" style="margin-right: 10px; height: 100px;">
+          <div class="container" style="text-align: center;">
+            <h4>Notificaciones</h4>
+          </div>
+          <div *ngIf="noti_real_time.text !== 'Registro no encontrado'">
+            <div *ngFor="let n of noti_real_time">
+
+              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      un permiso</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      vacaciones</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      hora extra</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      un permiso</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/ver-vacacion/', n.id_vacaciones]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      vacaciones</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/ver-hora-extra/', n.id_hora_extra]" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
+                      solicitado
+                      hora extra</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/vacacionesEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/horaExtraEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item 
+                  [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_hora_extra === null" mat-menu-item
+                  [routerLink]="['/vacacionesEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+                <a *ngIf="!loginService.getEstado() && n.id_permiso === null && n.id_vacaciones === null" mat-menu-item
+                  [routerLink]="['/horaExtraEmpleado']" type="submit" class="noti_menu"
+                  (click)="CambiarVistaNotificacion(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+            </div>
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
+            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
+              Mostrar todas las notificaciones
+            </a>
+          </div>
+        </mat-menu>
+        <form class="example-form">
+          <mat-form-field class="full-width">
+            <mat-icon matPrefix>search</mat-icon>
+            <input type="text" placeholder="Buscar" aria-label="Number" matInput [formControl]="myControl"
+              [matAutocomplete]="auto">
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </mat-toolbar-row>
+
+
+
     </mat-toolbar>
 
     <div class="container">
-      <div class="row">
-        <div class="col">
-          <router-outlet></router-outlet>
-        </div>
-      </div>
+      <router-outlet></router-outlet>
     </div>
+
+    <!-- <app-footer></app-footer> -->
+    
   </mat-sidenav-content>
-  <app-footer></app-footer>
 
 </mat-sidenav-container>

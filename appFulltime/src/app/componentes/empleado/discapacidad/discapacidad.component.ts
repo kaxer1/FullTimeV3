@@ -20,9 +20,12 @@ export class DiscapacidadComponent implements OnInit {
   unTipo: any = [];
   ultimoId: any = [];
 
+  HabilitarDescrip: boolean = true;
+  estilo: any;
+
   carnet = new FormControl('', [Validators.required, Validators.maxLength(8)]);
   porcentaje = new FormControl('', [Validators.required, Validators.maxLength(6)]);
-  tipo = new FormControl('', [Validators.required, Validators.maxLength(10)])
+  tipo = new FormControl('', [Validators.maxLength(10)])
   nombreF = new FormControl('', [Validators.minLength(5)])
 
   public nuevoCarnetForm = new FormGroup({
@@ -43,6 +46,7 @@ export class DiscapacidadComponent implements OnInit {
     this.limpiarCampos();
     this.editarFormulario();
     this.ObtenerTiposDiscapacidad();
+    this.tipoDiscapacidad[this.tipoDiscapacidad.length] = { nombre: "OTRO" };
   }
 
   texto: string = 'Anadir'
@@ -60,70 +64,56 @@ export class DiscapacidadComponent implements OnInit {
 
   insertarCarnet(form) {
     if (this.editar != 'editar') {
-      let dataCarnet = {
-        id_empleado: parseInt(this.idEmploy),
-        carn_conadis: form.carnetForm,
-        porcentaje: form.porcentajeForm,
-        tipo: form.tipoForm,
+      this.GuardarDiscapacidad(form);
+    }
+    else {
+      this.CambiarDiscapacidad(form);
+    }
+  }
+
+  GuardarDiscapacidad(form1) {
+    if (form1.tipoForm === undefined) {
+      if (form1.nombreForm != '') {
+        this.GuardarTipoRegistro(form1);
       }
-      this.GuardarDiscapacidad(form, dataCarnet);
-    } else {
-      let dataUpdate = {
-        carn_conadis: form.carnetForm,
-        porcentaje: form.porcentajeForm,
-        tipo: form.tipoForm,
+      else {
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
       }
-      this.CambiarDiscapacidad(form, dataUpdate);
+    }
+    else {
+      if (form1.tipoForm === null) {
+        console.log('probando2', form1.tipoForm)
+        this.toastr.info('Se le indica que debe seleccionar un tipo de discapacidad')
+      }
+      else {
+        this.RegistarDatos(form1, form1.tipoForm);
+      }
 
     }
   }
 
-  GuardarDiscapacidad(form1, datos) {
-    this.rest.BuscarTipoD(form1.tipoForm).subscribe(data => {
-      this.unTipo = data;
-      if (this.unTipo[0].nombre === 'OTRO') {
-        if (form1.nombreForm != '') {
-          this.GuardarTipo(form1);
-          this.rest.ConsultarUltimoIdTD().subscribe(data => {
-            this.ultimoId = data;
-            datos.tipo = this.ultimoId[0].max;
-            this.RegistarDatos(datos);
-          });
-        }
-        else {
-          this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
-        }
+  CambiarDiscapacidad(form1) {
+    if (form1.tipoForm === undefined) {
+      if (form1.nombreForm != '') {
+        this.GuardarTipoActualizacion(form1);
       }
       else {
-        this.RegistarDatos(datos);
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
       }
-    });
+    }
+    else {
+      this.ActualizarDatos(form1, form1.tipoForm);
+    }
   }
 
-  CambiarDiscapacidad(form1, datos) {
-    this.rest.BuscarTipoD(form1.tipoForm).subscribe(data => {
-      this.unTipo = data;
-      if (this.unTipo[0].nombre === 'OTRO') {
-        if (form1.nombreForm != '') {
-          this.GuardarTipo(form1);
-          this.rest.ConsultarUltimoIdTD().subscribe(data => {
-            this.ultimoId = data;
-            datos.tipo = this.ultimoId[0].max;
-            this.ActualizarDatos(datos);
-          });
-        }
-        else {
-          this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
-        }
-      }
-      else {
-        this.ActualizarDatos(datos);
-      }
-    });
-  }
-
-  RegistarDatos(datos) {
-    this.rest.postDiscapacidadRest(datos).subscribe(response => {
+  RegistarDatos(form, idTipoD) {
+    let dataCarnet = {
+      id_empleado: parseInt(this.idEmploy),
+      carn_conadis: form.carnetForm,
+      porcentaje: form.porcentajeForm,
+      tipo: idTipoD,
+    }
+    this.rest.postDiscapacidadRest(dataCarnet).subscribe(response => {
       this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
       this.limpiarCampos();
       this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
@@ -131,20 +121,44 @@ export class DiscapacidadComponent implements OnInit {
     }, error => { });
   }
 
-  ActualizarDatos(datos) {
-    this.rest.putDiscapacidadUsuarioRest(parseInt(this.idEmploy), datos).subscribe(res => {
+  ActualizarDatos(form, idTipoD) {
+    let dataUpdate = {
+      carn_conadis: form.carnetForm,
+      porcentaje: form.porcentajeForm,
+      tipo: idTipoD,
+    }
+    this.rest.putDiscapacidadUsuarioRest(parseInt(this.idEmploy), dataUpdate).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Discapacidad Actualiza');
       this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
       this.cerrarRegistro();
     });
   }
 
-  GuardarTipo(form) {
+  GuardarTipoActualizacion(form) {
     let datosTD = {
       nombre: form.nombreForm,
     }
     this.rest.InsertarTipoD(datosTD).subscribe(response => {
       console.log(response)
+      this.rest.ConsultarUltimoIdTD().subscribe(data => {
+        this.ultimoId = data;
+        this.ultimoId[0].max;
+        this.ActualizarDatos(form, this.ultimoId[0].max);
+      });
+    }, error => { });
+  }
+
+  GuardarTipoRegistro(form) {
+    let datosTD = {
+      nombre: form.nombreForm,
+    }
+    this.rest.InsertarTipoD(datosTD).subscribe(response => {
+      console.log(response)
+      this.rest.ConsultarUltimoIdTD().subscribe(data => {
+        this.ultimoId = data;
+        this.ultimoId[0].max;
+        this.RegistarDatos(form, this.ultimoId[0].max);
+      });
     }, error => { });
   }
 
@@ -208,27 +222,31 @@ export class DiscapacidadComponent implements OnInit {
 
 
   /* TIPO DE DESCAPACIDAD */
-
+  seleccionarTipo;
   ObtenerTiposDiscapacidad() {
     this.rest.ListarTiposD().subscribe(data => {
       this.tipoDiscapacidad = data;
+      this.tipoDiscapacidad[this.tipoDiscapacidad.length] = { nombre: "OTRO" };
+      //this.seleccionarTipo = this.tipoDiscapacidad[this.tipoDiscapacidad.length - 1].nombre;
+
     });
   }
 
   ActivarDesactivarNombre(form1) {
-    this.rest.BuscarTipoD(form1.tipoForm).subscribe(data => {
-      this.unTipo = data;
-      if (this.unTipo[0].nombre === 'OTRO') {
-        (<HTMLInputElement>document.getElementById('nombreTD')).style.visibility = 'visible';
-        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad', 'Etiqueta Nuevo Tipo activa')
-      }
-      else {
-        this.nuevoCarnetForm.patchValue({
-          nombreForm: '',
-        });
-        (<HTMLInputElement>document.getElementById('nombreTD')).style.visibility = 'hidden';
-      }
-    });
+    console.log('probando', form1.tipoForm)
+    if (form1.tipoForm === undefined) {
+      this.nuevoCarnetForm.patchValue({
+        nombreForm: '',
+      });
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
+      this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad', 'Etiqueta Nuevo Tipo activa')
+    }
+    else {
+      this.nuevoCarnetForm.patchValue({
+        nombreForm: '',
+      });
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
+    }
   }
 
 }

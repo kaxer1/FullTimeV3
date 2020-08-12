@@ -37,6 +37,7 @@
     "nodemon": "^2.0.2",
     "pg": "^7.18.2",
     "read-excel-file": "^4.0.6",
+    "reverse-md5": "0.0.4",
     "socket.io": "^2.3.0",
     "ts-md5": "^1.2.7",
     "web-push": "^3.4.4",

@@ -1,8 +1,8 @@
-td { padding-top: 10px; text-align: center; }
+td { padding-top: 10px; text-align: center; font-size: 14px;}
 
 p { font-size: x-small; }
 
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;}
 
 .fas { color:green; margin-left: 20px; cursor: pointer;  }
 

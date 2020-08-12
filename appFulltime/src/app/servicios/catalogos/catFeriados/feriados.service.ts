@@ -45,4 +45,7 @@ export class FeriadosService {
     return this.http.post(`${this.API_URL}/feriados/xmlDownload`, data);
   }
 
+  EliminarFeriado(id: number) {
+    return this.http.delete(`${this.API_URL}/feriados/delete/${id}`);
+  }
 }

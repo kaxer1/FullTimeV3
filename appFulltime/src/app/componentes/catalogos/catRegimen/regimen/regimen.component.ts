@@ -19,6 +19,9 @@ interface opcionesRegimen {
 
 export class RegimenComponent implements OnInit {
 
+  HabilitarDescrip: boolean = true;
+  estilo: any;
+
   // Control de campos y validaciones del formulario
   descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
   diaAnioVacacionF = new FormControl('', [Validators.required, Validators.pattern('[0-9]+')]);
@@ -65,26 +68,26 @@ export class RegimenComponent implements OnInit {
     if (nombreRegimen === 'OTRO') {
       this.LimpiarDiasMeses();
       this.IngresarDatosOtro();
-      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'visible';
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
       this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Etiqueta Régimen Laboral Activa')
     }
     else if (nombreRegimen === 'CODIGO DE TRABAJO') {
-      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.LimpiarDiasMeses();
       this.IngresarDatosCodigoTrabajo();
     }
     else if (nombreRegimen === 'LOSEP') {
-      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.LimpiarDiasMeses();
       this.IngresarDatosLosep();
     }
     else if (nombreRegimen === 'LOES') {
-      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.LimpiarDiasMeses();
       this.IngresarDatosLoes();
     }
     else {
-      (<HTMLInputElement>document.getElementById('nombreR')).style.visibility = 'hidden';
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.IngresarDatosOtro();
       this.LimpiarDiasMeses();
       this.toastr.info('No ha seleccionado ninguna opción')
@@ -205,8 +208,13 @@ export class RegimenComponent implements OnInit {
 
   FuncionInsertarDatos(datos) {
     this.rest.CrearNuevoRegimen(datos).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado')
-      this.LimpiarCampos();
+      if (response.message === 'error') {
+        this.toastr.error('Revisarlo en la lista y actualizar los datos si desea realizar cambios en la configuración del Régimen Laboral', 'Régimen Laboral ya esta configurado');
+      }
+      else {
+        this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado');
+        this.LimpiarCampos();
+      }
     }, error => {
       this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó')
     });

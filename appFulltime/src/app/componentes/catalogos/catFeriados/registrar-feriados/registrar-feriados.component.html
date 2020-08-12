@@ -1,14 +1,13 @@
-<mat-icon id="movilidad">open_with</mat-icon>
-<div class="barraTituloR">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registra Nuevo Feriado</span>
+<div class="d-flex bd-highlight barraTituloR">
+    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
+    <h5 class="w-100 bd-highlight align-self-center">Registra Nuevo Feriado</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="FeriadosForm">
     <mat-card-content>
         <div class="container" style="text-align: center">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                    Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
             </div>
             <mat-form-field>
                 <mat-label>Descripción</mat-label>
@@ -41,7 +40,7 @@
         </div>
     </mat-card-content>
 </form>
-<mat-card-actions style="text-align: center">
+<mat-card-actions class="d-flex justify-content-around">
     <input type="submit" class="btn btn-sm" [disabled]="!FeriadosForm.valid"
         (click)="InsertarFeriado(FeriadosForm.value)" value="Guardar">
     <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroFeriado()" value="Salir">

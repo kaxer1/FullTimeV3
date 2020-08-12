@@ -56,6 +56,20 @@ class AutorizaDepartamentoControlador {
             }
         });
     }
+    ActualizarAutorizaDepartamento(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_departamento, id_empl_cargo, estado, id } = req.body;
+            yield database_1.default.query('UPDATE depa_autorizaciones SET id_departamento = $1, id_empl_cargo = $2, estado = $3 WHERE id = $4', [id_departamento, id_empl_cargo, estado, id]);
+            res.jsonp({ message: 'Autorización se registró con éxito' });
+        });
+    }
+    EliminarAutorizacionDepartamento(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM depa_autorizaciones WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.AUTORIZA_DEPARTAMENTO_CONTROLADOR = new AutorizaDepartamentoControlador();
 exports.default = exports.AUTORIZA_DEPARTAMENTO_CONTROLADOR;

@@ -52,6 +52,12 @@ class DocumentosControlador {
         res.jsonp({ message: 'Documento Guardado' });
     }
 
+    public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM documentacion WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
 }
 
 export const DOCUMENTOS_CONTROLADOR = new DocumentosControlador();

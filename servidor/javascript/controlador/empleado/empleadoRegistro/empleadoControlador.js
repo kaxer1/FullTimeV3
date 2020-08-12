@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../../database"));
-const path = require("path");
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
 const ts_md5_1 = require("ts-md5");
@@ -198,6 +197,31 @@ class EmpleadoControlador {
             const DEPARTAMENTO = yield database_1.default.query('SELECT *FROM VistaDepartamentoEmpleado WHERE id_emple = $1 AND id_cargo = $2', [id_emple, id_cargo]);
             if (DEPARTAMENTO.rowCount > 0) {
                 return res.jsonp(DEPARTAMENTO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    CrearCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id, valor, cedula } = req.body;
+            yield database_1.default.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+            res.jsonp({ message: 'Codigo guardado' });
+        });
+    }
+    ActualizarCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { valor, id } = req.body;
+            yield database_1.default.query('UPDATE codigo SET valor = $1 WHERE id = $2', [valor, id]);
+            res.jsonp({ message: 'Codigo actualizado' });
+        });
+    }
+    ObtenerCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+            if (VALOR.rowCount > 0) {
+                return res.jsonp(VALOR.rows);
             }
             else {
                 return res.status(404).jsonp({ text: 'Registros no encontrados' });

@@ -37,7 +37,7 @@ class DetallePlanHorarioControlador {
     EncontrarPlanHoraDetallesPorIdPlanHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_plan_horario } = req.params;
-            const HORARIO_CARGO = yield database_1.default.query('SELECT p.id, p.fecha, p.id_plan_horario, p.tipo_dia, h.nombre AS horarios FROM plan_hora_detalles AS p, cg_horarios AS h WHERE p.id_plan_horario = $1 AND p.id_cg_horarios = h.id ', [id_plan_horario]);
+            const HORARIO_CARGO = yield database_1.default.query('SELECT p.id, p.fecha, p.id_plan_horario, p.tipo_dia, h.id AS id_horario, h.nombre AS horarios FROM plan_hora_detalles AS p, cg_horarios AS h WHERE p.id_plan_horario = $1 AND p.id_cg_horarios = h.id ', [id_plan_horario]);
             if (HORARIO_CARGO.rowCount > 0) {
                 return res.jsonp(HORARIO_CARGO.rows);
             }
@@ -63,6 +63,32 @@ class DetallePlanHorarioControlador {
             }));
             res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
+        });
+    }
+    ActualizarDetallePlanHorario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { fecha, id_plan_horario, tipo_dia, id_cg_horarios, id } = req.body;
+            yield database_1.default.query('UPDATE plan_hora_detalles SET fecha = $1, id_plan_horario = $2, tipo_dia = $3, id_cg_horarios = $4 WHERE id = $5', [fecha, id_plan_horario, tipo_dia, id_cg_horarios, id]);
+            res.jsonp({ message: 'Detalle Plan Horario Actualizado' });
+        });
+    }
+    EliminarRegistros(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM plan_hora_detalles WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    ObtenerRegistrosFecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_plan_horario, fecha } = req.body;
+            const FECHA = yield database_1.default.query('SELECT * FROM plan_hora_detalles WHERE id_plan_horario = $1 AND fecha = $2', [id_plan_horario, fecha]);
+            if (FECHA.rowCount > 0) {
+                return res.jsonp(FECHA.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
         });
     }
 }

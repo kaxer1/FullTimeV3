@@ -5,7 +5,7 @@ import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAda
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-
+import * as moment from 'moment';
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 
@@ -67,17 +67,37 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
     })
   }
 
+  ValidarRegistro(form) {
+    var fin = this.data.planHorario.fec_final.split('T')[0];
+    var inicio = this.data.planHorario.fec_inicio.split('T')[0];
+    var ingreso = String(moment(form.fechaForm, "YYYY/MM/DD").format("YYYY-MM-DD"));
+    if ((Date.parse(fin) >= Date.parse(ingreso)) &&
+      (Date.parse(inicio) <= Date.parse(ingreso))) {
+      this.InsertarDetallePlanHorario(form);
+    }
+    else {
+      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.');
+    }
+  }
+
   InsertarDetallePlanHorario(form) {
-    let datosDetallePlanH = {
-      fecha: form.fechaForm,
+    let datosBusqueda = {
       id_plan_horario: this.data.planHorario.id,
-      tipo_dia: form.tipoDiaForm,
-      id_cg_horarios: form.horarioForm,
-    };
-    this.rest.RegistrarDetallesPlanHorario(datosDetallePlanH).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado')
-      this.CerrarVentanaDetallePlanHorario();
+      fecha: form.fechaForm
+    }
+    this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
+      this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
     }, error => {
+      let datosDetallePlanH = {
+        fecha: form.fechaForm,
+        id_plan_horario: this.data.planHorario.id,
+        tipo_dia: form.tipoDiaForm,
+        id_cg_horarios: form.horarioForm,
+      };
+      this.rest.RegistrarDetallesPlanHorario(datosDetallePlanH).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado')
+        this.CerrarVentanaDetallePlanHorario();
+      }, error => { });
     });
   }
 

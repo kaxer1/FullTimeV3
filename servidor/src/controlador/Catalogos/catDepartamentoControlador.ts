@@ -7,15 +7,18 @@ import pool from '../../database';
 class DepartamentoControlador {
 
   public async ListarDepartamentos(req: Request, res: Response) {
-    // const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY id ASC');
-    const Sin_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, d.depa_padre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, sucursales AS s, cg_empresa AS e WHERE d.id_sucursal = s.id AND e.id = s.id_empresa AND d.depa_padre IS NULL ORDER BY nombre ASC');
-    const Con_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, nom_d.nombre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, nombredepartamento AS nom_d, sucursales AS s, cg_empresa AS e WHERE d.depa_padre = nom_d.id AND d.id_sucursal = s.id AND e.id = s.id_empresa ORDER BY nombre ASC');
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre ORDER BY nombre ASC');
+    // const Con_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, nom_d.nombre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, nombredepartamento AS nom_d, sucursales AS s, cg_empresa AS e WHERE d.depa_padre = nom_d.id AND d.id_sucursal = s.id AND e.id = s.id_empresa ORDER BY nombre ASC');
+    // const Sin_depa_padre = await pool.query('SELECT d.id, d.nombre, d.nivel, d.depa_padre AS departamento_padre, d.id_sucursal, s.nombre AS nomsucursal, e.id AS id_empresa, e.nombre AS nomempresa FROM cg_departamentos AS d, sucursales AS s, cg_empresa AS e WHERE d.id_sucursal = s.id AND e.id = s.id_empresa AND d.depa_padre IS NULL ORDER BY nombre ASC');
 
-    if (Sin_depa_padre.rowCount > 0) {
-      Sin_depa_padre.rows.forEach(obj => {
-        Con_depa_padre.rows.push(obj);
-      })
-      res.jsonp(Con_depa_padre.rows);
+    // if (Sin_depa_padre.rowCount > 0) {
+    //   Sin_depa_padre.rows.forEach(obj => {
+    //     Con_depa_padre.rows.push(obj);
+    //   })
+    //   res.jsonp(Con_depa_padre.rows);
+    // }
+    if (DEPARTAMENTOS.rowCount > 0) {
+      res.jsonp(DEPARTAMENTOS.rows);
     }
     else {
       return res.status(404).jsonp({ text: 'No se encuentran registros' });
@@ -70,18 +73,28 @@ class DepartamentoControlador {
     res.status(404).jsonp({ text: 'El departamento no ha sido encontrado' });
   }
 
-  public async CrearDepartamento(req: Request, res: Response): Promise<void> {
-    const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
-    res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+  public async CrearDepartamento(req: Request, res: Response) {
+    try {
+      const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+      await pool.query('INSERT INTO cg_departamentos (nombre, depa_padre, nivel, id_sucursal ) VALUES ($1, $2, $3, $4)', [nombre, depa_padre, nivel, id_sucursal]);
+      res.jsonp({ message: 'El departamento ha sido guardado con éxito' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
 
-  public async ActualizarDepartamento(req: Request, res: Response): Promise<any> {
-    const { nombre, depa_padre, nivel, id_sucursal } = req.body;
-    const id = req.params.id;
-    console.log(id);
-    await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
-    res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+  public async ActualizarDepartamento(req: Request, res: Response) {
+    try {
+      const { nombre, depa_padre, nivel, id_sucursal } = req.body;
+      const id = req.params.id;
+      console.log(id);
+      await pool.query('UPDATE cg_departamentos set nombre = $1, depa_padre = $2, nivel = $3 , id_sucursal = $4 WHERE id = $5', [nombre, depa_padre, nivel, id_sucursal, id]);
+      res.jsonp({ message: 'El departamento ha sido modificado con éxito' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
@@ -105,13 +118,30 @@ class DepartamentoControlador {
 
   public async BuscarDepartamentoPorContrato(req: Request, res: Response) {
     const id = req.params.id_contrato
-    const departamento = await pool.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC',[id]);
+    const departamento = await pool.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC', [id]);
     if (departamento.rowCount > 0) {
       return res.json([departamento.rows[0]]);
     } else {
       return res.status(404).json({ text: 'No se encuentran registros' });
     }
-}
+  }
+
+  public async EliminarRegistros(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM cg_departamentos WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
+
+  public async ListarDepartamentosSucursal(req: Request, res: Response) {
+    const id = req.params.id_sucursal;
+    const DEPARTAMENTOS = await pool.query('SELECT * FROM VistaDepartamentoPadre WHERE id_sucursal = $1 ORDER BY nombre ASC', [id]);
+    if (DEPARTAMENTOS.rowCount > 0) {
+      res.jsonp(DEPARTAMENTOS.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();

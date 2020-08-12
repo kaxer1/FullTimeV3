@@ -19,18 +19,18 @@ export class TipoPermisosService {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos`);
   }
 
-  getListAccesoTipoPermisoRest(access:number){
+  getListAccesoTipoPermisoRest(access: number) {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/acceso/${access}`);
   }
 
-  getOneTipoPermisoRest(id:number){
+  getOneTipoPermisoRest(id: number) {
     return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/${id}`);
   }
 
   postTipoPermisoRest(data: any) {
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data).pipe(
       catchError(data)
-    );;
+    );
   }
 
   putTipoPermisoRest(id: number, data: any) {
@@ -39,5 +39,9 @@ export class TipoPermisosService {
 
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos/xmlDownload`, data);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.TIPO_PERMISOS_URL}/tipoPermisos/eliminar/${id}`);
   }
 }

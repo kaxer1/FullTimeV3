@@ -51,4 +51,15 @@ export class VacacionesService {
     return this.http.get(`${this.API_URL}/vacaciones/datosAutorizacion/${id_vacaciones}/${id_empleado}`);
   }
 
+  SendMailNoti(datos: any) {
+    return this.http.post(`${this.API_URL}/vacaciones/mail-noti`, datos);
+  }
+
+  EliminarVacacion(id_vacacion: number) {
+    return this.http.delete(`${this.API_URL}/vacaciones/eliminar/${id_vacacion}`);
+  }
+
+  EditarVacacion(id: number, datos: any) {
+    return this.http.put(`${this.API_URL}/vacaciones/${id}/vacacion-solicitada`, datos);
+  }
 }

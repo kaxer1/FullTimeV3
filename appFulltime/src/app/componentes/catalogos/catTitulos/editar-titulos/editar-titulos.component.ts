@@ -14,19 +14,24 @@ import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulo
 export class EditarTitulosComponent implements OnInit {
 
   // Control de los campos del formulario
-  nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
-  nivelF = new FormControl('', Validators.required)
+  nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
+  nivelF = new FormControl('');
+  nombreNivel = new FormControl('', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}"))
+
 
   // asignar los campos en un formulario en grupo
   public nuevoTituloForm = new FormGroup({
     tituloNombreForm: this.nombre,
     tituloNivelForm: this.nivelF,
+    nombreNivelForm: this.nombreNivel
   });
 
   // Arreglo de niveles existentes
   niveles: any = [];
   idNivel: any = [];
   selectNivel: any;
+  HabilitarDescrip: boolean = true;
+  estilo: any;
 
   constructor(
     private rest: TituloService,
@@ -46,9 +51,50 @@ export class EditarTitulosComponent implements OnInit {
     this.niveles = [];
     this.restNivelTitulo.getNivelesTituloRest().subscribe(res => {
       this.niveles = res;
+      this.niveles[this.niveles.length] = { nombre: "OTRO" };
       this.selectNivel = this.niveles[this.niveles.length - 1].nombre;
     });
   }
+
+  ActivarDesactivarNombre(form1) {
+    console.log('nivel', form1.tituloNivelForm);
+    if (form1.tituloNivelForm === undefined) {
+      this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
+      this.toastr.info('Ingresar nombre de nivel de titulación');
+    }
+    else {
+      this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
+      this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
+    }
+  }
+
+  GuardarNivel(form) {
+    let dataNivelTitulo = {
+      nombre: form.nombreNivelForm,
+    };
+    this.restNivelTitulo.postNivelTituloRest(dataNivelTitulo).subscribe(response => {
+      this.restNivelTitulo.BuscarNivelID().subscribe(datos => {
+        var idNivel = datos[0].max;
+        console.log('id_nivel', datos[0].max)
+        this.ActualizarTitulo(form, idNivel);
+      })
+    });
+  }
+
+  ActualizarTitulo(form, idNivel) {
+    let dataTitulo = {
+      id: this.data.id,
+      nombre: form.tituloNombreForm,
+      id_nivel: idNivel,
+    };
+    this.rest.ActualizarUnTitulo(dataTitulo).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Título actualizado');
+      this.CerrarVentanaRegistroTitulo();
+    }, error => {
+    });
+  }
+
 
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
@@ -77,17 +123,25 @@ export class EditarTitulosComponent implements OnInit {
     return this.nombre.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
+  ObtenerMensajeErrorNivel() {
+    if (this.nombreNivel.hasError('pattern')) {
+      return 'Ingrese un nombre válido';
+    }
+  }
+
   InsertarTitulo(form) {
-    let dataTitulo = {
-      id: this.data.id,
-      nombre: form.tituloNombreForm,
-      id_nivel: form.tituloNivelForm,
-    };
-    this.rest.ActualizarUnTitulo(dataTitulo).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Título actualizado');
-      this.CerrarVentanaRegistroTitulo();
-    }, error => {
-    });
+    if (form.tituloNivelForm === undefined || form.tituloNivelForm === 'OTRO') {
+      if (form.nombreNivelForm != '') {
+        this.GuardarNivel(form);
+      }
+      else {
+        this.toastr.info('Ingrese un nombre de nivel o seleccione uno de la lista de niveles');
+      }
+    }
+    else {
+      this.ActualizarTitulo(form, form.tituloNivelForm);
+    }
+
   }
 
   ImprimirDatos() {
@@ -95,7 +149,7 @@ export class EditarTitulosComponent implements OnInit {
     console.log("nivel_nombre", this.data.nivel);
     this.restNivelTitulo.BuscarNivelNombre(this.data.nivel).subscribe(datos => {
       this.idNivel = datos;
-      this.nuevoTituloForm.setValue({
+      this.nuevoTituloForm.patchValue({
         tituloNombreForm: this.data.nombre,
         tituloNivelForm: this.data.nivel
       })

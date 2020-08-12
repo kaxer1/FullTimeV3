@@ -14,6 +14,8 @@ class DepartamentoRutas {
         this.router.get('/', planComidasControlador_1.default.ListarPlanComidas);
         this.router.get('/infoComida/:id_empleado', planComidasControlador_1.default.EncontrarPlanComidaPorIdEmpleado);
         this.router.post('/', planComidasControlador_1.default.CrearPlanComidas);
+        this.router.delete('/eliminar/:id', planComidasControlador_1.default.EliminarRegistros);
+        this.router.put('/', planComidasControlador_1.default.ActualizarPlanComidas);
     }
 }
 const PLAN_COMIDAS_RUTAS = new DepartamentoRutas();

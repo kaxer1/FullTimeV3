@@ -64,6 +64,14 @@ mat-grid-tile {background-color: rgb(80,87,97); }
 
 mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
+#datosF { font-weight: bold; font-size: 15px; padding-right: 5px;}
+
+#verticalLine { border-left: 1px solid rgb(52,65,84); }
+
+.caja3 {padding: 0px 5px 0px 5px; width: 200px; }
+
+.caja2 {padding: 0px 5px 0px 5px; width: 300px; }
+
 #avatar { 
     border-radius: 100%; 
     height: 100px; 
@@ -76,18 +84,21 @@ mat-grid-tile:hover {background-color: rgba(10, 10, 10, 0.609); }
 
 .iniciales {color: white; font-weight: bold; font-size: 60px; }
 
-#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center;}
-
+#edit { color:green; margin-right: 5px; cursor: pointer; font-size: 15px; text-align: center; }
 
 #doc { font-size: 14px; text-align: center;}
 
-#delete { color:red; margin-right: 5px; cursor: pointer;}
+#delete { color:red;  cursor: pointer; text-align: center; }
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
 table { width: 100%; font-size: 14px; }
 
 td { padding-top: 10px; text-align: center; }
+
+.caja1 {padding: 0px 10px 0px 10px; width: 250px; }
+
+#cancel { color:red; cursor: pointer; font-size: 15px; text-align: center; margin-right: 20px; }
 
 [type="file"] {
     height: 0;

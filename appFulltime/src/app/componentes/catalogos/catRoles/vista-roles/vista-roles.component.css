@@ -1,10 +1,12 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.btn { background-color: rgb(80,87,97); color: white; }
 
 p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
 #editar { color:green; margin-left: 20px; cursor: pointer; }
+
+button {margin: 5px 10px 5px 10px;}
 
 /*.rolL-tooltip { background: #ad4bc5;}*/
 

@@ -23,6 +23,7 @@ class FeriadosRuta {
         this.router.put('/', catFeriadosControlador_1.default.ActualizarFeriado);
         this.router.post('/xmlDownload/', catFeriadosControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catFeriadosControlador_1.default.downloadXML);
+        this.router.delete('/delete/:id', catFeriadosControlador_1.default.EliminarFeriado);
     }
 }
 const FERIADOS_RUTA = new FeriadosRuta();

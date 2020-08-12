@@ -14,6 +14,8 @@ class CiudadRutas {
         this.router.post('/insertar', enroladoRelojControlador_1.default.AsignarRelojEnrolado);
         this.router.post('/buscar', enroladoRelojControlador_1.default.ObtenerIdReloj);
         this.router.get('/nombresReloj/:enroladoid', enroladoRelojControlador_1.default.EncontrarEnroladosReloj);
+        this.router.put('/', enroladoRelojControlador_1.default.ActualizarRelojEnrolado);
+        this.router.delete('/eliminar/:id', enroladoRelojControlador_1.default.EliminarRelojEnrolado);
     }
 }
 const ENROLADO_RELOJ_RUTAS = new CiudadRutas();

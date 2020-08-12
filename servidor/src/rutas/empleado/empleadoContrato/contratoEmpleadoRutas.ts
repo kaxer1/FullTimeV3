@@ -26,6 +26,8 @@ class DepartamentoRutas {
         this.router.put('/:id/documento', multipartMiddleware, CONTRATO_EMPLEADO_CONTROLADOR.GuardarDocumentoContrato);
         this.router.get('/documentos/:docs', CONTRATO_EMPLEADO_CONTROLADOR.ObtenerDocumento);
         this.router.put('/editar/editarDocumento/:id', CONTRATO_EMPLEADO_CONTROLADOR.EditarDocumento);
+        this.router.post('/buscarFecha', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarFechaContrato);
+        this.router.post('/buscarFecha/contrato', CONTRATO_EMPLEADO_CONTROLADOR.EncontrarFechaContratoId);
     }
 }
 

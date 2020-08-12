@@ -14,6 +14,8 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 
 export class RegistroHorarioComponent implements OnInit {
 
+  isChecked: boolean = false;
+  
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
@@ -141,6 +143,13 @@ export class RegistroHorarioComponent implements OnInit {
     });
   }
 
+  HabilitarBtn: boolean = false;
+  deseleccionarArchivo() {
+    this.archivoSubido = [];
+    this.isChecked = false;
+    this.LimpiarNombreArchivo();
+  }
+
   nameFile: string;
   archivoSubido: Array<File>;
 
@@ -150,6 +159,7 @@ export class RegistroHorarioComponent implements OnInit {
       const name = this.archivoSubido[0].name;
       console.log(this.archivoSubido[0].name);
       this.nuevoHorarioForm.patchValue({ nombreCertificadoForm: name });
+      this.HabilitarBtn = true
     }
   }
 
@@ -168,7 +178,6 @@ export class RegistroHorarioComponent implements OnInit {
   CerrarVentanaRegistroHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

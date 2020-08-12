@@ -45,6 +45,20 @@ class EnroladoRelojControlador {
             }
         });
     }
+    ActualizarRelojEnrolado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_reloj, id_enrolado, id } = req.body;
+            yield database_1.default.query('UPDATE relj_enrolados SET id_reloj = $1, id_enrolado = $2 WHERE id = $3', [id_reloj, id_enrolado, id]);
+            res.jsonp({ message: 'Registro Actualizado' });
+        });
+    }
+    EliminarRelojEnrolado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM relj_enrolados WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
 }
 exports.ENROLADO_RELOJ_CONTROLADOR = new EnroladoRelojControlador();
 exports.default = exports.ENROLADO_RELOJ_CONTROLADOR;

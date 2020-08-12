@@ -43,6 +43,12 @@ export class RegistroEmpresaComponent implements OnInit {
     public dialogRef: MatDialogRef<RegistroEmpresaComponent>,
   ) { }
 
+
+  HabilitarOtro: boolean = true;
+  estiloOtro: any;
+  HabilitarRepre: boolean = true;
+  estiloRepre: any;
+
   ngOnInit(): void {
   }
 
@@ -141,8 +147,8 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   CambiarNombrePublica() {
-    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
-    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
+    this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
     this.valor = 'Máxima Autoridad'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
@@ -150,8 +156,8 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   CambiarNombrePrivada() {
-    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
-    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
+    this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
@@ -159,8 +165,8 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   CambiarNombreOng() {
-    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
-    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
+    this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
@@ -168,8 +174,8 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   CambiarNombreNatural() {
-    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'hidden';
-    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
+    this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
+    this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
@@ -177,8 +183,8 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   CambiarNombreOtro() {
-    (<HTMLInputElement>document.getElementById('repre')).style.visibility = 'visible';
-    (<HTMLInputElement>document.getElementById('otro')).style.visibility = 'visible';
+    this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
+    this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
     this.toastr.info('Ingresar el nombre del tipo de empresa')
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({

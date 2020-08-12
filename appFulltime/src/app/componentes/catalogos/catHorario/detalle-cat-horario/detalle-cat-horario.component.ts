@@ -47,7 +47,7 @@ export class DetalleCatHorarioComponent implements OnInit {
 
   ValidarMinEspera(form, datos) {
     if (form.minEsperaForm === '') {
-      datos.minu_espera = '00:00';
+      datos.minu_espera = 0;
     }
   }
 
@@ -101,7 +101,6 @@ export class DetalleCatHorarioComponent implements OnInit {
   CerrarVentanaDetalleHorario() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
 }

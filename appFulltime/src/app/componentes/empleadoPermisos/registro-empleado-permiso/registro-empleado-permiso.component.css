@@ -2,10 +2,15 @@
 
 .mat-radio-button ~ .mat-radio-button { margin-left: 10px; }
 
+mat-radio-group { width: 210px; padding: 15px 20px 15px 20x; margin-bottom: 10px;}
+
+mat-form-field {padding: 10px 10px 0px 10px;}
+
 #movilidad { 
     cursor: grab;
     color: blue;
     font-size: 20px;
+    margin-left: 10px;
 }
 
 .permisoEmpleado { 
@@ -18,9 +23,8 @@
 .nota {
     font-size: 12px; 
     font-weight: bold; 
-    padding-left: 5px;  
     text-align: justify;
-    padding-bottom: 10px; 
+    padding: 0px 5px 10px 5px; 
     color: rgb(52,65,84);
 }
 
@@ -89,7 +93,7 @@
 
 .scrollbar {
     float: left;
-    height: 500px;
+    height: 400px;
     width: 100%;
     background: #fff;
     overflow-y: scroll;

@@ -32,6 +32,10 @@ export class PermisosService {
   ActualizarEstado(id: number, datos: any) {
     return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/estado`, datos);
   }
+  
+  EditarPermiso(id: number, datos: any) {
+    return this.http.put(`${this.API_URL}/empleadoPermiso/${id}/permiso-solicitado`, datos);
+  }
 
   ConsultarEmpleadoPermisos() {
     return this.http.get(`${this.API_URL}/empleadoPermiso`);
@@ -65,4 +69,11 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/datosAutorizacion/${id_permiso}/${id_empleado}`);
   }
 
+  EliminarPermiso(id_permiso: number, doc: string) {
+    return this.http.delete(`${this.API_URL}/empleadoPermiso/eliminar/${id_permiso}/${doc}`);
+  }
+
+  SendMailNoti(datos: any) {
+    return this.http.post(`${this.API_URL}/empleadoPermiso/mail-noti`, datos);
+  }
 }

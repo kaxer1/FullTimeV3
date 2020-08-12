@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,9 @@ export class RegimenService {
 
   // Invocación del método post para crear nuevo régimen laboral
   CrearNuevoRegimen(datos: any) {
-    return this.http.post(`${this.API_URL}/regimenLaboral`, datos);
+    return this.http.post(`${this.API_URL}/regimenLaboral`, datos).pipe(
+      catchError(datos)
+    );
   }
 
   ConsultarRegimen() {
@@ -31,5 +34,9 @@ export class RegimenService {
 
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/regimenLaboral/xmlDownload`, data);
+  }
+
+  EliminarRegistro(id: number) {
+    return this.http.delete(`${this.API_URL}/regimenLaboral/eliminar/${id}`);
   }
 }

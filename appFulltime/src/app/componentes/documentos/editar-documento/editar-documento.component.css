@@ -1,19 +1,18 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; } 
+.btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;} 
 
 #hora { font-size: x-small; }
 
 #movilidad { 
     cursor: grab;
     color: blue;
-    font-size: 20px;
+    margin-left: 10px;
 }
 
 .tituloHorarioL { 
-    font-size: 20px; 
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
-    padding-top: 10px; 
+    height: 50px;
 }
 
 #iHor { cursor: pointer; }

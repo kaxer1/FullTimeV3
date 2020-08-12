@@ -21,6 +21,7 @@ class DoumentosRutas {
         this.router.put('/editar/:id', DOCUMENTOS_CONTROLADOR.EditarDocumento);
         this.router.get('/documentos/:docs', DOCUMENTOS_CONTROLADOR.ObtenerDocumento);
         this.router.put('/:id/documento', multipartMiddleware, DOCUMENTOS_CONTROLADOR.GuardarDocumentos);
+        this.router.delete('/eliminar/:id', DOCUMENTOS_CONTROLADOR.EliminarRegistros);
     }
 }
 

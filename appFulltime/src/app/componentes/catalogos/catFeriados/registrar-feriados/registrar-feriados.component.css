@@ -1,9 +1,9 @@
-.btn { margin-left: 15px; background-color: rgb(80,87,97); color: white; }
+.btn { background-color: rgb(80,87,97); color: white; }
 
 #movilidad { 
     cursor: grab;
     color: blue;
-    font-size: 20px;
+    margin-left: 10px;
 }
 
 #feriado { cursor: pointer; }
@@ -11,18 +11,18 @@
 /*.registrarF-tooltip { background-color : rgb(66, 0, 128); }*/
 
 .barraTituloR { 
-    font-size: 18px; 
     text-align: center; 
     background: rgb(52,65,84); 
-    color: white;  
-    padding-top: 10px; 
+    color: white; 
+    height: 50px; 
 }
 
 .nota {
     font-size: 12px; 
     font-weight: bold; 
-    padding-left: 5px;  
     text-align: justify;
-    padding-bottom: 10px; 
+    padding: 13px 5px 10px 5px; 
     color: rgb(52,65,84);
 }
+
+mat-form-field {width: 100%;}

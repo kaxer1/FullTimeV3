@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 
@@ -35,6 +36,7 @@ export class EditarRegimenComponent implements OnInit {
   constructor(
     private rest: RegimenService,
     private toastr: ToastrService,
+    public router: Router,
     public dialogRef: MatDialogRef<EditarRegimenComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -129,7 +131,7 @@ export class EditarRegimenComponent implements OnInit {
       if (this.data.actualizar === true) {
         window.location.reload();
       } else {
-        //this.router.navigate(['/verFeriados/', datosFeriado.id]);
+        this.router.navigate(['/verRegimen/', this.data.datosRegimen.id]);
       }
     }, error => {
       this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó')
