@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
@@ -16,7 +16,6 @@ interface Nivel {
   selector: 'app-registro-departamento',
   templateUrl: './registro-departamento.component.html',
   styleUrls: ['./registro-departamento.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroDepartamentoComponent implements OnInit {
@@ -132,7 +131,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     let idSucursal = datos.id_sucursal;
     this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
       this.revisarNombre = data;
-      console.log('revisando nombres', this.revisarNombre, ' ', datos.nombre);
       for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
         if (this.revisarNombre[i].nombre === datos.nombre) {
           this.contador = 1;
