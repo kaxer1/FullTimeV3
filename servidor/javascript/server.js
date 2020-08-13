@@ -328,7 +328,7 @@ setInterval(() => __awaiter(void 0, void 0, void 0, function* () {
                     subject: 'Aviso toma de vacaciones',
                     html: `
                     <h2> <b> ¡Tienes 2 días para tomar vacaciones! </b> </h2>
-                    <p> <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> se le da un aviso de que en 5 días, usted debe
+                    <p> <b>${obj.nombre.split(" ")[0]} ${obj.apellido.split(" ")[0]}</b> se le da un aviso de que en 2 días, usted debe
                     tomar vacaciones como esta prestablecido desde el dia <b> ${obj.fec_inicio.toLocaleDateString().split("T")[0]} </b>
                     hasta el dia <b>${obj.fec_final.toLocaleDateString().split("T")[0]}</b>.</p>
                     `
