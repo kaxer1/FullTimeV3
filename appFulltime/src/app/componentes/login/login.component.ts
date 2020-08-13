@@ -69,6 +69,7 @@ export class LoginComponent implements OnInit {
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
+      console.log(datos);
 
       if (datos.message === 'error') {
         this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
