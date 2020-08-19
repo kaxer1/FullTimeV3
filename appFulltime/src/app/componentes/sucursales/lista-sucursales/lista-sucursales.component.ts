@@ -163,7 +163,7 @@ export class ListaSucursalesComponent implements OnInit {
   }
 
   getDocumentDefinicion() {
-    sessionStorage.setItem('Sucursales', this.sucursales);
+    sessionStorage.setItem('Establecimientos', this.sucursales);
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
@@ -201,7 +201,7 @@ export class ListaSucursalesComponent implements OnInit {
       },
       content: [
         {
-          text: 'Lista de Sucursales',
+          text: 'Lista de Establecimientos',
           bold: true,
           fontSize: 20,
           alignment: 'center',
@@ -254,7 +254,7 @@ export class ListaSucursalesComponent implements OnInit {
               [
                 { text: 'Id', style: 'tableHeader' },
                 { text: 'Empresa', style: 'tableHeader' },
-                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Establecimiento', style: 'tableHeader' },
                 { text: 'Ciudad', style: 'tableHeader' }
               ],
               ...this.sucursales.map(obj => {
@@ -279,8 +279,8 @@ export class ListaSucursalesComponent implements OnInit {
   exportToExcel() {
     const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.sucursales);
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'Sucursales');
-    xlsx.writeFile(wb, "Sucursales" + new Date().getTime() + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wsr, 'Establecimientos');
+    xlsx.writeFile(wb, "Establecimientos" + new Date().getTime() + '.xlsx');
   }
 
   /****************************************************************************************************** 
@@ -291,7 +291,7 @@ export class ListaSucursalesComponent implements OnInit {
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.sucursales);
     const csvDataH = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataH], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "SucursalesCSV" + new Date().getTime() + '.csv');
+    FileSaver.saveAs(data, "EstablecimientosCSV" + new Date().getTime() + '.csv');
   }
 
   /* ****************************************************************************************************
@@ -305,10 +305,10 @@ export class ListaSucursalesComponent implements OnInit {
     var arregloSucursales = [];
     this.sucursales.forEach(obj => {
       objeto = {
-        "sucursal": {
+        "establecimiento": {
           '@id': obj.id,
           "empresa": obj.nomempresa,
-          "sucursal": obj.nombre,
+          "establecimiento": obj.nombre,
           "ciudad": obj.descripcion,
         }
       }

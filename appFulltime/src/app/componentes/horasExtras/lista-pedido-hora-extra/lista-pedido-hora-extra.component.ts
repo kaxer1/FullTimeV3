@@ -29,9 +29,23 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  obtenerHorasExtras(){
+  obtenerHorasExtras() {
     this.restHE.ListaAllHoraExtra().subscribe(res => {
       this.horas_extras = res;
+      for (var i = 0; i <= this.horas_extras.length - 1; i++) {
+        if (this.horas_extras[i].estado === 1) {
+          this.horas_extras[i].estado = 'Pendiente';
+        }
+        else if (this.horas_extras[i].estado === 2) {
+          this.horas_extras[i].estado = 'Pre-Autorizado';
+        }
+        else if (this.horas_extras[i].estado === 3) {
+          this.horas_extras[i].estado = 'Autorizado';
+        }
+        else if (this.horas_extras[i].estado === 4) {
+          this.horas_extras[i].estado = 'Negado';
+        }
+      }
       console.log(res);
     });
   }

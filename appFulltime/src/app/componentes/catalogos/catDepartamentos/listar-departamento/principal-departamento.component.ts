@@ -281,7 +281,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
               [
                 { text: 'Id', style: 'tableHeader' },
                 { text: 'Empresa', style: 'tableHeader' },
-                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Establecimiento', style: 'tableHeader' },
                 { text: 'Departamento', style: 'tableHeader' },
                 { text: 'Nivel', style: 'tableHeader' },
                 { text: 'Departamento Superior', style: 'tableHeader' }
@@ -339,7 +339,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
         "departamento": {
           '@id': obj.id,
           "empresa": obj.nomempresa,
-          "sucursal": obj.nomsucursal,
+          "establecimiento": obj.nomsucursal,
           "departamento": obj.nombre,
           "nivel": obj.nivel,
           "departamento_superior": obj.departamento_padre,

@@ -41,15 +41,15 @@ class EmpresaControlador {
     }
     CrearEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante } = req.body;
-            yield database_1.default.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante  ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante]);
+            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento } = req.body;
+            yield database_1.default.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento]);
             res.jsonp({ message: 'La Empresa se registró con éxito' });
         });
     }
     ActualizarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id } = req.body;
-            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7 WHERE id = $8', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, id]);
+            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id } = req.body;
+            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 WHERE id = $9', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id]);
             res.jsonp({ message: 'Empresa actualizada exitosamente' });
         });
     }

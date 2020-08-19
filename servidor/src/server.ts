@@ -51,6 +51,7 @@ import NOTIFICACION_TIEMPO_REAL_RUTAS from './rutas/notificaciones/notificacione
 import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
 import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
+import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -144,9 +145,12 @@ class Servidor {
 
         // Documentos
         this.app.use('/archivosCargados', DOCUMENTOS_RUTAS);
-        
+
         // Mensaje de cumpleaños empresas
         this.app.use('/birthday', BIRTHDAY_RUTAS);
+
+        // Reportes
+        this.app.use('/reporte', REPORTES_RUTAS);
 
     }
 
@@ -306,7 +310,7 @@ setInterval(async () => {
             })
         }
     }
-}, 3600000); 
+}, 3600000);
 
 // Aviso de toma de vacaciones en 2 dias.
 setInterval(async () => {
