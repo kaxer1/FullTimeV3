@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import AUTORIZACIONES_CONTROLADOR from '../../controlador/autorizaciones/autorizacionesControlador';
+import { TokenValidation } from '../../libs/verificarToken'
 
 class DepartamentoRutas {
     public router: Router = Router();

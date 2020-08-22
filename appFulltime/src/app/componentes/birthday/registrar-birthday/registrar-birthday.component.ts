@@ -12,12 +12,14 @@ import { ToastrService } from 'ngx-toastr';
 export class RegistrarBirthdayComponent implements OnInit {
 
   tituloF = new FormControl('', [Validators.required]);
+  linkF = new FormControl('');
   mensajeF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
 
   public birthdayForm = new FormGroup({
     tituloForm: this.tituloF,
+    linkForm: this.linkF,
     mensajeForm: this.mensajeF,
     nombreCertificadoForm: this.nombreCertificadoF
   })
@@ -38,6 +40,7 @@ export class RegistrarBirthdayComponent implements OnInit {
     let dataMensaje = {
       id_empresa: this.id_empresa, 
       titulo: form.tituloForm, 
+      link: form.linkForm, 
       mensaje: form.mensajeForm 
     } 
     console.log(dataMensaje);

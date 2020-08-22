@@ -4,26 +4,6 @@ import fs from 'fs';
 
 class BirthdayControlador {
 
-    // public async ListarNombreCiudad(req: Request, res: Response) {
-    //     const CIUDAD = await pool.query('SELECT * FROM VistaNombreProvincia ORDER BY nombre, descripcion ASC');
-    //     if (CIUDAD.rowCount > 0) {
-    //         return res.jsonp(CIUDAD.rows)
-    //     }
-    //     else {
-    //         return res.status(404).jsonp({ text: 'No se encuentran registros' });
-    //     }
-    // }
-
-    // public async ListarCiudades(req: Request, res: Response) {
-    //     const CIUDAD = await pool.query('SELECT * FROM ciudades');
-    //     if (CIUDAD.rowCount > 0) {
-    //         return res.jsonp(CIUDAD.rows)
-    //     }
-    //     else {
-    //         return res.status(404).jsonp({ text: 'No se encuentran registros' });
-    //     }
-    // }
-
     public async getImagen(req: Request, res: Response): Promise<any> {
         const imagen = req.params.imagen;
         let filePath = `servidor\\cumpleanios\\${imagen}`
@@ -42,8 +22,8 @@ class BirthdayControlador {
     }
 
     public async CrearMensajeBirthday(req: Request, res: Response): Promise<void> {
-        const { id_empresa, titulo, mensaje } = req.body;
-        await pool.query('INSERT INTO Message_birthday ( id_empresa, titulo, mensaje ) VALUES ($1, $2, $3)', [id_empresa, titulo, mensaje]);
+        const { id_empresa, titulo, link, mensaje } = req.body;
+        await pool.query('INSERT INTO Message_birthday ( id_empresa, titulo, mensaje, url ) VALUES ($1, $2, $3, $4)', [id_empresa, titulo, mensaje, link]);
         const oneMessage = await pool.query('SELECT id FROM Message_birthday WHERE id_empresa = $1', [id_empresa]);
         const idMessageGuardado = oneMessage.rows[0].id;
         res.jsonp([{ message: 'Mensaje de cumpleaños empresarial guardado', id: idMessageGuardado }]);
@@ -78,17 +58,11 @@ class BirthdayControlador {
     }
 
     public async EditarMensajeBirthday(req: Request, res: Response): Promise<void> {
-        const { titulo, mensaje } = req.body;
+        const { titulo, mensaje, link } = req.body;
         const {id_mensaje} = req.params;
-        await pool.query('UPDATE Message_birthday SET titulo = $1, mensaje = $2 WHERE id = $3', [titulo, mensaje, id_mensaje]);
+        await pool.query('UPDATE Message_birthday SET titulo = $1, mensaje = $2, url = $3 WHERE id = $4', [titulo, mensaje, link, id_mensaje]);
         res.jsonp({ message: 'Mensaje de cumpleaños actualizado'});
     }
-
-    // public async EliminarCiudad(req: Request, res: Response): Promise<void> {
-    //     const id = req.params.id;
-    //     await pool.query('DELETE FROM ciudades WHERE id = $1', [id]);
-    //     res.jsonp({ message: 'Registro eliminado' });
-    // }
 
 }
 

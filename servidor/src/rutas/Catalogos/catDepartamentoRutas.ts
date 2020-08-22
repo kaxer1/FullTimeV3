@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import DEPARTAMENTO_CONTROLADOR from '../../controlador/catalogos/catDepartamentoControlador';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class DepartamentoRutas {
     public router: Router = Router();
@@ -9,19 +10,19 @@ class DepartamentoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', DEPARTAMENTO_CONTROLADOR.ListarDepartamentos);
-        this.router.get('/nombreDepartamento', DEPARTAMENTO_CONTROLADOR.ListarNombreDepartamentos);
-        this.router.get('/idDepartamento/:nombre', DEPARTAMENTO_CONTROLADOR.ListarIdDepartamentoNombre);
-        this.router.get('/:id', DEPARTAMENTO_CONTROLADOR.ObtenerUnDepartamento);
-        this.router.get('/buscarDepa/:id_sucursal', DEPARTAMENTO_CONTROLADOR.ObtenerDepartamentosSucursal);
-        this.router.post('/', DEPARTAMENTO_CONTROLADOR.CrearDepartamento);
-        this.router.get('/busqueda/:nombre', DEPARTAMENTO_CONTROLADOR.ObtenerIdDepartamento);
-        this.router.get('/busqueda-contrato/:id_contrato', DEPARTAMENTO_CONTROLADOR.BuscarDepartamentoPorContrato);
-        this.router.put('/:id', DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento);
-        this.router.post('/xmlDownload/', DEPARTAMENTO_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarDepartamentos);
+        this.router.get('/nombreDepartamento', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarNombreDepartamentos);
+        this.router.get('/idDepartamento/:nombre', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarIdDepartamentoNombre);
+        this.router.get('/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.ObtenerUnDepartamento);
+        this.router.get('/buscarDepa/:id_sucursal', TokenValidation, DEPARTAMENTO_CONTROLADOR.ObtenerDepartamentosSucursal);
+        this.router.post('/', TokenValidation, DEPARTAMENTO_CONTROLADOR.CrearDepartamento);
+        this.router.get('/busqueda/:nombre', TokenValidation, DEPARTAMENTO_CONTROLADOR.ObtenerIdDepartamento);
+        this.router.get('/busqueda-contrato/:id_contrato', TokenValidation, DEPARTAMENTO_CONTROLADOR.BuscarDepartamentoPorContrato);
+        this.router.put('/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento);
+        this.router.post('/xmlDownload/', TokenValidation, DEPARTAMENTO_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', DEPARTAMENTO_CONTROLADOR.downloadXML);
-        this.router.delete('/eliminar/:id', DEPARTAMENTO_CONTROLADOR.EliminarRegistros);
-        this.router.get('/buscar/datosDepartamento/:id_sucursal', DEPARTAMENTO_CONTROLADOR.ListarDepartamentosSucursal);
+        this.router.delete('/eliminar/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.EliminarRegistros);
+        this.router.get('/buscar/datosDepartamento/:id_sucursal', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarDepartamentosSucursal);
     }
 }
 

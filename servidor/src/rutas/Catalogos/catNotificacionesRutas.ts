@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import NOTIFICACIONES_CONTROLADOR from '../../controlador/catalogos/catNotificacionesControlador';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class NotificacionesRutas {
     public router: Router = Router();
@@ -9,12 +10,12 @@ class NotificacionesRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', NOTIFICACIONES_CONTROLADOR.ListarNotificaciones);
-        this.router.get('/depa/:id_depa', NOTIFICACIONES_CONTROLADOR.ListarNotiByDepartamento);
-        this.router.get('/:id', NOTIFICACIONES_CONTROLADOR.ObtenerUnaNotificacion);
-        this.router.get('/listar/final', NOTIFICACIONES_CONTROLADOR.NotificacionLista);
-        this.router.post('/', NOTIFICACIONES_CONTROLADOR.CrearNotificacion);
-        this.router.get('/notificacionPermiso/:id_tipo_permiso', NOTIFICACIONES_CONTROLADOR.ObtenerNotificacionPermiso);
+        this.router.get('/', TokenValidation, NOTIFICACIONES_CONTROLADOR.ListarNotificaciones);
+        this.router.get('/depa/:id_depa', TokenValidation, NOTIFICACIONES_CONTROLADOR.ListarNotiByDepartamento);
+        this.router.get('/:id', TokenValidation, NOTIFICACIONES_CONTROLADOR.ObtenerUnaNotificacion);
+        this.router.get('/listar/final', TokenValidation, NOTIFICACIONES_CONTROLADOR.NotificacionLista);
+        this.router.post('/', TokenValidation, NOTIFICACIONES_CONTROLADOR.CrearNotificacion);
+        this.router.get('/notificacionPermiso/:id_tipo_permiso', TokenValidation, NOTIFICACIONES_CONTROLADOR.ObtenerNotificacionPermiso);
     }
 }
 

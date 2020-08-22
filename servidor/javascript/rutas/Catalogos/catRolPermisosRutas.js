@@ -5,17 +5,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catRolPermisosControlador_1 = __importDefault(require("../../controlador/catalogos/catRolPermisosControlador"));
+const verificarToken_1 = require("../../libs/verificarToken");
 class RolPermisosRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', catRolPermisosControlador_1.default.list);
-        this.router.get('/:id', catRolPermisosControlador_1.default.getOne);
-        this.router.post('/', catRolPermisosControlador_1.default.create);
-        this.router.post('/denegado/', catRolPermisosControlador_1.default.createPermisoDenegado);
-        this.router.get('/denegado/:id', catRolPermisosControlador_1.default.getPermisosUsuario);
+        this.router.get('/', verificarToken_1.TokenValidation, catRolPermisosControlador_1.default.list);
+        this.router.get('/:id', verificarToken_1.TokenValidation, catRolPermisosControlador_1.default.getOne);
+        this.router.post('/', verificarToken_1.TokenValidation, catRolPermisosControlador_1.default.create);
+        this.router.post('/denegado/', verificarToken_1.TokenValidation, catRolPermisosControlador_1.default.createPermisoDenegado);
+        this.router.get('/denegado/:id', verificarToken_1.TokenValidation, catRolPermisosControlador_1.default.getPermisosUsuario);
     }
 }
 const rolPermisosRutas = new RolPermisosRutas();

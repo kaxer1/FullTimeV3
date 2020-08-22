@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import EMPRESA_CONTROLADOR from '../../controlador/catalogos/catEmpresaControlador';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class DepartamentoRutas {
     public router: Router = Router();
@@ -9,14 +10,14 @@ class DepartamentoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', EMPRESA_CONTROLADOR.ListarEmpresa);
-        this.router.get('/buscar/:nombre', EMPRESA_CONTROLADOR.ListarUnaEmpresa);
-        this.router.post('/', EMPRESA_CONTROLADOR.CrearEmpresa);
-        this.router.put('/', EMPRESA_CONTROLADOR.ActualizarEmpresa);
-        this.router.post('/xmlDownload/', EMPRESA_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, EMPRESA_CONTROLADOR.ListarEmpresa);
+        this.router.get('/buscar/:nombre', TokenValidation, EMPRESA_CONTROLADOR.ListarUnaEmpresa);
+        this.router.post('/', TokenValidation, EMPRESA_CONTROLADOR.CrearEmpresa);
+        this.router.put('/', TokenValidation, EMPRESA_CONTROLADOR.ActualizarEmpresa);
+        this.router.post('/xmlDownload/', TokenValidation, EMPRESA_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', EMPRESA_CONTROLADOR.downloadXML);
-        this.router.delete('/eliminar/:id', EMPRESA_CONTROLADOR.EliminarRegistros);
-        this.router.get('/buscar/datos/:id', EMPRESA_CONTROLADOR.ListarEmpresaId);
+        this.router.delete('/eliminar/:id', TokenValidation, EMPRESA_CONTROLADOR.EliminarRegistros);
+        this.router.get('/buscar/datos/:id', TokenValidation, EMPRESA_CONTROLADOR.ListarEmpresaId);
     }
 }
 

@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const verificarToken_1 = require("../../../libs/verificarToken");
 const periodoVacacionControlador_1 = __importDefault(require("../../../controlador/empleado/empleadoPeriodoVacacion/periodoVacacionControlador"));
 class DepartamentoRutas {
     constructor() {
@@ -11,11 +12,11 @@ class DepartamentoRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', periodoVacacionControlador_1.default.ListarPerVacaciones);
-        this.router.get('/infoPeriodo/:id_empl_contrato', periodoVacacionControlador_1.default.EncontrarPerVacacionesPorIdContrato);
-        this.router.get('/buscar/:id_empleado', periodoVacacionControlador_1.default.EncontrarIdPerVacaciones);
-        this.router.post('/', periodoVacacionControlador_1.default.CrearPerVacaciones);
-        this.router.put('/', periodoVacacionControlador_1.default.ActualizarPeriodo);
+        this.router.get('/', verificarToken_1.TokenValidation, periodoVacacionControlador_1.default.ListarPerVacaciones);
+        this.router.get('/infoPeriodo/:id_empl_contrato', verificarToken_1.TokenValidation, periodoVacacionControlador_1.default.EncontrarPerVacacionesPorIdContrato);
+        this.router.get('/buscar/:id_empleado', verificarToken_1.TokenValidation, periodoVacacionControlador_1.default.EncontrarIdPerVacaciones);
+        this.router.post('/', verificarToken_1.TokenValidation, periodoVacacionControlador_1.default.CrearPerVacaciones);
+        this.router.put('/', verificarToken_1.TokenValidation, periodoVacacionControlador_1.default.ActualizarPeriodo);
     }
 }
 const PERIODO_VACACION__RUTAS = new DepartamentoRutas();

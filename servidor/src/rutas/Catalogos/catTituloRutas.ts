@@ -1,21 +1,20 @@
 import { Router } from 'express';
 import TITULO_CONTROLADOR from '../../controlador/catalogos/catTituloControlador';
-
+import { TokenValidation } from '../../libs/verificarToken';
 
 class TituloRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
     configuracion(): void {
-        this.router.get('/', TITULO_CONTROLADOR.list);
-        this.router.get('/:id', TITULO_CONTROLADOR.getOne);
-        this.router.post('/', TITULO_CONTROLADOR.create);
-        this.router.put('/', TITULO_CONTROLADOR.ActualizarTitulo);
-        this.router.delete('/eliminar/:id', TITULO_CONTROLADOR.EliminarRegistros);
+        this.router.get('/', TokenValidation, TITULO_CONTROLADOR.list);
+        this.router.get('/:id', TokenValidation, TITULO_CONTROLADOR.getOne);
+        this.router.post('/', TokenValidation, TITULO_CONTROLADOR.create);
+        this.router.put('/', TokenValidation, TITULO_CONTROLADOR.ActualizarTitulo);
+        this.router.delete('/eliminar/:id', TokenValidation, TITULO_CONTROLADOR.EliminarRegistros);
     }
 }
 
