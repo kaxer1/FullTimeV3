@@ -265,6 +265,8 @@ import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/h
 import { DepartamentoPipe } from './filtros/catDepartamentos/departamento/departamento.pipe';
 import { RegimenPipe } from './filtros/catRegimen/regimen/regimen.pipe';
 import { EmplCargoPipe } from './filtros/empleado/filtroEmpCargo/empl-cargo.pipe';
+import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -461,6 +463,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     DepartamentoPipe,
     RegimenPipe,
     EmplCargoPipe,
+    ReporteTimbresComponent,
+    ReportePermisosComponent,
   ],
 
   imports: [
