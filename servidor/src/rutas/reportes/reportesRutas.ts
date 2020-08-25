@@ -20,6 +20,8 @@ class CiudadRutas {
         this.router.get('/reportePermisos/horarios/:id_empleado', REPORTES_CONTROLADOR.ListarPermisoHorarioEmpleado);
         this.router.get('/reportePermisos/planificacion/:id_empleado', REPORTES_CONTROLADOR.ListarPermisoPlanificaEmpleado);
         this.router.get('/reportePermisos/autorizaciones/:id_empleado', REPORTES_CONTROLADOR.ListarPermisoAutorizaEmpleado);
+        this.router.post('/reporteAtrasos/horarios/:id_empleado', REPORTES_CONTROLADOR.ListarAtrasosHorarioEmpleado);
+        this.router.post('/reporteAtrasos/planificacion/:id_empleado', REPORTES_CONTROLADOR.ListarAtrasosPlanificaEmpleado);
     }
 }
 

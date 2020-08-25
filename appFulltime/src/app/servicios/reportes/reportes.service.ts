@@ -29,4 +29,11 @@ export class ReportesService {
     return this.http.get(`${this.API_URL}/reporte/reportePermisos/autorizaciones/${empleado_id}`);
   }
 
+  ObtenerTimbresAtrasosHorario(empleado_id: any, data: any) {
+    return this.http.post(`${this.API_URL}/reporte/reporteAtrasos/horarios/${empleado_id}`, data);
+  }
+
+  ObtenerTimbresAtrasosPlanificacion(empleado_id: any, data: any) {
+    return this.http.post(`${this.API_URL}/reporte/reporteAtrasos/planificacion/${empleado_id}`, data);
+  }
 }

@@ -139,6 +139,55 @@ class ReportesControlador {
         }
     }
 
+    public async ListarAtrasosHorarioEmpleado(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+            '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+            '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
+            'h.fec_inicio, h.fec_final, ch.hora_trabajo ' +
+            'AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, h.id_empl_cargo AS id_cargo, ' +
+            '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+            'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
+            'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
+            'AND dh.tipo_accion = 1) AS h ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado = h.empl_id AND t.accion LIKE \'E\' AND ' +
+            't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
+            't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
+            't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Sin registros' });
+        }
+    }
+
+    public async ListarAtrasosPlanificaEmpleado(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+            '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+            '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios, ' +
+            'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
+            'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, dp.fecha, ' +
+            '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+            'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
+            'deta_horarios AS dh ' +
+            'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = 1 AND ' +
+            'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
+            'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
+            'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+            'AND t.accion LIKE \'E\' AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
+            'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
+            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'error' });
+        }
+    }
 }
 
 export const REPORTES_CONTROLADOR = new ReportesControlador();

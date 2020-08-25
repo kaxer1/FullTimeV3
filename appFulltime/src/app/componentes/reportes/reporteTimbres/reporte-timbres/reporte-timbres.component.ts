@@ -221,6 +221,7 @@ export class ReporteTimbresComponent implements OnInit {
         this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
       }
     }
+    
   }
 
   IngresarSoloLetras(e) {

@@ -19,9 +19,9 @@ import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtras
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
 @Component({
-  selector: 'app-reporte-permisos',
-  templateUrl: './reporte-permisos.component.html',
-  styleUrls: ['./reporte-permisos.component.css'],
+  selector: 'app-reporte-atrasos',
+  templateUrl: './reporte-atrasos.component.html',
+  styleUrls: ['./reporte-atrasos.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -29,7 +29,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
-export class ReportePermisosComponent implements OnInit {
+export class ReporteAtrasosComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
@@ -95,9 +95,6 @@ export class ReportePermisosComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-    var h = '02:15';
-
-    //console.log('numero', h1)
   }
 
   // Método para ver la información del empleado 
@@ -192,73 +189,78 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
-  datosAutorizacion: any = [];
-  permisosHorarios: any = [];
-  permisosPlanificacion: any = [];
-  totalPermisos: any = [];
-  VerPermisosEmpleado(id_seleccionado, archivo) {
-    this.permisosHorarios = [];
-    this.permisosPlanificacion = [];
-    this.totalPermisos = [];
-    this.restR.ObtenerPermisosHorarios(id_seleccionado).subscribe(dataH => {
-      this.permisosHorarios = dataH;
-      this.VerPermisosPlanificacion(this.permisosHorarios, id_seleccionado, archivo);
+  VerAtrasosEmpleado(id_seleccionado, form, archivo) {
+    if (form.inicioForm === '' || form.finalForm === '') {
+      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+    }
+    else {
+      if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
+        let fechas = {
+          fechaInicio: form.inicioForm,
+          fechaFinal: form.finalForm
+        }
+        this.VerAtrasosHorario(id_seleccionado, fechas, archivo, form);
+      }
+      else {
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+      }
+    }
+  }
+
+  atrasosHorario: any = [];
+  atrasosPlanificacion: any = [];
+  totalAtrasos: any = [];
+  VerAtrasosHorario(id_seleccionado, datosFecha, archivo, form) {
+    this.atrasosHorario = [];
+    this.atrasosPlanificacion = [];
+    this.totalAtrasos = [];
+    this.restR.ObtenerTimbresAtrasosHorario(id_seleccionado, datosFecha).subscribe(dataH => {
+      this.atrasosHorario = dataH;
+      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form);
     }, error => {
-      this.VerPermisosPlanificacion(this.permisosHorarios, id_seleccionado, archivo);
+      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form);
     });
   }
 
-  VerPermisosPlanificacion(permisos_horario: any, id_seleccionado: number, archivo: string) {
-    this.restR.ObtenerPermisosPlanificacion(id_seleccionado).subscribe(dataP => {
-      this.permisosPlanificacion = dataP;
-      if (permisos_horario.length != 0) {
-        permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
-        this.totalPermisos = permisos_horario;
-        console.log('prueba', this.totalPermisos);
+  VerAtrasosPlanificacion(atrasos_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form) {
+    this.restR.ObtenerTimbresAtrasosPlanificacion(id_seleccionado, datos_fechas).subscribe(dataP => {
+      this.atrasosPlanificacion = dataP;
+      if (atrasos_horario.length != 0) {
+        atrasos_horario = atrasos_horario.concat(this.atrasosPlanificacion);
+        this.totalAtrasos = atrasos_horario;
+        console.log('prueba', this.totalAtrasos);
       }
       else {
-        this.totalPermisos = this.permisosPlanificacion;
-        console.log('prueba1', this.totalPermisos);
+        this.totalAtrasos = this.atrasosPlanificacion;
+        console.log('prueba1', this.totalAtrasos);
       }
-      this.VerDatosAutorizacion(id_seleccionado, archivo);
+      // this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+      this.GenerarArchivos(id_seleccionado, archivo, form);
+      this.LimpiarFechas();
+      this.LimpiarCampos();
     }, error => {
-      if (permisos_horario.length != 0) {
-        this.totalPermisos = permisos_horario;
-        console.log('prueba2', this.totalPermisos);
-        this.VerDatosAutorizacion(id_seleccionado, archivo);
+      if (atrasos_horario.length != 0) {
+        this.totalAtrasos = atrasos_horario;
+        console.log('prueba2', this.totalAtrasos);
+        //  this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+        this.GenerarArchivos(id_seleccionado, archivo, form);
+        this.LimpiarFechas();
+        this.LimpiarCampos();
       }
       else {
-        this.toastr.info('El empleado no tiene registros de PERMISOS.')
+        this.toastr.info('El empleado no tiene registros de Atrasos.')
       }
     })
   }
 
-  VerDatosAutorizacion(id_seleccionado: number, archivo: string) {
-    this.datosAutorizacion = [];
-    this.restR.ObtenerAutorizacionPermiso(id_seleccionado).subscribe(dataA => {
-      this.datosAutorizacion = dataA;
-      for (var i = 0; i <= this.datosAutorizacion.length - 1; i++) {
-        if (this.datosAutorizacion[i].estado === 1) {
-          this.datosAutorizacion[i].estado = 'Pendiente';
-        }
-        else if (this.datosAutorizacion[i].estado === 2) {
-          this.datosAutorizacion[i].estado = 'Pre-autorizado';
-        }
-        else if (this.datosAutorizacion[i].estado === 3) {
-          this.datosAutorizacion[i].estado = 'Autorizado';
-        }
-        else if (this.datosAutorizacion[i].estado === 4) {
-          this.datosAutorizacion[i].estado = 'Negado';
-        }
-      }
-      if (archivo === 'pdf') {
-        console.log('archivo', archivo)
-        this.generarPdf('open', id_seleccionado);
-      }
-      else if (archivo === 'excel') {
-        this.exportToExcel(this.permisosHorarios);
-      }
-    })
+  GenerarArchivos(id_seleccionado: number, archivo: string, form) {
+    if (archivo === 'pdf') {
+      console.log('archivo', archivo)
+      this.generarPdf('open', id_seleccionado, form);
+    }
+    else if (archivo === 'excel') {
+      this.exportToExcel(this.atrasosHorario);
+    }
   }
 
   IngresarSoloLetras(e) {
@@ -308,6 +310,11 @@ export class ReportePermisosComponent implements OnInit {
     this.cargoF.reset();
   }
 
+  LimpiarFechas() {
+    this.fechaInicialF.reset();
+    this.fechaFinalF.reset();
+  }
+
   ObtenerNacionalidades() {
     this.rest.getListaNacionalidades().subscribe(res => {
       this.nacionalidades = res;
@@ -318,8 +325,8 @@ export class ReportePermisosComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
-  generarPdf(action = 'open', id_seleccionado) {
-    const documentDefinition = this.getDocumentDefinicion(id_seleccionado);
+  generarPdf(action = 'open', id_seleccionado, form) {
+    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form);
 
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
@@ -331,8 +338,10 @@ export class ReportePermisosComponent implements OnInit {
 
   }
 
-  getDocumentDefinicion(id_seleccionado: number) {
+  getDocumentDefinicion(id_seleccionado: number, form) {
+
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
+    console.log('comprobando', this.empleadoLogueado, id_seleccionado);
     return {
 
       pageOrientation: 'landscape',
@@ -381,7 +390,7 @@ export class ReportePermisosComponent implements OnInit {
                 margin: [0, 0, 0, 20]
               },
               {
-                text: 'REPORTE PERMISOS',
+                text: 'REPORTE ATRASOS',
                 fontSize: 17,
                 alignment: 'center',
                 margin: [0, 0, 0, 20]
@@ -389,8 +398,8 @@ export class ReportePermisosComponent implements OnInit {
             ];
           }
         }),
-        this.presentarDatosGenerales(id_seleccionado),
-        this.presentarPermisos(),
+        this.presentarDatosGenerales(id_seleccionado, form),
+        this.presentarAtrasos(),
       ],
       styles: {
         header: {
@@ -432,11 +441,6 @@ export class ReportePermisosComponent implements OnInit {
           bold: true,
           margin: [50, 5, 5, 5]
         },
-        itemsTableC: {
-          fontSize: 9,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-        },
         tableHeaderA: {
           fontSize: 10,
           bold: true,
@@ -444,13 +448,24 @@ export class ReportePermisosComponent implements OnInit {
           fillColor: '#6495ED',
           margin: [20, 0, 20, 0],
         },
+        itemsTableC: {
+          fontSize: 9,
+          alignment: 'center',
+          margin: [50, 5, 5, 5]
+        },
       }
     };
   }
 
-  presentarDatosGenerales(id_seleccionado) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, enteroHoras = 0, formatoHoras, formatoHorasTotales;
-    var estado, horas_decimal, dias_decimal, horas_horario, empleadoAutoriza, dias_decimal1, tDias, horas_horario1, horaT;
+  presentarDatosGenerales(id_seleccionado, form) {
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
+    var tiempoTotal: string, horaF: string, minF: string, secondF: string;
+    var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
+    var day, hora1, hora2, hTrabajo, formatoHorasDecimal: number = 0, formatoDiasDecimal: number = 0;
+    var tHoras = 0, tMinutos = 0, tSegudos = 0, formatoHorasEntero;
+    var t1 = new Date();
+    var t2 = new Date();
+    var t3 = new Date();
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
         nombre = obj.nombre
@@ -463,116 +478,64 @@ export class ReportePermisosComponent implements OnInit {
         cargo = obj.cargo
       }
     })
-    this.totalPermisos.forEach(obj => {
-      this.datosAutorizacion.forEach(element => {
-        if (obj.id === element.id_permiso) {
-          estado = element.estado;
-          empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido
-          if (estado === 'Autorizado') {
-            horas_decimal = (parseInt(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
-            //console.log('horas decimal', horas_decimal);
-            if (obj.horario_horas.split(':')[1] != undefined) {
-              horas_horario = (parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60).toFixed(2);
-              // console.log('horas horario', horas_horario);
-              dias_decimal = parseFloat((horas_decimal / horas_horario).toFixed(2)) + obj.dia;
-              //console.log('dias decimal', dias_decimal);
-              dias_decimal1 = (horas_decimal / horas_horario) + obj.dia;
-              // console.log('dias decimal1', dias_decimal1);
-              horaT = parseFloat(horas_decimal) + (obj.dia * horas_horario);
-              totalDias = totalDias + parseFloat(dias_decimal);
-              //console.log('total dias', totalDias);
-              horas_horario1 = parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60;
-              totalHoras = totalHoras + horaT;
-              //console.log('total horas', totalHoras);
-              //console.log('horario 1', horas_horario1);
-              enteroHoras = enteroHoras + parseFloat(horas_decimal);
-              //console.log('total enteros', enteroHoras);
-            }
-            else {
-              dias_decimal = (parseFloat(horas_decimal) / parseInt(obj.horario_horas)) + obj.dia;
-              dias_decimal1 = (parseFloat((horas_decimal / parseFloat(obj.horario_horas)).toFixed(2)) + obj.dia).toFixed(2);
-              // console.log('dias decimal', dias_decimal);
-              totalDias = totalDias + parseFloat(dias_decimal1);
-              //console.log('total dias', totalDias);
-              totalHoras = totalHoras + (dias_decimal * parseInt(obj.horario_horas));
-              // console.log('total horas', totalHoras);
-              enteroHoras = enteroHoras + parseFloat(horas_decimal);
-              //console.log('total horas enteros', enteroHoras);
-            }
-          }
-        }
-        else {
-          estado = obj.estado
-        }
-      });
-    })
-    if (5 < parseInt(String(enteroHoras).split('.')[0])) {
-      tDias = totalDias - 1;
-    }
-    else {
-      tDias = totalDias;
-    }
-    if (parseInt(String(enteroHoras).split('.')[0]) < 10) {
-      // console.log('entra 1')
-      if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        //console.log('entra 1.1')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        //console.log('entra 1.2')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':0' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
+    this.totalAtrasos.forEach(obj => {
+      day = moment(obj.fec_hora_timbre).day();
+      hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
+      hora2 = (obj.hora_total).split(":")
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+      //Aquí hago la resta
+      t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+      // Establecer formato de hora
+      console.log('horas', t1.getHours());
+      tHoras = tHoras + t1.getHours();
+      console.log('horas', tHoras);
+      tSegudos = tSegudos + t1.getSeconds();
+      tMinutos = tMinutos + t1.getMinutes();
+      if (tHoras < 10) {
+        horaF = '0' + tHoras;
       }
       else {
-        //console.log('entra 1.3')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-        //console.log('p', parseFloat('0.' + String(enteroHoras).split('.')[1]))
+        horaF = String(tHoras);
       }
-    }
-    else {
-      if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 2.1')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':' + String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 2.2')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':0' + String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0];
+      if (tMinutos < 10) {
+        minF = '0' + tMinutos;
       }
       else {
-        // console.log('entra 2.3')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
+        minF = String(tMinutos);
       }
-    }
-    if (parseInt(String(totalHoras).split('.')[0]) < 10) {
-      // console.log('entra 1')
-      if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 1.1')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 1.2')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':0' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
+      if (tSegudos < 10) {
+        secondF = '0' + tSegudos;
       }
       else {
-        // console.log('entra 1.3')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-        console.log('p', parseFloat('0.' + String(totalHoras).split('.')[1]))
+        secondF = String(tSegudos);
       }
-    }
-    else {
-      if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 2.1')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':' + String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 2.2')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':0' + String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0];
-      }
-      else {
-        // console.log('entra 2.3')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
+      tiempoTotal = horaF + ':' + minF + ':' + secondF;
 
+      minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      horaTDecimal = (minTDecimal / 60) + t1.getHours();
+      console.log('hora decimal', horaTDecimal);
+      formatoHorasDecimal = formatoHorasDecimal + parseFloat(horaTDecimal.toFixed(2));
+      console.log('total hora decimal', formatoHorasDecimal);
+      formatoHorasEntero = parseFloat('0.' + String(formatoHorasDecimal).split('.')[1]) * 60
+
+      if ((obj.horario_horas).split(":")[1] != undefined) {
+        trabaja = obj.horario_horas + ':00'
       }
-    }
+      else {
+        trabaja = obj.horario_horas + ':00:00'
+      }
+      var hTrabajo = (trabaja).split(":")
+      var t3 = new Date();
+      t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      diasDecimal = horaTDecimal / horaTDecimalH;
+      formatoDiasDecimal = formatoDiasDecimal + parseFloat(diasDecimal.toFixed(2));
+      console.log('total dias decimal', formatoDiasDecimal);
+    })
+    var diaI = moment(form.inicioForm).day();
+    var diaF = moment(form.finalForm).day();
     return {
       table: {
         widths: ['*'],
@@ -593,14 +556,14 @@ export class ReportePermisosComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
+                      text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP'
                     }
                   ]
                 },
                 {
                   text: [
                     {
-                      text: 'N° REGISTROS: ' + this.totalPermisos.length, style: 'itemsTableI'
+                      text: 'N° REGISTROS: ' + this.totalAtrasos.length, style: 'itemsTableI'
                     }
                   ]
                 },
@@ -640,7 +603,7 @@ export class ReportePermisosComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
+                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
                     }
                   ]
                 },
@@ -655,6 +618,13 @@ export class ReportePermisosComponent implements OnInit {
                   text: [
                     {
                       text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
+                    }
+                  ]
+                },
+                {
+                  text: [
+                    {
+                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
                     }
                   ]
                 }
@@ -709,28 +679,28 @@ export class ReportePermisosComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'TOTAL EN DIAS: ' + parseFloat(totalDias.toFixed(2)), style: 'itemsTableC'
+                      text: 'TOTAL EN DIAS: ' + formatoDiasDecimal.toFixed(2), style: 'itemsTableC'
                     }
                   ]
                 },
                 {
                   text: [
                     {
-                      text: 'TOTAL EN HORAS: ' + totalHoras.toFixed(2), style: 'itemsTableC'
+                      text: 'TOTAL EN HORAS: ' + formatoHorasDecimal, style: 'itemsTableC'
                     }
                   ]
                 },
                 {
                   text: [
                     {
-                      text: 'PERMISO DÍAS: ' + String(tDias).split('.')[0] + ' dd' + '  HORAS: ' + formatoHoras + ' hh', style: 'itemsTableC'
+                      text: 'TOTAL HORAS: ' + String(formatoHorasDecimal).split('.')[0] + ' hh : ' + formatoHorasEntero.toFixed(0) + ' min', style: 'itemsTableC'
                     }
                   ]
                 },
                 {
                   text: [
                     {
-                      text: 'TOTAL HORAS: ' + String(totalHoras.toFixed(2)).split('.')[0] + ':' + formatoHorasTotales.split(':')[1], style: 'itemsTableC'
+                      text: '', style: 'itemsTableC'
                     }
                   ]
                 },
@@ -738,7 +708,7 @@ export class ReportePermisosComponent implements OnInit {
             }
           ],
           [
-            { text: 'LISTA DE PERMISOS', style: 'tableHeader' },
+            { text: 'LISTA DE ATRASOS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
           ],
         ]
       },
@@ -753,72 +723,77 @@ export class ReportePermisosComponent implements OnInit {
       }
     }
   }
-  contadorN = 0;
 
-  accionT: string;
-  presentarPermisos() {
+  presentarAtrasos() {
     return {
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*', 'auto', 'auto'],
+        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { text: 'N° PERMISO', style: 'tableHeader' },
-            { text: 'SOLICITADO', style: 'tableHeader' },
-            { text: 'TIPO', style: 'tableHeader' },
-            { text: 'DESDE', style: 'tableHeader' },
-            { text: 'HASTA', style: 'tableHeader' },
-            { text: 'DD', style: 'tableHeader' },
-            { text: 'HH:MM', style: 'tableHeader' },
-            { text: 'H. TRABAJO', style: 'tableHeader' },
-            { text: 'ESTADO', style: 'tableHeader' },
-            { text: 'AUTORIZA', style: 'tableHeader' },
+            { text: 'FECHA', style: 'tableHeader' },
+            { text: 'HORARIO', style: 'tableHeader' },
+            { text: 'MM TOLERANCIA', style: 'tableHeader' },
+            { text: 'HORA TIMBRE', style: 'tableHeader' },
+            { text: 'HH TRABAJO', style: 'tableHeader' },
+            { text: 'ATRASO', style: 'tableHeader' },
             { text: 'HORAS', style: 'tableHeader' },
             { text: 'DÍAS', style: 'tableHeader' },
           ],
-          ...this.totalPermisos.map(obj => {
-            //console.log('permisos', this.totalPermisos)
-            let estado = '', horas_decimal, dias_decimal, horas_horario, horaT;
-            let empleadoAutoriza;
-            for (var i = 0; i <= this.datosAutorizacion.length - 1; i++) {
-              if (obj.id === this.datosAutorizacion[i].id_permiso) {
-                // console.log(this.datosAutorizacion[i].estado);
-                estado = this.datosAutorizacion[i].estado;
-                // console.log('entra if .---estado', estado);
-                if (estado === 'Autorizado') {
-                  empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido;
-                  horas_decimal = (parseFloat(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
-                  //  console.log('dato permiso: ', horas_decimal)
-                  if (obj.horario_horas.split(':')[1] != undefined) {
-                    horas_horario = (parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60).toFixed(2);
-                    //  console.log('dato horario: ', horas_horario)
-                    dias_decimal = (parseFloat((horas_decimal / horas_horario).toFixed(2)) + obj.dia).toFixed(2);
-                    //horaT = horas_decimal + (obj.dia * horas_horario);
-                    horaT = (parseFloat(horas_decimal) + (obj.dia * parseFloat(horas_horario))).toFixed(2);
-                  }
-                  else {
-                    dias_decimal = (parseFloat((horas_decimal / parseFloat(obj.horario_horas)).toFixed(2)) + obj.dia).toFixed(2);
-                    horaT = (parseFloat(horas_decimal) + (obj.dia * parseFloat(obj.horario_horas))).toFixed(2);
-                  }
-                }
-                break
-              } else {
-                //  console.log(obj.estado);
-                estado = obj.estado
-              }
+          ...this.totalAtrasos.map(obj => {
+            var tiempoTotal: string, horaF: string, minF: string, secondF: string;
+            var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
+            var day = moment(obj.fec_hora_timbre).day();
+            var hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
+            var hora2 = (obj.hora_total).split(":")
+            var t1 = new Date();
+            var t2 = new Date();
+            t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+            t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+            //Aquí hago la resta
+            t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+            // Establecer formato de hora
+            if (t1.getHours() < 10) {
+              horaF = '0' + t1.getHours();
             }
+            else {
+              horaF = String(t1.getHours());
+            }
+            if (t1.getMinutes() < 10) {
+              minF = '0' + t1.getMinutes();
+            }
+            else {
+              minF = String(t1.getMinutes());
+            }
+            if (t1.getSeconds() < 10) {
+              secondF = '0' + t1.getSeconds();
+            }
+            else {
+              secondF = String(t1.getSeconds());
+            }
+            tiempoTotal = horaF + ':' + minF + ':' + secondF;
+            minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+            horaTDecimal = (minTDecimal / 60) + t1.getHours();
+            if ((obj.horario_horas).split(":")[1] != undefined) {
+              trabaja = obj.horario_horas + ':00'
+            }
+            else {
+              trabaja = obj.horario_horas + ':00:00'
+            }
+            var hTrabajo = (trabaja).split(":")
+            var t3 = new Date();
+            t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+            minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+            horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+            diasDecimal = horaTDecimal / horaTDecimalH;
             return [
-              { text: obj.num_permiso, style: 'itemsTableD' },
-              { text: String(moment(obj.fec_creacion, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
-              { text: obj.nombre_permiso, style: 'itemsTableD' },
-              { text: String(moment(obj.fec_inicio, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
-              { text: String(moment(obj.fec_final, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
-              { text: obj.dia, style: 'itemsTableD' },
-              { text: obj.hora_numero, style: 'itemsTableD' },
+              { text: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1) + ' ' + moment(obj.fec_hora_timbre).format('DD/MM/YYYY'), style: 'itemsTableD' },
+              { text: obj.hora, style: 'itemsTableD' },
+              { text: obj.minu_espera + ' min', style: 'itemsTableD' },
+              { text: moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
               { text: obj.horario_horas, style: 'itemsTableD' },
-              { text: estado, style: 'itemsTableD' },
-              { text: empleadoAutoriza, style: 'itemsTableD' },
-              { text: horaT, style: 'itemsTableD' },
-              { text: dias_decimal, style: 'itemsTableD' },
+              { text: tiempoTotal, style: 'itemsTableD' },
+              { text: horaTDecimal.toFixed(2), style: 'itemsTableD' },
+              { text: diasDecimal.toFixed(2), style: 'itemsTableD' },
             ];
           })
         ]

@@ -65,6 +65,7 @@ import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/h
 //Reportes
 import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
+import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
@@ -148,6 +149,7 @@ const routes: Routes = [
   //Reportes
   { path: 'reporteTimbres', component: ReporteTimbresComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reportePermisos', component: ReportePermisosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteAtrasos', component: ReporteAtrasosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   { path: 'datosEmpleado', component: DatosEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'estadisticas', component: HomeEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 2 } },

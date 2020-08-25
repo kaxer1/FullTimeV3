@@ -267,6 +267,7 @@ import { RegimenPipe } from './filtros/catRegimen/regimen/regimen.pipe';
 import { EmplCargoPipe } from './filtros/empleado/filtroEmpCargo/empl-cargo.pipe';
 import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
+import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -465,6 +466,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EmplCargoPipe,
     ReporteTimbresComponent,
     ReportePermisosComponent,
+    ReporteAtrasosComponent,
   ],
 
   imports: [
