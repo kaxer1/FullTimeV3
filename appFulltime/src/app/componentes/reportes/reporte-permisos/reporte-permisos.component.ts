@@ -449,8 +449,8 @@ export class ReportePermisosComponent implements OnInit {
   }
 
   presentarDatosGenerales(id_seleccionado) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, enteroHoras = 0, formatoHoras, formatoHorasTotales;
-    var estado, horas_decimal, dias_decimal, horas_horario, empleadoAutoriza, dias_decimal1, tDias, horas_horario1, horaT;
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, enteroHoras = 0, formatoHoras, formatoMinutos;
+    var estado, horas_decimal, dias_decimal, horas_horario, empleadoAutoriza, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
         nombre = obj.nombre
@@ -469,110 +469,58 @@ export class ReportePermisosComponent implements OnInit {
           estado = element.estado;
           empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido
           if (estado === 'Autorizado') {
-            horas_decimal = (parseInt(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
-            //console.log('horas decimal', horas_decimal);
-            if (obj.horario_horas.split(':')[1] != undefined) {
-              horas_horario = (parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60).toFixed(2);
-              // console.log('horas horario', horas_horario);
-              dias_decimal = parseFloat((horas_decimal / horas_horario).toFixed(2)) + obj.dia;
-              //console.log('dias decimal', dias_decimal);
-              dias_decimal1 = (horas_decimal / horas_horario) + obj.dia;
-              // console.log('dias decimal1', dias_decimal1);
-              horaT = parseFloat(horas_decimal) + (obj.dia * horas_horario);
-              totalDias = totalDias + parseFloat(dias_decimal);
-              //console.log('total dias', totalDias);
-              horas_horario1 = parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60;
-              totalHoras = totalHoras + horaT;
-              //console.log('total horas', totalHoras);
-              //console.log('horario 1', horas_horario1);
-              enteroHoras = enteroHoras + parseFloat(horas_decimal);
-              //console.log('total enteros', enteroHoras);
+            var hora1 = (obj.hora_numero).split(":");
+            var t1 = new Date();
+            t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+            var minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+            horas_decimal = (minTDecimal / 60) + t1.getHours();
+            if ((obj.horario_horas).split(":")[1] != undefined) {
+              horas_horario = obj.horario_horas + ':00'
             }
             else {
-              dias_decimal = (parseFloat(horas_decimal) / parseInt(obj.horario_horas)) + obj.dia;
-              dias_decimal1 = (parseFloat((horas_decimal / parseFloat(obj.horario_horas)).toFixed(2)) + obj.dia).toFixed(2);
-              // console.log('dias decimal', dias_decimal);
-              totalDias = totalDias + parseFloat(dias_decimal1);
-              //console.log('total dias', totalDias);
-              totalHoras = totalHoras + (dias_decimal * parseInt(obj.horario_horas));
-              // console.log('total horas', totalHoras);
-              enteroHoras = enteroHoras + parseFloat(horas_decimal);
-              //console.log('total horas enteros', enteroHoras);
+              horas_horario = obj.horario_horas + ':00:00'
             }
+            var hTrabajo = (horas_horario).split(":")
+            var t3 = new Date();
+            t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+            var minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+            horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+            horaT = horas_decimal + (horaTDecimalH * obj.dia);
+            dias_decimal = horaT / horaTDecimalH;
+            totalHoras = totalHoras + horaT;
+            totalDias = totalDias + dias_decimal;
           }
         }
         else {
           estado = obj.estado
         }
       });
-    })
-    if (5 < parseInt(String(enteroHoras).split('.')[0])) {
-      tDias = totalDias - 1;
-    }
-    else {
-      tDias = totalDias;
-    }
-    if (parseInt(String(enteroHoras).split('.')[0]) < 10) {
-      // console.log('entra 1')
-      if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        //console.log('entra 1.1')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        //console.log('entra 1.2')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':0' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-      }
-      else {
-        //console.log('entra 1.3')
-        formatoHoras = '0' + String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-        //console.log('p', parseFloat('0.' + String(enteroHoras).split('.')[1]))
-      }
-    }
-    else {
-      if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 2.1')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':' + String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 2.2')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':0' + String(parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).split('.')[0];
-      }
-      else {
-        // console.log('entra 2.3')
-        formatoHoras = String(enteroHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(enteroHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-      }
-    }
-    if (parseInt(String(totalHoras).split('.')[0]) < 10) {
-      // console.log('entra 1')
-      if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 1.1')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 1.2')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':0' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-      }
-      else {
-        // console.log('entra 1.3')
-        formatoHorasTotales = '0' + String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
-        console.log('p', parseFloat('0.' + String(totalHoras).split('.')[1]))
-      }
-    }
-    else {
-      if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) === 0) {
-        // console.log('entra 2.1')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':' + String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0] + '0';
-      }
-      else if (parseInt(String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0]) < 10) {
-        // console.log('entra 2.2')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':0' + String(parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).split('.')[0];
-      }
-      else {
-        // console.log('entra 2.3')
-        formatoHorasTotales = String(totalHoras).split('.')[0] + ':' + String((parseFloat('0.' + String(totalHoras).split('.')[1]) * 60).toFixed(0)).split('.')[0];
+    });
+    minutosHoras = parseFloat('0.' + String(totalHoras).split('.')[1]) * 60;
+    tDias = parseFloat('0.' + String(totalDias).split('.')[1]) * horaTDecimalH;
+    horasDias = parseFloat('0.' + String(tDias).split('.')[1]) * 60;
 
-      }
+    if (parseInt(String(tDias).split('.')[0]) < 10) {
+      formatoHoras = '0' + parseInt(String(tDias).split('.')[0]);
     }
+    else {
+      formatoHoras = parseInt(String(tDias).split('.')[0]);
+    }
+
+    if (horasDias.toFixed(0) < 10) {
+      formatoMinutos = '0' + horasDias.toFixed(0);
+    }
+    else {
+      formatoMinutos = horasDias.toFixed(0);
+    }
+
+    if (minutosHoras.toFixed(0) > 10) {
+      minutosHoras = minutosHoras.toFixed(0);
+    }
+    else {
+      minutosHoras = '0' + minutosHoras.toFixed(0);
+    }
+
     return {
       table: {
         widths: ['*'],
@@ -709,7 +657,7 @@ export class ReportePermisosComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'TOTAL EN DIAS: ' + parseFloat(totalDias.toFixed(2)), style: 'itemsTableC'
+                      text: 'TOTAL EN DIAS: ' + totalDias.toFixed(2), style: 'itemsTableC'
                     }
                   ]
                 },
@@ -723,14 +671,14 @@ export class ReportePermisosComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'PERMISO DÍAS: ' + String(tDias).split('.')[0] + ' dd' + '  HORAS: ' + formatoHoras + ' hh', style: 'itemsTableC'
+                      text: 'PERMISO DÍAS: ' + String(totalDias).split('.')[0] + ' d' + '  HORAS: ' + formatoHoras + ' h: ' + formatoMinutos + ' min', style: 'itemsTableC'
                     }
                   ]
                 },
                 {
                   text: [
                     {
-                      text: 'TOTAL HORAS: ' + String(totalHoras.toFixed(2)).split('.')[0] + ':' + formatoHorasTotales.split(':')[1], style: 'itemsTableC'
+                      text: 'TOTAL HORAS: ' + String(totalHoras.toFixed(2)).split('.')[0] + ' hh : ' + minutosHoras + ' min', style: 'itemsTableC'
                     }
                   ]
                 },
@@ -776,63 +724,17 @@ export class ReportePermisosComponent implements OnInit {
             { text: 'DÍAS', style: 'tableHeader' },
           ],
           ...this.totalPermisos.map(obj => {
-            //console.log('permisos', this.totalPermisos)
-            let estado = '', horas_decimal, dias_decimal, horas_horario, horaT;
-            let empleadoAutoriza;
+            var estado = '', horas_decimal, dias_decimal, horaT, empleadoAutoriza, trabaja;
             for (var i = 0; i <= this.datosAutorizacion.length - 1; i++) {
               if (obj.id === this.datosAutorizacion[i].id_permiso) {
-                // console.log(this.datosAutorizacion[i].estado);
                 estado = this.datosAutorizacion[i].estado;
-                // console.log('entra if .---estado', estado);
                 if (estado === 'Autorizado') {
                   empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido;
-                 horas_decimal = (parseFloat(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
-                  //  console.log('dato permiso: ', horas_decimal)
-                  if (obj.horario_horas.split(':')[1] != undefined) {
-                    horas_horario = (parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60).toFixed(2);
-                    //  console.log('dato horario: ', horas_horario)
-                    dias_decimal = (parseFloat((horas_decimal / horas_horario).toFixed(2)) + obj.dia).toFixed(2);
-                    //horaT = horas_decimal + (obj.dia * horas_horario);
-                    horaT = (parseFloat(horas_decimal) + (obj.dia * parseFloat(horas_horario))).toFixed(2);
-                  }
-                  else {
-                    dias_decimal = (parseFloat((horas_decimal / parseFloat(obj.horario_horas)).toFixed(2)) + obj.dia).toFixed(2);
-                    horaT = (parseFloat(horas_decimal) + (obj.dia * parseFloat(obj.horario_horas))).toFixed(2);
-                  }
-
-               /*   var tiempoTotal: string, horaF: string, minF: string, secondF: string;
-                  var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
-                  var day = moment(obj.fec_hora_timbre).day();
-                  var hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
-                  var hora2 = (obj.hora_total).split(":")
+                  var hora1 = (obj.hora_numero).split(":");
                   var t1 = new Date();
-                  var t2 = new Date();
                   t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
-                  t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
-                  //Aquí hago la resta
-                  t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
-                  // Establecer formato de hora
-                  if (t1.getHours() < 10) {
-                    horaF = '0' + t1.getHours();
-                  }
-                  else {
-                    horaF = String(t1.getHours());
-                  }
-                  if (t1.getMinutes() < 10) {
-                    minF = '0' + t1.getMinutes();
-                  }
-                  else {
-                    minF = String(t1.getMinutes());
-                  }
-                  if (t1.getSeconds() < 10) {
-                    secondF = '0' + t1.getSeconds();
-                  }
-                  else {
-                    secondF = String(t1.getSeconds());
-                  }
-                  tiempoTotal = horaF + ':' + minF + ':' + secondF;
-                  minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
-                  horaTDecimal = (minTDecimal / 60) + t1.getHours();
+                  var minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+                  horas_decimal = (minTDecimal / 60) + t1.getHours();
                   if ((obj.horario_horas).split(":")[1] != undefined) {
                     trabaja = obj.horario_horas + ':00'
                   }
@@ -842,21 +744,21 @@ export class ReportePermisosComponent implements OnInit {
                   var hTrabajo = (trabaja).split(":")
                   var t3 = new Date();
                   t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
-                  minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
-                  horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
-                  diasDecimal = horaTDecimal / horaTDecimalH;*/
-
-
+                  var minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+                  var horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+                  horaT = horas_decimal + (horaTDecimalH * obj.dia);
+                  dias_decimal = horaT / horaTDecimalH;
+                  horaT = horaT.toFixed(2);
+                  dias_decimal = dias_decimal.toFixed(2);
                 }
                 break
               } else {
-                //  console.log(obj.estado);
                 estado = obj.estado
               }
             }
             return [
               { text: obj.num_permiso, style: 'itemsTableD' },
-              { text: String(moment(obj.fec_creacion, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
+              { text: moment(obj.fec_creacion).format("DD/MM/YYYY"), style: 'itemsTableD' },
               { text: obj.nombre_permiso, style: 'itemsTableD' },
               { text: String(moment(obj.fec_inicio, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
               { text: String(moment(obj.fec_final, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableD' },
