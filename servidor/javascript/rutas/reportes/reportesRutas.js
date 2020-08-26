@@ -23,6 +23,8 @@ class CiudadRutas {
         this.router.get('/reportePermisos/autorizaciones/:id_empleado', reportesControlador_1.default.ListarPermisoAutorizaEmpleado);
         this.router.post('/reporteAtrasos/horarios/:id_empleado', reportesControlador_1.default.ListarAtrasosHorarioEmpleado);
         this.router.post('/reporteAtrasos/planificacion/:id_empleado', reportesControlador_1.default.ListarAtrasosPlanificaEmpleado);
+        this.router.post('/reporteEntradaSalida/horarios/:id_empleado', reportesControlador_1.default.ListarEntradaSalidaHorarioEmpleado);
+        this.router.post('/reporteEntradaSalida/planificacion/:id_empleado', reportesControlador_1.default.ListarEntradaSalidaPlanificaEmpleado);
     }
 }
 const REPORTES_RUTAS = new CiudadRutas();

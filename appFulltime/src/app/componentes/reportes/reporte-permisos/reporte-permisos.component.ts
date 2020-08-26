@@ -786,7 +786,7 @@ export class ReportePermisosComponent implements OnInit {
                 // console.log('entra if .---estado', estado);
                 if (estado === 'Autorizado') {
                   empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido;
-                  horas_decimal = (parseFloat(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
+                 horas_decimal = (parseFloat(obj.hora_numero.split(':')[0]) + parseFloat(obj.hora_numero.split(':')[1]) / 60).toFixed(2);
                   //  console.log('dato permiso: ', horas_decimal)
                   if (obj.horario_horas.split(':')[1] != undefined) {
                     horas_horario = (parseInt(obj.horario_horas.split(':')[0]) + parseFloat(obj.horario_horas.split(':')[1]) / 60).toFixed(2);
@@ -799,6 +799,54 @@ export class ReportePermisosComponent implements OnInit {
                     dias_decimal = (parseFloat((horas_decimal / parseFloat(obj.horario_horas)).toFixed(2)) + obj.dia).toFixed(2);
                     horaT = (parseFloat(horas_decimal) + (obj.dia * parseFloat(obj.horario_horas))).toFixed(2);
                   }
+
+               /*   var tiempoTotal: string, horaF: string, minF: string, secondF: string;
+                  var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
+                  var day = moment(obj.fec_hora_timbre).day();
+                  var hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
+                  var hora2 = (obj.hora_total).split(":")
+                  var t1 = new Date();
+                  var t2 = new Date();
+                  t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+                  t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+                  //Aquí hago la resta
+                  t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+                  // Establecer formato de hora
+                  if (t1.getHours() < 10) {
+                    horaF = '0' + t1.getHours();
+                  }
+                  else {
+                    horaF = String(t1.getHours());
+                  }
+                  if (t1.getMinutes() < 10) {
+                    minF = '0' + t1.getMinutes();
+                  }
+                  else {
+                    minF = String(t1.getMinutes());
+                  }
+                  if (t1.getSeconds() < 10) {
+                    secondF = '0' + t1.getSeconds();
+                  }
+                  else {
+                    secondF = String(t1.getSeconds());
+                  }
+                  tiempoTotal = horaF + ':' + minF + ':' + secondF;
+                  minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+                  horaTDecimal = (minTDecimal / 60) + t1.getHours();
+                  if ((obj.horario_horas).split(":")[1] != undefined) {
+                    trabaja = obj.horario_horas + ':00'
+                  }
+                  else {
+                    trabaja = obj.horario_horas + ':00:00'
+                  }
+                  var hTrabajo = (trabaja).split(":")
+                  var t3 = new Date();
+                  t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+                  minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+                  horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+                  diasDecimal = horaTDecimal / horaTDecimalH;*/
+
+
                 }
                 break
               } else {

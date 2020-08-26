@@ -17,12 +17,13 @@ import * as FileSaver from 'file-saver';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 
 
 @Component({
-  selector: 'app-reporte-timbres',
-  templateUrl: './reporte-timbres.component.html',
-  styleUrls: ['./reporte-timbres.component.css'],
+  selector: 'app-reporte-entrada-salida',
+  templateUrl: './reporte-entrada-salida.component.html',
+  styleUrls: ['./reporte-entrada-salida.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -30,7 +31,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
-export class ReporteTimbresComponent implements OnInit {
+export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
@@ -86,6 +87,7 @@ export class ReporteTimbresComponent implements OnInit {
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
+    public restF: FeriadosService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -96,6 +98,7 @@ export class ReporteTimbresComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
+    this.ObtenerFeriados();
   }
 
   // Método para ver la información del empleado 
@@ -110,6 +113,15 @@ export class ReporteTimbresComponent implements OnInit {
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  feriados: any = [];
+  ObtenerFeriados() {
+    this.feriados = [];
+    this.restF.ConsultarFeriado().subscribe(data => {
+      this.feriados = data;
+      console.log('feriados', this.feriados);
+    });
   }
 
   cont: number = 0;
@@ -189,9 +201,10 @@ export class ReporteTimbresComponent implements OnInit {
       }
     });
   }
-
-  timbres: any = [];
-  VerTimbresEmpleado(id_seleccionado, form, archivo) {
+  fechasPeriodo: any = [];
+  inicioDate: any;
+  finDate: any
+  VerAtrasosEmpleado(id_seleccionado, form, archivo) {
     if (form.inicioForm === '' || form.finalForm === '') {
       this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
     }
@@ -201,27 +214,84 @@ export class ReporteTimbresComponent implements OnInit {
           fechaInicio: form.inicioForm,
           fechaFinal: form.finalForm
         }
-        this.timbres = [];
-        this.restR.ObtenerTimbres(id_seleccionado, fechas).subscribe(data => {
-          this.timbres = data;
-          if (archivo === 'pdf') {
-            this.generarPdf('open', id_seleccionado, form);
-            this.LimpiarFechas();
-          }
-          else if (archivo === 'excel') {
-            this.exportToExcel(this.timbres);
-            this.LimpiarFechas();
-          }
-        }, error => {
-          this.toastr.info('No existen timbres registrado en el periodo indicado.', 'VERIFICAR')
+        this.fechasPeriodo = []; //Array where rest of the dates will be stored 
+        this.inicioDate = moment(form.inicioForm).format('MM-DD-YYYY');
+        this.finDate = moment(form.finalForm).format('MM-DD-YYYY');
+
+        //creating JS date objects 
+        var start = new Date(this.inicioDate);
+        var end = new Date(this.finDate);
+
+        //Logic for getting rest of the dates between two dates("FromDate" to "EndDate") 
+        while (start <= end) {
+          this.fechasPeriodo.push(moment(start).format('dddd DD/MM/YYYY'));
+          var newDate = start.setDate(start.getDate() + 1);
+          start = new Date(newDate);
         }
-        );
+
+        this.VerEntradasSalidasHorario(id_seleccionado, fechas, archivo, form, this.fechasPeriodo);
       }
       else {
         this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
       }
     }
-    
+  }
+
+  entradaSalidaHorario: any = [];
+  entradaSalidaPlanificacion: any = [];
+  totalEntradasSalidas: any = [];
+  VerEntradasSalidasHorario(id_seleccionado, datosFecha, archivo, form, fechasTotales) {
+    this.entradaSalidaHorario = [];
+    this.entradaSalidaPlanificacion = [];
+    this.totalEntradasSalidas = [];
+    this.restR.ObtenerEntradaSalidaHorario(id_seleccionado, datosFecha).subscribe(dataH => {
+      this.entradaSalidaHorario = dataH;
+      this.VerEntradasSalidasPlanificacion(this.entradaSalidaHorario, id_seleccionado, archivo, datosFecha, form, fechasTotales);
+    }, error => {
+      this.VerEntradasSalidasPlanificacion(this.entradaSalidaHorario, id_seleccionado, archivo, datosFecha, form, fechasTotales);
+    });
+  }
+
+  VerEntradasSalidasPlanificacion(entradas_salida_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form, fechasTotales: any) {
+    this.restR.ObtenerEntradaSalidaPlanificacion(id_seleccionado, datos_fechas).subscribe(dataP => {
+      this.entradaSalidaPlanificacion = dataP;
+      if (entradas_salida_horario.length != 0) {
+        entradas_salida_horario = entradas_salida_horario.concat(this.entradaSalidaPlanificacion);
+        this.totalEntradasSalidas = entradas_salida_horario;
+        //console.log('prueba', this.totalEntradasSalidas);
+      }
+      else {
+        this.totalEntradasSalidas = this.entradaSalidaPlanificacion;
+        // console.log('prueba1', this.totalEntradasSalidas);
+      }
+      // this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+
+      this.GenerarArchivos(id_seleccionado, archivo, form, fechasTotales);
+      this.LimpiarFechas();
+      this.LimpiarCampos();
+    }, error => {
+      if (entradas_salida_horario.length != 0) {
+        this.totalEntradasSalidas = entradas_salida_horario;
+        // console.log('prueba2', this.totalEntradasSalidas);
+        //  this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+        this.GenerarArchivos(id_seleccionado, archivo, form, fechasTotales);
+        this.LimpiarFechas();
+        this.LimpiarCampos();
+      }
+      else {
+        this.toastr.info('El empleado no tiene registros de Atrasos.')
+      }
+    })
+  }
+
+  GenerarArchivos(id_seleccionado: number, archivo: string, form, fechasTotales: any) {
+    if (archivo === 'pdf') {
+      console.log('archivo', archivo)
+      this.generarPdf('open', id_seleccionado, form, fechasTotales);
+    }
+    else if (archivo === 'excel') {
+      this.exportToExcel(this.totalEntradasSalidas);
+    }
   }
 
   IngresarSoloLetras(e) {
@@ -286,8 +356,8 @@ export class ReporteTimbresComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
-  generarPdf(action = 'open', id_seleccionado, form) {
-    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form);
+  generarPdf(action = 'open', id_seleccionado, form, fechasTotales: any) {
+    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form, fechasTotales);
 
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
@@ -299,7 +369,7 @@ export class ReporteTimbresComponent implements OnInit {
 
   }
 
-  getDocumentDefinicion(id_seleccionado: number, form) {
+  getDocumentDefinicion(id_seleccionado: number, form, fechasTotales: any) {
 
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
     console.log('comprobando', this.empleadoLogueado, id_seleccionado);
@@ -351,7 +421,7 @@ export class ReporteTimbresComponent implements OnInit {
                 margin: [0, 0, 0, 20]
               },
               {
-                text: 'REPORTE TIMBRES',
+                text: 'REPORTE ENTRADAS - SALIDAS',
                 fontSize: 17,
                 alignment: 'center',
                 margin: [0, 0, 0, 20]
@@ -359,8 +429,8 @@ export class ReporteTimbresComponent implements OnInit {
             ];
           }
         }),
-        this.presentarDatosGenerales(id_seleccionado, form),
-        this.presentarTimbres(),
+        this.presentarDatosGenerales(id_seleccionado, form, fechasTotales),
+        this.presentarEntradasSalidas(fechasTotales),
       ],
       styles: {
         header: {
@@ -388,7 +458,7 @@ export class ReporteTimbresComponent implements OnInit {
           fontSize: 8
         },
         itemsTableD: {
-          fontSize: 9,
+          fontSize: 8,
           alignment: 'center'
         },
         itemsTableI: {
@@ -402,16 +472,34 @@ export class ReporteTimbresComponent implements OnInit {
           bold: true,
           margin: [50, 5, 5, 5]
         },
+        tableHeaderA: {
+          fontSize: 10,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED',
+          margin: [20, 0, 20, 0],
+        },
+        itemsTableC: {
+          fontSize: 9,
+          alignment: 'center',
+          margin: [50, 5, 5, 5]
+        },
+        tableHeaderES: {
+          fontSize: 9,
+          bold: true,
+          alignment: 'center',
+          fillColor: '#6495ED'
+        },
       }
     };
   }
 
-  presentarDatosGenerales(id_seleccionado, form) {
+  presentarDatosGenerales(id_seleccionado, form, fechasTotales) {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
-        nombre = obj.nombre,
-          apellido = obj.apellido
+        nombre = obj.nombre
+        apellido = obj.apellido
         cedula = obj.cedula
         codigo = obj.codigo
         sucursal = obj.sucursal
@@ -449,7 +537,7 @@ export class ReporteTimbresComponent implements OnInit {
                 {
                   text: [
                     {
-                      text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI'
+                      text: 'N° REGISTROS: ' + fechasTotales.length, style: 'itemsTableI'
                     }
                   ]
                 },
@@ -518,7 +606,7 @@ export class ReporteTimbresComponent implements OnInit {
             }
           ],
           [
-            { text: 'LISTA DE TIMBRES PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
+            { text: 'LISTA DE ENTRADAS - SALIDAS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
           ],
         ]
       },
@@ -534,44 +622,177 @@ export class ReporteTimbresComponent implements OnInit {
     }
   }
 
-  accionT: string;
-  presentarTimbres() {
+  presentarEntradasSalidas(fechasTotales: any) {
     return {
       table: {
-        widths: ['*', '*', '*', '*'],
+        widths: ['auto', 'auto', '*', 'auto', '*', 'auto', '*', 'auto', '*'],
         body: [
           [
-            { text: 'TIMBRE', style: 'tableHeader' },
-            { text: 'RELOJ', style: 'tableHeader' },
-            { text: 'ACCIÓN', style: 'tableHeader' },
-            { text: 'OBSERVACIÓN', style: 'tableHeader' },
-          ],
-          ...this.timbres.map(obj => {
-            if (obj.accion === 'E' || obj.accion === '1') {
-              this.accionT = 'Entrada';
-            }
-            else if (obj.accion === 'S' || obj.accion === '2') {
-              this.accionT = 'Salida';
-            }
-            else if (obj.accion === 'EA' || obj.accion === '3') {
-              this.accionT = 'Entrada Almuerzo';
-            }
-            else if (obj.accion === 'SA' || obj.accion === '4') {
-              this.accionT = 'Salida Almuerzo';
-            }
-            else if (obj.accion === 'EP' || obj.accion === '5') {
-              this.accionT = 'Entrada Permiso';
-            }
-            else if (obj.accion === 'SP' || obj.accion === '6') {
-              this.accionT = 'Salida Permiso';
-            }
-            var day = moment(obj.fec_hora_timbre).day()
-            return [
+            { text: 'FECHA', style: 'tableHeaderES' },
+            {
+              columns: [
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto', 'auto'],
+                    body: [
+                      [
+                        { text: 'HORARIO', style: 'tableHeaderES' },
+                        { text: 'ENTRADA', style: 'tableHeaderES' },
+                      ]
+                    ]
+                  }
+                },
+              ], style: 'tableHeaderES'
+            },
+            { text: 'ESTADO', style: 'tableHeaderES' },
+            {
+              columns: [
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto', 'auto'],
+                    body: [
+                      [
+                        { text: 'HORARIO', style: 'tableHeaderES' },
+                        { text: 'S. ALM', style: 'tableHeaderES' },
+                      ]
+                    ]
+                  }
+                },
 
-              { text: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1) + ' ' + moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
-              { text: obj.id_reloj, style: 'itemsTableD' },
-              { text: this.accionT, style: 'itemsTableD' },
-              { text: obj.observacion, style: 'itemsTableD' },
+              ], style: 'tableHeaderES'
+            },
+            { text: 'ESTADO', style: 'tableHeaderES' },
+            {
+              columns: [
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto', 'auto'],
+                    body: [
+                      [
+                        { text: 'HORARIO', style: 'tableHeaderES' },
+                        { text: 'E. ALM', style: 'tableHeaderES' },
+                      ]
+                    ]
+                  }
+                },
+              ], style: 'tableHeaderES'
+            },
+            { text: 'ESTADO', style: 'tableHeaderES' },
+            {
+              columns: [
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto', 'auto'],
+                    body: [
+                      [
+                        { text: 'HORARIO', style: 'tableHeaderES' },
+                        { text: 'SALIDA', style: 'tableHeaderES' },
+                      ]
+                    ]
+                  }
+                },
+              ], style: 'tableHeaderES'
+
+            },
+            { text: 'ESTADO', style: 'tableHeaderES' },
+          ],
+          ...fechasTotales.map(obj => {
+            var fecha_timbre, fechaFeriado, day;
+            var entrada = '', salida = '', almuerzoS = '', almuerzoE = '', sinTimbre = '', estadoFeriado = '';
+            var horarioE = '-', horarioS = '-', horarioAE = '-', horarioAS = '-';
+            var timbreE = '-', timbreS = '-', timbreAlmuerzoE = '-', timbreAlmuerzoS = '-';
+            day = obj.split(' ')[1];
+            this.totalEntradasSalidas.forEach(element => {
+              fecha_timbre = moment(element.fec_hora_timbre).format('DD/MM/YYYY');
+              if (day === fecha_timbre && element.accion === '1') {
+                entrada = 'REGISTRADO'
+                horarioE = element.hora;
+                timbreE = moment(element.fec_hora_timbre).format('HH:mm:ss')
+              }
+              else if (day === fecha_timbre && element.accion === '2') {
+                salida = 'REGISTRADO'
+                horarioS = element.hora;
+                timbreS = moment(element.fec_hora_timbre).format('HH:mm:ss')
+              }
+              else if (day === fecha_timbre && element.accion === '3') {
+                almuerzoS = 'REGISTRADO'
+                horarioAS = element.hora;
+                timbreAlmuerzoS = moment(element.fec_hora_timbre).format('HH:mm:ss')
+              }
+              else if (day === fecha_timbre && element.accion === '4') {
+                almuerzoE = 'REGISTRADO'
+                horarioAE = element.hora;
+                timbreAlmuerzoE = moment(element.fec_hora_timbre).format('HH:mm:ss')
+              }
+              else {
+                for (var i = 0; i <= this.feriados.length - 1; i++) {
+                  fechaFeriado = moment(this.feriados[i].fecha).format('DD/MM/YYYY');
+                  if (day === fechaFeriado) {
+                    estadoFeriado = 'Feriado';
+                    break;
+                  }
+                }
+                if (estadoFeriado === '') {
+                  sinTimbre = 'Falta Timbre';
+                }
+              }
+            });
+
+            if (entrada === '' && estadoFeriado === '') {
+              entrada = 'Falta Timbre';
+            }
+            if (salida === '' && estadoFeriado === '') {
+              salida = 'Falta Timbre'
+            }
+            if (almuerzoE === '' && estadoFeriado === '') {
+              almuerzoE = 'Falta Timbre'
+            }
+            if (almuerzoS === '' && estadoFeriado === '') {
+              almuerzoS = 'Falta Timbre'
+            }
+
+            if (estadoFeriado != '') {
+              entrada = salida = almuerzoS = almuerzoE = 'FERIADO'
+            }
+
+            return [
+              { text: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1) + ' ' + obj.split(' ')[1], style: 'itemsTableD' },
+              {
+                columns: [
+                  { text: [{ text: horarioE, style: 'itemsTableD' }] },
+                  { text: [{ text: timbreE, style: 'itemsTableD' }] }
+                ]
+              },
+              { text: entrada, style: 'itemsTableD' },
+              {
+                columns: [
+                  { text: [{ text: horarioAS, style: 'itemsTableD' }] },
+                  { text: [{ text: timbreAlmuerzoS, style: 'itemsTableD' }] }
+                ]
+              },
+              { text: almuerzoS, style: 'itemsTableD' },
+              {
+                columns: [
+                  { text: [{ text: horarioAE, style: 'itemsTableD' }] },
+                  { text: [{ text: timbreAlmuerzoE, style: 'itemsTableD' }] }
+                ]
+              },
+              { text: almuerzoE, style: 'itemsTableD' },
+              {
+                columns: [
+                  { text: [{ text: horarioS, style: 'itemsTableD' }] },
+                  { text: [{ text: timbreS, style: 'itemsTableD' }] }
+                ]
+              },
+              { text: salida, style: 'itemsTableD' },
             ];
           })
         ]
@@ -650,5 +871,6 @@ export class ReporteTimbresComponent implements OnInit {
     const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
+
 
 }
