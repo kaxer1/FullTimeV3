@@ -52,6 +52,7 @@ import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
 import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
+import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -151,6 +152,9 @@ class Servidor {
 
         // Reportes
         this.app.use('/reporte', REPORTES_RUTAS);
+
+        // HORAS EXTRAS
+        this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS);
 
     }
 

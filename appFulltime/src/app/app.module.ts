@@ -269,6 +269,8 @@ import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/r
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
+import { PlanHoraExtraComponent } from './componentes/horasExtras/plan-hora-extra/plan-hora-extra.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -469,6 +471,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReportePermisosComponent,
     ReporteAtrasosComponent,
     ReporteEntradaSalidaComponent,
+    PlanHoraExtraComponent,
+    ListaEmplePlanHoraEComponent,
   ],
 
   imports: [

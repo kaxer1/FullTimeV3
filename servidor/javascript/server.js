@@ -65,6 +65,7 @@ const documentosRutas_1 = __importDefault(require("./rutas/documentos/documentos
 const horaExtraRutas_1 = __importDefault(require("./rutas/horaExtra/horaExtraRutas"));
 const birthdayRutas_1 = __importDefault(require("./rutas/birthday/birthdayRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
+const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -143,6 +144,8 @@ class Servidor {
         this.app.use('/birthday', birthdayRutas_1.default);
         // Reportes
         this.app.use('/reporte', reportesRutas_1.default);
+        // HORAS EXTRAS
+        this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
