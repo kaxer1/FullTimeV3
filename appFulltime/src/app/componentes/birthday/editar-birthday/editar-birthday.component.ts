@@ -12,12 +12,14 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class EditarBirthdayComponent implements OnInit {
 
   tituloF = new FormControl('', [Validators.required]);
+  linkF = new FormControl('');
   mensajeF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
 
   public birthdayForm = new FormGroup({
     tituloForm: this.tituloF,
+    linkForm: this.linkF,
     mensajeForm: this.mensajeF,
     nombreCertificadoForm: this.nombreCertificadoF
   })
@@ -38,14 +40,16 @@ export class EditarBirthdayComponent implements OnInit {
   setData(){
     this.birthdayForm.patchValue({
       tituloForm: this.data.titulo,
-      mensajeForm: this.data.mensaje
+      mensajeForm: this.data.mensaje,
+      linkForm: this.data.url
     })
   }
 
   ModificarMensajeBirthday(form) {
     let dataMensaje = {
       titulo: form.tituloForm, 
-      mensaje: form.mensajeForm 
+      mensaje: form.mensajeForm,
+      link: form.linkForm
     } 
     console.log(dataMensaje);
     this.restB.EditarBirthday(this.data.id, dataMensaje).subscribe(res => {

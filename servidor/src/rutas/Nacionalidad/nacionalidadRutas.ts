@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import nacionalidadControlador from '../../controlador/nacionalidad/nacionalidadControlador';
+import { TokenValidation } from '../../libs/verificarToken'
 
 class NacionalidadRutas {
     public router: Router = Router();
@@ -9,7 +10,7 @@ class NacionalidadRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', nacionalidadControlador.list);
+        this.router.get('/', TokenValidation, nacionalidadControlador.list);
     }
 }
 

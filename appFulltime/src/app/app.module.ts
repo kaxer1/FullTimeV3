@@ -263,6 +263,19 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
+import { VacacionesDiasCakendarioComponent } from './componentes/reportes-kardex/vacaciones-dias-cakendario/vacaciones-dias-cakendario.component';
+import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
+import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
+import { DepartamentoPipe } from './filtros/catDepartamentos/departamento/departamento.pipe';
+import { RegimenPipe } from './filtros/catRegimen/regimen/regimen.pipe';
+import { EmplCargoPipe } from './filtros/empleado/filtroEmpCargo/empl-cargo.pipe';
+import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
+import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
+import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
+import { PlanHoraExtraComponent } from './componentes/horasExtras/plan-hora-extra/plan-hora-extra.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
 
 
 @NgModule({
@@ -454,6 +467,19 @@ import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-bi
     RegistrarBirthdayComponent,
     EditarBirthdayComponent,
     VerBirthdayComponent,
+    VacacionesDiasCakendarioComponent,
+    AsistenciaConsolidadoComponent,
+    LogosComponent,
+    HoraExtraRealComponent,
+    DepartamentoPipe,
+    RegimenPipe,
+    EmplCargoPipe,
+    ReporteTimbresComponent,
+    ReportePermisosComponent,
+    ReporteAtrasosComponent,
+    ReporteEntradaSalidaComponent,
+    PlanHoraExtraComponent,
+    ListaEmplePlanHoraEComponent,
   ],
 
   imports: [

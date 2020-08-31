@@ -64,7 +64,7 @@ export class VerEmpresaComponent implements OnInit {
   /* Ventana para editar datos de dispositivo seleccionado */
   EditarDatosEmpresa(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '600px', data: datosSeleccionados })
+    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '800px', data: datosSeleccionados })
       .afterClosed().subscribe(item => {
         this.CargarDatosEmpresa();
       });

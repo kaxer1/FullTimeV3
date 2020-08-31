@@ -27,11 +27,13 @@
                         <label id="datosF" class="col-sm col-form-label">Correo:</label>
                         <label id="datosF" class="col-sm col-form-label">Representante:</label>
                         <label id="datosF" class="col-sm col-form-label">Tipo de Empresa:</label>
+                        <label id="datosF" class="col-sm col-form-label">Establecimientos:</label>
                     </div>
                     <div class="col-3">
                         <label class="col-sm col-form-label">{{e.correo}}</label>
                         <label class="col-sm col-form-label">{{e.representante}}</label>
                         <label class="col-sm col-form-label">{{e.tipo_empresa}}</label>
+                        <label class="col-sm col-form-label">{{e.establecimiento}}</label>
                     </div>
                 </div>
                 <div style="text-align: right;">
@@ -42,16 +44,16 @@
                 </div>
                 <div style="text-align: center;">
                     <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarSucursal()">Crear
-                        nueva Sucursal</button>
+                        {{e.establecimiento}}</button>
                 </div>
             </div>
             <hr>
             <div class="container table-responsive" style="padding-bottom: 50px;">
-                <div id="resulSucursales">LISTA DE SUCURSALES</div>
+                <div id="resulSucursales">LISTA DE {{e.establecimiento.toUpperCase()}}</div>
                 <table class="mat-elevation-z8 table table-hover table-sm">
                     <thead class="thead-light">
                         <tr style="text-align: center;">
-                            <th scope="col">Sucursal</th>
+                            <th scope="col">{{e.establecimiento}}</th>
                             <th scope="col">Ciudad</th>
                             <th scope="col">Acciones</th>
                         </tr>

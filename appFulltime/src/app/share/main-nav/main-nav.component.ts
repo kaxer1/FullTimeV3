@@ -41,7 +41,7 @@ export class MainNavComponent implements OnInit {
   pestania: string;
 
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three'];
+  options: string[] = [];
   filteredOptions: Observable<string[]>;
 
   id_empleado_logueado: number;
@@ -49,6 +49,7 @@ export class MainNavComponent implements OnInit {
   num_noti_false: number = 0;
   num_noti: number = 0;
 
+  buscar_empl: any = [];
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
@@ -61,6 +62,13 @@ export class MainNavComponent implements OnInit {
     private socket: Socket,
     private realTime: RealTimeService
   ) {
+    this.empleadoService.getBuscadorEmpledosRest().subscribe(res => {
+      console.log(res);
+      res.forEach(obj => {
+        this.options.push(obj.empleado)
+      });
+      this.buscar_empl = res
+    })
     this.socket.on('enviar_notification', (data) => {
       if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
         console.log(data);
@@ -160,6 +168,16 @@ export class MainNavComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  abrirInfoEmpleado(nombre: string) {
+    this.buscar_empl.forEach(element => {
+      if (element.empleado === nombre) {
+        this.router.navigate(['/verEmpleado/', element.id]).then(result => {
+          window.location.reload();
+        })
+      }
+    });
   }
 
   estadoNotificacion: boolean = true;

@@ -7,7 +7,8 @@
     <form [formGroup]="RelojesForm">
         <div class="container" style="text-align: center">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                    Guardar.</span>
             </div>
             <div class="d-flex flex-wrap justify-content-between">
                 <mat-form-field>
@@ -22,7 +23,7 @@
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>Seleccionar Sucursal</mat-label>
+                    <mat-label id="selec">Seleccionar Establecimiento</mat-label>
                     <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
                         matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
                         help_outline</mat-icon>
@@ -127,8 +128,8 @@
                     <mat-label>Fabricante</mat-label>
                     <input matInput placeholder="Ingresar fabricante" [formControl]="fabricanteF">
                     <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip"
-                        matTooltipPosition="left"
-                        matTooltip="Ingresar nombre de empresa fabricante del dispositivo">help_outline
+                        matTooltipPosition="left" matTooltip="Ingresar nombre de empresa fabricante del dispositivo">
+                        help_outline
                     </mat-icon>
                     <mat-error *ngIf="fabricanteF.invalid">Ingresar un modelo válido</mat-error>
                 </mat-form-field>

@@ -7,7 +7,8 @@
             <div class="container">
                 <br>
                 <div class="nota">
-                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
                 </div>
                 <div class="d-flex flex-wrap justify-content-between">
                     <mat-form-field>
@@ -29,8 +30,8 @@
                     <mat-form-field>
                         <mat-label id="fechaR">Fecha Actividades Realizadas</mat-label>
                         <input matInput [matDatepicker]="picker1" [formControl]="fechaRealizadasF" required>
-                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
-                            matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right"
                             matTooltip="Indicar la fecha de realización de actividades. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                         </mat-datepicker-toggle>
                         <mat-datepicker touchUi #picker1></mat-datepicker>
@@ -52,8 +53,7 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora de Finalización Planificada</mat-label>
-                        <input matInput [formControl]="horaFinF" type="time"
-                            (keypress)="IngresarSoloNumeros($event)">
+                        <input matInput [formControl]="horaFinF" type="time" (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Hora en la que finaliza las actividades de horas extras">
                             help_outline</mat-icon>
@@ -68,8 +68,7 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora de Finalización Timbre</mat-label>
-                        <input matInput [formControl]="horaFinTF" type="time"
-                            (keypress)="IngresarSoloNumeros($event)">
+                        <input matInput [formControl]="horaFinTF" type="time" (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Hora de finalización registrada en el timbre">
                             help_outline</mat-icon>
@@ -101,8 +100,9 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-label>Número de horas y minutos de Permisos</mat-label>
-                        <input matInput [formControl]="horasPermisoF" type="time"  (keypress)="IngresarSoloNumeros($event)">
+                        <mat-label>Horas y minutos de Permisos</mat-label>
+                        <input matInput [formControl]="horasPermisoF" type="time"
+                            (keypress)="IngresarSoloNumeros($event)">
                         <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                             matTooltip="Número de horas y minutos solicitados de permiso">
                             help_outline</mat-icon>

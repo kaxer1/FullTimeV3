@@ -246,7 +246,6 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           alignment: 'center',
           fillColor: '#6495ED',
           margin: [20, 0, 20, 0],
-
         },
         itemsTableC: {
           fontSize: 10,

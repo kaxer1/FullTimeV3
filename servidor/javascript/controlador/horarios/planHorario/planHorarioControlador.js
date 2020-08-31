@@ -72,7 +72,7 @@ class PlanHorarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_cargo, fec_inicio, fec_final, id } = req.body;
             yield database_1.default.query('UPDATE plan_horarios SET id_cargo = $1, fec_inicio = $2, fec_final = $3 WHERE id = $4', [id_cargo, fec_inicio, fec_final, id]);
-            res.jsonp({ message: 'Plan Horario Registrado' });
+            res.jsonp({ message: 'Registro Actualizado' + id, });
         });
     }
     EliminarRegistros(req, res) {

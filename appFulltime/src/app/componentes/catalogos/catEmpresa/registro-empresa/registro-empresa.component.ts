@@ -24,6 +24,8 @@ export class RegistroEmpresaComponent implements OnInit {
   tipoF = new FormControl('', [Validators.required]);
   representanteF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   otroF = new FormControl('', [Validators.minLength(3)]);
+  establecimientoF = new FormControl('', [Validators.required]);
+  otroE = new FormControl('', [Validators.minLength(3)]);
 
   // Asignación de validaciones a inputs del formulario
   public RegistroEmpresaForm = new FormGroup({
@@ -34,7 +36,9 @@ export class RegistroEmpresaComponent implements OnInit {
     correoForm: this.correoF,
     tipoForm: this.tipoF,
     representanteForm: this.representanteF,
-    otroForm: this.otroF
+    otroForm: this.otroF,
+    establecimientoForm: this.establecimientoF,
+    otroEForm: this.otroE
   });
 
   constructor(
@@ -48,6 +52,8 @@ export class RegistroEmpresaComponent implements OnInit {
   estiloOtro: any;
   HabilitarRepre: boolean = true;
   estiloRepre: any;
+  HabilitarOtroE: boolean = true;
+  estiloOtroE: any;
 
   ngOnInit(): void {
   }
@@ -118,12 +124,13 @@ export class RegistroEmpresaComponent implements OnInit {
       telefono: form.telefonoForm,
       correo: form.correoForm,
       tipo_empresa: form.tipoForm,
-      representante: form.representanteForm
+      representante: form.representanteForm,
+      establecimiento: form.establecimientoForm
     };
     this.VerificarOtroTipo(form, datosEmpresa);
   }
 
-  GuardarDatos(datos){
+  GuardarDatos(datos) {
     this.rest.IngresarEmpresas(datos).subscribe(response => {
       this.LimpiarCampos();
       this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados')
@@ -135,10 +142,25 @@ export class RegistroEmpresaComponent implements OnInit {
     if (form.tipoForm === 'Otro') {
       if (form.otroForm != '') {
         datos.tipo_empresa = form.otroForm;
+        this.VerificarEstablecimiento(form, datos);
+      }
+      else {
+        this.toastr.info('Ingrese el nombre del tipo de empresa.')
+      }
+    }
+    else {
+      this.VerificarEstablecimiento(form, datos);
+    }
+  }
+
+  VerificarEstablecimiento(form, datos) {
+    if (form.establecimientoForm === 'Otro') {
+      if (form.otroEForm != '') {
+        datos.establecimiento = form.otroEForm;
         this.GuardarDatos(datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del tipo de empresa')
+        this.toastr.info('Ingrese el nombre del establecimiento.')
       }
     }
     else {
@@ -185,10 +207,25 @@ export class RegistroEmpresaComponent implements OnInit {
   CambiarNombreOtro() {
     this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
     this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
-    this.toastr.info('Ingresar el nombre del tipo de empresa')
+    this.toastr.info('Ingresar el nombre del tipo de empresa.')
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
+    })
+  }
+
+  CambiarSucursalesAgencias() {
+    this.estiloOtroE = { 'visibility': 'hidden' }; this.HabilitarOtroE = true;
+    this.RegistroEmpresaForm.patchValue({
+      otroEForm: ''
+    })
+  }
+
+  CambiarEstablecimiento() {
+    this.estiloOtroE = { 'visibility': 'visible' }; this.HabilitarOtroE = false;
+    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.')
+    this.RegistroEmpresaForm.patchValue({
+      otroEForm: ''
     })
   }
 

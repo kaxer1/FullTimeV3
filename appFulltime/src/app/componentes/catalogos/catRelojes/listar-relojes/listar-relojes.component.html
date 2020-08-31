@@ -11,8 +11,8 @@
                     <div class="d-flex flex-wrap justify-content-center">
                         <mat-form-field>
                             <mat-label>Nombre</mat-label>
-                            <input matInput name="filtroNombreReloj" placeholder="Nombre reloj"
-                                [formControl]="nombreF" [(ngModel)]="filtroNombreReloj">
+                            <input matInput name="filtroNombreReloj" placeholder="Nombre reloj" [formControl]="nombreF"
+                                [(ngModel)]="filtroNombreReloj">
                             <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
                                 matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
                                 help_outline</mat-icon>
@@ -33,7 +33,7 @@
                             </mat-error>
                         </mat-form-field>
                         <mat-form-field>
-                            <mat-label>Sucursal</mat-label>
+                            <mat-label>Establecimiento</mat-label>
                             <input matInput name="filtroSucursalReloj" placeholder="Nombre de Sucursal"
                                 [formControl]="sucursalF" [(ngModel)]="filtroSucursalReloj">
                             <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
@@ -50,8 +50,7 @@
                             <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
                                 [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
                             <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Búsqueda del dispositivo por la dirección IP">
+                                matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por la dirección IP">
                                 help_outline</mat-icon>
                         </mat-form-field>
                         <mat-form-field>
@@ -117,7 +116,7 @@
                     <tr style="text-align: center;">
                         <th scope="col">Código</th>
                         <th scope="col">Empresa</th>
-                        <th scope="col">Sucursal</th>
+                        <th scope="col">Establecimiento</th>
                         <th scope="col">Ciudad</th>
                         <th scope="col">Departamento</th>
                         <th scope="col">Dispositivo</th>
@@ -129,7 +128,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
                         <td>{{reloj.nomempresa}}</td>
                         <td>{{reloj.nomsucursal}}</td>

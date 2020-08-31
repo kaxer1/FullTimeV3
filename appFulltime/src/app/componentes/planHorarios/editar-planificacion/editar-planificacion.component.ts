@@ -72,6 +72,7 @@ export class EditarPlanificacionComponent implements OnInit {
       id: this.data.id
     };
     this.rest.ActualizarDatos(datosPlanHorario).subscribe(response => {
+      console.log('prueba actualizacopn', response)
       this.toastr.success('Operación Exitosa', 'Planificación de Horario actualizada')
       this.CerrarVentanaPlanHorario();
     }, error => {

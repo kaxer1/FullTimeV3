@@ -16,6 +16,7 @@ import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { LogosComponent } from '../logos/logos.component';
 
 @Component({
   selector: 'app-listar-empresas',
@@ -80,17 +81,22 @@ export class ListarEmpresasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarEmpresa() {
-    this.vistaRegistrarDatos.open(RegistroEmpresaComponent, { width: '600px' }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(RegistroEmpresaComponent, { width: '800px' }).afterClosed().subscribe(item => {
       this.ObtenerEmpresa();
     });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '800px', data: datosSeleccionados }).afterClosed().subscribe(item => {
       this.ObtenerEmpresa();
     });
     //console.log(datosSeleccionados.fecha);
+  }
+
+  EditarLogo(id_empresa: number) {
+    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: id_empresa}).afterClosed()
+      .subscribe(res => { console.log(res) })
   }
 
   LimpiarCampoBuscar() {

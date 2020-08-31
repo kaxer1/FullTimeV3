@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const ValidacionHorario_1 = require("../../libs/ValidacionHorario");
 const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
@@ -271,6 +272,16 @@ class HorasExtrasPedidasControlador {
             console.log(fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion);
             yield database_1.default.query('UPDATE hora_extr_pedidos SET fec_inicio = $1, fec_final = $2, num_hora = $3, descripcion = $4, estado = $5, tipo_funcion = $6 WHERE id = $7', [fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion, id]);
             res.jsonp({ message: 'Hora Extra editado' });
+        });
+    }
+    ObtenerHorarioEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const id_empl_cargo = req.userIdCargo;
+            // const id_empleado = req.params.id_empleado;
+            let respuesta = yield ValidacionHorario_1.ValidarHorarioEmpleado(id_empleado, id_empl_cargo);
+            console.log(respuesta);
+            res.jsonp(respuesta);
         });
     }
 }

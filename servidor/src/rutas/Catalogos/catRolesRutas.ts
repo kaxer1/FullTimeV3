@@ -1,23 +1,23 @@
 import { Router } from 'express';
 import ROLES_CONTROLADOR from '../../controlador/catalogos/catRolesControlador';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class PruebasRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
     configuracion(): void {
-        this.router.get('/', ROLES_CONTROLADOR.ListarRoles);
-        this.router.get('/:id', ROLES_CONTROLADOR.ObtnenerUnRol);
-        this.router.post('/', ROLES_CONTROLADOR.CrearRol);
-        this.router.put('/', ROLES_CONTROLADOR.ActualizarRol);
+        this.router.get('/', TokenValidation, ROLES_CONTROLADOR.ListarRoles);
+        this.router.get('/:id', TokenValidation, ROLES_CONTROLADOR.ObtnenerUnRol);
+        this.router.post('/', TokenValidation, ROLES_CONTROLADOR.CrearRol);
+        this.router.put('/', TokenValidation, ROLES_CONTROLADOR.ActualizarRol);
         // this.router.delete('/:id', pruebaControlador.delete);
-        this.router.post('/xmlDownload/', ROLES_CONTROLADOR.FileXML);
+        this.router.post('/xmlDownload/', TokenValidation, ROLES_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', ROLES_CONTROLADOR.downloadXML);
-        this.router.delete('/eliminar/:id', ROLES_CONTROLADOR.EliminarRol);
+        this.router.delete('/eliminar/:id', TokenValidation, ROLES_CONTROLADOR.EliminarRol);
     }
 }
 
