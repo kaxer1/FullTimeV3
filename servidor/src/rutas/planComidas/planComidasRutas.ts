@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../libs/VerificarToken'
+import { TokenValidation } from '../../libs/verificarToken'
 import PLAN_COMIDAS_CONTROLADOR from '../../controlador/planComidas/planComidasControlador';
 
 class DepartamentoRutas {

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../../libs/VerificarToken';
+import { TokenValidation } from '../../../libs/verificarToken';
 import CONTRATO_EMPLEADO_CONTROLADOR from '../../../controlador/empleado/empleadoContrato/contratoEmpleadoControlador';
 
 const multipart = require('connect-multiparty');

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-const SettingsMail_1 = require("../../libs/SettingsMail");
+const settingsMail_1 = require("../../libs/settingsMail");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class LoginControlador {
     ValidarCredenciales(req, res) {
@@ -69,7 +69,7 @@ class LoginControlador {
             var url = 'http://localhost:4200/confirmar-contrasenia';
             var data = {
                 to: correoValido.rows[0].correo,
-                from: SettingsMail_1.email,
+                from: settingsMail_1.email,
                 template: 'forgot-password-email',
                 subject: 'Recupera tu contraseña!',
                 html: `<p>Hola <b>${correoValido.rows[0].nombre.split(' ')[0] + ' ' + correoValido.rows[0].apellido.split(' ')[0]}</b>
@@ -79,7 +79,7 @@ class LoginControlador {
         </a>
       `
             };
-            SettingsMail_1.enviarMail(data);
+            settingsMail_1.enviarMail(data);
             res.jsonp({ mail: 'si', message: 'Mail enviado' });
         });
     }

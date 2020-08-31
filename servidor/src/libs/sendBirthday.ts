@@ -1,5 +1,5 @@
 import pool from '../database';
-import { enviarMail, email } from './SettingsMail';
+import { enviarMail, email } from './settingsMail';
 import path from 'path'
 
 // metodo para enviar los cumpleaños a una hora determinada, verificando a cada hora hasta que sean las 12 pm y se envie el correo

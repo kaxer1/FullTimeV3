@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import nacionalidadControlador from '../../controlador/nacionalidad/nacionalidadControlador';
-import { TokenValidation } from '../../libs/VerificarToken'
+import { TokenValidation } from '../../libs/verificarToken'
 
 class NacionalidadRutas {
     public router: Router = Router();

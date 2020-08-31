@@ -167,15 +167,15 @@ class Servidor {
 }
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
-const SendBirthday_1 = require("./libs/SendBirthday");
-const AvisoVacaciones_1 = require("./libs/AvisoVacaciones");
+const sendBirthday_1 = require("./libs/sendBirthday");
+const avisoVacaciones_1 = require("./libs/avisoVacaciones");
 const ContarHoras_1 = require("./libs/ContarHoras");
 // llama al meodo de cumpleaños
-SendBirthday_1.cumpleanios();
+sendBirthday_1.cumpleanios();
 // llama al metodo de avisos de vacaciones
-AvisoVacaciones_1.beforeFiveDays();
-AvisoVacaciones_1.beforeTwoDays();
+avisoVacaciones_1.beforeFiveDays();
+avisoVacaciones_1.beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-AvisoVacaciones_1.Peri_Vacacion_Automatico();
+avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
 // conteoPermisos();

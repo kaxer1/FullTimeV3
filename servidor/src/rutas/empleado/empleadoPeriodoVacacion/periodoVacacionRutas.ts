@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../../libs/VerificarToken';
+import { TokenValidation } from '../../../libs/verificarToken';
 import PERIODO_VACACION_CONTROLADOR from '../../../controlador/empleado/empleadoPeriodoVacacion/periodoVacacionControlador';
 
 class DepartamentoRutas {

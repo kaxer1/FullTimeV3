@@ -193,9 +193,9 @@ class Servidor {
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
 
-import { cumpleanios } from './libs/SendBirthday';
-import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/AvisoVacaciones';
-import { conteoPermisos } from './libs/TimerPermiso';
+import { cumpleanios } from './libs/sendBirthday';
+import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
+import { conteoPermisos } from './libs/timerPermiso';
 import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
 
 // llama al meodo de cumpleaños

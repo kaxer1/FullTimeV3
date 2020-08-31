@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { email, enviarMail } from '../../libs/SettingsMail';
+import { email, enviarMail } from '../../libs/settingsMail';
 import jwt from 'jsonwebtoken';
 
 interface IPayload {

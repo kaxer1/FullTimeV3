@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-const SettingsMail_1 = require("./SettingsMail");
+const settingsMail_1 = require("./settingsMail");
 const periVacacion_1 = __importDefault(require("../class/periVacacion"));
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
 const HORA_ENVIO_AVISO_CINCO_DIAS = 0;
@@ -136,7 +136,7 @@ exports.beforeFiveDays = function () {
                 avisoVacacion.rows.forEach(obj => {
                     let data = {
                         to: obj.correo,
-                        from: SettingsMail_1.email,
+                        from: settingsMail_1.email,
                         subject: 'Aviso toma de vacaciones',
                         html: `
                         <h2> <b> ¡Tienes 5 días para tomar vacaciones! </b> </h2>
@@ -146,7 +146,7 @@ exports.beforeFiveDays = function () {
                         `
                     };
                     console.log(data);
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                 });
             }
         }
@@ -166,7 +166,7 @@ exports.beforeTwoDays = function () {
                 avisoVacacion.rows.forEach(obj => {
                     let data = {
                         to: obj.correo,
-                        from: SettingsMail_1.email,
+                        from: settingsMail_1.email,
                         subject: 'Aviso toma de vacaciones',
                         html: `
                         <h2> <b> ¡Tienes 2 días para tomar vacaciones! </b> </h2>
@@ -176,7 +176,7 @@ exports.beforeTwoDays = function () {
                         `
                     };
                     console.log(data);
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                 });
             }
         }

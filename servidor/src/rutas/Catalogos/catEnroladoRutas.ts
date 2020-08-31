@@ -1,6 +1,6 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import ENROLADOS_CONTROLADOR from '../../controlador/catalogos/catEnroladoControlador';
-import { TokenValidation } from '../../libs/VerificarToken';
+import { TokenValidation } from '../../libs/verificarToken';
 
 const multipart = require('connect-multiparty');  
 

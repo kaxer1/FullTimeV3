@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import DETALLE_CATALOGO_HORARIO_CONTROLADOR from '../../../controlador/horarios/detalleCatHorario/detalleCatHorarioControlador';
-import { TokenValidation } from '../../../libs/VerificarToken'
+import { TokenValidation } from '../../../libs/verificarToken'
 const multipart = require('connect-multiparty');
 
 const multipartMiddleware = multipart({
