@@ -27,7 +27,9 @@ class ReportesControlador {
     public async ListarEntradaSalidaEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM TimbresEntrada AS te INNER JOIN TimbresSalida AS ts ON te.id_empleado = ts.id_empleado AND te.fecha_inicio::date = ts.fecha_fin::date AND te.id_empleado = $1 AND te.fecha_inicio::date BETWEEN $2 AND $3', [id_empleado, fechaInicio, fechaFinal]);
+        const DATOS = await pool.query('SELECT * FROM TimbresEntrada AS te INNER JOIN TimbresSalida AS ts ' +
+            'ON te.id_empleado = ts.id_empleado AND te.fecha_inicio::date = ts.fecha_fin::date AND ' +
+            'te.id_empleado = $1 AND te.fecha_inicio::date BETWEEN $2 AND $3', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -50,7 +52,9 @@ class ReportesControlador {
 
     public async ListarEntradaSalidaTodos(req: Request, res: Response) {
         const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM TimbresEntrada AS te INNER JOIN TimbresSalida AS ts ON te.id_empleado = ts.id_empleado AND te.fecha_inicio::date = ts.fecha_fin::date AND te.fecha_inicio::date BETWEEN $1 AND $2', [fechaInicio, fechaFinal]);
+        const DATOS = await pool.query('SELECT * FROM TimbresEntrada AS te INNER JOIN TimbresSalida AS ts ' +
+            'ON te.id_empleado = ts.id_empleado AND te.fecha_inicio::date = ts.fecha_fin::date AND ' +
+            'te.fecha_inicio::date BETWEEN $1 AND $2', [fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -73,7 +77,8 @@ class ReportesControlador {
     public async ListarTimbres(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM timbres WHERE id_empleado = $1 AND fec_hora_timbre::date BETWEEN $2 AND $3 ORDER BY fec_hora_timbre::date ASC', [id_empleado, fechaInicio, fechaFinal]);
+        const DATOS = await pool.query('SELECT * FROM timbres WHERE id_empleado = $1 AND ' +
+            'fec_hora_timbre::date BETWEEN $2 AND $3 ORDER BY fec_hora_timbre::date ASC', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
         }
@@ -150,8 +155,8 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
-            'AND dh.tipo_accion = 1) AS h ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
-            'ON t.id_empleado = h.empl_id AND t.accion LIKE \'1\' AND ' +
+            'AND dh.tipo_accion = \'E\') AS h ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado = h.empl_id AND t.accion LIKE \'E\' AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
             't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
@@ -174,11 +179,11 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
             'deta_horarios AS dh ' +
-            'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = 1 AND ' +
+            'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = \'E\' AND ' +
             'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
             'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
             'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
-            'AND t.accion LIKE \'1\' AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
+            'AND t.accion LIKE \'E\' AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
             'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
