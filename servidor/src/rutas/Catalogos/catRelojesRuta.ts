@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import RELOJES_CONTROLADOR from '../../controlador/catalogos/catRelojesControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 const multipart = require('connect-multiparty');
 

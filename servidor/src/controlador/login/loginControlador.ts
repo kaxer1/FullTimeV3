@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { email, enviarMail } from '../../libs/settingsMail';
+import { email, enviarMail } from '../../libs/SettingsMail';
 import jwt from 'jsonwebtoken';
 
 interface IPayload {
@@ -22,10 +22,10 @@ class LoginControlador {
       if (SUC_DEP.rowCount > 0) {
         const AUTORIZA = await pool.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2',[SUC_DEP.rows[0].id_cargo, SUC_DEP.rows[0].id_departamento])
         if (AUTORIZA.rowCount > 0) {
-          const token =  jwt.sign({_id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: AUTORIZA.rows[0].estado}, process.env.TOKEN_SECRET || 'llaveSecreta');
+          const token =  jwt.sign({_id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: AUTORIZA.rows[0].estado, cargo: SUC_DEP.rows[0].id_cargo}, process.env.TOKEN_SECRET || 'llaveSecreta');
           return res.status(200).jsonp({token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: AUTORIZA.rows[0].estado });
         } else {
-          const token =  jwt.sign({_id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: false}, process.env.TOKEN_SECRET || 'llaveSecreta');
+          const token =  jwt.sign({_id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: false, cargo: SUC_DEP.rows[0].id_cargo}, process.env.TOKEN_SECRET || 'llaveSecreta');
           return res.status(200).jsonp({token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: false});
         }
       } else {

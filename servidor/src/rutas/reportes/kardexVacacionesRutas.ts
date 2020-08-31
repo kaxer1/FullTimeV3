@@ -1,6 +1,6 @@
 import {KARDEX_VACACION_CONTROLADOR} from '../../controlador/reportes/kardexVacacionesControlador';
 import {Router} from 'express'
-import {TokenValidation} from '../../libs/verificarToken';
+import {TokenValidation} from '../../libs/VerificarToken';
 
 class KardexVacacionesRutas {
     public router: Router = Router();
@@ -10,7 +10,10 @@ class KardexVacacionesRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', TokenValidation, KARDEX_VACACION_CONTROLADOR.varcularVacacion);
+        // solicita empleados
+        this.router.get('/', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
+        // solicita administrador
+        this.router.get('/:id_empleado', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
     }
 
 

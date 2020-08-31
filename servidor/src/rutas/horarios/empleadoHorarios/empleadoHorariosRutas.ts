@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import EMPLEADO_HORARIOS_CONTROLADOR from '../../../controlador/horarios/empleadoHorarios/empleadoHorariosControlador';
-import { TokenValidation } from '../../../libs/verificarToken'
+import { TokenValidation } from '../../../libs/VerificarToken'
 
 const multipart = require('connect-multiparty');
 

@@ -10,7 +10,6 @@ class EmpleadoControlador {
   public async list(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
     res.jsonp(empleado.rows);
-
   }
 
   public async getOne(req: Request, res: Response): Promise<any> {
@@ -208,6 +207,19 @@ class EmpleadoControlador {
     }
   }
 
+  public async ListaBusquedaEmpleados(req: Request, res: Response): Promise<any> {
+    const empleado = await pool.query('SELECT id, nombre, apellido FROM empleados ORDER BY apellido')
+    .then(result => {
+      return result.rows.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.apellido + ' ' + obj.nombre
+        }
+      })
+    })
+    
+    res.jsonp(empleado);
+  }
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();

@@ -133,7 +133,7 @@ async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any) {
     let Inicio_Ultimo_Periodo = arrayPeriodos.map(obj => {
         return obj.fec_inicio;
     });
-console.log('Inicio Periodos ====> ',Inicio_Ultimo_Periodo);
+    console.log('Inicio Periodos ====> ',Inicio_Ultimo_Periodo);
 
     let aniosInicio = arrayPeriodos.map(obj => {
         return obj.fec_inicio.getFullYear();
@@ -286,11 +286,12 @@ export const vacacionesByIdUser = async function(id_empleado: number) {
     const sueldoHora = await SueldoHorasTrabaja(id_empleado);
     
     const acumulado = await ObtenerPeriodosEmpleado(id_empleado, diasObliga);
-    let hora_trabaja = sueldoHora[0].hora_trabaja;
+    // let hora_trabaja = sueldoHora[0].hora_trabaja;
     console.log(acumulado.fecha_ingreso);
     /* VALORES DE PRUEBA */
+    acumulado.acumulado = 40.91;
+    let hora_trabaja = 6;
     // const acumulado = { acumulado: 40.91, anios_labo: 6, dia_adicional: 1 } as IAcumulado;
-    // let hora_trabaja = 6;
 
     let nuevoArray = UnirVacacionesPermiso(vacaciones, permisos);
     let arrayDetalleKardex = ArrayTotalDetalleKardex(nuevoArray, hora_trabaja, acumulado, id_empleado)

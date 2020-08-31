@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import TIPO_PERMISOS_CONTROLADOR from '../../controlador/catalogos/catTipoPermisosControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class TipoPermisosRutas {
     public router: Router = Router();

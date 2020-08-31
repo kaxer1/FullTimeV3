@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import CIUDAD_FERIADO_CONTROLADOR from '../../controlador/ciudadFeriado/ciudadFeriadoControlador';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 
 class CiudadRutas {
     public router: Router = Router();

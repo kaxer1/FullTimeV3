@@ -276,11 +276,12 @@ exports.vacacionesByIdUser = function (id_empleado) {
         const permisos = yield Permisos(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final);
         const sueldoHora = yield SueldoHorasTrabaja(id_empleado);
         const acumulado = yield ObtenerPeriodosEmpleado(id_empleado, diasObliga);
-        let hora_trabaja = sueldoHora[0].hora_trabaja;
+        // let hora_trabaja = sueldoHora[0].hora_trabaja;
         console.log(acumulado.fecha_ingreso);
         /* VALORES DE PRUEBA */
+        acumulado.acumulado = 40.91;
+        let hora_trabaja = 6;
         // const acumulado = { acumulado: 40.91, anios_labo: 6, dia_adicional: 1 } as IAcumulado;
-        // let hora_trabaja = 6;
         let nuevoArray = UnirVacacionesPermiso(vacaciones, permisos);
         let arrayDetalleKardex = ArrayTotalDetalleKardex(nuevoArray, hora_trabaja, acumulado, id_empleado);
         ComprobarCalculo(hora_trabaja, 24, 3, 16);

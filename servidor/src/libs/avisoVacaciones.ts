@@ -1,5 +1,5 @@
 import pool from '../database';
-import { enviarMail, email} from './settingsMail';
+import { enviarMail, email} from './SettingsMail';
 import PVacacion from '../class/periVacacion';
 
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;

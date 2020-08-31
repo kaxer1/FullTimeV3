@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 import VACACIONES_CONTROLADOR from '../../controlador/vacaciones/vacacionesControlador';
 
 class VacacionesRutas {

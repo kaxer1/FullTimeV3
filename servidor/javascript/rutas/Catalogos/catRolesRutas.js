@@ -5,21 +5,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catRolesControlador_1 = __importDefault(require("../../controlador/catalogos/catRolesControlador"));
-const verificarToken_1 = require("../../libs/verificarToken");
+const VerificarToken_1 = require("../../libs/VerificarToken");
 class PruebasRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.ListarRoles);
-        this.router.get('/:id', verificarToken_1.TokenValidation, catRolesControlador_1.default.ObtnenerUnRol);
-        this.router.post('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.CrearRol);
-        this.router.put('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.ActualizarRol);
+        this.router.get('/', VerificarToken_1.TokenValidation, catRolesControlador_1.default.ListarRoles);
+        this.router.get('/:id', VerificarToken_1.TokenValidation, catRolesControlador_1.default.ObtnenerUnRol);
+        this.router.post('/', VerificarToken_1.TokenValidation, catRolesControlador_1.default.CrearRol);
+        this.router.put('/', VerificarToken_1.TokenValidation, catRolesControlador_1.default.ActualizarRol);
         // this.router.delete('/:id', pruebaControlador.delete);
-        this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catRolesControlador_1.default.FileXML);
+        this.router.post('/xmlDownload/', VerificarToken_1.TokenValidation, catRolesControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catRolesControlador_1.default.downloadXML);
-        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catRolesControlador_1.default.EliminarRol);
+        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, catRolesControlador_1.default.EliminarRol);
     }
 }
 const ROLES_RUTAS = new PruebasRutas();

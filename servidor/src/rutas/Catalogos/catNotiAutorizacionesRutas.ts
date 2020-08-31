@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import NOTIFICACIONES_AUTORIZACIONES_CONTROLADOR from '../../controlador/catalogos/catNotiAutorizacionesControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class NotificacionesAutorizacionesRutas {
     public router: Router = Router();

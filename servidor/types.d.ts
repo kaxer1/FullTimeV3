@@ -3,6 +3,7 @@ declare namespace Express {
         userId: number,
         userIdEmpleado: number,
         id_empresa: number,
-        userRol: number
+        userRol: number,
+        userIdCargo: number
     }
 }

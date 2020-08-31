@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import HorasExtrasPedidasControlador from '../../controlador/horaExtra/horaExtraControlador';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 
 class HorasExtrasPedidasRutas {
     public router: Router = Router();
@@ -20,6 +20,7 @@ class HorasExtrasPedidasRutas {
         this.router.put('/:id/estado', TokenValidation, HorasExtrasPedidasControlador.ActualizarEstado);
         this.router.put('/:id/hora-extra-solicitada', TokenValidation, HorasExtrasPedidasControlador.EditarHoraExtra);
         this.router.get('/datosAutorizacion/:id_hora/:id_empleado', TokenValidation, HorasExtrasPedidasControlador.ObtenerAutorizacionHoraExtra);
+        this.router.get('/horario-empleado/:id_empleado', TokenValidation, HorasExtrasPedidasControlador.ObtenerHorarioEmpleado);
         this.router.delete('/eliminar/:id_hora_extra', TokenValidation, HorasExtrasPedidasControlador.EliminarHoraExtra);
     }
 }

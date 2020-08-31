@@ -51,6 +51,7 @@ import DOCUMENTOS_RUTAS from './rutas/documentos/documentosRutas';
 import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import KARDEX_VACACION_RUTAS from './rutas/reportes/kardexVacacionesRutas';
+import ASISTENCIA_RUTAS from './rutas/reportes/asistenciaRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -125,7 +126,6 @@ class Servidor {
         this.app.use('/departamento', DEPARTAMENTO_RUTA);
         this.app.use('/proceso', PROCESO_RUTA);
         this.app.use('/horario', HORARIO_RUTA);
-        this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS);
         this.app.use('/usuarios', USUARIO_RUTA);
         this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS);
         this.app.use('/rolPermisos', ROL_PERMISOS_RUTAS);
@@ -149,8 +149,11 @@ class Servidor {
         // Mensaje de cumpleaños empresas
         this.app.use('/birthday', BIRTHDAY_RUTAS);
 
+        // Asistencia
+        this.app.use('/asistencia', ASISTENCIA_RUTAS);
+
         // reportes
-        this.app.use('/reportes', KARDEX_VACACION_RUTAS);
+        this.app.use('/reportes/vacacion', KARDEX_VACACION_RUTAS);
 
     }
 
@@ -184,9 +187,10 @@ class Servidor {
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
 
-import { cumpleanios } from './libs/sendBirthday';
-import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
-import { conteoPermisos } from './libs/timerPermiso';
+import { cumpleanios } from './libs/SendBirthday';
+import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/AvisoVacaciones';
+import { conteoPermisos } from './libs/TimerPermiso';
+import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
 
 // llama al meodo de cumpleaños
 cumpleanios();
@@ -196,5 +200,6 @@ beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
 Peri_Vacacion_Automatico();
 
+RegistrarAsistenciaByTimbres()
 
 // conteoPermisos();

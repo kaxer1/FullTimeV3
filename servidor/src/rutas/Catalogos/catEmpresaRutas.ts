@@ -1,6 +1,12 @@
 import { Router } from 'express';
 import EMPRESA_CONTROLADOR from '../../controlador/catalogos/catEmpresaControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
+
+const multipart = require('connect-multiparty');
+
+const multipartMiddleware = multipart({
+    uploadDir: './logos',
+});
 
 class DepartamentoRutas {
     public router: Router = Router();
@@ -18,6 +24,8 @@ class DepartamentoRutas {
         this.router.get('/download/:nameXML', EMPRESA_CONTROLADOR.downloadXML);
         this.router.delete('/eliminar/:id', TokenValidation, EMPRESA_CONTROLADOR.EliminarRegistros);
         this.router.get('/buscar/datos/:id', TokenValidation, EMPRESA_CONTROLADOR.ListarEmpresaId);
+        this.router.get('/logo/codificado/:id_empresa', TokenValidation, EMPRESA_CONTROLADOR.getImagenBase64);
+        this.router.put('/logo/:id_empresa/uploadImage', [TokenValidation, multipartMiddleware], EMPRESA_CONTROLADOR.ActualizarLogoEmpresa);
     }
 }
 

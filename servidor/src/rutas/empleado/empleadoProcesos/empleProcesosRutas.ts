@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../../libs/verificarToken';
+import { TokenValidation } from '../../../libs/VerificarToken';
 import EMPLEADO_PROCESO_CONTROLADOR from '../../../controlador/empleado/empleadoProcesos/empleProcesoControlador';
 
 class DepartamentoRutas {

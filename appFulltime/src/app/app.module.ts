@@ -261,6 +261,9 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
+import { VacacionesDiasCakendarioComponent } from './componentes/reportes-kardex/vacaciones-dias-cakendario/vacaciones-dias-cakendario.component';
+import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -453,6 +456,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     RegistrarBirthdayComponent,
     EditarBirthdayComponent,
     VerBirthdayComponent,
+    VacacionesDiasCakendarioComponent,
+    AsistenciaConsolidadoComponent,
+    LogosComponent,
   ],
 
   imports: [

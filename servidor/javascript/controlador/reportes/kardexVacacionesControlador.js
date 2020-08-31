@@ -11,11 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const CalcularVacaciones_1 = require("../../libs/CalcularVacaciones");
 class KardexVacacion {
-    varcularVacacion(req, res) {
+    CarcularVacacionByIdToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             // console.log(req.userIdEmpleado);
             // console.log(req.id_empresa)
             let jsonData = yield CalcularVacaciones_1.vacacionesByIdUser(req.userIdEmpleado);
+            res.jsonp(jsonData);
+        });
+    }
+    CarcularVacacionByIdEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id_empleado = parseInt(req.params.id_empleado);
+            console.log(id_empleado);
+            let jsonData = yield CalcularVacaciones_1.vacacionesByIdUser(id_empleado);
             res.jsonp(jsonData);
         });
     }

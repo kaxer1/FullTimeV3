@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-const settingsMail_1 = require("../../libs/settingsMail");
+const SettingsMail_1 = require("../../libs/SettingsMail");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class LoginControlador {
     ValidarCredenciales(req, res) {
@@ -26,11 +26,11 @@ class LoginControlador {
                 if (SUC_DEP.rowCount > 0) {
                     const AUTORIZA = yield database_1.default.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2', [SUC_DEP.rows[0].id_cargo, SUC_DEP.rows[0].id_departamento]);
                     if (AUTORIZA.rowCount > 0) {
-                        const token = jsonwebtoken_1.default.sign({ _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: AUTORIZA.rows[0].estado }, process.env.TOKEN_SECRET || 'llaveSecreta');
+                        const token = jsonwebtoken_1.default.sign({ _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: AUTORIZA.rows[0].estado, cargo: SUC_DEP.rows[0].id_cargo }, process.env.TOKEN_SECRET || 'llaveSecreta');
                         return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: AUTORIZA.rows[0].estado });
                     }
                     else {
-                        const token = jsonwebtoken_1.default.sign({ _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: false }, process.env.TOKEN_SECRET || 'llaveSecreta');
+                        const token = jsonwebtoken_1.default.sign({ _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: false, cargo: SUC_DEP.rows[0].id_cargo }, process.env.TOKEN_SECRET || 'llaveSecreta');
                         return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: false });
                     }
                 }
@@ -69,7 +69,7 @@ class LoginControlador {
             var url = 'http://localhost:4200/confirmar-contrasenia';
             var data = {
                 to: correoValido.rows[0].correo,
-                from: settingsMail_1.email,
+                from: SettingsMail_1.email,
                 template: 'forgot-password-email',
                 subject: 'Recupera tu contraseña!',
                 html: `<p>Hola <b>${correoValido.rows[0].nombre.split(' ')[0] + ' ' + correoValido.rows[0].apellido.split(' ')[0]}</b>
@@ -79,7 +79,7 @@ class LoginControlador {
         </a>
       `
             };
-            settingsMail_1.enviarMail(data);
+            SettingsMail_1.enviarMail(data);
             res.jsonp({ mail: 'si', message: 'Mail enviado' });
         });
     }

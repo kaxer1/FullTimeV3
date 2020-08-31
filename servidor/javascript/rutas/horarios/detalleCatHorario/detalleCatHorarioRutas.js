@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const detalleCatHorarioControlador_1 = __importDefault(require("../../../controlador/horarios/detalleCatHorario/detalleCatHorarioControlador"));
-const verificarToken_1 = require("../../../libs/verificarToken");
+const VerificarToken_1 = require("../../../libs/VerificarToken");
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
     uploadDir: './plantillas',
@@ -16,12 +16,12 @@ class PermisosRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarDetalleHorarios);
-        this.router.post('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.CrearDetalleHorarios);
-        this.router.get('/:id_horario', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarUnDetalleHorario);
-        this.router.post('/upload', [verificarToken_1.TokenValidation, multipartMiddleware], detalleCatHorarioControlador_1.default.CrearHorarioDetallePlantilla);
-        this.router.put('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ActualizarDetalleHorarios);
-        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.EliminarRegistros);
+        this.router.get('/', VerificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarDetalleHorarios);
+        this.router.post('/', VerificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.CrearDetalleHorarios);
+        this.router.get('/:id_horario', VerificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarUnDetalleHorario);
+        this.router.post('/upload', [VerificarToken_1.TokenValidation, multipartMiddleware], detalleCatHorarioControlador_1.default.CrearHorarioDetallePlantilla);
+        this.router.put('/', VerificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ActualizarDetalleHorarios);
+        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.EliminarRegistros);
     }
 }
 const DETALLE_CATALOGO_HORARIO_RUTAS = new PermisosRutas();

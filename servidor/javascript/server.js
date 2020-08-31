@@ -55,6 +55,7 @@ const documentosRutas_1 = __importDefault(require("./rutas/documentos/documentos
 const horaExtraRutas_1 = __importDefault(require("./rutas/horaExtra/horaExtraRutas"));
 const birthdayRutas_1 = __importDefault(require("./rutas/birthday/birthdayRutas"));
 const kardexVacacionesRutas_1 = __importDefault(require("./rutas/reportes/kardexVacacionesRutas"));
+const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -111,7 +112,6 @@ class Servidor {
         this.app.use('/departamento', catDepartamentoRutas_1.default);
         this.app.use('/proceso', catProcesoRutas_1.default);
         this.app.use('/horario', catHorarioRutas_1.default);
-        this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
         this.app.use('/horasExtras', catHorasExtrasRutas_1.default);
         this.app.use('/rolPermisos', catRolPermisosRutas_1.default);
@@ -131,8 +131,10 @@ class Servidor {
         this.app.use('/archivosCargados', documentosRutas_1.default);
         // Mensaje de cumpleaños empresas
         this.app.use('/birthday', birthdayRutas_1.default);
+        // Asistencia
+        this.app.use('/asistencia', asistenciaRutas_1.default);
         // reportes
-        this.app.use('/reportes', kardexVacacionesRutas_1.default);
+        this.app.use('/reportes/vacacion', kardexVacacionesRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
@@ -160,13 +162,15 @@ class Servidor {
 }
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
-const sendBirthday_1 = require("./libs/sendBirthday");
-const avisoVacaciones_1 = require("./libs/avisoVacaciones");
+const SendBirthday_1 = require("./libs/SendBirthday");
+const AvisoVacaciones_1 = require("./libs/AvisoVacaciones");
+const ContarHoras_1 = require("./libs/ContarHoras");
 // llama al meodo de cumpleaños
-sendBirthday_1.cumpleanios();
+SendBirthday_1.cumpleanios();
 // llama al metodo de avisos de vacaciones
-avisoVacaciones_1.beforeFiveDays();
-avisoVacaciones_1.beforeTwoDays();
+AvisoVacaciones_1.beforeFiveDays();
+AvisoVacaciones_1.beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-avisoVacaciones_1.Peri_Vacacion_Automatico();
+AvisoVacaciones_1.Peri_Vacacion_Automatico();
+ContarHoras_1.RegistrarAsistenciaByTimbres();
 // conteoPermisos();

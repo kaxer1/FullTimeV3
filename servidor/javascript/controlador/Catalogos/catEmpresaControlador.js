@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
+const ImagenCodificacion_1 = require("../../libs/ImagenCodificacion");
 const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class EmpresaControlador {
@@ -91,6 +92,51 @@ class EmpresaControlador {
             else {
                 return res.status(404).jsonp({ text: 'No se encuentran registros' });
             }
+        });
+    }
+    getImagenBase64(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const file_name = yield database_1.default.query('select nombre, logo from cg_empresa where id = $1', [req.params.id_empresa])
+                .then(result => {
+                return result.rows[0];
+            });
+            const codificado = yield ImagenCodificacion_1.ImagenBase64LogosEmpresas(file_name.logo);
+            if (codificado === 0) {
+                res.send({ imagen: 0, nom_empresa: file_name.nombre });
+            }
+            else {
+                res.send({ imagen: codificado, nom_empresa: file_name.nombre });
+            }
+        });
+    }
+    ActualizarLogoEmpresa(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let logo = list.image[0].path.split("\\")[1];
+            let id = req.params.id_empresa;
+            console.log(logo, '====>', id);
+            const logo_name = yield database_1.default.query('SELECT nombre, logo FROM cg_empresa WHERE id = $1', [id]);
+            if (logo_name.rowCount > 0) {
+                logo_name.rows.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    if (obj.logo != null) {
+                        try {
+                            console.log(obj.logo);
+                            let filePath = `servidor\\logos\\${obj.logo}`;
+                            let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+                            fs_1.default.unlinkSync(direccionCompleta);
+                            yield database_1.default.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                        }
+                        catch (error) {
+                            yield database_1.default.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                        }
+                    }
+                    else {
+                        yield database_1.default.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                    }
+                }));
+            }
+            const codificado = yield ImagenCodificacion_1.ImagenBase64LogosEmpresas(logo);
+            res.send({ imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message: 'Logo actualizado' });
         });
     }
 }

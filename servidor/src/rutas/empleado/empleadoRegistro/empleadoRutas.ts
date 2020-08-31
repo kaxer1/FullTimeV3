@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import EMPLEADO_CONTROLADOR from '../../../controlador/empleado/empleadoRegistro/empleadoControlador';
-import { TokenValidation } from '../../../libs/verificarToken';
+import { TokenValidation } from '../../../libs/VerificarToken';
 
 const multipart = require('connect-multiparty');
 
@@ -16,12 +16,12 @@ class EmpleadoRutas {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
     configuracion(): void {
         this.router.get('/', TokenValidation, EMPLEADO_CONTROLADOR.list);
+        this.router.get('/buscador-empl', TokenValidation, EMPLEADO_CONTROLADOR.ListaBusquedaEmpleados);
         this.router.get('/:id', TokenValidation, EMPLEADO_CONTROLADOR.getOne);
         this.router.get('/img/:imagen', EMPLEADO_CONTROLADOR.getImagen);
         this.router.get('/download/:nameXML', EMPLEADO_CONTROLADOR.downloadXML);

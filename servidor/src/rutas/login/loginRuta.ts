@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import LOGIN_CONTROLADOR from '../../controlador/login/loginControlador';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 
 class LoginRuta {
     public router: Router = Router();

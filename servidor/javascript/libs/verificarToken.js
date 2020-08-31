@@ -24,5 +24,6 @@ exports.TokenValidation = (req, res, next) => {
     req.userIdEmpleado = payload._id_empleado;
     req.id_empresa = payload._empresa,
         req.userRol = payload.rol;
+    req.userIdCargo = payload.cargo;
     next();
 };

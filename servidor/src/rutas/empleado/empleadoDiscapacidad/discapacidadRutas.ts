@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../../libs/verificarToken';
+import { TokenValidation } from '../../../libs/VerificarToken';
 import DISCAPACIDAD_CONTROLADOR from '../../../controlador/empleado/empleadoDiscapacidad/discapacidadControlador';
 
 class DiscapacidadRutas {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import BIRTHDAY_CONTROLADOR from '../../controlador/birthday/birthdayControlador';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 const multipart = require('connect-multiparty');
 
 const multipartMiddleware = multipart({

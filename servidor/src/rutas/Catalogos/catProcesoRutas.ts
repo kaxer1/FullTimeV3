@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import PROCESO_CONTROLADOR from '../../controlador/catalogos/catProcesoControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class ProcesoRutas {
     public router: Router = Router();

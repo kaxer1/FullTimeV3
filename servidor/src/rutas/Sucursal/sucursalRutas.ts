@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 import SUCURSAL_CONTROLADOR from '../../controlador/sucursal/sucursalControlador';
 
 class SucursalRutas {

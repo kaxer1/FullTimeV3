@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 import ENROLADO_RELOJ_CONTROLADOR from '../../controlador/enroladoReloj/enroladoRelojControlador';
 
 class CiudadRutas {

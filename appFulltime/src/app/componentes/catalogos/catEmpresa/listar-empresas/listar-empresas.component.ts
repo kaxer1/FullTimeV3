@@ -16,6 +16,7 @@ import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { LogosComponent } from '../logos/logos.component';
 
 @Component({
   selector: 'app-listar-empresas',
@@ -91,6 +92,11 @@ export class ListarEmpresasComponent implements OnInit {
       this.ObtenerEmpresa();
     });
     //console.log(datosSeleccionados.fecha);
+  }
+
+  EditarLogo(id_empresa: number) {
+    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: id_empresa}).afterClosed()
+      .subscribe(res => { console.log(res) })
   }
 
   LimpiarCampoBuscar() {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import  PROVINCIA_CONTROLADOR  from '../../controlador/catalogos/catProvinciaControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class ProvinciaRutas {
     public router: Router = Router();

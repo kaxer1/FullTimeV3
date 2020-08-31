@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import NIVEL_TITULO_CONTROLADOR from '../../controlador/nivelTitulo/nivelTituloControlador';
-import { TokenValidation } from '../../libs/verificarToken'
+import { TokenValidation } from '../../libs/VerificarToken'
 
 class NivelTituloRutas {
     public router: Router = Router();

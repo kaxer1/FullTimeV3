@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import PLAN_HORARIO_CONTROLADOR from '../../../controlador/horarios/planHorario/planHorarioControlador';
-import { TokenValidation } from '../../../libs/verificarToken'
+import { TokenValidation } from '../../../libs/VerificarToken'
 
 class PlanHorarioRutas {
     public router: Router = Router();

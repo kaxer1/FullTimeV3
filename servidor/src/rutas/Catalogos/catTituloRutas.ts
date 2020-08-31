@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import TITULO_CONTROLADOR from '../../controlador/catalogos/catTituloControlador';
-import { TokenValidation } from '../../libs/verificarToken';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class TituloRutas {
     public router: Router = Router();
