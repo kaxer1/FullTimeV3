@@ -24,6 +24,10 @@ export class EmpleadoService {
   getEmpleadosRest() {
     return this.http.get(`${this.API_URI}/empleado`);
   }
+  
+  getBuscadorEmpledosRest() {
+    return this.http.get<any>(`${this.API_URI}/empleado/buscador-empl`);
+  }
 
   getOneEmpleadoRest(id: number) {
     return this.http.get<any>(`${this.API_URI}/empleado/${id}`);

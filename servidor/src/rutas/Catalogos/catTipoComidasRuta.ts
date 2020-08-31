@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import TIPO_COMIDAS_CONTROLADOR from '../../controlador/catalogos/catTipoComidasControlador';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 const multipart = require('connect-multiparty');
 
@@ -11,19 +12,18 @@ class TipoComidasRuta {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
     configuracion(): void {
-        this.router.get('/', TIPO_COMIDAS_CONTROLADOR.ListarTipoComidas);
-        this.router.get('/:id', TIPO_COMIDAS_CONTROLADOR.ListarUnTipoComida);
-        this.router.post('/', TIPO_COMIDAS_CONTROLADOR.CrearTipoComidas);
-        this.router.put('/', TIPO_COMIDAS_CONTROLADOR.ActualizarComida);
-        this.router.delete('/eliminar/:id', TIPO_COMIDAS_CONTROLADOR.EliminarRegistros);
-        this.router.post('/xmlDownload/', TIPO_COMIDAS_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, TIPO_COMIDAS_CONTROLADOR.ListarTipoComidas);
+        this.router.get('/:id', TokenValidation, TIPO_COMIDAS_CONTROLADOR.ListarUnTipoComida);
+        this.router.post('/', TokenValidation, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidas);
+        this.router.put('/', TokenValidation, TIPO_COMIDAS_CONTROLADOR.ActualizarComida);
+        this.router.delete('/eliminar/:id', TokenValidation, TIPO_COMIDAS_CONTROLADOR.EliminarRegistros);
+        this.router.post('/xmlDownload/', TokenValidation, TIPO_COMIDAS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', TIPO_COMIDAS_CONTROLADOR.downloadXML);
-        this.router.post('/upload', multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidasPlantilla);
+        this.router.post('/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidasPlantilla);
     }
 }
 

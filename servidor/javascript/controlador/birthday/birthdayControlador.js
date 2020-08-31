@@ -15,24 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const fs_1 = __importDefault(require("fs"));
 class BirthdayControlador {
-    // public async ListarNombreCiudad(req: Request, res: Response) {
-    //     const CIUDAD = await pool.query('SELECT * FROM VistaNombreProvincia ORDER BY nombre, descripcion ASC');
-    //     if (CIUDAD.rowCount > 0) {
-    //         return res.jsonp(CIUDAD.rows)
-    //     }
-    //     else {
-    //         return res.status(404).jsonp({ text: 'No se encuentran registros' });
-    //     }
-    // }
-    // public async ListarCiudades(req: Request, res: Response) {
-    //     const CIUDAD = await pool.query('SELECT * FROM ciudades');
-    //     if (CIUDAD.rowCount > 0) {
-    //         return res.jsonp(CIUDAD.rows)
-    //     }
-    //     else {
-    //         return res.status(404).jsonp({ text: 'No se encuentran registros' });
-    //     }
-    // }
     getImagen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const imagen = req.params.imagen;
@@ -54,8 +36,8 @@ class BirthdayControlador {
     }
     CrearMensajeBirthday(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empresa, titulo, mensaje } = req.body;
-            yield database_1.default.query('INSERT INTO Message_birthday ( id_empresa, titulo, mensaje ) VALUES ($1, $2, $3)', [id_empresa, titulo, mensaje]);
+            const { id_empresa, titulo, link, mensaje } = req.body;
+            yield database_1.default.query('INSERT INTO Message_birthday ( id_empresa, titulo, mensaje, url ) VALUES ($1, $2, $3, $4)', [id_empresa, titulo, mensaje, link]);
             const oneMessage = yield database_1.default.query('SELECT id FROM Message_birthday WHERE id_empresa = $1', [id_empresa]);
             const idMessageGuardado = oneMessage.rows[0].id;
             res.jsonp([{ message: 'Mensaje de cumpleaños empresarial guardado', id: idMessageGuardado }]);
@@ -93,9 +75,9 @@ class BirthdayControlador {
     }
     EditarMensajeBirthday(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { titulo, mensaje } = req.body;
+            const { titulo, mensaje, link } = req.body;
             const { id_mensaje } = req.params;
-            yield database_1.default.query('UPDATE Message_birthday SET titulo = $1, mensaje = $2 WHERE id = $3', [titulo, mensaje, id_mensaje]);
+            yield database_1.default.query('UPDATE Message_birthday SET titulo = $1, mensaje = $2, url = $3 WHERE id = $4', [titulo, mensaje, link, id_mensaje]);
             res.jsonp({ message: 'Mensaje de cumpleaños actualizado' });
         });
     }

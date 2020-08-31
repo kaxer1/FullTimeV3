@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { TokenValidation } from '../../../libs/VerificarToken';
 import EMPLEADO_PROCESO_CONTROLADOR from '../../../controlador/empleado/empleadoProcesos/empleProcesoControlador';
 
 class DepartamentoRutas {
@@ -10,11 +10,11 @@ class DepartamentoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', EMPLEADO_PROCESO_CONTROLADOR.ListarEmpleProcesos);
-        this.router.get('/infoProceso/:id_empl_cargo', EMPLEADO_PROCESO_CONTROLADOR.EncontrarProcesoPorIdCargo);
-        this.router.post('/', EMPLEADO_PROCESO_CONTROLADOR.CrearEmpleProcesos);
-        this.router.put('/', EMPLEADO_PROCESO_CONTROLADOR.ActualizarProcesoEmpleado);
-        this.router.delete('/eliminar/:id', EMPLEADO_PROCESO_CONTROLADOR.EliminarRegistros);
+        this.router.get('/', TokenValidation, EMPLEADO_PROCESO_CONTROLADOR.ListarEmpleProcesos);
+        this.router.get('/infoProceso/:id_empl_cargo', TokenValidation, EMPLEADO_PROCESO_CONTROLADOR.EncontrarProcesoPorIdCargo);
+        this.router.post('/', TokenValidation, EMPLEADO_PROCESO_CONTROLADOR.CrearEmpleProcesos);
+        this.router.put('/', TokenValidation, EMPLEADO_PROCESO_CONTROLADOR.ActualizarProcesoEmpleado);
+        this.router.delete('/eliminar/:id', TokenValidation, EMPLEADO_PROCESO_CONTROLADOR.EliminarRegistros);
     }
 }
 

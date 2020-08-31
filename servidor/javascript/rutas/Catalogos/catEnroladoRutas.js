@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catEnroladoControlador_1 = __importDefault(require("../../controlador/catalogos/catEnroladoControlador"));
-const jwt = require('jsonwebtoken');
+const VerificarToken_1 = require("../../libs/VerificarToken");
 const multipart = require('connect-multiparty');
 const multipartMiddlewarePlantilla = multipart({
     uploadDir: './plantillas',
@@ -16,29 +16,17 @@ class EnroladoRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', this.verifyToken, catEnroladoControlador_1.default.ListarEnrolados);
-        this.router.get('/:id', this.verifyToken, catEnroladoControlador_1.default.ObtenerUnEnrolado);
-        this.router.post('/', this.verifyToken, catEnroladoControlador_1.default.CrearEnrolado);
-        this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], catEnroladoControlador_1.default.CargaPlantillaEnrolado);
-        this.router.get('/busqueda/:id_usuario', this.verifyToken, catEnroladoControlador_1.default.ObtenerRegistroEnrolado);
-        this.router.get('/buscar/ultimoId', this.verifyToken, catEnroladoControlador_1.default.ObtenerUltimoId);
-        this.router.put('/', this.verifyToken, catEnroladoControlador_1.default.ActualizarEnrolado);
-        this.router.delete('/eliminar/:id', catEnroladoControlador_1.default.EliminarEnrolado);
-        this.router.post('/xmlDownload/', catEnroladoControlador_1.default.FileXML);
+        this.router.get('/', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ListarEnrolados);
+        this.router.get('/:id', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ObtenerUnEnrolado);
+        this.router.post('/', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.CrearEnrolado);
+        this.router.post('/plantillaExcel/', [VerificarToken_1.TokenValidation, multipartMiddlewarePlantilla], catEnroladoControlador_1.default.CargaPlantillaEnrolado);
+        this.router.get('/busqueda/:id_usuario', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ObtenerRegistroEnrolado);
+        this.router.get('/buscar/ultimoId', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ObtenerUltimoId);
+        this.router.put('/', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ActualizarEnrolado);
+        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.EliminarEnrolado);
+        this.router.post('/xmlDownload/', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catEnroladoControlador_1.default.downloadXML);
-        this.router.get('/cargarDatos/:usuario', catEnroladoControlador_1.default.ObtenerDatosEmpleado);
-    }
-    verifyToken(req, res, next) {
-        if (!req.headers.authorization) {
-            return res.status(401).send('Unauthorize Request');
-        }
-        const token = req.headers.authorization.split(' ')[1];
-        if (token === 'null') {
-            return res.status(401).send('Unauthorize Request');
-        }
-        const payload = jwt.verify(token, 'llaveSecreta');
-        req.body.userId = payload._id;
-        next();
+        this.router.get('/cargarDatos/:usuario', VerificarToken_1.TokenValidation, catEnroladoControlador_1.default.ObtenerDatosEmpleado);
     }
 }
 const ENROLADO_RUTAS = new EnroladoRutas();

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import FERIADOS_CONTROLADOR from '../../controlador/catalogos/catFeriadosControlador';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 const multipart = require('connect-multiparty');  
 
@@ -15,15 +16,15 @@ class FeriadosRuta {
     }
 
     configuracion(): void {
-        this.router.get('/', FERIADOS_CONTROLADOR.ListarFeriados);
-        this.router.get('/ultimoId', FERIADOS_CONTROLADOR.ObtenerUltimoId);
-        this.router.get('/:id', FERIADOS_CONTROLADOR.ObtenerUnFeriado);
-        this.router.post('/', FERIADOS_CONTROLADOR.CrearFeriados);
-        this.router.post('/upload', multipartMiddleware, FERIADOS_CONTROLADOR.CrearFeriadoPlantilla);
-        this.router.put('/', FERIADOS_CONTROLADOR.ActualizarFeriado);
-        this.router.post('/xmlDownload/', FERIADOS_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, FERIADOS_CONTROLADOR.ListarFeriados);
+        this.router.get('/ultimoId', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUltimoId);
+        this.router.get('/:id', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUnFeriado);
+        this.router.post('/', TokenValidation, FERIADOS_CONTROLADOR.CrearFeriados);
+        this.router.post('/upload', [TokenValidation, multipartMiddleware], FERIADOS_CONTROLADOR.CrearFeriadoPlantilla);
+        this.router.put('/', TokenValidation, FERIADOS_CONTROLADOR.ActualizarFeriado);
+        this.router.post('/xmlDownload/', TokenValidation, FERIADOS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', FERIADOS_CONTROLADOR.downloadXML);
-        this.router.delete('/delete/:id', FERIADOS_CONTROLADOR.EliminarFeriado);
+        this.router.delete('/delete/:id', TokenValidation, FERIADOS_CONTROLADOR.EliminarFeriado);
     }
 }
 

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { TokenValidation } from '../../../libs/VerificarToken';
 import EMPLEADO_CARGO_CONTROLADOR from '../../../controlador/empleado/empleadoCargos/emplCargosControlador';
 
 class EmpleadosCargpsRutas {
@@ -11,15 +11,15 @@ class EmpleadosCargpsRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', EMPLEADO_CARGO_CONTROLADOR.list);
-        this.router.get('/lista-empleados/', EMPLEADO_CARGO_CONTROLADOR.ListarCargoEmpleado);
-        this.router.get('/empleadosAutorizan/:id', EMPLEADO_CARGO_CONTROLADOR.ListarEmpleadoAutoriza);
-        this.router.get('/:id', EMPLEADO_CARGO_CONTROLADOR.getOne);
-        this.router.get('/cargoInfo/:id_empl_contrato', EMPLEADO_CARGO_CONTROLADOR.EncontrarInfoCargoEmpleado);
-        this.router.post('/', EMPLEADO_CARGO_CONTROLADOR.Crear);
-        this.router.get('/buscar/:id_empleado', EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargo);
-        this.router.get('/buscar/cargoActual/:id_empleado', EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargoActual);
-        this.router.put('/:id_empl_contrato/:id/actualizar', EMPLEADO_CARGO_CONTROLADOR.EditarCargo);
+        this.router.get('/', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.list);
+        this.router.get('/lista-empleados/', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.ListarCargoEmpleado);
+        this.router.get('/empleadosAutorizan/:id', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.ListarEmpleadoAutoriza);
+        this.router.get('/:id', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.getOne);
+        this.router.get('/cargoInfo/:id_empl_contrato', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EncontrarInfoCargoEmpleado);
+        this.router.post('/', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.Crear);
+        this.router.get('/buscar/:id_empleado', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargo);
+        this.router.get('/buscar/cargoActual/:id_empleado', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargoActual);
+        this.router.put('/:id_empl_contrato/:id/actualizar', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EditarCargo);
     }
 }
 

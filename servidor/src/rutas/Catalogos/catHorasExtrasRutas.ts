@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import horasExtrasControlador from '../../controlador/catalogos/catHorasExtrasControlador';
+import { TokenValidation } from '../../libs/VerificarToken';
 
 class HorasExtrasRutas {
     public router: Router = Router();
@@ -10,13 +11,13 @@ class HorasExtrasRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', horasExtrasControlador.ListarHorasExtras);
-        this.router.get('/:id', horasExtrasControlador.ObtenerUnaHoraExtra);
-        this.router.post('/', horasExtrasControlador.CrearHoraExtra);
-        this.router.delete('/eliminar/:id', horasExtrasControlador.EliminarRegistros);
-        this.router.post('/xmlDownload/', horasExtrasControlador.FileXML);
+        this.router.get('/', TokenValidation, horasExtrasControlador.ListarHorasExtras);
+        this.router.get('/:id', TokenValidation, horasExtrasControlador.ObtenerUnaHoraExtra);
+        this.router.post('/', TokenValidation, horasExtrasControlador.CrearHoraExtra);
+        this.router.delete('/eliminar/:id', TokenValidation, horasExtrasControlador.EliminarRegistros);
+        this.router.post('/xmlDownload/', TokenValidation, horasExtrasControlador.FileXML);
         this.router.get('/download/:nameXML', horasExtrasControlador.downloadXML);
-        this.router.put('/', horasExtrasControlador.ActualizarHoraExtra);
+        this.router.put('/', TokenValidation, horasExtrasControlador.ActualizarHoraExtra);
     }
 }
 

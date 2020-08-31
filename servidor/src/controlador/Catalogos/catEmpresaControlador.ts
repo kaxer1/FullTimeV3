@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
+import { ImagenBase64LogosEmpresas } from '../../libs/ImagenCodificacion'
 const builder = require('xmlbuilder');
 
 import pool from '../../database';
@@ -74,6 +75,53 @@ class EmpresaControlador {
             return res.status(404).jsonp({ text: 'No se encuentran registros' });
         }
     }
+
+    public async getImagenBase64(req: Request, res: Response): Promise<any> {
+
+        const file_name = 
+        await pool.query('select nombre, logo from cg_empresa where id = $1',[req.params.id_empresa])
+            .then(result => {
+                return result.rows[0];
+            });
+        const codificado = await ImagenBase64LogosEmpresas(file_name.logo);
+        if (codificado === 0) {
+            res.send({imagen: 0, nom_empresa: file_name.nombre})
+        } else {
+            res.send({imagen: codificado, nom_empresa: file_name.nombre})
+        }
+    }
+    
+    public async ActualizarLogoEmpresa(req: Request, res: Response): Promise<any> {
+
+        let list: any = req.files;
+        let logo = list.image[0].path.split("\\")[1];
+        let id = req.params.id_empresa;
+        console.log(logo, '====>', id);
+        
+        const logo_name = await pool.query('SELECT nombre, logo FROM cg_empresa WHERE id = $1', [id]);
+        
+        if (logo_name.rowCount > 0) {
+            logo_name.rows.map(async (obj) => {
+                if (obj.logo != null) {
+                try {
+                    console.log(obj.logo);
+                    let filePath = `servidor\\logos\\${obj.logo}`;
+                    let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+                    fs.unlinkSync(direccionCompleta);
+                    await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                } catch (error) {
+                    await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                }
+                } else {
+                await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                }
+            });
+        }
+
+        const codificado = await ImagenBase64LogosEmpresas(logo);
+        res.send({imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message:'Logo actualizado'})
+    }
+    
 
 }
 
