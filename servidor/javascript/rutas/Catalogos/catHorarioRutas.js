@@ -30,6 +30,7 @@ class HorarioRutas {
         this.router.put('/:id/documento', [VerificarToken_1.TokenValidation, multipartMiddlewareD], catHorarioControlador_1.default.GuardarDocumentoHorario);
         this.router.put('/editar/editarDocumento/:id', VerificarToken_1.TokenValidation, catHorarioControlador_1.default.EditarDocumento);
         this.router.post('/cargarHorario/upload', [VerificarToken_1.TokenValidation, multipartMiddleware], catHorarioControlador_1.default.CargarHorarioPlantilla);
+        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, catHorarioControlador_1.default.EliminarRegistros);
     }
 }
 const HORARIO_RUTAS = new HorarioRutas();

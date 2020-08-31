@@ -139,18 +139,10 @@ export class RegistroContratoComponent implements OnInit {
         this.contador = 0;
       }
       else {
-        if (form.nombreContratoForm === '') {
-          this.rest.CrearContratoEmpleado(datos).subscribe(response => {
-            this.toastr.success('Operación Exitosa', 'Contrato registrado')
-            this.CerrarVentanaRegistroContrato();
-          }, error => {
-            this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
-          });
-        }
-        else {
-          this.GuardarDatos(datos);
-        }
+        this.RegistrarContrato(form, datos);
       }
+    }, error => {
+      this.RegistrarContrato(form, datos);
     });
   }
 
@@ -207,7 +199,19 @@ export class RegistroContratoComponent implements OnInit {
     }
   }
 
-
+  RegistrarContrato(form, datos) {
+    if (form.nombreContratoForm === '') {
+      this.rest.CrearContratoEmpleado(datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.CerrarVentanaRegistroContrato();
+      }, error => {
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+      });
+    }
+    else {
+      this.GuardarDatos(datos);
+    }
+  }
 
   LimpiarCampos() {
     this.ContratoForm.reset();

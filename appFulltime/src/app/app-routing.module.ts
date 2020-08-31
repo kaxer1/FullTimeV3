@@ -60,6 +60,15 @@ import { ListaHorasExtrasComponent } from './componentes/catalogos/catHorasExtra
 import { VerHorasExtrasComponent } from './componentes/catalogos/catHorasExtras/ver-horas-extras/ver-horas-extras.component';
 import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empresa/ver-empresa.component';
 import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
+import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
+import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+
+//Reportes
+import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
+import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
+import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
 
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
 import { DatosEmpleadoComponent } from './componentes/rolEmpleado/datos-empleado/datos-empleado.component';
@@ -77,7 +86,6 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
-import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 import { VacacionesDiasCakendarioComponent } from './componentes/reportes-kardex/vacaciones-dias-cakendario/vacaciones-dias-cakendario.component';
 import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
 
@@ -143,6 +151,12 @@ const routes: Routes = [
   // Reportes
   { path: 'kardex/vacacion/dias-calendario', component: VacacionesDiasCakendarioComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'kardex/asisitencia/consolidado', component: AsistenciaConsolidadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteTimbres', component: ReporteTimbresComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reportePermisos', component: ReportePermisosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteAtrasos', component: ReporteAtrasosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteEntradaSalida', component: ReporteEntradaSalidaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'horaExtraReal', component: HoraExtraRealComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'planificaHoraExtra', component: ListaEmplePlanHoraEComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   
   // Rol mixto pra las autorizacines
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },

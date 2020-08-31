@@ -18,10 +18,10 @@ class EmpleadoCargosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const Cargos = yield database_1.default.query('SELECT * FROM empl_cargos');
             if (Cargos.rowCount > 0) {
-                res.jsonp(Cargos.rows);
+                return res.jsonp(Cargos.rows);
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -29,10 +29,10 @@ class EmpleadoCargosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const empleadoCargos = yield database_1.default.query('SELECT cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, e.id AS empleado, e.nombre, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ORDER BY nombre ASC');
             if (empleadoCargos.rowCount > 0) {
-                res.jsonp(empleadoCargos.rows);
+                return res.jsonp(empleadoCargos.rows);
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -41,10 +41,10 @@ class EmpleadoCargosControlador {
             const { id } = req.params;
             const empleadoCargos = yield database_1.default.query('SELECT * FROM Lista_empleados_autoriza WHERE id_notificacion = $1', [id]);
             if (empleadoCargos.rowCount > 0) {
-                res.jsonp(empleadoCargos.rows);
+                return res.jsonp(empleadoCargos.rows);
             }
             else {
-                res.status(404).jsonp({ text: 'Registro no encontrado' });
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
             }
         });
     }
@@ -85,7 +85,6 @@ class EmpleadoCargosControlador {
             const { id_empleado } = req.params;
             const CARGO = yield database_1.default.query('SELECT MAX(e_cargo.id) FROM empl_cargos AS e_cargo, empl_contratos AS contrato_e, empleados AS e WHERE contrato_e.id_empleado = e.id AND e_cargo.id_empl_contrato = contrato_e.id AND e.id = $1', [id_empleado]);
             if (CARGO.rowCount > 0) {
-                console.log("Patricia id cargo", CARGO.rows);
                 if (CARGO.rows[0]['max'] != null) {
                     return res.jsonp(CARGO.rows);
                 }

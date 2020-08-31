@@ -81,14 +81,14 @@ export class ListarEmpresasComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarEmpresa() {
-    this.vistaRegistrarDatos.open(RegistroEmpresaComponent, { width: '600px' }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(RegistroEmpresaComponent, { width: '800px' }).afterClosed().subscribe(item => {
       this.ObtenerEmpresa();
     });
   }
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '600px', data: datosSeleccionados }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '800px', data: datosSeleccionados }).afterClosed().subscribe(item => {
       this.ObtenerEmpresa();
     });
     //console.log(datosSeleccionados.fecha);

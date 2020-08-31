@@ -1,11 +1,13 @@
 <div class="d-flex bd-highlight barraTituloRegDepa">
     <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Editar Departamento</h5>
+    <h5 class="w-100 bd-highlight align-self-center" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        Editar Departamento</h5>
 </div>
 <form [formGroup]="nuevoDepartamentoForm">
     <div style="text-align: center">
         <div class="nota">
-            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
         </div>
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field>
@@ -20,12 +22,13 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Seleccionar Sucursal</mat-label>
+                <mat-label id="depSup">Seleccionar Establecimiento</mat-label>
                 <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
                     matTooltip="Lista de Sucursales que pertenecen a la Empresa seleccionada">help_outline
                 </mat-icon>
                 <mat-select [formControl]="idSucursalF" required>
-                    <mat-option *ngFor="let suc of sucursales" [value]="suc.id" (click)="ObtenerDepartamentos(nuevoDepartamentoForm.value)" >
+                    <mat-option *ngFor="let suc of sucursales" [value]="suc.id"
+                        (click)="ObtenerDepartamentos(nuevoDepartamentoForm.value)">
                         {{suc.nombre}}
                     </mat-option>
                 </mat-select>
@@ -53,7 +56,7 @@
                 <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
                     matTooltip="Seleccionar Departamento Superior del nuevo departamento">help_outline
                 </mat-icon>
-                <mat-select [formControl]="departamentoPadre" >
+                <mat-select [formControl]="departamentoPadre">
                     <mat-option [value]="0">Ninguno</mat-option>
                     <mat-option *ngFor="let departamento of departamentos" [value]="departamento.nombre">
                         {{departamento.nombre}}
@@ -65,7 +68,6 @@
 </form>
 <div class="d-flex flex-wrap justify-content-center">
     <input type="submit" class="btn btn-sm button" [disabled]="!nuevoDepartamentoForm.valid"
-        (click)="ModificarDepartamento(nuevoDepartamentoForm.value)"
-        value="Guardar">
+        (click)="ModificarDepartamento(nuevoDepartamentoForm.value)" value="Guardar">
     <input type="submit" class="btn btn-sm button" (click)="CerrarVentanaRegistroDepartamento()" value="Salir">
 </div>

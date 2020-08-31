@@ -45,6 +45,12 @@
                     <label id="datosF">Días Perdidos:</label>
                     <label>{{p.dia_perdido}}</label>
                 </div>
+                <div class="caja1 d-flex justify-content-start">
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                </div>
             </div>
             <mat-divider></mat-divider>
         </div>
@@ -100,8 +106,7 @@
             </div>
             <div class="float-right" *ngIf="v.estado === 'Solicitado'">
                 <i class="fas fa-edit" id="edit" (click)="EditarVacaciones(v)" matSuffix matTooltipPosition="right"
-                    matTooltipClass="departamento-tooltip"
-                    matTooltip="Modificar los datos generales de este registro">
+                    matTooltipClass="departamento-tooltip" matTooltip="Modificar los datos generales de este registro">
                     <p>Editar</p>
                 </i>
                 <i class="fas fa-backspace" id="cancel" (click)="CancelarVacaciones(v)" matSuffix

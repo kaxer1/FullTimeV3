@@ -120,7 +120,12 @@ export class EditarContratoComponent implements OnInit {
       id_regimen: form.idRegimenForm,
       doc_nombre: form.nombreContratoForm
     };
-    this.ValidarDuplicidad(datosContrato, form);
+    if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
+      this.RegistrarContrato(datosContrato);
+    }
+    else {
+      this.ValidarDuplicidad(datosContrato, form);
+    }
   }
 
   revisarFecha: any = [];
@@ -154,12 +159,7 @@ export class EditarContratoComponent implements OnInit {
           });
         }
         else {
-          if (this.contador === 0) {
-            this.GuardarDatos(datos);
-          }
-          else {
-            this.ActualizarDatos(datos);
-          }
+          this.RegistrarContrato(datos);
         }
       }
     });
@@ -208,6 +208,15 @@ export class EditarContratoComponent implements OnInit {
     }, error => {
       this.toastr.error('Operación Fallida', 'Datos de Contrato no pudieron ser actualizados')
     });
+  }
+
+  RegistrarContrato(datos) {
+    if (this.contador === 0) {
+      this.GuardarDatos(datos);
+    }
+    else {
+      this.ActualizarDatos(datos);
+    }
   }
 
   ActualizarDatos(datos) {

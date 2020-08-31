@@ -12,17 +12,21 @@
         </div>
         <div *ngFor="let pt of permisosTotales | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
             <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Permiso N°:</label>
+                    <label>{{pt.num_permiso}}</label>
+                </div>
                 <div class="caja1 d-flex justify-content-start" style="width: 300px;">
                     <label id="datosF">Tipo Permiso:</label>
                     <label>{{pt.nom_permiso}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">N° Permiso:</label>
-                    <label>{{pt.num_permiso}}</label>
-                </div>
-                <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Descripción:</label>
                     <label>{{pt.descripcion}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Estado:</label>
+                    <label>{{pt.estado}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Fecha Salida:</label>
@@ -30,39 +34,22 @@
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Fecha Ingreso:</label>
-                    <label>{{pt.fec_final.split("T")[0]}}</label>    
-                </div>
-                <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">Estado:</label>
-                    <label>{{pt.estado}}</label>
+                    <label>{{pt.fec_final.split("T")[0]}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Documento:</label>
-                    <a id="doc" class="fas fa-file-alt"
-                        style="color:rgb(11, 70, 197); text-align: center;" matSuffix
+                    <a id="doc" class="fas fa-file-alt" style="color:rgb(11, 70, 197); text-align: center;" matSuffix
                         matTooltipPosition="right" matTooltip="Dar click para descargar contrato de trabajo"
-                        href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}"
-                        target="_blank">
+                        href="http://localhost:3000/empleadoPermiso/documentos/{{pt.documento}}" target="_blank">
                         <p>{{pt.docu_nombre}}</p>
                     </a>
                 </div>
-                <!-- <div class="caja1 align-self-center" *ngIf="pt.estado === 'Pendiente'">
-                    <i class="far fa-window-close" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
-                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                        matTooltip="Puede cancelar la solicitud antes de que cambien el estado">
-                        <p>Cancelar</p>
-                    </i>
-                    <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
-                        matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                        matTooltip="Modificar los datos generales de este registro">
-                        <p>Editar</p>
-                    </i>
-                </div> -->
+                <div class="caja1 d-flex justify-content-start">
+                </div>
             </div>
             <div style="text-align: right;" *ngIf="pt.estado === 'Pendiente'">
-                <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix
-                    matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                    matTooltip="Modificar los datos generales de este registro">
+                <i class="fas fa-edit" id="edit" (click)="EditarPermiso(pt)" matSuffix matTooltipPosition="right"
+                    matTooltipClass="departamento-tooltip" matTooltip="Modificar los datos generales de este registro">
                     <p>Editar</p>
                 </i>
                 <i class="fas fa-backspace" id="cancel" (click)="CancelarPermiso(pt)" matSuffix
@@ -73,9 +60,8 @@
             </div>
             <mat-divider></mat-divider>
         </div>
-        <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
-            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
-            showFirstLastButtons>
+        <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

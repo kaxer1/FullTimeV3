@@ -32,7 +32,7 @@
                                 Indispensable ingresar dos letras</mat-error>
                         </mat-form-field>
                         <mat-form-field>
-                            <mat-label>Sucursal</mat-label>
+                            <mat-label>Establecimiento</mat-label>
                             <input matInput id="depPadre" name="filtroNombreSuc" placeholder="Nombre de Sucursal"
                                 [formControl]="buscarNombre" [(ngModel)]="filtroNombreSuc">
                             <mat-icon id="color" matSuffix matTooltipPosition="right"
@@ -44,12 +44,11 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Departamento Superior</mat-label>
-                            <input matInput id="depPadre" name="filtroDeparPadre"
-                                placeholder="Departamento Superior" [formControl]="departamentoPadreF"
-                                (keypress)="IngresarSoloLetras($event)" [(ngModel)]="filtroDeparPadre">
+                            <input matInput id="depPadre" name="filtroDeparPadre" placeholder="Departamento Superior"
+                                [formControl]="departamentoPadreF" (keypress)="IngresarSoloLetras($event)"
+                                [(ngModel)]="filtroDeparPadre">
                             <mat-icon id="color" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
-                                matTooltip="Búsqueda por Departamento Superior">
+                                matTooltipClass="departamento-tooltip" matTooltip="Búsqueda por Departamento Superior">
                                 help_outline</mat-icon>
                             <mat-error *ngIf="departamentoPadreF.invalid">
                                 {{ObtenerMensajeDepartamentoPadreLetras()}}</mat-error>
@@ -73,7 +72,7 @@
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Empresa</th>
-                        <th scope="col">Sucursal</th>
+                        <th scope="col">Establecimiento</th>
                         <th scope="col">Departamento</th>
                         <th scope="col">Nivel</th>
                         <th scope="col">Departamento Superior</th>
@@ -81,7 +80,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let departamento of departamentos | filtroDepartamento: filtroNombre | departamentoPadre: filtroDeparPadre | filtroSucursalR: filtroNombreSuc | filtroEmpresaR: filtroEmpresaSuc | paginate:tamanio_pagina:numero_pagina">
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomempresa}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nomsucursal}}</td>
                         <td *ngIf="departamento.nombre != 'Ninguno'">{{departamento.nombre | titlecase}}</td>

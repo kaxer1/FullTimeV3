@@ -53,6 +53,8 @@ import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import KARDEX_VACACION_RUTAS from './rutas/reportes/kardexVacacionesRutas';
 import ASISTENCIA_RUTAS from './rutas/reportes/asistenciaRutas';
 
+import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
+import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -145,15 +147,19 @@ class Servidor {
 
         // Documentos
         this.app.use('/archivosCargados', DOCUMENTOS_RUTAS);
-        
+
         // Mensaje de cumpleaños empresas
         this.app.use('/birthday', BIRTHDAY_RUTAS);
 
         // Asistencia
         this.app.use('/asistencia', ASISTENCIA_RUTAS);
 
-        // reportes
+        // Reportes
         this.app.use('/reportes/vacacion', KARDEX_VACACION_RUTAS);
+        this.app.use('/reporte', REPORTES_RUTAS);
+
+        // HORAS EXTRAS
+        this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS);
 
     }
 

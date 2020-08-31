@@ -31,6 +31,7 @@ class HorarioRutas {
         this.router.put('/:id/documento', [TokenValidation, multipartMiddlewareD], HORARIO_CONTROLADOR.GuardarDocumentoHorario);
         this.router.put('/editar/editarDocumento/:id', TokenValidation, HORARIO_CONTROLADOR.EditarDocumento);
         this.router.post('/cargarHorario/upload', [TokenValidation, multipartMiddleware], HORARIO_CONTROLADOR.CargarHorarioPlantilla);
+        this.router.delete('/eliminar/:id', TokenValidation, HORARIO_CONTROLADOR.EliminarRegistros);
 
     }
 }
