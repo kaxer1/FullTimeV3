@@ -318,7 +318,7 @@ export class ListarRelojesComponent implements OnInit {
                 { text: 'Fabricante', style: 'tableHeader' },
                 { text: 'Mac', style: 'tableHeader' },
                 { text: 'Departamento', style: 'tableHeader' },
-                { text: 'Sucursal', style: 'tableHeader' },
+                { text: 'Establecimiento', style: 'tableHeader' },
                 { text: 'Empresa', style: 'tableHeader' },
                 { text: 'Ciudad', style: 'tableHeader' }
               ],

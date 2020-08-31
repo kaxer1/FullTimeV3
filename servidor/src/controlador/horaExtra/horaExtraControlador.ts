@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
 const nodemailer = require("nodemailer");
 
 class HorasExtrasPedidasControlador {
@@ -258,6 +259,16 @@ class HorasExtrasPedidasControlador {
     console.log(fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion);
     await pool.query('UPDATE hora_extr_pedidos SET fec_inicio = $1, fec_final = $2, num_hora = $3, descripcion = $4, estado = $5, tipo_funcion = $6 WHERE id = $7', [fec_inicio, fec_final, num_hora, descripcion, estado, tipo_funcion, id]);
     res.jsonp({message: 'Hora Extra editado'});    
+  }
+
+  public async ObtenerHorarioEmpleado(req: Request, res: Response) {
+    const id_empleado = req.userIdEmpleado;
+    const id_empl_cargo = req.userIdCargo;
+    // const id_empleado = req.params.id_empleado;
+    let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
+    console.log(respuesta);
+    
+    res.jsonp(respuesta)
   }
 }
 

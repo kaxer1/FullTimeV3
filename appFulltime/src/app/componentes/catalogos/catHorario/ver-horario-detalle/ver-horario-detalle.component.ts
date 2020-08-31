@@ -62,16 +62,16 @@ export class VerHorarioDetalleComponent implements OnInit {
       this.datosDetalle = datos;
       for (let i = this.datosDetalle.length - 1; i >= 0; i--) {
         var cadena1 = this.datosDetalle[i]['tipo_accion'];
-        if (this.datosDetalle[i]['tipo_accion'] === 1) {
+        if (this.datosDetalle[i]['tipo_accion'] === 'E') {
           this.datosDetalle[i]['tipo_accion'] = 'Entrada';
         }
-        else if (this.datosDetalle[i]['tipo_accion'] === 2) {
+        else if (this.datosDetalle[i]['tipo_accion'] === 'S') {
           this.datosDetalle[i]['tipo_accion'] = 'Salida';
         }
-        else if (this.datosDetalle[i]['tipo_accion'] === 3) {
+        else if (this.datosDetalle[i]['tipo_accion'] === 'S/A') {
           this.datosDetalle[i]['tipo_accion'] = 'S.Almuerzo';
         }
-        else if (this.datosDetalle[i]['tipo_accion'] === 4) {
+        else if (this.datosDetalle[i]['tipo_accion'] === 'E/A') {
           this.datosDetalle[i]['tipo_accion'] = 'E. Almuerzo';
         }
       }

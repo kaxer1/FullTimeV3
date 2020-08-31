@@ -1,6 +1,6 @@
 import { Router } from 'express';
-
 import PROCESO_CONTROLADOR from '../../controlador/catalogos/catProcesoControlador';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class ProcesoRutas {
     public router: Router = Router();
@@ -10,13 +10,13 @@ class ProcesoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', PROCESO_CONTROLADOR.list);
-        this.router.get('/busqueda/:nombre', PROCESO_CONTROLADOR.getIdByNombre);
-        this.router.get('/:id',  PROCESO_CONTROLADOR.getOne);
-        this.router.post('/', PROCESO_CONTROLADOR.create);
-        this.router.put('/', PROCESO_CONTROLADOR.ActualizarProceso);  
-        this.router.delete('/eliminar/:id', PROCESO_CONTROLADOR.EliminarProceso);
-        this.router.post('/xmlDownload/', PROCESO_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, PROCESO_CONTROLADOR.list);
+        this.router.get('/busqueda/:nombre', TokenValidation, PROCESO_CONTROLADOR.getIdByNombre);
+        this.router.get('/:id', TokenValidation, PROCESO_CONTROLADOR.getOne);
+        this.router.post('/', TokenValidation, PROCESO_CONTROLADOR.create);
+        this.router.put('/', TokenValidation, PROCESO_CONTROLADOR.ActualizarProceso);  
+        this.router.delete('/eliminar/:id', TokenValidation, PROCESO_CONTROLADOR.EliminarProceso);
+        this.router.post('/xmlDownload/', TokenValidation, PROCESO_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', PROCESO_CONTROLADOR.downloadXML);
     }
 }

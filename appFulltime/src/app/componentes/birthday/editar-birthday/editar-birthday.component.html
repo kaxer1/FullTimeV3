@@ -16,6 +16,13 @@
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
+                <mat-label>Link (opcional)</mat-label>
+                <input matInput [formControl]="linkF" placeholder="Placeholder" required>
+                <mat-icon id="birthday" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Escriba el link de acceso para ver otro mensaje de cumpleaños">
+                    help_outline</mat-icon>
+            </mat-form-field>
+            <mat-form-field>
                 <mat-label>Mensaje</mat-label>
                 <textarea matInput #message maxlength="256" placeholder="Ingrese mensaje de felicitación de cumpleaños" [formControl]="mensajeF" required></textarea>
                 <mat-icon id="birthday" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"

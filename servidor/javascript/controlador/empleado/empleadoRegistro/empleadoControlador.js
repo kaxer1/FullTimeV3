@@ -228,6 +228,20 @@ class EmpleadoControlador {
             }
         });
     }
+    ListaBusquedaEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const empleado = yield database_1.default.query('SELECT id, nombre, apellido FROM empleados ORDER BY apellido')
+                .then(result => {
+                return result.rows.map(obj => {
+                    return {
+                        id: obj.id,
+                        empleado: obj.apellido + ' ' + obj.nombre
+                    };
+                });
+            });
+            res.jsonp(empleado);
+        });
+    }
 }
 exports.EMPLEADO_CONTROLADOR = new EmpleadoControlador();
 exports.default = exports.EMPLEADO_CONTROLADOR;

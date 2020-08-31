@@ -1,7 +1,6 @@
 import { Router, NextFunction, Request, Response } from 'express';
 import ENROLADOS_CONTROLADOR from '../../controlador/catalogos/catEnroladoControlador';
-
-const jwt = require('jsonwebtoken');
+import { TokenValidation } from '../../libs/verificarToken';
 
 const multipart = require('connect-multiparty');  
 
@@ -17,33 +16,19 @@ class EnroladoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', this.verifyToken, ENROLADOS_CONTROLADOR.ListarEnrolados);
-        this.router.get('/:id', this.verifyToken, ENROLADOS_CONTROLADOR.ObtenerUnEnrolado);
-        this.router.post('/', this.verifyToken, ENROLADOS_CONTROLADOR.CrearEnrolado);
-        this.router.post('/plantillaExcel/', [this.verifyToken, multipartMiddlewarePlantilla], ENROLADOS_CONTROLADOR.CargaPlantillaEnrolado);
-        this.router.get('/busqueda/:id_usuario', this.verifyToken, ENROLADOS_CONTROLADOR.ObtenerRegistroEnrolado);
-        this.router.get('/buscar/ultimoId', this.verifyToken, ENROLADOS_CONTROLADOR.ObtenerUltimoId);
-        this.router.put('/', this.verifyToken, ENROLADOS_CONTROLADOR.ActualizarEnrolado);
-        this.router.delete('/eliminar/:id', ENROLADOS_CONTROLADOR.EliminarEnrolado);
-        this.router.post('/xmlDownload/', ENROLADOS_CONTROLADOR.FileXML);
+        this.router.get('/', TokenValidation, ENROLADOS_CONTROLADOR.ListarEnrolados);
+        this.router.get('/:id', TokenValidation, ENROLADOS_CONTROLADOR.ObtenerUnEnrolado);
+        this.router.post('/', TokenValidation, ENROLADOS_CONTROLADOR.CrearEnrolado);
+        this.router.post('/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], ENROLADOS_CONTROLADOR.CargaPlantillaEnrolado);
+        this.router.get('/busqueda/:id_usuario', TokenValidation, ENROLADOS_CONTROLADOR.ObtenerRegistroEnrolado);
+        this.router.get('/buscar/ultimoId', TokenValidation, ENROLADOS_CONTROLADOR.ObtenerUltimoId);
+        this.router.put('/', TokenValidation, ENROLADOS_CONTROLADOR.ActualizarEnrolado);
+        this.router.delete('/eliminar/:id', TokenValidation, ENROLADOS_CONTROLADOR.EliminarEnrolado);
+        this.router.post('/xmlDownload/', TokenValidation, ENROLADOS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', ENROLADOS_CONTROLADOR.downloadXML);
-        this.router.get('/cargarDatos/:usuario', ENROLADOS_CONTROLADOR.ObtenerDatosEmpleado);
+        this.router.get('/cargarDatos/:usuario', TokenValidation, ENROLADOS_CONTROLADOR.ObtenerDatosEmpleado);
     }
 
-    verifyToken(req: Request, res: Response, next: NextFunction) {
-        if (!req.headers.authorization) {
-            return res.status(401).send('Unauthorize Request');
-        }
-
-        const token = req.headers.authorization.split(' ')[1];
-        if (token === 'null'){
-            return res.status(401).send('Unauthorize Request');
-        }
-       
-        const payload = jwt.verify(token, 'llaveSecreta')
-        req.body.userId = payload._id;
-        next();
-    }
 }
 
 const ENROLADO_RUTAS = new EnroladoRutas();

@@ -61,13 +61,19 @@ export class RegistroContratoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.datoEmpleado);
+    
     this.regimenLaboral = this.ObtenerRegimen();
     this.ObtenerEmpleados(this.datoEmpleado);
   }
 
   ObtenerRegimen() {
     this.regimenLaboral = [];
+    console.log('obtener regimen');
+    
     this.restR.ConsultarRegimen().subscribe(datos => {
+      console.log(datos);
+      
       this.regimenLaboral = datos;
       this.regimenLaboral[this.regimenLaboral.length] = { nombre: "Seleccionar Régimen" };
       this.seleccionarRegimen = this.regimenLaboral[this.regimenLaboral.length - 1].nombre;
@@ -117,6 +123,8 @@ export class RegistroContratoComponent implements OnInit {
   ValidarDuplicidad(datos, form): any {
     this.revisarFecha = [];
     this.rest.BuscarContratoEmpleadoRegimen(this.datoEmpleado).subscribe(data => {
+      console.log(data);
+      
       this.revisarFecha = data;
       var ingreso = String(moment(datos.fec_ingreso, "YYYY/MM/DD").format("YYYY-MM-DD"));
       console.log('fechas', ingreso, ' ', this.revisarFecha);

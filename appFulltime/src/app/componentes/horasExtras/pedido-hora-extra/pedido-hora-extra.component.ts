@@ -84,6 +84,7 @@ export class PedidoHoraExtraComponent implements OnInit {
 
     this.PedirHoraExtraForm.patchValue({
       fechaSolicitudForm: this.FechaActual,
+      estadoForm: 1
     });
   }
 
@@ -91,6 +92,7 @@ export class PedidoHoraExtraComponent implements OnInit {
   NotifiRes: any;
   arrayNivelesDepa: any = [];
   insertarTipoPermiso(form1) {
+    
     let horaI = form1.fechaInicioForm._i.year + "/" + form1.fechaInicioForm._i.month + "/" + form1.fechaInicioForm._i.date + "T" + form1.horaInicioForm + ":00"
     let horaF = form1.FechaFinForm._i.year + "/" + form1.FechaFinForm._i.month + "/" + form1.FechaFinForm._i.date + "T" + form1.horaFinForm + ":00"
 

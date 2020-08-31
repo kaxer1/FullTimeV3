@@ -92,10 +92,10 @@
             <span matLine>Registrar Empresa</span>
           </a>
           <a mat-list-item [routerLink]="['/sucursales']" class="texcol">
-            <span matLine>Registrar Sucursal</span>
+            <span matLine>Registrar Establecimiento</span>
           </a>
           <a mat-list-item [routerLink]="['/departamento']" class="texcol">
-            <span matLine>Crear Departamento</span>
+            <span matLine>Registrar Departamento</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -116,10 +116,10 @@
             <span matLine>Permisos Solicitados</span>
           </a>
           <a mat-list-item [routerLink]="['/vacaciones-solicitados']" class="texcol">
-            <span matLine>Vacaciones Solicitados</span>
+            <span matLine>Vacaciones Solicitadas</span>
           </a>
           <a mat-list-item [routerLink]="['/horas-extras-solicitadas']" class="texcol">
-            <span matLine>Hora Extra Solicitud</span>
+            <span matLine>Horas Extras Solicitadas</span>
           </a>
           <a mat-list-item [routerLink]="['/verTipoPermiso']" class="texcol">
             <span matLine>Configurar Permisos</span>
@@ -155,7 +155,7 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item [routerLink]="['/horario']" class="texcol">
-            <span matLine>Crear Horario</span>
+            <span matLine>Registrar Horario</span>
           </a>
           <a mat-list-item [routerLink]="['/listaHorasExtras']" class="texcol">
             <span matLine>Configurar Horas Extras</span>
@@ -163,7 +163,10 @@
           <a mat-list-item [routerLink]="['/planificacion']" class="texcol">
             <span matLine>Planificación Múltiple</span>
           </a>
-          <a mat-list-item [routerLink]="['/calcularHoraExtra']" class="texcol">
+          <a mat-list-item [routerLink]="['/planificaHoraExtra']" class="texcol">
+            <span matLine>Planificación Hora Extra</span>
+          </a>
+          <a mat-list-item [routerLink]="['/horaExtraReal']" class="texcol">
             <span matLine>Calcular Hora Extra</span>
           </a>
         </mat-nav-list>
@@ -199,6 +202,18 @@
           <a mat-list-item [routerLink]="['/archivos']" class="texcol">
             <span matLine>Archivos</span>
           </a>
+          <a mat-list-item [routerLink]="['/reporteTimbres']" class="texcol">
+            <span matLine>Reporte Timbres</span>
+          </a>
+          <a mat-list-item [routerLink]="['/reportePermisos']" class="texcol">
+            <span matLine>Reporte Permisos</span>
+          </a>
+          <a mat-list-item [routerLink]="['/reporteAtrasos']" class="texcol">
+            <span matLine>Reporte Atrasos</span>
+          </a>
+          <a mat-list-item [routerLink]="['/reporteEntradaSalida']" class="texcol">
+            <span matLine>Reporte Entradas Salidas</span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
 
@@ -216,18 +231,36 @@
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
-      
+
       <!-- Cumpleaños -->
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec5">
           <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <mat-icon mat-list-icon class="color-icon">card_giftcard</mat-icon>
             <span class="item-menu" id="accion">Cumpleaños</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <a mat-list-item [routerLink]="['/cumpleanios']" class="texcol">
             <span matLine>Cumpleaños</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Reportes -->
+      <mat-expansion-panel class="menus">
+        <mat-expansion-panel-header class="selec7">
+          <mat-panel-title>
+            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <span class="item-menu" id="accion">Reportes</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <!-- <a mat-list-item [routerLink]="['/kardex/vacacion/dias-calendario']" class="texcol">
+            <span matLine>Kardex Vacación</span>
+          </a> -->
+          <a mat-list-item [routerLink]="['/kardex/asisitencia/consolidado']" class="texcol">
+            <span matLine>Kardex - Asistencia</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -424,15 +457,15 @@
             </div>
           </div>
         </div>
-      
+
 
         <form class="example-form">
           <mat-form-field class="example-full-width">
             <mat-icon matPrefix>search</mat-icon>
-            <input type="text" placeholder="Buscar" aria-label="Number" matInput [formControl]="myControl"
+            <input type="text" placeholder="Buscar Empleados" aria-label="Number" matInput [formControl]="myControl"
               [matAutocomplete]="auto">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option" type="submit" (click)="abrirInfoEmpleado(option)">
                 {{option}}
               </mat-option>
             </mat-autocomplete>
@@ -453,8 +486,8 @@
 
               <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
               <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
@@ -494,8 +527,8 @@
                 </a>
               </div>
               <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
@@ -578,8 +611,8 @@
                 </a>
               </div>
               <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item 
-                  [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
@@ -654,16 +687,17 @@
         </button>
 
         <div class="d-flex justify-content-center" style="margin-top: 18px;">
-            <div id="avatar" *ngIf="mostrarImagen">
-              <img src="{{urlImagen}}" alt="" id="avatarImagen">
-            </div>
-            <div id="avatar" *ngIf="mostrarIniciales">
-              <span class="iniciales d-flex align-items-center justify-content-center" style="margin-top: 8px;">{{iniciales}}</span>
-            </div>
-            <div class="d-flex flex-column bd-highlight" style="margin-left: 19px; margin-top: 3px;">
-              <h3 class="bd-highlight">{{UserName}}</h3>
-              <p class="bd-highlight" style="font-size: 13px; margin-top: -10px;">{{UserEmail}}</p>
-            </div>
+          <div id="avatar" *ngIf="mostrarImagen">
+            <img src="{{urlImagen}}" alt="" id="avatarImagen">
+          </div>
+          <div id="avatar" *ngIf="mostrarIniciales">
+            <span class="iniciales d-flex align-items-center justify-content-center"
+              style="margin-top: 8px;">{{iniciales}}</span>
+          </div>
+          <div class="d-flex flex-column bd-highlight" style="margin-left: 19px; margin-top: 3px;">
+            <h3 class="bd-highlight">{{UserName}}</h3>
+            <p class="bd-highlight" style="font-size: 13px; margin-top: -10px;">{{UserEmail}}</p>
+          </div>
         </div>
 
         <div>
@@ -701,8 +735,8 @@
 
               <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
               <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
@@ -742,8 +776,8 @@
                 </a>
               </div>
               <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item
-                  [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
+                <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
@@ -826,8 +860,8 @@
                 </a>
               </div>
               <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null" mat-menu-item 
-                  [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
+                <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
+                  mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
@@ -898,7 +932,7 @@
     </div>
 
     <!-- <app-footer></app-footer> -->
-    
+
   </mat-sidenav-content>
 
 </mat-sidenav-container>

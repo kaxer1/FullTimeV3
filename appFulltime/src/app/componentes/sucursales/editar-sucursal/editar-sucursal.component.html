@@ -1,17 +1,18 @@
 <div class="d-flex bd-highlight tituloSucursalR">
     <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Modificar Datos Sucursal</h5>
+    <h5 class="w-100 bd-highlight align-self-center">Modificar Datos Establecimiento</h5>
 </div>
 <form [formGroup]="nuevaSucursalForm">
     <div class="container">
         <div class="nota">
-            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
         </div>
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field>
                 <mat-label id="cont">Seleccionar Continente</mat-label>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right" matTooltip="Lista de continentes">help_outline</mat-icon>
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                    matTooltip="Lista de continentes">help_outline</mat-icon>
                 <mat-select [formControl]="nombreContinenteF" [(ngModel)]="seleccionarContinente" required>
                     <mat-option *ngFor="let c of continentes" [value]="c.continente"
                         (click)="FiltrarPaises(nuevaSucursalForm.value)">
@@ -21,8 +22,8 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Seleccionar País</mat-label>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right" matTooltip="Lista de países del continente seleccionado">
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                    matTooltip="Lista de países del continente seleccionado">
                     help_outline</mat-icon>
                 <mat-select [formControl]="nombrePaisF" [(ngModel)]="seleccionarPaises" required>
                     <mat-option *ngFor="let pais of paises" [value]="pais.id"
@@ -33,8 +34,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label id="provSelec">Seleccionar Provincia</mat-label>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right"
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
                     matTooltip="Lista de provincias, departamentos o estados del país seleccionado">help_outline
                 </mat-icon>
                 <mat-select [formControl]="idProvinciaF" [(ngModel)]="seleccionarProvincia" required>
@@ -46,8 +46,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Seleccionar Ciudad</mat-label>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right"
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
                     matTooltip="Lista de ciudades de la provincia, departamento o estado seleccionado">
                     help_outline</mat-icon>
                 <mat-select [formControl]="idCiudad" [(ngModel)]="seleccionarCiudad" required>
@@ -59,8 +58,8 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Seleccionar Empresa</mat-label>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right" matTooltip="Lista de Empresas">help_outline</mat-icon>
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                    matTooltip="Lista de Empresas">help_outline</mat-icon>
                 <mat-select [formControl]="idEmpresaF" required>
                     <mat-option *ngFor="let empre of empresas" [value]="empre.id">
                         {{empre.nombre}}
@@ -68,10 +67,10 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Nueva Sucursal</mat-label>
+                <mat-label>Nuevo Establecimiento</mat-label>
                 <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre" required>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip"
-                    matTooltipPosition="right" matTooltip="Modificar nombre de la sucursal">
+                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
+                    matTooltip="Modificar nombre de la sucursal">
                     help_outline</mat-icon>
                 <mat-error *ngIf="nombre.invalid">{{ObtenerMensajeErrorNombre()}}</mat-error>
                 <mat-error *ngIf="nombre.invalid">Ingrese un nombre válido</mat-error>

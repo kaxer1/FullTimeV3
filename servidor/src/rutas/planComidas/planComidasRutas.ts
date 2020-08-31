@@ -1,5 +1,5 @@
 import { Router } from 'express';
-
+import { TokenValidation } from '../../libs/verificarToken'
 import PLAN_COMIDAS_CONTROLADOR from '../../controlador/planComidas/planComidasControlador';
 
 class DepartamentoRutas {
@@ -10,11 +10,11 @@ class DepartamentoRutas {
     }
 
     configuracion(): void {
-        this.router.get('/', PLAN_COMIDAS_CONTROLADOR.ListarPlanComidas);
-        this.router.get('/infoComida/:id_empleado', PLAN_COMIDAS_CONTROLADOR.EncontrarPlanComidaPorIdEmpleado);
-        this.router.post('/', PLAN_COMIDAS_CONTROLADOR.CrearPlanComidas);
-        this.router.delete('/eliminar/:id', PLAN_COMIDAS_CONTROLADOR.EliminarRegistros);
-        this.router.put('/', PLAN_COMIDAS_CONTROLADOR.ActualizarPlanComidas);
+        this.router.get('/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ListarPlanComidas);
+        this.router.get('/infoComida/:id_empleado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarPlanComidaPorIdEmpleado);
+        this.router.post('/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearPlanComidas);
+        this.router.delete('/eliminar/:id', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EliminarRegistros);
+        this.router.put('/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ActualizarPlanComidas);
 
     }
 }

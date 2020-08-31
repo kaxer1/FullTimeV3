@@ -5,19 +5,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catProcesoControlador_1 = __importDefault(require("../../controlador/catalogos/catProcesoControlador"));
+const verificarToken_1 = require("../../libs/verificarToken");
 class ProcesoRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', catProcesoControlador_1.default.list);
-        this.router.get('/busqueda/:nombre', catProcesoControlador_1.default.getIdByNombre);
-        this.router.get('/:id', catProcesoControlador_1.default.getOne);
-        this.router.post('/', catProcesoControlador_1.default.create);
-        this.router.put('/', catProcesoControlador_1.default.ActualizarProceso);
-        this.router.delete('/eliminar/:id', catProcesoControlador_1.default.EliminarProceso);
-        this.router.post('/xmlDownload/', catProcesoControlador_1.default.FileXML);
+        this.router.get('/', verificarToken_1.TokenValidation, catProcesoControlador_1.default.list);
+        this.router.get('/busqueda/:nombre', verificarToken_1.TokenValidation, catProcesoControlador_1.default.getIdByNombre);
+        this.router.get('/:id', verificarToken_1.TokenValidation, catProcesoControlador_1.default.getOne);
+        this.router.post('/', verificarToken_1.TokenValidation, catProcesoControlador_1.default.create);
+        this.router.put('/', verificarToken_1.TokenValidation, catProcesoControlador_1.default.ActualizarProceso);
+        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catProcesoControlador_1.default.EliminarProceso);
+        this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catProcesoControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catProcesoControlador_1.default.downloadXML);
     }
 }
