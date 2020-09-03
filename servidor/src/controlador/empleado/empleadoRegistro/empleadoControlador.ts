@@ -186,8 +186,8 @@ class EmpleadoControlador {
   }
 
   public async CrearCodigo(req: Request, res: Response) {
-    const { id, valor, cedula } = req.body;
-    await pool.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+    const { id, valor } = req.body;
+    await pool.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
     res.jsonp({ message: 'Codigo guardado' });
   }
 
@@ -209,15 +209,15 @@ class EmpleadoControlador {
 
   public async ListaBusquedaEmpleados(req: Request, res: Response): Promise<any> {
     const empleado = await pool.query('SELECT id, nombre, apellido FROM empleados ORDER BY apellido')
-    .then(result => {
-      return result.rows.map(obj => {
-        return {
-          id: obj.id,
-          empleado: obj.apellido + ' ' + obj.nombre
-        }
+      .then(result => {
+        return result.rows.map(obj => {
+          return {
+            id: obj.id,
+            empleado: obj.apellido + ' ' + obj.nombre
+          }
+        })
       })
-    })
-    
+
     res.jsonp(empleado);
   }
 }

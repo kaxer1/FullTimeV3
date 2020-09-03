@@ -712,22 +712,22 @@ export class ReporteEntradaSalidaComponent implements OnInit {
             day = obj.split(' ')[1];
             this.totalEntradasSalidas.forEach(element => {
               fecha_timbre = moment(element.fec_hora_timbre).format('DD/MM/YYYY');
-              if (day === fecha_timbre && element.accion === '1') {
+              if (day === fecha_timbre && element.accion === 'E') {
                 entrada = 'REGISTRADO'
                 horarioE = element.hora;
                 timbreE = moment(element.fec_hora_timbre).format('HH:mm:ss')
               }
-              else if (day === fecha_timbre && element.accion === '2') {
+              else if (day === fecha_timbre && element.accion === 'S') {
                 salida = 'REGISTRADO'
                 horarioS = element.hora;
                 timbreS = moment(element.fec_hora_timbre).format('HH:mm:ss')
               }
-              else if (day === fecha_timbre && element.accion === '3') {
+              else if (day === fecha_timbre && element.accion === 'S/A') {
                 almuerzoS = 'REGISTRADO'
                 horarioAS = element.hora;
                 timbreAlmuerzoS = moment(element.fec_hora_timbre).format('HH:mm:ss')
               }
-              else if (day === fecha_timbre && element.accion === '4') {
+              else if (day === fecha_timbre && element.accion === 'E/A') {
                 almuerzoE = 'REGISTRADO'
                 horarioAE = element.hora;
                 timbreAlmuerzoE = moment(element.fec_hora_timbre).format('HH:mm:ss')

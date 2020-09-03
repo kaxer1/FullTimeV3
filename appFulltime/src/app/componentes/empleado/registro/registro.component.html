@@ -15,14 +15,15 @@
                 </div>
                 <br>
                 <div class="subtitulo_empleR">
-                    <span>Por favor llenar todos los campos obligatorios (*) del formulario y dar click en Siguiente para continuar.</span>
+                    <span>Por favor llenar todos los campos obligatorios (*) del formulario y dar click en Siguiente
+                        para continuar.</span>
                 </div>
                 <form [formGroup]="primeroFormGroup">
                     <div class="d-flex flex-wrap justify-content-between">
                         <mat-form-field>
                             <mat-label>Nombres</mat-label>
-                            <input matInput placeholder="Ej: Kevin Alexander" type="text"
-                                formControlName="nombreForm" (keypress)="IngresarSoloLetras($event)" required>
+                            <input matInput placeholder="Ej: Kevin Alexander" type="text" formControlName="nombreForm"
+                                (keypress)="IngresarSoloLetras($event)" required>
                             <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Es obligatorio ingresar los dos nombres del nuevo empleado">
@@ -30,8 +31,8 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Apellidos</mat-label>
-                            <input matInput placeholder="Ej: Curay Lasluisa" type="text"
-                                formControlName="apellidoForm" (keypress)="IngresarSoloLetras($event)" required>
+                            <input matInput placeholder="Ej: Curay Lasluisa" type="text" formControlName="apellidoForm"
+                                (keypress)="IngresarSoloLetras($event)" required>
                             <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Es obligatorio ingresar los dos apellidos del nuevo empleado">
@@ -69,8 +70,8 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Correo Electrónico</mat-label>
-                            <input matInput type="text" placeholder="ejemplo@mail.com"
-                                formControlName="emailForm" required>
+                            <input matInput type="text" placeholder="ejemplo@mail.com" formControlName="emailForm"
+                                required>
                             <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                 matTooltipPosition="right" matTooltip="Ingrese un correo electrónico valido">
                                 mail_outline</mat-icon>
@@ -103,7 +104,8 @@
                     </div>
                     <br>
                     <div class="subtitulo_empleR">
-                        <span>Por favor llenar todos los campos obligatorios (*) del formulario y dar click en Siguiente para continuar.</span>
+                        <span>Por favor llenar todos los campos obligatorios (*) del formulario y dar click en Siguiente
+                            para continuar.</span>
                     </div>
                     <div class="d-flex flex-wrap justify-content-between">
                         <mat-form-field>
@@ -130,8 +132,8 @@
                         <mat-form-field>
                             <mat-label>Estado Civil</mat-label>
                             <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Seleccinar el estado civil del nuevo empleado">help_outline
+                                matTooltipPosition="right" matTooltip="Seleccinar el estado civil del nuevo empleado">
+                                help_outline
                             </mat-icon>
                             <mat-select required formControlName="estadoCivilForm">
                                 <mat-option [value]="1">Soltero/a</mat-option>
@@ -168,8 +170,7 @@
                             <input type="text" placeholder="Nacionalidad" aria-label="Number" matInput
                                 [formControl]="NacionalidadControl" [matAutocomplete]="auto" required>
                             <mat-autocomplete #auto="matAutocomplete">
-                                <mat-option *ngFor="let option of filteredOptions | async"
-                                    [value]="option.nombre">
+                                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.nombre">
                                     {{option.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
@@ -224,12 +225,12 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Contraseña</mat-label>
-                            <input matInput placeholder="máximo 10 caracteres"
-                                [type]="hide ? 'password' : 'text'" maxlength="10"
+                            <input matInput placeholder="máximo 10 caracteres" [type]="hide ? 'password' : 'text'"
+                                maxlength="10"
                                 oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                 formControlName="passForm" required>
-                            <button mat-icon-button matSuffix (click)="hide = !hide"
-                                [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                                [attr.aria-pressed]="hide">
                                 <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
                                     matTooltipPosition="right"
                                     matTooltip="Contraseña del usuario con la cual podra ingresar al sistema">

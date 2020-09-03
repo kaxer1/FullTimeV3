@@ -205,8 +205,8 @@ class EmpleadoControlador {
     }
     CrearCodigo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, valor, cedula } = req.body;
-            yield database_1.default.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+            const { id, valor } = req.body;
+            yield database_1.default.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
             res.jsonp({ message: 'Codigo guardado' });
         });
     }

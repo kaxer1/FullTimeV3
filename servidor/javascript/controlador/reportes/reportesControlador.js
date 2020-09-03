@@ -232,7 +232,7 @@ class ReportesControlador {
                 'ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
                 'ON t.id_empleado = h.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
                 't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
-                'AND t.accion::integer = h.tipo_accion ' +
+                'AND t.accion = h.tipo_accion ' +
                 'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
             if (DATOS.rowCount > 0) {
                 return res.jsonp(DATOS.rows);
@@ -259,7 +259,7 @@ class ReportesControlador {
                 'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
                 'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
                 'AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
-                'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion::integer ' +
+                'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion ' +
                 'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
             if (DATOS.rowCount > 0) {
                 return res.jsonp(DATOS.rows);

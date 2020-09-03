@@ -34,4 +34,8 @@ export class PeriodoVacacionesService {
     return this.http.put(`${this.API_URL}/perVacacion`, datos);
   }
 
+  CargarPeriodosMultiples(formData) {
+    return this.http.post(`${this.API_URL}/perVacacion/cargarPeriodo/upload`, formData);
+  }
+
 }
