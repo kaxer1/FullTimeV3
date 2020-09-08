@@ -13,16 +13,18 @@ import * as FileSaver from 'file-saver';
 
 import { RegistroProcesoComponent } from '../registro-proceso/registro-proceso.component';
 import { EditarCatProcesosComponent } from 'src/app/componentes/catalogos/catProcesos/editar-cat-procesos/editar-cat-procesos.component';
-import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-principal-proceso',
   templateUrl: './principal-proceso.component.html',
-  styleUrls: ['./principal-proceso.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./principal-proceso.component.css']
 })
+
 export class PrincipalProcesoComponent implements OnInit {
 
   buscarNombre = new FormControl('', [Validators.minLength(2)]);
@@ -44,13 +46,14 @@ export class PrincipalProcesoComponent implements OnInit {
     private rest: ProcesoService,
     public restE: EmpleadoService,
     private toastr: ToastrService,
+    public restEmpre: EmpresaService,
     public vistaRegistrarDatos: MatDialog,
     private router: Router,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
@@ -58,15 +61,23 @@ export class PrincipalProcesoComponent implements OnInit {
   ngOnInit(): void {
     this.getProcesos();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -194,10 +205,13 @@ export class PrincipalProcesoComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Procesos', this.procesos);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -209,64 +223,31 @@ export class PrincipalProcesoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Procesos',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Procesos', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFProcesos(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10 },
+        itemsTableC: { fontSize: 10, alignment: 'center' }
       }
     };
   }

@@ -4,26 +4,26 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
-
-import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
-import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
-import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-
-
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
+import { RelojesComponent } from 'src/app/componentes/catalogos/catRelojes/relojes/relojes.component';
+import { EditarRelojComponent } from 'src/app/componentes/catalogos/catRelojes/editar-reloj/editar-reloj.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
+import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+
 @Component({
   selector: 'app-listar-relojes',
   templateUrl: './listar-relojes.component.html',
-  styleUrls: ['./listar-relojes.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./listar-relojes.component.css']
 })
+
 export class ListarRelojesComponent implements OnInit {
 
   // Almacenamiento de datos y búsqueda
@@ -64,6 +64,7 @@ export class ListarRelojesComponent implements OnInit {
   constructor(
     private rest: RelojesService,
     public restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
@@ -74,15 +75,23 @@ export class ListarRelojesComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerReloj();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -175,7 +184,7 @@ export class ListarRelojesComponent implements OnInit {
     this.nameFile = this.archivoSubido[0].name;
     let arrayItems = this.nameFile.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 30);
+    let itemName = arrayItems[0].slice(0, 12);
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'dispositivos') {
         this.plantilla();
@@ -220,10 +229,13 @@ export class ListarRelojesComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Dispositivos', this.relojes);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -244,55 +256,22 @@ export class ListarRelojesComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Dispositivos ',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Dispositivos ', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFRelojes(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 9
-        },
-        itemsTableC: {
-          fontSize: 9,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 9 },
+        itemsTableC: { fontSize: 9, alignment: 'center' }
       }
     };
   }

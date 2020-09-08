@@ -12,6 +12,7 @@ import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -45,9 +46,10 @@ export class ListaEmpleadosComponent implements OnInit {
 
   constructor(
     public rest: EmpleadoService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
-  ) { 
+  ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
@@ -57,13 +59,19 @@ export class ListaEmpleadosComponent implements OnInit {
     this.ObtenerEmpleados(this.idEmpleado);
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleadoD = [];
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoD = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -188,10 +196,13 @@ export class ListaEmpleadosComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Empleados', this.empleado);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -203,17 +214,16 @@ export class ListaEmpleadosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-          var time = f.getHours() + ':' + f.getMinutes();
+        var time = f.getHours() + ':' + f.getMinutes();
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
@@ -223,44 +233,14 @@ export class ListaEmpleadosComponent implements OnInit {
         }
       },
       content: [
-        {
-          text: 'Empleados',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Empleados', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFEmpleados(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 8,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 8 },
+        itemsTableD: { fontSize: 8, alignment: 'center' }
       }
     };
   }

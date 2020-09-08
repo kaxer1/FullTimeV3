@@ -11,16 +11,17 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { EditarTipoPermisosComponent } from '../../editar-tipo-permisos/editar-tipo-permisos.component';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-vista-elementos',
   templateUrl: './vista-elementos.component.html',
-  styleUrls: ['./vista-elementos.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./vista-elementos.component.css']
 })
 
 export class VistaElementosComponent implements OnInit {
@@ -47,6 +48,7 @@ export class VistaElementosComponent implements OnInit {
   constructor(
     private rest: TipoPermisosService,
     public restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public vistaTipoPermiso: MatDialog,
     private toastr: ToastrService,
     private router: Router,
@@ -57,15 +59,23 @@ export class VistaElementosComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerTipoPermiso();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -135,10 +145,13 @@ export class VistaElementosComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('TipoPermisos', this.tipoPermiso);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -159,52 +172,21 @@ export class VistaElementosComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Tipos de Permisos',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Tipos de Permisos', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFTipoPermisos(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 9,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8,
-          alignment: 'center',
-        }
+        tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 8, alignment: 'center', }
       }
     };
   }

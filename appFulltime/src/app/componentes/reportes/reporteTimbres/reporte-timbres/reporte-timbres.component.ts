@@ -11,13 +11,12 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
-import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
-
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-reporte-timbres',
@@ -30,6 +29,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class ReporteTimbresComponent implements OnInit {
 
   // Datos del Empleado Timbre
@@ -86,6 +86,7 @@ export class ReporteTimbresComponent implements OnInit {
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -96,6 +97,7 @@ export class ReporteTimbresComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
+    this.ObtenerLogo();
   }
 
   // Método para ver la información del empleado 
@@ -105,6 +107,14 @@ export class ReporteTimbresComponent implements OnInit {
       this.empleadoLogueado = data;
       console.log('emple', this.empleadoLogueado)
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -221,7 +231,7 @@ export class ReporteTimbresComponent implements OnInit {
         this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
       }
     }
-    
+
   }
 
   IngresarSoloLetras(e) {
@@ -302,13 +312,15 @@ export class ReporteTimbresComponent implements OnInit {
   getDocumentDefinicion(id_seleccionado: number, form) {
 
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
-    console.log('comprobando', this.empleadoLogueado, id_seleccionado);
+
     return {
 
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -324,38 +336,27 @@ export class ReporteTimbresComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
+              text: [{
+                text: 'Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', color: 'blue', opacity: 0.5
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+              }],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
+        { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              {
-                text: obj.empresa.toUpperCase(),
-                bold: true,
-                fontSize: 25,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'REPORTE TIMBRES',
-                fontSize: 17,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: 'REPORTE TIMBRES', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
             ];
           }
         }),
@@ -363,45 +364,10 @@ export class ReporteTimbresComponent implements OnInit {
         this.presentarTimbres(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 9,
-          alignment: 'center'
-        },
-        itemsTableI: {
-          fontSize: 9,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableP: {
-          fontSize: 9,
-          alignment: 'left',
-          bold: true,
-          margin: [50, 5, 5, 5]
-        },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTableD: { fontSize: 9, alignment: 'center' },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
       }
     };
   }
@@ -426,100 +392,30 @@ export class ReporteTimbresComponent implements OnInit {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + ciudad, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + apellido, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + nombre, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + cedula, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            { text: 'LISTA DE TIMBRES PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
-          ],
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+              { text: [{ text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{ text: 'LISTA DE TIMBRES PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },],
         ]
       },
       layout: {

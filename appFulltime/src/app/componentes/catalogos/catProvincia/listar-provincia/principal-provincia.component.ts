@@ -5,10 +5,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PageEvent } from '@angular/material/paginator';
 
-import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
-import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component'
-import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { RegistroProvinciaComponent } from '../registro-provincia/registro-provincia.component';
 
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { ProvinciaService } from '../../../../servicios/catalogos/catProvincias/provincia.service'
 
 @Component({
   selector: 'app-principal-provincia',
@@ -23,7 +23,7 @@ export class PrincipalProvinciaComponent implements OnInit {
   filtroPais = '';
   filtroProvincia = '';
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
@@ -50,6 +50,7 @@ export class PrincipalProvinciaComponent implements OnInit {
   ngOnInit(): void {
     this.ListarProvincias();
   }
+
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;

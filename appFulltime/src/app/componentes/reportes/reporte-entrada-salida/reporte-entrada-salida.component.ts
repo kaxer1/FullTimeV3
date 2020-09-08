@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -11,14 +11,13 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
-import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
-
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
@@ -31,6 +30,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Datos del Empleado Timbre
@@ -88,6 +88,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
     public restF: FeriadosService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -99,6 +100,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerFeriados();
+    this.ObtenerLogo();
   }
 
   // Método para ver la información del empleado 
@@ -110,6 +112,15 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     })
   }
 
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Evento para menejar el uso de paginación
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
@@ -120,7 +131,6 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.feriados = [];
     this.restF.ConsultarFeriado().subscribe(data => {
       this.feriados = data;
-      console.log('feriados', this.feriados);
     });
   }
 
@@ -214,15 +224,15 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           fechaInicio: form.inicioForm,
           fechaFinal: form.finalForm
         }
-        this.fechasPeriodo = []; //Array where rest of the dates will be stored 
+        this.fechasPeriodo = []; // Array que contiene todas las fechas del mes indicado 
         this.inicioDate = moment(form.inicioForm).format('MM-DD-YYYY');
         this.finDate = moment(form.finalForm).format('MM-DD-YYYY');
 
-        //creating JS date objects 
+        // Inicializar datos de fecha
         var start = new Date(this.inicioDate);
         var end = new Date(this.finDate);
 
-        //Logic for getting rest of the dates between two dates("FromDate" to "EndDate") 
+        // Lógica para obtener el nombre de cada uno de los día del periodo indicado
         while (start <= end) {
           this.fechasPeriodo.push(moment(start).format('dddd DD/MM/YYYY'));
           var newDate = start.setDate(start.getDate() + 1);
@@ -258,11 +268,9 @@ export class ReporteEntradaSalidaComponent implements OnInit {
       if (entradas_salida_horario.length != 0) {
         entradas_salida_horario = entradas_salida_horario.concat(this.entradaSalidaPlanificacion);
         this.totalEntradasSalidas = entradas_salida_horario;
-        //console.log('prueba', this.totalEntradasSalidas);
       }
       else {
         this.totalEntradasSalidas = this.entradaSalidaPlanificacion;
-        // console.log('prueba1', this.totalEntradasSalidas);
       }
       // this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
 
@@ -366,19 +374,19 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
   }
 
   getDocumentDefinicion(id_seleccionado: number, form, fechasTotales: any) {
 
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
-    console.log('comprobando', this.empleadoLogueado, id_seleccionado);
-    return {
 
+    return {
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -394,37 +402,28 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
-            }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+              text: [{
+                text: 'Glosario de Terminos: ALM = Almuerzo ' + '\n Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', color: 'blue', opacity: 0.5
+              }]
+            },
+            { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5 }], }
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
+        { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
               {
                 text: obj.empresa.toUpperCase(),
-                bold: true,
-                fontSize: 25,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
+                bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 15]
               },
               {
                 text: 'REPORTE ENTRADAS - SALIDAS',
-                fontSize: 17,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
+                fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20]
               },
             ];
           }
@@ -433,63 +432,11 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         this.presentarEntradasSalidas(fechasTotales),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 8,
-          alignment: 'center'
-        },
-        itemsTableI: {
-          fontSize: 9,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableP: {
-          fontSize: 9,
-          alignment: 'left',
-          bold: true,
-          margin: [50, 5, 5, 5]
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-        },
-        itemsTableC: {
-          fontSize: 9,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-        },
-        tableHeaderES: {
-          fontSize: 9,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTableD: { fontSize: 8, alignment: 'center' },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
+        tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED' },
       }
     };
   }
@@ -514,100 +461,30 @@ export class ReporteEntradaSalidaComponent implements OnInit {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + ciudad, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'N° REGISTROS: ' + fechasTotales.length, style: 'itemsTableI'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + apellido, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + nombre, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + cedula, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            { text: 'LISTA DE ENTRADAS - SALIDAS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
-          ],
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+              { text: [{ text: 'N° REGISTROS: ' + fechasTotales.length, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{ text: 'LISTA DE ENTRADAS - SALIDAS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },],
         ]
       },
       layout: {
@@ -630,77 +507,67 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           [
             { text: 'FECHA', style: 'tableHeaderES' },
             {
-              columns: [
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto', 'auto'],
-                    body: [
-                      [
-                        { text: 'HORARIO', style: 'tableHeaderES' },
-                        { text: 'ENTRADA', style: 'tableHeaderES' },
-                      ]
+              columns: [{
+                width: 'auto',
+                layout: 'lightHorizontalLines',
+                table: {
+                  widths: ['auto', 'auto'],
+                  body: [
+                    [
+                      { text: 'HORARIO', style: 'tableHeaderES' },
+                      { text: 'ENTRADA', style: 'tableHeaderES' },
                     ]
-                  }
-                },
-              ], style: 'tableHeaderES'
+                  ]
+                }
+              }], style: 'tableHeaderES'
             },
             { text: 'ESTADO', style: 'tableHeaderES' },
             {
-              columns: [
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto', 'auto'],
-                    body: [
-                      [
-                        { text: 'HORARIO', style: 'tableHeaderES' },
-                        { text: 'S. ALM', style: 'tableHeaderES' },
-                      ]
+              columns: [{
+                width: 'auto',
+                layout: 'lightHorizontalLines',
+                table: {
+                  widths: ['auto', 'auto'],
+                  body: [
+                    [
+                      { text: 'HORARIO', style: 'tableHeaderES' },
+                      { text: 'S. ALM', style: 'tableHeaderES' },
                     ]
-                  }
-                },
-
-              ], style: 'tableHeaderES'
+                  ]
+                }
+              }], style: 'tableHeaderES'
             },
             { text: 'ESTADO', style: 'tableHeaderES' },
             {
-              columns: [
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto', 'auto'],
-                    body: [
-                      [
-                        { text: 'HORARIO', style: 'tableHeaderES' },
-                        { text: 'E. ALM', style: 'tableHeaderES' },
-                      ]
+              columns: [{
+                width: 'auto',
+                layout: 'lightHorizontalLines',
+                table: {
+                  widths: ['auto', 'auto'],
+                  body: [
+                    [
+                      { text: 'HORARIO', style: 'tableHeaderES' },
+                      { text: 'E. ALM', style: 'tableHeaderES' },
                     ]
-                  }
-                },
-              ], style: 'tableHeaderES'
+                  ]
+                }
+              }], style: 'tableHeaderES'
             },
             { text: 'ESTADO', style: 'tableHeaderES' },
             {
-              columns: [
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto', 'auto'],
-                    body: [
-                      [
-                        { text: 'HORARIO', style: 'tableHeaderES' },
-                        { text: 'SALIDA', style: 'tableHeaderES' },
-                      ]
+              columns: [{
+                width: 'auto',
+                layout: 'lightHorizontalLines',
+                table: {
+                  widths: ['auto', 'auto'],
+                  body: [
+                    [
+                      { text: 'HORARIO', style: 'tableHeaderES' },
+                      { text: 'SALIDA', style: 'tableHeaderES' },
                     ]
-                  }
-                },
-              ], style: 'tableHeaderES'
-
+                  ]
+                }
+              }], style: 'tableHeaderES'
             },
             { text: 'ESTADO', style: 'tableHeaderES' },
           ],
@@ -745,7 +612,6 @@ export class ReporteEntradaSalidaComponent implements OnInit {
                 }
               }
             });
-
             if (entrada === '' && estadoFeriado === '') {
               entrada = 'Falta Timbre';
             }
@@ -758,11 +624,9 @@ export class ReporteEntradaSalidaComponent implements OnInit {
             if (almuerzoS === '' && estadoFeriado === '') {
               almuerzoS = 'Falta Timbre'
             }
-
             if (estadoFeriado != '') {
               entrada = salida = almuerzoS = almuerzoE = 'FERIADO'
             }
-
             return [
               { text: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1) + ' ' + obj.split(' ')[1], style: 'itemsTableD' },
               {

@@ -14,6 +14,7 @@ import * as FileSaver from 'file-saver';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorario/registro-horario/registro-horario.component';
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
@@ -23,9 +24,9 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 @Component({
   selector: 'app-principal-horario',
   templateUrl: './principal-horario.component.html',
-  styleUrls: ['./principal-horario.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./principal-horario.component.css']
 })
+
 export class PrincipalHorarioComponent implements OnInit {
 
   // Almacenamiento de datos y búsqueda
@@ -61,6 +62,7 @@ export class PrincipalHorarioComponent implements OnInit {
     public restE: EmpleadoService,
     private restD: DetalleCatHorariosService,
     private toastr: ToastrService,
+    public restEmpre: EmpresaService,
     public vistaRegistrarDatos: MatDialog,
     public router: Router,
   ) {
@@ -71,15 +73,23 @@ export class PrincipalHorarioComponent implements OnInit {
     this.ObtenerHorarios();
     this.nameFile = '';
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -188,7 +198,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.nameFileDetalle = this.archivoSubidoDetalle[0].name;
     let arrayItems = this.nameFileDetalle.split(".");
     let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 50);
+    let itemName = arrayItems[0].slice(0, 17);
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'detalles horarios') {
@@ -232,10 +242,13 @@ export class PrincipalHorarioComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Empleados', this.horarios);
     return {
+
+      // Encabezado de página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -256,55 +269,22 @@ export class PrincipalHorarioComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Horarios',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Horarios', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFEmpleados(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10 },
+        itemsTableC: { fontSize: 10, alignment: 'center' }
       }
     };
   }

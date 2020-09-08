@@ -4,13 +4,16 @@ import { Router } from '@angular/router';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { MatDialog } from '@angular/material/dialog';
+
 import { HoraExtraAutorizacionesComponent } from '../../autorizaciones/hora-extra-autorizaciones/hora-extra-autorizaciones.component';
 import { EditarEstadoHoraExtraAutorizacionComponent } from '../../autorizaciones/editar-estado-hora-extra-autorizacion/editar-estado-hora-extra-autorizacion.component';
-import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EstadoHoraExtraComponent } from "../estado-hora-extra/estado-hora-extra.component";
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 
 interface Estado {
   id: number,
@@ -22,6 +25,7 @@ interface Estado {
   templateUrl: './ver-pedido-hora-extra.component.html',
   styleUrls: ['./ver-pedido-hora-extra.component.css']
 })
+
 export class VerPedidoHoraExtraComponent implements OnInit {
 
   estados: Estado[] = [
@@ -44,13 +48,13 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   empleado: any = [];
   idEmpleado: number;
 
-
   datoSolicitud: any = [];
   datosAutorizacion: any = [];
 
   constructor(
     private restHE: PedHoraExtraService,
     private restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     private router: Router,
     private restA: AutorizacionService,
     private restD: DepartamentosService,
@@ -61,9 +65,9 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     console.log(this.dataParams.id);
     this.BuscarInfo();
+    this.ObtenerLogo();
   }
 
   id_usua_solicita: number;
@@ -103,16 +107,23 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     this.ObtenerAutorizacion(this.dataParams.id);
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
   }
 
-  // metodo para ver la informacion de la solicitud 
+  // Método para ver la información de la solicitud 
   ObtenerSolicitud(id: any) {
     this.datoSolicitud = [];
     this.restHE.BuscarDatosSolicitud(id).subscribe(data => {
@@ -121,7 +132,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     })
   }
 
-  // metodo para ver la informacion de la autorización 
+  // Método para ver la información de la autorización 
   ObtenerAutorizacion(id: any) {
     console.log('entra')
     this.datosAutorizacion = [];
@@ -201,7 +212,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
@@ -223,76 +234,24 @@ export class VerPedidoHoraExtraComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: this.datoSolicitud[0].nom_empresa,
-          bold: true,
-          fontSize: 15,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-        {
-          text: 'SOLICITUD DE HORAS EXTRAS',
-          fontSize: 10,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-
+        { image: this.logo, width: 150 },
+        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
+        { text: 'SOLICITUD DE HORAS EXTRAS', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFPermiso(this.ObtenerFecha()),
       ],
       styles: {
-        header: {
-          fontSize: 9,
-          bold: true,
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-
-        },
-        itemsTableD: {
-          fontSize: 10,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTable: {
-          fontSize: 10,
-          alignment: 'center',
-        }
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', },
+        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [20, 0, 20, 0], },
+        itemsTableD: { fontSize: 10, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTable: { fontSize: 10, alignment: 'center', }
       }
     };
   }
@@ -302,175 +261,78 @@ export class VerPedidoHoraExtraComponent implements OnInit {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'FECHA: ' + f, style: 'itemsTableD'
+          [{ text: 'INFORMACIÓN GENERAL', style: 'tableHeader' }],
+          [{
+            columns: [
+              { text: [{ text: 'FECHA: ' + f, style: 'itemsTableD' }] },
+              { text: [{ text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD' }] },
+              { text: [{ text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD' }] },
+              { text: [{ text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD' }] },
+              { text: [{ text: 'Sucursal: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD' }] },
+            ]
+          }],
+          [{ text: 'HORAS EXTRAS', style: 'tableHeader' }],
+          [{
+            columns: [
+              { text: [{ text: 'DESCRIPCIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD' }] },
+              { text: [{ text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD' }] },]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'Total Horas Extras: ' + this.datoSolicitud[0].num_hora + ' horas', style: 'itemsTableD' }] },
+              { text: [{ text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD' }] },
+            ]
+          }],
+          [{
+            columns: [
+              {
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                        [{ text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },]
+                      ]
                     }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD'
+                  },
+                  { width: '*', text: '' },
+                ]
+              },
+              {
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: 'EMPLEADO', style: 'tableHeaderA' },],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                        [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },]
+                      ]
                     }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'Sucursal: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              text: 'HORAS EXTRAS', style: 'tableHeader'
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'DESCRIPCIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'Total Horas Extras: ' + this.datoSolicitud[0].num_hora + ' horas', style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                },
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'EMPLEADO', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                }
-              ]
-            }
-          ],
+                  },
+                  { width: '*', text: '' },
+                ]
+              }
+            ]
+          }],
         ]
       },
       layout: {

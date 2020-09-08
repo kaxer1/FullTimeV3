@@ -17,6 +17,7 @@ import * as FileSaver from 'file-saver';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-reporte-atrasos',
@@ -85,6 +86,7 @@ export class ReporteAtrasosComponent implements OnInit {
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -95,6 +97,7 @@ export class ReporteAtrasosComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
+    this.ObtenerLogo();
   }
 
   // Método para ver la información del empleado 
@@ -102,8 +105,15 @@ export class ReporteAtrasosComponent implements OnInit {
     this.empleadoLogueado = [];
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoLogueado = data;
-      console.log('emple', this.empleadoLogueado)
+      //console.log('emple', this.empleadoLogueado)
     })
+  }
+
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -344,10 +354,12 @@ export class ReporteAtrasosComponent implements OnInit {
     console.log('comprobando', this.empleadoLogueado, id_seleccionado);
     return {
 
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -363,38 +375,27 @@ export class ReporteAtrasosComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
+              text: [{
+                text: 'Glosario de Terminos: MM = Minutos de Tolerancia, HH = Horas Laborables' + '\n Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', color: 'blue', opacity: 0.5
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+              }],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 9, color: '#A4B8FF',
         }
       },
       content: [
+        { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              {
-                text: obj.empresa.toUpperCase(),
-                bold: true,
-                fontSize: 25,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'REPORTE ATRASOS',
-                fontSize: 17,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: 'REPORTE ATRASOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
             ];
           }
         }),
@@ -402,57 +403,12 @@ export class ReporteAtrasosComponent implements OnInit {
         this.presentarAtrasos(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 9,
-          alignment: 'center'
-        },
-        itemsTableI: {
-          fontSize: 9,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableP: {
-          fontSize: 9,
-          alignment: 'left',
-          bold: true,
-          margin: [50, 5, 5, 5]
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-        },
-        itemsTableC: {
-          fontSize: 9,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-        },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTableD: { fontSize: 9, alignment: 'center' },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
+        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [20, 0, 20, 0], },
+        itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
       }
     };
   }
@@ -461,11 +417,10 @@ export class ReporteAtrasosComponent implements OnInit {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     var tiempoTotal: string, horaF: string, minF: string, secondF: string;
     var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
-    var day, hora1, hora2, hTrabajo, formatoHorasDecimal: number = 0, formatoDiasDecimal: number = 0;
+    var day, hora1, hora2, formatoHorasDecimal: number = 0, formatoDiasDecimal: number = 0;
     var tHoras = 0, tMinutos = 0, tSegudos = 0, formatoHorasEntero;
     var t1 = new Date();
     var t2 = new Date();
-    var t3 = new Date();
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
         nombre = obj.nombre
@@ -540,176 +495,69 @@ export class ReporteAtrasosComponent implements OnInit {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },
-          ],
-          [
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+              { text: [{ text: 'N° REGISTROS: ' + this.totalAtrasos.length, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [{
+              columns: [
+                { width: '*', text: '' },
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto'],
+                    body: [[{ text: 'DATOS TOTALES FORMATO DECIMAL', style: 'tableHeaderA' },]]
+                  }
+                },
+                { width: '*', text: '' },
+              ]
+            },
             {
               columns: [
+                { width: '*', text: '' },
                 {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + ciudad, style: 'itemsTableI'
-                    }
-                  ]
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto'],
+                    body: [[{ text: 'DATOS TOTALES FORMATO GENERAL', style: 'tableHeaderA' },]]
+                  }
                 },
-                {
-                  text: [
-                    {
-                      text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'N° REGISTROS: ' + this.totalAtrasos.length, style: 'itemsTableI'
-                    }
-                  ]
-                },
+                { width: '*', text: '' },
               ]
             }
+            ]
+          }
           ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + apellido, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + nombre, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + cedula, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'DATOS TOTALES FORMATO DECIMAL', style: 'tableHeaderA' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                },
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'DATOS TOTALES FORMATO GENERAL', style: 'tableHeaderA' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'TOTAL EN DIAS: ' + formatoDiasDecimal.toFixed(2), style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'TOTAL EN HORAS: ' + formatoHorasDecimal, style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'TOTAL HORAS: ' + String(formatoHorasDecimal).split('.')[0] + ' hh : ' + formatoHorasEntero.toFixed(0) + ' min', style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: '', style: 'itemsTableC'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            { text: 'LISTA DE ATRASOS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
-          ],
+          [{
+            columns: [
+              { text: [{ text: 'TOTAL EN DIAS: ' + formatoDiasDecimal.toFixed(2), style: 'itemsTableC' }] },
+              { text: [{ text: 'TOTAL EN HORAS: ' + formatoHorasDecimal, style: 'itemsTableC' }] },
+              { text: [{ text: 'TOTAL HORAS: ' + String(formatoHorasDecimal).split('.')[0] + ' hh : ' + formatoHorasEntero.toFixed(0) + ' min', style: 'itemsTableC' }] },
+              { text: [{ text: '', style: 'itemsTableC' }] },]
+          }],
+          [{ text: 'LISTA DE ATRASOS PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },],
         ]
       },
       layout: {
