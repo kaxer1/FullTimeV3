@@ -483,7 +483,13 @@ export class DatosEmpleadoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [

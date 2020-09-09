@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 moment.locale('es');
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -94,7 +94,6 @@ export class ReportePermisosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerLogo();
@@ -117,11 +116,13 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Método para manejo de paginación
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // Obtener lista de empleados que tienen datos de contrato y cargo
   cont: number = 0;
   contador: number = 0;
   iteracion: number = 0;
@@ -200,6 +201,7 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Obtener datos de permiso del empleado de acuerdo al horario
   datosAutorizacion: any = [];
   permisosHorarios: any = [];
   permisosPlanificacion: any = [];
@@ -216,6 +218,7 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Obtener datos de permisos del empleado de acuerdo a la planificación
   VerPermisosPlanificacion(permisos_horario: any, id_seleccionado: number, archivo: string) {
     this.restR.ObtenerPermisosPlanificacion(id_seleccionado).subscribe(dataP => {
       this.permisosPlanificacion = dataP;
@@ -241,6 +244,7 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
+  // Obtener datos de la autorización de los permisos
   VerDatosAutorizacion(id_seleccionado: number, archivo: string) {
     this.datosAutorizacion = [];
     this.restR.ObtenerAutorizacionPermiso(id_seleccionado).subscribe(dataA => {
@@ -269,7 +273,7 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
-
+  // Obtención de los permisos de acuerdo horario y al periodo de fechas indicado
   VerPermisosEmpleadoFecha(id_seleccionado, archivo, fechas) {
     this.permisosHorarios = [];
     this.permisosPlanificacion = [];
@@ -282,6 +286,7 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Obtención de los permisos de acuerdo a la planificación y al periodo de fechas indicado 
   VerPermisosPlanificacionFecha(permisos_horario: any, id_seleccionado: number, archivo: string, fechas) {
     this.restR.ObtenerPermisosPlanificacionFechas(id_seleccionado, fechas).subscribe(dataP => {
       this.permisosPlanificacion = dataP;
@@ -307,7 +312,7 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
-
+  // Método para controlar ingreso adecuado de periodo de fechas
   VerPermisos(form, archivo, id_seleccionado) {
     if (form.inicioForm === '' && form.finalForm === '' || form.inicioForm === null && form.finalForm === null) {
       this.VerPermisosEmpleado(id_seleccionado, archivo);
@@ -333,6 +338,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Método para ingresar solo letras
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
@@ -353,6 +359,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Método para ingresar solo números
   IngresarSoloNumeros(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
@@ -370,6 +377,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Método para limpiar campos de búsqueda
   LimpiarCampos() {
     this.codigo.reset();
     this.cedula.reset();
@@ -380,15 +388,10 @@ export class ReportePermisosComponent implements OnInit {
     this.cargoF.reset();
   }
 
+  // Método para limpiar campos de fecha
   LimpiarFechas() {
     this.fechaInicialF.reset();
     this.fechaFinalF.reset();
-  }
-
-  ObtenerNacionalidades() {
-    this.rest.getListaNacionalidades().subscribe(res => {
-      this.nacionalidades = res;
-    });
   }
 
   /* ****************************************************************************************************
@@ -419,6 +422,7 @@ export class ReportePermisosComponent implements OnInit {
 
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
+        // Método de obtención de fecha y hora actual
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
@@ -429,7 +433,13 @@ export class ReportePermisosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -447,6 +457,7 @@ export class ReportePermisosComponent implements OnInit {
           ], fontSize: 8, color: '#A4B8FF',
         }
       },
+      // Título del archivo y sumatoria de cálculos
       content: [
         { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
@@ -460,6 +471,8 @@ export class ReportePermisosComponent implements OnInit {
         this.presentarDatosGenerales(id_seleccionado),
         this.presentarPermisos(),
       ],
+
+      // Estilos del archivo PDF
       styles: {
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
         itemsTableD: { fontSize: 9, alignment: 'center' },
@@ -471,6 +484,7 @@ export class ReportePermisosComponent implements OnInit {
     };
   }
 
+  // Datos Generales del empleado del que se obtiene el reporte y sumatoria de cálculos realizados
   presentarDatosGenerales(id_seleccionado) {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, enteroHoras = 0, formatoHoras, formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, empleadoAutoriza, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
@@ -519,10 +533,12 @@ export class ReportePermisosComponent implements OnInit {
         }
       });
     });
+    // Realización de cálculos
     minutosHoras = parseFloat('0.' + String(totalHoras).split('.')[1]) * 60;
     tDias = parseFloat('0.' + String(totalDias).split('.')[1]) * horaTDecimalH;
     horasDias = parseFloat('0.' + String(tDias).split('.')[1]) * 60;
 
+    // Control de escritura de horas y minutos
     if (parseInt(String(tDias).split('.')[0]) < 10) {
       formatoHoras = '0' + parseInt(String(tDias).split('.')[0]);
     }
@@ -543,7 +559,7 @@ export class ReportePermisosComponent implements OnInit {
     else {
       minutosHoras = '0' + minutosHoras.toFixed(0);
     }
-
+    // Estructura del PDF
     return {
       table: {
         widths: ['*'],
@@ -598,8 +614,7 @@ export class ReportePermisosComponent implements OnInit {
               paddingTop: function (i, node) { return 10; },
               paddingBottom: function (i, node) { return 10; }
             }
-          }
-          ],
+          }],
           [{ text: 'LISTA DE PERMISOS', style: 'tableHeader' },],
         ]
       },
@@ -615,6 +630,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Estructura de lista de permisos registrados por el empleado
   presentarPermisos() {
     return {
       table: {
@@ -641,11 +657,15 @@ export class ReportePermisosComponent implements OnInit {
                 estado = this.datosAutorizacion[i].estado;
                 if (estado === 'Autorizado') {
                   empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido;
+
+                  // Realización de cálculos
                   var hora1 = (obj.hora_numero).split(":");
                   var t1 = new Date();
                   t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
                   var minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
                   horas_decimal = (minTDecimal / 60) + t1.getHours();
+
+                  // Obtención de las horas de trabajo en días
                   if ((obj.horario_horas).split(":")[1] != undefined) {
                     trabaja = obj.horario_horas + ':00'
                   }

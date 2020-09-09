@@ -40,4 +40,8 @@ export class PlanHorarioService {
     return this.http.delete(`${this.API_URL}/planHorario/eliminar/${id}`);
   }
 
+  ObtenerPlanHorarioEmpleadoFechas(id_empleado: number, datos: any) {
+    return this.http.post(`${this.API_URL}/planHorario/fechas_plan/${id_empleado}`, datos);
+  }
+
 }
