@@ -12,11 +12,14 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
+import { MatDialog } from '@angular/material/dialog';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+
+import { ConfigurarAtrasosComponent } from 'src/app/componentes/configurar-atrasos/configurar-atrasos.component';
 
 @Component({
   selector: 'app-reporte-atrasos',
@@ -87,6 +90,7 @@ export class ReporteAtrasosComponent implements OnInit {
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
     public restEmpre: EmpresaService,
+    public vistaConfigurarAtraso: MatDialog,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -201,7 +205,8 @@ export class ReporteAtrasosComponent implements OnInit {
   }
 
   // Método para verificar ingreso correcto de periodo de fechas
-  VerAtrasosEmpleado(id_seleccionado, form, archivo) {
+  confirmado: boolean;
+  ConfigurarAtrasos(id_seleccionado: any, form, archivo: string) {
     if (form.inicioForm === '' || form.finalForm === '') {
       this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
     }
@@ -211,7 +216,21 @@ export class ReporteAtrasosComponent implements OnInit {
           fechaInicio: form.inicioForm,
           fechaFinal: form.finalForm
         }
-        this.VerAtrasosHorario(id_seleccionado, fechas, archivo, form);
+        /** Función para indicar cálculo de atrasos*/
+        this.vistaConfigurarAtraso.open(ConfigurarAtrasosComponent, { width: '450px' }).afterClosed()
+          .subscribe((seleccion: string) => {
+            if (seleccion === 'con') {
+              this.confirmado = true;
+              this.VerAtrasosHorario(id_seleccionado, fechas, archivo, form, this.confirmado);
+            }
+            else if (seleccion === 'sin') {
+              this.confirmado = false;
+              this.VerAtrasosHorario(id_seleccionado, fechas, archivo, form, this.confirmado);
+            }
+            else {
+              this.router.navigate(['/reporteAtrasos']);
+            }
+          });
       }
       else {
         this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
@@ -223,20 +242,20 @@ export class ReporteAtrasosComponent implements OnInit {
   atrasosHorario: any = [];
   atrasosPlanificacion: any = [];
   totalAtrasos: any = [];
-  VerAtrasosHorario(id_seleccionado, datosFecha, archivo, form) {
+  VerAtrasosHorario(id_seleccionado, datosFecha, archivo, form, confirmado) {
     this.atrasosHorario = [];
     this.atrasosPlanificacion = [];
     this.totalAtrasos = [];
     this.restR.ObtenerTimbresAtrasosHorario(id_seleccionado, datosFecha).subscribe(dataH => {
       this.atrasosHorario = dataH;
-      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form);
+      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form, confirmado);
     }, error => {
-      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form);
+      this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form, confirmado);
     });
   }
 
   // Método para obtener los atrasos del empleado de acuerdo a la planificación de horario del empleado
-  VerAtrasosPlanificacion(atrasos_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form) {
+  VerAtrasosPlanificacion(atrasos_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form, confirmado) {
     this.restR.ObtenerTimbresAtrasosPlanificacion(id_seleccionado, datos_fechas).subscribe(dataP => {
       this.atrasosPlanificacion = dataP;
       if (atrasos_horario.length != 0) {
@@ -249,7 +268,7 @@ export class ReporteAtrasosComponent implements OnInit {
         console.log('prueba1', this.totalAtrasos);
       }
       // this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
-      this.GenerarArchivos(id_seleccionado, archivo, form);
+      this.GenerarArchivos(id_seleccionado, archivo, form, confirmado);
       this.LimpiarFechas();
       this.LimpiarCampos();
     }, error => {
@@ -257,7 +276,7 @@ export class ReporteAtrasosComponent implements OnInit {
         this.totalAtrasos = atrasos_horario;
         console.log('prueba2', this.totalAtrasos);
         //  this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
-        this.GenerarArchivos(id_seleccionado, archivo, form);
+        this.GenerarArchivos(id_seleccionado, archivo, form, confirmado);
         this.LimpiarFechas();
         this.LimpiarCampos();
       }
@@ -268,10 +287,10 @@ export class ReporteAtrasosComponent implements OnInit {
   }
 
   // Método para generar los archivos de descarga
-  GenerarArchivos(id_seleccionado: number, archivo: string, form) {
+  GenerarArchivos(id_seleccionado: number, archivo: string, form, confirmado) {
     if (archivo === 'pdf') {
       console.log('archivo', archivo)
-      this.generarPdf('open', id_seleccionado, form);
+      this.generarPdf('open', id_seleccionado, form, confirmado);
     }
     else if (archivo === 'excel') {
       this.exportToExcel(this.atrasosHorario);
@@ -339,8 +358,8 @@ export class ReporteAtrasosComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
-  generarPdf(action = 'open', id_seleccionado, form) {
-    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form);
+  generarPdf(action = 'open', id_seleccionado, form, confirmado) {
+    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form, confirmado);
 
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
@@ -352,7 +371,7 @@ export class ReporteAtrasosComponent implements OnInit {
 
   }
 
-  getDocumentDefinicion(id_seleccionado: number, form) {
+  getDocumentDefinicion(id_seleccionado: number, form, confirmado) {
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
 
     return {
@@ -375,7 +394,7 @@ export class ReporteAtrasosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -412,8 +431,8 @@ export class ReporteAtrasosComponent implements OnInit {
             ];
           }
         }),
-        this.presentarDatosGenerales(id_seleccionado, form),
-        this.presentarAtrasos(),
+        this.presentarDatosGenerales(id_seleccionado, form, confirmado),
+        this.presentarAtrasos(confirmado),
       ],
 
       // Estilos del archivo PDF
@@ -423,15 +442,15 @@ export class ReporteAtrasosComponent implements OnInit {
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
         tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [20, 0, 20, 0], },
-        tableHeaderS: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED'},
+        tableHeaderS: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED' },
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
-        itemsTableF: { fontSize: 9, alignment: 'center'},
+        itemsTableF: { fontSize: 9, alignment: 'center' },
       }
     };
   }
 
   // Datos generales del PDF y sumatoria total de calculos realizados
-  presentarDatosGenerales(id_seleccionado, form) {
+  presentarDatosGenerales(id_seleccionado, form, confirmado) {
     // Inicialización de varibles
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     var tiempoTotal: string, horaF: string, minF: string, secondF: string;
@@ -456,7 +475,15 @@ export class ReporteAtrasosComponent implements OnInit {
     this.totalAtrasos.forEach(obj => {
       day = moment(obj.fec_hora_timbre).day();
       hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
-      hora2 = (obj.hora_total).split(":")
+
+      // Control de configuración de cálculos
+      if (confirmado === true) {
+        hora2 = (obj.hora_total).split(":");
+      }
+      else {
+        hora2 = (obj.hora).split(":");
+      }
+
       t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
       t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
 
@@ -563,7 +590,7 @@ export class ReporteAtrasosComponent implements OnInit {
                 ],
                 [
                   { text: 'TOTAL DE ATRASOS EN DIAS LABORABLES DECIMAL: ' + formatoDiasDecimal.toFixed(3), style: 'itemsTableF' },
-                  { rowSpan: 2, text: 'TOTAL DE ATRASOS EN HORAS Y MINUTOS: ' + String(formatoHorasDecimal).split('.')[0] + ' horas : ' + minutosEscrito + ' minutos', style: 'itemsTableF' }
+                  { rowSpan: 2, text: 'TOTAL DE ATRASOS EN HORAS Y MINUTOS: ' + String(formatoHorasDecimal).split('.')[0] + ' horas : ' + minutosEscrito + ' minutos', style: 'itemsTableF', margin: [0, 20, 0, 20] }
                 ],
                 [
                   { text: 'TOTAL DE ATRASOS EN HORAS LABORABLES DECIMAL: ' + formatoHorasDecimal, style: 'itemsTableF' },
@@ -598,7 +625,8 @@ export class ReporteAtrasosComponent implements OnInit {
 
   // Estructura Lista de Registros
   contarRegistros: number = 0;
-  presentarAtrasos() {
+  presentarAtrasos(confirmado: boolean) {
+    this.contarRegistros = 0;
     return {
       table: {
         widths: ['auto', '*', 'auto', 'auto', '*', 'auto', '*', '*', 'auto', 'auto'],
@@ -621,7 +649,15 @@ export class ReporteAtrasosComponent implements OnInit {
             var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
             var day = moment(obj.fec_hora_timbre).day();
             var hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
-            var hora2 = (obj.hora_total).split(":")
+
+            // Control de configuración de cálculos
+            if (confirmado === true) {
+              var hora2 = (obj.hora_total).split(":");
+            }
+            else {
+              var hora2 = (obj.hora).split(":");
+            }
+
             var t1 = new Date();
             var t2 = new Date();
             t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
@@ -677,12 +713,18 @@ export class ReporteAtrasosComponent implements OnInit {
               { text: obj.minu_espera + ' min', style: 'itemsTableD' },
               { text: moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
               { text: obj.horario_horas, style: 'itemsTableD' },
-              { text: tiempoTotal, style: 'itemsTableD' },
+              { text: tiempoTotal, style: 'itemsTableD', fillColor: '#CCD1D1' },
               { text: horaTDecimal.toFixed(3), style: 'itemsTableD' },
               { text: diasDecimal.toFixed(3), style: 'itemsTableD' },
             ];
           })
         ]
+      },
+      // Estilo de colores formato zebra
+      layout: {
+        fillColor: function (i, node) {
+          return (i % 2 === 0) ? '#CCD1D1' : null;
+        }
       }
     };
   }

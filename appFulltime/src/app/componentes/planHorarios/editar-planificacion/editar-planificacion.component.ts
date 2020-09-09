@@ -41,6 +41,7 @@ export class EditarPlanificacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.CargarDatos();
+    console.log('imprimir', this.data)
   }
 
   ValidarDatosPlanHorario(form) {
@@ -49,7 +50,6 @@ export class EditarPlanificacionComponent implements OnInit {
       id_empleado: this.data.idEmpleado
     }
     this.restE.BuscarFechaContrato(datosBusqueda).subscribe(response => {
-      console.log('fecha', response[0].fec_ingreso.split('T')[0], ' ', Date.parse(form.fechaIngresoForm), Date.parse(response[0].fec_ingreso.split('T')[0]))
       if (Date.parse(response[0].fec_ingreso.split('T')[0]) < Date.parse(form.fechaIngresoForm)) {
         if (Date.parse(form.fechaIngresoForm) < Date.parse(form.fechaSalidaForm)) {
           this.InsertarPlanHorario(form);
@@ -66,10 +66,10 @@ export class EditarPlanificacionComponent implements OnInit {
 
   InsertarPlanHorario(form) {
     let datosPlanHorario = {
-      id_cargo: this.data.id_cargo,
+      id_cargo: this.data.datosPlan.id_cargo,
       fec_inicio: form.fechaIngresoForm,
       fec_final: form.fechaSalidaForm,
-      id: this.data.id
+      id: this.data.datosPlan.id
     };
     this.rest.ActualizarDatos(datosPlanHorario).subscribe(response => {
       console.log('prueba actualizacopn', response)

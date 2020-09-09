@@ -33,7 +33,7 @@ export class PlanHorarioService {
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/planHorario`, datos);
+    return this.http.put(`${this.API_URL}/planHorario/`, datos);
   }
 
   EliminarRegistro(id: number) {

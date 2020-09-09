@@ -316,17 +316,31 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.restHorario.ObtenerHorariosFechasEmpleado(id_seleccionado, fechas).subscribe(data => {
       this.empleadoHorario = data;
       console.log('horario', this.empleadoHorario);
-
       // Búsqueda de la lista de las planificaciones del empleado
       this.restPlan.ObtenerPlanHorarioEmpleadoFechas(id_seleccionado, fechas).subscribe(dataP => {
         this.empleadoPlan = dataP;
         console.log('plan', this.empleadoPlan);
-
         // Llamado a ver archivos
         this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
-      }, error => { })
-      //this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
-    }, error => { })
+
+      }, error => {
+        // Llamado a ver archivos cuando no existe horarios de planificación del empleado
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+      })
+
+    }, error => {
+      // Búsqueda de la lista de las planificaciones del empleado
+      this.restPlan.ObtenerPlanHorarioEmpleadoFechas(id_seleccionado, fechas).subscribe(dataP => {
+        this.empleadoPlan = dataP;
+        console.log('plan', this.empleadoPlan);
+        // Llamado a ver archivos
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+
+      }, error => {
+        // Llamado a ver archivos cuando no existe horarios de planifiación del empleado
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+      })
+    })
   }
 
   VerArchivos(id_seleccionado, archivo, form, fechasTotales, entradasSalidas) {

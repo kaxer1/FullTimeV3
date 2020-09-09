@@ -433,7 +433,7 @@ export class ReportePermisosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -703,6 +703,12 @@ export class ReportePermisosComponent implements OnInit {
             ];
           })
         ]
+      },
+      // Estilo de colores formato zebra
+      layout: {
+        fillColor: function (i, node) {
+          return (i % 2 === 0) ? '#CCD1D1' : null;
+        }
       }
     };
   }
