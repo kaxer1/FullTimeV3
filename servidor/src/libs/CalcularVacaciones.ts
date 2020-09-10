@@ -3,31 +3,31 @@ import moment, { min, now } from 'moment';
 import { VacacionesDiasCalendario, InfoLabora, IAcumulado } from '../class/periVacacion'
 
 
-function DescuentoDiasHorMin(hora_trabaja: number, num_dia_vacaciones: any ) {    
+function DescuentoDiasHorMin(hora_trabaja: number, num_dia_vacaciones: any) {
 
-    var dProporcional = parseFloat(num_dia_vacaciones) * (30/22);
+    var dProporcional = parseFloat(num_dia_vacaciones) * (30 / 22);
     var d = parseInt(dProporcional.toString())
-    var aux_h = (dProporcional - d) * (hora_trabaja/1);
+    var aux_h = (dProporcional - d) * (hora_trabaja / 1);
     var h = parseInt(aux_h.toString());
-    var aux_m = (aux_h - h) * (60/1);
+    var aux_m = (aux_h - h) * (60 / 1);
     var m = parseInt(aux_m.toString());
-    
-    return { 
+
+    return {
         dias: d,
         horas: h,
         min: m
     }
 }
 
-function SaldoDiasHorMin(hora_trabaja: number, num_dia_vacaciones: any ) {
+function SaldoDiasHorMin(hora_trabaja: number, num_dia_vacaciones: any) {
     var dProporcional = parseFloat(num_dia_vacaciones);
     var d = parseInt(dProporcional.toString())
-    var aux_h = (dProporcional - d) * (hora_trabaja/1);
+    var aux_h = (dProporcional - d) * (hora_trabaja / 1);
     var h = parseInt(aux_h.toString());
-    var aux_m = (aux_h - h) * (60/1);
+    var aux_m = (aux_h - h) * (60 / 1);
     var m = parseInt(aux_m.toString());
-    
-    return { 
+
+    return {
         dias: d,
         horas: h,
         min: m
@@ -47,27 +47,27 @@ function diasTotal(array: any, i: Date, f: Date) {
 }
 
 function CalcularDiasVacacion(inicio: Date, final: Date) {
-   
-    if (final.getDate() > inicio.getDate() && final.getMonth() === inicio.getMonth() && final.getFullYear() === inicio.getFullYear()) {        
+
+    if (final.getDate() > inicio.getDate() && final.getMonth() === inicio.getMonth() && final.getFullYear() === inicio.getFullYear()) {
         // console.log('Calulo normal');
         let numDias = final.getDate() - inicio.getDate();
         return numDias + 1;
 
     } else if (final.getDate() < inicio.getDate() && final.getMonth() > inicio.getMonth() && final.getFullYear() === inicio.getFullYear()) {
 
-        if (((final.getFullYear() % 4 == 0) && (final.getFullYear() % 100 != 0 )) || (final.getFullYear() % 400 == 0)){
+        if (((final.getFullYear() % 4 == 0) && (final.getFullYear() % 100 != 0)) || (final.getFullYear() % 400 == 0)) {
             // console.log('Este año es bisiesto', final.getFullYear());            
-            var DiasCadaMes = [31,29,31,30,31,30,31,31,30,31,30,31]
+            var DiasCadaMes = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
             return diasTotal(DiasCadaMes, inicio, final);
         } else {
             // console.log('No bisiesto');
-            var DiasCadaMes = [31,28,31,30,31,30,31,31,30,31,30,31]
+            var DiasCadaMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
             return diasTotal(DiasCadaMes, inicio, final);
         }
-        
+
     } else if (final.getFullYear() > inicio.getFullYear()) {
         // console.log('Años diferentes');
-        var DiasCadaMes = [31,28,31,30,31,30,31,31,30,31,30,31]
+        var DiasCadaMes = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         return diasTotal(DiasCadaMes, inicio, final);
     }
 
@@ -80,7 +80,7 @@ function CalcularDiasVacacion(inicio: Date, final: Date) {
  * @param descuen son el número de dias de la solicitud de vacaciones * (30/22)
  */
 function CarcularSaldoDecimal(contador: number, acumulado: number, descuen: any) {
-    
+
     if (contador === 0) {
         let x = acumulado - descuen
         // console.log(acumulado);
@@ -93,7 +93,7 @@ function CarcularSaldoDecimal(contador: number, acumulado: number, descuen: any)
         // console.log('saldo Decimal',x);
         // console.log("================");
         return x
-    }    
+    }
 
 }
 
@@ -104,28 +104,28 @@ function CalcularDiasAcumulados(dias_obliga: number, I_Periodo: Date, F_Periodo:
     var fecha1 = moment(I_Periodo.toJSON().split("T")[0]);
     var fecha2 = moment(F_Periodo.toJSON().split("T")[0]);
 
-    if (f.getFullYear() != F_Periodo.getFullYear() &&  f.getFullYear() != I_Periodo.getFullYear()) {
+    if (f.getFullYear() != F_Periodo.getFullYear() && f.getFullYear() != I_Periodo.getFullYear()) {
         var diasLaborados = fecha2.diff(fecha1, 'days');
-        var aux = (diasLaborados * 15)/365
+        var aux = (diasLaborados * 15) / 365
         return 15
     } else {
         var fechaAux = moment(f.toJSON().split("T")[0]);
         var diasLaborados = fechaAux.diff(fecha1, 'days');
-        var aux = (diasLaborados * 15)/365
+        var aux = (diasLaborados * 15) / 365
         return aux
     }
-    
+
 }
 
 // falta mejorar este metodo
 async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any) {
     // console.log(diasObliga);
-    
+
     let arrayPeriodos = await pool.query('SELECT pv.id as id_peri_vac,pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato ORDER BY e.fec_ingreso DESC', [id_empl])
-                .then(result => {
-                    return result.rows;
-                });
-    
+        .then(result => {
+            return result.rows;
+        });
+
     let acumulado = arrayPeriodos.map(obj => {
         return CalcularDiasAcumulados(diasObliga.dia_obli, obj.fec_inicio, obj.fec_final)
     });
@@ -133,7 +133,7 @@ async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any) {
     let Inicio_Ultimo_Periodo = arrayPeriodos.map(obj => {
         return obj.fec_inicio;
     });
-    console.log('Inicio Periodos ====> ',Inicio_Ultimo_Periodo);
+    console.log('Inicio Periodos ====> ', Inicio_Ultimo_Periodo);
 
     let aniosInicio = arrayPeriodos.map(obj => {
         return obj.fec_inicio.getFullYear();
@@ -142,24 +142,24 @@ async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any) {
         return obj.fec_final.getFullYear();
     });
 
-    var nuevo = aniosInicio.concat(aniosFinal);  
+    var nuevo = aniosInicio.concat(aniosFinal);
     for (let j = 0; j < nuevo.length; j++) {
         let numMin;
         let i = numMin = j;
         for (++i; i < nuevo.length; i++) {
-            ( nuevo[i] < nuevo[ numMin ] ) && ( numMin = i );
+            (nuevo[i] < nuevo[numMin]) && (numMin = i);
         }
-        [ nuevo[ j ], nuevo[ numMin ] ] = [ nuevo[ numMin ], nuevo[ j ] ]
-    }  
+        [nuevo[j], nuevo[numMin]] = [nuevo[numMin], nuevo[j]]
+    }
     // console.log(nuevo);
     let aniosLaborados = nuevo[nuevo.length - 1] - nuevo[0];
     let obj_antiguedad = ObtenerDiasAdicionales(aniosLaborados) as InfoLabora;
     // console.log(aniosLaborados);
     // console.log(obj_antiguedad);
     // console.log(acumulado);
-    
+
     return {
-        fecha_ingreso: Inicio_Ultimo_Periodo[0], 
+        fecha_ingreso: Inicio_Ultimo_Periodo[0],
         acumulado: acumulado[acumulado.length - 1],
         anios_labo: obj_antiguedad.anio,
         dia_adicional: obj_antiguedad.adicional,
@@ -169,26 +169,26 @@ async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any) {
 
 function ObtenerDiasAdicionales(aniosLaborados: number) {
     let objeto: any = [
-        {anio: 5, adicional: 0},
-        {anio: 6, adicional: 1},
-        {anio: 7, adicional: 2},
-        {anio: 8, adicional: 3},
-        {anio: 9, adicional: 4},
-        {anio: 10, adicional: 5},
-        {anio: 11, adicional: 6},
-        {anio: 12, adicional: 7},
-        {anio: 13, adicional: 8},
-        {anio: 14, adicional: 9},
-        {anio: 15, adicional: 10},
-        {anio: 16, adicional: 11},
-        {anio: 17, adicional: 12},
-        {anio: 18, adicional: 13},
-        {anio: 19, adicional: 14},
-        {anio: 10, adicional: 15},
+        { anio: 5, adicional: 0 },
+        { anio: 6, adicional: 1 },
+        { anio: 7, adicional: 2 },
+        { anio: 8, adicional: 3 },
+        { anio: 9, adicional: 4 },
+        { anio: 10, adicional: 5 },
+        { anio: 11, adicional: 6 },
+        { anio: 12, adicional: 7 },
+        { anio: 13, adicional: 8 },
+        { anio: 14, adicional: 9 },
+        { anio: 15, adicional: 10 },
+        { anio: 16, adicional: 11 },
+        { anio: 17, adicional: 12 },
+        { anio: 18, adicional: 13 },
+        { anio: 19, adicional: 14 },
+        { anio: 10, adicional: 15 },
     ]
 
     let resultado: InfoLabora;
-    resultado  = {
+    resultado = {
         anio: 0, adicional: 0
     }
     objeto.forEach((ele: any) => {
@@ -196,7 +196,7 @@ function ObtenerDiasAdicionales(aniosLaborados: number) {
             resultado = ele;
         }
     });
-    
+
     return resultado
 }
 
@@ -208,9 +208,9 @@ function ObtenerDiasAdicionales(aniosLaborados: number) {
  */
 async function PeriodoVacacionContrato(id_empl: number, ant: string, pre: string) {
     let data = await pool.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
-                .then(result => {
-                    return result.rows[0];
-                });
+        .then(result => {
+            return result.rows[0];
+        });
     return data
 }
 
@@ -220,11 +220,11 @@ async function PeriodoVacacionContrato(id_empl: number, ant: string, pre: string
  * @param fec_inicio Fecha inicio del periodo
  * @param fec_final Fecha finaliza el periodo
  */
-async function Vacaciones (id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
+async function Vacaciones(id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
     let data = await pool.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.dia_libre, v.dia_laborable FROM vacaciones v WHERE v.id_peri_vacacion = $1 AND v.estado like \'Aceptado\' AND CAST(v.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY v.fec_inicio ASC', [id_peri_vac, fec_inicio, fec_final])
-                .then(result => {
-                    return result.rows;
-                });
+        .then(result => {
+            return result.rows;
+        });
     return data
 }
 
@@ -234,11 +234,11 @@ async function Vacaciones (id_peri_vac: number, fec_inicio: Date, fec_final: Dat
  * @param fec_inicio Fecha de inicio del periodo
  * @param fec_final Fecha de finalizacion del periodo
  */
-async function Permisos (id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
+async function Permisos(id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
     let data = await pool.query('SELECT p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.dia_libre, p.hora_numero FROM permisos p WHERE p.id_peri_vacacion = $1  AND p.estado like \'Aceptado\' AND CAST(p.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\'', [id_peri_vac, fec_inicio, fec_final])
-                .then(result => {
-                    return result.rows;
-                });
+        .then(result => {
+            return result.rows;
+        });
     return data
 }
 
@@ -248,9 +248,9 @@ async function Permisos (id_peri_vac: number, fec_inicio: Date, fec_final: Date)
  */
 async function SueldoHorasTrabaja(id_empleado: number) {
     let data = await pool.query('SELECT ca.sueldo, ca.hora_trabaja FROM empl_contratos co, empl_cargos ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1', [id_empleado])
-                .then(result => {
-                    return result.rows;
-                });
+        .then(result => {
+            return result.rows;
+        });
     return data
 }
 
@@ -260,14 +260,14 @@ async function SueldoHorasTrabaja(id_empleado: number) {
  */
 async function diasObligaByRegimen(id_regimen: number) {
     let data = await pool.query('SELECT dia_anio_vacacion, dia_libr_anio_vacacion, max_dia_acumulacion FROM cg_regimenes WHERE id = $1', [id_regimen])
-                .then(result => {
-                    return result.rows[0];
-                });
+        .then(result => {
+            return result.rows[0];
+        });
     var x = data.dia_anio_vacacion + data.dia_libr_anio_vacacion;
     return { dia_obli: x, max_acumulado: data.max_dia_acumulacion }
 }
 
-export const vacacionesByIdUser = async function(id_empleado: number) {
+export const vacacionesByIdUser = async function (id_empleado: number) {
     // busco ID del ultimo contrato y su regimen del usuario
     var f = new Date()
     var f_presente = new Date()
@@ -280,11 +280,11 @@ export const vacacionesByIdUser = async function(id_empleado: number) {
 
     // console.log(dataPeri);
     const diasObliga = await diasObligaByRegimen(dataPeri.id_regimen);
-    
+
     const vacaciones = await Vacaciones(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final);
     const permisos = await Permisos(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final);
     const sueldoHora = await SueldoHorasTrabaja(id_empleado);
-    
+
     const acumulado = await ObtenerPeriodosEmpleado(id_empleado, diasObliga);
     // let hora_trabaja = sueldoHora[0].hora_trabaja;
     console.log(acumulado.fecha_ingreso);
@@ -321,36 +321,36 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
             detalle: '',
             desde: '',
             hasta: '',
-            descuento: { 
+            descuento: {
                 dias: 0,
                 horas: 0,
                 min: 0
             },
-            saldo: { 
+            saldo: {
                 dias: 0,
                 horas: 0,
                 min: 0
             }
         }
 
-        dkardex.periodo = JSON.stringify(obj.fec_final).slice(1,5);
+        dkardex.periodo = JSON.stringify(obj.fec_final).slice(1, 5);
         dkardex.detalle = obj.descripcion;
-        dkardex.desde = JSON.stringify(obj.fec_inicio).slice(1,-1) ;
-        dkardex.hasta = JSON.stringify(obj.fec_final).slice(1,-1);
+        dkardex.desde = JSON.stringify(obj.fec_inicio).slice(1, -1);
+        dkardex.hasta = JSON.stringify(obj.fec_final).slice(1, -1);
 
-        let num_dia_vacaciones = CalcularDiasVacacion(obj.fec_inicio, obj.fec_final) || 0;    
-            
+        let num_dia_vacaciones = CalcularDiasVacacion(obj.fec_inicio, obj.fec_final) || 0;
+
         let descuen;
         let proporcional_descuento;
 
         if (num_dia_vacaciones === 0) {
             var hora = parseInt(obj.hora_numero.split(':')[0]);
             var min = parseInt(obj.hora_numero.split(':')[1]);
-            var dia = (hora/hora_trabaja) + (min * (1/60) * (1/hora_trabaja));
-            proporcional_descuento = dia * (30/22)
+            var dia = (hora / hora_trabaja) + (min * (1 / 60) * (1 / hora_trabaja));
+            proporcional_descuento = dia * (30 / 22)
             descuen = DescuentoDiasHorMin(hora_trabaja, dia);
         } else {
-            proporcional_descuento = num_dia_vacaciones * (30/22)
+            proporcional_descuento = num_dia_vacaciones * (30 / 22)
             descuen = DescuentoDiasHorMin(hora_trabaja, num_dia_vacaciones);
         }
 
@@ -369,15 +369,15 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
             let DPeriodo = DetallePeriodoMetodo(IAcumulado.inicio_Ultimo_Periodo);
 
             let DAntiguedad = DetalleAntiguedadMetodo(IAcumulado.dia_adicional);
-            
-            let DLiquidacion = DetalleLiquidacionMetodo(saldoDecimal, DPeriodo.valor, DAntiguedad.valor )
+
+            let DLiquidacion = DetalleLiquidacionMetodo(saldoDecimal, DPeriodo.valor, DAntiguedad.valor)
             console.log(DPeriodo);
             console.log(DAntiguedad);
             console.log(DLiquidacion);
             arrayProporcional.periodo.push(DPeriodo);
             arrayProporcional.antiguedad.push(DAntiguedad);
             arrayLiquidacion.push(DLiquidacion);
-            
+
             console.log('===========');
             console.log(saldoDecimal);
         }
@@ -385,7 +385,7 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
         contador = contador + 1;
         dkardex.descuento = descuen;
         dkardex.saldo = saldo;
-        dkardex as VacacionesDiasCalendario;        
+        dkardex as VacacionesDiasCalendario;
         arrayDetalleKardex.push(dkardex);
     });
 
@@ -402,9 +402,9 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
         }
 
         let data = await pool.query('SELECT e.nombre, e.apellido, e.cedula, e.codigo, e.estado, c.descripcion FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca, sucursales AS s, ciudades AS c WHERE e.id = $1 AND e.id = co.id_empleado AND ca.id_empl_contrato = co.id AND s.id = ca.id_sucursal AND s.id_ciudad = c.id ORDER BY co.fec_ingreso DESC LIMIT 1', [id_empl])
-                .then(result => {
-                    return result.rows[0];
-                });
+            .then(result => {
+                return result.rows[0];
+            });
         ObjetoEmpleado.nombre = data.nombre + ' ' + data.apellido;
         ObjetoEmpleado.ciudad = data.descripcion;
         ObjetoEmpleado.cedula = data.cedula;
@@ -412,7 +412,7 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
         if (data.estado === 1) {
             ObjetoEmpleado.estado = 'Activo';
         }
-        
+
         return ObjetoEmpleado
     }
 
@@ -430,7 +430,7 @@ async function ArrayTotalDetalleKardex(arrayTotal: any, hora_trabaja: number, IA
 }
 
 function UnirVacacionesPermiso(vacaciones: any, permisos: any) {
-    
+
     let arrayUnico: any = [];
 
     vacaciones.forEach((element: any) => {
@@ -465,9 +465,9 @@ function UnirVacacionesPermiso(vacaciones: any, permisos: any) {
         let numMin;
         let i = numMin = j;
         for (++i; i < arrayUnico.length; i++) {
-            ( arrayUnico[i].fec_inicio < arrayUnico[ numMin ].fec_inicio ) && ( numMin = i );
+            (arrayUnico[i].fec_inicio < arrayUnico[numMin].fec_inicio) && (numMin = i);
         }
-        [ arrayUnico[ j ], arrayUnico[ numMin ] ] = [ arrayUnico[ numMin ], arrayUnico[ j ] ]
+        [arrayUnico[j], arrayUnico[numMin]] = [arrayUnico[numMin], arrayUnico[j]]
     }
 
     return arrayUnico;
@@ -477,16 +477,16 @@ function UnirVacacionesPermiso(vacaciones: any, permisos: any) {
  * Metodo para llenar el campo de Periodo en el Kardex
  * @param I_Periodo Fecha final del ultimo periodo 
  */
-function DetallePeriodoMetodo(I_Periodo: Date,) {
+function DetallePeriodoMetodo(I_Periodo: Date, ) {
     var f = new Date();
     var fecha1 = moment(I_Periodo.toJSON().split("T")[0]);
     var fecha2 = moment(f.toJSON().split("T")[0]);
 
     var diasLaborados = fecha2.diff(fecha1, 'days');
-    var valor = (diasLaborados * 15)/365
+    var valor = (diasLaborados * 15) / 365
 
     let respuesta = TransformaDiasHorMin(valor);
-    
+
     return respuesta
 }
 
@@ -500,18 +500,18 @@ function DetalleAntiguedadMetodo(dia_adicional: number) {
  * @param periodo 
  * @param antiguedad 
  */
-function DetalleLiquidacionMetodo(saldo:number, periodo: number, antiguedad: number ) {
-    return TransformaDiasHorMin( saldo + periodo + antiguedad )
+function DetalleLiquidacionMetodo(saldo: number, periodo: number, antiguedad: number) {
+    return TransformaDiasHorMin(saldo + periodo + antiguedad)
 }
 
-function TransformaDiasHorMin(valor_decimal: any ) {    
+function TransformaDiasHorMin(valor_decimal: any) {
 
     var d = parseInt(valor_decimal.toString().split(".")[0]);
     var aux_dia = valor_decimal - d;
-    
+
     var aux_hor = aux_dia * 24;
     var h = parseInt(aux_hor.toString().split(".")[0]);
-    
+
     var aux_min = (aux_hor - h) * 60;
     var m = parseInt(aux_min.toString().split(".")[0]);
 
@@ -524,8 +524,8 @@ function TransformaDiasHorMin(valor_decimal: any ) {
 }
 
 function ComprobarCalculo(hora_trabaja: number, dias: number, hora: number, min: number) {
-    var h = hora/hora_trabaja;
-    var m = (min/60) * (1/hora_trabaja)
+    var h = hora / hora_trabaja;
+    var m = (min / 60) * (1 / hora_trabaja)
     // console.log(dias + h + m);
     // console.log(dias + h + m + 10.5833);
 
@@ -536,10 +536,10 @@ function ComprobarCalculo(hora_trabaja: number, dias: number, hora: number, min:
 /**
  * var d = parseInt(valor.toString().split(".")[0]);
     var aux_dia = valor - d;
-    
+
     var aux_hor = aux_dia * 24;
     var h = parseInt(aux_hor.toString().split(".")[0]);
-    
+
     var aux_min = (aux_hor - h) * 60;
     var m = parseInt(aux_min.toString().split(".")[0]);
  */

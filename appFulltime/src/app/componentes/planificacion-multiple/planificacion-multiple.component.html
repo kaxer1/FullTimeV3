@@ -68,4 +68,39 @@
             </mat-card>
         </div>
     </div>
+    <br>
+    <div class="row">
+        <div class="col-md">
+            <div class="tituloHorarioL">
+                <span>CARGA PLANIFICACION MULTIPLES EMPLEADOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <form method="post" enctype="multipart/form-data">
+                        <input (change)="fileChangePrueba($event)" type="file" [formControl]="archivoPruebaForm"
+                            id="file3"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <label for="file3" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Presionar para seleccionar Plantilla con nombre PlanDetalle Multiples Empleados">Cargar
+                            Planificacion Multiple</label>
+                    </form>
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-sm">
+            <div class="tituloHorarioL">
+                <span>DESCARGAR PLANTILLA PLANIFICACION EMPLEADOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9" id="carta1">
+                <div class="container">
+                    <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                        matTooltip="Dar click para ver o descargar el documento"
+                        href="http://localhost:3000/plantillaD/documento/PlanDetalle Multiples Empleados.xlsx">
+                        <span class="material-icons">cloud_download</span> Descargar Plantilla Plan Multiples Empleados
+                    </a>
+                </div>
+            </mat-card>
+        </div>
+    </div>
 </div>

@@ -52,6 +52,7 @@ import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import KARDEX_VACACION_RUTAS from './rutas/reportes/kardexVacacionesRutas';
 import ASISTENCIA_RUTAS from './rutas/reportes/asistenciaRutas';
+import CARGA_MULTIPLE_RUTAS from './rutas/cargaMultiple/cargaMultipleRutas';
 
 import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
@@ -160,6 +161,9 @@ class Servidor {
 
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS);
+
+        // CARGA MULTIPLE
+        this.app.use('/cargaMultiple', CARGA_MULTIPLE_RUTAS);
 
     }
 

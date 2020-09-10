@@ -56,6 +56,7 @@ const horaExtraRutas_1 = __importDefault(require("./rutas/horaExtra/horaExtraRut
 const birthdayRutas_1 = __importDefault(require("./rutas/birthday/birthdayRutas"));
 const kardexVacacionesRutas_1 = __importDefault(require("./rutas/reportes/kardexVacacionesRutas"));
 const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRutas"));
+const cargaMultipleRutas_1 = __importDefault(require("./rutas/cargaMultiple/cargaMultipleRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
 const http_1 = require("http");
@@ -140,6 +141,8 @@ class Servidor {
         this.app.use('/reporte', reportesRutas_1.default);
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
+        // CARGA MULTIPLE
+        this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

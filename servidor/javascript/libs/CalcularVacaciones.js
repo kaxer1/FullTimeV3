@@ -487,10 +487,10 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
 /**
  * var d = parseInt(valor.toString().split(".")[0]);
     var aux_dia = valor - d;
-    
+
     var aux_hor = aux_dia * 24;
     var h = parseInt(aux_hor.toString().split(".")[0]);
-    
+
     var aux_min = (aux_hor - h) * 60;
     var m = parseInt(aux_min.toString().split(".")[0]);
  */ 
