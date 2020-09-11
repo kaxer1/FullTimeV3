@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-const nodemailer = require("nodemailer");
+import { enviarMail, email } from '../../libs/SettingsMail'
+import { RestarPeriodoVacacionAutorizada } from '../../libs/CargarVacacion'
 
 class VacacionesControlador {
 
@@ -53,17 +54,6 @@ class VacacionesControlador {
     const ultimo = await pool.query('SELECT * FROM vacaciones WHERE fec_inicio = $1 AND fec_final = $2  ORDER BY id DESC LIMIT 1', [fec_inicio, fec_final])
     const correoInfoPidePermiso = await pool.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [idContrato]);
 
-    const email = process.env.EMAIL;
-    const pass = process.env.PASSWORD;
-
-    let smtpTransport = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: email,
-        pass: pass
-      }
-    });
-    
     // obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal
     if (estado === true) {
       var url = `${process.env.URL_DOMAIN}/ver-vacacion`;
@@ -80,22 +70,10 @@ class VacacionesControlador {
       };
 
       if (vaca_mail === true && vaca_noti === true) {
-        smtpTransport.sendMail(data, async (error: any, info: any) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
+        enviarMail(data);
         res.jsonp({ message: 'Vacaciones guardadas con éxito', notificacion: true, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
       } else if (vaca_mail === true && vaca_noti === false) {
-        smtpTransport.sendMail(data, async (error: any, info: any) => {
-          if (error) {
-            console.log(error);
-          } else {
-            console.log('Email sent: ' + info.response);
-          }
-        });
+        enviarMail(data);
         res.jsonp({ message: 'Vacaciones guardadas con éxito', notificacion: false, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
       } else if (vaca_mail === false && vaca_noti === true) {
         res.jsonp({ message: 'Vacaciones guardadas con éxito', notificacion: true, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
@@ -132,42 +110,29 @@ class VacacionesControlador {
     const { estado, id_vacacion, id_rece_emp, id_depa_send } = req.body;
     await pool.query('UPDATE vacaciones SET estado = $1 WHERE id = $2', [estado, id]);
 
+    console.log(estado, id_vacacion, id_rece_emp, id_depa_send);
+    
     const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_depa_send]);
     const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacacion, id_rece_emp]);
     // console.log(JefeDepartamento.rows)
     // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
-    const estadoAutorizacion = [
-      { id: 1, nombre: 'Pendiente' },
-      { id: 2, nombre: 'Pre-autorizado' },
-      { id: 3, nombre: 'Autorizado' },
-      { id: 4, nombre: 'Negado' },
-    ];
-
-    let nombreEstado = '';
-    estadoAutorizacion.forEach(obj => {
-      if (obj.id === estado) {
-        nombreEstado = obj.nombre
-      }
-    })
-
-    const email = process.env.EMAIL;
-    const pass = process.env.PASSWORD;
-
-    let smtpTransport = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: email,
-        pass: pass
-      }
-    });
-
+    // const estadoAutorizacion = [
+    //   { id: 1, nombre: 'Solicitado' },
+    //   { id: 2, nombre: 'Rechazado' },
+    //   { id: 3, nombre: 'Aceptado' },
+    //   { id: 4, nombre: 'Eliminado' },
+    // ];    
+    if ('Aceptado' === estado) {
+      RestarPeriodoVacacionAutorizada(parseInt(id));
+    }
+    
     JefeDepartamento.rows.forEach(obj => {
       var url = `${process.env.URL_DOMAIN}/vacacionesEmpleado`;
       InfoVacacionesReenviarEstadoEmpleado.rows.forEach(ele => {
         let notifi_realtime = {
           id_send_empl: obj.empleado,
           id_receives_depa: obj.id_dep,
-          estado: nombreEstado,
+          estado: estado,
           id_vacaciones: id_vacacion,
           id_permiso: null
         }
@@ -177,7 +142,7 @@ class VacacionesControlador {
           to: ele.correo,
           subject: 'Estado de solicitud de Vacaciones',
           html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
-                cédula ${obj.cedula} a cambiado el estado de su solicitud de vacaciones a: <b>${nombreEstado}</b></p>
+                cédula ${obj.cedula} a cambiado el estado de su solicitud de vacaciones a: <b>${estado}</b></p>
                 <h4><b>Informacion de las vacaciones</b></h4>
                 <ul>
                     <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
@@ -192,22 +157,10 @@ class VacacionesControlador {
         };
 
         if (ele.vaca_mail === true && ele.vaca_noti === true) {
-          smtpTransport.sendMail(data, async (error: any, info: any) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
+          enviarMail(data);
           res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
         } else if (ele.vaca_mail === true && ele.vaca_noti === false) {
-          smtpTransport.sendMail(data, async (error: any, info: any) => {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log('Email sent: ' + info.response);
-            }
-          });
+          enviarMail(data);
           res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
         } else if (ele.vaca_mail === false && ele.vaca_noti === true) {
           res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
@@ -217,7 +170,6 @@ class VacacionesControlador {
       });
 
     });
-
 
   }
 

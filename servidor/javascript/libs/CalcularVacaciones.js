@@ -40,10 +40,6 @@ function SaldoDiasHorMin(hora_trabaja, num_dia_vacaciones) {
         min: m
     };
 }
-function restarYear(fecha, anio) {
-    fecha.setFullYear(fecha.getFullYear() - anio);
-    return fecha;
-}
 function diasTotal(array, i, f) {
     var diasFaltante = array[i.getMonth()];
     var y = diasFaltante - i.getDate();
@@ -96,7 +92,7 @@ function CarcularSaldoDecimal(contador, acumulado, descuen) {
         return x;
     }
 }
-// falta mejorar este metodo
+// falta mejorar este metodo en caso de usarlo
 function CalcularDiasAcumulados(dias_obliga, I_Periodo, F_Periodo) {
     var f = new Date();
     var fecha1 = moment_1.default(I_Periodo.toJSON().split("T")[0]);
@@ -113,45 +109,44 @@ function CalcularDiasAcumulados(dias_obliga, I_Periodo, F_Periodo) {
         return aux;
     }
 }
-// falta mejorar este metodo
-function ObtenerPeriodosEmpleado(id_empl, diasObliga) {
+function ObtenerPeriodosEmpleado(id_empl, diasObliga, fec_final_Rango, hora_trabaja) {
     return __awaiter(this, void 0, void 0, function* () {
-        // console.log(diasObliga);
-        let arrayPeriodos = yield database_1.default.query('SELECT pv.id as id_peri_vac,pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato ORDER BY e.fec_ingreso DESC', [id_empl])
+        let primerPeriodoInicio = yield database_1.default.query('SELECT pv.fec_inicio FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato ORDER BY e.fec_ingreso DESC, pv.fec_inicio LIMIT 1', [id_empl])
+            .then(result => {
+            return result.rows[0].fec_inicio.toJSON().split('T')[0];
+        });
+        let arrayPeriodos = yield database_1.default.query('SELECT pv.id as id_peri_vac, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC, pv.fec_inicio', [id_empl, primerPeriodoInicio, fec_final_Rango])
             .then(result => {
             return result.rows;
         });
+        // console.log(arrayPeriodos);
         let acumulado = arrayPeriodos.map(obj => {
-            return CalcularDiasAcumulados(diasObliga.dia_obli, obj.fec_inicio, obj.fec_final);
+            // return CalcularDiasAcumulados(diasObliga.dia_obli, obj.fec_inicio, obj.fec_final)
+            return DiasHorMinToDecimal(obj.dia_vacacion, obj.horas_vacaciones, obj.min_vacaciones, hora_trabaja);
         });
+        // console.log(acumulado);
+        let valorAcumulado = 0;
+        acumulado.forEach(obj => {
+            valorAcumulado = obj + valorAcumulado;
+        });
+        // console.log(valorAcumulado);
         let Inicio_Ultimo_Periodo = arrayPeriodos.map(obj => {
             return obj.fec_inicio;
         });
-        console.log('Inicio Periodos ====> ', Inicio_Ultimo_Periodo);
+        // console.log('Inicio Periodos ====> ',Inicio_Ultimo_Periodo);
         let aniosInicio = arrayPeriodos.map(obj => {
             return obj.fec_inicio.getFullYear();
         });
         let aniosFinal = arrayPeriodos.map(obj => {
             return obj.fec_final.getFullYear();
         });
-        var nuevo = aniosInicio.concat(aniosFinal);
-        for (let j = 0; j < nuevo.length; j++) {
-            let numMin;
-            let i = numMin = j;
-            for (++i; i < nuevo.length; i++) {
-                (nuevo[i] < nuevo[numMin]) && (numMin = i);
-            }
-            [nuevo[j], nuevo[numMin]] = [nuevo[numMin], nuevo[j]];
-        }
+        var nuevo = [...new Set(aniosInicio.concat(aniosFinal))];
         // console.log(nuevo);
         let aniosLaborados = nuevo[nuevo.length - 1] - nuevo[0];
-        let obj_antiguedad = ObtenerDiasAdicionales(aniosLaborados);
-        // console.log(aniosLaborados);
-        // console.log(obj_antiguedad);
-        // console.log(acumulado);
+        let obj_antiguedad = ObtenerDiasAdicionales(aniosLaborados); // APLICA SOLO A CODIGO DE TRABAJO
         return {
             fecha_ingreso: Inicio_Ultimo_Periodo[0],
-            acumulado: acumulado[acumulado.length - 1],
+            acumulado: valorAcumulado,
             anios_labo: obj_antiguedad.anio,
             dia_adicional: obj_antiguedad.adicional,
             inicio_Ultimo_Periodo: Inicio_Ultimo_Periodo[Inicio_Ultimo_Periodo.length - 1]
@@ -191,12 +186,12 @@ function ObtenerDiasAdicionales(aniosLaborados) {
 /**
  * Método para pedir el periodo del presente año hasta la fecha actual de solicitud
  * @param id_empl Id de empleado que solicita el cardex
- * @param ant Fecha del año anterior
- * @param pre Fecha del año presente
+ * @param ant Fecha del año anterior solo el año Ejm: 2015
+ * @param pre Fecha del año presente solo el año Ejm: 2016
  */
 function PeriodoVacacionContrato(id_empl, ant, pre) {
     return __awaiter(this, void 0, void 0, function* () {
-        let data = yield database_1.default.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
+        let data = yield database_1.default.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
             .then(result => {
             return result.rows[0];
         });
@@ -211,7 +206,7 @@ function PeriodoVacacionContrato(id_empl, ant, pre) {
  */
 function Vacaciones(id_peri_vac, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        let data = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.dia_libre, v.dia_laborable FROM vacaciones v WHERE v.id_peri_vacacion = $1 AND v.estado like \'Aceptado\' AND CAST(v.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY v.fec_inicio ASC', [id_peri_vac, fec_inicio, fec_final])
+        let data = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.dia_libre, v.dia_laborable FROM vacaciones v WHERE v.id_peri_vacacion = $1 AND v.estado like \'Aceptado\' AND CAST(v.fec_inicio as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY v.fec_inicio ASC', [id_peri_vac, fec_inicio, fec_final])
             .then(result => {
             return result.rows;
         });
@@ -260,31 +255,35 @@ function diasObligaByRegimen(id_regimen) {
         return { dia_obli: x, max_acumulado: data.max_dia_acumulacion };
     });
 }
-exports.vacacionesByIdUser = function (id_empleado) {
+exports.vacacionesByIdUser = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         // busco ID del ultimo contrato y su regimen del usuario
         var f = new Date();
         var f_presente = new Date();
         f.setUTCHours(f.getHours());
         f_presente.setUTCHours(f_presente.getHours());
-        let year_anterior = restarYear(f, 1).toLocaleDateString().split("-")[0];
-        let year_presente = f_presente.toLocaleDateString().split("-")[0];
-        const dataPeri = yield PeriodoVacacionContrato(id_empleado, year_anterior, year_presente);
+        const dataPeri = yield PeriodoVacacionContrato(id_empleado, desde.split("-")[0], hasta.split("-")[0]); //LISTO
         // console.log(dataPeri);
-        const diasObliga = yield diasObligaByRegimen(dataPeri.id_regimen);
-        const vacaciones = yield Vacaciones(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final);
-        const permisos = yield Permisos(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final);
-        const sueldoHora = yield SueldoHorasTrabaja(id_empleado);
-        const acumulado = yield ObtenerPeriodosEmpleado(id_empleado, diasObliga);
-        // let hora_trabaja = sueldoHora[0].hora_trabaja;
-        console.log(acumulado.fecha_ingreso);
+        const diasObliga = yield diasObligaByRegimen(dataPeri.id_regimen); //LISTO
+        // console.log('REGIMEN ======>',diasObliga);
+        const vacaciones = yield Vacaciones(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final); //LISTO
+        // console.log('VACACIONES ##################',vacaciones);
+        const permisos = yield Permisos(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final); //LISTO
+        // console.log('PERMISOS ##################', permisos);
+        const sueldoHora = yield SueldoHorasTrabaja(id_empleado); //LISTO
+        // console.log(sueldoHora)
+        let hora_trabaja = sueldoHora[0].hora_trabaja;
+        // console.log(dataPeri.fec_final.toJSON().split('T')[0]);
+        const acumulado = yield ObtenerPeriodosEmpleado(id_empleado, diasObliga, dataPeri.fec_final.toJSON().split('T')[0], hora_trabaja); //LISTO
+        // console.log(acumulado);
         /* VALORES DE PRUEBA */
-        acumulado.acumulado = 40.91;
-        let hora_trabaja = 6;
+        // acumulado.acumulado = 40.91;
+        // let hora_trabaja = 6;
         // const acumulado = { acumulado: 40.91, anios_labo: 6, dia_adicional: 1 } as IAcumulado;
-        let nuevoArray = UnirVacacionesPermiso(vacaciones, permisos);
-        let arrayDetalleKardex = ArrayTotalDetalleKardex(nuevoArray, hora_trabaja, acumulado, id_empleado);
-        ComprobarCalculo(hora_trabaja, 24, 3, 16);
+        let nuevoArray = UnirVacacionesPermiso(vacaciones, permisos); //LISTO
+        // console.log(nuevoArray);
+        let arrayDetalleKardex = ArrayTotalDetalleKardex(nuevoArray, hora_trabaja, acumulado, id_empleado); //LISTO
+        // ComprobarCalculo(hora_trabaja, 24, 3, 16);
         return arrayDetalleKardex;
     });
 };
@@ -296,7 +295,6 @@ function ArrayTotalDetalleKardex(arrayTotal, hora_trabaja, IAcumulado, id_emplea
             antiguedad: []
         };
         let arrayLiquidacion = [];
-        let arrayEmpleado = [];
         let contador = 0;
         let saldoDecimal = 0;
         arrayTotal.forEach((obj) => {
@@ -363,34 +361,9 @@ function ArrayTotalDetalleKardex(arrayTotal, hora_trabaja, IAcumulado, id_emplea
             dkardex;
             arrayDetalleKardex.push(dkardex);
         });
-        const arrayEmpleadoFuncion = function ObtenerInformacionEmpleado(IAcumulado, id_empl) {
-            return __awaiter(this, void 0, void 0, function* () {
-                let ObjetoEmpleado = {
-                    nombre: '',
-                    ciudad: '',
-                    cedula: '',
-                    codigo: '',
-                    fec_ingreso: IAcumulado.fecha_ingreso,
-                    fec_carga: IAcumulado.inicio_Ultimo_Periodo,
-                    estado: 'Inactivo'
-                };
-                let data = yield database_1.default.query('SELECT e.nombre, e.apellido, e.cedula, e.codigo, e.estado, c.descripcion FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca, sucursales AS s, ciudades AS c WHERE e.id = $1 AND e.id = co.id_empleado AND ca.id_empl_contrato = co.id AND s.id = ca.id_sucursal AND s.id_ciudad = c.id ORDER BY co.fec_ingreso DESC LIMIT 1', [id_empl])
-                    .then(result => {
-                    return result.rows[0];
-                });
-                ObjetoEmpleado.nombre = data.nombre + ' ' + data.apellido;
-                ObjetoEmpleado.ciudad = data.descripcion;
-                ObjetoEmpleado.cedula = data.cedula;
-                ObjetoEmpleado.codigo = data.codigo;
-                if (data.estado === 1) {
-                    ObjetoEmpleado.estado = 'Activo';
-                }
-                return ObjetoEmpleado;
-            });
-        };
         // ObtenerInformacionEmpleado(IAcumulado, id_empleado)
-        let empleado = yield arrayEmpleadoFuncion(IAcumulado, id_empleado);
-        console.log(empleado);
+        let empleado = yield ObtenerInformacionEmpleado(IAcumulado, id_empleado);
+        // console.log(empleado);
         let KardexJsop = {
             empleado: [empleado],
             detalle: arrayDetalleKardex,
@@ -421,7 +394,8 @@ function UnirVacacionesPermiso(vacaciones, permisos) {
         let camposIguales = {
             fec_inicio: element.fec_inicio,
             fec_final: element.fec_final,
-            descripcion: element.descripcion,
+            descripcion: 'Solicitud Permiso',
+            // descripcion: element.descripcion,
             dia_laborable: element.dia,
             dia_libre: element.dia_libre,
             hora_numero: element.hora_numero
@@ -438,16 +412,55 @@ function UnirVacacionesPermiso(vacaciones, permisos) {
     }
     return arrayUnico;
 }
+function ObtenerInformacionEmpleado(IAcumulado, id_empl) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let ObjetoEmpleado = {
+            nombre: '',
+            ciudad: '',
+            cedula: '',
+            codigo: '',
+            fec_ingreso: IAcumulado.fecha_ingreso,
+            fec_carga: IAcumulado.inicio_Ultimo_Periodo,
+            acumulado: IAcumulado.acumulado,
+            estado: 'Inactivo'
+        };
+        let data = yield database_1.default.query('SELECT e.nombre, e.apellido, e.cedula, e.codigo, e.estado, c.descripcion FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca, sucursales AS s, ciudades AS c WHERE e.id = $1 AND e.id = co.id_empleado AND ca.id_empl_contrato = co.id AND s.id = ca.id_sucursal AND s.id_ciudad = c.id ORDER BY co.fec_ingreso DESC LIMIT 1', [id_empl])
+            .then(result => {
+            return result.rows[0];
+        });
+        ObjetoEmpleado.nombre = data.nombre + ' ' + data.apellido;
+        ObjetoEmpleado.ciudad = data.descripcion;
+        ObjetoEmpleado.cedula = data.cedula;
+        ObjetoEmpleado.codigo = data.codigo;
+        if (data.estado === 1) {
+            ObjetoEmpleado.estado = 'Activo';
+        }
+        return ObjetoEmpleado;
+    });
+}
 /**
  * Metodo para llenar el campo de Periodo en el Kardex
- * @param I_Periodo Fecha final del ultimo periodo
+ * @param I_Periodo Fecha inicial del ultimo periodo
  */
 function DetallePeriodoMetodo(I_Periodo) {
     var f = new Date();
-    var fecha1 = moment_1.default(I_Periodo.toJSON().split("T")[0]);
-    var fecha2 = moment_1.default(f.toJSON().split("T")[0]);
-    var diasLaborados = fecha2.diff(fecha1, 'days');
-    var valor = (diasLaborados * 15) / 365;
+    var aux_f = new Date(I_Periodo.toJSON().split('T')[0]);
+    // console.log('ANTES ========================>',aux_f);
+    aux_f.setFullYear(aux_f.getFullYear() + 1);
+    // console.log('DESPUES ========================>',aux_f);
+    let diasLaborados;
+    let valor;
+    if (f < aux_f) {
+        // console.log('Periodo Actual');
+        var fecha1 = moment_1.default(I_Periodo.toJSON().split("T")[0]);
+        var fecha2 = moment_1.default(f.toJSON().split("T")[0]);
+        diasLaborados = fecha2.diff(fecha1, 'days');
+        valor = (diasLaborados * 15) / 365;
+    }
+    else {
+        // console.log('Periodo Anterior');
+        valor = 0;
+    }
     let respuesta = TransformaDiasHorMin(valor);
     return respuesta;
 }
@@ -477,6 +490,12 @@ function TransformaDiasHorMin(valor_decimal) {
         valor: valor_decimal
     };
 }
+function DiasHorMinToDecimal(dias, horas, min, hora_trabaja) {
+    var hToD = horas / hora_trabaja;
+    var mToD = min * (1 / 60) * (1 / hora_trabaja);
+    let decimal = dias + hToD + mToD;
+    return decimal;
+}
 function ComprobarCalculo(hora_trabaja, dias, hora, min) {
     var h = hora / hora_trabaja;
     var m = (min / 60) * (1 / hora_trabaja);
@@ -493,4 +512,26 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
     
     var aux_min = (aux_hor - h) * 60;
     var m = parseInt(aux_min.toString().split(".")[0]);
+ */
+// let year_anterior = restarYear(f, 1).toLocaleDateString().split("-")[0];
+// let year_presente = f_presente.toLocaleDateString().split("-")[0];
+// console.log(year_anterior);
+// console.log(year_presente);
+// for (let j = 0; j < nuevo.length; j++) {
+//     let numMin;
+//     let i = numMin = j;
+//     for (++i; i < nuevo.length; i++) {
+//         ( nuevo[i] < nuevo[ numMin ] ) && ( numMin = i );
+//     }
+//     [ nuevo[ j ], nuevo[ numMin ] ] = [ nuevo[ numMin ], nuevo[ j ] ]
+// } 
+/**
+•	Numerar los empleados y contabilizarlos (Reporte lista empleados). (1h)
+•	Colorear las filas en formato cebra para (Reporte lista empleados). (1h)
+•	Numerar los registros y contabilizarlos (Reporte Asistencia Consolidada). (1h)
+•	Colorear las filas en formato cebra para (Reporte Asistencia Consolidada). (1h)
+•	Mejorar el diseño del total (Reporte Asistencia Consolidada). (30min)
+•	Diseño de la cabecera al presentar los datos de los reportes (Kardex y asistencia consolidada). (1h).
+•	Mejorar el diseño del total (Reporte Asistencia Consolidada). (30min)
+•	Descripción de palabras claves.
  */ 

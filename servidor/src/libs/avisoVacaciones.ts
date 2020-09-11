@@ -71,17 +71,17 @@ async function CrearNuevoPeriodo(Obj: any, descripcion: string, dia: Date, anio:
         antiguedad = regimen.dia_incr_antiguedad
     }
     
-    var nuevo = new PVacacion(
-        Obj.id_empl_contrato,
-        descripcion,
-        regimen.dia_anio_vacacion,
-        antiguedad,
-        1,
-        dia,
-        anio,
-        Obj.dia_perdido,
-        Obj.horas_vacaciones,
-        Obj.min_vacaciones );
+    // var nuevo = new PVacacion(
+    //     Obj.id_empl_contrato,
+    //     descripcion,
+    //     regimen.dia_anio_vacacion,
+    //     antiguedad,
+    //     1,
+    //     dia,
+    //     anio,
+    //     Obj.dia_perdido,
+    //     Obj.horas_vacaciones,
+    //     Obj.min_vacaciones );
     
     // console.log(nuevo);
     await pool.query('INSERT INTO peri_vacaciones(id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, horas_vacaciones, min_vacaciones) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )', [Obj.id_empl_contrato, descripcion, regimen.dia_anio_vacacion, antiguedad, 1, dia, anio, Obj.dia_perdido, Obj.horas_vacaciones, Obj.min_vacaciones])

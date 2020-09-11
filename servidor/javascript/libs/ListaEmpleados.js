@@ -38,7 +38,7 @@ function EmpleadoDepartamentos(id_empleado) {
 }
 function IdsEmpleados(id_empresa) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT distinct co.id_empleado FROM sucursales AS s, cg_departamentos AS d, empl_cargos AS ca, empl_contratos AS co WHERE s.id_empresa = $1 AND s.id = d.id_sucursal AND ca.id_sucursal = s.id AND d.id = ca.id_departamento AND co.id = ca.id_empl_contrato ORDER BY co.id_empleado ASC', [id_empresa])
+        return yield database_1.default.query('SELECT distinct co.id_empleado, e.apellido FROM sucursales AS s, cg_departamentos AS d, empl_cargos AS ca, empl_contratos AS co, empleados AS e WHERE s.id_empresa = $1 AND s.id = d.id_sucursal AND ca.id_sucursal = s.id AND d.id = ca.id_departamento AND co.id = ca.id_empl_contrato AND e.id = co.id_empleado ORDER BY e.apellido ASC', [id_empresa])
             .then(result => {
             return result.rows;
         });

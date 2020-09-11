@@ -11,9 +11,9 @@ class KardexVacacionesRutas {
 
     configuracion(): void {
         // solicita empleados
-        this.router.get('/', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
+        this.router.get('/:desde/:hasta', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
         // solicita administrador
-        this.router.get('/:id_empleado', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
+        this.router.get('/:id_empleado/:desde/:hasta', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
     }
 
 

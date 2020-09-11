@@ -13,28 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-function sumaDias(fecha, dias) {
-    fecha.setUTCHours(fecha.getHours());
-    fecha.setDate(fecha.getDate() + dias);
-    return fecha;
-}
-function restaDias(fecha, dias) {
-    fecha.setUTCHours(fecha.getHours());
-    fecha.setDate(fecha.getDate() - dias);
-    return fecha;
-}
-function ObtenerRangoSemanal(fHoy) {
-    fHoy.setUTCHours(0);
-    fHoy.setUTCMinutes(0);
-    var fechaInicio = new Date(fHoy);
-    var fechaFinal = new Date(fHoy);
-    let dia_suma = sumaDias(fechaFinal, 6 - fHoy.getDay());
-    let dia_resta = restaDias(fechaInicio, fHoy.getDay());
-    return {
-        inicio: dia_resta,
-        final: dia_suma
-    };
-}
+const MetodosFechas_1 = require("./MetodosFechas");
 function HorarioEmpleado(id_cargo, dia_inicia_semana) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
@@ -47,15 +26,16 @@ exports.ValidarHorarioEmpleado = function (id_empleado, id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         f.setHours(0);
-        let diaInicioSemana = ObtenerRangoSemanal(f);
+        let diaInicioSemana = MetodosFechas_1.ObtenerRangoSemanal(f);
         let fechaIterada = new Date(diaInicioSemana.inicio);
         let diasLabora = yield HorarioEmpleado(id_cargo, diaInicioSemana.inicio.toJSON().split('T')[0]);
+        console.log(diasLabora);
         let respuesta = [];
         let dataEstructurada = [];
+        console.log(diaInicioSemana.inicio.getDay(), '====>', diaInicioSemana.final.getDay());
         diasLabora.forEach((obj) => {
             let con = 0;
-            for (let i = diaInicioSemana.inicio.getDate(); i <= diaInicioSemana.final.getDate(); i++) {
-                fechaIterada.setDate(i);
+            for (let i = 0; i <= 6; i++) {
                 if (con === 0) {
                     respuesta.push(obj.lunes);
                 }
@@ -81,6 +61,7 @@ exports.ValidarHorarioEmpleado = function (id_empleado, id_cargo) {
                     fec_iterada: fechaIterada.toJSON().split('T')[0],
                     boolena_fecha: respuesta[con]
                 });
+                fechaIterada.setDate(fechaIterada.getDate() + 1);
                 con = con + 1;
             }
         });

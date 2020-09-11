@@ -10,9 +10,9 @@ class KardexVacacionesRutas {
     }
     configuracion() {
         // solicita empleados
-        this.router.get('/', VerificarToken_1.TokenValidation, kardexVacacionesControlador_1.KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
+        this.router.get('/:desde/:hasta', VerificarToken_1.TokenValidation, kardexVacacionesControlador_1.KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
         // solicita administrador
-        this.router.get('/:id_empleado', VerificarToken_1.TokenValidation, kardexVacacionesControlador_1.KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
+        this.router.get('/:id_empleado/:desde/:hasta', VerificarToken_1.TokenValidation, kardexVacacionesControlador_1.KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
     }
 }
 exports.KARDEX_VACACION_RUTAS = new KardexVacacionesRutas();

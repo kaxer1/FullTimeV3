@@ -46,16 +46,20 @@ export class PedHoraExtraService {
   BuscarDatosAutorizacion(id_hora: number, id_empleado: number) {
     return this.http.get(`${this.API_URL}/horas-extras-pedidas/datosAutorizacion/${id_hora}/${id_empleado}`);
   }
-
+  
   SendMailNoti(datos: any) {
     return this.http.post(`${this.API_URL}/horas-extras-pedidas/mail-noti`, datos);
   }
-
+  
   EliminarHoraExtra(id_hora_extra: number) {
     return this.http.delete(`${this.API_URL}/horas-extras-pedidas/eliminar/${id_hora_extra}`);
   }
-
+  
   EditarHoraExtra(id: number, datos: any) {
     return this.http.put(`${this.API_URL}/horas-extras-pedidas/${id}/hora-extra-solicitada`, datos);
+  }
+  
+  HorarioEmpleadoSemanal(id_empleado: number){
+    return this.http.get<any>(`${this.API_URL}/horas-extras-pedidas/horario-empleado/${id_empleado}`);
   }
 }

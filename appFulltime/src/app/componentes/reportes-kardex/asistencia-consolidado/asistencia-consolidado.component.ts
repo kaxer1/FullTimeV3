@@ -8,11 +8,20 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-asistencia-consolidado',
   templateUrl: './asistencia-consolidado.component.html',
-  styleUrls: ['./asistencia-consolidado.component.css']
+  styleUrls: ['./asistencia-consolidado.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  ]
 })
 export class AsistenciaConsolidadoComponent implements OnInit {
 
@@ -39,10 +48,18 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   fec_inicio_mes = new FormControl('', Validators.required);
   fec_final_mes = new FormControl('', Validators.required);
-
+  
   public fechasForm = new FormGroup({
     fec_inicio: this.fec_inicio_mes,
     fec_final: this.fec_final_mes
+  })
+  
+  anio_inicio = new FormControl('', Validators.required);
+  anio_final = new FormControl('', Validators.required);
+
+  public fechasKardexForm = new FormGroup({
+    fec_inicio: this.anio_inicio,
+    fec_final: this.anio_final
   })
 
   constructor(
@@ -92,18 +109,6 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     })
   }
 
-  kardex: any = [];
-  KardexEmpleado(id_empleado: number, palabra: string) {
-    console.log('conca');
-    this.restKardex.ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado).subscribe(res => {
-      this.kardex = res;
-      console.log(this.kardex);
-      this.generarPdf(palabra, 3)
-    })
-  }
-
-  
-
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
@@ -133,6 +138,31 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     console.log(f_i.toJSON());
     console.log(f_f.toJSON());
   }
+  
+  f_inicio_reqK: string = ''; 
+  f_final_reqK: string = ''; 
+  habilitarK: boolean = false;
+  estiloK: any = { 'visibility': 'hidden' };
+  ValidarRangofechasKardex(form) {
+    var f_i = new Date(form.fec_inicio)
+    var f_f = new Date(form.fec_final)
+
+    if (f_i < f_f) {
+      this.toastr.success('Fechas validas');
+      this.f_inicio_reqK = f_i.toJSON().split('T')[0];
+      this.f_final_reqK = f_f.toJSON().split('T')[0];
+      this.habilitarK = true
+      this.estiloK = { 'visibility': 'visible' };
+    } else if(f_i > f_f) {
+      this.toastr.info('Fecha final es menor a la fecha inicial');
+      this.fechasKardexForm.reset();
+    } else if(f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
+      this.toastr.info('Fecha inicial es igual a la fecha final');
+      this.fechasKardexForm.reset();
+    }
+    console.log(f_i.toJSON());
+    console.log(f_f.toJSON());
+  }
 
   AsistenciaEmpleado(id_empleado: number, palabra: string) {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
@@ -146,6 +176,18 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     }
   }
 
+  kardex: any = [];
+  KardexEmpleado(id_empleado: number, palabra: string) {
+    if (this.f_inicio_reqK != '' && this.f_final_reqK != '') {
+      this.restKardex.ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado, this.f_inicio_reqK, this.f_final_reqK).subscribe(res => {
+        this.kardex = res;
+        console.log(this.kardex);
+        this.generarPdf(palabra, 3)
+      })
+  } else {
+    this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
+  }
+  }
    /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
    * ****************************************************************************************************/
@@ -172,9 +214,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   }
 
-  /**********************************
+  /**********************************************
    *  METODOS PARA IMPRIMIR LA ASISTENCIA
-   **********************************/
+   **********************************************/
   fechaHoy: string;
   getDocumentDefinicionAsistencia() {
     sessionStorage.setItem('Empleado', this.empleados);
@@ -230,30 +272,16 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           style: 'subtitulos',
           text: 'Reporte - Asistencia Detalle Consolidado'
         },
-        {
-          style: 'subtitulos',
-          text: 'Periodo del: ' + this.asistencia.detalle[0].fecha.split("T")[0] + ' al ' + this.asistencia.detalle[this.asistencia.detalle.length - 1].fecha.split("T")[0]
-        },
-        this.CampoCiudad(this.asistencia.empleado[0].ciudad),
-        this.CampoInfoEmpleado(this.asistencia.empleado[0]),
+        this.CampoInformacionGeneralAsistencia(this.asistencia.empleado[0].ciudad, this.asistencia.empleado[0]),
         this.CampoDetalleAsistencia(this.asistencia.detalle),
         this.CampoOperaciones(this.asistencia.operaciones[0]),
       ],
       styles: {
-        header: {
-          fontSize: 18,
+        tableTotal: {
+          fontSize: 30,
           bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
+          alignment: 'center',
+          fillColor: '#6495ED'
         },
         tableHeader: {
           fontSize: 9,
@@ -265,67 +293,70 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           fontSize: 8,
           margin: [0,5,0,5]
         },
-        itemsTableDesHas: {
-          fontSize: 9,
-          margin: [0,5,0,5]
-        },
-        itemsTableCentrado: {
+        itemsTableInfo: {
           fontSize: 10,
-          alignment: 'center',
           margin: [0,5,0,5]
         },
         subtitulos: {
           fontSize: 16,
           alignment: 'center',
           margin: [0, 5, 0, 10]
+        },
+        tableMargin: {
+          margin: [0, 20, 0, 0]
+        },
+        CabeceraTabla: {
+          fontSize: 12,
+          alignment: 'center',
+          margin: [0, 8, 0, 8],
+          fillColor: '#6495ED',
         }
       }
     };
   }
 
-  CampoCiudad(ciudad: string) {
+  CampoInformacionGeneralAsistencia(ciudad: string, e: any) {
     return {
       table: {
-        widths: ['*'],
+        widths: ['*', '*', '*'],
         body: [
           [
+            {colSpan: 3, text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'CabeceraTabla'},
+            '',''            
+          ],
+          [
             {
-              bold: true,
-              fillColor: '#E1BB10',
-              border: [false, false, false, false],
+              border: [true, true, false, true],
               text: 'CIUDAD: ' +  ciudad,
+              style: 'itemsTableInfo'
+            },
+            {
+              border: [false, true, false, true],
+              bold: true,
+              text: 'PERIODO DEL: ' + String(moment(this.f_inicio_req, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(this.f_final_req, "YYYY/MM/DD").format("DD/MM/YYYY")),
+              style: 'itemsTableInfo'
+            },
+            {
+              border: [false, true, true, true],
+              text: 'N° REGISTROS: ' + this.asistencia.detalle.length, 
+              style: 'itemsTableInfo'
             }
-          ]
-        ]
-      }
-    }
-  }
-
-  CampoInfoEmpleado(e: any) {
-    return {
-      table: {
-        widths: ['auto', '*', '*'],
-        body: [
+          ],
           [
             {
-              bold: true,
-              fillColor: '#1BAEFD',
-              border: [false, false, false, false],
+              border: [true, true, false, true],
               text: 'EMPLEADO: ' +  e.nombre,
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#1BAEFD',
-              alignment: 'center',
-              border: [false, false, false, false],
+              border: [false, true, false, true],
               text: 'C.C.: ' + e.cedula,
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#1BAEFD',
-              alignment: 'center',
-              border: [false, false, false, false],
+              border: [false, true, true, true],
               text: 'COD: ' + e.codigo,
+              style: 'itemsTableInfo'
             }
           ]
         ]
@@ -334,11 +365,14 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   }
 
   CampoDetalleAsistencia(d: any[]) {
+    let contador = 0;
     return {
+      style: 'tableMargin',
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto','auto', 'auto', 'auto','auto', 'auto', 'auto','auto', 'auto', 'auto', 'auto' ],
+        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto','auto', 'auto', 'auto','auto', 'auto', 'auto','auto', 'auto', 'auto', 'auto' ],
         body: [
           [
+            {text: 'Nº', style: 'tableHeader'},
             {colSpan: 4, text: 'ENTRADA', style: 'tableHeader'}, 
             '', '', '',
             {colSpan: 3, text: 'SALIDA A', style: 'tableHeader'},
@@ -356,7 +390,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             {text: 'HORA EX. S-D', style: 'tableHeader'},
           ],
           ...d.map(obj => {
+              contador = contador + 1
               return [ 
+                { style: 'itemsTable', text: contador}, 
                 { style: 'itemsTable', text: obj.fecha_mostrar}, 
                 { style: 'itemsTable', text: obj.E.hora_default}, 
                 { style: 'itemsTable', text: obj.E.hora_timbre}, 
@@ -380,35 +416,51 @@ export class AsistenciaConsolidadoComponent implements OnInit {
               ]
             })
         ]
-      }
+      },
+      layout: {
+				fillColor: function (rowIndex) {
+					return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+				}
+			}
     }
   }
 
   CampoOperaciones(objeto: any) {
     return {
+      style: 'tableMargin',
       table: {
-        widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*','*', '*', '*','auto', 'auto', 'auto','auto', 'auto', 'auto', 'auto' ],
+        widths: ['*','*', '*', '*', '*', '*', '*', '*', '*', '*', '*','*', '*', '*','auto', 'auto', 'auto','auto', 'auto', 'auto', 'auto' ],
         body: [
           [
-            {rowSpan: 2, colSpan: 13, text: 'TOTAL', style: 'tableHeader'},
-            '','','','','','','','','','','','',
-            {text: objeto.HHMM.atraso, style: 'tableHeader'},
-            {text: objeto.HHMM.sal_antes, style: 'tableHeader'},
-            {text: objeto.HHMM.almuerzo, style: 'tableHeader'},
-            {text: objeto.HHMM.hora_trab, style: 'tableHeader'},
-            {text: objeto.HHMM.hora_supl, style: 'tableHeader'},
-            {text: objeto.HHMM.hora_ex_L_V, style: 'tableHeader'},
-            {text: objeto.HHMM.hora_ex_S_D, style: 'tableHeader'},
+            {rowSpan: 3, colSpan: 14, text: 'TOTAL', style: 'tableTotal'},
+            '','','','','','','','','','','','','',
+            {text: 'ATRASO', style: 'tableHeader'},
+            {text: 'SAL ANTES', style: 'tableHeader'},
+            {text: 'ALMUE', style: 'tableHeader'},
+            {text: 'HORA TRAB', style: 'tableHeader'},
+            {text: 'HORA SUPL', style: 'tableHeader'},
+            {text: 'HORA EX. L-V', style: 'tableHeader'},
+            {text: 'HORA EX. S-D', style: 'tableHeader'}
           ],
           [
-            '','','','','','','','','','','','','',
-            {text: objeto.decimal.atraso.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.sal_antes.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.almuerzo.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.hora_trab.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.hora_supl.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.hora_ex_L_V.toString().slice(0,8), style: 'tableHeader'},
-            {text: objeto.decimal.hora_ex_S_D.toString().slice(0,8), style: 'tableHeader'},
+            '','','','','','','','','','','','','','',
+            {text: objeto.HHMM.atraso, style: 'itemsTable'},
+            {text: objeto.HHMM.sal_antes, style: 'itemsTable'},
+            {text: objeto.HHMM.almuerzo, style: 'itemsTable'},
+            {text: objeto.HHMM.hora_trab, style: 'itemsTable'},
+            {text: objeto.HHMM.hora_supl, style: 'itemsTable'},
+            {text: objeto.HHMM.hora_ex_L_V, style: 'itemsTable'},
+            {text: objeto.HHMM.hora_ex_S_D, style: 'itemsTable'},
+          ],
+          [
+            '','','','','','','','','','','','','','',
+            {text: objeto.decimal.atraso.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.sal_antes.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.almuerzo.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.hora_trab.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.hora_supl.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.hora_ex_L_V.toString().slice(0,8), style: 'itemsTable'},
+            {text: objeto.decimal.hora_ex_S_D.toString().slice(0,8), style: 'itemsTable'},
           ]
         ]
       }
@@ -472,34 +524,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           style: 'subtitulos',
           text: 'Listado - Empleados'
         },
+        {
+          style: 'subtitulos',
+          text: 'Cantidad de Empleados: ' + this.lista.length
+        },
         this.ObtenerListadoDetallado(this.lista),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 9,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8,
-          margin: [0,5,0,5]
-        },
         tableHeaderDetalle: {
           bold: true,
           alignment: 'center',
@@ -521,11 +552,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   }
 
   ObtenerListadoDetallado(datos: any[]) {
+    let contador = 0;
     return {
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto' ],
+        widths: ['auto','auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*' ],
         body: [
           [
+            {text: 'N°', style: 'tableHeaderDetalle'}, 
             {text: 'CEDULA', style: 'tableHeaderDetalle'}, 
             {text: 'CODIGO', style: 'tableHeaderDetalle'},
             {text: 'APELLIDOS Y NOMBRES', style: 'tableHeaderDetalle'}, 
@@ -535,7 +568,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             {text: 'DETALLE GRUPO', style: 'tableHeaderDetalle'}
           ],
           ...datos.map(obj => {
-              return [ 
+            contador = contador + 1
+            return [ 
+                { style: 'itemsTableDetalle', text: contador}, 
                 { style: 'itemsTableDetalle', text: obj.cedula}, 
                 { style: 'itemsTableDetalle', text: obj.codigo}, 
                 { style: 'itemsTableDetalle', text: obj.nom_completo}, 
@@ -546,13 +581,18 @@ export class AsistenciaConsolidadoComponent implements OnInit {
               ]
             })
         ]
-      }
+      },
+      layout: {
+				fillColor: function (rowIndex) {
+					return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+				}
+			}
     }
   }
 
-  /**********************************
+  /**********************************************
    *  METODOS PARA IMPRIMIR EL KARDEX
-   **********************************/
+   **********************************************/
   getDocumentDefinicionKardex(){
     sessionStorage.setItem('Empleado', this.empleados);
     var f = new Date();
@@ -568,23 +608,49 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       footer: function (currentPage, pageCount, fecha) {  
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
-        return {
-          margin: 10,
-          columns: [
-            'Fecha: ' + fecha + ' Hora: ' + timer,
-            {
-              text: [
-                {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
+        
+        return [
+          {
+            table: {
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+              body: [
+                [
+                  { text: 'F.CARGA: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Fecha de inicio del periodo.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'F.INGRESO: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Fecha de ingreso a la compañia.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'F.SALIDA: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Fecha de termino de contrato.', border: [false, false, false, false], style: ['quote', 'small'] }
+                ],
+                [
+                  { text: 'ACUM: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Dias acumulados hasta el final del periodo.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'C.I: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Cédula de identidad o pasaporte.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'COD: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Código de empleado en el sistema.', border: [false, false, false, false], style: ['quote', 'small'] }
+                ]
+              ]
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
-        }
+          },
+          {
+            margin: [10, -2, 10, 0],
+            columns: [
+              'Fecha: ' + fecha + ' Hora: ' + timer,
+              {
+                text: [
+                  {
+                    text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                    alignment: 'right', color: 'blue',
+                    opacity: 0.5
+                  }
+                ],
+              }
+            ],
+            fontSize: 10,
+            color: '#A4B8FF',
+          }
+        ]
       },
       content: [
         {
@@ -607,36 +673,16 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           style: 'subtitulos',
           text: 'Reporte - Kardex Vacaciones Días Calendario'
         },
-        {
-          style: 'subtitulos',
-          text: 'Fecha de Corte: ' + this.fechaHoy.split("T")[0] + ' ' + this.fechaHoy.split("T")[1].slice(0, 5)
-        },
-        this.CampoCiudad(this.kardex.empleado[0].ciudad),
-        this.CampoInfoEmpleado(this.kardex.empleado[0]),
-        this.CampoFechas(this.kardex.empleado[0]),
+        this.CampoInformacionGeneralKardex(this.kardex.empleado[0].ciudad,this.kardex.empleado[0]),
         this.CampoDetallePeriodo(this.kardex.detalle),
-        this.CampoLiquidacionProporcional(this.kardex.proporcional.antiguedad[0], this.kardex.proporcional.periodo[0], this.kardex.liquidacion[0]),
-
-        
-        // this.presentarDataPDFEmpleados(),
-        // this.kardex
+        {
+          stack: [
+            this.CampoLiquidacionProporcional(this.kardex.proporcional.antiguedad[0], this.kardex.proporcional.periodo[0], this.kardex.liquidacion[0]),
+          ],
+          style: 'tableLiqPro',
+        }
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
         tableHeader: {
           fontSize: 11,
           bold: true,
@@ -660,49 +706,111 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           fontSize: 16,
           alignment: 'center',
           margin: [0, 5, 0, 10]
+        },
+        tableMargin: {
+          margin: [0, 20, 0, 0]
+        },
+        CabeceraTabla: {
+          fontSize: 12,
+          alignment: 'center',
+          margin: [0, 8, 0, 8],
+          fillColor: '#6495ED',
+        },
+        itemsTableInfo: {
+          fontSize: 10,
+          margin: [0,3,0,3]
+        },
+        tableLiqPro: {
+          alignment: 'right',
+          margin: [0, 20, 0, 0]
+        },
+        quote: {
+          margin: [1, -2, 0, -2],
+          italics: true
+        },
+        small: {
+          fontSize: 7
         }
       }
     };
   }
-  
-  CampoFechas(e: any) {
+
+  CampoInformacionGeneralKardex(ciudad: string, e: any) {
     return {
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', '*'],
+        widths: ['*', 'auto', 'auto'],
         body: [
           [
+            {colSpan: 3, text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'CabeceraTabla'},
+            '',''            
+          ],
+          [
             {
+              border: [true, true, false, true],
               bold: true,
-              fillColor: '#EAEAEA',
-              border: [false, false, false, false],
-              text: 'F.INGRESO: ' +  e.fec_ingreso.split('T')[0]
+              text: 'PERIODO DEL: ' + String(moment(this.f_inicio_reqK, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(this.f_final_reqK, "YYYY/MM/DD").format("DD/MM/YYYY")),
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#EAEAEA',
-              border: [false, false, false, false],
-              text: 'F.SALIDA: '
+              border: [false, true, false, true],
+              text: 'CIUDAD: ' +  ciudad,
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#EAEAEA',
-              alignment: 'center',
-              border: [false, false, false, false],
-              text: 'F.CARGA: ' + e.fec_carga.split('T')[0],
+              border: [false, true, true, true],
+              text: 'N° REGISTROS: ' + this.kardex.detalle.length, 
+              style: 'itemsTableInfo'
+            }
+          ],
+          [
+            {
+              border: [true, true, false, true],
+              text: 'EMPLEADO: ' +  e.nombre,
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#EAEAEA',
-              alignment: 'center',
-              border: [false, false, false, false],
-              text: 'ACUM: '
+              border: [false, true, false, true],
+              text: 'C.C.: ' + e.cedula,
+              style: 'itemsTableInfo'
             },
             {
-              bold: true,
-              fillColor: '#EAEAEA',
-              border: [false, false, false, false],
-              text: 'ESTADO: ' +  e.estado
+              border: [false, true, true, true],
+              text: 'COD: ' + e.codigo,
+              style: 'itemsTableInfo'
+            }
+          ],
+          [
+            {
+              border: [true, false, false, true],
+              text: 'F.INGRESO: ' + String(moment(e.fec_ingreso.split('T')[0], "YYYY/MM/DD").format("DD/MM/YYYY")),
+              style: 'itemsTableInfo',
             },
+            {
+              border: [false, true, false, true],
+              text: 'F.SALIDA: ',
+              style: 'itemsTableInfo',
+            },
+            {
+              border: [false, true, true, true],
+              text: ''
+            }
+          ],
+          [
+            {
+              border: [true, true, false, true],
+              text: 'F.CARGA: ' + String(moment(e.fec_carga.split('T')[0], "YYYY/MM/DD").format("DD/MM/YYYY")),
+              style: 'itemsTableInfo',
+            },
+            {
+              border: [false, true, false, true],
+              text: 'ESTADO: ' +  e.estado,
+              style: 'itemsTableInfo',
+            },
+            {
+              border: [false, true, true, true],
+              text: 'ACUM: ' + e.acumulado.toString().slice(0,7),
+              style: 'itemsTableInfo',
+            }
           ]
         ]
       }
@@ -711,6 +819,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   CampoDetallePeriodo(d: any[]) {
     return {
+      style: 'tableMargin',
       table: {
         widths: ['auto', 'auto', 'auto', 'auto', 25, 25, 25, 25, 25, 25],
         body: [
@@ -765,7 +874,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
                 { style: 'itemsTableCentrado', text: obj.saldo.min}]
             })
         ]
-      }
+      },
+      layout: {
+				fillColor: function (rowIndex) {
+					return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+				}
+			}
     }
   }
 
@@ -947,5 +1061,11 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.fechasForm.reset();
     this.habilitar = false;
     this.estilo = { 'visibility': 'hidden' };
+  }
+  
+  limpiarCamposRangoKardex(){
+    this.fechasKardexForm.reset();
+    this.habilitarK = false;
+    this.estiloK = { 'visibility': 'hidden' };
   }
 }
