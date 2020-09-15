@@ -17,6 +17,7 @@ class DetallePlanHorarioRutas {
     }
     configuracion() {
         this.router.post('/upload', verificarToken_1.TokenValidation, multipartMiddleware, cargaMultipleControlador_1.default.CargaMultiple);
+        this.router.post('/horarioFijo/upload', verificarToken_1.TokenValidation, multipartMiddleware, cargaMultipleControlador_1.default.CargarHorarioMultiplesEmpleados);
     }
 }
 const DETALLE_PLAN_HORARIO_RUTAS = new DetallePlanHorarioRutas();
