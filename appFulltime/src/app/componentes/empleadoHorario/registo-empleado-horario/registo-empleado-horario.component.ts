@@ -106,27 +106,35 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   }
 
   InsertarEmpleadoHorario(form) {
-    let datosempleH = {
-      id_empl_cargo: this.datoEmpleado.idCargo,
-      id_hora: 0,
-      fec_inicio: form.fechaInicioForm,
-      fec_final: form.fechaFinalForm,
-      lunes: form.lunesForm,
-      martes: form.martesForm,
-      miercoles: form.miercolesForm,
-      jueves: form.juevesForm,
-      viernes: form.viernesForm,
-      sabado: form.sabadoForm,
-      domingo: form.domingoForm,
-      id_horarios: form.horarioForm,
-      estado: form.estadoForm
+    let fechas = {
+      fechaInicio: form.fechaInicioForm,
+      fechaFinal: form.fechaFinalForm,
     };
-    console.log(datosempleH);
-    this.rest.IngresarEmpleadoHorarios(datosempleH).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado')
-      this.LimpiarCampos();
+    this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario');
     }, error => {
+      let datosempleH = {
+        id_empl_cargo: this.datoEmpleado.idCargo,
+        id_hora: 0,
+        fec_inicio: form.fechaInicioForm,
+        fec_final: form.fechaFinalForm,
+        lunes: form.lunesForm,
+        martes: form.martesForm,
+        miercoles: form.miercolesForm,
+        jueves: form.juevesForm,
+        viernes: form.viernesForm,
+        sabado: form.sabadoForm,
+        domingo: form.domingoForm,
+        id_horarios: form.horarioForm,
+        estado: form.estadoForm
+      };
+      console.log(datosempleH);
+      this.rest.IngresarEmpleadoHorarios(datosempleH).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado');
+        this.LimpiarCampos();
+      }, error => { });
     });
+
   }
 
   LimpiarCampos() {
