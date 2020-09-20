@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -11,17 +11,18 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
 
-import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
 import { EditarRegimenComponent } from 'src/app/componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-listar-regimen',
   templateUrl: './listar-regimen.component.html',
-  styleUrls: ['./listar-regimen.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./listar-regimen.component.css']
 })
 
 export class ListarRegimenComponent implements OnInit {
@@ -49,6 +50,7 @@ export class ListarRegimenComponent implements OnInit {
   constructor(
     private rest: RegimenService,
     private restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
@@ -59,15 +61,23 @@ export class ListarRegimenComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerRegimen();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -172,10 +182,13 @@ export class ListarRegimenComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Regimen', this.regimen);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -187,7 +200,13 @@ export class ListarRegimenComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -196,52 +215,21 @@ export class ListarRegimenComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Regímenes Laborales',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Regímenes Laborales', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFFeriados(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8,
-          alignment: 'center',
-        },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 8, alignment: 'center', },
       }
     };
   }

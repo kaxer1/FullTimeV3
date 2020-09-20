@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import REGIMEN_CONTROLADOR from '../../controlador/catalogos/catRegimenControlador';
-import { TokenValidation } from '../../libs/VerificarToken';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class RegimenRuta {
     public router: Router = Router();

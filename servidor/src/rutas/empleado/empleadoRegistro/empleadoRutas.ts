@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import EMPLEADO_CONTROLADOR from '../../../controlador/empleado/empleadoRegistro/empleadoControlador';
-import { TokenValidation } from '../../../libs/VerificarToken';
+import { TokenValidation } from '../../../libs/verificarToken';
 
 const multipart = require('connect-multiparty');
 
@@ -38,6 +38,9 @@ class EmpleadoRutas {
         this.router.get('/encontrarDato/codigo', TokenValidation, EMPLEADO_CONTROLADOR.ObtenerCodigo);
         this.router.post('/crearCodigo', TokenValidation, EMPLEADO_CONTROLADOR.CrearCodigo);
         this.router.put('/cambiarCodigo', TokenValidation, EMPLEADO_CONTROLADOR.ActualizarCodigo);
+        this.router.get('/desactivados/empleados', TokenValidation, EMPLEADO_CONTROLADOR.listaEmpleadosDesactivados);
+        this.router.put('/desactivar/masivo', TokenValidation, EMPLEADO_CONTROLADOR.DesactivarMultiplesEmpleados);
+        this.router.put('/activar/masivo', TokenValidation, EMPLEADO_CONTROLADOR.ActivarMultiplesEmpleados);
     }
 
 }

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const VerificarToken_1 = require("../../libs/VerificarToken");
+const verificarToken_1 = require("../../libs/verificarToken");
 const ciudadControlador_1 = __importDefault(require("../../controlador/ciudad/ciudadControlador"));
 class CiudadRutas {
     constructor() {
@@ -12,11 +12,11 @@ class CiudadRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', VerificarToken_1.TokenValidation, ciudadControlador_1.default.ListarNombreCiudad);
-        this.router.get('/listaCiudad', VerificarToken_1.TokenValidation, ciudadControlador_1.default.ListarCiudades);
-        this.router.get('/:id', VerificarToken_1.TokenValidation, ciudadControlador_1.default.ConsularUnaCiudad);
-        this.router.post('/', VerificarToken_1.TokenValidation, ciudadControlador_1.default.CrearCiudad);
-        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, ciudadControlador_1.default.EliminarCiudad);
+        this.router.get('/', verificarToken_1.TokenValidation, ciudadControlador_1.default.ListarNombreCiudad);
+        this.router.get('/listaCiudad', verificarToken_1.TokenValidation, ciudadControlador_1.default.ListarCiudades);
+        this.router.get('/:id', verificarToken_1.TokenValidation, ciudadControlador_1.default.ConsularUnaCiudad);
+        this.router.post('/', verificarToken_1.TokenValidation, ciudadControlador_1.default.CrearCiudad);
+        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, ciudadControlador_1.default.EliminarCiudad);
     }
 }
 const CIUDAD_RUTAS = new CiudadRutas();

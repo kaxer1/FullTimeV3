@@ -24,6 +24,9 @@ exports.VerificarHorario = function (id_cargo) {
         // console.log(horario);
         let respuesta = tipoHorario(horario.fec_inicio, horario.fec_final);
         var f = new Date();
+        f.setUTCMonth(f.getMonth());
+        f.setUTCDate(f.getDate());
+        f.setUTCHours(f.getHours());
         // FECHA_FERIADOS = feriados
         let feriados;
         let fechasRango;

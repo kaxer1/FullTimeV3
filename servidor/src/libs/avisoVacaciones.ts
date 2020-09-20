@@ -1,5 +1,5 @@
 import pool from '../database';
-import { enviarMail, email} from './SettingsMail';
+import { enviarMail, email} from './settingsMail';
 import PVacacion from '../class/periVacacion';
 
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
@@ -47,7 +47,7 @@ async function AniosEmpleado(idEmpleado: number): Promise<number> {
 
 async function ObtenerIdEmpleado(idContrato: number): Promise<any> {
     let id_empleado = 
-    await pool.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id LIMIT 1', [idContrato])
+    await pool.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id AND e.estado = 1 LIMIT 1', [idContrato])
         .then(async(result) => { 
             let id = await result.rows.map(obj => {return obj.id});
             return id[0];

@@ -35,7 +35,7 @@ class ContratoEmpleadoControlador {
 
     public async EncontrarIdContrato(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
-        const CONTRATO = await pool.query('SELECT ec.id FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1', [id_empleado]);
+        const CONTRATO = await pool.query('SELECT ec.id FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1 ORDER BY ec.fec_ingreso DESC ', [id_empleado]);
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }

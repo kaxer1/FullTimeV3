@@ -13,16 +13,18 @@ import * as FileSaver from 'file-saver';
 
 import { RegistroEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/registro-empresa/registro-empresa.component';
 import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { LogosComponent } from '../logos/logos.component';
+
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-listar-empresas',
   templateUrl: './listar-empresas.component.html',
   styleUrls: ['./listar-empresas.component.css']
 })
+
 export class ListarEmpresasComponent implements OnInit {
 
   buscarNombre = new FormControl('', [Validators.minLength(2)]);
@@ -58,15 +60,24 @@ export class ListarEmpresasComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpresa();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.rest.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+      //console.log('logo', this.logo)
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -95,7 +106,7 @@ export class ListarEmpresasComponent implements OnInit {
   }
 
   EditarLogo(id_empresa: number) {
-    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: id_empresa}).afterClosed()
+    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: id_empresa }).afterClosed()
       .subscribe(res => { console.log(res) })
   }
 
@@ -185,10 +196,13 @@ export class ListarEmpresasComponent implements OnInit {
     sessionStorage.setItem('Empresas', this.empresas);
 
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -200,7 +214,13 @@ export class ListarEmpresasComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -209,55 +229,22 @@ export class ListarEmpresasComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Empresas',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20],
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Empresas', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20], },
         this.presentarDataPDFEmpresas(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline',
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center'
-        },
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10 },
+        itemsTableC: { fontSize: 10, alignment: 'center' },
       }
     };
   }

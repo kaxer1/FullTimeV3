@@ -46,7 +46,6 @@ class HorarioControlador {
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
     /** Horarios */
     plantilla.forEach(async (data: any) => {
       var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
@@ -91,10 +90,10 @@ class HorarioControlador {
       console.log("horarios", id_horario)
       if (minutos_espera != undefined) {
         console.log("entra");
-        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
       } else {
-        minutos_espera = '00:00';
-        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+        minutos_espera = 0;
+        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
       }
     });
     res.jsonp({ message: 'La plantilla a sido receptada' });

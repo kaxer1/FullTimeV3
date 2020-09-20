@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -13,10 +13,12 @@ import * as FileSaver from 'file-saver';
 
 import { RegistroEnroladosComponent } from '../registro-enrolados/registro-enrolados.component';
 import { EnroladoRelojComponent } from '../enrolado-reloj/enrolado-reloj.component';
-import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { EditarEnroladosComponent } from 'src/app/componentes/catalogos/catEnrolados/editar-enrolados/editar-enrolados.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 interface buscarActivo {
   value: boolean;
@@ -27,7 +29,6 @@ interface buscarActivo {
   selector: 'app-principal-enrolados',
   templateUrl: './principal-enrolados.component.html',
   styleUrls: ['./principal-enrolados.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class PrincipalEnroladosComponent implements OnInit {
@@ -45,7 +46,7 @@ export class PrincipalEnroladosComponent implements OnInit {
 
   confirmacion = false;
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
@@ -61,25 +62,34 @@ export class PrincipalEnroladosComponent implements OnInit {
   constructor(
     private rest: EnroladoService,
     public restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
     private router: Router,
-  ) { 
+  ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
     this.getEnrolados();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -239,10 +249,13 @@ export class PrincipalEnroladosComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Enrolados', this.enrolados);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -254,61 +267,36 @@ export class PrincipalEnroladosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
           var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Usuarios Enrolados',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Usuarios Enrolados', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFEnrolados(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10,
-          alignment: 'center',
-        }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10, alignment: 'center', }
       }
     };
   }
@@ -327,7 +315,6 @@ export class PrincipalEnroladosComponent implements OnInit {
                 { text: 'Id', style: 'tableHeader' },
                 { text: 'Nombre', style: 'tableHeader' },
                 { text: 'Código', style: 'tableHeader' },
-                // { text: 'Contraseña', style: 'tableHeader' },
                 { text: 'Activo', style: 'tableHeader' },
                 { text: 'Finger', style: 'tableHeader' },
                 { text: 'Data Finger', style: 'tableHeader' }
@@ -337,7 +324,6 @@ export class PrincipalEnroladosComponent implements OnInit {
                   { text: obj.id, style: 'itemsTable' },
                   { text: obj.nombre, style: 'itemsTable' },
                   { text: obj.codigo, style: 'itemsTable' },
-                  //{ text: obj.contrasenia, style: 'itemsTable' },
                   { text: obj.activo, style: 'itemsTable' },
                   { text: obj.finger, style: 'itemsTable' },
                   { text: obj.data_finger, style: 'itemsTable' }
@@ -387,7 +373,6 @@ export class PrincipalEnroladosComponent implements OnInit {
           '@id': obj.id,
           "nombre": obj.nombre,
           "codigo": obj.codigo,
-          // "contrasenia": obj.contrasenia,
           "activo": obj.activo,
           "finger": obj.finger,
           "data_finger": obj.data_finger,

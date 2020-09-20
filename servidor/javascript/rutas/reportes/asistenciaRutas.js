@@ -5,15 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const asistenciaControlador_1 = __importDefault(require("../../controlador/reportes/asistenciaControlador"));
-const VerificarToken_1 = require("../../libs/VerificarToken");
+const verificarToken_1 = require("../../libs/verificarToken");
 class AsistenciaRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/:id_empleado/:desde/:hasta', VerificarToken_1.TokenValidation, asistenciaControlador_1.default.ObtenerHorasTrabajadas);
-        this.router.get('/lista-empleados/:id_empresa', VerificarToken_1.TokenValidation, asistenciaControlador_1.default.ObtenerListaEmpresa);
+        this.router.get('/:id_empleado/:desde/:hasta', verificarToken_1.TokenValidation, asistenciaControlador_1.default.ObtenerHorasTrabajadas);
+        this.router.get('/lista-empleados/:id_empresa', verificarToken_1.TokenValidation, asistenciaControlador_1.default.ObtenerListaEmpresa);
     }
 }
 const ASISTENCIA_RUTAS = new AsistenciaRutas();

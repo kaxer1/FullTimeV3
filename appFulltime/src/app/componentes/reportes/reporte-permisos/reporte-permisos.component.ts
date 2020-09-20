@@ -1,22 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 moment.locale('es');
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
-import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-reporte-permisos',
@@ -29,6 +29,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class ReportePermisosComponent implements OnInit {
 
   // Datos del Empleado Timbre
@@ -85,6 +86,7 @@ export class ReportePermisosComponent implements OnInit {
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -92,12 +94,9 @@ export class ReportePermisosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-    var h = '02:15';
-
-    //console.log('numero', h1)
+    this.ObtenerLogo();
   }
 
   // Método para ver la información del empleado 
@@ -109,11 +108,21 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para manejo de paginación
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // Obtener lista de empleados que tienen datos de contrato y cargo
   cont: number = 0;
   contador: number = 0;
   iteracion: number = 0;
@@ -192,6 +201,7 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Obtener datos de permiso del empleado de acuerdo al horario
   datosAutorizacion: any = [];
   permisosHorarios: any = [];
   permisosPlanificacion: any = [];
@@ -208,6 +218,7 @@ export class ReportePermisosComponent implements OnInit {
     });
   }
 
+  // Obtener datos de permisos del empleado de acuerdo a la planificación
   VerPermisosPlanificacion(permisos_horario: any, id_seleccionado: number, archivo: string) {
     this.restR.ObtenerPermisosPlanificacion(id_seleccionado).subscribe(dataP => {
       this.permisosPlanificacion = dataP;
@@ -233,6 +244,7 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
+  // Obtener datos de la autorización de los permisos
   VerDatosAutorizacion(id_seleccionado: number, archivo: string) {
     this.datosAutorizacion = [];
     this.restR.ObtenerAutorizacionPermiso(id_seleccionado).subscribe(dataA => {
@@ -261,6 +273,72 @@ export class ReportePermisosComponent implements OnInit {
     })
   }
 
+  // Obtención de los permisos de acuerdo horario y al periodo de fechas indicado
+  VerPermisosEmpleadoFecha(id_seleccionado, archivo, fechas) {
+    this.permisosHorarios = [];
+    this.permisosPlanificacion = [];
+    this.totalPermisos = [];
+    this.restR.ObtenerPermisosHorariosFechas(id_seleccionado, fechas).subscribe(dataH => {
+      this.permisosHorarios = dataH;
+      this.VerPermisosPlanificacionFecha(this.permisosHorarios, id_seleccionado, archivo, fechas);
+    }, error => {
+      this.VerPermisosPlanificacionFecha(this.permisosHorarios, id_seleccionado, archivo, fechas);
+    });
+  }
+
+  // Obtención de los permisos de acuerdo a la planificación y al periodo de fechas indicado 
+  VerPermisosPlanificacionFecha(permisos_horario: any, id_seleccionado: number, archivo: string, fechas) {
+    this.restR.ObtenerPermisosPlanificacionFechas(id_seleccionado, fechas).subscribe(dataP => {
+      this.permisosPlanificacion = dataP;
+      if (permisos_horario.length != 0) {
+        permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
+        this.totalPermisos = permisos_horario;
+        console.log('prueba', this.totalPermisos);
+      }
+      else {
+        this.totalPermisos = this.permisosPlanificacion;
+        console.log('prueba1', this.totalPermisos);
+      }
+      this.VerDatosAutorizacion(id_seleccionado, archivo);
+    }, error => {
+      if (permisos_horario.length != 0) {
+        this.totalPermisos = permisos_horario;
+        console.log('prueba2', this.totalPermisos);
+        this.VerDatosAutorizacion(id_seleccionado, archivo);
+      }
+      else {
+        this.toastr.info('El empleado no tiene registros de PERMISOS.')
+      }
+    })
+  }
+
+  // Método para controlar ingreso adecuado de periodo de fechas
+  VerPermisos(form, archivo, id_seleccionado) {
+    if (form.inicioForm === '' && form.finalForm === '' || form.inicioForm === null && form.finalForm === null) {
+      this.VerPermisosEmpleado(id_seleccionado, archivo);
+    }
+    else {
+      if (form.inicioForm === '' || form.finalForm === '') {
+        this.toastr.info('Ingresar las dos fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+      }
+      else {
+        console.log('fechas', form.inicioForm)
+        if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
+          var fechas = {
+            fechaInicio: form.inicioForm,
+            fechaFinal: form.finalForm
+          }
+          this.VerPermisosEmpleadoFecha(id_seleccionado, archivo, fechas);
+          this.LimpiarFechas();
+        }
+        else {
+          this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+        }
+      }
+    }
+  }
+
+  // Método para ingresar solo letras
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
@@ -281,6 +359,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Método para ingresar solo números
   IngresarSoloNumeros(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
@@ -298,6 +377,7 @@ export class ReportePermisosComponent implements OnInit {
     }
   }
 
+  // Método para limpiar campos de búsqueda
   LimpiarCampos() {
     this.codigo.reset();
     this.cedula.reset();
@@ -308,10 +388,10 @@ export class ReportePermisosComponent implements OnInit {
     this.cargoF.reset();
   }
 
-  ObtenerNacionalidades() {
-    this.rest.getListaNacionalidades().subscribe(res => {
-      this.nacionalidades = res;
-    });
+  // Método para limpiar campos de fecha
+  LimpiarFechas() {
+    this.fechaInicialF.reset();
+    this.fechaFinalF.reset();
   }
 
   /* ****************************************************************************************************
@@ -335,11 +415,14 @@ export class ReportePermisosComponent implements OnInit {
     sessionStorage.setItem('Administrador', this.empleadoLogueado);
     return {
 
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
+        // Método de obtención de fecha y hora actual
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
@@ -350,104 +433,58 @@ export class ReportePermisosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+        // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
+              text: [{
+                text: 'Glosario de Terminos: DD = Días de Permiso, HH:MM = Horas y minutos de permiso, HH = Horas Laborables' + '\n Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', color: 'blue', opacity: 0.5
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+              }],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 8, color: '#A4B8FF',
         }
       },
+      // Título del archivo y sumatoria de cálculos
       content: [
+        { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              {
-                text: obj.empresa.toUpperCase(),
-                bold: true,
-                fontSize: 25,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'REPORTE PERMISOS',
-                fontSize: 17,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
             ];
           }
         }),
         this.presentarDatosGenerales(id_seleccionado),
         this.presentarPermisos(),
       ],
+
+      // Estilos del archivo PDF
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 9,
-          alignment: 'center'
-        },
-        itemsTableI: {
-          fontSize: 9,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableP: {
-          fontSize: 9,
-          alignment: 'left',
-          bold: true,
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableC: {
-          fontSize: 9,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-        },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTableD: { fontSize: 9, alignment: 'center' },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
+        tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED', },
+        itemsTableS: { fontSize: 9, alignment: 'center', },
       }
     };
   }
 
+  // Datos Generales del empleado del que se obtiene el reporte y sumatoria de cálculos realizados
   presentarDatosGenerales(id_seleccionado) {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, enteroHoras = 0, formatoHoras, formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, empleadoAutoriza, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
@@ -496,10 +533,12 @@ export class ReportePermisosComponent implements OnInit {
         }
       });
     });
+    // Realización de cálculos
     minutosHoras = parseFloat('0.' + String(totalHoras).split('.')[1]) * 60;
     tDias = parseFloat('0.' + String(totalDias).split('.')[1]) * horaTDecimalH;
     horasDias = parseFloat('0.' + String(tDias).split('.')[1]) * 60;
 
+    // Control de escritura de horas y minutos
     if (parseInt(String(tDias).split('.')[0]) < 10) {
       formatoHoras = '0' + parseInt(String(tDias).split('.')[0]);
     }
@@ -520,174 +559,63 @@ export class ReportePermisosComponent implements OnInit {
     else {
       minutosHoras = '0' + minutosHoras.toFixed(0);
     }
-
+    // Estructura del PDF
     return {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + ciudad, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'N° REGISTROS: ' + this.totalPermisos.length, style: 'itemsTableI'
-                    }
-                  ]
-                },
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'N° DE PERMISOS: ' + this.totalPermisos.length, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            border: [false, false, false, false],
+            table: {
+              widths: ['*', '*'],
+              body: [
+                [
+                  { text: 'SUMATORIA TOTAL DE PERMISOS EN DIAS Y HORAS FORMATO DECIMAL', style: 'tableHeaderF' },
+                  { text: 'SUMATORIA TOTAL DE PERMISOS EN DIAS Y HORAS FORMATO GENERAL', style: 'tableHeaderF' },
+                ],
+                [
+                  { text: 'TOTAL DE PERMISOS EN DÍAS DECIMAL: ' + totalDias.toFixed(3), style: 'itemsTableS' },
+                  { text: 'TOTAL DE DÍAS Y HORAS DE PERMISO: ' + String(totalDias).split('.')[0] + ' días ' + ' ' + formatoHoras + ' horas: ' + formatoMinutos + ' minutos', style: 'itemsTableS' }
+                ],
+                [
+                  { text: 'TOTAL DE PERMISOS EN HORAS DECIMAL: ' + totalHoras.toFixed(3), style: 'itemsTableS' },
+                  { text: 'TOTAL DE HORAS Y MINUTOS DE PERMISO: ' + String(totalHoras.toFixed(3)).split('.')[0] + ' horas : ' + minutosHoras + ' minutos', style: 'itemsTableS' }
+                ],
               ]
+            },
+            layout: {
+              hLineColor: function (i, node) {
+                return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+              },
+              paddingLeft: function (i, node) { return 10; },
+              paddingRight: function (i, node) { return 10; },
+              paddingTop: function (i, node) { return 10; },
+              paddingBottom: function (i, node) { return 10; }
             }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + apellido, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + nombre, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + cedula, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'DATOS TOTALES FORMATO DECIMAL', style: 'tableHeaderA' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                },
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'DATOS TOTALES FORMATO GENERAL', style: 'tableHeaderA' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'TOTAL EN DIAS: ' + totalDias.toFixed(2), style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'TOTAL EN HORAS: ' + totalHoras.toFixed(2), style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'PERMISO DÍAS: ' + String(totalDias).split('.')[0] + ' d' + '  HORAS: ' + formatoHoras + ' h: ' + formatoMinutos + ' min', style: 'itemsTableC'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'TOTAL HORAS: ' + String(totalHoras.toFixed(2)).split('.')[0] + ' hh : ' + minutosHoras + ' min', style: 'itemsTableC'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            { text: 'LISTA DE PERMISOS', style: 'tableHeader' },
-          ],
+          }],
+          [{ text: 'LISTA DE PERMISOS', style: 'tableHeader' },],
         ]
       },
       layout: {
@@ -698,12 +626,11 @@ export class ReportePermisosComponent implements OnInit {
         paddingRight: function (i, node) { return 40; },
         paddingTop: function (i, node) { return 10; },
         paddingBottom: function (i, node) { return 10; }
-      }
+      },
     }
   }
-  contadorN = 0;
 
-  accionT: string;
+  // Estructura de lista de permisos registrados por el empleado
   presentarPermisos() {
     return {
       table: {
@@ -717,7 +644,7 @@ export class ReportePermisosComponent implements OnInit {
             { text: 'HASTA', style: 'tableHeader' },
             { text: 'DD', style: 'tableHeader' },
             { text: 'HH:MM', style: 'tableHeader' },
-            { text: 'H. TRABAJO', style: 'tableHeader' },
+            { text: 'HH. TRABAJO', style: 'tableHeader' },
             { text: 'ESTADO', style: 'tableHeader' },
             { text: 'AUTORIZA', style: 'tableHeader' },
             { text: 'HORAS', style: 'tableHeader' },
@@ -730,11 +657,15 @@ export class ReportePermisosComponent implements OnInit {
                 estado = this.datosAutorizacion[i].estado;
                 if (estado === 'Autorizado') {
                   empleadoAutoriza = this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido;
+
+                  // Realización de cálculos
                   var hora1 = (obj.hora_numero).split(":");
                   var t1 = new Date();
                   t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
                   var minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
                   horas_decimal = (minTDecimal / 60) + t1.getHours();
+
+                  // Obtención de las horas de trabajo en días
                   if ((obj.horario_horas).split(":")[1] != undefined) {
                     trabaja = obj.horario_horas + ':00'
                   }
@@ -748,8 +679,8 @@ export class ReportePermisosComponent implements OnInit {
                   var horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
                   horaT = horas_decimal + (horaTDecimalH * obj.dia);
                   dias_decimal = horaT / horaTDecimalH;
-                  horaT = horaT.toFixed(2);
-                  dias_decimal = dias_decimal.toFixed(2);
+                  horaT = horaT.toFixed(3);
+                  dias_decimal = dias_decimal.toFixed(3);
                 }
                 break
               } else {
@@ -772,6 +703,12 @@ export class ReportePermisosComponent implements OnInit {
             ];
           })
         ]
+      },
+      // Estilo de colores formato zebra
+      layout: {
+        fillColor: function (i, node) {
+          return (i % 2 === 0) ? '#CCD1D1' : null;
+        }
       }
     };
   }

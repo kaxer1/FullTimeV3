@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import NOTIFICACION_TIEMPO_REAL_CONTROLADOR from '../../controlador/notificaciones/notificacionesControlador';
-import { TokenValidation } from '../../libs/VerificarToken'
+import { TokenValidation } from '../../libs/verificarToken'
 
 class NotificacionTiempoRealRutas {
     public router: Router = Router();

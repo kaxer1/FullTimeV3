@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { enviarMail, email } from '../../libs/SettingsMail'
+import { enviarMail, email } from '../../libs/settingsMail'
 import { RestarPeriodoVacacionAutorizada } from '../../libs/CargarVacacion'
 
 class VacacionesControlador {
@@ -30,17 +30,24 @@ class VacacionesControlador {
     const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion, depa_user_loggin } = req.body;
     await pool.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion]);
     
+    console.log('******************',depa_user_loggin);
     const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin]);
-
+    console.log('******************',JefesDepartamentos.rows[0]);
     let depa_padre = JefesDepartamentos.rows[0].depa_padre;
     let JefeDepaPadre;        
 
       if (depa_padre !== null) {
+        console.log('******************',depa_padre);
         do {
             JefeDepaPadre =  await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre]);
-            depa_padre = JefeDepaPadre.rows[0].depa_padre;
-            JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
-        } while (depa_padre !== null);
+            console.log(JefeDepaPadre.rows.length);
+            if (JefeDepaPadre.rows.length > 0) {
+              depa_padre = JefeDepaPadre.rows[0].depa_padre;
+              JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
+            } else {
+              depa_padre = null
+            }
+        } while (depa_padre !== null || JefeDepaPadre.rows.length !== 0);
         
         res.jsonp(JefesDepartamentos.rows);
       } else {
@@ -49,7 +56,7 @@ class VacacionesControlador {
     
   }
 
-  public async SendMailNotifiPermiso(req: Request, res: Response): Promise<void> {
+  public async SendMailNotifiPermiso(req: Request, res: Response): Promise<void> {    
     const {idContrato, fec_inicio, fec_final, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, vaca_mail, vaca_noti} = req.body;
     const ultimo = await pool.query('SELECT * FROM vacaciones WHERE fec_inicio = $1 AND fec_final = $2  ORDER BY id DESC LIMIT 1', [fec_inicio, fec_final])
     const correoInfoPidePermiso = await pool.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [idContrato]);
@@ -85,7 +92,7 @@ class VacacionesControlador {
 
   public async VacacionesIdPeriodo(req: Request, res: Response) {
     const { id } = req.params;
-    const VACACIONES = await pool.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1', [id]);
+    const VACACIONES = await pool.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1 ORDER BY p.fec_final ASC', [id]);
     if (VACACIONES.rowCount > 0) {
       return res.jsonp(VACACIONES.rows)
     }
@@ -114,14 +121,7 @@ class VacacionesControlador {
     
     const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_depa_send]);
     const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacacion, id_rece_emp]);
-    // console.log(JefeDepartamento.rows)
-    // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
-    // const estadoAutorizacion = [
-    //   { id: 1, nombre: 'Solicitado' },
-    //   { id: 2, nombre: 'Rechazado' },
-    //   { id: 3, nombre: 'Aceptado' },
-    //   { id: 4, nombre: 'Eliminado' },
-    // ];    
+     
     if ('Aceptado' === estado) {
       RestarPeriodoVacacionAutorizada(parseInt(id));
     }

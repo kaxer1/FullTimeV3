@@ -155,4 +155,17 @@ export class EmpleadoService {
     return this.http.post(`${this.API_URI}/empleado/buscarDepartamento`, datos);
   }
 
+  // Desactivar varios empleados seleccionados
+  DesactivarVariosUsuarios(data: any[]) {
+    return this.http.put<any>(`${this.API_URI}/empleado/desactivar/masivo`, data)
+  }
+  
+  ActivarVariosUsuarios(data: any[]) {
+    return this.http.put<any>(`${this.API_URI}/empleado/activar/masivo`, data)
+  }
+  
+  ListaEmpleadosDesactivados() {
+    return this.http.get<any>(`${this.API_URI}/empleado/desactivados/empleados`);
+  }
+
 }

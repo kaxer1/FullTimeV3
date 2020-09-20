@@ -1,6 +1,6 @@
 import {KARDEX_VACACION_CONTROLADOR} from '../../controlador/reportes/kardexVacacionesControlador';
 import {Router} from 'express'
-import {TokenValidation} from '../../libs/VerificarToken';
+import {TokenValidation} from '../../libs/verificarToken';
 
 class KardexVacacionesRutas {
     public router: Router = Router();

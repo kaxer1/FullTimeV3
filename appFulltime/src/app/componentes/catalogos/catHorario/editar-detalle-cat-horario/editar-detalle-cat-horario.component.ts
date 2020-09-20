@@ -112,22 +112,22 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
     }
     if (this.data.tipo_accion === 'Entrada') {
       this.DetalleHorarioForm.patchValue({
-        accionForm: '1',
+        accionForm: 'E',
       })
     }
     else if (this.data.tipo_accion === 'Salida') {
       this.DetalleHorarioForm.patchValue({
-        accionForm: '2',
+        accionForm: 'S',
       })
     }
     else if (this.data.tipo_accion === 'S.Almuerzo') {
       this.DetalleHorarioForm.patchValue({
-        accionForm: '3',
+        accionForm: 'S/A',
       })
     }
     else if (this.data.tipo_accion === 'E. Almuerzo') {
       this.DetalleHorarioForm.patchValue({
-        accionForm: '4',
+        accionForm: 'E/A',
       })
     }
   }

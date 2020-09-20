@@ -8,7 +8,7 @@ const builder = require('xmlbuilder');
 class EmpleadoControlador {
 
   public async list(req: Request, res: Response) {
-    const empleado = await pool.query('SELECT * FROM empleados ORDER BY id');
+    const empleado = await pool.query('SELECT * FROM empleados WHERE estado = 1 ORDER BY id');
     res.jsonp(empleado.rows);
   }
 
@@ -186,8 +186,8 @@ class EmpleadoControlador {
   }
 
   public async CrearCodigo(req: Request, res: Response) {
-    const { id, valor, cedula } = req.body;
-    await pool.query('INSERT INTO codigo ( id, valor, cedula) VALUES ($1, $2, $3)', [id, valor, cedula]);
+    const { id, valor } = req.body;
+    await pool.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
     res.jsonp({ message: 'Codigo guardado' });
   }
 
@@ -209,16 +209,65 @@ class EmpleadoControlador {
 
   public async ListaBusquedaEmpleados(req: Request, res: Response): Promise<any> {
     const empleado = await pool.query('SELECT id, nombre, apellido FROM empleados ORDER BY apellido')
-    .then(result => {
-      return result.rows.map(obj => {
-        return {
-          id: obj.id,
-          empleado: obj.apellido + ' ' + obj.nombre
-        }
+      .then(result => {
+        return result.rows.map(obj => {
+          return {
+            id: obj.id,
+            empleado: obj.apellido + ' ' + obj.nombre
+          }
+        })
       })
-    })
-    
+
     res.jsonp(empleado);
+  }
+
+  public async DesactivarMultiplesEmpleados(req: Request, res: Response): Promise<any> {
+    const arrayIdsEmpleados = req.body;
+    console.log(arrayIdsEmpleados);
+
+    if (arrayIdsEmpleados.length > 0) {
+      arrayIdsEmpleados.forEach(async(obj: number) => {
+        await pool.query('UPDATE empleados SET estado = 2 WHERE id = $1', [obj]) // 2 => desactivado o inactivo
+        .then(result => {
+            console.log(result.command, 'EMPLEADO ====>', obj);
+        });
+        await pool.query('UPDATE usuarios SET estado = false, app_habilita = false WHERE id_empleado = $1',[obj]) // false => Ya no tiene acceso
+        .then(result => {
+            console.log(result.command, 'USUARIO ====>', obj);
+        });
+      });
+      return res.jsonp({message: 'Todos los empleados han sido desactivados'});
+    }
+    return res.jsonp({message: 'No ha sido desactivado ningún empleado'});
+  }
+
+  public async listaEmpleadosDesactivados(req: Request, res: Response) {
+    const empleado = await pool.query('SELECT * FROM empleados WHERE estado = 2 ORDER BY id');
+    
+    res.jsonp(empleado.rows);
+  }
+
+  public async ActivarMultiplesEmpleados(req: Request, res: Response): Promise<any> {
+    const arrayIdsEmpleados = req.body;
+    console.log(arrayIdsEmpleados);
+
+    if (arrayIdsEmpleados.length > 0) {
+      arrayIdsEmpleados.forEach(async(obj: number) => {
+        await pool.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+        .then(result => {
+          console.log(result.command, 'EMPLEADO ====>', obj);
+        });
+        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1',[obj]) // true => Tiene acceso
+        .then(result => {
+          console.log(result.command, 'USUARIO ====>', obj);
+        });
+      });
+      // var tiempo = 1000 * arrayIdsEmpleados.length
+      // setInterval(() => {
+      // }, tiempo)
+      return res.jsonp({message: 'Todos los empleados han sido activados'});
+    }
+    return  res.jsonp({message: 'No ha sido activado ningún empleado'});
   }
 }
 

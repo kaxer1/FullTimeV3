@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import horasExtrasControlador from '../../controlador/catalogos/catHorasExtrasControlador';
-import { TokenValidation } from '../../libs/VerificarToken';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class HorasExtrasRutas {
     public router: Router = Router();

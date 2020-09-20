@@ -56,8 +56,10 @@ const horaExtraRutas_1 = __importDefault(require("./rutas/horaExtra/horaExtraRut
 const birthdayRutas_1 = __importDefault(require("./rutas/birthday/birthdayRutas"));
 const kardexVacacionesRutas_1 = __importDefault(require("./rutas/reportes/kardexVacacionesRutas"));
 const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRutas"));
+const cargaMultipleRutas_1 = __importDefault(require("./rutas/cargaMultiple/cargaMultipleRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
+const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -127,6 +129,8 @@ class Servidor {
         this.app.use('/noti-autorizaciones', catNotiAutorizacionesRutas_1.default);
         this.app.use('/autorizaciones', autorizacionesRutas_1.default);
         this.app.use('/noti-real-time', notificacionesRutas_1.default);
+        // Timbres
+        this.app.use('/timbres', timbresRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
         // Documentos
@@ -140,6 +144,8 @@ class Servidor {
         this.app.use('/reporte', reportesRutas_1.default);
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
+        // CARGA MULTIPLE
+        this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
@@ -167,15 +173,20 @@ class Servidor {
 }
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
-const SendBirthday_1 = require("./libs/SendBirthday");
-const AvisoVacaciones_1 = require("./libs/AvisoVacaciones");
+const sendBirthday_1 = require("./libs/sendBirthday");
+const avisoVacaciones_1 = require("./libs/avisoVacaciones");
 const ContarHoras_1 = require("./libs/ContarHoras");
+const SinTimbres_1 = require("./libs/SinTimbres");
+const DesactivarEmpleado_1 = require("./libs/DesactivarEmpleado");
 // llama al meodo de cumpleaños
-SendBirthday_1.cumpleanios();
+sendBirthday_1.cumpleanios();
 // llama al metodo de avisos de vacaciones
-AvisoVacaciones_1.beforeFiveDays();
-AvisoVacaciones_1.beforeTwoDays();
+avisoVacaciones_1.beforeFiveDays();
+avisoVacaciones_1.beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-AvisoVacaciones_1.Peri_Vacacion_Automatico();
+avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
 // conteoPermisos();
+// NotificacionTimbreAutomatica();
+SinTimbres_1.NotificacionSinTimbres();
+DesactivarEmpleado_1.DesactivarFinContratoEmpleado();

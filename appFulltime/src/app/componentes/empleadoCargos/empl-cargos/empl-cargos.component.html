@@ -52,7 +52,7 @@
                         <mat-datepicker touchUi #picker></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-label>Fecha de Finalización</mat-label>
+                        <mat-label id="selEmpre">Fecha de Finalización</mat-label>
                         <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
                             [formControl]="fechaFinal" required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="cargoE"
@@ -62,7 +62,7 @@
                         <mat-datepicker touchUi #picker2></mat-datepicker>
                     </mat-form-field>
                     <mat-form-field>
-                        <mat-label>Cargo a desempeñar</mat-label>
+                        <mat-label id="selEmpre">Cargo a desempeñar</mat-label>
                         <input matInput placeholder="Ej: Secretaria" [formControl]="cargoF" required>
                         <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar el cargo que va a desempeñar el empleado">

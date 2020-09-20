@@ -506,10 +506,10 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
 /**
  * var d = parseInt(valor.toString().split(".")[0]);
     var aux_dia = valor - d;
-    
+
     var aux_hor = aux_dia * 24;
     var h = parseInt(aux_hor.toString().split(".")[0]);
-    
+
     var aux_min = (aux_hor - h) * 60;
     var m = parseInt(aux_min.toString().split(".")[0]);
  */
@@ -525,13 +525,3 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
 //     }
 //     [ nuevo[ j ], nuevo[ numMin ] ] = [ nuevo[ numMin ], nuevo[ j ] ]
 // } 
-/**
-•	Numerar los empleados y contabilizarlos (Reporte lista empleados). (1h)
-•	Colorear las filas en formato cebra para (Reporte lista empleados). (1h)
-•	Numerar los registros y contabilizarlos (Reporte Asistencia Consolidada). (1h)
-•	Colorear las filas en formato cebra para (Reporte Asistencia Consolidada). (1h)
-•	Mejorar el diseño del total (Reporte Asistencia Consolidada). (30min)
-•	Diseño de la cabecera al presentar los datos de los reportes (Kardex y asistencia consolidada). (1h).
-•	Mejorar el diseño del total (Reporte Asistencia Consolidada). (30min)
-•	Descripción de palabras claves.
- */ 

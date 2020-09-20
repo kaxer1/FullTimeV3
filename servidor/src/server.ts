@@ -52,9 +52,11 @@ import HORA_EXTRA_PEDIDA_RUTAS from './rutas/horaExtra/horaExtraRutas';
 import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import KARDEX_VACACION_RUTAS from './rutas/reportes/kardexVacacionesRutas';
 import ASISTENCIA_RUTAS from './rutas/reportes/asistenciaRutas';
+import CARGA_MULTIPLE_RUTAS from './rutas/cargaMultiple/cargaMultipleRutas';
 
 import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
+import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -141,6 +143,9 @@ class Servidor {
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
         this.app.use('/noti-real-time', NOTIFICACION_TIEMPO_REAL_RUTAS);
+        
+        // Timbres
+        this.app.use('/timbres', TIMBRES_RUTAS);
 
         // Plantillas
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
@@ -160,6 +165,9 @@ class Servidor {
 
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS);
+
+        // CARGA MULTIPLE
+        this.app.use('/cargaMultiple', CARGA_MULTIPLE_RUTAS);
 
     }
 
@@ -193,11 +201,13 @@ class Servidor {
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
 
-import { cumpleanios } from './libs/SendBirthday';
-import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/AvisoVacaciones';
+import { cumpleanios } from './libs/sendBirthday';
+import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
 import { conteoPermisos } from './libs/TimerPermiso';
 import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
-
+import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
+import { NotificacionSinTimbres } from './libs/SinTimbres'
+import { DesactivarFinContratoEmpleado } from './libs/DesactivarEmpleado'
 // llama al meodo de cumpleaños
 cumpleanios();
 // llama al metodo de avisos de vacaciones
@@ -206,6 +216,12 @@ beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
 Peri_Vacacion_Automatico();
 
-RegistrarAsistenciaByTimbres()
+RegistrarAsistenciaByTimbres();
 
 // conteoPermisos();
+
+// NotificacionTimbreAutomatica();
+
+NotificacionSinTimbres();
+
+DesactivarFinContratoEmpleado();

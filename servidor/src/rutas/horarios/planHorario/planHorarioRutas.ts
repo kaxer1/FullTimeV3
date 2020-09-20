@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import PLAN_HORARIO_CONTROLADOR from '../../../controlador/horarios/planHorario/planHorarioControlador';
-import { TokenValidation } from '../../../libs/VerificarToken'
+import { TokenValidation } from '../../../libs/verificarToken'
 
 class PlanHorarioRutas {
     public router: Router = Router();
@@ -17,6 +17,7 @@ class PlanHorarioRutas {
         this.router.get('/datosPlanHorario/:id', TokenValidation, PLAN_HORARIO_CONTROLADOR.EncontrarPlanHorarioPorId);
         this.router.put('/', TokenValidation, PLAN_HORARIO_CONTROLADOR.ActualizarPlanHorario);
         this.router.delete('/eliminar/:id', TokenValidation, PLAN_HORARIO_CONTROLADOR.EliminarRegistros);
+        this.router.post('/fechas_plan/:id_empleado', TokenValidation, PLAN_HORARIO_CONTROLADOR.ObtenerPlanificacionEmpleadoFechas);
     }
 }
 

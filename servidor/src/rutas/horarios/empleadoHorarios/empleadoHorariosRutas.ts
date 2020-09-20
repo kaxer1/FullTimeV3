@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import EMPLEADO_HORARIOS_CONTROLADOR from '../../../controlador/horarios/empleadoHorarios/empleadoHorariosControlador';
-import { TokenValidation } from '../../../libs/VerificarToken'
+import { TokenValidation } from '../../../libs/verificarToken'
 
 const multipart = require('connect-multiparty');
 
@@ -24,6 +24,7 @@ class EmpleadoHorariosRutas {
         this.router.post('/horas', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.ObtenerNumeroHoras);
         this.router.put('/', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.ActualizarEmpleadoHorarios);
         this.router.delete('/eliminar/:id', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.EliminarRegistros);
+        this.router.post('/fechas_horario/:id_empleado', TokenValidation, EMPLEADO_HORARIOS_CONTROLADOR.ObtenerHorariosEmpleadoFechas);
     }
 }
 

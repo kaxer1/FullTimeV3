@@ -472,6 +472,87 @@
           </mat-form-field>
         </form>
         <span class="example-spacer"></span>
+
+        <!-- Botón Timbres -->
+        <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="timbre" (click)="numeroTimbres()">
+          <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoTimbres" matBadge="{{num_timbre_false}}"
+            matBadgeColor="warn" style="margin-left: 8px;">report</mat-icon>
+        </button>
+        <mat-menu #timbre="matMenu" style="margin-right: 10px; height: 100px;">
+          <div class="container" style="text-align: center;">
+            <h4>Timbres</h4>
+          </div>
+          <div *ngIf="timbres_noti.message !== 'No se encuentran registros'">
+            <div *ngFor="let n of timbres_noti">
+
+              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226)">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- *ngIf="loginService.getEstado()"  -->
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
+              <!-- <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
+                  (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
+                  (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div> -->
+
+            </div>
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
+            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
+              Mostrar todas las notificaciones
+            </a>
+          </div>
+        </mat-menu>
+
         <!-- Botón notificación -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
           <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"
@@ -721,6 +802,86 @@
       </mat-toolbar-row>
 
       <mat-toolbar-row *ngIf="barraDos" class="d-flex justify-content-start">
+        <!-- Botón Timbres -->
+        <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="timbre" (click)="numeroTimbres()">
+          <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoTimbres" matBadge="{{num_timbre_false}}"
+            matBadgeColor="warn" style="margin-left: 8px;">report</mat-icon>
+        </button>
+        <mat-menu #timbre="matMenu" style="margin-right: 10px; height: 100px;">
+          <div class="container" style="text-align: center;">
+            <h4>Timbres</h4>
+          </div>
+          <div *ngIf="timbres_noti.message !== 'No se encuentran registros'">
+            <div *ngFor="let n of timbres_noti">
+
+              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
+              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226)">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- *ngIf="loginService.getEstado()"  -->
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
+              <!-- <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
+                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
+                  (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
+                  (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
+                      estado de la</li>
+                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
+                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b>
+                      {{n.create_at.slice(11,16)}}</li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div> -->
+
+            </div>
+          </div>
+          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
+            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
+              Mostrar todas las notificaciones
+            </a>
+          </div>
+        </mat-menu>
+        
         <!-- Botón notificación -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
           <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"

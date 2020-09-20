@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import EMPRESA_CONTROLADOR from '../../controlador/catalogos/catEmpresaControlador';
-import { TokenValidation } from '../../libs/VerificarToken';
+import { TokenValidation } from '../../libs/verificarToken';
 
 const multipart = require('connect-multiparty');
 

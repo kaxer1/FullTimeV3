@@ -5,17 +5,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catNotiAutorizacionesControlador_1 = __importDefault(require("../../controlador/catalogos/catNotiAutorizacionesControlador"));
-const VerificarToken_1 = require("../../libs/VerificarToken");
+const verificarToken_1 = require("../../libs/verificarToken");
 class NotificacionesAutorizacionesRutas {
     constructor() {
         this.router = express_1.Router();
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', VerificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ListarNotiAutorizaciones);
-        this.router.get('/lista/:id_notificacion', VerificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ListarPorNotificacion);
-        this.router.get('/:id', VerificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ObtenerUnaNotiAutorizacion);
-        this.router.post('/', VerificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.CrearNotiAutorizacion);
+        this.router.get('/', verificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ListarNotiAutorizaciones);
+        this.router.get('/lista/:id_notificacion', verificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ListarPorNotificacion);
+        this.router.get('/:id', verificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.ObtenerUnaNotiAutorizacion);
+        this.router.post('/', verificarToken_1.TokenValidation, catNotiAutorizacionesControlador_1.default.CrearNotiAutorizacion);
     }
 }
 const NOTIFICACIONES_AUTORIZACIONES_RUTA = new NotificacionesAutorizacionesRutas();

@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const catEmpresaControlador_1 = __importDefault(require("../../controlador/catalogos/catEmpresaControlador"));
-const VerificarToken_1 = require("../../libs/VerificarToken");
+const verificarToken_1 = require("../../libs/verificarToken");
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
     uploadDir: './logos',
@@ -16,16 +16,16 @@ class DepartamentoRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarEmpresa);
-        this.router.get('/buscar/:nombre', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarUnaEmpresa);
-        this.router.post('/', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.CrearEmpresa);
-        this.router.put('/', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.ActualizarEmpresa);
-        this.router.post('/xmlDownload/', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.FileXML);
+        this.router.get('/', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarEmpresa);
+        this.router.get('/buscar/:nombre', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarUnaEmpresa);
+        this.router.post('/', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.CrearEmpresa);
+        this.router.put('/', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ActualizarEmpresa);
+        this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catEmpresaControlador_1.default.downloadXML);
-        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.EliminarRegistros);
-        this.router.get('/buscar/datos/:id', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarEmpresaId);
-        this.router.get('/logo/codificado/:id_empresa', VerificarToken_1.TokenValidation, catEmpresaControlador_1.default.getImagenBase64);
-        this.router.put('/logo/:id_empresa/uploadImage', [VerificarToken_1.TokenValidation, multipartMiddleware], catEmpresaControlador_1.default.ActualizarLogoEmpresa);
+        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.EliminarRegistros);
+        this.router.get('/buscar/datos/:id', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarEmpresaId);
+        this.router.get('/logo/codificado/:id_empresa', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.getImagenBase64);
+        this.router.put('/logo/:id_empresa/uploadImage', [verificarToken_1.TokenValidation, multipartMiddleware], catEmpresaControlador_1.default.ActualizarLogoEmpresa);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

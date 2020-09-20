@@ -10,24 +10,26 @@ export const RestarPeriodoVacacionAutorizada = async function(id_vacacion: numbe
 
     let periodo = await ConsultarPerido(vacacion.id_peri_vacacion);
 
-    var dProporcional = num_dias * (30/22);
+    // var dProporcional = num_dias * (30/22);
+    var dProporcional = num_dias;
     
     let d_h_m = DecimalToDiasHorMin(hora_trabaja, dProporcional);
     
     let dias_decimal = DDHHMMtoDiasDecimal(hora_trabaja, periodo.dias, periodo.horas, periodo.min)
     
+    // var total = (dias_decimal * (30/22)) - dProporcional;
     var total = dias_decimal - dProporcional;
     
     let total_DHM = DecimalToDiasHorMin(hora_trabaja, total);
     
-    // console.log(vacacion);
-    // console.log(num_dias);
-    // console.log(hora_trabaja);
-    // console.log(periodo);
-    // console.log(dProporcional);
-    // console.log(d_h_m);
-    // console.log('Total ===>',total);
-    // console.log(total_DHM);
+    console.log(vacacion);
+    console.log(num_dias);
+    console.log(hora_trabaja);
+    console.log(periodo);
+    console.log(dProporcional);
+    console.log(d_h_m);
+    console.log('Total ===>',total);
+    console.log(total_DHM);
 
     await pool.query('UPDATE peri_vacaciones SET dia_vacacion = $1, horas_vacaciones = $2, min_vacaciones = $3 WHERE id = $4', [total_DHM.dias, total_DHM.horas, total_DHM.min, vacacion.id_peri_vacacion])
     

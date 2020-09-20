@@ -33,11 +33,15 @@ export class PlanHorarioService {
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/planHorario`, datos);
+    return this.http.put(`${this.API_URL}/planHorario/`, datos);
   }
 
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/planHorario/eliminar/${id}`);
+  }
+
+  ObtenerPlanHorarioEmpleadoFechas(id_empleado: number, datos: any) {
+    return this.http.post(`${this.API_URL}/planHorario/fechas_plan/${id_empleado}`, datos);
   }
 
 }

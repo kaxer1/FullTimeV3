@@ -12,7 +12,6 @@ export const restaDias = function(fecha: Date, dias: number) {
 }
 
 export const ObtenerRangoSemanal = function(fHoy: Date) {
-
     fHoy.setUTCHours(0);
     fHoy.setUTCMinutes(0);
     

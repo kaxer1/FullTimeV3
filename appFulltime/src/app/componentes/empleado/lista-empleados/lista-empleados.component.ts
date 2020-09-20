@@ -12,6 +12,28 @@ import * as xml from 'xml-js';
 import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import {SelectionModel} from '@angular/cdk/collections';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
+
+export interface EmpleadoElemento {
+  apellido: string;
+  cedula: string;
+  codigo: string;
+  correo: string;
+  domicilio: string;
+  esta_civil: number;
+  estado: number;
+  fec_nacimiento: string;
+  genero: number;
+  id: number;
+  id_nacionalidad: number;
+  imagen: string
+  mail_alternativo: string;
+  nombre: string;
+  telefono: string;
+}
 
 @Component({
   selector: 'app-lista-empleados',
@@ -39,15 +61,25 @@ export class ListaEmpleadosComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+  
+  // items de paginacion de la tabla
+  tamanio_paginaDes: number = 5;
+  numero_paginaDes: number = 1;
+  pageSizeOptionsDes = [5, 10, 20, 50];
 
   empleadoD: any = [];
   idEmpleado: number;
 
+  selectionUno = new SelectionModel<EmpleadoElemento>(true, []);
+  selectionDos = new SelectionModel<EmpleadoElemento>(true, []);
+
   constructor(
     public rest: EmpleadoService,
+    public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
-  ) { 
+    public vistaRegistrarDatos: MatDialog,
+  ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
@@ -57,18 +89,137 @@ export class ListaEmpleadosComponent implements OnInit {
     this.ObtenerEmpleados(this.idEmpleado);
   }
 
-  // metodo para ver la informacion del empleado 
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selectionUno.selected.length;
+    const numRows = this.empleado.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+    this.selectionUno.clear() :
+    this.empleado.forEach(row => this.selectionUno.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selectionUno.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  btnCheckHabilitar: boolean = false;
+  HabilitarSeleccion(){
+    if (this.btnCheckHabilitar === false) {
+      this.btnCheckHabilitar = true;
+    } else if(this.btnCheckHabilitar === true) {
+      this.btnCheckHabilitar = false;
+    }
+  }
+
+  desactivados: any = [];
+  ListaEmpleadosDeshabilitados() {
+    this.desactivados = [];
+    if (this.Hab_Deshabilitados == false) {
+      this.Hab_Deshabilitados = true;
+      this.rest.ListaEmpleadosDesactivados().subscribe(res => {
+        this.desactivados = res;
+      });
+    } else if (this.Hab_Deshabilitados == true) {
+      this.Hab_Deshabilitados = false;
+    }  
+  }
+
+  Hab_Deshabilitados: boolean = false;
+  btnCheckDeshabilitado: boolean = false;
+  HabilitarSeleccionDesactivados() {
+    if (this.btnCheckDeshabilitado === false) {
+      this.btnCheckDeshabilitado = true;
+    } else if(this.btnCheckDeshabilitado === true) {
+      this.btnCheckDeshabilitado = false;
+    }
+  }
+
+  isAllSelectedDos() {
+    const numSelected = this.selectionDos.selected.length;
+    const numRows = this.desactivados.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggleDos() {
+    this.isAllSelectedDos() ?
+    this.selectionDos.clear() :
+    this.desactivados.forEach(row => this.selectionDos.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabelDos(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelectedDos() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selectionDos.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  Deshabilitar(opcion: number){
+    let EmpleadosSeleccionados 
+    if (opcion === 1) {
+      EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
+    } else if (opcion === 2) {
+      EmpleadosSeleccionados = this.selectionDos.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
+    }
+    console.log(EmpleadosSeleccionados);
+    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: {opcion: opcion, lista: EmpleadosSeleccionados} }).afterClosed().subscribe(item => {
+      console.log(item);
+      if (item === true) {
+        this.getEmpleados();
+        this.ListaEmpleadosDeshabilitados();
+        this.btnCheckHabilitar = false;
+        this.btnCheckDeshabilitado = false;
+        this.Hab_Deshabilitados = false;
+        this.selectionUno.clear();
+        this.selectionDos.clear();
+      };
+    });
+  }
+
+
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleadoD = [];
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoD = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+  
+  ManejarPaginaDes(e: PageEvent) {
+    this.tamanio_paginaDes = e.pageSize;
+    this.numero_paginaDes = e.pageIndex + 1;
   }
 
   IngresarSoloLetras(e) {
@@ -112,6 +263,7 @@ export class ListaEmpleadosComponent implements OnInit {
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
       this.empleado = data;
+      console.log(this.empleado);
     })
   }
 
@@ -188,10 +340,13 @@ export class ListaEmpleadosComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Empleados', this.empleado);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -203,17 +358,22 @@ export class ListaEmpleadosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
           var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,,
+            'Fecha: ' + fecha + ' Hora: ' + time, ,
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
@@ -223,44 +383,14 @@ export class ListaEmpleadosComponent implements OnInit {
         }
       },
       content: [
-        {
-          text: 'Empleados',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Empleados', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFEmpleados(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 8,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 8 },
+        itemsTableD: { fontSize: 8, alignment: 'center' }
       }
     };
   }

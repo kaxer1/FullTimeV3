@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-const SettingsMail_1 = require("./SettingsMail");
+const settingsMail_1 = require("./settingsMail");
 const path_1 = __importDefault(require("path"));
 // metodo para enviar los cumpleaños a una hora determinada, verificando a cada hora hasta que sean las 12 pm y se envie el correo
 exports.cumpleanios = function () {
@@ -27,7 +27,7 @@ exports.cumpleanios = function () {
         const fecha = date.toJSON().slice(4).split("T")[0];
         // console.log(fecha)
         if (hora === 10) {
-            const felizCumple = yield database_1.default.query("SELECT e.nombre, e.apellido, e.correo, e.fec_nacimiento, em.nombre AS empresa, m.titulo, m.mensaje, m.img, m.url FROM empleados AS e, empl_contratos AS cn, empl_cargos AS cr, sucursales AS s, cg_empresa AS em, message_birthday AS m WHERE CAST(e.fec_nacimiento AS VARCHAR) LIKE '%' || $1 AND cn.id_empleado = e.id AND cr.id_empl_contrato = cn.id AND s.id = cr.id_sucursal AND em.id = s.id_empresa AND m.id_empresa = em.id", [fecha]);
+            const felizCumple = yield database_1.default.query("SELECT e.nombre, e.apellido, e.correo, e.fec_nacimiento, em.nombre AS empresa, m.titulo, m.mensaje, m.img, m.url FROM empleados AS e, empl_contratos AS cn, empl_cargos AS cr, sucursales AS s, cg_empresa AS em, message_birthday AS m WHERE CAST(e.fec_nacimiento AS VARCHAR) LIKE '%' || $1 AND cn.id_empleado = e.id AND e.estado = 1 AND cr.id_empl_contrato = cn.id AND s.id = cr.id_sucursal AND em.id = s.id_empresa AND m.id_empresa = em.id", [fecha]);
             // console.log(felizCumple.rows);
             if (felizCumple.rowCount > 0) {
                 // Enviar mail a todos los que nacieron en la fecha seleccionada
@@ -41,7 +41,7 @@ exports.cumpleanios = function () {
                     }
                     let data = {
                         to: obj.correo,
-                        from: SettingsMail_1.email,
+                        from: settingsMail_1.email,
                         subject: 'Felicidades',
                         html: ` <h2> <b> ${obj.empresa} </b> </h2>
                         <h3 style="text-align-center"><b>¡Feliz Cumpleaños ${obj.nombre.split(" ")[0]}!</b></h3>
@@ -56,7 +56,7 @@ exports.cumpleanios = function () {
                             }]
                     };
                     console.log(data);
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                 });
             }
         }

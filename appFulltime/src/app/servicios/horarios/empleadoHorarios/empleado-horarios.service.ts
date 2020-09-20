@@ -47,4 +47,8 @@ export class EmpleadoHorariosService {
     return this.http.delete(`${this.API_URL}/empleadoHorario/eliminar/${id}`);
   }
 
+  ObtenerHorariosFechasEmpleado(id_empleado: number, data: any) {
+    return this.http.post(`${this.API_URL}/empleadoHorario/fechas_horario/${id_empleado}`, data)
+  }
+
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import ROLES_CONTROLADOR from '../../controlador/catalogos/catRolesControlador';
-import { TokenValidation } from '../../libs/VerificarToken';
+import { TokenValidation } from '../../libs/verificarToken';
 
 class PruebasRutas {
     public router: Router = Router();

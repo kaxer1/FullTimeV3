@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-const SettingsMail_1 = require("../../libs/SettingsMail");
+const settingsMail_1 = require("../../libs/settingsMail");
 const CargarVacacion_1 = require("../../libs/CargarVacacion");
 class VacacionesControlador {
     ListarVacaciones(req, res) {
@@ -43,15 +43,24 @@ class VacacionesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion, depa_user_loggin } = req.body;
             yield database_1.default.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion]);
+            console.log('******************', depa_user_loggin);
             const JefesDepartamentos = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin]);
+            console.log('******************', JefesDepartamentos.rows[0]);
             let depa_padre = JefesDepartamentos.rows[0].depa_padre;
             let JefeDepaPadre;
             if (depa_padre !== null) {
+                console.log('******************', depa_padre);
                 do {
                     JefeDepaPadre = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre]);
-                    depa_padre = JefeDepaPadre.rows[0].depa_padre;
-                    JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
-                } while (depa_padre !== null);
+                    console.log(JefeDepaPadre.rows.length);
+                    if (JefeDepaPadre.rows.length > 0) {
+                        depa_padre = JefeDepaPadre.rows[0].depa_padre;
+                        JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
+                    }
+                    else {
+                        depa_padre = null;
+                    }
+                } while (depa_padre !== null || JefeDepaPadre.rows.length !== 0);
                 res.jsonp(JefesDepartamentos.rows);
             }
             else {
@@ -71,7 +80,7 @@ class VacacionesControlador {
                 let id_empleado_autoriza = empleado;
                 let data = {
                     to: correo,
-                    from: SettingsMail_1.email,
+                    from: settingsMail_1.email,
                     subject: 'Solicitud de vacaciones',
                     html: `<p><b>${correoInfoPidePermiso.rows[0].nombre} ${correoInfoPidePermiso.rows[0].apellido}</b> con número de
         cédula ${correoInfoPidePermiso.rows[0].cedula} solicita vacaciones desde la fecha ${fec_inicio.split("T")[0]}
@@ -79,11 +88,11 @@ class VacacionesControlador {
         <a href="${url}/${ultimo.rows[0].id}">Ir a verificar permiso</a>`
                 };
                 if (vaca_mail === true && vaca_noti === true) {
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                     res.jsonp({ message: 'Vacaciones guardadas con éxito', notificacion: true, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
                 }
                 else if (vaca_mail === true && vaca_noti === false) {
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                     res.jsonp({ message: 'Vacaciones guardadas con éxito', notificacion: false, id_vacacion: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado });
                 }
                 else if (vaca_mail === false && vaca_noti === true) {
@@ -98,7 +107,7 @@ class VacacionesControlador {
     VacacionesIdPeriodo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1', [id]);
+            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.id = $1 ORDER BY p.fec_final ASC', [id]);
             if (VACACIONES.rowCount > 0) {
                 return res.jsonp(VACACIONES.rows);
             }
@@ -127,14 +136,6 @@ class VacacionesControlador {
             console.log(estado, id_vacacion, id_rece_emp, id_depa_send);
             const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_depa_send]);
             const InfoVacacionesReenviarEstadoEmpleado = yield database_1.default.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacacion, id_rece_emp]);
-            // console.log(JefeDepartamento.rows)
-            // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
-            // const estadoAutorizacion = [
-            //   { id: 1, nombre: 'Solicitado' },
-            //   { id: 2, nombre: 'Rechazado' },
-            //   { id: 3, nombre: 'Aceptado' },
-            //   { id: 4, nombre: 'Eliminado' },
-            // ];    
             if ('Aceptado' === estado) {
                 CargarVacacion_1.RestarPeriodoVacacionAutorizada(parseInt(id));
             }
@@ -167,11 +168,11 @@ class VacacionesControlador {
                 <a href="${url}">Ir a verificar estado vacaciones</a>`
                     };
                     if (ele.vaca_mail === true && ele.vaca_noti === true) {
-                        SettingsMail_1.enviarMail(data);
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                     }
                     else if (ele.vaca_mail === true && ele.vaca_noti === false) {
-                        SettingsMail_1.enviarMail(data);
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                     else if (ele.vaca_mail === false && ele.vaca_noti === true) {

@@ -13,7 +13,11 @@ export const VerificarHorario = async function(id_cargo: number) {
     
     let respuesta = tipoHorario(horario.fec_inicio, horario.fec_final)
     var f = new Date();
-
+    
+    f.setUTCMonth(f.getMonth());
+    f.setUTCDate(f.getDate());
+    f.setUTCHours(f.getHours());
+    
     // FECHA_FERIADOS = feriados
     let feriados;
     

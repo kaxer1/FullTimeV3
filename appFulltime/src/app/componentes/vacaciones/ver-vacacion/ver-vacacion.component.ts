@@ -13,13 +13,8 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EditarEstadoVacacionAutoriacionComponent } from '../../autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 import { EstadoVacacionesComponent } from "../estado-vacaciones/estado-vacaciones.component";
 
-
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
-
-//HORAS EXTRAS PRUEBAS
-import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
-
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 
@@ -60,23 +55,13 @@ export class VerVacacionComponent implements OnInit {
   datoSolicitud: any = [];
   datosAutorizacion: any = [];
 
-  //horas extras
-  datoSolicitudHE: any = [];
-
-
-
   constructor(
-
-    //hora extra 
-    private restHE: PedHoraExtraService,
-
     private restV: VacacionesService,
-    private toastr: ToastrService,
     private router: Router,
     private restD: DepartamentosService,
-    private restP: PermisosService,
     private restA: AutorizacionService,
     public restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public vistaFlotante: MatDialog
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -84,8 +69,8 @@ export class VerVacacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.BuscarDatos();
+    this.ObtenerLogo();
   }
 
   BuscarDatos() {
@@ -115,27 +100,28 @@ export class VerVacacionComponent implements OnInit {
       });
     });
 
-
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerSolicitud(this.id_vacacion);
     this.ObtenerAutorizacion(this.id_vacacion);
-
-
-
-    //hora extra
-    //this.ObtenerSolicitudHE(this.id_vacacion);
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la informacion del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
   }
 
-  // metodo para ver la informacion de la solicitud 
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para ver la informacion de la solicitud 
   ObtenerSolicitud(id: any) {
     this.datoSolicitud = [];
     this.restV.BuscarDatosSolicitud(id).subscribe(data => {
@@ -144,7 +130,7 @@ export class VerVacacionComponent implements OnInit {
     })
   }
 
-  // metodo para ver la informacion de la autorización 
+  // Método para ver la informacion de la autorización 
   ObtenerAutorizacion(id: any) {
     console.log('entra')
     this.datosAutorizacion = [];
@@ -166,8 +152,6 @@ export class VerVacacionComponent implements OnInit {
       console.log('autorizacion', this.datosAutorizacion);
     })
   }
-
-
 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     this.vistaFlotante.open(EstadoVacacionesComponent, { width: '300px', data: { vacacion: datosSeleccionados, depa: this.dep } })
@@ -223,10 +207,13 @@ export class VerVacacionComponent implements OnInit {
 
   getDocumentDefinicion() {
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -238,7 +225,13 @@ export class VerVacacionComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -252,71 +245,21 @@ export class VerVacacionComponent implements OnInit {
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: this.datoSolicitud[0].nom_empresa,
-          bold: true,
-          fontSize: 15,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-        {
-          text: 'SOLICITUD DE VACACIONES',
-          fontSize: 10,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
-
+        { image: this.logo, width: 150 },
+        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
+        { text: 'SOLICITUD DE VACACIONES', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFPermiso(this.ObtenerFecha()),
       ],
       styles: {
-        header: {
-          fontSize: 9,
-          bold: true,
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-        },
-        tableHeaderA: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED',
-          margin: [20, 0, 20, 0],
-
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center',
-          margin: [50, 5, 5, 5]
-
-        },
-        itemsTableD: {
-          fontSize: 10,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTable: {
-          fontSize: 10,
-          alignment: 'center',
-        }
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', },
+        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [20, 0, 20, 0], },
+        itemsTableC: { fontSize: 10, alignment: 'center', margin: [50, 5, 5, 5] },
+        itemsTableD: { fontSize: 10, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTable: { fontSize: 10, alignment: 'center', }
       }
     };
   }
@@ -326,182 +269,79 @@ export class VerVacacionComponent implements OnInit {
       table: {
         widths: ['*'],
         body: [
-          [
-            { text: 'INFORMACIÓN GENERAL', style: 'tableHeader' },
-          ],
-          [
+          [{ text: 'INFORMACIÓN GENERAL', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'FECHA: ' + f, style: 'itemsTableD' }] },
+              { text: [{ text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD' }] },
+              { text: [{ text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD' }] },
+              { text: [{ text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD' }] },
+              { text: [{ text: 'Sucursal: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD' }] },
+              { text: [{ text: 'Días de Vacaciones: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD' }] }
+            ]
+          }],
+          [{ text: 'VACACIONES', style: 'tableHeader' }],
+          [{
+            columns: [
+              { text: [{ text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD' }] },
+              { text: [{ text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD' }] },
+              { text: [{ text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD' }] },
+            ]
+          }],
+          [{
+            columns: [{
+              columns: [
+                { width: '*', text: '' },
+                {
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto'],
+                    body: [
+                      [{ text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },],
+                      [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                      [{ text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },]
+                    ]
+                  }
+                },
+                { width: '*', text: '' },
+              ]
+            },
             {
               columns: [
+                { width: '*', text: '' },
                 {
-                  text: [
-                    {
-                      text: 'FECHA: ' + f, style: 'itemsTableD'
-                    }
-                  ]
+                  width: 'auto',
+                  layout: 'lightHorizontalLines',
+                  table: {
+                    widths: ['auto'],
+                    body: [
+                      [{ text: 'EMPLEADO', style: 'tableHeaderA' },],
+                      [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                      [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },]
+                    ]
+                  }
                 },
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD'
-                    }
-                  ]
-                }
+                { width: '*', text: '' },
               ]
             }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'Sucursal: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'Días de Vacaciones: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              text: 'VACACIONES', style: 'tableHeader'
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                },
-                {
-                  columns: [
-                    { width: '*', text: '' },
-                    {
-                      width: 'auto',
-                      layout: 'lightHorizontalLines',
-                      table: {
-                        widths: ['auto'],
-                        body: [
-                          [
-                            { text: 'EMPLEADO', style: 'tableHeaderA' },
-                          ],
-                          [
-                            { text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },
-                          ],
-                          [
-                            { text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },
-                          ]
-                        ]
-                      }
-                    },
-                    { width: '*', text: '' },
-                  ]
-                }
-              ]
-            }
-          ],
+            ]
+          }],
         ]
       },
       layout: {

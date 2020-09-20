@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
@@ -11,6 +9,9 @@ import * as xlsx from 'xlsx';
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
+
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 
 @Component({
   selector: 'app-asistencia-consolidado',
@@ -23,6 +24,7 @@ import * as moment from 'moment';
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class AsistenciaConsolidadoComponent implements OnInit {
 
   empleados: any = [];
@@ -66,7 +68,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     private restEmpleado: EmpleadoService,
     private restKardex: KardexService,
     private toastr: ToastrService
-  ) { 
+  ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
@@ -81,7 +83,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       this.empleados = res;
     });
   }
-  // metodo para ver la informacion del empleado 
+
+  // Método para ver la informacion del empleado 
   urlImagen: string;
   nombreEmpresa: string;
   ObtenerEmpleadoSolicitaKardex(idemploy: any) {
@@ -99,13 +102,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
    * METODOS PARA OBTENER LA INFORMACION SEGUN EL REPORTE QUE REQUIERE
    */
 
-  lista:any = [];
+  lista: any = [];
   ListaEmpleadosDetallado(palabra: string) {
     var id_empresa = parseInt(localStorage.getItem('empresa'));
     this.restKardex.ListadoEmpleadosConDepartamentoRegimen(id_empresa).subscribe(res => {
       this.lista = res
       console.log(this.lista)
-      this.generarPdf(palabra,2)
+      this.generarPdf(palabra, 2)
     })
   }
 
@@ -114,8 +117,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  f_inicio_req: string = ''; 
-  f_final_req: string = ''; 
+  f_inicio_req: string = '';
+  f_final_req: string = '';
   habilitar: boolean = false;
   estilo: any = { 'visibility': 'hidden' };
   ValidarRangofechas(form) {
@@ -128,10 +131,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       this.f_final_req = f_f.toJSON().split('T')[0];
       this.habilitar = true
       this.estilo = { 'visibility': 'visible' };
-    } else if(f_i > f_f) {
+    } else if (f_i > f_f) {
       this.toastr.info('Fecha final es menor a la fecha inicial');
       this.fechasForm.reset();
-    } else if(f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
+    } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
       this.toastr.info('Fecha inicial es igual a la fecha final');
       this.fechasForm.reset();
     }
@@ -193,7 +196,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
    * ****************************************************************************************************/
 
   generarPdf(action = 'open', pdf: number) {
-    
+
     let documentDefinition;
 
     if (pdf === 1) {
@@ -224,13 +227,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     f.setUTCHours(f.getHours())
     this.fechaHoy = f.toJSON();
     console.log(this.fechaHoy);
-    
+
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-      
-      footer: function (currentPage, pageCount, fecha) {  
+
+      footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
         return {
@@ -240,7 +243,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }
@@ -291,7 +294,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 8,
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         itemsTableInfo: {
           fontSize: 10,
@@ -375,19 +378,19 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             {text: 'Nº', style: 'tableHeader'},
             {colSpan: 4, text: 'ENTRADA', style: 'tableHeader'}, 
             '', '', '',
-            {colSpan: 3, text: 'SALIDA A', style: 'tableHeader'},
+            { colSpan: 3, text: 'SALIDA A', style: 'tableHeader' },
             '', '',
-            {colSpan: 3, text: 'ENTRADA A', style: 'tableHeader'}, 
+            { colSpan: 3, text: 'ENTRADA A', style: 'tableHeader' },
             '', '',
-            {colSpan: 3, text: 'SALIDA', style: 'tableHeader'}, 
+            { colSpan: 3, text: 'SALIDA', style: 'tableHeader' },
             '', '',
-            {text: 'ATRASO', style: 'tableHeader'},
-            {text: 'SAL ANTES', style: 'tableHeader'},
-            {text: 'ALMUE', style: 'tableHeader'},
-            {text: 'HORA TRAB', style: 'tableHeader'},
-            {text: 'HORA SUPL', style: 'tableHeader'},
-            {text: 'HORA EX. L-V', style: 'tableHeader'},
-            {text: 'HORA EX. S-D', style: 'tableHeader'},
+            { text: 'ATRASO', style: 'tableHeader' },
+            { text: 'SAL ANTES', style: 'tableHeader' },
+            { text: 'ALMUE', style: 'tableHeader' },
+            { text: 'HORA TRAB', style: 'tableHeader' },
+            { text: 'HORA SUPL', style: 'tableHeader' },
+            { text: 'HORA EX. L-V', style: 'tableHeader' },
+            { text: 'HORA EX. S-D', style: 'tableHeader' },
           ],
           ...d.map(obj => {
               contador = contador + 1
@@ -470,19 +473,19 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   /**********************************************
    *  METODOS PARA IMPRIMIR LA LISTA DE EMPLEADOS
    **********************************************/
-  getDocumentDefinicionListaEmpleados(){
+  getDocumentDefinicionListaEmpleados() {
     sessionStorage.setItem('Empleado', this.empleados);
     var f = new Date();
     f.setUTCHours(f.getHours())
     this.fechaHoy = f.toJSON();
     console.log(this.fechaHoy);
-    
+
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-      
-      footer: function (currentPage, pageCount, fecha) {  
+
+      footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
         return {
@@ -492,7 +495,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             {
               text: [
                 {
-                  text: '© Pag '  + currentPage.toString() + ' of ' + pageCount,
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
                   alignment: 'right', color: 'blue',
                   opacity: 0.5
                 }
@@ -536,11 +539,11 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           alignment: 'center',
           fillColor: '#6495ED',
           fontSize: 12,
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         itemsTableDetalle: {
           fontSize: 11,
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         subtitulos: {
           fontSize: 16,
@@ -599,13 +602,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     f.setUTCHours(f.getHours())
     this.fechaHoy = f.toJSON();
     console.log(this.fechaHoy);
-    
+
     return {
       // pageOrientation: 'landscape',
       watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-      
-      footer: function (currentPage, pageCount, fecha) {  
+
+      footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
         
@@ -691,16 +694,16 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         },
         itemsTable: {
           fontSize: 10,
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         itemsTableDesHas: {
           fontSize: 9,
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         itemsTableCentrado: {
           fontSize: 10,
           alignment: 'center',
-          margin: [0,5,0,5]
+          margin: [0, 5, 0, 5]
         },
         subtitulos: {
           fontSize: 16,
@@ -824,55 +827,55 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         widths: ['auto', 'auto', 'auto', 'auto', 25, 25, 25, 25, 25, 25],
         body: [
           [
-            {rowSpan: 2, text: 'Periodo', style: 'tableHeader'}, 
-            {rowSpan: 2, text: 'Detalle', style: 'tableHeader'},
-            {rowSpan: 2, text: 'Desde', style: 'tableHeader'}, 
-            {rowSpan: 2, text: 'Hasta', style: 'tableHeader'}, 
-            {colSpan: 3, text: 'Descuento', style: 'tableHeader'},
+            { rowSpan: 2, text: 'Periodo', style: 'tableHeader' },
+            { rowSpan: 2, text: 'Detalle', style: 'tableHeader' },
+            { rowSpan: 2, text: 'Desde', style: 'tableHeader' },
+            { rowSpan: 2, text: 'Hasta', style: 'tableHeader' },
+            { colSpan: 3, text: 'Descuento', style: 'tableHeader' },
             '', '',
-            {colSpan: 3, text: 'Saldo', style: 'tableHeader'},
+            { colSpan: 3, text: 'Saldo', style: 'tableHeader' },
             '', ''
           ],
           [
-						'', '', '', '',
-						{
-							style: 'tableHeader',
-							text: 'Dias'
+            '', '', '', '',
+            {
+              style: 'tableHeader',
+              text: 'Dias'
             },
             {
-							style: 'tableHeader',
-							text: 'Hor'
+              style: 'tableHeader',
+              text: 'Hor'
             },
             {
-							style: 'tableHeader',
-							text: 'Min'
+              style: 'tableHeader',
+              text: 'Min'
             },
             {
-							style: 'tableHeader',
-							text: 'Dias'
+              style: 'tableHeader',
+              text: 'Dias'
             },
             {
-							style: 'tableHeader',
-							text: 'Hor'
+              style: 'tableHeader',
+              text: 'Hor'
             },
             {
-							style: 'tableHeader',
-							text: 'Min'
-						}
+              style: 'tableHeader',
+              text: 'Min'
+            }
           ],
           ...d.map(obj => {
-              return [ 
-                { style: 'itemsTableCentrado', text: obj.periodo}, 
-                { style: 'itemsTable', text: obj.detalle}, 
-                { style: 'itemsTableDesHas', text: obj.desde.split("T")[0] + ' ' + obj.desde.split("T")[1].slice(0, 5)}, 
-                { style: 'itemsTableDesHas', text: obj.hasta.split("T")[0] + ' ' + obj.desde.split("T")[1].slice(0, 5)}, 
-                { style: 'itemsTableCentrado', text: obj.descuento.dias}, 
-                { style: 'itemsTableCentrado', text: obj.descuento.horas}, 
-                { style: 'itemsTableCentrado', text: obj.descuento.min}, 
-                { style: 'itemsTableCentrado', text: obj.saldo.dias}, 
-                { style: 'itemsTableCentrado', text: obj.saldo.horas}, 
-                { style: 'itemsTableCentrado', text: obj.saldo.min}]
-            })
+            return [
+              { style: 'itemsTableCentrado', text: obj.periodo },
+              { style: 'itemsTable', text: obj.detalle },
+              { style: 'itemsTableDesHas', text: obj.desde.split("T")[0] + ' ' + obj.desde.split("T")[1].slice(0, 5) },
+              { style: 'itemsTableDesHas', text: obj.hasta.split("T")[0] + ' ' + obj.desde.split("T")[1].slice(0, 5) },
+              { style: 'itemsTableCentrado', text: obj.descuento.dias },
+              { style: 'itemsTableCentrado', text: obj.descuento.horas },
+              { style: 'itemsTableCentrado', text: obj.descuento.min },
+              { style: 'itemsTableCentrado', text: obj.saldo.dias },
+              { style: 'itemsTableCentrado', text: obj.saldo.horas },
+              { style: 'itemsTableCentrado', text: obj.saldo.min }]
+          })
         ]
       },
       layout: {
@@ -892,20 +895,20 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         widths: [25, 25, 25, 25, 25, 25, 25, 25, 25],
         body: [
           [
-            {colSpan: 6, text: 'Proporcional', style: 'tableHeader'},
-            '','','','','',
-            {rowSpan: 2, colSpan: 3, text: 'Liquidacion', style: 'tableHeader'},
-            '',''
+            { colSpan: 6, text: 'Proporcional', style: 'tableHeader' },
+            '', '', '', '', '',
+            { rowSpan: 2, colSpan: 3, text: 'Liquidacion', style: 'tableHeader' },
+            '', ''
           ],
           [
-            {colSpan: 3, text: 'Antigüedad', style: 'tableHeader'},
-            '','',
-            {colSpan: 3, text: 'Periódo', style: 'tableHeader'},
-            '','',
-            '','',''
+            { colSpan: 3, text: 'Antigüedad', style: 'tableHeader' },
+            '', '',
+            { colSpan: 3, text: 'Periódo', style: 'tableHeader' },
+            '', '',
+            '', '', ''
           ],
           [
-						{ style: 'tableHeader', text: 'Dias' },
+            { style: 'tableHeader', text: 'Dias' },
             { style: 'tableHeader', text: 'Hor' },
             { style: 'tableHeader', text: 'Min' },
             { style: 'tableHeader', text: 'Dias' },
@@ -916,23 +919,23 @@ export class AsistenciaConsolidadoComponent implements OnInit {
             { style: 'tableHeader', text: 'Min' }
           ],
           [
-            {style: 'itemsTableCentrado', text: antiguedad.dias},
-            {style: 'itemsTableCentrado', text: antiguedad.horas},
-            {style: 'itemsTableCentrado', text: antiguedad.min},
-            {style: 'itemsTableCentrado', text: periodo.dias},
-            {style: 'itemsTableCentrado', text: periodo.horas},
-            {style: 'itemsTableCentrado', text: periodo.min},
-            {style: 'itemsTableCentrado', text: liquidacion.dias},
-            {style: 'itemsTableCentrado', text: liquidacion.horas},
-            {style: 'itemsTableCentrado', text: liquidacion.min}
+            { style: 'itemsTableCentrado', text: antiguedad.dias },
+            { style: 'itemsTableCentrado', text: antiguedad.horas },
+            { style: 'itemsTableCentrado', text: antiguedad.min },
+            { style: 'itemsTableCentrado', text: periodo.dias },
+            { style: 'itemsTableCentrado', text: periodo.horas },
+            { style: 'itemsTableCentrado', text: periodo.min },
+            { style: 'itemsTableCentrado', text: liquidacion.dias },
+            { style: 'itemsTableCentrado', text: liquidacion.horas },
+            { style: 'itemsTableCentrado', text: liquidacion.min }
           ],
           [
-            {colSpan: 3, text: antiguedad.valor.toString().slice(0,8), style: 'itemsTableCentrado'},
-            '','',
-            {colSpan: 3, text: periodo.valor.toString().slice(0,8), style: 'itemsTableCentrado'},
-            '','',
-            {colSpan: 3, text: liquidacion.valor.toString().slice(0,8), style: 'itemsTableCentrado'},
-            '',''
+            { colSpan: 3, text: antiguedad.valor.toString().slice(0, 8), style: 'itemsTableCentrado' },
+            '', '',
+            { colSpan: 3, text: periodo.valor.toString().slice(0, 8), style: 'itemsTableCentrado' },
+            '', '',
+            { colSpan: 3, text: liquidacion.valor.toString().slice(0, 8), style: 'itemsTableCentrado' },
+            '', ''
           ]
         ]
       }
@@ -943,31 +946,31 @@ export class AsistenciaConsolidadoComponent implements OnInit {
    *                                       MÉTODO PARA EXPORTAR A EXCEL
    ******************************************************************************************************/
   exportToExcelAsistencia(id_empleado: number) {
-    this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado,'2020-08-01','2020-08-31').subscribe(res => {
+    this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, '2020-08-01', '2020-08-31').subscribe(res => {
       this.asistencia = res;
-      console.log(this.asistencia);      
+      console.log(this.asistencia);
       const wsd: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.detalle.map(obj => {
-        return { 
-            fecha: obj.fecha_mostrar,
-            E_h_default: obj.E.hora_default, 
-            E_h_timbre: obj.E.hora_timbre, 
-            E_descripcion: obj.E.descripcion, 
-            S_A_h_default: obj.S_A.hora_default, 
-            S_A_h_timbre: obj.S_A.hora_timbre, 
-            S_A_descripcion: obj.S_A.descripcion, 
-            E_A_h_default: obj.E_A.hora_default, 
-            E_A_h_timbre: obj.E_A.hora_timbre, 
-            E_A_descripcion: obj.E_A.descripcion, 
-            S_h_default: obj.S.hora_default, 
-            S_h_timbre: obj.S.hora_timbre, 
-            S_descripcion: obj.S.descripcion, 
-            atraso: obj.atraso, 
-            sal_antes: obj.sal_antes, 
-            almuerzo: obj.almuerzo, 
-            hora_trab: obj.hora_trab, 
-            hora_supl: obj.hora_supl, 
-            hora_ex_L_V: obj.hora_ex_L_V, 
-            hora_ex_S_D: obj.hora_ex_S_D, 
+        return {
+          fecha: obj.fecha_mostrar,
+          E_h_default: obj.E.hora_default,
+          E_h_timbre: obj.E.hora_timbre,
+          E_descripcion: obj.E.descripcion,
+          S_A_h_default: obj.S_A.hora_default,
+          S_A_h_timbre: obj.S_A.hora_timbre,
+          S_A_descripcion: obj.S_A.descripcion,
+          E_A_h_default: obj.E_A.hora_default,
+          E_A_h_timbre: obj.E_A.hora_timbre,
+          E_A_descripcion: obj.E_A.descripcion,
+          S_h_default: obj.S.hora_default,
+          S_h_timbre: obj.S.hora_timbre,
+          S_descripcion: obj.S.descripcion,
+          atraso: obj.atraso,
+          sal_antes: obj.sal_antes,
+          almuerzo: obj.almuerzo,
+          hora_trab: obj.hora_trab,
+          hora_supl: obj.hora_supl,
+          hora_ex_L_V: obj.hora_ex_L_V,
+          hora_ex_S_D: obj.hora_ex_S_D,
         }
       }));
       const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.asistencia.empleado);
@@ -980,13 +983,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           HHMM_hora_supl: obj.HHMM.hora_supl,
           HHMM_hora_ex_L_V: obj.HHMM.hora_ex_L_V,
           HHMM_hora_ex_S_D: obj.HHMM.hora_ex_S_D,
-          decimal_atraso: obj.decimal.atraso.toString().slice(0,8),
-          decimal_sal_antes: obj.decimal.sal_antes.toString().slice(0,8),
-          decimal_almuerzo: obj.decimal.almuerzo.toString().slice(0,8), 
-          decimal_hora_trab: obj.decimal.hora_trab.toString().slice(0,8),
-          decimal_hora_supl: obj.decimal.hora_supl.toString().slice(0,8),
-          decimal_hora_ex_L_V: obj.decimal.hora_ex_L_V.toString().slice(0,8),
-          decimal_hora_ex_S_D: obj.decimal.hora_ex_S_D.toString().slice(0,8),
+          decimal_atraso: obj.decimal.atraso.toString().slice(0, 8),
+          decimal_sal_antes: obj.decimal.sal_antes.toString().slice(0, 8),
+          decimal_almuerzo: obj.decimal.almuerzo.toString().slice(0, 8),
+          decimal_hora_trab: obj.decimal.hora_trab.toString().slice(0, 8),
+          decimal_hora_supl: obj.decimal.hora_supl.toString().slice(0, 8),
+          decimal_hora_ex_L_V: obj.decimal.hora_ex_L_V.toString().slice(0, 8),
+          decimal_hora_ex_S_D: obj.decimal.hora_ex_S_D.toString().slice(0, 8),
         }
       }));
       const wb: xlsx.WorkBook = xlsx.utils.book_new();
@@ -1057,7 +1060,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.apellido.reset();
   }
 
-  limpiarCamposRango(){
+  limpiarCamposRango() {
     this.fechasForm.reset();
     this.habilitar = false;
     this.estilo = { 'visibility': 'hidden' };

@@ -13,16 +13,18 @@ import * as FileSaver from 'file-saver';
 
 import { RegistrarSucursalesComponent } from '../registrar-sucursales/registrar-sucursales.component';
 import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-sucursal/editar-sucursal.component';
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-lista-sucursales',
   templateUrl: './lista-sucursales.component.html',
-  styleUrls: ['./lista-sucursales.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./lista-sucursales.component.css']
 })
+
 export class ListaSucursalesComponent implements OnInit {
 
   buscarNombre = new FormControl('', [Validators.minLength(2)]);
@@ -40,7 +42,7 @@ export class ListaSucursalesComponent implements OnInit {
 
   sucursales: any = [];
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
@@ -52,6 +54,7 @@ export class ListaSucursalesComponent implements OnInit {
     private rest: SucursalService,
     private toastr: ToastrService,
     public restE: EmpleadoService,
+    public restEmpre: EmpresaService,
     public vistaRegistrarDatos: MatDialog,
     private router: Router,
   ) {
@@ -61,15 +64,23 @@ export class ListaSucursalesComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerSucursal();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -165,10 +176,13 @@ export class ListaSucursalesComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Establecimientos', this.sucursales);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -180,7 +194,13 @@ export class ListaSucursalesComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -189,55 +209,22 @@ export class ListaSucursalesComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Establecimientos',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Establecimientos', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFSucursales(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10 },
+        itemsTableC: { fontSize: 10, alignment: 'center' }
       }
     };
   }

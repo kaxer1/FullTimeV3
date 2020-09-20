@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const detallePlanHorarioControlador_1 = __importDefault(require("../../../controlador/horarios/detallePlanHorario/detallePlanHorarioControlador"));
-const VerificarToken_1 = require("../../../libs/VerificarToken");
+const verificarToken_1 = require("../../../libs/verificarToken");
 const multipart = require('connect-multiparty');
 const multipartMiddleware = multipart({
     uploadDir: './plantillas',
@@ -16,13 +16,13 @@ class DetallePlanHorarioRutas {
         this.configuracion();
     }
     configuracion() {
-        this.router.get('/', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ListarDetallePlanHorario);
-        this.router.get('/infoPlan/:id_plan_horario', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.EncontrarPlanHoraDetallesPorIdPlanHorario);
-        this.router.post('/', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.CrearDetallePlanHorario);
-        this.router.post('/:id_plan_horario/upload', VerificarToken_1.TokenValidation, multipartMiddleware, detallePlanHorarioControlador_1.default.CrearDetallePlanificacionPlantilla);
-        this.router.put('/', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ActualizarDetallePlanHorario);
-        this.router.delete('/eliminar/:id', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.EliminarRegistros);
-        this.router.post('/verificarRegistro', VerificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ObtenerRegistrosFecha);
+        this.router.get('/', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ListarDetallePlanHorario);
+        this.router.get('/infoPlan/:id_plan_horario', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.EncontrarPlanHoraDetallesPorIdPlanHorario);
+        this.router.post('/', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.CrearDetallePlanHorario);
+        this.router.post('/:id_plan_horario/upload', verificarToken_1.TokenValidation, multipartMiddleware, detallePlanHorarioControlador_1.default.CrearDetallePlanificacionPlantilla);
+        this.router.put('/', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ActualizarDetallePlanHorario);
+        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.EliminarRegistros);
+        this.router.post('/verificarRegistro', verificarToken_1.TokenValidation, detallePlanHorarioControlador_1.default.ObtenerRegistrosFecha);
     }
 }
 const DETALLE_PLAN_HORARIO_RUTAS = new DetallePlanHorarioRutas();

@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-const SettingsMail_1 = require("./SettingsMail");
+const settingsMail_1 = require("./settingsMail");
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
 const HORA_ENVIO_AVISO_CINCO_DIAS = 0;
 const HORA_ENVIO_AVISO_DOS_DIAS = 1;
@@ -54,7 +54,7 @@ function AniosEmpleado(idEmpleado) {
 }
 function ObtenerIdEmpleado(idContrato) {
     return __awaiter(this, void 0, void 0, function* () {
-        let id_empleado = yield database_1.default.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id LIMIT 1', [idContrato])
+        let id_empleado = yield database_1.default.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id AND e.estado = 1 LIMIT 1', [idContrato])
             .then((result) => __awaiter(this, void 0, void 0, function* () {
             let id = yield result.rows.map(obj => { return obj.id; });
             return id[0];
@@ -145,7 +145,7 @@ exports.beforeFiveDays = function () {
                 avisoVacacion.rows.forEach(obj => {
                     let data = {
                         to: obj.correo,
-                        from: SettingsMail_1.email,
+                        from: settingsMail_1.email,
                         subject: 'Aviso toma de vacaciones',
                         html: `
                         <h2> <b> ¡Tienes 5 días para tomar vacaciones! </b> </h2>
@@ -155,7 +155,7 @@ exports.beforeFiveDays = function () {
                         `
                     };
                     console.log(data);
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                 });
             }
         }
@@ -175,7 +175,7 @@ exports.beforeTwoDays = function () {
                 avisoVacacion.rows.forEach(obj => {
                     let data = {
                         to: obj.correo,
-                        from: SettingsMail_1.email,
+                        from: settingsMail_1.email,
                         subject: 'Aviso toma de vacaciones',
                         html: `
                         <h2> <b> ¡Tienes 2 días para tomar vacaciones! </b> </h2>
@@ -185,7 +185,7 @@ exports.beforeTwoDays = function () {
                         `
                     };
                     console.log(data);
-                    SettingsMail_1.enviarMail(data);
+                    settingsMail_1.enviarMail(data);
                 });
             }
         }

@@ -1,6 +1,6 @@
 import {Router} from 'express'
 import ASISTENCIA_CONTROLADOR from '../../controlador/reportes/asistenciaControlador'
-import { TokenValidation } from '../../libs/VerificarToken'
+import { TokenValidation } from '../../libs/verificarToken'
 
 class AsistenciaRutas {
 
