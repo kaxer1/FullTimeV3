@@ -17,6 +17,7 @@ class DetallePlanHorarioRutas {
 
     configuracion(): void {
         this.router.post('/upload', TokenValidation, multipartMiddleware, CARGA_MULTIPLE_CONTROLADOR.CargaMultiple);
+        this.router.post('/horarioFijo/upload', TokenValidation, multipartMiddleware, CARGA_MULTIPLE_CONTROLADOR.CargarHorarioMultiplesEmpleados);
     }
 }
 

@@ -15,5 +15,7 @@ export class MultiplePlanHorarioService {
   CargarArchivoExcel(formData) {
     return this.http.post(`${this.API_URL}/cargaMultiple/upload`, formData)
   }
-
+  CargarHorarioFijoVarios(formData) {
+    return this.http.post(`${this.API_URL}/cargaMultiple/horarioFijo/upload`, formData)
+  }
 }

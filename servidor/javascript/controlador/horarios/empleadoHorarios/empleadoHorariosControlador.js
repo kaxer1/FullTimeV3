@@ -140,6 +140,39 @@ class EmpleadoHorariosControlador {
             }
         });
     }
+    VerificarFechasHorario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { fechaInicio, fechaFinal } = req.body;
+            const { empl_id } = req.params;
+            const HORARIO = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+                '(SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    VerificarFechasHorarioEdicion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { id_emple } = req.params;
+            const { fechaInicio, fechaFinal } = req.body;
+            const HORARIO = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+                '(SELECT * FROM empl_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
+                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();
 exports.default = exports.EMPLEADO_HORARIOS_CONTROLADOR;

@@ -86,27 +86,34 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
   }
 
   InsertarEmpleadoHorario(form) {
-    let datosempleH = {
-      id_empl_cargo: this.data.datosHorario.id_empl_cargo,
-      id_hora: 0,
-      fec_inicio: form.fechaInicioForm,
-      fec_final: form.fechaFinalForm,
-      lunes: form.lunesForm,
-      martes: form.martesForm,
-      miercoles: form.miercolesForm,
-      jueves: form.juevesForm,
-      viernes: form.viernesForm,
-      sabado: form.sabadoForm,
-      domingo: form.domingoForm,
-      id_horarios: form.horarioForm,
-      estado: form.estadoForm,
-      id: this.data.datosHorario.id
+    let fechas = {
+      fechaInicio: form.fechaInicioForm,
+      fechaFinal: form.fechaFinalForm,
     };
-    console.log(datosempleH);
-    this.rest.ActualizarDatos(datosempleH).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario del Empleado actualizado')
-      this.CerrarVentanaEmpleadoHorario();
+    this.rest.VerificarDuplicidadHorariosEdicion(this.data.datosHorario.id, this.data.idEmpleado, fechas).subscribe(response => {
+      this.toastr.success('Las fechas ingresadas ya se encuntran registradas en otro horario');
     }, error => {
+      let datosempleH = {
+        id_empl_cargo: this.data.datosHorario.id_empl_cargo,
+        id_hora: 0,
+        fec_inicio: form.fechaInicioForm,
+        fec_final: form.fechaFinalForm,
+        lunes: form.lunesForm,
+        martes: form.martesForm,
+        miercoles: form.miercolesForm,
+        jueves: form.juevesForm,
+        viernes: form.viernesForm,
+        sabado: form.sabadoForm,
+        domingo: form.domingoForm,
+        id_horarios: form.horarioForm,
+        estado: form.estadoForm,
+        id: this.data.datosHorario.id
+      };
+      console.log(datosempleH);
+      this.rest.ActualizarDatos(datosempleH).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horario del Empleado actualizado')
+        this.CerrarVentanaEmpleadoHorario();
+      }, error => { });
     });
   }
 

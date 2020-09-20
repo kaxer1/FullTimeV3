@@ -25,6 +25,8 @@ class EmpleadoHorariosRutas {
         this.router.put('/', verificarToken_1.TokenValidation, empleadoHorariosControlador_1.default.ActualizarEmpleadoHorarios);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, empleadoHorariosControlador_1.default.EliminarRegistros);
         this.router.post('/fechas_horario/:id_empleado', verificarToken_1.TokenValidation, empleadoHorariosControlador_1.default.ObtenerHorariosEmpleadoFechas);
+        this.router.post('/validarFechas/:empl_id', verificarToken_1.TokenValidation, empleadoHorariosControlador_1.default.VerificarFechasHorario);
+        this.router.post('/validarFechas/horarioEmpleado/:id/empleado/:empl_id', verificarToken_1.TokenValidation, empleadoHorariosControlador_1.default.VerificarFechasHorarioEdicion);
     }
 }
 const EMPLEADO_HORARIOS_RUTAS = new EmpleadoHorariosRutas();

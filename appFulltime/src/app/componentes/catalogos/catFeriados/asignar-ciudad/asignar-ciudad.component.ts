@@ -1,20 +1,20 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-asignar-ciudad',
   templateUrl: './asignar-ciudad.component.html',
-  styleUrls: ['./asignar-ciudad.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./asignar-ciudad.component.css']
 })
+
 export class AsignarCiudadComponent implements OnInit {
 
   // Datos Ciudad-Feriado
@@ -22,6 +22,9 @@ export class AsignarCiudadComponent implements OnInit {
   nombreProvincias: any = [];
 
   actualizarPagina: boolean = false;
+
+  // Habilitar o deshabilitar selector de ciudades
+  Habilitar: boolean = true;
 
   // Datos Provincias, Continentes, Países y Ciudades
   provincias: any = [];
@@ -38,10 +41,11 @@ export class AsignarCiudadComponent implements OnInit {
   filteredOptCiud: Observable<string[]>;
 
   // Control de los campos del formulario
-  nombreCiudadF = new FormControl('', [Validators.required]);
+  nombreCiudadF = new FormControl('');
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
+  tipoF = new FormControl('');
 
   // Asignar los campos en un formulario en grupo
   public asignarCiudadForm = new FormGroup({
@@ -49,6 +53,7 @@ export class AsignarCiudadComponent implements OnInit {
     idProvinciaForm: this.idProvinciaF,
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
+    tipoForm: this.tipoF,
   });
 
   constructor(
@@ -77,6 +82,42 @@ export class AsignarCiudadComponent implements OnInit {
         startWith(''),
         map(value => this._filterCiudad(value))
       );
+  }
+
+  // Arreglos para guardar las ciudades seleccionadas
+  ciudadesSeleccionadas = [];
+
+  AgregarCiudad(data: string) {
+    this.ciudadesSeleccionadas.push(data);
+  }
+
+  QuitarCiudad(data) {
+    this.ciudadesSeleccionadas = this.ciudadesSeleccionadas.filter(s => s !== data);
+  }
+
+  // Agregar datos multiples de ciudades de la provincia indicada
+  AgregarTodos() {
+    console.log('ciudades', this.ciudadesSeleccionadas);
+    if (this.ciudadesSeleccionadas.length === 0) {
+      this.ciudadesSeleccionadas = this.nombreCiudades;
+    }
+    else {
+      this.ciudadesSeleccionadas = this.ciudadesSeleccionadas.concat(this.nombreCiudades);
+    }
+    for (var i = 0; i <= this.nombreCiudades.length - 1; i++) {
+      (<HTMLInputElement>document.getElementById('ciudadesSeleccionadas' + i)).checked = true;
+    }
+  }
+
+  // Quitar todos los datos seleccionados de la provincia indicada
+  limpiarData: any = [];
+  QuitarTodos() {
+    this.limpiarData = this.nombreCiudades;
+    for (var i = 0; i <= this.limpiarData.length - 1; i++) {
+      (<HTMLInputElement>document.getElementById('ciudadesSeleccionadas' + i)).checked = false;
+      this.ciudadesSeleccionadas = this.ciudadesSeleccionadas.filter(s => s !== this.nombreCiudades[i]);
+      console.log('retirar', this.nombreCiudades[i]);
+    }
   }
 
   private _filterPais(value: string): string[] {
@@ -162,6 +203,11 @@ export class AsignarCiudadComponent implements OnInit {
     this.nombreCiudades = [];
     this.restF.BuscarCiudadProvincia(provincia).subscribe(datos => {
       this.nombreCiudades = datos;
+      console.log('ciudades', this.nombreCiudades);
+      this.Habilitar = false;
+      if (this.ciudadesSeleccionadas.length != 0) {
+        (<HTMLInputElement>document.getElementById('selecTodo')).checked = false;
+      }
       this.seleccionarCiudad = '';
     }, error => {
       this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
@@ -192,6 +238,7 @@ export class AsignarCiudadComponent implements OnInit {
     this.paises = [];
     this.provincias = [];
     this.nombreCiudades = [];
+    this.Habilitar = true;
   }
 
   CerrarVentanaAsignarCiudad() {
@@ -199,41 +246,40 @@ export class AsignarCiudadComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  InsertarFeriadoCiudad(form, id) {
-    let idCiudad;
-    this.nombreCiudades.forEach(obj => {
-      if (obj.descripcion === form.nombreCiudadForm) {
-        idCiudad = obj.id;
-        console.log(obj);
-      }
-    });
-    if (idCiudad != 'Seleccionar') {
-      var buscarCiudad = {
-        id_feriado: this.data.feriado.id,
-        id_ciudad: idCiudad
-      }
-      this.ciudadFeriados = [];
-      this.restF.BuscarIdCiudad(buscarCiudad).subscribe(datos => {
-        this.ciudadFeriados = datos;
-        this.toastr.info('Se le recuerda que esta Ciudad ya fue asignada a este Feriado')
-        this.LimpiarCampos();
-      }, error => {
-        this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
-          this.actualizarPagina = this.data.actualizar;
-          if(this.actualizarPagina === true){
-            this.LimpiarCampos();
-          }
-          else {
-           this.dialogRef.close();
-          }          
+  InsertarFeriadoCiudad() {
+    if (this.ciudadesSeleccionadas.length != 0) {
+      this.ciudadesSeleccionadas.map(obj => {
+        var buscarCiudad = {
+          id_feriado: this.data.feriado.id,
+          id_ciudad: obj.id
+        }
+        this.ciudadFeriados = [];
+        this.restF.BuscarIdCiudad(buscarCiudad).subscribe(datos => {
+          this.ciudadFeriados = datos;
+          this.toastr.info('Se le recuerda que ' + obj.descripcion + ' ya fue asignada a este Feriado')
         }, error => {
-          this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado')
+          this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
+            this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
+
+          }, error => {
+            this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado')
+          });
         });
       });
-    } else {
-      this.toastr.info('Debe seleccionar una ciudad')
+      this.actualizarPagina = this.data.actualizar;
+      if (this.actualizarPagina === true) {
+        this.LimpiarCampos();
+      }
+      else {
+        this.dialogRef.close();
+        this.router.navigate(['/verFeriados/', this.data.feriado.id]);
+      }
     }
+    else {
+      this.toastr.info('No ha seleccionado ninguna opción')
+    }
+
+    console.log('prueba', this.ciudadesSeleccionadas)
   }
 
 }

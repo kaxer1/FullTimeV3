@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -19,6 +19,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class RegistroPlanHorarioComponent implements OnInit {
 
   // Control de campos y validaciones del formulario
@@ -42,6 +43,7 @@ export class RegistroPlanHorarioComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
   ValidarDatosPlanHorario(form) {
     let datosBusqueda = {
       id_cargo: this.datoEmpleado.idCargo,
@@ -64,15 +66,22 @@ export class RegistroPlanHorarioComponent implements OnInit {
   }
 
   InsertarPlanHorario(form) {
-    let datosPlanHorario = {
-      id_cargo: this.datoEmpleado.idCargo,
-      fec_inicio: form.fechaIngresoForm,
-      fec_final: form.fechaSalidaForm,
+    let fechas = {
+      fechaInicio: form.fechaIngresoForm,
+      fechaFinal: form.fechaSalidaForm,
     };
-    this.rest.RegistrarPlanHorario(datosPlanHorario).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Planificación de Horario registrado')
-      this.CerrarVentanaPlanHorario();
+    this.rest.VerificarDuplicidadPlan(this.datoEmpleado.idEmpleado, fechas).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación');
     }, error => {
+      let datosPlanHorario = {
+        id_cargo: this.datoEmpleado.idCargo,
+        fec_inicio: form.fechaIngresoForm,
+        fec_final: form.fechaSalidaForm,
+      };
+      this.rest.RegistrarPlanHorario(datosPlanHorario).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Planificación de Horario registrado');
+        this.CerrarVentanaPlanHorario();
+      }, error => { });
     });
   }
 

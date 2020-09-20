@@ -65,17 +65,24 @@ export class EditarPlanificacionComponent implements OnInit {
   }
 
   InsertarPlanHorario(form) {
-    let datosPlanHorario = {
-      id_cargo: this.data.datosPlan.id_cargo,
-      fec_inicio: form.fechaIngresoForm,
-      fec_final: form.fechaSalidaForm,
-      id: this.data.datosPlan.id
+    let fechas = {
+      fechaInicio: form.fechaIngresoForm,
+      fechaFinal: form.fechaSalidaForm,
     };
-    this.rest.ActualizarDatos(datosPlanHorario).subscribe(response => {
-      console.log('prueba actualizacopn', response)
-      this.toastr.success('Operación Exitosa', 'Planificación de Horario actualizada')
-      this.CerrarVentanaPlanHorario();
+    this.rest.VerificarDuplicidadPlanEdicion(this.data.datosPlan.id, this.data.idEmpleado, fechas).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación');
     }, error => {
+      let datosPlanHorario = {
+        id_cargo: this.data.datosPlan.id_cargo,
+        fec_inicio: form.fechaIngresoForm,
+        fec_final: form.fechaSalidaForm,
+        id: this.data.datosPlan.id
+      };
+      this.rest.ActualizarDatos(datosPlanHorario).subscribe(response => {
+        console.log('prueba actualizacopn', response)
+        this.toastr.success('Operación Exitosa', 'Planificación de Horario actualizada')
+        this.CerrarVentanaPlanHorario();
+      }, error => { });
     });
   }
 

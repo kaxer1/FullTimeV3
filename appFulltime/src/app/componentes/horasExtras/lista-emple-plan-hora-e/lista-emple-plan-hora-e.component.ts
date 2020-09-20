@@ -82,6 +82,11 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   empleadoLogueado: any = [];
   idEmpleado: number;
 
+  // Habilitar o deshabilitar selector de empleados
+  Habilitar: boolean = true;
+
+  habilitado: any;
+
   constructor(
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
@@ -111,6 +116,16 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+  }
+
+  MarcarDatos() {
+    if ((<HTMLInputElement>document.getElementById('selecTodo')).checked) {
+      for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
+        if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
+          (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = true;
+        }
+      }
+    }
   }
 
   cont: number = 0;
@@ -191,38 +206,51 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     });
   }
 
-  timbres: any = [];
-  VerTimbresEmpleado(id_seleccionado, form, archivo) {
-    if (form.inicioForm === '' || form.finalForm === '') {
-      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+  // Arreglos para guardar empleados seleccionadas
+  empleadosSeleccionados = [];
+
+  AgregarEmpleado(data: string) {
+    this.empleadosSeleccionados.push(data);
+  }
+
+  QuitarEmpleado(data) {
+    this.empleadosSeleccionados = this.empleadosSeleccionados.filter(s => s !== data);
+  }
+
+  // Agregar datos multiples seleccionados
+  AgregarTodos() {
+    this.Habilitar = false;
+    if (this.empleadosSeleccionados.length === 0) {
+      this.empleadosSeleccionados = this.datosEmpleado;
     }
     else {
-      if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
-        let fechas = {
-          fechaInicio: form.inicioForm,
-          fechaFinal: form.finalForm
-        }
-        this.timbres = [];
-        this.restR.ObtenerTimbres(id_seleccionado, fechas).subscribe(data => {
-          this.timbres = data;
-          if (archivo === 'pdf') {
-            this.generarPdf('open', id_seleccionado, form);
-            this.LimpiarFechas();
-          }
-          else if (archivo === 'excel') {
-            this.exportToExcel(this.timbres);
-            this.LimpiarFechas();
-          }
-        }, error => {
-          this.toastr.info('No existen timbres registrado en el periodo indicado.', 'VERIFICAR')
-        }
-        );
-      }
-      else {
-        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+      this.empleadosSeleccionados = this.empleadosSeleccionados.concat(this.datosEmpleado);
+    }
+    for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
+      if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
+        (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = true;
       }
     }
+    this.Habilitar = false;
+    this.habilitado = { 'visibility': 'hidden' };
+    console.log('empleados', this.empleadosSeleccionados);
+  }
 
+  // Quitar todos los datos seleccionados 
+  limpiarData: any = [];
+  QuitarTodos() {
+    this.limpiarData = this.datosEmpleado;
+    for (var i = 0; i <= this.limpiarData.length - 1; i++) {
+      this.empleadosSeleccionados = this.empleadosSeleccionados.filter(s => s !== this.datosEmpleado[i]);
+      console.log('retirar', this.datosEmpleado[i]);
+    }
+    for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
+      if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
+        (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = false;
+      }
+    }
+    this.habilitado = { 'visibility': 'visible' };
+    this.Habilitar = true;
   }
 
   IngresarSoloLetras(e) {
@@ -286,312 +314,28 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   Planificar(datosSeleccionado: any) {
     this.vistaRegistrarDatos.open(PlanHoraExtraComponent, { width: '800px', data: { planifica: datosSeleccionado, actualizar: false } })
       .afterClosed().subscribe(item => {
-        this.VerDatosEmpleado();
+       /* this.ObtenerNacionalidades();
+        this.ObtenerEmpleadoLogueado(this.idEmpleado);
+        this.VerDatosEmpleado();*/
+        window.location.reload();
       });
   }
 
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
-   * ****************************************************************************************************/
 
-  generarPdf(action = 'open', id_seleccionado, form) {
-    const documentDefinition = this.getDocumentDefinicion(id_seleccionado, form);
-
-    switch (action) {
-      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
-      default: pdfMake.createPdf(documentDefinition).open(); break;
-    }
-
+  Planificacion() {
+    this.vistaRegistrarDatos.open(PlanHoraExtraComponent, { width: '800px', data: { planifica: this.empleadosSeleccionados, actualizar: false } })
+      .afterClosed().subscribe(item => {
+        this.habilitado = { 'visibility': 'visible' };
+        this.Habilitar = true;
+        (<HTMLInputElement>document.getElementById('selecTodo')).checked = false;
+       /* this.ObtenerNacionalidades();
+        this.ObtenerEmpleadoLogueado(this.idEmpleado);
+        this.VerDatosEmpleado();*/
+        window.location.reload();
+      });
   }
 
-  getDocumentDefinicion(id_seleccionado: number, form) {
 
-    sessionStorage.setItem('Administrador', this.empleadoLogueado);
-    console.log('comprobando', this.empleadoLogueado, id_seleccionado);
-    return {
-
-      pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-
-      footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
-         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
-        }
-        else {
-          var time = f.getHours() + ':' + f.getMinutes();
-        }
-        return {
-          margin: 10,
-          columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time, ,
-            {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
-            }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
-        }
-      },
-      content: [
-        ...this.datosEmpleado.map(obj => {
-          if (obj.id === id_seleccionado) {
-            return [
-              {
-                text: obj.empresa.toUpperCase(),
-                bold: true,
-                fontSize: 25,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
-              {
-                text: 'REPORTE TIMBRES',
-                fontSize: 17,
-                alignment: 'center',
-                margin: [0, 0, 0, 20]
-              },
-            ];
-          }
-        }),
-        this.presentarDatosGenerales(id_seleccionado, form),
-        this.presentarTimbres(),
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 10,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 8
-        },
-        itemsTableD: {
-          fontSize: 9,
-          alignment: 'center'
-        },
-        itemsTableI: {
-          fontSize: 9,
-          alignment: 'left',
-          margin: [50, 5, 5, 5]
-        },
-        itemsTableP: {
-          fontSize: 9,
-          alignment: 'left',
-          bold: true,
-          margin: [50, 5, 5, 5]
-        },
-      }
-    };
-  }
-
-  presentarDatosGenerales(id_seleccionado, form) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
-    this.datosEmpleado.forEach(obj => {
-      if (obj.id === id_seleccionado) {
-        nombre = obj.nombre,
-          apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
-      }
-    })
-    var diaI = moment(form.inicioForm).day();
-    var diaF = moment(form.finalForm).day();
-    return {
-      table: {
-        widths: ['*'],
-        body: [
-          [
-            { text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CIUDAD: ' + ciudad, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI'
-                    }
-                  ]
-                },
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'APELLIDOS: ' + apellido, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'NOMBRES: ' + nombre, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CÉDULA: ' + cedula, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            {
-              columns: [
-                {
-                  text: [
-                    {
-                      text: 'CÓDIGO: ' + codigo, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI'
-                    }
-                  ]
-                },
-                {
-                  text: [
-                    {
-                      text: 'CARGO: ' + cargo, style: 'itemsTableI'
-                    }
-                  ]
-                }
-              ]
-            }
-          ],
-          [
-            { text: 'LISTA DE TIMBRES PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },
-          ],
-        ]
-      },
-      layout: {
-        hLineColor: function (i, node) {
-          return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
-        },
-        paddingLeft: function (i, node) { return 40; },
-        paddingRight: function (i, node) { return 40; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
-      }
-    }
-  }
-
-  accionT: string;
-  presentarTimbres() {
-    return {
-      table: {
-        widths: ['*', '*', '*', '*'],
-        body: [
-          [
-            { text: 'TIMBRE', style: 'tableHeader' },
-            { text: 'RELOJ', style: 'tableHeader' },
-            { text: 'ACCIÓN', style: 'tableHeader' },
-            { text: 'OBSERVACIÓN', style: 'tableHeader' },
-          ],
-          ...this.timbres.map(obj => {
-            if (obj.accion === 'E' || obj.accion === '1') {
-              this.accionT = 'Entrada';
-            }
-            else if (obj.accion === 'S' || obj.accion === '2') {
-              this.accionT = 'Salida';
-            }
-            else if (obj.accion === 'EA' || obj.accion === '3') {
-              this.accionT = 'Entrada Almuerzo';
-            }
-            else if (obj.accion === 'SA' || obj.accion === '4') {
-              this.accionT = 'Salida Almuerzo';
-            }
-            else if (obj.accion === 'EP' || obj.accion === '5') {
-              this.accionT = 'Entrada Permiso';
-            }
-            else if (obj.accion === 'SP' || obj.accion === '6') {
-              this.accionT = 'Salida Permiso';
-            }
-            var day = moment(obj.fec_hora_timbre).day()
-            return [
-
-              { text: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1) + ' ' + moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
-              { text: obj.id_reloj, style: 'itemsTableD' },
-              { text: this.accionT, style: 'itemsTableD' },
-              { text: obj.observacion, style: 'itemsTableD' },
-            ];
-          })
-        ]
-      }
-    };
-  }
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL

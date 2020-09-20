@@ -68,6 +68,45 @@ export class PlanificacionMultipleComponent implements OnInit {
     });
   }
 
+  /** ********************************************
+ *  CARGAR HORARIO FIJO PARA VARIOS EMPLEADOS
+ * ***********************************************
+ */
+  nameFileHorarioFijo: string;
+  archivoSubidoHorarioFijo: Array<File>;
+  archivoHorarioFijoForm = new FormControl('');
+
+  fileChangeHorarioFijo(element) {
+    this.archivoSubidoHorarioFijo = element.target.files;
+    this.nameFileHorarioFijo = this.archivoSubidoHorarioFijo[0].name;
+    let arrayItems = this.nameFileHorarioFijo.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    let itemName = arrayItems[0].slice(0, 30);
+    console.log(itemName.toLowerCase());
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (itemName.toLowerCase() === 'multiplesempleados_horariofijo') {
+        this.plantillaHorarioFijo();
+      } else {
+        this.toastr.error('Plantilla seleccionada incorrecta');
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
+  }
+
+  plantillaHorarioFijo() {
+    let formData = new FormData();
+    for (var i = 0; i < this.archivoSubidoHorarioFijo.length; i++) {
+      formData.append("uploads[]", this.archivoSubidoHorarioFijo[i], this.archivoSubidoHorarioFijo[i].name);
+      console.log("toda la data", formData)
+    }
+    this.restP.CargarHorarioFijoVarios(formData).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.archivoHorarioFijoForm.reset();
+      this.nameFileHorarioFijo = '';
+    });
+  }
+
   /** *************************************************
    *  CARGAR PERIODO DE VACACIONES DE VARIOS EMPLEADOS
    * **************************************************

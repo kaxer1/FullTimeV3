@@ -215,6 +215,7 @@ export class ListaEmpleadosComponent implements OnInit {
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+    console.log('empl ', this.empleado);
   }
   
   ManejarPaginaDes(e: PageEvent) {
@@ -358,7 +359,7 @@ export class ListaEmpleadosComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
