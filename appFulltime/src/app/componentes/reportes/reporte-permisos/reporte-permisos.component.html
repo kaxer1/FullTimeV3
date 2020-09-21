@@ -101,6 +101,51 @@
         </div>
     </div>
 </div>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md">
+            <div class="tituloEmpleados">
+                <span>PERIODO</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z8">
+                <h5 style="text-align: center">Período de Búsqueda</h5>
+                <!-- Formulario Completo -->
+                <mat-card-content>
+                    <form [formGroup]="fechasForm">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <mat-form-field>
+                                <mat-label>Fecha Inicial</mat-label>
+                                <input matInput [matDatepicker]="picker1" [formControl]="fechaInicialF" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso"
+                                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                    matTooltip="Fecha de inicio de periodo">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker1></mat-datepicker>
+                            </mat-form-field>
+                            <br>
+                            <mat-form-field>
+                                <mat-label>Fecha Final</mat-label>
+                                <input matInput [matDatepicker]="picker2" [formControl]="fechaFinalF" required>
+                                <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso"
+                                    matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                                    matTooltip="Fecha de fin de periodo">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker touchUi #picker2></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </mat-card-content>
+                <div class="d-flex justify-content-around">
+                    <!-- <button mat-button type="button" class="btn btn-sm">
+                        Calcular
+                    </button>-->
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+                    </button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div id="resulEmpleados">Resultado de búsqueda</div>
@@ -115,7 +160,7 @@
                         <th scope="col">Departamento</th>
                         <th scope="col">Cargo</th>
                         <th scope="col">Régimen</th>
-                        <th scope="col">Reporte Timbres</th>
+                        <th scope="col">Reporte Permisos</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -129,8 +174,8 @@
                         <td>{{d.cargo}}</td>
                         <td>{{d.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
-                            <i (click)="VerPermisosEmpleado(d.id, 'pdf')" id="pdf" class="fas fa-file-pdf" matSuffix
-                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            <i (click)="VerPermisos(fechasForm.value, 'pdf', d.id)" id="pdf" class="fas fa-file-pdf"
+                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Ver reporte de timbres del empleado en formato PDF">
                                 <p>PDF</p>
                             </i>

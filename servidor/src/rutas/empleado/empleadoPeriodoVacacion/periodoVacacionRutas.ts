@@ -2,6 +2,12 @@ import { Router } from 'express';
 import { TokenValidation } from '../../../libs/verificarToken';
 import PERIODO_VACACION_CONTROLADOR from '../../../controlador/empleado/empleadoPeriodoVacacion/periodoVacacionControlador';
 
+const multipart = require('connect-multiparty');
+
+const multipartMiddleware = multipart({
+    uploadDir: './plantillas',
+});
+
 class DepartamentoRutas {
     public router: Router = Router();
 
@@ -15,6 +21,7 @@ class DepartamentoRutas {
         this.router.get('/buscar/:id_empleado', TokenValidation, PERIODO_VACACION_CONTROLADOR.EncontrarIdPerVacaciones);
         this.router.post('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.CrearPerVacaciones);
         this.router.put('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.ActualizarPeriodo);
+        this.router.post('/cargarPeriodo/upload', [TokenValidation, multipartMiddleware], PERIODO_VACACION_CONTROLADOR.CargarPeriodoVacaciones);
     }
 }
 

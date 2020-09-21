@@ -60,7 +60,6 @@ export class EditarEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarRoles();
-
     this.obtenerNacionalidades();
     this.obtenerEmpleado();
     this.primeroFormGroup = this._formBuilder.group({

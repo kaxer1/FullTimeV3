@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -16,6 +16,8 @@ import { RegistroDepartamentoComponent } from 'src/app/componentes/catalogos/cat
 import { EditarDepartamentoComponent } from 'src/app/componentes/catalogos/catDepartamentos/editar-departamento/editar-departamento.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
@@ -62,6 +64,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     public restE: EmpleadoService,
     private toastr: ToastrService,
     private scriptService: ScriptService,
+    public restEmpre: EmpresaService,
     public vistaRegistrarDepartamento: MatDialog,
     private router: Router,
   ) {
@@ -72,15 +75,23 @@ export class PrincipalDepartamentoComponent implements OnInit {
   ngOnInit(): void {
     this.ListaDepartamentos();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
-      //this.urlImagen = 'http://localhost:3000/empleado/img/' + this.empleado[0]['imagen'];
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logo: any = String;
+  ObtenerLogo() {
+    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -92,14 +103,14 @@ export class PrincipalDepartamentoComponent implements OnInit {
     this.departamentos = []
     this.rest.ConsultarDepartamentos().subscribe(datos => {
       this.departamentos = datos;
-      console.log(this.departamentos);
     })
   }
 
   AbrirVentanaRegistrarDepartamento(): void {
-    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent, { width: '600px' }).afterClosed().subscribe(item => {
-      this.ListaDepartamentos();
-    });
+    this.vistaRegistrarDepartamento.open(RegistroDepartamentoComponent,
+      { width: '600px' }).afterClosed().subscribe(item => {
+        this.ListaDepartamentos();
+      });
   }
 
   AbrirVentanaEditarDepartamento(departamento: any): void {
@@ -117,7 +128,6 @@ export class PrincipalDepartamentoComponent implements OnInit {
       buscarEmpresaForm: ''
     });
     this.ListaDepartamentos();
-
   }
 
   ObtenerMensajeDepartamentoLetras() {
@@ -192,10 +202,12 @@ export class PrincipalDepartamentoComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('Departamentos', this.departamentos);
     return {
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -207,7 +219,13 @@ export class PrincipalDepartamentoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -216,55 +234,22 @@ export class PrincipalDepartamentoComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        {
-          text: 'Lista de Departamentos',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logo, width: 150 },
+        { text: 'Lista de Departamentos', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         this.presentarDataPDFDepartamentos(),
       ],
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        tableHeader: {
-          fontSize: 12,
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        },
-        itemsTable: {
-          fontSize: 10
-        },
-        itemsTableC: {
-          fontSize: 10,
-          alignment: 'center'
-        }
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        itemsTable: { fontSize: 10 },
+        itemsTableC: { fontSize: 10, alignment: 'center' }
       }
     };
   }

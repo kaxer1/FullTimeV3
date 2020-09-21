@@ -46,7 +46,6 @@ class HorarioControlador {
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-
     /** Horarios */
     plantilla.forEach(async (data: any) => {
       var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;

@@ -131,6 +131,54 @@ class ReportesControlador {
         }
     }
 
+    public async ListarPermisoHorarioEmpleadoFechas(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const DATOS = await pool.query('SELECT * FROM permisos AS p INNER JOIN ' +
+            '(SELECT h.id_horarios, ch.nombre AS nom_horario, h.id_empl_cargo, ch.hora_trabajo AS horario_horas, ' +
+            'cargo.hora_trabaja AS cargo_horas, cargo.cargo, ' +
+            'e.id AS id_empleado, contrato.id AS id_contrato, p.fec_inicio AS fecha, p.id AS id_permiso, ' +
+            'tp.id AS id_tipo_permiso, tp.descripcion AS nombre_permiso ' +
+            'FROM empl_horarios AS h, empl_contratos AS contrato, empl_cargos AS cargo, empleados AS e,  ' +
+            'cg_horarios AS ch, ' +
+            'permisos AS p, cg_tipo_permisos AS tp ' +
+            'WHERE h.id_empl_cargo = cargo.id AND e.id = contrato.id_empleado AND p.id_tipo_permiso = tp.id ' +
+            'AND ch.id = h.id_horarios AND p.id_empl_contrato = contrato.id ' +
+            'AND p.fec_inicio::date BETWEEN h.fec_inicio AND h.fec_final AND e.id = $1) AS h ' +
+            'ON h.id_permiso = p.id AND (p.fec_inicio::date BETWEEN $2 AND $3 OR ' +
+            'p.fec_final::date BETWEEN $2 AND $3) ORDER BY p.num_permiso ASC', [id_empleado, fechaInicio, fechaFinal]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'error' });
+        }
+    }
+
+    public async ListarPermisoPlanificaEmpleadoFechas(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const DATOS = await pool.query('SELECT * FROM permisos AS p INNER JOIN ' +
+            '(SELECT ph.id AS id_plan, ph.id_cargo, dp.id_cg_horarios, ch.nombre AS nom_horario, ' +
+            'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, ' +
+            'e.id AS id_empleado, contrato.id AS id_contrato, p.id AS id_permiso, dp.fecha, ' +
+            'tp.id AS id_tipo_permiso, tp.descripcion AS nombre_permiso ' +
+            'FROM plan_horarios AS ph, empl_cargos AS cargo, empl_contratos AS contrato, empleados AS e, ' +
+            'plan_hora_detalles AS dp, cg_horarios AS ch, permisos AS p, cg_tipo_permisos AS tp ' +
+            'WHERE cargo.id = ph.id_cargo AND e.id = contrato.id_empleado AND e.id = $1 AND ' +
+            'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario AND p.id_tipo_permiso = tp.id ' +
+            'AND p.id_empl_contrato = contrato.id AND p.fec_inicio::date BETWEEN ph.fec_inicio AND ' +
+            'ph.fec_final AND p.fec_inicio::date = dp.fecha) AS h ' +
+            'ON p.id = h.id_permiso AND (p.fec_inicio::date BETWEEN $2 AND $3 OR ' +
+            'p.fec_final::date BETWEEN $2 AND $3) ORDER BY p.num_permiso ASC', [id_empleado, fechaInicio, fechaFinal]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'error' });
+        }
+    }
+
     public async ListarPermisoAutorizaEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const DATOS = await pool.query('SELECT a.id AS id_autoriza, a.estado, a.id_permiso, p.id_empl_contrato, contrato.id_empleado ' +
@@ -208,7 +256,7 @@ class ReportesControlador {
             'ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
             'ON t.id_empleado = h.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
-            'AND t.accion::integer = h.tipo_accion ' +
+            'AND t.accion = h.tipo_accion ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
@@ -234,7 +282,7 @@ class ReportesControlador {
             'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
             'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
             'AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
-            'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion::integer ' +
+            'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)

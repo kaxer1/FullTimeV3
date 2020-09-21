@@ -25,6 +25,8 @@ class CiudadRutas {
         this.router.post('/reporteAtrasos/planificacion/:id_empleado', reportesControlador_1.default.ListarAtrasosPlanificaEmpleado);
         this.router.post('/reporteEntradaSalida/horarios/:id_empleado', reportesControlador_1.default.ListarEntradaSalidaHorarioEmpleado);
         this.router.post('/reporteEntradaSalida/planificacion/:id_empleado', reportesControlador_1.default.ListarEntradaSalidaPlanificaEmpleado);
+        this.router.post('/reportePermisos/fechas/horarios/:id_empleado', reportesControlador_1.default.ListarPermisoHorarioEmpleadoFechas);
+        this.router.post('/reportePermisos/fechas/planificacion/:id_empleado', reportesControlador_1.default.ListarPermisoPlanificaEmpleadoFechas);
     }
 }
 const REPORTES_RUTAS = new CiudadRutas();

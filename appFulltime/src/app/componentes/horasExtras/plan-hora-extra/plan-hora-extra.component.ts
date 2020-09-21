@@ -92,81 +92,101 @@ export class PlanHoraExtraComponent implements OnInit {
   HoraExtraResponse: any;
   NotifiRes: any;
   arrayNivelesDepa: any = [];
+
+  datosSeleccionados: any = [];
   insertarPlanificacion(form1) {
+    this.datosSeleccionados = [];
+    this.datosSeleccionados = this.data.planifica;
     let dataPlanHoraExtra = {
       id_empl_planifica: this.id_user_loggin,
-      id_empl_realiza: this.data.planifica.id,
+      id_empl_realiza: 0,
       fecha_desde: form1.fechaInicioForm,
       fecha_hasta: form1.FechaFinForm,
       hora_inicio: form1.horaInicioForm,
       hora_fin: form1.horaFinForm,
       descripcion: form1.descripcionForm,
-      total_horas: form1.horasForm,
+      horas_totales: form1.horasForm,
       estado: form1.estadoForm,
     }
+    if (this.datosSeleccionados.length != undefined) {
+      console.log('probando', this.datosSeleccionados, this.datosSeleccionados.length - 1, this.datosSeleccionados.length)
+      for (var i = 0; i < this.datosSeleccionados.length; i++) {
+        console.log('entra 21')
+        dataPlanHoraExtra.id_empl_realiza = this.datosSeleccionados[i].id;
+        this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
+        })
+      }
+    }
+    else {
+      dataPlanHoraExtra.id_empl_realiza = this.data.planifica.id;
+      this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
+      })
+    }
 
-    this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
-      this.dialogRef.close();
-      /*  this.arrayNivelesDepa = response;
-        console.log(this.arrayNivelesDepa);
-        this.arrayNivelesDepa.forEach(obj => {
-  
-          let datosHoraExtraCreada = {
-            //id_empl_cargo: dataPedirHoraExtra.id_empl_cargo,
-            // id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
-            //fec_inicio: dataPedirHoraExtra.fec_inicio,
-            //fec_final: dataPedirHoraExtra.fec_final,
-            // fec_solicita: dataPedirHoraExtra.fec_solicita,
-            id: obj.id,
-            estado: obj.estado,
-            id_dep: obj.id_dep,
-            depa_padre: obj.depa_padre,
-            nivel: obj.nivel,
-            id_suc: obj.id_suc,
-            departamento: obj.departamento,
-            sucursal: obj.sucursal,
-            cargo: obj.cargo,
-            contrato: obj.contrato,
-            empleado: obj.empleado,
-            nombre: obj.nombre,
-            apellido: obj.apellido,
-            cedula: obj.cedula,
-            correo: obj.correo,
-            hora_extra_mail: obj.hora_extra_mail,
-            hora_extra_noti: obj.hora_extra_noti
-          }
-  
-            this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
-               this.HoraExtraResponse = res;
-               console.log(this.HoraExtraResponse);
-               var f = new Date();
-               let notificacion = {
-                 id: null,
-                 id_send_empl: this.id_user_loggin,
-                 id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
-                 id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
-                 estado: this.HoraExtraResponse.estado,
-                 create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
-                 id_permiso: null,
-                 id_vacaciones: null,
-                 id_hora_extra: this.HoraExtraResponse.id
+
+    this.dialogRef.close();
+
+    /*  this.arrayNivelesDepa = response;
+      console.log(this.arrayNivelesDepa);
+      this.arrayNivelesDepa.forEach(obj => {
+ 
+        let datosHoraExtraCreada = {
+          //id_empl_cargo: dataPedirHoraExtra.id_empl_cargo,
+          // id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
+          //fec_inicio: dataPedirHoraExtra.fec_inicio,
+          //fec_final: dataPedirHoraExtra.fec_final,
+          // fec_solicita: dataPedirHoraExtra.fec_solicita,
+          id: obj.id,
+          estado: obj.estado,
+          id_dep: obj.id_dep,
+          depa_padre: obj.depa_padre,
+          nivel: obj.nivel,
+          id_suc: obj.id_suc,
+          departamento: obj.departamento,
+          sucursal: obj.sucursal,
+          cargo: obj.cargo,
+          contrato: obj.contrato,
+          empleado: obj.empleado,
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          cedula: obj.cedula,
+          correo: obj.correo,
+          hora_extra_mail: obj.hora_extra_mail,
+          hora_extra_noti: obj.hora_extra_noti
+        }
+ 
+          this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
+             this.HoraExtraResponse = res;
+             console.log(this.HoraExtraResponse);
+             var f = new Date();
+             let notificacion = {
+               id: null,
+               id_send_empl: this.id_user_loggin,
+               id_receives_empl: this.HoraExtraResponse.id_empleado_autoriza,
+               id_receives_depa: this.HoraExtraResponse.id_departamento_autoriza,
+               estado: this.HoraExtraResponse.estado,
+               create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+               id_permiso: null,
+               id_vacaciones: null,
+               id_hora_extra: this.HoraExtraResponse.id
+             }
+   
+             this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+               console.log(resN);
+               this.NotifiRes = resN;
+               notificacion.id = this.NotifiRes._id;
+               if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
+                 this.restHE.sendNotiRealTime(notificacion);
                }
-     
-               this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
-                 console.log(resN);
-                 this.NotifiRes = resN;
-                 notificacion.id = this.NotifiRes._id;
-                 if (this.NotifiRes._id > 0 && this.HoraExtraResponse.notificacion === true) {
-                   this.restHE.sendNotiRealTime(notificacion);
-                 }
-               });
-     
-             })
+             });
+   
+           })
 
-    });*/
+  });*/
 
-    });
+
 
   }
 

@@ -17,6 +17,9 @@ class PlanHorarioRutas {
         this.router.get('/datosPlanHorario/:id', TokenValidation, PLAN_HORARIO_CONTROLADOR.EncontrarPlanHorarioPorId);
         this.router.put('/', TokenValidation, PLAN_HORARIO_CONTROLADOR.ActualizarPlanHorario);
         this.router.delete('/eliminar/:id', TokenValidation, PLAN_HORARIO_CONTROLADOR.EliminarRegistros);
+        this.router.post('/fechas_plan/:id_empleado', TokenValidation, PLAN_HORARIO_CONTROLADOR.ObtenerPlanificacionEmpleadoFechas);
+        this.router.post('/validarFechas', TokenValidation, PLAN_HORARIO_CONTROLADOR.VerificarFechasPlan);
+        this.router.post('/validarFechas/horarioEmpleado/:id/empleado/:empl_id', TokenValidation, PLAN_HORARIO_CONTROLADOR.VerificarFechasPlanEdicion);
     }
 }
 

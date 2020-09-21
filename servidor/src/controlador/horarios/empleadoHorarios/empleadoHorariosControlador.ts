@@ -106,6 +106,53 @@ class EmpleadoHorariosControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
+    public async ObtenerHorariosEmpleadoFechas(req: Request, res: Response): Promise<any> {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dec ' +
+            'INNER JOIN (SELECT * FROM empl_horarios) AS eh ' +
+            'ON dec.cargo_id = eh.id_empl_cargo AND dec.empl_id = $1 ' +
+            'AND (eh.fec_inicio BETWEEN $2 AND $3 OR ' +
+            'eh.fec_final BETWEEN $2 AND $3)', [id_empleado, fechaInicio, fechaFinal]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    public async VerificarFechasHorario(req: Request, res: Response): Promise<any> {
+        const { fechaInicio, fechaFinal } = req.body;
+        const { empl_id } = req.params;
+        const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+            '(SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    public async VerificarFechasHorarioEdicion(req: Request, res: Response): Promise<any> {
+        const id = req.params.id;
+        const { id_emple } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+            '(SELECT * FROM empl_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
 }
 
 export const EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();

@@ -88,15 +88,10 @@ export class RegistroComponent implements OnInit {
       );
 
     this.rest.ObtenerCodigo().subscribe(datos => {
-      if (datos[0].cedula === false) {
-        this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-        this.primeroFormGroup.patchValue({
-          codigoForm: parseInt(datos[0].valor) + 1
-        })
-      }
-      else {
-        this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
-      }
+      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
+      this.primeroFormGroup.patchValue({
+        codigoForm: parseInt(datos[0].valor) + 1
+      })
     }, error => {
       this.toastr.info('Primero configurar el código de empleado.');
       this.router.navigate(['/codigo/']);
@@ -197,39 +192,19 @@ export class RegistroComponent implements OnInit {
     };
 
     this.rest.ObtenerCodigo().subscribe(datos => {
-      if (datos[0].cedula === true) {
-        dataEmpleado.codigo = form1.cedulaForm;
-        console.log(dataEmpleado);
-        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-          if (response.message === 'error') {
-            this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
-          }
-          else {
-            this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-            this.empleadoGuardado = response;
-            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
-            this.limpliarCampos();
-          }
-        },
-          error => {
-            console.log(error);
-          });
-      }
-      else {
-        console.log(dataEmpleado);
-        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-          if (response.message === 'error') {
-            this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
-          }
-          else {
-            this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-            this.empleadoGuardado = response;
-            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
-            this.ActualizarCodigo(form1.codigoForm);
-            this.limpliarCampos();
-          }
-        }, error => { });
-      }
+      console.log(dataEmpleado);
+      this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
+        if (response.message === 'error') {
+          this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
+        }
+        else {
+          this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+          this.empleadoGuardado = response;
+          this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
+          this.ActualizarCodigo(form1.codigoForm);
+          this.limpliarCampos();
+        }
+      }, error => { });
     }, error => { });
   }
 

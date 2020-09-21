@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md">
             <div class="tituloEmpleados">
-                <span>REPORTE DE TIMBRES DEL EMPLEADO</span>
+                <span>PLANIFICACIÓN HORAS EXTRAS</span>
             </div>
             <mat-card class="example-card mat-elevation-z8">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
@@ -101,6 +101,11 @@
         </div>
     </div>
 </div>
+<div class="d-flex justify-content-around" *ngIf="!Habilitar">
+    <button mat-button type="submit" class="btn btn-sm" (click)="Planificacion()">Planificar Horas Extras
+    </button>
+</div>
+<br>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div id="resulEmpleados">Resultado de búsqueda</div>
@@ -108,6 +113,13 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
+                        <th scope="col">
+                            <div class="col-md" style="margin-left: 5px; text-align: center;">
+                                <input class="form-check-input" type="checkbox" id="selecTodo"
+                                    (change)="$event.target.checked ? AgregarTodos() : QuitarTodos()">
+                                <label class="form-check-label" for="inlineCheckbox1">Todos</label>
+                            </div>
+                        </th>
                         <th scope="col">Código</th>
                         <th scope="col">Cédula</th>
                         <th scope="col">Apellido</th>
@@ -115,12 +127,20 @@
                         <th scope="col">Departamento</th>
                         <th scope="col">Cargo</th>
                         <th scope="col">Régimen</th>
-                        <th scope="col">Reporte Timbres</th>
+                        <th scope="col">Planificación</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr
-                        *ngFor="let d of datosEmpleado | emplCargo: filtroCargo | regimen: filtroRegimen | departamento: filtroDepartamento | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido  | paginate:tamanio_pagina:numero_pagina">
+                        *ngFor="let d of datosEmpleado | emplCargo: filtroCargo | regimen: filtroRegimen | departamento: filtroDepartamento | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido  | paginate:tamanio_pagina:numero_pagina; index as i">
+                        <td>
+                            <div class="col-md" style="margin-left: 5px; text-align: center;">
+                                <input class="form-check-input" type="checkbox" name="empleadosSeleccionados"
+                                    id="empleadosSeleccionados{{i}}"
+                                    (change)="$event.target.checked ? AgregarEmpleado(d) : QuitarEmpleado(d)">
+                                <label class="form-check-label" for="inlineCheckbox1"></label>
+                            </div>
+                        </td>
                         <th scope="row">{{d.codigo}}</th>
                         <td>{{d.cedula}}</td>
                         <td>{{d.apellido}}</td>
@@ -131,7 +151,7 @@
                         <td class="d-flex justify-content-center">
                             <i (click)="Planificar(d)" id="plan" class="fa fa-list-alt" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                                matTooltip="Ver reporte de timbres del empleado en formato PDF">
+                                matTooltip="Ver reporte de timbres del empleado en formato PDF" [ngStyle]="habilitado">
                                 <p>Planificar</p>
                             </i>
                         </td>
@@ -140,8 +160,9 @@
             </table>
         </div>
         <mat-paginator [length]="datosEmpleado.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons (click)='MarcarDatos()'>
         </mat-paginator>
+
         <!--   <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato PDF">
@@ -161,4 +182,5 @@
             </i>
         </div> -->
     </div>
+
 </div>

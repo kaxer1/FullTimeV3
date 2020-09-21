@@ -166,14 +166,23 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerContratosEmpleado();
     this.VerAccionPersonal();
     this.VerHorasExtras();
+    this.ObtenerLogo();
   }
 
-  // metodo para ver la informacion del empleado 
+  // Método para ver la información del empleado 
   ObtenerEmpleadoLogueado(idemploy: any) {
     this.empleadoLogueado = [];
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoLogueado = data;
     })
+  }
+
+  // Método para obtener el logo de la empresa
+  logoE: any = String;
+  ObtenerLogo() {
+    this.restEmpresa.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
+      this.logoE = 'data:image/jpeg;base64,' + res.imagen;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -1075,10 +1084,13 @@ export class VerEmpleadoComponent implements OnInit {
   getDocumentDefinicion() {
     sessionStorage.setItem('profile', this.empleadoUno);
     return {
+
+      // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
+      // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         var f = new Date();
         if (f.getMonth() < 10 && f.getDate() < 10) {
@@ -1090,7 +1102,13 @@ export class VerEmpleadoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-        var time = f.getHours() + ':' + f.getMinutes();
+         // Formato de hora actual
+        if (f.getMinutes() < 10) {
+          var time = f.getHours() + ':0' + f.getMinutes();
+        }
+        else {
+          var time = f.getHours() + ':' + f.getMinutes();
+        }
         return {
           margin: 10,
           columns: [
@@ -1099,62 +1117,32 @@ export class VerEmpleadoComponent implements OnInit {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', color: 'blue', opacity: 0.5
                 }
               ],
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          ], fontSize: 10, color: '#A4B8FF',
         }
       },
       content: [
-        // this.logoEmplesa(),
-        {
-          text: 'Perfil Empleado',
-          bold: true,
-          fontSize: 20,
-          alignment: 'center',
-          margin: [0, 0, 0, 20]
-        },
+        { image: this.logoE, width: 150 },
+        { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
         {
           columns: [
-            [{
-              text: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido,
-              style: 'name'
-            },
-            {
-              text: 'Fecha Nacimiento: ' + this.fechaNacimiento
-            },
-            {
-              text: 'Corre Electronico: ' + this.empleadoUno[0].correo,
-            },
-            {
-              text: 'Teléfono: ' + this.empleadoUno[0].telefono,
-            }
+            [
+              { text: this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido, style: 'name' },
+              { text: 'Fecha Nacimiento: ' + this.fechaNacimiento },
+              { text: 'Corre Electronico: ' + this.empleadoUno[0].correo },
+              { text: 'Teléfono: ' + this.empleadoUno[0].telefono }
             ]
           ]
         },
-        {
-          text: 'Contrato Empleado',
-          style: 'header'
-        },
+        { text: 'Contrato Empleado', style: 'header' },
         this.presentarDataPDFcontratoEmpleado(),
-        {
-          text: 'Plan de comidas',
-          style: 'header'
-        },
-        // this.presentarDataPDFplanComidas(),
-        {
-          text: 'Titulos',
-          style: 'header'
-        },
+        { text: 'Plan de comidas', style: 'header' },
+        { text: 'Titulos', style: 'header' },
         this.presentarDataPDFtitulosEmpleado(),
-        {
-          text: 'Discapacidad',
-          style: 'header'
-        },
+        { text: 'Discapacidad', style: 'header' },
         this.presentarDataPDFdiscapacidadEmpleado(),
       ],
       info: {
@@ -1164,31 +1152,9 @@ export class VerEmpleadoComponent implements OnInit {
         keywords: 'Perfil, Empleado',
       },
       styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 20, 0, 10],
-          decoration: 'underline'
-        },
-        name: {
-          fontSize: 16,
-          bold: true
-        },
-        jobTitle: {
-          fontSize: 14,
-          bold: true,
-          italics: true
-        },
-        sign: {
-          margin: [0, 50, 0, 10],
-          alignment: 'right',
-          italics: true
-        },
-        tableHeader: {
-          bold: true,
-          alignment: 'center',
-          fillColor: '#6495ED'
-        }
+        header: { fontSize: 18, bold: true, margin: [0, 20, 0, 10], decoration: 'underline' },
+        name: { fontSize: 16, bold: true },
+        tableHeader: { bold: true, alignment: 'center', fillColor: '#6495ED' }
       }
     };
   }
@@ -1198,18 +1164,10 @@ export class VerEmpleadoComponent implements OnInit {
       table: {
         widths: ['*', '*', '*'],
         body: [
-          [{
-            text: 'Observaciones',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Nombre',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Nivel',
-            style: 'tableHeader'
-          }
+          [
+            { text: 'Observaciones', style: 'tableHeader' },
+            { text: 'Nombre', style: 'tableHeader' },
+            { text: 'Nivel', style: 'tableHeader' }
           ],
           ...this.relacionTituloEmpleado.map(obj => {
             return [obj.observaciones, obj.nombre, obj.nivel];
@@ -1224,22 +1182,11 @@ export class VerEmpleadoComponent implements OnInit {
       table: {
         widths: ['*', 'auto', 100, '*'],
         body: [
-          [{
-            text: 'Descripción',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Dias Vacacion',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Fecha Ingreso',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Fecha Salida',
-            style: 'tableHeader'
-          }
+          [
+            { text: 'Descripción', style: 'tableHeader' },
+            { text: 'Dias Vacacion', style: 'tableHeader' },
+            { text: 'Fecha Ingreso', style: 'tableHeader' },
+            { text: 'Fecha Salida', style: 'tableHeader' }
           ],
           ...this.contratoEmpleadoRegimen.map(obj => {
             const ingreso = obj.fec_ingreso.split("T")[0];
@@ -1262,57 +1209,16 @@ export class VerEmpleadoComponent implements OnInit {
       table: {
         widths: ['*', '*', '*'],
         body: [
-          [{
-            text: 'Carnet conadis',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Porcentaje',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Tipo',
-            style: 'tableHeader'
-          }
+          [
+            { text: 'Carnet conadis', style: 'tableHeader' },
+            { text: 'Porcentaje', style: 'tableHeader' },
+            { text: 'Tipo', style: 'tableHeader' }
           ],
           ...this.discapacidadUser.map(obj => {
             return [obj.carn_conadis, obj.porcentaje + ' %', obj.tipo];
           })
         ]
       }
-    };
-  }
-
-  presentarDataPDFplanComidas() {
-
-  }
-
-  logoEmplesa() {
-    this.getBase64();
-    if (this.logo) {
-      return {
-        image: this.logo,
-        width: 110,
-        alignment: 'right'
-      };
-    }
-    return null;
-  }
-
-  fileChanged(e) {
-    const file = e.target.files[0];
-    this.getBase64();
-  }
-
-  getBase64() {
-    const reader = new FileReader();
-    reader.readAsDataURL(this.urlImagen);
-    reader.onload = () => {
-      // console.log(reader.result);
-      this.logo = reader.result as string;
-    };
-    reader.onerror = (error) => {
-      console.log('Error: ', error);
     };
   }
 
