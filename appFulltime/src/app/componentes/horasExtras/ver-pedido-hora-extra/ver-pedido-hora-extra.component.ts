@@ -14,6 +14,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { TiempoAutorizadoComponent } from '../tiempo-autorizado/tiempo-autorizado.component';
 
 interface Estado {
   id: number,
@@ -39,6 +40,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
   hora_extra: any = [];
   nomEstado: string;
   HabilitarAutorizacion: boolean = true;
+  HabilitarTiempo: boolean = true;
   autorizacion: any = [];
   estado: string = '';
   dep: any = [];
@@ -81,9 +83,13 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         }
       })
       console.log(this.hora_extra);
+      if (this.hora_extra[0].tiempo_autorizado === null ) {
+        this.HabilitarTiempo = false;
+      } 
+
       this.id_usua_solicita = this.hora_extra[0].id_usua_solicita;
       this.restA.getUnaAutorizacionByHoraExtraRest(this.dataParams.id).subscribe(res1 => {
-        console.log(res);
+        console.log(res1);
         this.autorizacion = res1;
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
@@ -159,6 +165,20 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', data: datosHoraExtra }).afterClosed().subscribe(items => {
       this.BuscarInfo();
       this.HabilitarAutorizacion = true;
+    });
+  }
+  
+  AbrirTiempoAutorizacion(num_hora, id_hora) {
+    let h = {
+      id_hora: id_hora,
+      hora: num_hora
+    }
+    this.vistaFolante.open(TiempoAutorizadoComponent, { width: '310px', data: h }).afterClosed().subscribe(items => {
+      if (items === true) {
+        this.HabilitarTiempo = true;
+      } else {
+        this.HabilitarTiempo = false;
+      }
     });
   }
 

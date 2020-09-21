@@ -20,7 +20,7 @@ const builder = require('xmlbuilder');
 class EmpleadoControlador {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const empleado = yield database_1.default.query('SELECT * FROM empleados ORDER BY id');
+            const empleado = yield database_1.default.query('SELECT * FROM empleados WHERE estado = 1 ORDER BY id');
             res.jsonp(empleado.rows);
         });
     }
@@ -240,6 +240,55 @@ class EmpleadoControlador {
                 });
             });
             res.jsonp(empleado);
+        });
+    }
+    DesactivarMultiplesEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsEmpleados = req.body;
+            console.log(arrayIdsEmpleados);
+            if (arrayIdsEmpleados.length > 0) {
+                arrayIdsEmpleados.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('UPDATE empleados SET estado = 2 WHERE id = $1', [obj]) // 2 => desactivado o inactivo
+                        .then(result => {
+                        console.log(result.command, 'EMPLEADO ====>', obj);
+                    });
+                    yield database_1.default.query('UPDATE usuarios SET estado = false, app_habilita = false WHERE id_empleado = $1', [obj]) // false => Ya no tiene acceso
+                        .then(result => {
+                        console.log(result.command, 'USUARIO ====>', obj);
+                    });
+                }));
+                return res.jsonp({ message: 'Todos los empleados han sido desactivados' });
+            }
+            return res.jsonp({ message: 'No ha sido desactivado ningún empleado' });
+        });
+    }
+    listaEmpleadosDesactivados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const empleado = yield database_1.default.query('SELECT * FROM empleados WHERE estado = 2 ORDER BY id');
+            res.jsonp(empleado.rows);
+        });
+    }
+    ActivarMultiplesEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsEmpleados = req.body;
+            console.log(arrayIdsEmpleados);
+            if (arrayIdsEmpleados.length > 0) {
+                arrayIdsEmpleados.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+                        .then(result => {
+                        console.log(result.command, 'EMPLEADO ====>', obj);
+                    });
+                    yield database_1.default.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+                        .then(result => {
+                        console.log(result.command, 'USUARIO ====>', obj);
+                    });
+                }));
+                // var tiempo = 1000 * arrayIdsEmpleados.length
+                // setInterval(() => {
+                // }, tiempo)
+                return res.jsonp({ message: 'Todos los empleados han sido activados' });
+            }
+            return res.jsonp({ message: 'No ha sido activado ningún empleado' });
         });
     }
 }

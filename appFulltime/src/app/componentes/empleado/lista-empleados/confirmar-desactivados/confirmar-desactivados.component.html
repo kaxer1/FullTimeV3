@@ -1,0 +1,17 @@
+<div *ngIf="contenidoDeshabilitar">
+    <h3>Deshabilitar empleados </h3>
+    <p>Confirmar que los siguientes empleados van a ser deshabilitados del sistema</p>
+</div>
+<div *ngIf="contenidoHabilitar">
+    <h3>Habilitar empleados </h3>
+    <p>Confirmar que los siguientes empleados van a ser habilitados nuevamente</p>
+</div>
+<ul *ngFor="let e of Empleados.lista">
+    <li style="margin-top: -10px;">{{e.empleado}}</li>
+</ul>
+
+
+<div class="d-flex justify-content-between">
+    <button class="btn btn-primary" (click)="ConfirmarListaEmpleados()">Aceptar</button>
+    <button class="btn btn-danger" (click)="dialogRef.close(false)">Salir</button>
+</div>

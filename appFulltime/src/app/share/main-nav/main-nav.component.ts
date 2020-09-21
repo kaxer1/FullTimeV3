@@ -14,6 +14,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -48,6 +49,10 @@ export class MainNavComponent implements OnInit {
   noti_real_time: any = [];
   num_noti_false: number = 0;
   num_noti: number = 0;
+  
+  timbres_noti: any = [];
+  num_timbre_false: number = 0;
+  num_timbre: number = 0;
 
   buscar_empl: any = [];
   constructor(
@@ -60,7 +65,8 @@ export class MainNavComponent implements OnInit {
     private router: Router,
     private toaster: ToastrService,
     private socket: Socket,
-    private realTime: RealTimeService
+    private realTime: RealTimeService,
+    private timbresNoti: TimbresService
   ) {
     this.empleadoService.getBuscadorEmpledosRest().subscribe(res => {
       console.log(res);
@@ -112,7 +118,8 @@ export class MainNavComponent implements OnInit {
       map(value => this._filter(value))
     );
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
-    this.LlamarNotificaicones(this.id_empleado_logueado);
+    this.LlamarNotificaciones(this.id_empleado_logueado);
+    this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
     this.VerAccionPersonal();
     this.breakpointObserver.observe('(max-width: 663px)').subscribe(result => {
       this.barraInicial = result.matches;
@@ -122,7 +129,7 @@ export class MainNavComponent implements OnInit {
   }
 
   confRes: any = [];
-  LlamarNotificaicones(id: number) {
+  LlamarNotificaciones(id: number) {
     this.realTime.ObtenerNotificacionesReceives(id).subscribe(res => {
       this.noti_real_time = res;
       console.log(this.noti_real_time);
@@ -185,6 +192,37 @@ export class MainNavComponent implements OnInit {
     if (this.num_noti_false > 0) {
       this.num_noti_false = 0;
       this.estadoNotificacion = !this.estadoNotificacion;
+    }
+  }
+
+  LlamarNotificacionesTimbres(id: number) {
+    this.timbresNoti.NotiTimbresRealTime(id).subscribe(res => {
+      this.timbres_noti = res;
+      console.log(this.timbres_noti);
+      if (!this.timbres_noti.message) {
+        if (this.timbres_noti.length > 0) {
+          this.timbres_noti.forEach(obj => {
+            if (obj.visto === false) {
+              this.num_timbre_false = this.num_timbre_false + 1;
+              this.estadoTimbres = false;
+            }
+          });
+        }
+      }
+    });
+  }
+
+  CambiarVistaTimbres(id_realtime: number) {
+    this.timbresNoti.PutVistaTimbre(id_realtime).subscribe(res => {
+      console.log(res);
+    });
+  }
+
+  estadoTimbres: boolean = true;
+  numeroTimbres() {
+    if (this.num_timbre_false > 0) {
+      this.num_timbre_false = 0;
+      this.estadoTimbres = !this.estadoTimbres;
     }
   }
 

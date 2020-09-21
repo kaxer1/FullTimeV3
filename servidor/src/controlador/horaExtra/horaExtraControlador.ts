@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
+// import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
+import { VerificarHorario } from '../../libs/MetodosHorario'
 const nodemailer = require("nodemailer");
 
 class HorasExtrasPedidasControlador {
@@ -16,7 +17,7 @@ class HorasExtrasPedidasControlador {
 
   public async ObtenerUnaHoraExtraPedida(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT h.id_empl_cargo, h.id_usua_solicita, h.fec_inicio, h.fec_final, h.fec_solicita, h.descripcion, h.estado, h.tipo_funcion, h.num_hora, h.id, c.cargo, c.id_empl_contrato AS id_contrato, c.id_departamento, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empl_cargos AS c, empleados AS e WHERE h.id = $1 AND h.id_empl_cargo = c.id AND e.id = h.id_usua_solicita', [id]);
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT h.id_empl_cargo, h.id_usua_solicita, h.fec_inicio, h.fec_final, h.fec_solicita, h.descripcion, h.estado, h.tipo_funcion, h.num_hora, h.id, h.tiempo_autorizado, c.cargo, c.id_empl_contrato AS id_contrato, c.id_departamento, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empl_cargos AS c, empleados AS e WHERE h.id = $1 AND h.id_empl_cargo = c.id AND e.id = h.id_usua_solicita', [id]);
     if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
       return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
     }
@@ -262,14 +263,30 @@ class HorasExtrasPedidasControlador {
   }
 
   public async ObtenerHorarioEmpleado(req: Request, res: Response) {
-    const id_empleado = req.userIdEmpleado;
-    const id_empl_cargo = req.userIdCargo;
-    // const id_empleado = req.params.id_empleado;
-    let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
+    // const id_empleado = req.userIdEmpleado;
+    // const id_empl_cargo = req.userIdCargo;
+    const id_empl_cargo = parseInt(req.params.id_cargo);
+    console.log('IDS: ', id_empl_cargo);
+    
+    // let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
+    let respuesta = await VerificarHorario(id_empl_cargo)
     console.log(respuesta);
     
     res.jsonp(respuesta)
   }
+  
+  public async TiempoAutorizado(req: Request, res: Response) {
+    const id_hora = parseInt(req.params.id_hora);
+    const { hora } = req.body;
+    console.log(id_hora);
+    console.log(hora);
+    let respuesta = await pool.query('UPDATE hora_extr_pedidos SET tiempo_autorizado = $2 WHERE id = $1',[id_hora, hora]).then(result => {      
+      return {message: 'Tiempo de hora autorizada confirmada'}
+    });
+    res.jsonp(respuesta)
+  }
+
+
 }
 
 export const horaExtraPedidasControlador = new HorasExtrasPedidasControlador();

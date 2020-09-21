@@ -58,12 +58,12 @@ export class VacacionesDiasCakendarioComponent implements OnInit {
 
   KardexEmpleado(id_empleado: number, palabra: string) {
     console.log('conca');
-    this.restKardex.ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado).subscribe(res => {
-      this.kardex = res;
-      console.log(this.kardex);
-      this.generarPdf(palabra)
-      
-    })
+      // this.restKardex.ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado).subscribe(res => {
+      //   this.kardex = res;
+      //   console.log(this.kardex);
+      //   this.generarPdf(palabra)
+        
+      // })
   }
 
   urlImagen: string;

@@ -56,6 +56,7 @@ import CARGA_MULTIPLE_RUTAS from './rutas/cargaMultiple/cargaMultipleRutas';
 
 import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
+import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -163,6 +164,9 @@ class Servidor {
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
         this.app.use('/noti-real-time', NOTIFICACION_TIEMPO_REAL_RUTAS);
+        
+        // Timbres
+        this.app.use('/timbres', TIMBRES_RUTAS);
 
         // Plantillas
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
@@ -222,7 +226,9 @@ import { cumpleanios } from './libs/sendBirthday';
 import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
 import { conteoPermisos } from './libs/timerPermiso';
 import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
-
+import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
+import { NotificacionSinTimbres } from './libs/SinTimbres'
+import { DesactivarFinContratoEmpleado } from './libs/DesactivarEmpleado'
 // llama al meodo de cumpleaños
 cumpleanios();
 // llama al metodo de avisos de vacaciones
@@ -231,6 +237,12 @@ beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
 Peri_Vacacion_Automatico();
 
-RegistrarAsistenciaByTimbres()
+RegistrarAsistenciaByTimbres();
 
 // conteoPermisos();
+
+// NotificacionTimbreAutomatica();
+
+NotificacionSinTimbres();
+
+DesactivarFinContratoEmpleado();

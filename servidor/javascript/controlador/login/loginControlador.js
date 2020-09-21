@@ -23,6 +23,21 @@ class LoginControlador {
                 console.log(nombre_usuario, pass);
                 const USUARIO = yield database_1.default.query('SELECT id, usuario, id_rol, id_empleado FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
                 const SUC_DEP = yield database_1.default.query('SELECT c.id_departamento, c.id_sucursal, s.id_empresa, c.id AS id_cargo FROM empl_contratos AS e, empl_cargos AS c, sucursales AS s WHERE e.id_empleado = $1 AND c.id_empl_contrato = e.id AND c.id_sucursal = s.id ORDER BY c.fec_inicio DESC LIMIT 1', [USUARIO.rows[0].id_empleado]);
+                // "pass": "827ccb0eea8a706c4c34a16891f84e7b"
+                if (USUARIO.rowCount === 0) {
+                    return res.jsonp({ message: 'No existe Usuario' });
+                }
+                let ACTIVO = yield database_1.default.query('SELECT e.estado AS empleado, u.estado AS usuario, u.app_habilita FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND u.id = $1', [USUARIO.rows[0].id])
+                    .then(result => {
+                    return result.rows;
+                });
+                console.log(ACTIVO);
+                if (ACTIVO.length === 0) {
+                    return res.jsonp({ message: 'No existe Usuario' });
+                }
+                if (ACTIVO[0].empleado === 2 && ACTIVO[0].usuario === false && ACTIVO[0].app_habilita === false) {
+                    return res.jsonp({ message: 'EL usuario esta inactivo.' });
+                }
                 if (SUC_DEP.rowCount > 0) {
                     const AUTORIZA = yield database_1.default.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2', [SUC_DEP.rows[0].id_cargo, SUC_DEP.rows[0].id_departamento]);
                     if (AUTORIZA.rowCount > 0) {

@@ -29,7 +29,8 @@
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                     matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
                     help_outline</mat-icon>
-                <mat-select [formControl]="estadoF" [disabled]="true" required>
+                <!-- <mat-select [formControl]="estadoF" [disabled]="true" required> -->
+                <mat-select [formControl]="estadoF" disabled required>
                     <mat-option *ngFor="let e of estados" [value]="e.id">
                         {{e.nombre}}
                     </mat-option>
@@ -54,7 +55,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Fecha Fin Actividades</mat-label>
-                <input matInput [matDatepicker]="picker3" [formControl]="FechaFinF" required>
+                <input matInput [matDatepicker]="picker3" [formControl]="FechaFinF" (dateInput)="ValidarFechas(PedirHoraExtraForm.value)" required>
                 <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
                     matTooltipPosition="right"
                     matTooltip="Fecha en la que finaliza actividades de horas extras. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">

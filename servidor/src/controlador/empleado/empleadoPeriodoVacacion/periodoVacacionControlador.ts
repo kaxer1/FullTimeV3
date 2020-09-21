@@ -23,7 +23,7 @@ class PeriodoVacacionControlador {
 
     public async EncontrarIdPerVacaciones(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
-        const VACACIONES = await pool.query('SELECT pv.id, ce.id AS idContrato FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND e.id = $1', [id_empleado]);
+        const VACACIONES = await pool.query('SELECT pv.id, ce.id AS idContrato FROM peri_vacaciones AS pv, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND pv.id_empl_contrato = ce.id AND e.id = $1 ORDER BY pv.fec_final DESC', [id_empleado]);
         if (VACACIONES.rowCount > 0) {
             return res.jsonp(VACACIONES.rows)
         }

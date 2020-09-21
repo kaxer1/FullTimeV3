@@ -82,11 +82,63 @@ export class PedidoHoraExtraComponent implements OnInit {
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.id_cargo_loggin = parseInt(localStorage.getItem("ultimoCargo"));
 
+    this.HorarioEmpleadoSemanal(this.id_cargo_loggin);
     this.PedirHoraExtraForm.patchValue({
       fechaSolicitudForm: this.FechaActual,
       estadoForm: 1
     });
   }
+
+  Horario: any
+  HorarioEmpleadoSemanal(id_cargo: number) {
+    this.restHE.HorarioEmpleadoSemanal(id_cargo).subscribe(res => {
+      console.log(res);
+      this.Horario = res;
+    });
+  }
+
+  ValidarFechas(formFechas){    
+    var fi = new Date(formFechas.fechaInicioForm);
+    var ff = new Date(formFechas.FechaFinForm)
+
+    console.log(fi.toJSON());   console.log(ff.toJSON());
+    if (fi > ff) {
+      this.toastr.error('Fecha inicial no puede ser mayor a fecha final')
+      this.fechaInicioF.reset();
+      this.FechaFinF.reset()
+    }
+    
+    let valor1 = this.Horario.filter(fil => {
+      return fil.fecha === fi.toJSON().split('T')[0];
+    }).map(result => {
+      return result.estado
+    })
+    let valor2 = this.Horario.filter(fil => {
+      return fil.fecha === ff.toJSON().split('T')[0];
+    }).map(result => {
+      return result.estado
+    })
+
+    console.log(valor1[0]);   console.log(valor2[0]);
+    if (valor1[0] === undefined || valor2[0] === undefined) {
+      this.toastr.error('Fechas seleccionadas no corresponden a la semana laboral actual');
+      this.fechaInicioF.reset();
+      this.FechaFinF.reset()
+    }
+    
+    if (valor1[0] === true) {
+      this.toastr.info('Fecha de inicio tiene dia libre')
+      this.fechaInicioF.reset();
+    }
+    if (valor2[0] === true) {
+      this.toastr.info('Fecha de fin tiene dia libre')
+      this.FechaFinF.reset()
+    }
+    
+    console.log(valor1, '===', valor2); // false ===> significa que ese dia labora || true ===> significa que ese dia tiene libre
+    
+  }
+
 
   HoraExtraResponse: any;
   NotifiRes: any;

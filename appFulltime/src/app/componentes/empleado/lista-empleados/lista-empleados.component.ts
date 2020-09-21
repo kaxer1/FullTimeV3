@@ -13,6 +13,27 @@ import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import {SelectionModel} from '@angular/cdk/collections';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
+
+export interface EmpleadoElemento {
+  apellido: string;
+  cedula: string;
+  codigo: string;
+  correo: string;
+  domicilio: string;
+  esta_civil: number;
+  estado: number;
+  fec_nacimiento: string;
+  genero: number;
+  id: number;
+  id_nacionalidad: number;
+  imagen: string
+  mail_alternativo: string;
+  nombre: string;
+  telefono: string;
+}
 
 @Component({
   selector: 'app-lista-empleados',
@@ -40,15 +61,24 @@ export class ListaEmpleadosComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+  
+  // items de paginacion de la tabla
+  tamanio_paginaDes: number = 5;
+  numero_paginaDes: number = 1;
+  pageSizeOptionsDes = [5, 10, 20, 50];
 
   empleadoD: any = [];
   idEmpleado: number;
+
+  selectionUno = new SelectionModel<EmpleadoElemento>(true, []);
+  selectionDos = new SelectionModel<EmpleadoElemento>(true, []);
 
   constructor(
     public rest: EmpleadoService,
     public restEmpre: EmpresaService,
     public router: Router,
     private toastr: ToastrService,
+    public vistaRegistrarDatos: MatDialog,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -58,6 +88,114 @@ export class ListaEmpleadosComponent implements OnInit {
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
   }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    const numSelected = this.selectionUno.selected.length;
+    const numRows = this.empleado.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    this.isAllSelected() ?
+    this.selectionUno.clear() :
+    this.empleado.forEach(row => this.selectionUno.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selectionUno.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  btnCheckHabilitar: boolean = false;
+  HabilitarSeleccion(){
+    if (this.btnCheckHabilitar === false) {
+      this.btnCheckHabilitar = true;
+    } else if(this.btnCheckHabilitar === true) {
+      this.btnCheckHabilitar = false;
+    }
+  }
+
+  desactivados: any = [];
+  ListaEmpleadosDeshabilitados() {
+    this.desactivados = [];
+    if (this.Hab_Deshabilitados == false) {
+      this.Hab_Deshabilitados = true;
+      this.rest.ListaEmpleadosDesactivados().subscribe(res => {
+        this.desactivados = res;
+      });
+    } else if (this.Hab_Deshabilitados == true) {
+      this.Hab_Deshabilitados = false;
+    }  
+  }
+
+  Hab_Deshabilitados: boolean = false;
+  btnCheckDeshabilitado: boolean = false;
+  HabilitarSeleccionDesactivados() {
+    if (this.btnCheckDeshabilitado === false) {
+      this.btnCheckDeshabilitado = true;
+    } else if(this.btnCheckDeshabilitado === true) {
+      this.btnCheckDeshabilitado = false;
+    }
+  }
+
+  isAllSelectedDos() {
+    const numSelected = this.selectionDos.selected.length;
+    const numRows = this.desactivados.length;
+    return numSelected === numRows;
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggleDos() {
+    this.isAllSelectedDos() ?
+    this.selectionDos.clear() :
+    this.desactivados.forEach(row => this.selectionDos.select(row));
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabelDos(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelectedDos() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selectionDos.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  Deshabilitar(opcion: number){
+    let EmpleadosSeleccionados 
+    if (opcion === 1) {
+      EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
+    } else if (opcion === 2) {
+      EmpleadosSeleccionados = this.selectionDos.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
+    }
+    console.log(EmpleadosSeleccionados);
+    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: {opcion: opcion, lista: EmpleadosSeleccionados} }).afterClosed().subscribe(item => {
+      console.log(item);
+      if (item === true) {
+        this.getEmpleados();
+        this.ListaEmpleadosDeshabilitados();
+        this.btnCheckHabilitar = false;
+        this.btnCheckDeshabilitado = false;
+        this.Hab_Deshabilitados = false;
+        this.selectionUno.clear();
+        this.selectionDos.clear();
+      };
+    });
+  }
+
 
   // Método para ver la información del empleado 
   ObtenerEmpleados(idemploy: any) {
@@ -78,6 +216,11 @@ export class ListaEmpleadosComponent implements OnInit {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
     console.log('empl ', this.empleado);
+  }
+  
+  ManejarPaginaDes(e: PageEvent) {
+    this.tamanio_paginaDes = e.pageSize;
+    this.numero_paginaDes = e.pageIndex + 1;
   }
 
   IngresarSoloLetras(e) {
@@ -121,6 +264,7 @@ export class ListaEmpleadosComponent implements OnInit {
     this.empleado = [];
     this.rest.getEmpleadosRest().subscribe(data => {
       this.empleado = data;
+      console.log(this.empleado);
     })
   }
 

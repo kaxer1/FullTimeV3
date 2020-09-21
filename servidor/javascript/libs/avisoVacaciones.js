@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
 const settingsMail_1 = require("./settingsMail");
-const periVacacion_1 = __importDefault(require("../class/periVacacion"));
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
 const HORA_ENVIO_AVISO_CINCO_DIAS = 0;
 const HORA_ENVIO_AVISO_DOS_DIAS = 1;
@@ -55,7 +54,7 @@ function AniosEmpleado(idEmpleado) {
 }
 function ObtenerIdEmpleado(idContrato) {
     return __awaiter(this, void 0, void 0, function* () {
-        let id_empleado = yield database_1.default.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id LIMIT 1', [idContrato])
+        let id_empleado = yield database_1.default.query('SELECT e.id FROM empl_contratos co, empleados e WHERE co.id = $1 AND co.id_empleado = e.id AND e.estado = 1 LIMIT 1', [idContrato])
             .then((result) => __awaiter(this, void 0, void 0, function* () {
             let id = yield result.rows.map(obj => { return obj.id; });
             return id[0];
@@ -77,7 +76,17 @@ function CrearNuevoPeriodo(Obj, descripcion, dia, anio) {
         if (year >= regimen.anio_antiguedad) {
             antiguedad = regimen.dia_incr_antiguedad;
         }
-        var nuevo = new periVacacion_1.default(Obj.id_empl_contrato, descripcion, regimen.dia_anio_vacacion, antiguedad, 1, dia, anio, Obj.dia_perdido, Obj.horas_vacaciones, Obj.min_vacaciones);
+        // var nuevo = new PVacacion(
+        //     Obj.id_empl_contrato,
+        //     descripcion,
+        //     regimen.dia_anio_vacacion,
+        //     antiguedad,
+        //     1,
+        //     dia,
+        //     anio,
+        //     Obj.dia_perdido,
+        //     Obj.horas_vacaciones,
+        //     Obj.min_vacaciones );
         // console.log(nuevo);
         yield database_1.default.query('INSERT INTO peri_vacaciones(id_empl_contrato, descripcion, dia_vacacion, dia_antiguedad, estado, fec_inicio, fec_final, dia_perdido, horas_vacaciones, min_vacaciones) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )', [Obj.id_empl_contrato, descripcion, regimen.dia_anio_vacacion, antiguedad, 1, dia, anio, Obj.dia_perdido, Obj.horas_vacaciones, Obj.min_vacaciones])
             .then(() => {
