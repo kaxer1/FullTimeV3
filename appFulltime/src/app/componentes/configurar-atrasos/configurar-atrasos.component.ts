@@ -6,6 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './configurar-atrasos.component.html',
   styleUrls: ['./configurar-atrasos.component.css']
 })
+
 export class ConfigurarAtrasosComponent implements OnInit {
 
   constructor(
@@ -25,7 +26,6 @@ export class ConfigurarAtrasosComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
   }
 
 }
