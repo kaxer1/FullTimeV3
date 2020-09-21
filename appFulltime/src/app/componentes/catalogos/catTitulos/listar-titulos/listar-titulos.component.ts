@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -7,15 +7,15 @@ import { Router } from '@angular/router';
 
 import { TitulosComponent } from '../titulos/titulos.component'
 import { EditarTitulosComponent } from '../editar-titulos/editar-titulos.component'
+import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
-import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 @Component({
   selector: 'app-listar-titulos',
   templateUrl: './listar-titulos.component.html',
-  styleUrls: ['./listar-titulos.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./listar-titulos.component.css']
 })
 
 export class ListarTitulosComponent implements OnInit {

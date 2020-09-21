@@ -14,7 +14,6 @@ export class ConfigurarCodigoComponent implements OnInit {
   seleccionF = new FormControl('');
 
   selec1 = false;
-  selec2 = false;
   HabilitarDescrip: boolean = true;
   estilo: any;
 
@@ -45,25 +44,15 @@ export class ConfigurarCodigoComponent implements OnInit {
       let dataCodigo = {
         id: 1,
         valor: form.inicioForm,
-        cedula: form.seleccionForm
       }
-      if (this.HabilitarDescrip === false) {
-        if (form.inicioForm != '') {
-          dataCodigo.cedula = false;
-          this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
-            this.toastr.success('Configuración Registrada')
-          })
-          this.Limpiar();
-        }
-        else {
-          this.toastr.info('Por favor ingresar un valor para generación de código')
-        }
-      }
-      else {
+      if (form.inicioForm != '') {
         this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
           this.toastr.success('Configuración Registrada')
-        });
+        })
         this.Limpiar();
+      }
+      else {
+        this.toastr.info('Por favor ingresar un valor para generación de código')
       }
     });
   }
@@ -102,6 +91,7 @@ export class ConfigurarCodigoComponent implements OnInit {
 
   Limpiar() {
     this.configuracionForm.reset();
+    this.QuitarCampo();
   }
 
 }

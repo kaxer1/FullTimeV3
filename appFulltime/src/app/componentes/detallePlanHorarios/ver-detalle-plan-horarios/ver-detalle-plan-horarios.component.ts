@@ -43,8 +43,6 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
-    //console.log('idPlanificacion', aux[2]);
-    //console.log('idEmpleado', aux[3]);
     this.idPlanH = aux[2];
     this.idEmpleado = aux[3];
   }

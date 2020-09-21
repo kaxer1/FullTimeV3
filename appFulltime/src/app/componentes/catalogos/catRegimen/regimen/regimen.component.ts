@@ -108,7 +108,7 @@ export class RegimenComponent implements OnInit {
       diaAnioVacacionForm: 22,
       diaLibreAnioVacacionForm: 8,
       anioAntiguedadForm: 5,
-      diaIncrAntiguedadForm: 1,
+      diaIncrAntiguedadForm: 0,
     });
   }
 
@@ -117,7 +117,7 @@ export class RegimenComponent implements OnInit {
       diaAnioVacacionForm: 11,
       diaLibreAnioVacacionForm: 4,
       anioAntiguedadForm: 5,
-      diaIncrAntiguedadForm: 1,
+      diaIncrAntiguedadForm: 0,
     });
   }
 

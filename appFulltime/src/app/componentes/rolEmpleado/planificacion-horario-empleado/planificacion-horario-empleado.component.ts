@@ -132,17 +132,13 @@ export class PlanificacionHorarioEmpleadoComponent implements OnInit {
       });
   }
 
-  /* Ventana para editar datos */
+  /* Ventana para registrar horario */
   AbrirEditarPlanificacion(datoSeleccionado: any): void {
     console.log(datoSeleccionado);
     this.vistaRegistrarDatos.open(EditarPlanificacionComponent,
-      { width: '300px', data: datoSeleccionado }).afterClosed().subscribe(item => {
+      { width: '300px', data: { idEmpleado: this.idEmpleado, datosPlan: datoSeleccionado } }).afterClosed().subscribe(item => {
         this.obtenerPlanHorarios(parseInt(this.idEmpleado));
       });
-
   }
-
-
-
 
 }

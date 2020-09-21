@@ -64,6 +64,55 @@ class PlanHorarioControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
+    public async ObtenerPlanificacionEmpleadoFechas(req: Request, res: Response): Promise<any> {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const PLAN = await pool.query('SELECT * FROM datos_empleado_cargo AS dec INNER JOIN ' +
+            '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, ' +
+            'phd.id AS id_detalle_plan, phd.fecha AS fecha_dia, phd.tipo_dia ' +
+            'FROM plan_horarios AS ph, plan_hora_detalles AS phd ' +
+            'WHERE phd.id_plan_horario = ph.id) AS ph ON ' +
+            'dec.cargo_id = ph.id_cargo AND dec.empl_id = $1 ' +
+            'AND ph.fecha_dia BETWEEN $2 AND $3', [id_empleado, fechaInicio, fechaFinal]);
+        if (PLAN.rowCount > 0) {
+            return res.jsonp(PLAN.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    public async VerificarFechasPlan(req: Request, res: Response): Promise<any> {
+        const { fechaInicio, fechaFinal } = req.body;
+        const { empl_id } = req.params;
+        const PLAN = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+            '(SELECT * FROM plan_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+            'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+        if (PLAN.rowCount > 0) {
+            return res.jsonp(PLAN.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    public async VerificarFechasPlanEdicion(req: Request, res: Response): Promise<any> {
+        const id = req.params.id;
+        const { id_emple } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        const PLAN = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+            '(SELECT * FROM plan_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
+            'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+        if (PLAN.rowCount > 0) {
+            return res.jsonp(PLAN.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
 }
 
 export const PLAN_HORARIO_CONTROLADOR = new PlanHorarioControlador();
