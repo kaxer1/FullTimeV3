@@ -280,6 +280,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
+import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 
 @NgModule({
   declarations: [
@@ -484,6 +486,8 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
     PlanHoraExtraComponent,
     ListaEmplePlanHoraEComponent,
     ConfigurarAtrasosComponent,
+    TiempoAutorizadoComponent,
+    ConfirmarDesactivadosComponent,
   ],
 
   imports: [

@@ -151,19 +151,19 @@ function DiaEspaniol(dia) {
 function CalcularCamposFaltantes(obj, id_cargo, labora) {
     var x = new Date(obj.fecha);
     // console.log(obj.fecha, '===========' , x.getDay(), '=========', labora);
-    if (obj.E.hora_timbre === '' && labora === true) {
+    if (obj.E.hora_timbre === '' && labora === false) { //false => son dias normales
         obj.E.descripcion = 'FT';
     }
-    if (obj.S_A.hora_timbre === '' && labora === true) {
+    if (obj.S_A.hora_timbre === '' && labora === false) {
         obj.S_A.descripcion = 'FT';
     }
-    if (obj.E_A.hora_timbre === '' && labora === true) {
+    if (obj.E_A.hora_timbre === '' && labora === false) {
         obj.E_A.descripcion = 'FT';
     }
-    if (obj.S.hora_timbre === '' && labora === true) {
+    if (obj.S.hora_timbre === '' && labora === false) {
         obj.S.descripcion = 'FT';
     }
-    if (labora === false) {
+    if (labora === true) { //true => son dias libres
         obj.E.descripcion = 'L';
         obj.S_A.descripcion = 'L';
         obj.E_A.descripcion = 'L';

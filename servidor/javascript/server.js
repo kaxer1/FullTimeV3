@@ -59,6 +59,7 @@ const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRu
 const cargaMultipleRutas_1 = __importDefault(require("./rutas/cargaMultiple/cargaMultipleRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
+const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -150,6 +151,8 @@ class Servidor {
         this.app.use('/noti-autorizaciones', catNotiAutorizacionesRutas_1.default);
         this.app.use('/autorizaciones', autorizacionesRutas_1.default);
         this.app.use('/noti-real-time', notificacionesRutas_1.default);
+        // Timbres
+        this.app.use('/timbres', timbresRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
         // Documentos
@@ -195,6 +198,8 @@ SERVIDOR.start();
 const sendBirthday_1 = require("./libs/sendBirthday");
 const avisoVacaciones_1 = require("./libs/avisoVacaciones");
 const ContarHoras_1 = require("./libs/ContarHoras");
+const SinTimbres_1 = require("./libs/SinTimbres");
+const DesactivarEmpleado_1 = require("./libs/DesactivarEmpleado");
 // llama al meodo de cumpleaños
 sendBirthday_1.cumpleanios();
 // llama al metodo de avisos de vacaciones
@@ -204,3 +209,6 @@ avisoVacaciones_1.beforeTwoDays();
 avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
 // conteoPermisos();
+// NotificacionTimbreAutomatica();
+SinTimbres_1.NotificacionSinTimbres();
+DesactivarEmpleado_1.DesactivarFinContratoEmpleado();

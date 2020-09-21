@@ -144,7 +144,6 @@ class AutorizacionesControlador {
                 }
             });
         });
-
     }
 
     public async ActualizarEstadoVacacion(req: Request, res: Response): Promise<void> {

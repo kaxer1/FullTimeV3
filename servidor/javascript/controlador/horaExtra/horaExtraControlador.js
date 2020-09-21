@@ -13,7 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-const ValidacionHorario_1 = require("../../libs/ValidacionHorario");
+// import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
+const MetodosHorario_1 = require("../../libs/MetodosHorario");
 const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
@@ -30,7 +31,7 @@ class HorasExtrasPedidasControlador {
     ObtenerUnaHoraExtraPedida(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id_empl_cargo, h.id_usua_solicita, h.fec_inicio, h.fec_final, h.fec_solicita, h.descripcion, h.estado, h.tipo_funcion, h.num_hora, h.id, c.cargo, c.id_empl_contrato AS id_contrato, c.id_departamento, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empl_cargos AS c, empleados AS e WHERE h.id = $1 AND h.id_empl_cargo = c.id AND e.id = h.id_usua_solicita', [id]);
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id_empl_cargo, h.id_usua_solicita, h.fec_inicio, h.fec_final, h.fec_solicita, h.descripcion, h.estado, h.tipo_funcion, h.num_hora, h.id, h.tiempo_autorizado, c.cargo, c.id_empl_contrato AS id_contrato, c.id_departamento, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empl_cargos AS c, empleados AS e WHERE h.id = $1 AND h.id_empl_cargo = c.id AND e.id = h.id_usua_solicita', [id]);
             if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
                 return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
             }
@@ -276,11 +277,25 @@ class HorasExtrasPedidasControlador {
     }
     ObtenerHorarioEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id_empleado = req.userIdEmpleado;
-            const id_empl_cargo = req.userIdCargo;
-            // const id_empleado = req.params.id_empleado;
-            let respuesta = yield ValidacionHorario_1.ValidarHorarioEmpleado(id_empleado, id_empl_cargo);
+            // const id_empleado = req.userIdEmpleado;
+            // const id_empl_cargo = req.userIdCargo;
+            const id_empl_cargo = parseInt(req.params.id_cargo);
+            console.log('IDS: ', id_empl_cargo);
+            // let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
+            let respuesta = yield MetodosHorario_1.VerificarHorario(id_empl_cargo);
             console.log(respuesta);
+            res.jsonp(respuesta);
+        });
+    }
+    TiempoAutorizado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_hora = parseInt(req.params.id_hora);
+            const { hora } = req.body;
+            console.log(id_hora);
+            console.log(hora);
+            let respuesta = yield database_1.default.query('UPDATE hora_extr_pedidos SET tiempo_autorizado = $2 WHERE id = $1', [id_hora, hora]).then(result => {
+                return { message: 'Tiempo de hora autorizada confirmada' };
+            });
             res.jsonp(respuesta);
         });
     }

@@ -20,7 +20,8 @@ class HorasExtrasPedidasRutas {
         this.router.put('/:id/estado', TokenValidation, HorasExtrasPedidasControlador.ActualizarEstado);
         this.router.put('/:id/hora-extra-solicitada', TokenValidation, HorasExtrasPedidasControlador.EditarHoraExtra);
         this.router.get('/datosAutorizacion/:id_hora/:id_empleado', TokenValidation, HorasExtrasPedidasControlador.ObtenerAutorizacionHoraExtra);
-        this.router.get('/horario-empleado/:id_empleado', TokenValidation, HorasExtrasPedidasControlador.ObtenerHorarioEmpleado);
+        this.router.get('/horario-empleado/:id_cargo', TokenValidation, HorasExtrasPedidasControlador.ObtenerHorarioEmpleado);
+        this.router.put('/tiempo-autorizado/:id_hora', TokenValidation, HorasExtrasPedidasControlador.TiempoAutorizado);
         this.router.delete('/eliminar/:id_hora_extra', TokenValidation, HorasExtrasPedidasControlador.EliminarHoraExtra);
     }
 }
