@@ -1,22 +1,24 @@
 <div class="d-flex bd-highlight barraTitulo">
     <mat-icon class="flex-shrink-1 bd-highlight" id="movilidad">open_with</mat-icon>
-    <h4 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Tiempo Autorizado</h4>
+    <h4 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Horas Extras</h4>
 </div>
 <form [formGroup]="TiempoHoraExtraForm">
     <mat-card-content>
         <div class="container" style="padding-top: 15px;">
-            <div class="row" style="text-align: center;">
-                <p style="font-size: 15px;"> <b>{{data.hora}}</b> </p><br>
-                <button type="submit" class="btn btn-block" (click)="TiempoAceptado()"> Aceptar tiempo Calculado </button>
+            <div style="text-align: center;">
+                <p style="font-size: 20; text-align: center; font-weight: bold;">HORAS REALIZADAS</p>
+                <p style="font-size: 15px;"><b>{{data.hora}}{{data.horas_calculadas.hora}}</b></p>
+                <button type="submit" class="btn btn-sm" (click)="TiempoAceptado()">Autorizar Horas</button>
             </div>
             <br>
-            <div class="row">
+            <div>
+                <p style="font-size: 20; text-align: center; font-weight: bold;">HORAS APROBADAS</p>
                 <mat-form-field>
-                    <mat-label>Tiempo</mat-label>
+                    <mat-label>Número Horas</mat-label>
                     <input matInput [formControl]="timer" type="time" (keypress)="IngresarSoloNumeros($event)"
                         (click)="LimpiarCampoHoras()">
                     <mat-icon id="icon_help" matSuffix matTooltipPosition="right"
-                        matTooltip="Tiempo que autoriza el empleador">
+                        matTooltip="Horas que autoriza el empleador">
                         help_outline</mat-icon>
                 </mat-form-field>
             </div>

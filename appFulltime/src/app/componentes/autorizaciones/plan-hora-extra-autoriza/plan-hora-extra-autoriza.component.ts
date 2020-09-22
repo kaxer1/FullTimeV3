@@ -1,13 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
-import { NotiAutorizacionesService } from 'src/app/servicios/catalogos/catNotiAutorizaciones/noti-autorizaciones.service';
-import { NotificacionesService } from 'src/app/servicios/catalogos/catNotificaciones/notificaciones.service';
+import { ToastrService } from 'ngx-toastr';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
-import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 
 interface Orden {
   valor: number
@@ -18,19 +14,15 @@ interface Estado {
   nombre: string
 }
 
-interface Documento {
-  id: number,
-  nombre: string
-}
-
 @Component({
-  selector: 'app-autorizaciones',
-  templateUrl: './autorizaciones.component.html',
-  styleUrls: ['./autorizaciones.component.css']
+  selector: 'app-plan-hora-extra-autoriza',
+  templateUrl: './plan-hora-extra-autoriza.component.html',
+  styleUrls: ['./plan-hora-extra-autoriza.component.css']
 })
-export class AutorizacionesComponent implements OnInit {
+export class PlanHoraExtraAutorizaComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
+  TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
@@ -42,8 +34,6 @@ export class AutorizacionesComponent implements OnInit {
     idDepartamentoF: this.idDepartamento
   });
 
-  notificacion: any = [];
-  notiAutrizaciones: any = [];
   departamentos: any = [];
 
   ordenes: Orden[] = [
@@ -63,18 +53,16 @@ export class AutorizacionesComponent implements OnInit {
 
   constructor(
     public restAutorizaciones: AutorizacionService,
-    // public restNotiAutorizaciones: NotiAutorizacionesService,
-    // public restNotificaciones: NotificacionesService,
     public restDepartamento: DepartamentosService,
-    public restCargo: EmplCargosService,
     private toastr: ToastrService,
-    public dialogRef: MatDialogRef<AutorizacionesComponent>,
+    public dialogRef: MatDialogRef<PlanHoraExtraAutorizaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     console.log(this.data);
     this.obtenerDepartamento();
+
   }
 
   insertarAutorizacion(form) {
@@ -82,25 +70,37 @@ export class AutorizacionesComponent implements OnInit {
       orden: form.ordenF,
       estado: form.estadoF,
       id_departamento: form.idDepartamentoF,
-      id_permiso: this.data.id,
+      id_permiso: null,
       id_vacacion: null,
       id_hora_extra: null,
-      id_plan_hora_extra: null,
+      id_plan_hora_extra: this.data.datosHora.id_plan_extra,
       id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
-    this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
-        this.limpiarCampos();
+
+    if (this.data.carga === 'individual') {
+      this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
+          this.limpiarCampos();
+        this.dialogRef.close();
+      }, error => {
+        console.log(error);
+      })
+    }
+    else {
+      for (var i = 0; i <= this.data.datosHora.length - 1; i++) {
+        newAutorizaciones.id_plan_hora_extra = this.data.datosHora[i].id_plan_extra;
+        this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+        }, error => { })
+      }
+      this.limpiarCampos();
       this.dialogRef.close();
-      window.location.reload();
-    }, error => {
-      console.log(error);
-    })
+    }
   }
 
   obtenerDepartamento() {
-    this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_contrato).subscribe(res => {
+    this.restDepartamento.ConsultarDepartamentoPorContrato(6).subscribe(res => {
       console.log(res);
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
@@ -113,11 +113,6 @@ export class AutorizacionesComponent implements OnInit {
 
   limpiarCampos() {
     this.nuevaAutorizacionesForm.reset();
-  }
-
-  CerrarVentanaRegistroNoti() {
-    this.limpiarCampos();
-    this.dialogRef.close();
   }
 
 }

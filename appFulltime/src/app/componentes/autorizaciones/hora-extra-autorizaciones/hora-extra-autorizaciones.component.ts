@@ -14,12 +14,12 @@ interface Estado {
   nombre: string
 }
 
-
 @Component({
   selector: 'app-hora-extra-autorizaciones',
   templateUrl: './hora-extra-autorizaciones.component.html',
   styleUrls: ['./hora-extra-autorizaciones.component.css']
 })
+
 export class HoraExtraAutorizacionesComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
@@ -74,6 +74,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       id_permiso: null,
       id_vacacion: null,
       id_hora_extra: this.data.id,
+      id_plan_hora_extra: null,
       id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
