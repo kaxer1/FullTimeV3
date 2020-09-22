@@ -6,6 +6,13 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
+                        <th scope="col">
+                            <div class="col-md" style="margin-left: 5px; text-align: center;">
+                                <input class="form-check-input" type="checkbox" id="selecTodo"
+                                    (change)="$event.target.checked ? AgregarTodos() : QuitarTodos()">
+                                <label class="form-check-label" for="inlineCheckbox1">Todos</label>
+                            </div>
+                        </th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Fecha Desde</th>
                         <th scope="col">Fecha Hasta</th>
@@ -16,7 +23,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let h of horas_extras_plan | paginate:tamanio_pagina:numero_pagina">
+                    <tr *ngFor="let h of horas_extras_plan | paginate:tamanio_pagina:numero_pagina; index as i">
+                        <td>
+                            <div class="col-md" style="margin-left: 5px; text-align: center;">
+                                <input class="form-check-input" type="checkbox" name="empleadosSeleccionados"
+                                    id="empleadosSeleccionados{{i}}"
+                                    (change)="$event.target.checked ? AgregarEmpleado(h) : QuitarEmpleado(h)">
+                                <label class="form-check-label" for="inlineCheckbox1"></label>
+                            </div>
+                        </td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
                         <td>{{h.fecha_hasta.split('T')[0]}}</td>
@@ -31,8 +46,8 @@
                             </a>-->
                             <i id="iconos" *ngIf="h.tiempo_autorizado === null" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
-                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra)" matTooltipPosition="right"
-                                matTooltip="Tiempo que se le autoriza de la hora extra.">
+                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h)"
+                                matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
                                 <p>Autorizar Horas</p>
                             </i>
                         </td>
@@ -44,4 +59,10 @@
             [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
+    <br>
+    <div class="d-flex justify-content-around" *ngIf="!Habilitar">
+        <button mat-button type="submit" class="btn btn-sm" (click)="AutorizarHoras()">Autorizar Horas Extras
+        </button>
+    </div>
+
 </div>
