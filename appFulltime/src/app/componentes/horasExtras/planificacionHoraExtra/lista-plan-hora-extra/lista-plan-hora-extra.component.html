@@ -1,0 +1,47 @@
+<br>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resultadosEmpre">Empleados que han realizado Planificación de Horas Extras</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Empleado</th>
+                        <th scope="col">Fecha Desde</th>
+                        <th scope="col">Fecha Hasta</th>
+                        <th scope="col">Horas Planificadas</th>
+                        <th scope="col">Fecha Timbre</th>
+                        <th scope="col">Horas Realizadas</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let h of horas_extras_plan | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{h.nombre}} {{h.apellido}}</td>
+                        <td>{{h.fecha_desde.split('T')[0]}}</td>
+                        <td>{{h.fecha_hasta.split('T')[0]}}</td>
+                        <td>{{h.hora_total_plan}}</td>
+                        <td>{{h.fecha_timbre.split('T')[0]}}</td>
+                        <td>{{h.hora_total_timbre}}</td>
+                        <td class="d-flex justify-content-center">
+                            <!--   <a class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix
+                                matTooltipPosition="right" matTooltip="Cambiar el estado del documento de autorazación"
+                                [routerLink]="['/ver-hora-extra', h.id]">
+                                <p>Documento</p>
+                            </a>-->
+                            <i id="iconos" *ngIf="h.tiempo_autorizado === null" class="fas fa-stopwatch"
+                                style="color:rgb(8, 96, 168); margin-left: 15px;"
+                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra)" matTooltipPosition="right"
+                                matTooltip="Tiempo que se le autoriza de la hora extra.">
+                                <p>Autorizar Horas</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="horas_extras_plan.length" [pageSize]="tamanio_pagina"
+            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>
