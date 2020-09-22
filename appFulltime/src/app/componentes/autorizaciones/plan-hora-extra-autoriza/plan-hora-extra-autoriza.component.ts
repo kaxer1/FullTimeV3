@@ -19,6 +19,7 @@ interface Estado {
   templateUrl: './plan-hora-extra-autoriza.component.html',
   styleUrls: ['./plan-hora-extra-autoriza.component.css']
 })
+
 export class PlanHoraExtraAutorizaComponent implements OnInit {
 
   idDocumento = new FormControl('', Validators.required);
@@ -62,7 +63,6 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.obtenerDepartamento();
-
   }
 
   insertarAutorizacion(form) {

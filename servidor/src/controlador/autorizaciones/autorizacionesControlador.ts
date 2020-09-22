@@ -140,7 +140,6 @@ class AutorizacionesControlador {
 
                 } else if (ele.permiso_mail === false && ele.permiso_noti === false) {
                     res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-
                 }
             });
         });
