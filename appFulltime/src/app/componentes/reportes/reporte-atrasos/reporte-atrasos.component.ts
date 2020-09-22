@@ -402,22 +402,37 @@ export class ReporteAtrasosComponent implements OnInit {
           var time = f.getHours() + ':' + f.getMinutes();
         }
 
-        return {
-          margin: 10,
-          columns: [
-            {
-              text: [{
-                text: 'Glosario de Terminos: MM = Minutos de Tolerancia, HH = Horas Laborables' + '\n Fecha: ' + fecha + ' Hora: ' + time,
-                alignment: 'left', color: 'blue', opacity: 0.5
-              }]
-            },
-            {
-              text: [{
-                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
-              }],
+        return [
+        /*  {
+            table: {
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+              body: [
+                [
+                  { text: 'MM: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Minutos de Tolerancia.', border: [false, false, false, false], style: ['quote', 'small'], fontSize: 9, },],
+                [
+                  { text: 'HH: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Horas Laborables.', border: [false, false, false, false], style: ['quote', 'small'], fontSize: 9, },]
+              ]
             }
-          ], fontSize: 9, color: '#A4B8FF',
-        }
+          },*/
+          {
+            margin: [10, -2, 10, 0],
+            columns: [
+              {
+                text: [{
+                  text: 'Glosario de Terminos: MM = Minutos de Tolerancia, HH = Horas Laborables' + '\n Fecha: ' + fecha + ' Hora: ' + time,
+                  alignment: 'left', color: 'blue', opacity: 0.5
+                }]
+              },
+              {
+                text: [{
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                }],
+              }
+            ], fontSize: 9, color: '#A4B8FF',
+          }
+        ]
       },
 
       // Títulos del archivo PDF y contenido general 
