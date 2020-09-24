@@ -13,7 +13,7 @@ import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
 
@@ -61,7 +61,7 @@ export class ListaEmpleadosComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-  
+
   // items de paginacion de la tabla
   tamanio_paginaDes: number = 5;
   numero_paginaDes: number = 1;
@@ -87,7 +87,32 @@ export class ListaEmpleadosComponent implements OnInit {
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
+
   }
+
+  colorPicker = document.querySelector('#input-color');
+
+
+
+  color: any;
+  fileChange1() {
+    /*  function test(t) {
+        console.log(t.value);
+      }
+    this.color = element.value;
+    console.log('color', this.color)
+    this.colorPicker.addEventListener('change', function () {
+      console.log(this.value)
+    });
+    var color1 = document.getElementById('#input-color').onchange = function () {
+      // do whatever you want with value
+      // alert(this.value);
+      //console.log(color1.value);
+    }*/
+    console.log(this.color);
+
+  }
+
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -99,8 +124,8 @@ export class ListaEmpleadosComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-    this.selectionUno.clear() :
-    this.empleado.forEach(row => this.selectionUno.select(row));
+      this.selectionUno.clear() :
+      this.empleado.forEach(row => this.selectionUno.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -112,10 +137,10 @@ export class ListaEmpleadosComponent implements OnInit {
   }
 
   btnCheckHabilitar: boolean = false;
-  HabilitarSeleccion(){
+  HabilitarSeleccion() {
     if (this.btnCheckHabilitar === false) {
       this.btnCheckHabilitar = true;
-    } else if(this.btnCheckHabilitar === true) {
+    } else if (this.btnCheckHabilitar === true) {
       this.btnCheckHabilitar = false;
     }
   }
@@ -130,7 +155,7 @@ export class ListaEmpleadosComponent implements OnInit {
       });
     } else if (this.Hab_Deshabilitados == true) {
       this.Hab_Deshabilitados = false;
-    }  
+    }
   }
 
   Hab_Deshabilitados: boolean = false;
@@ -138,7 +163,7 @@ export class ListaEmpleadosComponent implements OnInit {
   HabilitarSeleccionDesactivados() {
     if (this.btnCheckDeshabilitado === false) {
       this.btnCheckDeshabilitado = true;
-    } else if(this.btnCheckDeshabilitado === true) {
+    } else if (this.btnCheckDeshabilitado === true) {
       this.btnCheckDeshabilitado = false;
     }
   }
@@ -152,8 +177,8 @@ export class ListaEmpleadosComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggleDos() {
     this.isAllSelectedDos() ?
-    this.selectionDos.clear() :
-    this.desactivados.forEach(row => this.selectionDos.select(row));
+      this.selectionDos.clear() :
+      this.desactivados.forEach(row => this.selectionDos.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -164,8 +189,8 @@ export class ListaEmpleadosComponent implements OnInit {
     return `${this.selectionDos.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  Deshabilitar(opcion: number){
-    let EmpleadosSeleccionados 
+  Deshabilitar(opcion: number) {
+    let EmpleadosSeleccionados
     if (opcion === 1) {
       EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
         return {
@@ -182,7 +207,7 @@ export class ListaEmpleadosComponent implements OnInit {
       })
     }
     console.log(EmpleadosSeleccionados);
-    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: {opcion: opcion, lista: EmpleadosSeleccionados} }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: { opcion: opcion, lista: EmpleadosSeleccionados } }).afterClosed().subscribe(item => {
       console.log(item);
       if (item === true) {
         this.getEmpleados();
@@ -217,7 +242,7 @@ export class ListaEmpleadosComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
     console.log('empl ', this.empleado);
   }
-  
+
   ManejarPaginaDes(e: PageEvent) {
     this.tamanio_paginaDes = e.pageSize;
     this.numero_paginaDes = e.pageIndex + 1;
@@ -290,21 +315,26 @@ export class ListaEmpleadosComponent implements OnInit {
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
-    this.archivoSubido = element.target.files;
-    this.nameFile = this.archivoSubido[0].name;
-    let arrayItems = this.nameFile.split(".");
-    let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 9);
-    console.log(itemName.toLowerCase());
-    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'empleados') {
-        this.plantilla();
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.archivoSubido = element.target.files;
+      this.nameFile = this.archivoSubido[0].name;
+      let arrayItems = this.nameFile.split(".");
+      let itemExtencion = arrayItems[arrayItems.length - 1];
+      let itemName = arrayItems[0].slice(0, 9);
+      console.log(itemName.toLowerCase());
+      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+        if (itemName.toLowerCase() == 'empleados') {
+          this.plantilla();
+        } else {
+          this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+        }
       } else {
-        this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-    }
+    }, error => {
+      this.toastr.info('Primero configurar el código de empleado.');
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   plantilla() {

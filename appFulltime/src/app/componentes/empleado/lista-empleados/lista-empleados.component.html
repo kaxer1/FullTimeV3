@@ -13,11 +13,10 @@
                         <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
                                 <mat-label>Ingresar Código</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
-                                    [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
+                                    (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el código">
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <br>
@@ -36,26 +35,23 @@
                             <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Nombres</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
-                                    [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el nombre">
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Apellidos</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
-                                    [formControl]="apellido" type="text"
-                                    (keypress)="IngresarSoloLetras($event)">
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
+                                    type="text" (keypress)="IngresarSoloLetras($event)">
                                 <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el apellido">
+                                    matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
                         </div>
@@ -86,17 +82,21 @@
                     <span class="material-icons">cloud_download</span> Descargar Plantilla Empleados
                 </a>
             </mat-card>
+            <input type="color" [(ngModel)]="color">
+            <input type="button" (click)="fileChange1()">
         </div>
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resulEmpleados">
-            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix matTooltipPosition="right" 
-                matTooltip="Activa o desactiva selección múltiple para desactivar empleados masivamente" id="SelectCheck">library_add_check</mat-icon>
-            <button  *ngIf="btnCheckHabilitar" class="btn btn-primary" style="float: left; margin-left: 10px;" 
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
+                matTooltipPosition="right"
+                matTooltip="Activa o desactiva selección múltiple para desactivar empleados masivamente"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckHabilitar" class="btn btn-primary" style="float: left; margin-left: 10px;"
                 (click)="Deshabilitar(1)">Confirmar</button>
-            <span class="w-100 bd-highlight"> 
+            <span class="w-100 bd-highlight">
                 Resultado de búsqueda</span>
         </div>
         <div class="table-responsive">
@@ -105,9 +105,9 @@
                     <tr style="text-align: center;">
                         <th>
                             <mat-checkbox *ngIf="btnCheckHabilitar" (change)="$event ? masterToggle() : null"
-                                            [checked]="selectionUno.hasValue() && isAllSelected()"
-                                            [indeterminate]="selectionUno.hasValue() && !isAllSelected()"
-                                            [aria-label]="checkboxLabel()">
+                                [checked]="selectionUno.hasValue() && isAllSelected()"
+                                [indeterminate]="selectionUno.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
                             </mat-checkbox>
                         </th>
                         <th scope="col">Código</th>
@@ -120,12 +120,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let e of empleado | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
                         <td>
                             <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
-                                          (change)="$event ? selectionUno.toggle(e) : null"
-                                          [checked]="selectionUno.isSelected(e)"
-                                          [aria-label]="checkboxLabel(e)">
+                                (change)="$event ? selectionUno.toggle(e) : null" [checked]="selectionUno.isSelected(e)"
+                                [aria-label]="checkboxLabel(e)">
                             </mat-checkbox>
                         </td>
                         <td scope="row">{{e.codigo}}</td>
@@ -169,15 +169,18 @@
     </div>
 </div>
 
-<button (click)="ListaEmpleadosDeshabilitados()" class="btn btn-primary" style="margin-bottom: 30px;">Lista de empleados desactivados</button>
+<button (click)="ListaEmpleadosDeshabilitados()" class="btn btn-primary" style="margin-bottom: 30px;">Lista de empleados
+    desactivados</button>
 <div *ngIf="Hab_Deshabilitados" class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resulEmpleados">
-            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionDesactivados()" matSuffix matTooltipPosition="right" 
-                matTooltip="Activa o desactiva selección múltiple para habilitar empleados masivamente" id="SelectCheck">library_add_check</mat-icon>
-            <button  *ngIf="btnCheckDeshabilitado" class="btn btn-primary" style="float: left; margin-left: 10px;" 
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionDesactivados()" matSuffix
+                matTooltipPosition="right"
+                matTooltip="Activa o desactiva selección múltiple para habilitar empleados masivamente"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckDeshabilitado" class="btn btn-primary" style="float: left; margin-left: 10px;"
                 (click)="Deshabilitar(2)">Confirmar</button>
-            <span class="w-100 bd-highlight"> 
+            <span class="w-100 bd-highlight">
                 Empleados Desactivados</span>
         </div>
         <div class="table-responsive">
@@ -186,9 +189,9 @@
                     <tr style="text-align: center;">
                         <th>
                             <mat-checkbox *ngIf="btnCheckDeshabilitado" (change)="$event ? masterToggleDos() : null"
-                                            [checked]="selectionDos.hasValue() && isAllSelectedDos()"
-                                            [indeterminate]="selectionDos.hasValue() && !isAllSelectedDos()"
-                                            [aria-label]="checkboxLabelDos()">
+                                [checked]="selectionDos.hasValue() && isAllSelectedDos()"
+                                [indeterminate]="selectionDos.hasValue() && !isAllSelectedDos()"
+                                [aria-label]="checkboxLabelDos()">
                             </mat-checkbox>
                         </th>
                         <th scope="col">Código</th>
@@ -202,9 +205,8 @@
                     <tr *ngFor="let e of desactivados  | paginate:tamanio_paginaDes:numero_paginaDes">
                         <td>
                             <mat-checkbox *ngIf="btnCheckDeshabilitado" (click)="$event.stopPropagation()"
-                                          (change)="$event ? selectionDos.toggle(e) : null"
-                                          [checked]="selectionDos.isSelected(e)"
-                                          [aria-label]="checkboxLabelDos(e)">
+                                (change)="$event ? selectionDos.toggle(e) : null" [checked]="selectionDos.isSelected(e)"
+                                [aria-label]="checkboxLabelDos(e)">
                             </mat-checkbox>
                         </td>
                         <td scope="row">{{e.codigo}}</td>
@@ -216,8 +218,8 @@
                 </tbody>
             </table>
         </div>
-        <mat-paginator [length]="desactivados.length" [pageSize]="tamanio_paginaDes" [pageSizeOptions]="pageSizeOptionsDes"
-            id="estilo" (page)="ManejarPaginaDes($event)" showFirstLastButtons>
+        <mat-paginator [length]="desactivados.length" [pageSize]="tamanio_paginaDes"
+            [pageSizeOptions]="pageSizeOptionsDes" id="estilo" (page)="ManejarPaginaDes($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>
