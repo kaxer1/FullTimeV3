@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const settingsMail_1 = require("../../libs/settingsMail");
 const nodemailer = require("nodemailer");
 class AutorizacionesControlador {
     ListarAutorizaciones(req, res) {
@@ -72,12 +73,12 @@ class AutorizacionesControlador {
     ActualizarEstadoPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { estado, id_permiso, id_departamento, id_empleado } = req.body;
-            yield database_1.default.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
+            const { id_documento, estado, id_permiso, id_departamento, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
             const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
             const InfoPermisoReenviarEstadoEmpleado = yield database_1.default.query('SELECT p.id, p.descripcion, p.estado, e.cedula, e.nombre, e.apellido, e.correo, co.permiso_mail, co.permiso_noti FROM permisos AS p, empl_contratos AS c, empleados AS e, config_noti AS co WHERE p.id = $1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id AND co.id_empleado = e.id AND e.id = $2', [id_permiso, id_empleado]);
-            console.log(JefeDepartamento.rows);
-            console.log(InfoPermisoReenviarEstadoEmpleado.rows);
+            // console.log(JefeDepartamento.rows)
+            // console.log(InfoPermisoReenviarEstadoEmpleado.rows)
             const estadoAutorizacion = [
                 { id: 1, nombre: 'Pendiente' },
                 { id: 2, nombre: 'Pre-autorizado' },
@@ -90,17 +91,8 @@ class AutorizacionesControlador {
                     nombreEstado = obj.nombre;
                 }
             });
-            const email = process.env.EMAIL;
-            const pass = process.env.PASSWORD;
-            let smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: email,
-                    pass: pass
-                }
-            });
             JefeDepartamento.rows.forEach(obj => {
-                var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
+                var url = `${process.env.URL_DOMAIN}/solicitarPermiso`;
                 InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
                     let notifi_realtime = {
                         id_send_empl: obj.empleado,
@@ -128,25 +120,11 @@ class AutorizacionesControlador {
                     };
                     console.log(data);
                     if (ele.permiso_mail === true && ele.permiso_noti === true) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                     }
                     else if (ele.permiso_mail === true && ele.permiso_noti === false) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                     else if (ele.permiso_mail === false && ele.permiso_noti === true) {
@@ -162,8 +140,8 @@ class AutorizacionesControlador {
     ActualizarEstadoVacacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { estado, id_vacaciones, id_departamento, id_empleado } = req.body;
-            yield database_1.default.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
+            const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
             const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
             const InfoVacacionesReenviarEstadoEmpleado = yield database_1.default.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacaciones, id_empleado]);
             // console.log(JefeDepartamento.rows)
@@ -178,15 +156,6 @@ class AutorizacionesControlador {
             estadoAutorizacion.forEach(obj => {
                 if (obj.id === estado) {
                     nombreEstado = obj.nombre;
-                }
-            });
-            const email = process.env.EMAIL;
-            const pass = process.env.PASSWORD;
-            let smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: email,
-                    pass: pass
                 }
             });
             JefeDepartamento.rows.forEach(obj => {
@@ -219,25 +188,11 @@ class AutorizacionesControlador {
                     <a href="${url}">Ir a verificar estado permisos</a>`
                     };
                     if (ele.vaca_mail === true && ele.vaca_noti === true) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                     }
                     else if (ele.vaca_mail === true && ele.vaca_noti === false) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                     else if (ele.vaca_mail === false && ele.vaca_noti === true) {
@@ -253,8 +208,8 @@ class AutorizacionesControlador {
     ActualizarEstadoHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { estado, id_hora_extra, id_departamento } = req.body;
-            yield database_1.default.query('UPDATE autorizaciones SET estado = $1 WHERE id = $2', [estado, id]);
+            const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
             const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
             const InfoHoraExtraReenviarEstadoEmpleado = yield database_1.default.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo, c.hora_extra_mail, c.hora_extra_noti FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h, config_noti AS c WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita AND e.id = c.id_empleado ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
             const estadoAutorizacion = [
@@ -267,15 +222,6 @@ class AutorizacionesControlador {
             estadoAutorizacion.forEach(obj => {
                 if (obj.id === estado) {
                     nombreEstado = obj.nombre;
-                }
-            });
-            const email = process.env.EMAIL;
-            const pass = process.env.PASSWORD;
-            let smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: email,
-                    pass: pass
                 }
             });
             JefeDepartamento.rows.forEach(obj => {
@@ -305,25 +251,11 @@ class AutorizacionesControlador {
                     <a href="${url}">Ir a verificar estado hora extra</a>`
                     };
                     if (ele.hora_extra_mail === true && ele.hora_extra_noti === true) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                     }
                     else if (ele.hora_extra_mail === true && ele.hora_extra_noti === false) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                     else if (ele.hora_extra_mail === false && ele.hora_extra_noti === true) {

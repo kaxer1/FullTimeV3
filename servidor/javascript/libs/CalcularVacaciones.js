@@ -124,7 +124,7 @@ function ObtenerPeriodosEmpleado(id_empl, diasObliga, fec_final_Rango, hora_trab
             // return CalcularDiasAcumulados(diasObliga.dia_obli, obj.fec_inicio, obj.fec_final)
             return DiasHorMinToDecimal(obj.dia_vacacion, obj.horas_vacaciones, obj.min_vacaciones, hora_trabaja);
         });
-        // console.log(acumulado);
+        console.log(acumulado);
         let valorAcumulado = 0;
         acumulado.forEach(obj => {
             valorAcumulado = obj + valorAcumulado;

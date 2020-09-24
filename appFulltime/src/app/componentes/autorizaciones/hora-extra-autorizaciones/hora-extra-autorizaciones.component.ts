@@ -22,14 +22,14 @@ interface Estado {
 })
 export class HoraExtraAutorizacionesComponent implements OnInit {
 
-  idDocumento = new FormControl('', Validators.required);
+  // idDocumento = new FormControl('', Validators.required);
   TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
   idDepartamento = new FormControl('', Validators.required);
 
   public nuevaAutorizacionesForm = new FormGroup({
-    idDocumentoF: this.idDocumento,
+    // idDocumentoF: this.idDocumento,
     ordenF: this.orden,
     estadoF: this.estado,
     idDepartamentoF: this.idDepartamento
@@ -63,7 +63,6 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data);
     this.obtenerDepartamento();
-    
   }
 
   insertarAutorizacion(form) {
@@ -74,7 +73,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       id_permiso: null,
       id_vacacion: null,
       id_hora_extra: this.data.id,
-      id_documento: form.idDocumentoF
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ','
     }
     console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {

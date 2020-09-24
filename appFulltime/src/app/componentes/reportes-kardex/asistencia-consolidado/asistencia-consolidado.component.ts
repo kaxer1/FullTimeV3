@@ -236,23 +236,50 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
-        return {
-          margin: 10,
-          columns: [
-            'Fecha: ' + fecha + ' Hora: ' + timer,
-            {
-              text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
-                }
-              ],
+        return [
+          {
+            table: {
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+              body: [
+                [
+                  { text: 'TRAB: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Trabaja', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'SAL: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Salida.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'ALMUE o A: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Fecha de termino de contrato.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'FT: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Falta Timbre.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'SUPL: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Suplementaria.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'EX. L-V: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Extra de lunes a viernes.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'EX. S-D: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Extra sabado a domingo.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'L: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Libre.', border: [false, false, false, false], style: ['quote', 'small'] }
+                ]
+              ]
             }
-          ],
-          fontSize: 10,
-          color: '#A4B8FF',
-        }
+          },          
+          {
+            margin: [10, -2, 10, 0],
+            columns: [
+              'Fecha: ' + fecha + ' Hora: ' + timer,
+              {
+                text: [
+                  {
+                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                    alignment: 'right', color: 'blue',
+                    opacity: 0.5
+                  }
+                ],
+              }
+            ],
+            fontSize: 10,
+            color: '#A4B8FF',
+          }
+        ]
       },
       content: [
         {
@@ -313,6 +340,14 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           alignment: 'center',
           margin: [0, 8, 0, 8],
           fillColor: '#6495ED',
+        },
+        quote: {
+          margin: [1, -2, 0, -2],
+          italics: true
+        },
+        small: {
+          fontSize: 7,
+          color: '#A4B8FF',
         }
       }
     };
@@ -732,7 +767,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           italics: true
         },
         small: {
-          fontSize: 7
+          fontSize: 7,
+          color: '#A4B8FF',
         }
       }
     };

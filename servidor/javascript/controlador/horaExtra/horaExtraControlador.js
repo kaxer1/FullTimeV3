@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-// import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
 const MetodosHorario_1 = require("../../libs/MetodosHorario");
 const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
@@ -277,11 +276,8 @@ class HorasExtrasPedidasControlador {
     }
     ObtenerHorarioEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const id_empleado = req.userIdEmpleado;
-            // const id_empl_cargo = req.userIdCargo;
             const id_empl_cargo = parseInt(req.params.id_cargo);
             console.log('IDS: ', id_empl_cargo);
-            // let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
             let respuesta = yield MetodosHorario_1.VerificarHorario(id_empl_cargo);
             console.log(respuesta);
             res.jsonp(respuesta);

@@ -46,5 +46,5 @@ export const DesactivarFinContratoEmpleado = function () {
 
         }
         
-    }, 60000)
+    }, 3600000)
 }

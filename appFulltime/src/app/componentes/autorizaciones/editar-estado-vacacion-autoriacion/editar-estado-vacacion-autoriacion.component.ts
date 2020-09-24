@@ -20,7 +20,7 @@ interface Estado {
 export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente'},
+    // { id: 1, nombre: 'Pendiente'},
     { id: 2, nombre: 'Pre-autorizado'},
     { id: 3, nombre: 'Autorizado'},
     { id: 4, nombre: 'Negado'},
@@ -47,9 +47,13 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
     console.log(this.data);
     console.log(this.data.datosSeleccionados);
     this.tiempo();
-    this.estadoAutorizacionesForm.patchValue({
-      estadoF: this.data.datosSeleccionados.estado
-    });
+    if (this.data.datosSeleccionados.estado === 1) {
+      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
+    } else {
+      this.estadoAutorizacionesForm.patchValue({
+        estadoF: this.data.datosSeleccionados.estado
+      });
+    }
   }
 
   tiempo() {
@@ -69,6 +73,7 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
   idNoti: any = [];
   ActualizarEstadoAutorizacion(form){
     let newAutorizaciones = {
+      id_documento: this.data.datosSeleccionados.id_documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       estado: form.estadoF,
       id_vacaciones: this.data.datosSeleccionados.id_vacacion, 
       id_departamento: this.data.datosSeleccionados.id_departamento,
