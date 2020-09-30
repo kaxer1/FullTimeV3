@@ -97,7 +97,8 @@ export class ReporteTimbresComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-    this.ObtenerLogo();
+       this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -114,6 +115,16 @@ export class ReporteTimbresComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -370,7 +381,7 @@ export class ReporteTimbresComponent implements OnInit {
         this.presentarTimbres(),
       ],
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableD: { fontSize: 9, alignment: 'center' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },

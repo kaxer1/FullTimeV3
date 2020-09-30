@@ -23,4 +23,8 @@ export class PlanHoraExtraService {
   ConsultarPlanHoraExtra() {
     return this.http.get(`${this.API_URL}/planificacionHoraExtra`);
   }
+
+  ConsultarPlanHoraExtraObservacion() {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/justificar`);
+  }
 }

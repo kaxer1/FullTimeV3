@@ -43,6 +43,10 @@ export class EmpresaService {
     return this.http.get(`${this.API_URL}/empresas/buscar/datos/${id}`);
   }
 
+  ActualizarColores(formData) {
+    return this.http.put<any>(`${this.API_URL}/empresas/colores`, formData);
+  }
+
   /**
    * Método para llamar al logotipo de la empresa, este llega codificado en base64
    * @param id_empresa ID de la empresa

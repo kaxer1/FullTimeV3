@@ -87,32 +87,9 @@ export class ListaEmpleadosComponent implements OnInit {
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
-
+    this.ObtenerLogo();
+    this.ObtnerColores();
   }
-
-  colorPicker = document.querySelector('#input-color');
-
-
-
-  color: any;
-  fileChange1() {
-    /*  function test(t) {
-        console.log(t.value);
-      }
-    this.color = element.value;
-    console.log('color', this.color)
-    this.colorPicker.addEventListener('change', function () {
-      console.log(this.value)
-    });
-    var color1 = document.getElementById('#input-color').onchange = function () {
-      // do whatever you want with value
-      // alert(this.value);
-      //console.log(color1.value);
-    }*/
-    console.log(this.color);
-
-  }
-
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
@@ -234,6 +211,16 @@ export class ListaEmpleadosComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -419,7 +406,7 @@ export class ListaEmpleadosComponent implements OnInit {
         this.presentarDataPDFEmpleados(),
       ],
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 8 },
         itemsTableD: { fontSize: 8, alignment: 'center' }
       }

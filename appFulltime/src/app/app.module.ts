@@ -282,6 +282,7 @@ import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-auto
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
+import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -492,6 +493,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ConfirmarDesactivadosComponent,
     ListaPlanHoraExtraComponent,
     PlanHoraExtraAutorizaComponent,
+    ColoresEmpresaComponent,
   ],
 
   imports: [

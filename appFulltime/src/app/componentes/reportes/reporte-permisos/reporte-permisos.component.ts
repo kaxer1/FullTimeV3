@@ -96,7 +96,8 @@ export class ReportePermisosComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-    this.ObtenerLogo();
+       this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -113,6 +114,16 @@ export class ReportePermisosComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -474,11 +485,11 @@ export class ReportePermisosComponent implements OnInit {
 
       // Estilos del archivo PDF
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableD: { fontSize: 9, alignment: 'center' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
-        tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED', },
+        tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, },
         itemsTableS: { fontSize: 9, alignment: 'center', },
       }
     };

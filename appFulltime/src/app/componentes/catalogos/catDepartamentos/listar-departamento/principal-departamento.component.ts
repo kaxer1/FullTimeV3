@@ -76,6 +76,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     this.ListaDepartamentos();
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -91,6 +92,18 @@ export class PrincipalDepartamentoComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      console.log('empresa', res);
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
+      console.log('color', this.p_color );
     });
   }
 
@@ -219,7 +232,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -247,7 +260,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
         this.presentarDataPDFDepartamentos(),
       ],
       styles: {
-        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 10 },
         itemsTableC: { fontSize: 10, alignment: 'center' }
       }

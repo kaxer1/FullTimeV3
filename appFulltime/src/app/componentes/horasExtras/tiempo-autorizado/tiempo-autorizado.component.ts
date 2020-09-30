@@ -13,10 +13,18 @@ import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-
 })
 export class TiempoAutorizadoComponent implements OnInit {
 
-  timer = new FormControl('');
+  Observacion: boolean = true;
+  Horas: boolean = false;
+
+  timer = new FormControl('', Validators.required);
+  mensaje = new FormControl('', Validators.required);
 
   public TiempoHoraExtraForm = new FormGroup({
-    timerForm: this.timer
+    timerForm: this.timer,
+  });
+
+  public MensajeForm = new FormGroup({
+    mensajeF: this.mensaje
   });
 
   constructor(
@@ -57,9 +65,6 @@ export class TiempoAutorizadoComponent implements OnInit {
   }
 
   TiempoAceptado() {
-
-    console.log(this.data);
-
     if (this.data.pagina === 'plan_hora_extra') {
       console.log(this.data);
       let h = {
@@ -102,5 +107,19 @@ export class TiempoAutorizadoComponent implements OnInit {
 
   LimpiarCampoHoras() {
     this.TiempoHoraExtraForm.patchValue({ timerForm: '' })
+  }
+
+  MostrarObservacion() {
+    this.Observacion = false;
+    this.Horas = true;
+  }
+
+  MostrarHoras() {
+    this.Observacion = true;
+    this.Horas = false;
+  }
+
+  EnviarMensaje(form){
+    
   }
 }

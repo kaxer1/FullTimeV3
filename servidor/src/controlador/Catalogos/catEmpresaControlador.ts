@@ -29,8 +29,8 @@ class EmpresaControlador {
     }
 
     public async CrearEmpresa(req: Request, res: Response): Promise<void> {
-        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento } = req.body;
-        await pool.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento]);
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s } = req.body;
+        await pool.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s]);
         res.jsonp({ message: 'La Empresa se registró con éxito' });
     }
 
@@ -121,8 +121,13 @@ class EmpresaControlador {
         const codificado = await ImagenBase64LogosEmpresas(logo);
         res.send({imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message:'Logo actualizado'})
     }
-    
 
+    public async ActualizarColores(req: Request, res: Response): Promise<void> {
+        const { color_p, color_s, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET color_p = $1, color_s = $2 WHERE id = $3', [color_p, color_s, id]);
+        res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
+    }
+    
 }
 
 export const EMPRESA_CONTROLADOR = new EmpresaControlador();

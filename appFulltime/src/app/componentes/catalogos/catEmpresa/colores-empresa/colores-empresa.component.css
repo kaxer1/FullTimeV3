@@ -1,0 +1,14 @@
+mat-form-field { width: 230px; }
+
+.btn { border-radius: 5px; margin-left: 15px; background-color: rgb(80,87,97); color: white;}
+
+#titulo { 
+    font-size: 17px; 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    padding-top: 10px; 
+    padding-bottom: 6px; 
+}
+
+#cerrar { color:red; cursor: pointer; }
