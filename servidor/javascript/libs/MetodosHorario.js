@@ -18,7 +18,7 @@ const MetodosFechas_1 = require("./MetodosFechas");
 const FECHA_FERIADOS = [];
 exports.VerificarHorario = function (id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let horario = yield database_1.default.query('SELECT * FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [id_cargo]).then(result => { return result.rows[0]; }); // devuelve el ultimo horario del cargo
+        let horario = yield database_1.default.query('SELECT * FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [id_cargo]).then(result => { return result.rows[0]; }); // devuelve el ultimo horario del cargo
         if (!horario)
             return { message: 'Horario no encontrado' };
         // console.log(horario);
@@ -121,3 +121,27 @@ function fechaIterada(fechaIterada, horario) {
         estado: est
     };
 }
+exports.EstadoHorarioPeriVacacion = function (id_empleado) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(id_empleado);
+        let ids = yield database_1.default.query('SELECT co.id AS id_contrato, ca.id AS id_cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato', [id_empleado])
+            .then(result => { return result.rows; });
+        if (ids.length === 0) {
+            return 0;
+        }
+        console.log(ids);
+        let cargos = [...new Set(ids.map(obj => {
+                return obj.id_cargo;
+            }))];
+        cargos.forEach((id_cargo) => __awaiter(this, void 0, void 0, function* () {
+            yield database_1.default.query('UPDATE empl_horarios SET estado = 2 WHERE id_empl_cargo = $1', [id_cargo]); //Estado 2 es para q esten desactivados esos horarios
+        }));
+        let contratos = [...new Set(ids.map(obj => {
+                return obj.id_contrato;
+            }))];
+        contratos.forEach((id_contrato) => __awaiter(this, void 0, void 0, function* () {
+            yield database_1.default.query('UPDATE peri_vacaciones SET estado = 2 WHERE id_empl_contrato = $1', [id_contrato]); //Estado 2 es para q esten desactivados esos periodos de vacacion
+        }));
+        return 0;
+    });
+};

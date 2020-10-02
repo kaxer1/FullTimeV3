@@ -80,7 +80,7 @@ async function ListaTimbresDiarioToEmpleado(hoy: any) {
 }
 
 async function HorarioEmpleado(id_cargo: number, dia_inicia_semana: string, fechaIterada: Date) {
-    return await pool.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
+    return await pool.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE estado = 1 AND id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
     .then(result => {
         let respuesta: any = [];
         result.rows.forEach(res => {
@@ -429,7 +429,7 @@ function AsistenciaDetalleConsolidado(arr: any, tlaboral: ITiempoLaboral, id_car
 
 async function MetodoModelarDetalleAsistencia(id_empleado: number, desde: Date, hasta: Date, TiemposEmpleado: ITiempoLaboral, id_cargo: number) {
     let arr: any = [];
-    let minu_espera = await pool.query('SELECT distinct dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.id_horarios = ch.id AND dh.id_horario = ch.id',[id_cargo])
+    let minu_espera = await pool.query('SELECT distinct dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND eh.id_horarios = ch.id AND dh.id_horario = ch.id',[id_cargo])
                         .then(result => { return result.rows[0].minu_espera});
     for (let i = 1; i <= hasta.getDate() + 1; i++) {
         let semanaFecha = ObtenerDiaIniciaSemana(new Date(desde))    
@@ -479,7 +479,7 @@ export const RegistrarAsistenciaByTimbres = async function() {
 }
 
 async function HoraIngreso_MinAlmuerzo_HorasLabora(id_cargo: number) {
-    return await pool.query('SELECT distinct dh.hora, ch.min_almuerzo, ch.hora_trabajo FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND ch.id = eh.id_horarios AND ch.id = dh.id_horario', [id_cargo])
+    return await pool.query('SELECT distinct dh.hora, ch.min_almuerzo, ch.hora_trabajo FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND ch.id = eh.id_horarios AND ch.id = dh.id_horario', [id_cargo])
     .then(result => {
         return result.rows[0]
     })

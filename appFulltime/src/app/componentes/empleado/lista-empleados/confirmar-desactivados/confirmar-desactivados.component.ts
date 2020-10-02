@@ -13,6 +13,7 @@ export class ConfirmarDesactivadosComponent implements OnInit {
   ids: any = [];
   contenidoHabilitar: boolean = false;
   contenidoDeshabilitar: boolean = false;
+  contenidoReactivar: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -35,6 +36,9 @@ export class ConfirmarDesactivadosComponent implements OnInit {
       console.log('DESACTIVAR EMPLEADO');
     } else if (this.Empleados.opcion === 2) {
       this.contenidoHabilitar = true;
+      console.log('ACTIVAR EMPLEADO');
+    } else if (this.Empleados.opcion === 3) {
+      this.contenidoReactivar = true;
       console.log('REACTIVAR EMPLEADO');
     }
   }
@@ -48,8 +52,15 @@ export class ConfirmarDesactivadosComponent implements OnInit {
       });
       this.dialogRef.close(true);
     } else if (this.Empleados.opcion === 2) {
-      console.log('REACTIVAR EMPLEADO');
+      console.log('ACTIVAR EMPLEADO');
       this.restE.ActivarVariosUsuarios(this.ids).subscribe(res => {
+        console.log(res);
+        this.toastr.success(res.message)
+      });
+      this.dialogRef.close(true);
+    } else if (this.Empleados.opcion === 3) {
+      console.log('ACTIVAR EMPLEADO');
+      this.restE.ReActivarVariosUsuarios(this.ids).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message)
       });

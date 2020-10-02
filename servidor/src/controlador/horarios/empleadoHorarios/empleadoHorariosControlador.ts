@@ -6,7 +6,7 @@ import fs from 'fs';
 class EmpleadoHorariosControlador {
 
     public async ListarEmpleadoHorarios(req: Request, res: Response) {
-        const HORARIOS = await pool.query('SELECT * FROM empl_horarios');
+        const HORARIOS = await pool.query('SELECT * FROM empl_horarios WHERE estado = 1');
         if (HORARIOS.rowCount > 0) {
             return res.jsonp(HORARIOS.rows)
         }
@@ -106,7 +106,7 @@ class EmpleadoHorariosControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
-    public async ObtenerHorariosEmpleadoFechas(req: Request, res: Response): Promise<any> {
+    public async ObtenerHorariosEmpleadoFechas(req: Request, res: Response): Promise<any> { //Falta verificar q los estados esten con estado 1
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
         const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dec ' +

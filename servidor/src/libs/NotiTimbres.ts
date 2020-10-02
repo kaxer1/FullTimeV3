@@ -70,11 +70,11 @@ async function CalcularHoras(fecha: string, hora: string) {
                 break;
                 case 'S/A':
                     tiempo_horario = await HorarioEmpleado(obj.id_empleado, 2);
-                    estado = SalidasAntes(tiempo_horario.tiempo, h)
+                    estado = SalidasAntesAlmuerzo(tiempo_horario.tiempo, h)
                 break;
                 case 'E/A':
                     tiempo_horario = await HorarioEmpleado(obj.id_empleado, 3);
-                    estado = Atrasos(tiempo_horario.tiempo, h)
+                    estado = AtrasosAlmuerzo(tiempo_horario.tiempo, h)
                 break;
                 case 'S':
                     tiempo_horario = await HorarioEmpleado(obj.id_empleado, 4);
@@ -109,7 +109,7 @@ async function HorarioEmpleado(id_empleado: number, orden: number) {
     .then(result => { return result.rows[0] });
     console.log('id cargo ===>',UltimoCargo);
     
-    let IdCgHorario = await pool.query('SELECT id_horarios FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [UltimoCargo.id])
+    let IdCgHorario = await pool.query('SELECT id_horarios FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [UltimoCargo.id])
     .then(result => { return result.rows[0].id_horarios })
     // console.log('id Catalogo Horario ===>',IdCgHorario);
     
@@ -162,7 +162,7 @@ function Transformar(tiempo: string) {
 function Atrasos(hora: number, hora_timbre: number) {
     console.log('**************************', hora, '===', hora_timbre);
     if ( hora_timbre > hora) {
-        return { bool: true, message: 'Llego atrasado'}
+        return { bool: true, message: 'Llego atrasado al trabajo'}
     }
     return { bool: false, message: 'Llego a tiempo'}
 }
@@ -170,7 +170,23 @@ function Atrasos(hora: number, hora_timbre: number) {
 function SalidasAntes(hora: number, hora_timbre: number) {
     console.log('**************************', hora, '===', hora_timbre);
     if ( hora_timbre < hora) {
-        return { bool: true, message: 'Salio antes'}
+        return { bool: true, message: 'Salio antes del trabajo'}
     } 
     return { bool: false, message: 'Salio despues'}
+}
+
+function SalidasAntesAlmuerzo(hora: number, hora_timbre: number) {
+    console.log('**************************', hora, '===', hora_timbre);
+    if ( hora_timbre < hora) {
+        return { bool: true, message: 'Salio antes al almuerzo'}
+    } 
+    return { bool: false, message: 'Salio despues'}
+}
+
+function AtrasosAlmuerzo(hora: number, hora_timbre: number) {
+    console.log('**************************', hora, '===', hora_timbre);
+    if ( hora_timbre > hora) {
+        return { bool: true, message: 'Se tomo mucho tiempo de almuerzo'}
+    }
+    return { bool: false, message: 'Llego a tiempo'}
 }

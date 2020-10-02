@@ -40,6 +40,7 @@ class EmpleadoRutas {
         this.router.get('/desactivados/empleados', verificarToken_1.TokenValidation, empleadoControlador_1.default.listaEmpleadosDesactivados);
         this.router.put('/desactivar/masivo', verificarToken_1.TokenValidation, empleadoControlador_1.default.DesactivarMultiplesEmpleados);
         this.router.put('/activar/masivo', verificarToken_1.TokenValidation, empleadoControlador_1.default.ActivarMultiplesEmpleados);
+        this.router.put('/re-activar/masivo', verificarToken_1.TokenValidation, empleadoControlador_1.default.ReactivarMultiplesEmpleados);
     }
 }
 const EMPLEADO_RUTAS = new EmpleadoRutas();

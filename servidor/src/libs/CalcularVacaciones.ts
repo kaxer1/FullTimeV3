@@ -114,12 +114,12 @@ function CalcularDiasAcumulados(dias_obliga: number, I_Periodo: Date, F_Periodo:
 
 async function ObtenerPeriodosEmpleado(id_empl: number, diasObliga: any, fec_final_Rango: string, hora_trabaja: number) {
     
-    let primerPeriodoInicio = await pool.query('SELECT pv.fec_inicio FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato ORDER BY e.fec_ingreso DESC, pv.fec_inicio LIMIT 1', [id_empl])
+    let primerPeriodoInicio = await pool.query('SELECT pv.fec_inicio FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND pv.estado = 1 ORDER BY e.fec_ingreso DESC, pv.fec_inicio LIMIT 1', [id_empl])
                 .then(result => {
                     return result.rows[0].fec_inicio.toJSON().split('T')[0];
                 });
     
-    let arrayPeriodos = await pool.query('SELECT pv.id as id_peri_vac, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC, pv.fec_inicio', [id_empl, primerPeriodoInicio, fec_final_Rango])
+    let arrayPeriodos = await pool.query('SELECT pv.id as id_peri_vac, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC, pv.fec_inicio', [id_empl, primerPeriodoInicio, fec_final_Rango])
                 .then(result => {
                     return result.rows;
                 });
@@ -199,7 +199,7 @@ function ObtenerDiasAdicionales(aniosLaborados: number) {
  * @param pre Fecha del año presente solo el año Ejm: 2016
  */
 async function PeriodoVacacionContrato(id_empl: number, ant: string, pre: string) {
-    let data = await pool.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
+    let data = await pool.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
                 .then(result => {
                     return result.rows[0];
                 });

@@ -3,6 +3,7 @@ import pool from '../../../database';
 import excel from 'xlsx';
 import fs from 'fs';
 import { Md5 } from 'ts-md5';
+import { EstadoHorarioPeriVacacion } from '../../../libs/MetodosHorario'
 const builder = require('xmlbuilder');
 
 class EmpleadoControlador {
@@ -269,6 +270,30 @@ class EmpleadoControlador {
     }
     return  res.jsonp({message: 'No ha sido activado ningún empleado'});
   }
+
+  public async ReactivarMultiplesEmpleados(req: Request, res: Response): Promise<any> {
+    const arrayIdsEmpleados = req.body;
+    console.log(arrayIdsEmpleados);
+
+    if (arrayIdsEmpleados.length > 0) {
+      arrayIdsEmpleados.forEach(async(obj: number) => {
+        
+        await pool.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+        .then(result => {
+          console.log(result.command, 'EMPLEADO ====>', obj);
+        });
+        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1',[obj]) // true => Tiene acceso
+        .then(result => {
+          console.log(result.command, 'USUARIO ====>', obj);
+        });
+        EstadoHorarioPeriVacacion(obj);
+      });
+
+      return res.jsonp({message: 'Todos los empleados seleccionados han sido reactivados'});
+    }
+    return  res.jsonp({message: 'No ha sido reactivado ningún empleado'});
+  }
+
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();

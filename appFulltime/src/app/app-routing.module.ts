@@ -87,6 +87,7 @@ import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
 import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -134,7 +135,7 @@ const routes: Routes = [
   { path: 'cumpleanios', component: VerBirthdayComponent, canActivate: [AuthGuard], data: { roles: 1 }},
   { path: 'verEmpleado/:id', component: VerEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'seleccionarPermisos/:id', component: SeleccionarRolPermisoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  { path: 'notificaciones/:id_suc/:id_depa/:nivel', component: NotificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  // { path: 'notificaciones/:id_suc/:id_depa/:nivel', component: NotificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'modificarDepartamento/:id', component: RegistroDepartamentoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'verFeriados/:id', component: ListarCiudadFeriadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'enroladoDispositivo/:id', component: DispositivosEnroladosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
@@ -158,6 +159,7 @@ const routes: Routes = [
   
   // Rol mixto pra las autorizacines
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },
+  { path: 'lista-avisos', component: RealtimeAvisosComponent, canActivate: [AuthGuard], data: { rolMix: 0 }},
   { path: 'ver-permiso/:id', component: VerEmpleadoPermisoComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },
   { path: 'ver-vacacion/:id', component: VerVacacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },
   { path: 'ver-hora-extra/:id', component: VerPedidoHoraExtraComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },
