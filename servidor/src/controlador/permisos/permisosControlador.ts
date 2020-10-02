@@ -16,7 +16,12 @@ class PermisosControlador {
     }
 
     public async ListarEstadosPermisos(req: Request, res: Response) {
-        const PERMISOS = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC');
+        const PERMISOS = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+            'p.documento, p.docu_nombre, p.fec_final, p.estado, e.id AS id_emple_solicita, e.nombre, e.apellido, ' +
+            'e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, ' +
+            'empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ' +
+            'ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id  AND (p.estado = \'Pendiente\' OR p.estado = \'Pre-Autorizado\' ) ' +
+            'ORDER BY fec_creacion DESC');
         if (PERMISOS.rowCount > 0) {
             return res.json(PERMISOS.rows)
         }
@@ -48,12 +53,12 @@ class PermisosControlador {
     }
 
     public async CrearPermisos(req: Request, res: Response): Promise<void> {
-        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, depa_user_loggin} = req.body;
+        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, depa_user_loggin } = req.body;
         await pool.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre]);
-        
+
         const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.permiso_mail, c.permiso_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn,empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND da.estado = \'true\' AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin]);
         let depa_padre = JefesDepartamentos.rows[0].depa_padre;
-        let JefeDepaPadre;        
+        let JefeDepaPadre;
 
         if (depa_padre !== null) {
             do {
@@ -61,7 +66,7 @@ class PermisosControlador {
                 depa_padre = JefeDepaPadre.rows[0].depa_padre;
                 JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
             } while (depa_padre !== null);
-            
+
             res.jsonp(JefesDepartamentos.rows);
         } else {
             res.jsonp(JefesDepartamentos.rows);
@@ -70,13 +75,13 @@ class PermisosControlador {
     }
 
     public async SendMailNotifiPermiso(req: Request, res: Response): Promise<void> {
-        const {fec_creacion, id_tipo_permiso, id_empl_contrato, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, permiso_mail, permiso_noti} = req.body;
+        const { fec_creacion, id_tipo_permiso, id_empl_contrato, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, permiso_mail, permiso_noti } = req.body;
         const ultimo = await pool.query('SELECT id, estado FROM permisos WHERE fec_creacion = $1 AND  id_tipo_permiso = $2 AND id_empl_contrato = $3', [fec_creacion, id_tipo_permiso, id_empl_contrato]);
         const correoInfoPidePermiso = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [id_empl_contrato]);
-        
+
         const email = process.env.EMAIL;
         const pass = process.env.PASSWORD;
-        
+
         let smtpTransport = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
@@ -87,7 +92,7 @@ class PermisosControlador {
 
         // codigo para enviar notificacion o correo al jefe de su propio departamento, independientemente del nivel.
         // && obj.id_dep === correoInfoPidePermiso.rows[0].id_departamento && obj.id_suc === correoInfoPidePermiso.rows[0].id_sucursal
-        if (estado === true){
+        if (estado === true) {
             var url = `${process.env.URL_DOMAIN}/ver-permiso`;
             let id_departamento_autoriza = id_dep;
             let id_empleado_autoriza = empleado;
@@ -113,7 +118,7 @@ class PermisosControlador {
                     if (error) {
                         console.log(error);
                     } else {
-                        console.log('Email sent: ' + info.response);    
+                        console.log('Email sent: ' + info.response);
                     }
                 });
                 res.jsonp({ message: 'Permiso se registró con éxito', notificacion: false, id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado: ultimo.rows[0].estado });
@@ -171,29 +176,31 @@ class PermisosControlador {
         console.log(estado, id_permiso, id_departamento, id_empleado);
         console.log(JefeDepartamento.rows)
         console.log(InfoPermisoReenviarEstadoEmpleado.rows)
-        
+
         const email = process.env.EMAIL;
         const pass = process.env.PASSWORD;
-        
+
         let smtpTransport = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-              user: email,
-              pass: pass
+                user: email,
+                pass: pass
             }
         });
 
         JefeDepartamento.rows.forEach(obj => {
+            
             var url = `${process.env.URL_DOMAIN}/solicitarPermiso`;
             InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
+
                 let notifi_realtime = {
                     id_send_empl: obj.empleado,
                     id_receives_depa: obj.id_dep,
-                    estado: estado, 
-                    id_permiso : id_permiso,
+                    estado: estado,
+                    id_permiso: id_permiso,
                     id_vacaciones: null
                 }
-
+                console.log(notifi_realtime);
                 let data = {
                     from: obj.correo,
                     to: ele.correo,
@@ -220,7 +227,7 @@ class PermisosControlador {
                             console.log('Email sent: ' + info.response);
                         }
                     });
-                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: true, realtime: [notifi_realtime]});
+                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                 } else if (ele.permiso_mail === true && ele.permiso_noti === false) {
                     smtpTransport.sendMail(data, async (error: any, info: any) => {
                         if (error) {
@@ -229,16 +236,16 @@ class PermisosControlador {
                             console.log('Email sent: ' + info.response);
                         }
                     });
-                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime]});
+                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                 } else if (ele.permiso_mail === false && ele.permiso_noti === true) {
-                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: true, realtime: [notifi_realtime]});
-                    
+                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
+
                 } else if (ele.permiso_mail === false && ele.permiso_noti === false) {
-                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime]});
-                    
+                    res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
+
                 }
             });
-        }); 
+        });
     }
 
     public async ObtenerDatosSolicitud(req: Request, res: Response) {
@@ -265,35 +272,35 @@ class PermisosControlador {
     }
 
     public async EliminarPermiso(req: Request, res: Response) {
-        const {id_permiso, doc} = req.params;
+        const { id_permiso, doc } = req.params;
         console.log(id_permiso, doc);
-        
-        await pool.query('DELETE FROM realtime_noti where id_permiso = $1',[id_permiso])
-        await pool.query('DELETE FROM permisos WHERE id = $1',[id_permiso]);
+
+        await pool.query('DELETE FROM realtime_noti where id_permiso = $1', [id_permiso])
+        await pool.query('DELETE FROM permisos WHERE id = $1', [id_permiso]);
 
         let filePath = `servidor\\docRespaldosPermisos\\${doc}`
         let direccionCompleta = __dirname.split("servidor")[0] + filePath;
         fs.unlinkSync(direccionCompleta);
 
-        res.jsonp({message: 'registro eliminado'});
+        res.jsonp({ message: 'registro eliminado' });
     }
 
     public async EditarPermiso(req: Request, res: Response): Promise<void> {
         const id = req.params.id
-        const {descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre} = req.body;
+        const { descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre } = req.body;
         console.log(descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre);
         if (anterior_doc === null && docu_nombre === null) {
             await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8 WHERE id = $9', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, id]);
-            res.jsonp({message: 'Permiso Editado'});
+            res.jsonp({ message: 'Permiso Editado' });
         } else {
             await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, docu_nombre = $9 WHERE id = $10', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, docu_nombre, id]);
             console.log(anterior_doc, docu_nombre);
             let filePath = `servidor\\docRespaldosPermisos\\${anterior_doc}`
             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
             fs.unlinkSync(direccionCompleta);
-            res.jsonp({message: 'Permiso Editado'});
+            res.jsonp({ message: 'Permiso Editado' });
         }
-        
+
     }
 }
 
