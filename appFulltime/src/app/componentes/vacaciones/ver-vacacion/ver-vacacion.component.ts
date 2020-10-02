@@ -70,7 +70,8 @@ export class VerVacacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.BuscarDatos();
-    this.ObtenerLogo();
+       this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   BuscarDatos() {
@@ -118,6 +119,16 @@ export class VerVacacionComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -255,8 +266,8 @@ export class VerVacacionComponent implements OnInit {
         this.presentarDataPDFPermiso(this.ObtenerFecha()),
       ],
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', },
-        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [20, 0, 20, 0], },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, },
+        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [20, 0, 20, 0], },
         itemsTableC: { fontSize: 10, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableD: { fontSize: 10, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTable: { fontSize: 10, alignment: 'center', }

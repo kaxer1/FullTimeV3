@@ -61,6 +61,7 @@ export class VistaRolesComponent implements OnInit {
   ngOnInit() {
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para obtener el logo de la empresa
@@ -68,6 +69,16 @@ export class VistaRolesComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logoE = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -197,7 +208,7 @@ export class VistaRolesComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -225,7 +236,7 @@ export class VistaRolesComponent implements OnInit {
         this.presentarDataPDFRoles(),
       ],
       styles: {
-        tableHeader: { fontSize: 13, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 13, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 11, alignment: 'center' }
       }
     };

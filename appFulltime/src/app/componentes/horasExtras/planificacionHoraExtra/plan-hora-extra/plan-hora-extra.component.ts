@@ -107,6 +107,8 @@ export class PlanHoraExtraComponent implements OnInit {
       descripcion: form1.descripcionForm,
       horas_totales: form1.horasForm,
       estado: form1.estadoForm,
+      observacion: false,
+      justifica: false
     }
     if (this.datosSeleccionados.length != undefined) {
       console.log('probando', this.datosSeleccionados, this.datosSeleccionados.length - 1, this.datosSeleccionados.length)

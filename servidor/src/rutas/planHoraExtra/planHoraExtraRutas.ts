@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { TokenValidation } from '../../libs/verificarToken'
 import PLAN_HORA_EXTRA_CONTROLADOR from '../../controlador/planHoraExtra/planHoraExtraControlador';
 
 class DepartamentoRutas {
@@ -9,7 +10,11 @@ class DepartamentoRutas {
     }
 
     configuracion(): void {
-        this.router.post('/', PLAN_HORA_EXTRA_CONTROLADOR.CrearPlanHoraExtra);
+        this.router.get('/', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ListarPlanHoraExtra);
+        this.router.get('/justificar', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ListarPlanHoraExtraObserva);
+        this.router.post('/', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.CrearPlanHoraExtra);
+        this.router.put('/tiempo-autorizado/:id', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.TiempoAutorizado);
+
     }
 }
 

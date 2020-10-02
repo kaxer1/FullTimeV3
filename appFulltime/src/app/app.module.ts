@@ -123,8 +123,8 @@ import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/r
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
-import { PlanHoraExtraComponent } from './componentes/horasExtras/plan-hora-extra/plan-hora-extra.component';
-import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+import { PlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
 import { ConfigurarAtrasosComponent } from './componentes/configurar-atrasos/configurar-atrasos.component';
 import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
 import { VerPedidoHoraExtraComponent } from './componentes/horasExtras/ver-pedido-hora-extra/ver-pedido-hora-extra.component';
@@ -285,6 +285,9 @@ import { AvisoDescPipe } from './filtros/lista-realtime/avisos/aviso-desc.pipe';
 import { AvisoFechPipe } from './filtros/lista-realtime/avisos/aviso-fech.pipe';
 import { EliminarRealtimeComponent } from './componentes/notificaciones/eliminar-realtime/eliminar-realtime.component';
 import { AvisoEstadoPipe } from './filtros/lista-realtime/avisos/aviso-estado.pipe';
+import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
+import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
+import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -498,6 +501,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AvisoFechPipe,
     EliminarRealtimeComponent,
     AvisoEstadoPipe,
+    ListaPlanHoraExtraComponent,
+    PlanHoraExtraAutorizaComponent,
+    ColoresEmpresaComponent,
   ],
 
   imports: [

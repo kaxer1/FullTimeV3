@@ -18,7 +18,7 @@ import * as FileSaver from 'file-saver';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
-import { PlanHoraExtraComponent } from 'src/app/componentes/horasExtras/plan-hora-extra/plan-hora-extra.component';
+import { PlanHoraExtraComponent } from 'src/app/componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
 
 @Component({
   selector: 'app-lista-emple-plan-hora-e',

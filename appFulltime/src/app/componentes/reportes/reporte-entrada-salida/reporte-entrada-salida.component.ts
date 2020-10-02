@@ -103,7 +103,8 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerFeriados();
-    this.ObtenerLogo();
+       this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -120,6 +121,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -491,13 +502,13 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
       // Estilos del archivo PDF 
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableD: { fontSize: 8, alignment: 'center' },
-        itemsTableColor: { fontSize: 8, alignment: 'center', fillColor: '#CCD1D1' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
-        tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED' },
-        centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [0, 10, 0, 10] },
+        tableHeaderESC: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color },
+        tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
+        centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] },
       }
     };
   }
@@ -683,16 +694,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           [
             '', '', '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
           ],
           ...fechasTotales.map(obj => {
@@ -799,16 +810,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
               { text: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1), style: 'itemsTableD' },
               { text: obj.split(' ')[1], style: 'itemsTableD' },
               { text: horarioE, style: 'itemsTableD' },
-              { text: timbreE, style: 'itemsTableColor' },
+              { text: timbreE, style: 'itemsTableD' },
               { text: entrada, style: 'itemsTableD' },
               { text: horarioAS, style: 'itemsTableD' },
-              { text: timbreAlmuerzoS, style: 'itemsTableColor' },
+              { text: timbreAlmuerzoS, style: 'itemsTableD' },
               { text: almuerzoS, style: 'itemsTableD' },
               { text: horarioAE, style: 'itemsTableD' },
-              { text: timbreAlmuerzoE, style: 'itemsTableColor' },
+              { text: timbreAlmuerzoE, style: 'itemsTableD' },
               { text: almuerzoE, style: 'itemsTableD' },
               { text: horarioS, style: 'itemsTableD' },
-              { text: timbreS, style: 'itemsTableColor' },
+              { text: timbreS, style: 'itemsTableD' },
               { text: salida, style: 'itemsTableD' },
             ];
           })

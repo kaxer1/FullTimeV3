@@ -14,12 +14,12 @@ interface Estado {
   nombre: string
 }
 
-
 @Component({
   selector: 'app-hora-extra-autorizaciones',
   templateUrl: './hora-extra-autorizaciones.component.html',
   styleUrls: ['./hora-extra-autorizaciones.component.css']
 })
+
 export class HoraExtraAutorizacionesComponent implements OnInit {
 
   // idDocumento = new FormControl('', Validators.required);
@@ -73,7 +73,9 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       id_permiso: null,
       id_vacacion: null,
       id_hora_extra: this.data.id,
-      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ','
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      id_plan_hora_extra: null,
+      // id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {

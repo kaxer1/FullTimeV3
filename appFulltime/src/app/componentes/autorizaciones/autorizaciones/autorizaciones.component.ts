@@ -85,7 +85,9 @@ export class AutorizacionesComponent implements OnInit {
       id_permiso: this.data.id,
       id_vacacion: null,
       id_hora_extra: null,
-      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ','
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      id_plan_hora_extra: null,
+      // id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
