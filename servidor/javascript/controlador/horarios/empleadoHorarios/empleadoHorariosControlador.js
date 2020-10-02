@@ -18,7 +18,7 @@ const fs_1 = __importDefault(require("fs"));
 class EmpleadoHorariosControlador {
     ListarEmpleadoHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const HORARIOS = yield database_1.default.query('SELECT * FROM empl_horarios');
+            const HORARIOS = yield database_1.default.query('SELECT * FROM empl_horarios WHERE estado = 1');
             if (HORARIOS.rowCount > 0) {
                 return res.jsonp(HORARIOS.rows);
             }

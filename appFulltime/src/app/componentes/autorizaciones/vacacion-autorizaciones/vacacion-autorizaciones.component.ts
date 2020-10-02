@@ -25,7 +25,7 @@ interface Estado {
 })
 export class VacacionAutorizacionesComponent implements OnInit {
 
-  idDocumento = new FormControl('', Validators.required);
+  // idDocumento = new FormControl('', Validators.required);
   TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
@@ -34,7 +34,7 @@ export class VacacionAutorizacionesComponent implements OnInit {
   idDepartamento = new FormControl('', Validators.required);
 
   public nuevaAutorizacionesForm = new FormGroup({
-    idDocumentoF: this.idDocumento,
+    // idDocumentoF: this.idDocumento,
     ordenF: this.orden,
     estadoF: this.estado,
     idDepartamentoF: this.idDepartamento
@@ -78,8 +78,9 @@ export class VacacionAutorizacionesComponent implements OnInit {
       id_permiso: null,
       id_vacacion: this.data.id,
       id_hora_extra: null,
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       id_plan_hora_extra: null,
-      id_documento: form.idDocumentoF
+      // id_documento: form.idDocumentoF
     }
     console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {

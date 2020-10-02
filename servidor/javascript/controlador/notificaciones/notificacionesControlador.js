@@ -28,9 +28,15 @@ class NotificacionTiempoRealControlador {
     ListaPorEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_send;
-            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT * FROM realtime_noti WHERE id_send_empl = $1 ORDER BY id DESC', [id]);
-            if (REAL_TIME_NOTIFICACION.rowCount > 0) {
-                return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT * FROM realtime_noti WHERE id_send_empl = $1 ORDER BY id DESC', [id]).
+                then(result => {
+                return result.rows.map(obj => {
+                    obj;
+                    return obj;
+                });
+            });
+            if (REAL_TIME_NOTIFICACION.length > 0) {
+                return res.jsonp(REAL_TIME_NOTIFICACION);
             }
             else {
                 return res.status(404).jsonp({ text: 'Registro no encontrado' });
@@ -40,9 +46,27 @@ class NotificacionTiempoRealControlador {
     ListaNotificacionesRecibidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_receive;
-            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC', [id]);
-            if (REAL_TIME_NOTIFICACION.rowCount > 0) {
-                return res.jsonp(REAL_TIME_NOTIFICACION.rows);
+            const REAL_TIME_NOTIFICACION = yield database_1.default.query('SELECT r.id, r.id_send_empl, r.id_receives_empl, r.id_receives_depa, r.estado, r.create_at, r.id_permiso, r.id_vacaciones, r.id_hora_extra, r.visto, e.nombre, e.apellido FROM realtime_noti AS r, empleados AS e WHERE r.id_receives_empl = $1 AND e.id = r.id_send_empl ORDER BY id DESC', [id])
+                .then(result => {
+                return result.rows.map(obj => {
+                    console.log(obj);
+                    return {
+                        id: obj.id,
+                        id_send_empl: obj.id_send_empl,
+                        id_receives_empl: obj.id_receives_empl,
+                        id_receives_depa: obj.id_receives_depa,
+                        estado: obj.estado,
+                        create_at: obj.create_at,
+                        id_permiso: obj.id_permiso,
+                        id_vacaciones: obj.id_vacaciones,
+                        id_hora_extra: obj.id_hora_extra,
+                        visto: obj.visto,
+                        empleado: obj.nombre + ' ' + obj.apellido
+                    };
+                });
+            });
+            if (REAL_TIME_NOTIFICACION.length > 0) {
+                return res.jsonp(REAL_TIME_NOTIFICACION);
             }
             else {
                 return res.status(404).jsonp({ text: 'Registro no encontrado' });
@@ -93,6 +117,22 @@ class NotificacionTiempoRealControlador {
             const { visto } = req.body;
             yield database_1.default.query('UPDATE realtime_noti SET visto = $1 WHERE id = $2', [visto, id]);
             res.jsonp({ message: 'Vista modificado' });
+        });
+    }
+    EliminarMultiplesNotificaciones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsRealtimeNotificaciones = req.body;
+            console.log(arrayIdsRealtimeNotificaciones);
+            if (arrayIdsRealtimeNotificaciones.length > 0) {
+                arrayIdsRealtimeNotificaciones.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('DELETE FROM realtime_noti WHERE id = $1', [obj])
+                        .then(result => {
+                        console.log(result.command, 'REALTIME ELIMINADO ====>', obj);
+                    });
+                }));
+                return res.jsonp({ message: 'Todos las notificaciones seleccionadas han sido eliminadas' });
+            }
+            return res.jsonp({ message: 'No seleccionó ninguna notificación' });
         });
     }
     /*

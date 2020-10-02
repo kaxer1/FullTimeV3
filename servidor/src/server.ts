@@ -220,7 +220,7 @@ RegistrarAsistenciaByTimbres();
 
 // conteoPermisos();
 
-// NotificacionTimbreAutomatica();
+NotificacionTimbreAutomatica();
 
 NotificacionSinTimbres();
 

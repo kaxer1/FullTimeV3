@@ -16,6 +16,7 @@ const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
 const ts_md5_1 = require("ts-md5");
+const MetodosHorario_1 = require("../../../libs/MetodosHorario");
 const builder = require('xmlbuilder');
 class EmpleadoControlador {
     list(req, res) {
@@ -298,6 +299,27 @@ class EmpleadoControlador {
                 return res.jsonp({ message: 'Todos los empleados han sido activados' });
             }
             return res.jsonp({ message: 'No ha sido activado ningún empleado' });
+        });
+    }
+    ReactivarMultiplesEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsEmpleados = req.body;
+            console.log(arrayIdsEmpleados);
+            if (arrayIdsEmpleados.length > 0) {
+                arrayIdsEmpleados.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+                        .then(result => {
+                        console.log(result.command, 'EMPLEADO ====>', obj);
+                    });
+                    yield database_1.default.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+                        .then(result => {
+                        console.log(result.command, 'USUARIO ====>', obj);
+                    });
+                    MetodosHorario_1.EstadoHorarioPeriVacacion(obj);
+                }));
+                return res.jsonp({ message: 'Todos los empleados seleccionados han sido reactivados' });
+            }
+            return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
         });
     }
 }

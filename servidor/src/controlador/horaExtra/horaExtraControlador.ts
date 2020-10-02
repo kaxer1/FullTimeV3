@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-// import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
 import { VerificarHorario } from '../../libs/MetodosHorario'
 const nodemailer = require("nodemailer");
 
@@ -273,11 +272,8 @@ class HorasExtrasPedidasControlador {
   }
 
   public async ObtenerHorarioEmpleado(req: Request, res: Response) {
-    // const id_empleado = req.userIdEmpleado;
-    // const id_empl_cargo = req.userIdCargo;
     const id_empl_cargo = parseInt(req.params.id_cargo);
     console.log('IDS: ', id_empl_cargo);
-
     // let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)
     let respuesta = await VerificarHorario(id_empl_cargo)
     console.log(respuesta);

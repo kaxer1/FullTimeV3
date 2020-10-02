@@ -45,7 +45,7 @@ export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   nacionalidades: any = [];
-  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
+  // displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -182,6 +182,13 @@ export class ListaEmpleadosComponent implements OnInit {
           empleado: obj.nombre + ' ' + obj.apellido
         }
       })
+    } else if (opcion === 3) {
+      EmpleadosSeleccionados = this.selectionDos.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
     }
     console.log(EmpleadosSeleccionados);
     this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: { opcion: opcion, lista: EmpleadosSeleccionados } }).afterClosed().subscribe(item => {
@@ -194,6 +201,7 @@ export class ListaEmpleadosComponent implements OnInit {
         this.Hab_Deshabilitados = false;
         this.selectionUno.clear();
         this.selectionDos.clear();
+        EmpleadosSeleccionados = [];
       };
     });
   }

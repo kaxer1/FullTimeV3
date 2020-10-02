@@ -73,11 +73,11 @@ function CalcularHoras(fecha, hora) {
                         break;
                     case 'S/A':
                         tiempo_horario = yield HorarioEmpleado(obj.id_empleado, 2);
-                        estado = SalidasAntes(tiempo_horario.tiempo, h);
+                        estado = SalidasAntesAlmuerzo(tiempo_horario.tiempo, h);
                         break;
                     case 'E/A':
                         tiempo_horario = yield HorarioEmpleado(obj.id_empleado, 3);
-                        estado = Atrasos(tiempo_horario.tiempo, h);
+                        estado = AtrasosAlmuerzo(tiempo_horario.tiempo, h);
                         break;
                     case 'S':
                         tiempo_horario = yield HorarioEmpleado(obj.id_empleado, 4);
@@ -110,7 +110,7 @@ function HorarioEmpleado(id_empleado, orden) {
         let UltimoCargo = yield database_1.default.query('SELECT id, id_departamento, id_sucursal FROM empl_cargos WHERE id_empl_contrato = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoContrato])
             .then(result => { return result.rows[0]; });
         console.log('id cargo ===>', UltimoCargo);
-        let IdCgHorario = yield database_1.default.query('SELECT id_horarios FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [UltimoCargo.id])
+        let IdCgHorario = yield database_1.default.query('SELECT id_horarios FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [UltimoCargo.id])
             .then(result => { return result.rows[0].id_horarios; });
         // console.log('id Catalogo Horario ===>',IdCgHorario);
         let hora_detalle = yield database_1.default.query('SELECT hora, minu_espera FROM deta_horarios WHERE id_horario = $1 AND orden = $2', [IdCgHorario, orden])
@@ -156,14 +156,28 @@ function Transformar(tiempo) {
 function Atrasos(hora, hora_timbre) {
     console.log('**************************', hora, '===', hora_timbre);
     if (hora_timbre > hora) {
-        return { bool: true, message: 'Llego atrasado' };
+        return { bool: true, message: 'Llego atrasado al trabajo' };
     }
     return { bool: false, message: 'Llego a tiempo' };
 }
 function SalidasAntes(hora, hora_timbre) {
     console.log('**************************', hora, '===', hora_timbre);
     if (hora_timbre < hora) {
-        return { bool: true, message: 'Salio antes' };
+        return { bool: true, message: 'Salio antes del trabajo' };
     }
     return { bool: false, message: 'Salio despues' };
+}
+function SalidasAntesAlmuerzo(hora, hora_timbre) {
+    console.log('**************************', hora, '===', hora_timbre);
+    if (hora_timbre < hora) {
+        return { bool: true, message: 'Salio antes al almuerzo' };
+    }
+    return { bool: false, message: 'Salio despues' };
+}
+function AtrasosAlmuerzo(hora, hora_timbre) {
+    console.log('**************************', hora, '===', hora_timbre);
+    if (hora_timbre > hora) {
+        return { bool: true, message: 'Se tomo mucho tiempo de almuerzo' };
+    }
+    return { bool: false, message: 'Llego a tiempo' };
 }

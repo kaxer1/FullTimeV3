@@ -151,7 +151,6 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
-import { VacacionesDiasCakendarioComponent } from './componentes/reportes-kardex/vacaciones-dias-cakendario/vacaciones-dias-cakendario.component';
 import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
 import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
@@ -280,6 +279,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
+import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
+import { AvisoEmplPipe } from './filtros/lista-realtime/avisos/aviso-empl.pipe';
+import { AvisoDescPipe } from './filtros/lista-realtime/avisos/aviso-desc.pipe';
+import { AvisoFechPipe } from './filtros/lista-realtime/avisos/aviso-fech.pipe';
+import { EliminarRealtimeComponent } from './componentes/notificaciones/eliminar-realtime/eliminar-realtime.component';
+import { AvisoEstadoPipe } from './filtros/lista-realtime/avisos/aviso-estado.pipe';
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
 import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
@@ -475,7 +480,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     RegistrarBirthdayComponent,
     EditarBirthdayComponent,
     VerBirthdayComponent,
-    VacacionesDiasCakendarioComponent,
     AsistenciaConsolidadoComponent,
     LogosComponent,
     HoraExtraRealComponent,
@@ -491,6 +495,12 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ConfigurarAtrasosComponent,
     TiempoAutorizadoComponent,
     ConfirmarDesactivadosComponent,
+    RealtimeAvisosComponent,
+    AvisoEmplPipe,
+    AvisoDescPipe,
+    AvisoFechPipe,
+    EliminarRealtimeComponent,
+    AvisoEstadoPipe,
     ListaPlanHoraExtraComponent,
     PlanHoraExtraAutorizaComponent,
     ColoresEmpresaComponent,

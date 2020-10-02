@@ -130,7 +130,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
         let horario;
         switch (num_dia) {
             case 0: //DOMINGO
-                horario = yield database_1.default.query('SELECT domingo FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT domingo FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -140,7 +140,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             case 1: //LUNES
-                horario = yield database_1.default.query('SELECT lunes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT lunes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -150,7 +150,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             case 2: //MARTES
-                horario = yield database_1.default.query('SELECT martes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT martes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -160,7 +160,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             case 3: //MIERCOLES
-                horario = yield database_1.default.query('SELECT miercoles FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT miercoles FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -170,7 +170,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             case 4: //JUEVES
-                horario = yield database_1.default.query('SELECT jueves FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT jueves FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -180,7 +180,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             case 5: //VIERNES
-                horario = yield database_1.default.query('SELECT viernes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT viernes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
@@ -190,7 +190,7 @@ function RegistrarNotificacion(id_empleado, num_dia, fechaDate, descripcion) {
                 });
                 break;
             default: //SABADO
-                horario = yield database_1.default.query('SELECT sabado FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
+                horario = yield database_1.default.query('SELECT sabado FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoCargo.id_cargo])
                     .then(result => {
                     return result.rows.map(obj => {
                         var dias_Horario = [];
