@@ -1,17 +1,28 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resultadosEmpre">Empleados que han realizado Planificación de Horas Extras</div>
+        <div class="d-flex bd-highlight" id="resultadosEmpre">
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
+                matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckHabilitar" class="btn btn-primary" (click)="AutorizarHoras()"
+                style="float: left; margin-left: 10px;">Autorizar</button>
+            <span class="w-100 bd-highlight">
+                Empleados que han realizado Planificación de Horas Extras</span>
+            <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl
+                [(ngModel)]="totalHorasExtras" [ngModelOptions]="{standalone: true}">Horas Totales
+                {{totalHorasExtras}}</button>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <th scope="col">
-                            <div class="col-md" style="margin-left: 5px; text-align: center;">
-                                <input class="form-check-input" type="checkbox" id="selecTodo"
-                                    (change)="$event.target.checked ? AgregarTodos() : QuitarTodos()">
-                                <label class="form-check-label" for="inlineCheckbox1">Todos</label>
-                            </div>
+                        <th>
+                            <mat-checkbox *ngIf="btnCheckHabilitar" (change)="$event ? masterToggle() : null"
+                                [checked]="selectionUno.hasValue() && isAllSelected()"
+                                [indeterminate]="selectionUno.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
                         </th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Fecha Desde</th>
@@ -25,12 +36,10 @@
                 <tbody>
                     <tr *ngFor="let h of horas_extras_plan | paginate:tamanio_pagina:numero_pagina; index as i">
                         <td>
-                            <div class="col-md" style="margin-left: 5px; text-align: center;">
-                                <input class="form-check-input" type="checkbox" name="empleadosSeleccionados"
-                                    id="empleadosSeleccionados{{i}}"
-                                    (change)="$event.target.checked ? AgregarEmpleado(h) : QuitarEmpleado(h)">
-                                <label class="form-check-label" for="inlineCheckbox1"></label>
-                            </div>
+                            <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
+                                (change)="$event ? selectionUno.toggle(h) : null" [checked]="selectionUno.isSelected(h)"
+                                [aria-label]="checkboxLabel(h)">
+                            </mat-checkbox>
                         </td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
@@ -55,30 +64,43 @@
                 </tbody>
             </table>
         </div>
+        <br>
+        <div>
+            <button class="btn btn-sm float-right" ngDefaultControl [(ngModel)]="horasSumadas"
+                style="margin-right: 10px;" [ngModelOptions]="{standalone: true}">Sub-total Horas
+                {{horasSumadas}}</button>
+        </div>
+        <br>
         <mat-paginator [length]="horas_extras_plan.length" [pageSize]="tamanio_pagina"
             [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-    </div>
-    <br>
-    <div class="d-flex justify-content-around" *ngIf="!Habilitar">
-        <button mat-button type="submit" class="btn btn-sm" (click)="AutorizarHoras()">Autorizar Horas Extras
-        </button>
     </div>
 </div>
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarObservacion">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resultadosEmpre">Empleados que requieren justificar Horas Extras</div>
+        <div class="d-flex bd-highlight" id="resultadosEmpre">
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionO()" matSuffix
+                matTooltipPosition="right" matTooltip="Autorizar a todos los empleados la Planificación de Horas Extras"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckHabilitarO" class="btn btn-primary" (click)="AutorizarHoras()"
+                style="float: left; margin-left: 10px;">Autorizar</button>
+            <span class="w-100 bd-highlight">
+                Empleados que requieren justificar Horas Extras</span>
+            <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl
+                [(ngModel)]="totalHorasExtrasO" [ngModelOptions]="{standalone: true}">Horas Totales
+                {{totalHorasExtrasO}}</button>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <th scope="col">
-                            <div class="col-md" style="margin-left: 5px; text-align: center;">
-                                <input class="form-check-input" type="checkbox" id="selecTodo"
-                                    (change)="$event.target.checked ? AgregarTodos_Observacion() : QuitarTodos_Observacion()">
-                                <label class="form-check-label" for="inlineCheckbox1">Todos</label>
-                            </div>
+                        <th>
+                            <mat-checkbox *ngIf="btnCheckHabilitarO" (change)="$event ? masterToggleO() : null"
+                                [checked]="selectionUno.hasValue() && isAllSelectedO()"
+                                [indeterminate]="selectionUno.hasValue() && !isAllSelectedO()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
                         </th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Fecha Desde</th>
@@ -92,14 +114,13 @@
                 <tbody>
                     <tr
                         *ngFor="let h of horas_extras_plan_observacion | paginate:tamanio_pagina_O:numero_pagina_O; index as i">
-                        <td>
-                            <div class="col-md" style="margin-left: 5px; text-align: center;">
-                                <input class="form-check-input" type="checkbox" name="empleadosObservacion"
-                                    id="empleadosObservacion{{i}}"
-                                    (change)="$event.target.checked ? AgregarEmpleado(h) : QuitarEmpleado(h)">
-                                <label class="form-check-label" for="inlineCheckbox1"></label>
-                            </div>
-                        </td>
+                        <th>
+                            <mat-checkbox *ngIf="btnCheckHabilitarO" (change)="$event ? masterToggleO() : null"
+                                [checked]="selectionUno.hasValue() && isAllSelectedO()"
+                                [indeterminate]="selectionUno.hasValue() && !isAllSelectedO()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                        </th>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
                         <td>{{h.fecha_hasta.split('T')[0]}}</td>
@@ -123,14 +144,16 @@
                 </tbody>
             </table>
         </div>
+        <br>
+        <div>
+            <button class="btn btn-sm float-right" ngDefaultControl [(ngModel)]="horasSumadas2"
+                style="margin-right: 10px;" [ngModelOptions]="{standalone: true}">Sub-total Horas
+                {{horasSumadas2}}</button>
+        </div>
+        <br>
         <mat-paginator [length]="horas_extras_plan_observacion.length" [pageSize]="tamanio_pagina_O"
             [pageSizeOptions]="pageSizeOptions_O" id="estilo" (page)="ManejarPaginaObserva($event)"
             showFirstLastButtons>
         </mat-paginator>
-    </div>
-    <br>
-    <div class="d-flex justify-content-around" *ngIf="!HabilitarAutoriza">
-        <button mat-button type="submit" class="btn btn-sm" (click)="AutorizarHoras()">Autorizar Horas Extras
-        </button>
     </div>
 </div>

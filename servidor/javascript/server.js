@@ -59,6 +59,7 @@ const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRu
 const cargaMultipleRutas_1 = __importDefault(require("./rutas/cargaMultiple/cargaMultipleRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
+const datosGeneralesRutas_1 = __importDefault(require("./rutas/datosGenerales/datosGeneralesRutas"));
 const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
@@ -146,6 +147,8 @@ class Servidor {
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
+        // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
+        this.app.use('/generalidades', datosGeneralesRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

@@ -53,10 +53,11 @@ import BIRTHDAY_RUTAS from './rutas/birthday/birthdayRutas';
 import KARDEX_VACACION_RUTAS from './rutas/reportes/kardexVacacionesRutas';
 import ASISTENCIA_RUTAS from './rutas/reportes/asistenciaRutas';
 import CARGA_MULTIPLE_RUTAS from './rutas/cargaMultiple/cargaMultipleRutas';
-
 import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
+import DATOS_GENERALES_RUTAS from './rutas/datosGenerales/datosGeneralesRutas';
 import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
+
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
 
@@ -143,7 +144,7 @@ class Servidor {
         this.app.use('/noti-autorizaciones', NOTIFICACIONES_AUTORIZACIONES_RUTAS);
         this.app.use('/autorizaciones', AUTORIZACIONES_RUTAS);
         this.app.use('/noti-real-time', NOTIFICACION_TIEMPO_REAL_RUTAS);
-        
+
         // Timbres
         this.app.use('/timbres', TIMBRES_RUTAS);
 
@@ -168,6 +169,9 @@ class Servidor {
 
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', CARGA_MULTIPLE_RUTAS);
+
+        // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
+        this.app.use('/generalidades', DATOS_GENERALES_RUTAS);
 
     }
 

@@ -21,7 +21,8 @@ class HorasExtrasPedidasControlador {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
                 'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
-                'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND h.estado = 1 AND ' +
+                'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
+                '(h.estado = 1 OR h.estado = 2) AND ' +
                 'contrato.id = cargo.id_empl_contrato AND cargo.id = h.id_empl_cargo');
             if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
                 return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
@@ -258,8 +259,9 @@ class HorasExtrasPedidasControlador {
     ObtenerAutorizacionHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_hora;
-            const id_empleado = req.params.id_empleado;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizacionesHorasE WHERE id_hora = $1 AND id_empleado = $2', [id, id_empleado]);
+            const SOLICITUD = yield database_1.default.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+                'hp.id AS hora_extra FROM autorizaciones AS a, hora_extr_pedidos AS hp ' +
+                'WHERE hp.id = a.id_hora_extra AND hp.id = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { TiempoAutorizadoComponent } from 'src/app/componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
@@ -34,6 +35,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
 
   selectionUno = new SelectionModel<HoraExtraElemento>(true, []);
 
+  totalHorasExtras;
+
   // Habilitar o Deshabilitar el icono de autorización individual
   auto_individual: boolean = true;
 
@@ -42,6 +45,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  inicioFor = 0;
+
   constructor(
     private restHE: PedHoraExtraService,
     private vistaFlotante: MatDialog,
@@ -49,14 +54,65 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerHorasExtras();
+    this.calcularHoraPaginacion();
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
+    this.calcularHoraPaginacion();
+  }
+
+
+  calcularHoraPaginacion() {
+    if (this.numero_pagina != 1) {
+      console.log("datos originales",this.numero_pagina,this.tamanio_pagina);
+
+      this.inicioFor = (this.numero_pagina - 1) * this.tamanio_pagina;
+      this.SumatoriaHoras(this.inicioFor, ((this.numero_pagina) * this.tamanio_pagina))
+
+    } else {
+      console.log("datos originales else ",this.numero_pagina,this.tamanio_pagina);
+      this.inicioFor = 0;
+      this.SumatoriaHoras(this.inicioFor, ((this.tamanio_pagina) * this.numero_pagina))
+    }
+    // this.SumatoriaHoras(this.inicioFor, ((this.tamanio_pagina - 1) * this.numero_pagina))
+  }
+
+  sumaHoras: any = [];
+  horasSumadas;
+  SumatoriaHoras(inicio, fin) {
+    var t1 = new Date();
+    var tt = new Date();
+    var hora1 = '00:00:00', horaT = '00:00:00'.split(":");
+    this.restHE.ListaAllHoraExtra().subscribe(res => {
+      this.sumaHoras = res;
+      for (var i = inicio; i < fin; i++) {
+        console.log('bucle', inicio, fin, i)
+        if (i < this.sumaHoras.length) {
+          hora1 = (this.sumaHoras[i].num_hora).split(":");
+          t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+          tt.setHours(parseInt(horaT[0]), parseInt(horaT[1]), parseInt(horaT[2]));
+
+          //Aquí hago la suma
+          tt.setHours(tt.getHours() + t1.getHours(), tt.getMinutes() + t1.getMinutes(), tt.getSeconds() + tt.getSeconds());
+          horaT = (moment(tt).format('HH:mm:ss')).split(':');
+          this.horasSumadas = (moment(tt).format('HH:mm:ss'));
+          console.log('sjhuwhduw', this.horasSumadas);
+        }
+        else {
+          console.log('break', this.horasSumadas);
+          break;
+        }
+      }
+      console.log(res);
+    });
   }
 
   obtenerHorasExtras() {
+    var t1 = new Date();
+    var tt = new Date();
+    var hora1 = '00:00:00', horaT = '00:00:00'.split(":");
     this.restHE.ListaAllHoraExtra().subscribe(res => {
       this.horas_extras = res;
       for (var i = 0; i <= this.horas_extras.length - 1; i++) {
@@ -72,7 +128,17 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
         else if (this.horas_extras[i].estado === 4) {
           this.horas_extras[i].estado = 'Negado';
         }
+
+        hora1 = (this.horas_extras[i].num_hora).split(":");
+        t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+        tt.setHours(parseInt(horaT[0]), parseInt(horaT[1]), parseInt(horaT[2]));
+
+        //Aquí hago la suma
+        tt.setHours(tt.getHours() + t1.getHours(), tt.getMinutes() + t1.getMinutes(), tt.getSeconds() + tt.getSeconds());
+        horaT = (moment(tt).format('HH:mm:ss')).split(':');
+        this.totalHorasExtras = (moment(tt).format('HH:mm:ss'));
       }
+
       console.log(res);
     });
   }

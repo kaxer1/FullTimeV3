@@ -281,8 +281,9 @@ class PermisosControlador {
     ObtenerDatosAutorizacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_permiso;
-            const id_empleado = req.params.id_empleado;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1 AND id_empleado = $2', [id, id_empleado]);
+            const SOLICITUD = yield database_1.default.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+                'p.id AS permiso_id FROM autorizaciones AS a, permisos AS p ' +
+                'WHERE p.id = a.id_permiso AND p.id = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }
