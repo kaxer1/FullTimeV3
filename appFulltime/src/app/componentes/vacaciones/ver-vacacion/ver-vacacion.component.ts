@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -8,16 +8,17 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
-import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+
 import { EditarEstadoVacacionAutoriacionComponent } from '../../autorizaciones/editar-estado-vacacion-autoriacion/editar-estado-vacacion-autoriacion.component';
 import { EstadoVacacionesComponent } from "../estado-vacaciones/estado-vacaciones.component";
+import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-
-import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
-
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
+import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
 interface Estado {
   id: number,
@@ -62,6 +63,7 @@ export class VerVacacionComponent implements OnInit {
     private restA: AutorizacionService,
     public restE: EmpleadoService,
     public restEmpre: EmpresaService,
+    public restGeneral: DatosGeneralesService,
     public vistaFlotante: MatDialog
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -70,7 +72,7 @@ export class VerVacacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.BuscarDatos();
-       this.ObtenerLogo();
+    this.ObtenerLogo();
     this.ObtnerColores();
   }
 
@@ -132,7 +134,7 @@ export class VerVacacionComponent implements OnInit {
     });
   }
 
-  // Método para ver la informacion de la solicitud 
+  // Método para ver la información de la solicitud 
   ObtenerSolicitud(id: any) {
     this.datoSolicitud = [];
     this.restV.BuscarDatosSolicitud(id).subscribe(data => {
@@ -142,24 +144,51 @@ export class VerVacacionComponent implements OnInit {
   }
 
   // Método para ver la informacion de la autorización 
+  consulta: any = [];
+  datosEmpleadoAutoriza: any = [];
+  cont: number;
   ObtenerAutorizacion(id: any) {
     console.log('entra')
     this.datosAutorizacion = [];
-    this.restV.BuscarDatosAutorizacion(id, this.idEmpleado).subscribe(data => {
+    this.restV.BuscarDatosAutorizacion(id).subscribe(data => {
       this.datosAutorizacion = data;
       console.log('autorizacion', this.datosAutorizacion);
-      if (this.datosAutorizacion[0].estado_auto === 1) {
-        this.datosAutorizacion[0].estado_auto = 'Pendiente';
-      }
-      else if (this.datosAutorizacion[0].estado_auto === 2) {
-        this.datosAutorizacion[0].estado_auto = 'Pre-autorizado';
-      }
-      else if (this.datosAutorizacion[0].estado_auto === 3) {
-        this.datosAutorizacion[0].estado_auto = 'Autorizado';
-      }
-      else if (this.datosAutorizacion[0].estado_auto === 4) {
-        this.datosAutorizacion[0].estado_auto = 'Negado';
-      }
+      var autorizaciones = this.datosAutorizacion[0].empleado_estado.split(',');
+      console.log('tamaño', autorizaciones.length, ' cadena ', autorizaciones);
+
+      autorizaciones.map(obj => {
+        if (obj != '') {
+          let empleado_id = obj.split('_')[0];
+          var estado_auto = obj.split('_')[1];
+          if (estado_auto === '1') {
+            estado_auto = 'Pendiente';
+          }
+          else if (estado_auto === '2') {
+            estado_auto = 'Pre-autorizado';
+          }
+          else if (estado_auto === '3') {
+            estado_auto = 'Autorizado';
+          }
+          else if (estado_auto === '4') {
+            estado_auto = 'Negado';
+          }
+          this.restGeneral.AutorizaEmpleado(empleado_id).subscribe(dataE => {
+            this.consulta = [];
+            this.consulta = dataE;
+            for (var i = 0; i < this.consulta.length; i++) {
+              this.consulta[i].estado = estado_auto;
+              console.log(this.consulta);
+            }
+            if (this.datosEmpleadoAutoriza.length == 0) {
+              this.datosEmpleadoAutoriza = this.consulta;
+            } else {
+              this.datosEmpleadoAutoriza = this.datosEmpleadoAutoriza.concat(this.consulta);
+            }
+            this.cont = this.datosEmpleadoAutoriza.length;
+            console.log('empleado', this.datosEmpleadoAutoriza);
+          });
+        }
+      })
       console.log('autorizacion', this.datosAutorizacion);
     })
   }
@@ -185,6 +214,13 @@ export class VerVacacionComponent implements OnInit {
     });
   }
 
+  ObtenerFecha() {
+    var fecha
+    var f = moment();
+    fecha = f.format('YYYY-MM-DD');
+    return fecha;
+  }
+
   /****************************************************************************************************** 
   *                                         MÉTODO PARA EXPORTAR A PDF
   ******************************************************************************************************/
@@ -201,21 +237,6 @@ export class VerVacacionComponent implements OnInit {
 
   }
 
-  ObtenerFecha() {
-    var fecha;
-    var f = new Date();
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
-    return fecha;
-  }
-
   getDocumentDefinicion() {
     return {
 
@@ -226,22 +247,16 @@ export class VerVacacionComponent implements OnInit {
 
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
-         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
+
+        var h = new Date();
+        // Formato de hora actual
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
         return {
           margin: 10,
@@ -263,11 +278,11 @@ export class VerVacacionComponent implements OnInit {
         { image: this.logo, width: 150 },
         { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
         { text: 'SOLICITUD DE VACACIONES', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
-        this.presentarDataPDFPermiso(this.ObtenerFecha()),
+        this.SeleccionarMetodo(this.ObtenerFecha()),
       ],
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, },
-        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [20, 0, 20, 0], },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
+        tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.s_color, margin: [20, 0, 20, 0] },
         itemsTableC: { fontSize: 10, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableD: { fontSize: 10, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTable: { fontSize: 10, alignment: 'center', }
@@ -275,96 +290,213 @@ export class VerVacacionComponent implements OnInit {
     };
   }
 
-  presentarDataPDFPermiso(f) {
-    return {
-      table: {
-        widths: ['*'],
-        body: [
-          [{ text: 'INFORMACIÓN GENERAL', style: 'tableHeader' },],
-          [{
-            columns: [
-              { text: [{ text: 'FECHA: ' + f, style: 'itemsTableD' }] },
-              { text: [{ text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD' }] }
-            ]
-          }],
-          [{
-            columns: [
-              { text: [{ text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD' }] },
-              { text: [{ text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD' }] },
-              { text: [{ text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD' }] }
-            ]
-          }],
-          [{
-            columns: [
-              { text: [{ text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD' }] },
-              { text: [{ text: 'Sucursal: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD' }] },
-              { text: [{ text: 'Días de Vacaciones: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD' }] }
-            ]
-          }],
-          [{ text: 'VACACIONES', style: 'tableHeader' }],
-          [{
-            columns: [
-              { text: [{ text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD' }] },
-              { text: [{ text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD' }] },
-            ]
-          }],
-          [{
-            columns: [
-              { text: [{ text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD' }] },
-              { text: [{ text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD' }] },
-            ]
-          }],
-          [{
-            columns: [{
+  SeleccionarMetodo(f) {
+    if (this.cont === 1) {
+      return {
+        table: {
+          widths: ['*'],
+          body: [
+            [{ text: 'INFORMACIÓN GENERAL', style: 'tableHeader' }],
+            [{
               columns: [
-                { width: '*', text: '' },
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto'],
-                    body: [
-                      [{ text: this.datosAutorizacion[0].estado_auto.toUpperCase() + ' POR', style: 'tableHeaderA' },],
-                      [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                      [{ text: this.datosAutorizacion[0].nombre + ' ' + this.datosAutorizacion[0].apellido + '\n' + this.datosAutorizacion[0].cargo, style: 'itemsTable' },]
-                    ]
-                  }
-                },
-                { width: '*', text: '' },
+                { text: [{ text: 'FECHA: ' + f, style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD' }] }
               ]
-            },
-            {
+            }],
+            [{
               columns: [
-                { width: '*', text: '' },
-                {
-                  width: 'auto',
-                  layout: 'lightHorizontalLines',
-                  table: {
-                    widths: ['auto'],
-                    body: [
-                      [{ text: 'EMPLEADO', style: 'tableHeaderA' },],
-                      [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                      [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },]
-                    ]
-                  }
-                },
-                { width: '*', text: '' },
+                { text: [{ text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD' }] },
+                { text: [{ text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD' }] },
+                { text: [{ text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD' }] }
               ]
-            }
-            ]
-          }],
-        ]
-      },
-      layout: {
-        hLineColor: function (i, node) {
-          return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+            }],
+            [{
+              columns: [
+                { text: [{ text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD' }] },
+                { text: [{ text: 'SUCURSAL: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD' }] },
+                { text: [{ text: 'DÍAS DE VACACIONES: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD' }] }
+              ]
+            }],
+            [{ text: 'VACACIONES', style: 'tableHeader' }],
+            [{
+              columns: [
+                { text: [{ text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD' }] },
+              ]
+            }],
+            [{
+              columns: [
+                { text: [{ text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD' }] },
+              ]
+            }],
+            [{
+              columns: [{
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
+                      ]
+                    }
+                  },
+                  { width: '*', text: '' },
+                ]
+              },
+              {
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: 'EMPLEADO', style: 'tableHeaderA' }],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                        [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' }]
+                      ]
+                    }
+                  },
+                  { width: '*', text: '' },
+                ]
+              }
+              ]
+            }],
+          ]
         },
-        paddingLeft: function (i, node) { return 40; },
-        paddingRight: function (i, node) { return 40; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
-      }
-    };
+        layout: {
+          hLineColor: function (i, node) {
+            return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+          },
+          paddingLeft: function (i, node) { return 40; },
+          paddingRight: function (i, node) { return 40; },
+          paddingTop: function (i, node) { return 10; },
+          paddingBottom: function (i, node) { return 10; }
+        }
+      };
+    }
+    else {
+      return {
+        table: {
+          widths: ['*'],
+          body: [
+            [{ text: 'INFORMACIÓN GENERAL', style: 'tableHeader' }],
+            [{
+              columns: [
+                { text: [{ text: 'FECHA: ' + f, style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'CIUDAD: ' + this.datoSolicitud[0].nom_ciudad, style: 'itemsTableD' }] }
+              ]
+            }],
+            [{
+              columns: [
+                { text: [{ text: 'APELLIDOS: ' + this.datoSolicitud[0].apellido_emple, style: 'itemsTableD' }] },
+                { text: [{ text: 'NOMBRES: ' + this.datoSolicitud[0].nombre_emple, style: 'itemsTableD' }] },
+                { text: [{ text: 'CÉDULA: ' + this.datoSolicitud[0].cedula, style: 'itemsTableD' }] }
+              ]
+            }],
+            [{
+              columns: [
+                { text: [{ text: 'RÉGIMEN: ' + this.datoSolicitud[0].nom_regimen, style: 'itemsTableD' }] },
+                { text: [{ text: 'SUCURSAL: ' + this.datoSolicitud[0].nom_sucursal, style: 'itemsTableD' }] },
+                { text: [{ text: 'DÍAS DE VACACIONES: ' + this.datoSolicitud[0].dia_laborable, style: 'itemsTableD' }] }
+              ]
+            }],
+            [{ text: 'VACACIONES', style: 'tableHeader' }],
+            [{
+              columns: [
+                { text: [{ text: 'OBSERVACIÓN: ' + this.datoSolicitud[0].descripcion, style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'FECHA DE INICIO: ' + this.datoSolicitud[0].fec_inicio.split('T')[0], style: 'itemsTableD' }] },
+              ]
+            }],
+            [{
+              columns: [
+                { text: [{ text: 'FECHA INGRESO: ' + this.datoSolicitud[0].fec_ingreso.split('T')[0], style: 'itemsTableD' }] },
+                { text: [{ text: '', style: 'itemsTableD' }] },
+                { text: [{ text: 'FECHA DE FINALIZACIÓN: ' + this.datoSolicitud[0].fec_final.split('T')[0], style: 'itemsTableD' }] },
+              ]
+            }],
+            [{
+              columns: [{
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 2].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 2].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 2].cargo, style: 'itemsTable' }]
+                      ]
+                    }
+                  },
+                  { width: '*', text: '' },
+                ]
+              },
+              {
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
+                        [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
+                      ]
+                    }
+                  },
+                  { width: '*', text: '' },
+                ]
+              },
+              {
+                columns: [
+                  { width: '*', text: '' },
+                  {
+                    width: 'auto',
+                    layout: 'lightHorizontalLines',
+                    table: {
+                      widths: ['auto'],
+                      body: [
+                        [{ text: 'EMPLEADO', style: 'tableHeaderA' }],
+                        [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                        [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' }]
+                      ]
+                    }
+                  },
+                  { width: '*', text: '' },
+                ]
+              }
+              ]
+            }],
+          ]
+        },
+        layout: {
+          hLineColor: function (i, node) {
+            return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+          },
+          paddingLeft: function (i, node) { return 40; },
+          paddingRight: function (i, node) { return 40; },
+          paddingTop: function (i, node) { return 10; },
+          paddingBottom: function (i, node) { return 10; }
+        }
+      };
+    }
   }
 
 }

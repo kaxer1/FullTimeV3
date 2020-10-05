@@ -25,6 +25,7 @@
                             </mat-checkbox>
                         </th>
                         <th scope="col">Empleado</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Fecha Desde</th>
                         <th scope="col">Fecha Hasta</th>
                         <th scope="col">Horas Planificadas</th>
@@ -42,6 +43,7 @@
                             </mat-checkbox>
                         </td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
+                        <td>{{h.plan_estado}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
                         <td>{{h.fecha_hasta.split('T')[0]}}</td>
                         <td>{{h.hora_total_plan}}</td>
@@ -103,6 +105,7 @@
                             </mat-checkbox>
                         </th>
                         <th scope="col">Empleado</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Fecha Desde</th>
                         <th scope="col">Fecha Hasta</th>
                         <th scope="col">Horas Planificadas</th>
@@ -122,6 +125,7 @@
                             </mat-checkbox>
                         </th>
                         <td>{{h.nombre}} {{h.apellido}}</td>
+                        <td>{{h.plan_estado}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
                         <td>{{h.fecha_hasta.split('T')[0]}}</td>
                         <td>{{h.hora_total_plan}}</td>

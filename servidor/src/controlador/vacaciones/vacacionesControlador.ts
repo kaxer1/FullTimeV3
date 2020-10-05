@@ -186,8 +186,9 @@ class VacacionesControlador {
 
   public async ObtenerAutorizacionVacaciones(req: Request, res: Response) {
     const id = req.params.id_vacaciones;
-    const id_empleado = req.params.id_empleado;
-    const SOLICITUD = await pool.query('SELECT *FROM VistaAutorizacionesVacaciones WHERE id_vacaciones = $1 AND id_empleado = $2', [id, id_empleado]);
+    const SOLICITUD = await pool.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+    'v.id AS vacacion_id FROM autorizaciones AS a, vacaciones AS v ' +
+    'WHERE v.id = a.id_vacacion AND v.id = $1', [id]);
     if (SOLICITUD.rowCount > 0) {
       return res.json(SOLICITUD.rows)
     }

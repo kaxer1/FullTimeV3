@@ -17,14 +17,15 @@ class PlanHoraExtraControlador {
     ListarPlanHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const PLAN = yield database_1.default.query('SELECT e.id AS empl_id, e.codigo, e.cedula, e.nombre, e.apellido, ' +
-                't.id_plan_extra, t.tiempo_autorizado, t.fecha_desde, t.fecha_hasta, ' +
+                't.id_empl_cargo, t.id_empl_contrato, t.id_plan_extra, t.tiempo_autorizado, t.fecha_desde, t.fecha_hasta, ' +
                 't.hora_inicio, t.hora_fin, (t.h_fin::interval - t.h_inicio::interval)::time AS hora_total_plan, ' +
                 't.fecha_timbre, t.timbre_entrada, t.timbre_salida, ' +
-                '(t.timbre_salida::interval - t.timbre_entrada::interval)::time AS hora_total_timbre, t.observacion ' +
+                '(t.timbre_salida::interval - t.timbre_entrada::interval)::time AS hora_total_timbre, t.observacion, ' +
+                't.estado AS plan_estado ' +
                 'FROM empleados AS e, (SELECT * FROM timbres_entrada_plan_hora_extra AS tehe ' +
                 'FULL JOIN timbres_salida_plan_hora_extra AS tshe ' +
                 'ON tehe.fecha_timbre_e = tshe.fecha_timbre AND tehe.id_empl = tshe.id_empleado) AS t ' +
-                'WHERE t.observacion = false AND (e.id = t.id_empleado OR e.id = t.id_empl)');
+                'WHERE t.observacion = false AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = \'1\' OR t.estado = \'2\')');
             if (PLAN.rowCount > 0) {
                 res.jsonp(PLAN.rows);
             }
@@ -36,14 +37,15 @@ class PlanHoraExtraControlador {
     ListarPlanHoraExtraObserva(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const PLAN = yield database_1.default.query('SELECT e.id AS empl_id, e.codigo, e.cedula, e.nombre, e.apellido, ' +
-                't.id_plan_extra, t.tiempo_autorizado, t.fecha_desde, t.fecha_hasta, ' +
+                't.id_empl_cargo, t.id_empl_contrato, t.id_plan_extra, t.tiempo_autorizado, t.fecha_desde, t.fecha_hasta, ' +
                 't.hora_inicio, t.hora_fin, (t.h_fin::interval - t.h_inicio::interval)::time AS hora_total_plan, ' +
                 't.fecha_timbre, t.timbre_entrada, t.timbre_salida, ' +
-                '(t.timbre_salida::interval - t.timbre_entrada::interval)::time AS hora_total_timbre, t.observacion ' +
+                '(t.timbre_salida::interval - t.timbre_entrada::interval)::time AS hora_total_timbre, t.observacion, ' +
+                't.estado AS plan_estado ' +
                 'FROM empleados AS e, (SELECT * FROM timbres_entrada_plan_hora_extra AS tehe ' +
                 'FULL JOIN timbres_salida_plan_hora_extra AS tshe ' +
                 'ON tehe.fecha_timbre_e = tshe.fecha_timbre AND tehe.id_empl = tshe.id_empleado) AS t ' +
-                'WHERE t.observacion = true AND (e.id = t.id_empleado OR e.id = t.id_empl)');
+                'WHERE t.observacion = true AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = \'1\' OR t.estado = \'2\')');
             if (PLAN.rowCount > 0) {
                 res.jsonp(PLAN.rows);
             }
@@ -54,11 +56,11 @@ class PlanHoraExtraControlador {
     }
     CrearPlanHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica } = req.body;
+            const { id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, id_empl_cargo, id_empl_contrato } = req.body;
             yield database_1.default.query('INSERT INTO plan_hora_extra (id_empl_planifica, id_empl_realiza, fecha_desde, ' +
-                'fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica) ' +
-                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta,
-                hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica]);
+                'fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, ' +
+                'id_empl_cargo, id_empl_contrato) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta,
+                hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, id_empl_cargo, id_empl_contrato]);
             res.jsonp({ message: 'Planificacion registrada' });
         });
     }

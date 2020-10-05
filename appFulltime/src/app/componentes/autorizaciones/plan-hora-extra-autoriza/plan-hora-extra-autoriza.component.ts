@@ -60,9 +60,8 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log('datos, planificacion', this.data);
     this.obtenerDepartamento();
-
   }
 
   insertarAutorizacion(form) {
@@ -88,19 +87,29 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
       })
     }
     else {
-      for (var i = 0; i <= this.data.datosHora.length - 1; i++) {
-        newAutorizaciones.id_plan_hora_extra = this.data.datosHora[i].id_plan_extra;
-        this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-        }, error => { })
-      }
+      this.data.datosHora.map(obj => {
+        // console.log('i', i, ' ', this.data.datosHora.length - 1, this.data.datosHora.length);
+        newAutorizaciones.id_plan_hora_extra = obj.id_plan_extra;
+        //console.log('ejecuta 1', i);
+        this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_empl_contrato).subscribe(res => {
+          this.departamentos = res;
+          //console.log('ejecuta 2', i);
+          newAutorizaciones.id_departamento = this.departamentos[0].id_departamento;
+          this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+            this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+            console.log(obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita, form.estadoF)
+            //this.EditarEstadoHoraExtra(obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita, form.estadoF)
+          }, error => { })
+        })
+      })
+
       this.limpiarCampos();
       this.dialogRef.close();
     }
   }
 
   obtenerDepartamento() {
-    this.restDepartamento.ConsultarDepartamentoPorContrato(6).subscribe(res => {
+    this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.datosHora.id_empl_contrato).subscribe(res => {
       console.log(res);
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({

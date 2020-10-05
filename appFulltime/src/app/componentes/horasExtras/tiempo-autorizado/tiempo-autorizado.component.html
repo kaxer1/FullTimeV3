@@ -9,7 +9,7 @@
         <div class="container" style="padding-top: 15px;">
             <div style="text-align: center;">
                 <p style="font-size: 20; text-align: center; font-weight: bold;">HORAS REALIZADAS</p>
-                <p style="font-size: 15px;"><b>{{data.hora}}{{data.horas_calculadas.hora}}</b></p>
+                <p style="font-size: 15px;"><b>{{data.horas_calculadas.hora}}</b></p>
                 <button type="submit" class="btn btn-sm" (click)="TiempoAceptado()">Autorizar Horas</button>
             </div>
             <br>
@@ -38,8 +38,7 @@
         <p style="font-size: 20; text-align: center; font-weight: bold;">SOLICITAR JUSTIFICACIÓN</p>
         <mat-form-field>
             <mat-label>Mensaje</mat-label>
-            <textarea matInput #message maxlength="150"
-                placeholder="Ingresar mensaje" [formControl]="mensaje"
+            <textarea matInput #message maxlength="150" placeholder="Ingresar mensaje" [formControl]="mensaje"
                 required></textarea>
             <mat-icon id="icon_help" matSuffix matTooltipPosition="right"
                 matTooltip="Escribir mensaje que se enviará al empleado">

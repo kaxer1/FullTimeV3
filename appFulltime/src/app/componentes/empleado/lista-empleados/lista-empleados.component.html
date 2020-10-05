@@ -130,7 +130,8 @@
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
-                        <td>{{e.estado}}</td>
+                        <td *ngIf="e.estado === 1">Activo</td>
+                        <td *ngIf="e.estado === 2">Inactivo</td>
                         <td>{{e.correo}}</td>
                         <td class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
@@ -211,7 +212,8 @@
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
-                        <td>{{e.estado}}</td>
+                        <td *ngIf="e.estado === 1">Activo</td>
+                        <td *ngIf="e.estado === 2">Inactivo</td>
                     </tr>
                 </tbody>
             </table>

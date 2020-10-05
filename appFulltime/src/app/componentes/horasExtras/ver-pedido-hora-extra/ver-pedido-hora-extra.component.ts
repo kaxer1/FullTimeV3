@@ -215,7 +215,10 @@ export class VerPedidoHoraExtraComponent implements OnInit {
       id_hora: id_hora,
       hora: num_hora
     }
-    this.vistaFolante.open(TiempoAutorizadoComponent, { width: '310px', data: h }).afterClosed().subscribe(items => {
+    this.vistaFolante.open(TiempoAutorizadoComponent, {
+      width: '300px',
+      data: { horas_calculadas: h, pagina: 'solicitud_hora_extra' }
+    }).afterClosed().subscribe(items => {
       if (items === true) {
         this.HabilitarTiempo = true;
       } else {
@@ -362,9 +365,9 @@ export class VerPedidoHoraExtraComponent implements OnInit {
                       table: {
                         widths: ['auto'],
                         body: [
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 2].estado.toUpperCase() + ' POR', style: 'tableHeaderA' },],
-                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                          [{ text: this.datosEmpleadoAutoriza[this.cont - 2].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 2].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 2].cargo, style: 'itemsTable' },]
+                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].estado.toUpperCase() + ' POR', style: 'tableHeaderA' }],
+                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                          [{ text: this.datosEmpleadoAutoriza[this.cont - 1].e_nombre + ' ' + this.datosEmpleadoAutoriza[this.cont - 1].e_apellido + '\n' + this.datosEmpleadoAutoriza[this.cont - 1].cargo, style: 'itemsTable' }]
                         ]
                       }
                     },
@@ -381,8 +384,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
                         widths: ['auto'],
                         body: [
                           [{ text: 'EMPLEADO', style: 'tableHeaderA' },],
-                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] },],
-                          [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' },]
+                          [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                          [{ text: this.datoSolicitud[0].nombre_emple + ' ' + this.datoSolicitud[0].apellido_emple + '\n' + this.datoSolicitud[0].cargo, style: 'itemsTable' }]
                         ]
                       }
                     },

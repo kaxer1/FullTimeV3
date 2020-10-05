@@ -4,6 +4,7 @@ import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
@@ -19,6 +20,36 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { PlanHoraExtraComponent } from 'src/app/componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
+
+export interface PlanificacionHorasExtrasElemento {
+  apellido: string;
+  cargo: string;
+  cedula: string;
+  ciudad: string;
+  codigo: string;
+  correo: string;
+  departamento: string;
+  domicilio: string;
+  empresa: string;
+  esta_civil: number;
+  estado: number;
+  fec_nacimiento: string;
+  genero: number;
+  id: number;
+  id_cargo: number;
+  id_ciudad: number;
+  id_contrato: number;
+  id_departamento: number;
+  id_empresa: number;
+  id_nacionalidad: number;
+  id_sucursal: number;
+  nombre: string;
+  regimen: string;
+  sucursal: string;
+  telefono: string;
+  imagen: string;
+  mail_alternativo: string;
+}
 
 @Component({
   selector: 'app-lista-emple-plan-hora-e',
@@ -118,16 +149,6 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  MarcarDatos() {
-    if ((<HTMLInputElement>document.getElementById('selecTodo')).checked) {
-      for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
-        if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
-          (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = true;
-        }
-      }
-    }
-  }
-
   cont: number = 0;
   contador: number = 0;
   iteracion: number = 0;
@@ -206,52 +227,57 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     });
   }
 
-  // Arreglos para guardar empleados seleccionadas
-  empleadosSeleccionados = [];
+  selectionUno = new SelectionModel<PlanificacionHorasExtrasElemento>(true, []);
 
-  AgregarEmpleado(data: string) {
-    this.empleadosSeleccionados.push(data);
+  // Habilitar o Deshabilitar el icono de autorización individual
+  auto_individual: boolean = true;
+
+  /** Si el número de elementos seleccionados coincide con el número total de filas. */
+  isAllSelected() {
+    const numSelected = this.selectionUno.selected.length;
+    const numRows = this.datosEmpleado.length;
+    return numSelected === numRows;
   }
 
-  QuitarEmpleado(data) {
-    this.empleadosSeleccionados = this.empleadosSeleccionados.filter(s => s !== data);
+  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selectionUno.clear() :
+      this.datosEmpleado.forEach(row => this.selectionUno.select(row));
   }
 
-  // Agregar datos multiples seleccionados
-  AgregarTodos() {
-    this.Habilitar = false;
-    if (this.empleadosSeleccionados.length === 0) {
-      this.empleadosSeleccionados = this.datosEmpleado;
+  /** La etiqueta de la casilla de verificación en la fila pasada*/
+  checkboxLabel(row?: PlanificacionHorasExtrasElemento): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
-    else {
-      this.empleadosSeleccionados = this.empleadosSeleccionados.concat(this.datosEmpleado);
+    return `${this.selectionUno.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  btnCheckHabilitar: boolean = false;
+  HabilitarSeleccion() {
+    if (this.btnCheckHabilitar === false) {
+      this.btnCheckHabilitar = true;
+      this.auto_individual = false;
+    } else if (this.btnCheckHabilitar === true) {
+      this.btnCheckHabilitar = false;
+      this.auto_individual = true;
     }
-    for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
-      if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
-        (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = true;
+  }
+
+  PlanificacionMultiple() {
+    let EmpleadosSeleccionados;
+    EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
+      return {
+        id: obj.id,
+        empleado: obj.nombre + ' ' + obj.apellido,
+        id_contrato: obj.id_contrato,
+        id_cargo: obj.id_cargo
       }
-    }
-    this.Habilitar = false;
-    this.habilitado = { 'visibility': 'hidden' };
-    console.log('empleados', this.empleadosSeleccionados);
+    })
+    this.Planificacion(EmpleadosSeleccionados);
   }
 
-  // Quitar todos los datos seleccionados 
-  limpiarData: any = [];
-  QuitarTodos() {
-    this.limpiarData = this.datosEmpleado;
-    for (var i = 0; i <= this.limpiarData.length - 1; i++) {
-      this.empleadosSeleccionados = this.empleadosSeleccionados.filter(s => s !== this.datosEmpleado[i]);
-      console.log('retirar', this.datosEmpleado[i]);
-    }
-    for (var i = 0; i <= this.tamanio_pagina - 1; i++) {
-      if ((<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i))) {
-        (<HTMLInputElement>document.getElementById('empleadosSeleccionados' + i)).checked = false;
-      }
-    }
-    this.habilitado = { 'visibility': 'visible' };
-    this.Habilitar = true;
-  }
 
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
@@ -314,23 +340,14 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
   Planificar(datosSeleccionado: any) {
     this.vistaRegistrarDatos.open(PlanHoraExtraComponent, { width: '800px', data: { planifica: datosSeleccionado, actualizar: false } })
       .afterClosed().subscribe(item => {
-       /* this.ObtenerNacionalidades();
-        this.ObtenerEmpleadoLogueado(this.idEmpleado);
-        this.VerDatosEmpleado();*/
         window.location.reload();
       });
   }
 
 
-  Planificacion() {
-    this.vistaRegistrarDatos.open(PlanHoraExtraComponent, { width: '800px', data: { planifica: this.empleadosSeleccionados, actualizar: false } })
+  Planificacion(datosSeleccionados) {
+    this.vistaRegistrarDatos.open(PlanHoraExtraComponent, { width: '800px', data: { planifica: datosSeleccionados, actualizar: false } })
       .afterClosed().subscribe(item => {
-        this.habilitado = { 'visibility': 'visible' };
-        this.Habilitar = true;
-        (<HTMLInputElement>document.getElementById('selecTodo')).checked = false;
-       /* this.ObtenerNacionalidades();
-        this.ObtenerEmpleadoLogueado(this.idEmpleado);
-        this.VerDatosEmpleado();*/
         window.location.reload();
       });
   }

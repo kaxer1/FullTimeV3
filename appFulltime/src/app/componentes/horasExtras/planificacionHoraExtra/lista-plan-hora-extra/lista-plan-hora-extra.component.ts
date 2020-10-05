@@ -187,6 +187,20 @@ export class ListaPlanHoraExtraComponent implements OnInit {
       this.horas_extras_plan = res;
       console.log(this.horas_extras_plan);
       for (var i = 0; i <= this.horas_extras_plan.length - 1; i++) {
+
+        if (this.horas_extras_plan[i].plan_estado === '1') {
+          this.horas_extras_plan[i].plan_estado = 'Pendiente';
+        }
+        else if (this.horas_extras_plan[i].plan_estado === '2') {
+          this.horas_extras_plan[i].plan_estado = 'Pre-Autorizado';
+        }
+        else if (this.horas_extras_plan[i].plan_estado === '3') {
+          this.horas_extras_plan[i].plan_estado = 'Autorizado';
+        }
+        else if (this.horas_extras_plan[i].plan_estado === '4') {
+          this.horas_extras_plan[i].plan_estado = 'Negado';
+        }
+
         hora1 = (this.horas_extras_plan[i].hora_total_timbre).split(":");
         t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
         tt.setHours(parseInt(horaT[0]), parseInt(horaT[1]), parseInt(horaT[2]));
@@ -195,6 +209,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         horaT = (moment(tt).format('HH:mm:ss')).split(':');
         this.totalHorasExtras = (moment(tt).format('HH:mm:ss'));
       }
+      console.log('probando', this.horas_extras_plan);
     });
   }
 
@@ -212,6 +227,20 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         this.HabilitarObservacion = true;
       }
       for (var i = 0; i <= this.horas_extras_plan_observacion.length - 1; i++) {
+
+        if (this.horas_extras_plan_observacion[i].plan_estado === '1') {
+          this.horas_extras_plan_observacion[i].plan_estado = 'Pendiente';
+        }
+        else if (this.horas_extras_plan_observacion[i].plan_estado === '2') {
+          this.horas_extras_plan_observacion[i].plan_estado = 'Pre-Autorizado';
+        }
+        else if (this.horas_extras_plan_observacion[i].plan_estado === '3') {
+          this.horas_extras_plan_observacion[i].plan_estado = 'Autorizado';
+        }
+        else if (this.horas_extras_plan_observacion[i].plan_estado === '4') {
+          this.horas_extras_plan_observacion[i].plan_estado = 'Negado';
+        }
+
         hora1 = (this.horas_extras_plan_observacion[i].hora_total_timbre).split(":");
         t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
         tt.setHours(parseInt(horaT[0]), parseInt(horaT[1]), parseInt(horaT[2]));

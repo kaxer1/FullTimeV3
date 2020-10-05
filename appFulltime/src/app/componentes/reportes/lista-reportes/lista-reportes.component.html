@@ -1,0 +1,48 @@
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="lista">
+                <span id="negrita_dep">LISTA DE REPORTES</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <ul>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporteTimbres']" class="texcol">
+                            <span matLine>Reporte Timbres</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reportePermisos']" class="texcol">
+                            <span matLine>Reporte Permisos</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporteAtrasos']" class="texcol">
+                            <span matLine>Reporte Atrasos</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporteEntradaSalida']" class="texcol">
+                            <span matLine>Reporte Entradas Salidas</span>
+                        </a>
+                    </li>
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="lista">
+                <span id="negrita_dep">LISTA DE KARDEX</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <ul>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/kardex/asisitencia/consolidado']" class="texcol">
+                            <span matLine>Kardex - Asistencia</span>
+                        </a>
+                    </li>
+                </ul>
+            </mat-card>
+        </div>
+    </div>
+</div>
