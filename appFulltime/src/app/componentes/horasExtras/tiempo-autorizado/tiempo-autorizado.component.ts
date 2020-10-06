@@ -52,7 +52,7 @@ export class TiempoAutorizadoComponent implements OnInit {
       })
     }
     else {
-       // Guardar horas que el empleador considere de la solicitud de horas extras
+      // Guardar horas que el empleador considere de la solicitud de horas extras
       this.restPH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id_hora, h).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message);
@@ -114,7 +114,22 @@ export class TiempoAutorizadoComponent implements OnInit {
     this.Horas = false;
   }
 
+  // Método para cambiar de estado el campo observacion de planificacion de horas extras
   EnviarMensaje(form) {
+    // Si el empleador emite una observacion entonces actualizamos el estado de la observacion de false a true
+    if (this.data.pagina === 'plan_hora_extra') {
+      let datos = {
+        observacion: true
+      }
+      this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
+      })
+    }
 
+    // Falta enviar al correo del empleado el mensaje logicamente el empleador indica que se debe justificar por
+    //medio del correo del empleador las horas realizadas.
+
+    let mensaje = {
+      mensaje: form.mensajeF
+    }
   }
 }

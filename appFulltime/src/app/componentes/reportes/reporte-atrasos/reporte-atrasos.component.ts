@@ -100,7 +100,7 @@ export class ReporteAtrasosComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-       this.ObtenerLogo();
+    this.ObtenerLogo();
     this.ObtnerColores();
   }
 
@@ -395,44 +395,37 @@ export class ReporteAtrasosComponent implements OnInit {
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
         // Obtener fecha y hora actual
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
-
         return [
-        /*  {
+          {
             table: {
-              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
               body: [
                 [
-                  { text: 'MM: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
-                  { text: 'Minutos de Tolerancia.', border: [false, false, false, false], style: ['quote', 'small'], fontSize: 9, },],
-                [
-                  { text: 'HH: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
-                  { text: 'Horas Laborables.', border: [false, false, false, false], style: ['quote', 'small'], fontSize: 9, },]
+                  { text: 'Glosario de Términos: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'MM = ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Minutos de Tolerancia ', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'HH = ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Horas Laborables ', border: [false, false, false, false], style: ['quote', 'small'] },
+                ]
               ]
             }
-          },*/
+          },
           {
             margin: [10, -2, 10, 0],
             columns: [
               {
                 text: [{
-                  text: 'Glosario de Terminos: MM = Minutos de Tolerancia, HH = Horas Laborables' + '\n Fecha: ' + fecha + ' Hora: ' + time,
+                  text: 'Fecha: ' + fecha + ' Hora: ' + time,
                   alignment: 'left', color: 'blue', opacity: 0.5
                 }]
               },
@@ -471,6 +464,8 @@ export class ReporteAtrasosComponent implements OnInit {
         tableHeaderS: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableF: { fontSize: 9, alignment: 'center' },
+        quote: { margin: [5, -2, 0, -2], italics: true },
+        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
       }
     };
   }

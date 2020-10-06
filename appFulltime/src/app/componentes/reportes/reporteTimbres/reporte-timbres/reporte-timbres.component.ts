@@ -97,7 +97,7 @@ export class ReporteTimbresComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
-       this.ObtenerLogo();
+    this.ObtenerLogo();
     this.ObtnerColores();
   }
 
@@ -225,12 +225,13 @@ export class ReporteTimbresComponent implements OnInit {
         this.timbres = [];
         this.restR.ObtenerTimbres(id_seleccionado, fechas).subscribe(data => {
           this.timbres = data;
+          console.log('datos timbres', this.timbres);
           if (archivo === 'pdf') {
             this.generarPdf('open', id_seleccionado, form);
             this.LimpiarFechas();
           }
           else if (archivo === 'excel') {
-            this.exportToExcel(this.timbres);
+            this.exportToExcelTimbres(id_seleccionado, form);
             this.LimpiarFechas();
           }
         }, error => {
@@ -333,22 +334,15 @@ export class ReporteTimbresComponent implements OnInit {
 
       // Pie de la página
       footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
         return {
           margin: 10,
@@ -385,6 +379,7 @@ export class ReporteTimbresComponent implements OnInit {
         itemsTableD: { fontSize: 9, alignment: 'center' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
+        centrado: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] }
       }
     };
   }
@@ -393,14 +388,14 @@ export class ReporteTimbresComponent implements OnInit {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
-        nombre = obj.nombre,
-          apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
       }
     })
     var diaI = moment(form.inicioForm).day();
@@ -414,22 +409,23 @@ export class ReporteTimbresComponent implements OnInit {
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
               { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
-              { text: [{ text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
               { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
-              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] }
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI' }] },
             ]
           }],
           [{ text: 'LISTA DE TIMBRES PERIODO DEL ' + moment.weekdays(diaI).toUpperCase() + ' ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + moment.weekdays(diaF).toUpperCase() + ' ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'tableHeader' },],
@@ -448,16 +444,27 @@ export class ReporteTimbresComponent implements OnInit {
   }
 
   accionT: string;
+  contarRegistros: number = 0;
   presentarTimbres() {
+    this.contarRegistros = 0;
     return {
       table: {
-        widths: ['*', '*', '*', '*'],
+        widths: ['*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { text: 'TIMBRE', style: 'tableHeader' },
-            { text: 'RELOJ', style: 'tableHeader' },
-            { text: 'ACCIÓN', style: 'tableHeader' },
-            { text: 'OBSERVACIÓN', style: 'tableHeader' },
+            { rowSpan: 2, text: 'N. REGISTRO', style: 'centrado' },
+            { colSpan: 3, text: 'TIMBRE', style: 'tableHeader', fillColor: this.s_color },
+            '', '',
+            { rowSpan: 2, text: 'RELOJ', style: 'centrado' },
+            { rowSpan: 2, text: 'ACCIÓN', style: 'centrado' },
+            { rowSpan: 2, text: 'OBSERVACIÓN', style: 'centrado' },
+          ],
+          [
+            '',
+            { text: 'DÍA', style: 'tableHeader' },
+            { text: 'FECHA', style: 'tableHeader' },
+            { text: 'HORA', style: 'tableHeader' },
+            '', '', ''
           ],
           ...this.timbres.map(obj => {
             if (obj.accion === 'E' || obj.accion === '1') {
@@ -479,9 +486,14 @@ export class ReporteTimbresComponent implements OnInit {
               this.accionT = 'Salida Permiso';
             }
             var day = moment(obj.fec_hora_timbre).day()
-            return [
 
-              { text: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1) + ' ' + moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
+            this.contarRegistros = this.contarRegistros + 1;
+
+            return [
+              { text: this.contarRegistros, style: 'itemsTableD' },
+              { text: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1), style: 'itemsTableD' },
+              { text: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'), style: 'itemsTableD' },
+              { text: moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
               { text: obj.id_reloj, style: 'itemsTableD' },
               { text: this.accionT, style: 'itemsTableD' },
               { text: obj.observacion, style: 'itemsTableD' },
@@ -498,20 +510,61 @@ export class ReporteTimbresComponent implements OnInit {
     };
   }
 
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
-   * ****************************************************************************************************/
-
-  exportToExcel(datos_timbres) {
-    datos_timbres.forEach(obj => {
-      var fecha = moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss');
-      obj.fec_hora_timbre = fecha;
-    });
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datos_timbres);
+  /****************************************************************************************************** 
+    *                                       MÉTODO PARA EXPORTAR A EXCEL
+    ******************************************************************************************************/
+  exportToExcelTimbres(id_empleado: number, form) {
+    for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
+      if (this.datosEmpleado[i].id === id_empleado) {
+        var datosEmpleado = [{
+          codigo: this.datosEmpleado[i].codigo,
+          empleado_nombre: this.datosEmpleado[i].nombre,
+          empleado_apellido: this.datosEmpleado[i].apellido,
+          empleado_cedula: this.datosEmpleado[i].cedula,
+          sucursal: this.datosEmpleado[i].sucursal,
+          departamento: this.datosEmpleado[i].departamento,
+          ciudad: this.datosEmpleado[i].ciudad,
+          cargo: this.datosEmpleado[i].cargo
+        }]
+        break;
+      }
+    }
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEmpleado);
+    const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.timbres.map(obj => {
+      if (obj.accion === 'E' || obj.accion === '1') {
+        this.accionT = 'Entrada';
+      }
+      else if (obj.accion === 'S' || obj.accion === '2') {
+        this.accionT = 'Salida';
+      }
+      else if (obj.accion === 'EA' || obj.accion === '3') {
+        this.accionT = 'Entrada Almuerzo';
+      }
+      else if (obj.accion === 'SA' || obj.accion === '4') {
+        this.accionT = 'Salida Almuerzo';
+      }
+      else if (obj.accion === 'EP' || obj.accion === '5') {
+        this.accionT = 'Entrada Permiso';
+      }
+      else if (obj.accion === 'SP' || obj.accion === '6') {
+        this.accionT = 'Salida Permiso';
+      }
+      var day = moment(obj.fec_hora_timbre).day()
+      return {
+        dia_timbre: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
+        fecha_timbre: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
+        hora_timbre: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
+        id_reloj: obj.id_reloj,
+        accion: this.accionT,
+        observacion: obj.observacion,
+      }
+    }));
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'timbresEmpleado');
-    xlsx.writeFile(wb, "TimbresEmpleadoEXCEL" + new Date().getTime() + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
+    xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
+    xlsx.writeFile(wb, "Timbres - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
+
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML

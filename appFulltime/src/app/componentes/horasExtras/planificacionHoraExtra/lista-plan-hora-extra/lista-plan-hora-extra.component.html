@@ -55,7 +55,7 @@
                                 [routerLink]="['/ver-hora-extra', h.id]">
                                 <p>Documento</p>
                             </a>-->
-                            <i id="iconos" *ngIf="h.tiempo_autorizado === null" class="fas fa-stopwatch"
+                            <i id="iconos" *ngIf="auto_individual" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
                                 (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h)"
                                 matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
@@ -137,7 +137,7 @@
                                 [routerLink]="['/ver-hora-extra', h.id]">
                                 <p>Documento</p>
                             </a>-->
-                            <i id="iconos" *ngIf="h.tiempo_autorizado === null" class="fas fa-stopwatch"
+                            <i id="iconos" *ngIf="auto_individualO" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
                                 (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h)"
                                 matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">

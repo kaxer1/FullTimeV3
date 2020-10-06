@@ -41,7 +41,7 @@
             <textarea matInput #message maxlength="150" placeholder="Ingresar mensaje" [formControl]="mensaje"
                 required></textarea>
             <mat-icon id="icon_help" matSuffix matTooltipPosition="right"
-                matTooltip="Escribir mensaje que se enviará al empleado">
+                matTooltip="Escribir mensaje que se enviará al empleado. No olvidar indicar su correo para recibir la respuesta del empleado.">
                 help_outline</mat-icon>
             <mat-hint align="start"><strong>Ingresar hasta 150 caracteres</strong></mat-hint>
             <mat-hint align="end">{{message.value.length}} / 150</mat-hint>

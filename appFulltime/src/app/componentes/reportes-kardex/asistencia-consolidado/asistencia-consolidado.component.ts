@@ -243,7 +243,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {
@@ -282,15 +282,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
               {
                 text: [
                   {
-                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                    alignment: 'right', color: 'blue',
-                    opacity: 0.5
+                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
                   }
                 ],
               }
             ],
-            fontSize: 10,
-            color: '#A4B8FF',
+            fontSize: 10, color: '#A4B8FF',
           }
         ]
       },
