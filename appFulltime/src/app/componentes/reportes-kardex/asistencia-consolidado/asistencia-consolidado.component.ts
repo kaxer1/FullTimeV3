@@ -527,7 +527,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
     return {
       pageOrientation: 'landscape',
-      watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {
@@ -650,7 +650,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
     return {
       // pageOrientation: 'landscape',
-      watermark: { text: 'Reporte', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
       footer: function (currentPage, pageCount, fecha) {
