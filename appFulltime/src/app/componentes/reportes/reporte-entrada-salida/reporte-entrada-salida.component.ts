@@ -104,6 +104,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     this.VerDatosEmpleado();
     this.ObtenerFeriados();
     this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -120,6 +121,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -296,7 +307,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         this.LimpiarCampos();
       }
       else {
-        this.toastr.info('El empleado no tiene registros de Atrasos.')
+        this.toastr.info('El empleado no tiene registros de Timbres.')
       }
     })
   }
@@ -321,11 +332,11 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         this.empleadoPlan = dataP;
         console.log('plan', this.empleadoPlan);
         // Llamado a ver archivos
-        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales);
 
       }, error => {
         // Llamado a ver archivos cuando no existe horarios de planificación del empleado
-        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales);
       })
 
     }, error => {
@@ -334,21 +345,21 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         this.empleadoPlan = dataP;
         console.log('plan', this.empleadoPlan);
         // Llamado a ver archivos
-        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales);
 
       }, error => {
         // Llamado a ver archivos cuando no existe horarios de planifiación del empleado
-        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales, this.totalEntradasSalidas);
+        this.VerArchivos(id_seleccionado, archivo, form, fechasTotales);
       })
     })
   }
 
-  VerArchivos(id_seleccionado, archivo, form, fechasTotales, entradasSalidas) {
+  VerArchivos(id_seleccionado, archivo, form, fechasTotales) {
     if (archivo === 'pdf') {
       this.generarPdf('open', id_seleccionado, form, fechasTotales);
     }
     else if (archivo === 'excel') {
-      this.exportToExcel(entradasSalidas);
+      this.exportToExcel(id_seleccionado, form, fechasTotales);
     }
   }
 
@@ -436,38 +447,42 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
-
-        return {
-          margin: 10,
-          columns: [
-            {
-              text: [{
-                text: 'Glosario de Terminos: ALM = Almuerzo ' + '\n Fecha: ' + fecha + ' Hora: ' + time,
-                alignment: 'left', color: 'blue', opacity: 0.5
-              }]
-            },
-            { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5 }], }
-          ], fontSize: 10, color: '#A4B8FF',
-        }
+        return [
+          {
+            table: {
+              widths: ['auto', 'auto', 'auto'],
+              body: [
+                [
+                  { text: 'Glosario de Términos: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'ALM = ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Almuerzo ', border: [false, false, false, false], style: ['quote', 'small'] },
+                ]
+              ]
+            }
+          },
+          {
+            margin: [10, -2, 10, 0],
+            columns: [
+              {
+                text: [{
+                  text: 'Fecha: ' + fecha + ' Hora: ' + time, alignment: 'left', color: 'blue', opacity: 0.5
+                }]
+              },
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5 }], }
+            ], fontSize: 9, color: '#A4B8FF',
+          }
+        ]
       },
-
       // Título e imagen del archivo PDF - Contenido del archivo
       content: [
         { image: this.logo, width: 150 },
@@ -491,13 +506,15 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
       // Estilos del archivo PDF 
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableD: { fontSize: 8, alignment: 'center' },
-        itemsTableColor: { fontSize: 8, alignment: 'center', fillColor: '#CCD1D1' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
-        tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED' },
-        centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: '#6495ED', margin: [0, 10, 0, 10] },
+        tableHeaderESC: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color },
+        tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
+        centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] },
+        quote: { margin: [5, -2, 0, -2], italics: true },
+        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
       }
     };
   }
@@ -683,16 +700,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           [
             '', '', '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
             { text: 'HORARIO', style: 'tableHeaderES' },
-            { text: 'TIMBRE', style: 'tableHeaderES' },
+            { text: 'TIMBRE', style: 'tableHeaderESC' },
             '',
           ],
           ...fechasTotales.map(obj => {
@@ -799,16 +816,16 @@ export class ReporteEntradaSalidaComponent implements OnInit {
               { text: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1), style: 'itemsTableD' },
               { text: obj.split(' ')[1], style: 'itemsTableD' },
               { text: horarioE, style: 'itemsTableD' },
-              { text: timbreE, style: 'itemsTableColor' },
+              { text: timbreE, style: 'itemsTableD' },
               { text: entrada, style: 'itemsTableD' },
               { text: horarioAS, style: 'itemsTableD' },
-              { text: timbreAlmuerzoS, style: 'itemsTableColor' },
+              { text: timbreAlmuerzoS, style: 'itemsTableD' },
               { text: almuerzoS, style: 'itemsTableD' },
               { text: horarioAE, style: 'itemsTableD' },
-              { text: timbreAlmuerzoE, style: 'itemsTableColor' },
+              { text: timbreAlmuerzoE, style: 'itemsTableD' },
               { text: almuerzoE, style: 'itemsTableD' },
               { text: horarioS, style: 'itemsTableD' },
-              { text: timbreS, style: 'itemsTableColor' },
+              { text: timbreS, style: 'itemsTableD' },
               { text: salida, style: 'itemsTableD' },
             ];
           })
@@ -827,15 +844,139 @@ export class ReporteEntradaSalidaComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
    * ****************************************************************************************************/
 
-  exportToExcel(datos_timbres) {
-    datos_timbres.forEach(obj => {
-      var fecha = moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss');
-      obj.fec_hora_timbre = fecha;
-    });
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datos_timbres);
+  exportToExcel(id_empleado: number, form, fechasTotales) {
+    for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
+      if (this.datosEmpleado[i].id === id_empleado) {
+        var datosEmpleado = [{
+          codigo: this.datosEmpleado[i].codigo,
+          empleado_nombre: this.datosEmpleado[i].nombre,
+          empleado_apellido: this.datosEmpleado[i].apellido,
+          empleado_cedula: this.datosEmpleado[i].cedula,
+          sucursal: this.datosEmpleado[i].sucursal,
+          departamento: this.datosEmpleado[i].departamento,
+          ciudad: this.datosEmpleado[i].ciudad,
+          cargo: this.datosEmpleado[i].cargo
+        }]
+        break;
+      }
+    }
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEmpleado);
+    const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(fechasTotales.map(obj => {
+      // Inicialización de variables
+      var fecha_timbre, fechaFeriado, dayFecha, day;
+      var entrada = '', salida = '', almuerzoS = '', almuerzoE = '', sinTimbre = '';
+      var horarioE = '-', horarioS = '-', horarioAE = '-', horarioAS = '-';
+      var timbreE = '-', timbreS = '-', timbreAlmuerzoE = '-', timbreAlmuerzoS = '-';
+      dayFecha = obj.split(' ')[1];
+      day = obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1);
+
+      // Búsqueda de los datos
+      this.totalEntradasSalidas.forEach(element => {
+        fecha_timbre = moment(element.fec_hora_timbre).format('DD/MM/YYYY');
+        // TIMBRE EXISTENTE - ESTADO Y HORA DEL TIMBRE
+        if (dayFecha === fecha_timbre && element.accion === 'E') {
+          entrada = 'REGISTRADO'
+          horarioE = element.hora;
+          timbreE = moment(element.fec_hora_timbre).format('HH:mm:ss')
+        }
+        else if (dayFecha === fecha_timbre && element.accion === 'S') {
+          salida = 'REGISTRADO'
+          horarioS = element.hora;
+          timbreS = moment(element.fec_hora_timbre).format('HH:mm:ss')
+        }
+        else if (dayFecha === fecha_timbre && element.accion === 'S/A') {
+          almuerzoS = 'REGISTRADO'
+          horarioAS = element.hora;
+          timbreAlmuerzoS = moment(element.fec_hora_timbre).format('HH:mm:ss')
+        }
+        else if (dayFecha === fecha_timbre && element.accion === 'E/A') {
+          almuerzoE = 'REGISTRADO'
+          horarioAE = element.hora;
+          timbreAlmuerzoE = moment(element.fec_hora_timbre).format('HH:mm:ss')
+        }
+        // NO EXISTE TIMBRE
+        else {
+          if (this.feriados.length != 0) {
+            // Buscar días en la lista de feriados
+            for (var i = 0; i <= this.feriados.length - 1; i++) {
+              fechaFeriado = moment(this.feriados[i].fecha).format('DD/MM/YYYY');
+              if (dayFecha === fechaFeriado) {
+                sinTimbre = 'Feriado';
+                break;
+              }
+              else {
+                sinTimbre = this.IterarFeriados(day, dayFecha);
+              }
+            }
+          }
+          else {
+            sinTimbre = this.IterarFeriados(day, dayFecha);
+          }
+        }
+      });
+
+      // Control de estados SIN TIMBRE
+      if (entrada === '' && sinTimbre === '') {
+        entrada = 'Falta Timbre';
+      }
+      if (salida === '' && sinTimbre === '') {
+        salida = 'Falta Timbre'
+      }
+      if (almuerzoE === '' && sinTimbre === '') {
+        almuerzoE = 'Falta Timbre'
+      }
+      if (almuerzoS === '' && sinTimbre === '') {
+        almuerzoS = 'Falta Timbre'
+      }
+
+      // Control de estados FERIADOS
+      if (entrada === '' && sinTimbre === 'Feriado') {
+        entrada = 'FERIADO';
+      }
+      if (salida === '' && sinTimbre === 'Feriado') {
+        salida = 'FERIADO'
+      }
+      if (almuerzoE === '' && sinTimbre === 'Feriado') {
+        almuerzoE = 'FERIADO'
+      }
+      if (almuerzoS === '' && sinTimbre === 'Feriado') {
+        almuerzoS = 'FERIADO'
+      }
+
+      // Control de estados LIBRES
+      if (entrada === '' && sinTimbre === 'Libre') {
+        entrada = 'LIBRE';
+      }
+      if (salida === '' && sinTimbre === 'Libre') {
+        salida = 'LIBRE'
+      }
+      if (almuerzoE === '' && sinTimbre === 'Libre') {
+        almuerzoE = 'LIBRE'
+      }
+      if (almuerzoS === '' && sinTimbre === 'Libre') {
+        almuerzoS = 'LIBRE'
+      }
+      return {
+        dia_timbre: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1),
+        fecha_timbre: obj.split(' ')[1],
+        horario_entrada: horarioE,
+        timbre_entrada: timbreE,
+        estado_entrada: entrada,
+        horario_salida_almuerzo: horarioAS,
+        timbre_salida_almuerzo: timbreAlmuerzoS,
+        estado_salida_almuerzo: almuerzoS,
+        horario_entrada_almuerzo: horarioAE,
+        timbre_entrada_almuerzo: timbreAlmuerzoE,
+        estado_entrada_almuerzo: almuerzoE,
+        horario_salida: horarioS,
+        timbre_salida: timbreS,
+        estado_salida: salida,
+      }
+    }));
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'timbresEmpleado');
-    xlsx.writeFile(wb, "TimbresEmpleadoEXCEL" + new Date().getTime() + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
+    xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
+    xlsx.writeFile(wb, "Timbres Entradas-Salidas - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
 
   /* ****************************************************************************************************

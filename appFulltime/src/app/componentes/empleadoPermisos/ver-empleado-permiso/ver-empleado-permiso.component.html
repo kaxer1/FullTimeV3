@@ -15,87 +15,54 @@
                     <div class="container" style="padding-top: 15px;" *ngFor="let p of InfoPermiso">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Fecha Creación:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.fec_creacion.split('T')[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Empleado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.nombre}} {{p.apellido}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Cédula:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.cedula}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Tipo Permiso:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.nom_permiso}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Código Permiso:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.id}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Descripción:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.descripcion}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.estado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Inicio:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.fec_inicio.split('T')[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Fecha Final:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{p.fec_final.split('T')[0]}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Certificado:</label>
-                            </div>
-                            <div class="col">
-                                <a id="iconos" class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 20px; text-align: center;" matSuffix
-                                    matTooltipPosition="right" matTooltip="Certificado"
-                                    href="http://192.168.0.192:3001/empleadoPermiso/documentos/{{p.documento}}"
-                                    target="_blank">
-                                    <p>{{p.docu_nombre}}</p>
-                                </a>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Fecha Creación:</label>
+                                    <label>{{p.fec_creacion.split('T')[0]}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Empleado:</label>
+                                    <label>{{p.nombre}} {{p.apellido}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Cédula:</label>
+                                    <label>{{p.cedula}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Tipo Permiso:</label>
+                                    <label>{{p.nom_permiso}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Código Permiso:</label>
+                                    <label>{{p.id}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Descripción:</label>
+                                    <label>{{p.descripcion}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Estado:</label>
+                                    <label>{{p.estado}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Fecha Inicio:</label>
+                                    <label>{{p.fec_inicio.split('T')[0]}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Fecha Final:</label>
+                                    <label>{{p.fec_final.split('T')[0]}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Certificado:</label>
+                                    <label>
+                                        <a id="iconos" class="fas fa-file-alt"
+                                            style="color:rgb(197, 95, 11); margin-left: 20px; text-align: center;"
+                                            matSuffix matTooltipPosition="right" matTooltip="Certificado"
+                                            href="http://192.168.0.192:3001/empleadoPermiso/documentos/{{p.documento}}"
+                                            target="_blank">
+                                            <p>{{p.docu_nombre}}</p>
+                                        </a>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 5px;">
@@ -136,47 +103,33 @@
                     <div class="container" style="padding-top: 15px;" *ngFor="let a of autorizacion">
                         <div class="row">
                             <div class="col">
-                                <label class="col-sm col-form-label">Código autorización:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{a.id}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Estado:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{estado}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Orden:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{a.orden}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Departamento:</label>
-                            </div>
-                            <div class="col">
-                                <label class="col col-form-label">{{departamento}}</label>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <label class="col-sm col-form-label">Solicitud de Permiso:</label>
-                            </div>
-                            <div class="col">
-                                <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
-                                    style="color:red; margin-left: 20px; text-align: center;" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="departamento-tooltip"
-                                    matTooltip="Descargar Solicitud de Permiso en formato PDF">
-                                    <p>Permiso</p>
-                                </i>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Código autorización:</label>
+                                    <label>{{a.id}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Estado:</label>
+                                    <label>{{estado}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Orden:</label>
+                                    <label>{{a.orden}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Departamento:</label>
+                                    <label>{{departamento}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Solicitud de Permiso:</label>
+                                    <label>
+                                        <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
+                                            style="color:red; margin-left: 20px; text-align: center;" matSuffix
+                                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                            matTooltip="Descargar Solicitud de Permiso en formato PDF">
+                                            <p>Permiso</p>
+                                        </i>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 5px;">

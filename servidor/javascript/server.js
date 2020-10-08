@@ -59,6 +59,7 @@ const asistenciaRutas_1 = __importDefault(require("./rutas/reportes/asistenciaRu
 const cargaMultipleRutas_1 = __importDefault(require("./rutas/cargaMultiple/cargaMultipleRutas"));
 const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"));
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
+const datosGeneralesRutas_1 = __importDefault(require("./rutas/datosGenerales/datosGeneralesRutas"));
 const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
@@ -168,6 +169,8 @@ class Servidor {
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
+        // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
+        this.app.use('/generalidades', datosGeneralesRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {
@@ -198,6 +201,7 @@ SERVIDOR.start();
 const sendBirthday_1 = require("./libs/sendBirthday");
 const avisoVacaciones_1 = require("./libs/avisoVacaciones");
 const ContarHoras_1 = require("./libs/ContarHoras");
+const NotiTimbres_1 = require("./libs/NotiTimbres");
 const SinTimbres_1 = require("./libs/SinTimbres");
 const DesactivarEmpleado_1 = require("./libs/DesactivarEmpleado");
 // llama al meodo de cumpleaños
@@ -209,6 +213,6 @@ avisoVacaciones_1.beforeTwoDays();
 avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
 // conteoPermisos();
-// NotificacionTimbreAutomatica();
+NotiTimbres_1.NotificacionTimbreAutomatica();
 SinTimbres_1.NotificacionSinTimbres();
 DesactivarEmpleado_1.DesactivarFinContratoEmpleado();

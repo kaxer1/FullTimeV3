@@ -29,7 +29,7 @@ class PermisosRutas {
         this.router.put('/:id/estado', verificarToken_1.TokenValidation, permisosControlador_1.default.ActualizarEstado);
         this.router.put('/:id/permiso-solicitado', verificarToken_1.TokenValidation, permisosControlador_1.default.EditarPermiso);
         this.router.get('/datosSolicitud/:id_emple_permiso', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerDatosSolicitud);
-        this.router.get('/datosAutorizacion/:id_permiso/:id_empleado', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerDatosAutorizacion);
+        this.router.get('/datosAutorizacion/:id_permiso', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerDatosAutorizacion);
         this.router.delete('/eliminar/:id_permiso/:doc', verificarToken_1.TokenValidation, permisosControlador_1.default.EliminarPermiso);
     }
 }

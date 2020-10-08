@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -8,8 +8,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 @Component({
   selector: 'app-registro-empresa',
   templateUrl: './registro-empresa.component.html',
-  styleUrls: ['./registro-empresa.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./registro-empresa.component.css']
 })
 export class RegistroEmpresaComponent implements OnInit {
 
@@ -125,7 +124,9 @@ export class RegistroEmpresaComponent implements OnInit {
       correo: form.correoForm,
       tipo_empresa: form.tipoForm,
       representante: form.representanteForm,
-      establecimiento: form.establecimientoForm
+      establecimiento: form.establecimientoForm,
+      color_p: '#6495ED',
+      color_s: '#00FF00'
     };
     this.VerificarOtroTipo(form, datosEmpresa);
   }

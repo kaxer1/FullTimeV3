@@ -45,6 +45,35 @@ class TimbresControlador {
             return res.status(404).jsonp({ message: 'No se encuentran registros' });
         });
     }
+    ObtenerAvisosTimbresEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            console.log(id_empleado);
+            const TIMBRES_NOTIFICACION = yield database_1.default.query('SELECT * FROM realtime_timbres WHERE id_receives_empl = $1 ORDER BY create_at DESC', [id_empleado])
+                .then((result) => __awaiter(this, void 0, void 0, function* () {
+                if (result.rowCount > 0) {
+                    return yield Promise.all(result.rows.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                        let nombre = yield database_1.default.query('SELECT nombre, apellido FROM empleados WHERE id = $1', [obj.id_send_empl]).then(ele => {
+                            return ele.rows[0].nombre + ' ' + ele.rows[0].apellido;
+                        });
+                        return {
+                            create_at: obj.create_at,
+                            descripcion: obj.descripcion,
+                            visto: obj.visto,
+                            id_timbre: obj.id_timbre,
+                            empleado: nombre,
+                            id: obj.id
+                        };
+                    })));
+                }
+                return [];
+            }));
+            if (TIMBRES_NOTIFICACION.length > 0) {
+                return res.jsonp(TIMBRES_NOTIFICACION);
+            }
+            return res.status(404).jsonp({ message: 'No se encuentran registros' });
+        });
+    }
     ActualizarVista(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_noti_timbre;
@@ -54,6 +83,22 @@ class TimbresControlador {
                 .then(result => {
                 res.jsonp({ message: 'Vista Actualizada' });
             });
+        });
+    }
+    EliminarMultiplesAvisos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsRealtimeTimbres = req.body;
+            console.log(arrayIdsRealtimeTimbres);
+            if (arrayIdsRealtimeTimbres.length > 0) {
+                arrayIdsRealtimeTimbres.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('DELETE FROM realtime_timbres WHERE id = $1', [obj])
+                        .then(result => {
+                        console.log(result.command, 'REALTIME ELIMINADO ====>', obj);
+                    });
+                }));
+                return res.jsonp({ message: 'Todos las notificaciones han sido eliminadas' });
+            }
+            return res.jsonp({ message: 'No seleccionó ningún timbre' });
         });
     }
 }

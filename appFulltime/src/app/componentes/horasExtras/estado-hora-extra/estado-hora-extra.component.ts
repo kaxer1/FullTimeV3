@@ -1,8 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
+
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 interface Estados {
   valor: number;
@@ -23,9 +25,9 @@ export class EstadoHoraExtraComponent implements OnInit {
 
   estados: Estados[] = [
     { valor: 1, nombre: 'Pendiente' },
-    { valor: 2, nombre: 'Rechazado' },
+    { valor: 2, nombre: 'Pre-Autorizado'},
     { valor: 3, nombre: 'Aceptado' },
-    { valor: 4, nombre: 'Eliminado' }
+    { valor: 4, nombre: 'Rechazado' }
   ];
 
   id_empleado_loggin: number;
@@ -46,16 +48,9 @@ export class EstadoHoraExtraComponent implements OnInit {
   }
 
   tiempo () {
-    var f = new Date();
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
+    console.log('fecha Actual', this.FechaActual);
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado')); 
   }
 

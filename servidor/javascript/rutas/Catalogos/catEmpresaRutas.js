@@ -26,6 +26,7 @@ class DepartamentoRutas {
         this.router.get('/buscar/datos/:id', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.ListarEmpresaId);
         this.router.get('/logo/codificado/:id_empresa', verificarToken_1.TokenValidation, catEmpresaControlador_1.default.getImagenBase64);
         this.router.put('/logo/:id_empresa/uploadImage', [verificarToken_1.TokenValidation, multipartMiddleware], catEmpresaControlador_1.default.ActualizarLogoEmpresa);
+        this.router.put('/colores', [verificarToken_1.TokenValidation], catEmpresaControlador_1.default.ActualizarColores);
     }
 }
 const EMPRESA_RUTAS = new DepartamentoRutas();

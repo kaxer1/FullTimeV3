@@ -16,6 +16,7 @@ const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
 const ts_md5_1 = require("ts-md5");
+const MetodosHorario_1 = require("../../../libs/MetodosHorario");
 const builder = require('xmlbuilder');
 class EmpleadoControlador {
     list(req, res) {
@@ -108,7 +109,7 @@ class EmpleadoControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                // realiza un capital letter a los nombres y apellidos
+                // Realiza un capital letter a los nombres y apellidos
                 let nombres = data.nombre.split(' ');
                 let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
                 let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
@@ -117,18 +118,27 @@ class EmpleadoControlador {
                 let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
                 let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
                 const apellido = lastname1 + ' ' + lastname2;
-                // encriptar contraseña
+                // Encriptar contraseña
                 const md5 = new ts_md5_1.Md5();
                 const contrasena = md5.appendStr(data.contrasena).end();
-                const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, codigo, usuario, estado_user, rol, app_habilita } = data;
-                //obtener id del rol
+                // Datos que se leen de la plantilla ingresada
+                const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+                //Obtener id del rol
                 const id_rol = yield database_1.default.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
-                //var id_horario = id_rol.rows[0]['id'];
+                // Obtener último código registrado
+                const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+                var codigo = parseInt(VALOR.rows[0].valor) + 1;
+                console.log('codigo', codigo);
                 if (cedula != undefined) {
+                    // Registro de nuevo empleado
                     yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+                    // Obtener el id del empleado ingresado
                     const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
                     const id_empleado = oneEmpley.rows[0].id;
+                    // Registro de los datos de usuario
                     yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+                    // Actualización del código
+                    yield database_1.default.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
                 }
                 else {
                     res.jsonp({ error: 'plantilla equivocada' });
@@ -289,6 +299,27 @@ class EmpleadoControlador {
                 return res.jsonp({ message: 'Todos los empleados han sido activados' });
             }
             return res.jsonp({ message: 'No ha sido activado ningún empleado' });
+        });
+    }
+    ReactivarMultiplesEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const arrayIdsEmpleados = req.body;
+            console.log(arrayIdsEmpleados);
+            if (arrayIdsEmpleados.length > 0) {
+                arrayIdsEmpleados.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
+                    yield database_1.default.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+                        .then(result => {
+                        console.log(result.command, 'EMPLEADO ====>', obj);
+                    });
+                    yield database_1.default.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+                        .then(result => {
+                        console.log(result.command, 'USUARIO ====>', obj);
+                    });
+                    MetodosHorario_1.EstadoHorarioPeriVacacion(obj);
+                }));
+                return res.jsonp({ message: 'Todos los empleados seleccionados han sido reactivados' });
+            }
+            return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
         });
     }
 }

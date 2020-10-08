@@ -13,10 +13,18 @@ import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-
 })
 export class TiempoAutorizadoComponent implements OnInit {
 
-  timer = new FormControl('');
+  Observacion: boolean = true;
+  Horas: boolean = false;
+
+  timer = new FormControl('', Validators.required);
+  mensaje = new FormControl('', Validators.required);
 
   public TiempoHoraExtraForm = new FormGroup({
-    timerForm: this.timer
+    timerForm: this.timer,
+  });
+
+  public MensajeForm = new FormGroup({
+    mensajeF: this.mensaje
   });
 
   constructor(
@@ -28,14 +36,15 @@ export class TiempoAutorizadoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log('data de la hora', this.data);
   }
 
   GuardarTiempoAutorizado(form) {
+    let h = {
+      hora: form.timerForm + ':00'
+    }
+    // Guardar horas que el empleador considere de la planificación de horas extras
     if (this.data.pagina === 'plan_hora_extra') {
-      let h = {
-        hora: form.timerForm + ':00'
-      }
       this.restPlanH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id, h).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message);
@@ -43,28 +52,21 @@ export class TiempoAutorizadoComponent implements OnInit {
       })
     }
     else {
-      console.log(form.timerForm + ':00');
-      let h = {
-        hora: form.timerForm + ':00'
-      }
-      this.restPH.AutorizarTiempoHoraExtra(this.data.id_hora, h).subscribe(res => {
+      // Guardar horas que el empleador considere de la solicitud de horas extras
+      this.restPH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id_hora, h).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message);
         this.dialogRef.close(true)
       })
     }
-
   }
 
   TiempoAceptado() {
-
-    console.log(this.data);
-
+    let h = {
+      hora: this.data.horas_calculadas.hora
+    }
+    // Guardar horas extras realizadas de la planificación de horas extras
     if (this.data.pagina === 'plan_hora_extra') {
-      console.log(this.data);
-      let h = {
-        hora: this.data.horas_calculadas.hora
-      }
       this.restPlanH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id, h).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message);
@@ -72,10 +74,8 @@ export class TiempoAutorizadoComponent implements OnInit {
       })
     }
     else {
-      let h = {
-        hora: this.data.hora
-      }
-      this.restPH.AutorizarTiempoHoraExtra(this.data.id_hora, h).subscribe(res => {
+      // Guardar horas extras realizadas de la solicitud de horas extras
+      this.restPH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id_hora, h).subscribe(res => {
         console.log(res);
         this.toastr.success(res.message);
         this.dialogRef.close(true)
@@ -102,5 +102,34 @@ export class TiempoAutorizadoComponent implements OnInit {
 
   LimpiarCampoHoras() {
     this.TiempoHoraExtraForm.patchValue({ timerForm: '' })
+  }
+
+  MostrarObservacion() {
+    this.Observacion = false;
+    this.Horas = true;
+  }
+
+  MostrarHoras() {
+    this.Observacion = true;
+    this.Horas = false;
+  }
+
+  // Método para cambiar de estado el campo observacion de planificacion de horas extras
+  EnviarMensaje(form) {
+    // Si el empleador emite una observacion entonces actualizamos el estado de la observacion de false a true
+    if (this.data.pagina === 'plan_hora_extra') {
+      let datos = {
+        observacion: true
+      }
+      this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
+      })
+    }
+
+    // Falta enviar al correo del empleado el mensaje logicamente el empleador indica que se debe justificar por
+    //medio del correo del empleador las horas realizadas.
+
+    let mensaje = {
+      mensaje: form.mensajeF
+    }
   }
 }

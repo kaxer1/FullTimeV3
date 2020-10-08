@@ -1,24 +1,23 @@
-<mat-icon id="movilidad">open_with</mat-icon>
-<div class="tituloNotifica">
-    <span mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Autorización</span>
+<div class="d-flex bd-highlight tituloNotifica">
+    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
+    <h5 class="w-100 bd-highlight align-self-center">Registrar Autorización</h5>
 </div>
 <form [formGroup]="nuevaAutorizacionesForm">
     <mat-card-content>
         <div class="container" style="text-align: center;">
             <div class="nota">
-                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
-                    Guardar.</span>
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
             </div>
             <div class="row">
                 <div class="col">
-                    <mat-form-field>
+                    <!-- <mat-form-field>
                         <mat-label>Id documento</mat-label>
                         <input matInput placeholder="Empleado" [formControl]="idDocumento" required>
                         <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de orden">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <br>
+                    <br> -->
                     <mat-form-field>
                         <mat-label>Orden</mat-label>
                         <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
@@ -43,13 +42,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="Habilitado">
                     <mat-form-field>
                         <mat-label>Departamento</mat-label>
                         <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de orden">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="idDepartamento" required>
+                        <mat-select [formControl]="idDepartamento">
                             <mat-option *ngFor="let d of departamentos" [value]="d.id_departamento">
                                 {{d.nombre}}
                             </mat-option>

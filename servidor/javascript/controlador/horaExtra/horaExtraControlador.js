@@ -13,13 +13,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-// import { ValidarHorarioEmpleado } from '../../libs/ValidacionHorario'
 const MetodosHorario_1 = require("../../libs/MetodosHorario");
 const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, h.fec_solicita, h.descripcion, h.num_hora, e.nombre, e.apellido FROM hora_extr_pedidos AS h, empleados AS e WHERE h.id_usua_solicita = e.id');
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
+                'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
+                '(h.estado = 1 OR h.estado = 2) AND ' +
+                'contrato.id = cargo.id_empl_contrato AND cargo.id = h.id_empl_cargo');
             if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
                 return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
             }
@@ -88,9 +92,9 @@ class HorasExtrasPedidasControlador {
             });
             const estadoAutorizacion = [
                 { id: 1, nombre: 'Pendiente' },
-                { id: 2, nombre: 'Rechazado' },
+                { id: 2, nombre: 'Pre-Autorizado' },
                 { id: 3, nombre: 'Aceptado' },
-                { id: 4, nombre: 'Eliminado' }
+                { id: 4, nombre: 'Rechazado' }
             ];
             let nombreEstado = '';
             estadoAutorizacion.forEach(obj => {
@@ -98,6 +102,7 @@ class HorasExtrasPedidasControlador {
                     nombreEstado = obj.nombre;
                 }
             });
+            console.log('estado', estado);
             // codigo para enviar notificacion o correo al jefe de su propio departamento, independientemente del nivel.
             // obj.id_dep === correoInfoPideHoraExtra.rows[0].id_departamento && obj.id_suc === correoInfoPideHoraExtra.rows[0].id_sucursal
             if (estado === true) {
@@ -161,16 +166,22 @@ class HorasExtrasPedidasControlador {
             const { estado, id_hora_extra, id_departamento } = req.body;
             console.log(estado, id_hora_extra, id_departamento);
             yield database_1.default.query('UPDATE hora_extr_pedidos SET estado = $1 WHERE id = $2', [estado, id]);
-            const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [id_departamento]);
+            const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, ' +
+                'cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, ' +
+                'e.nombre, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, ' +
+                'empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, ' +
+                'config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND ' +
+                'da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id ' +
+                'AND ecn.id_empleado = e.id AND e.id = c.id_empleado AND da.estado = true', [id_departamento]);
             const InfoHoraExtraReenviarEstadoEmpleado = yield database_1.default.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
             console.log(InfoHoraExtraReenviarEstadoEmpleado.rows);
             const email = process.env.EMAIL;
             const pass = process.env.PASSWORD;
             let estadoHoraExtra = [
                 { valor: 1, nombre: 'Pendiente' },
-                { valor: 2, nombre: 'Rechazado' },
+                { valor: 2, nombre: 'Pre-Autorizado' },
                 { valor: 3, nombre: 'Aceptado' },
-                { valor: 4, nombre: 'Eliminado' }
+                { valor: 4, nombre: 'Rechazado' }
             ];
             let nombreEstado = '';
             estadoHoraExtra.forEach(obj => {
@@ -248,8 +259,9 @@ class HorasExtrasPedidasControlador {
     ObtenerAutorizacionHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_hora;
-            const id_empleado = req.params.id_empleado;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizacionesHorasE WHERE id_hora = $1 AND id_empleado = $2', [id, id_empleado]);
+            const SOLICITUD = yield database_1.default.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+                'hp.id AS hora_extra FROM autorizaciones AS a, hora_extr_pedidos AS hp ' +
+                'WHERE hp.id = a.id_hora_extra AND hp.id = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }
@@ -277,8 +289,6 @@ class HorasExtrasPedidasControlador {
     }
     ObtenerHorarioEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const id_empleado = req.userIdEmpleado;
-            // const id_empl_cargo = req.userIdCargo;
             const id_empl_cargo = parseInt(req.params.id_cargo);
             console.log('IDS: ', id_empl_cargo);
             // let respuesta = await ValidarHorarioEmpleado(id_empleado, id_empl_cargo)

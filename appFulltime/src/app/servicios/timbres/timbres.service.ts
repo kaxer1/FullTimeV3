@@ -13,7 +13,7 @@ export class TimbresService {
   ) { }
 
   /**
-   * Metodo para traer las notificaciones de atrasos o salidas antes
+   * Metodo para traer las notificaciones de atrasos o salidas antes solo vienen 5 notificaciones
    * @param id_empleado Id del empleado loggeado
    */
   NotiTimbresRealTime(id_empleado: number) {
@@ -23,6 +23,14 @@ export class TimbresService {
   PutVistaTimbre(id_noti_timbre: number) {
     let data = {visto:true};
     return this.http.put(`${this.API_URL}/timbres/noti-timbres/vista/${id_noti_timbre}`, data);
+  }
+
+  AvisosTimbresRealtime(id_empleado: number) {
+    return this.http.get(`${this.API_URL}/timbres/noti-timbres/avisos/${id_empleado}`);
+  }
+  
+  EliminarAvisos(Seleccionados: any[]) {
+    return this.http.put<any>(`${this.API_URL}/timbres/eliminar-multiples/avisos`, Seleccionados); //Eliminacion de datos seleccionados.
   }
 
 }

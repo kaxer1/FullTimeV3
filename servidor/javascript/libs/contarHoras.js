@@ -79,7 +79,7 @@ function ListaTimbresDiarioToEmpleado(hoy) {
 }
 function HorarioEmpleado(id_cargo, dia_inicia_semana, fechaIterada) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
+        return yield database_1.default.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE estado = 1 AND id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
             .then(result => {
             let respuesta = [];
             result.rows.forEach(res => {
@@ -416,7 +416,7 @@ function AsistenciaDetalleConsolidado(arr, tlaboral, id_cargo, minu_espera) {
 function MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, TiemposEmpleado, id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
         let arr = [];
-        let minu_espera = yield database_1.default.query('SELECT distinct dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.id_horarios = ch.id AND dh.id_horario = ch.id', [id_cargo])
+        let minu_espera = yield database_1.default.query('SELECT distinct dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND eh.id_horarios = ch.id AND dh.id_horario = ch.id', [id_cargo])
             .then(result => { return result.rows[0].minu_espera; });
         for (let i = 1; i <= hasta.getDate() + 1; i++) {
             let semanaFecha = ObtenerDiaIniciaSemana(new Date(desde));
@@ -459,7 +459,7 @@ exports.RegistrarAsistenciaByTimbres = function () {
 };
 function HoraIngreso_MinAlmuerzo_HorasLabora(id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT distinct dh.hora, ch.min_almuerzo, ch.hora_trabajo FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND ch.id = eh.id_horarios AND ch.id = dh.id_horario', [id_cargo])
+        return yield database_1.default.query('SELECT distinct dh.hora, ch.min_almuerzo, ch.hora_trabajo FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND ch.id = eh.id_horarios AND ch.id = dh.id_horario', [id_cargo])
             .then(result => {
             return result.rows[0];
         });

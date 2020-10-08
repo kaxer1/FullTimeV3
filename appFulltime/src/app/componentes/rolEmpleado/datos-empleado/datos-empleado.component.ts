@@ -110,6 +110,7 @@ export class DatosEmpleadoComponent implements OnInit {
     this.obtenerPeriodoVacaciones(parseInt(this.idEmpleado));
     this.obtenerVacaciones(parseInt(this.idEmpleado));
     this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para obtener el logo de la empresa
@@ -117,6 +118,16 @@ export class DatosEmpleadoComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logoE = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -483,7 +494,7 @@ export class DatosEmpleadoComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -534,7 +545,7 @@ export class DatosEmpleadoComponent implements OnInit {
       styles: {
         header: { fontSize: 18, bold: true, margin: [0, 20, 0, 10], decoration: 'underline' },
         name: { fontSize: 16, bold: true },
-        tableHeader: { bold: true, alignment: 'center', fillColor: '#6495ED' }
+        tableHeader: { bold: true, alignment: 'center', fillColor: this.p_color }
       }
     };
   }

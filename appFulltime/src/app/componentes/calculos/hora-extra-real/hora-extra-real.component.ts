@@ -554,7 +554,6 @@ export class HoraExtraRealComponent implements OnInit {
           fontSize: 10,
           bold: true,
           alignment: 'center',
-          fillColor: '#6495ED'
         },
         itemsTable: {
           fontSize: 8
@@ -806,7 +805,6 @@ export class HoraExtraRealComponent implements OnInit {
           fontSize: 10,
           bold: true,
           alignment: 'center',
-          fillColor: '#6495ED'
         },
         itemsTable: {
           fontSize: 8

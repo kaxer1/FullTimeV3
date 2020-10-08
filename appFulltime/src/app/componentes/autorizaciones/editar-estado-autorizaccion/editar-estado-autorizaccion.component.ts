@@ -19,10 +19,10 @@ interface Estado {
 export class EditarEstadoAutorizaccionComponent implements OnInit {
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente' },
+    // { id: 1, nombre: 'Pendiente' },
     { id: 2, nombre: 'Pre-autorizado' },
     { id: 3, nombre: 'Autorizado' },
-    { id: 4, nombre: 'Negado' },
+    { id: 4, nombre: 'Negado' }
   ];
 
   estado = new FormControl('', Validators.required);
@@ -46,9 +46,15 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
     console.log(this.data);
     console.log(this.data.auto.id_documento);
     console.log(this.data.empl[0].id_empleado);
-    this.estadoAutorizacionesForm.patchValue({
-      estadoF: this.data.auto.estado
-    });
+    console.log(this.data.empl[0].estado);
+    if (this.data.empl[0].estado === "Pendiente") {
+      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
+    } else {
+      this.estadoAutorizacionesForm.patchValue({
+        estadoF: this.data.auto.estado
+      });
+    }
+
     this.tiempo();
   }
 
@@ -69,8 +75,9 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
   idNoti: any = [];
   ActualizarEstadoAutorizacion(form) {
     let newAutorizaciones = {
+      id_documento: this.data.auto.id_documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       estado: form.estadoF,
-      id_permiso: this.data.auto.id_documento, 
+      id_permiso: this.data.auto.id_permiso, 
       id_departamento: this.data.auto.id_departamento,
       id_empleado: this.data.empl[0].id_empleado
     }

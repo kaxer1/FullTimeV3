@@ -92,14 +92,14 @@ class ReportesControlador {
         const DATOS = await pool.query('SELECT * FROM permisos AS p INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, h.id_empl_cargo, ch.hora_trabajo AS horario_horas, ' +
             'cargo.hora_trabaja AS cargo_horas, cargo.cargo, ' +
-            'e.id AS id_empleado, contrato.id AS id_contrato, p.fec_inicio AS fecha, p.id AS id_permiso, ' +
+            'e.id AS id_empleado, e.estado AS estado_empl, contrato.id AS id_contrato, p.fec_inicio AS fecha, p.id AS id_permiso, ' +
             'tp.id AS id_tipo_permiso, tp.descripcion AS nombre_permiso ' +
             'FROM empl_horarios AS h, empl_contratos AS contrato, empl_cargos AS cargo, empleados AS e,  ' +
             'cg_horarios AS ch, ' +
             'permisos AS p, cg_tipo_permisos AS tp ' +
             'WHERE h.id_empl_cargo = cargo.id AND e.id = contrato.id_empleado AND p.id_tipo_permiso = tp.id ' +
             'AND ch.id = h.id_horarios AND p.id_empl_contrato = contrato.id ' +
-            'AND p.fec_inicio::date BETWEEN h.fec_inicio AND h.fec_final AND e.id = $1) AS h ' +
+            'AND p.fec_inicio::date BETWEEN h.fec_inicio AND h.fec_final AND e.id = $1 AND e.estado = 1) AS h ' +
             'ON h.id_permiso = p.id ORDER BY p.num_permiso ASC', [id_empleado]);
         if (DATOS.rowCount > 0) {
             return res.jsonp(DATOS.rows)
@@ -137,14 +137,14 @@ class ReportesControlador {
         const DATOS = await pool.query('SELECT * FROM permisos AS p INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, h.id_empl_cargo, ch.hora_trabajo AS horario_horas, ' +
             'cargo.hora_trabaja AS cargo_horas, cargo.cargo, ' +
-            'e.id AS id_empleado, contrato.id AS id_contrato, p.fec_inicio AS fecha, p.id AS id_permiso, ' +
+            'e.id AS id_empleado, e.estado AS estado_empl, contrato.id AS id_contrato, p.fec_inicio AS fecha, p.id AS id_permiso, ' +
             'tp.id AS id_tipo_permiso, tp.descripcion AS nombre_permiso ' +
             'FROM empl_horarios AS h, empl_contratos AS contrato, empl_cargos AS cargo, empleados AS e,  ' +
             'cg_horarios AS ch, ' +
             'permisos AS p, cg_tipo_permisos AS tp ' +
             'WHERE h.id_empl_cargo = cargo.id AND e.id = contrato.id_empleado AND p.id_tipo_permiso = tp.id ' +
             'AND ch.id = h.id_horarios AND p.id_empl_contrato = contrato.id ' +
-            'AND p.fec_inicio::date BETWEEN h.fec_inicio AND h.fec_final AND e.id = $1) AS h ' +
+            'AND p.fec_inicio::date BETWEEN h.fec_inicio AND h.fec_final AND e.id = $1 AND e.estado = 1) AS h ' +
             'ON h.id_permiso = p.id AND (p.fec_inicio::date BETWEEN $2 AND $3 OR ' +
             'p.fec_final::date BETWEEN $2 AND $3) ORDER BY p.num_permiso ASC', [id_empleado, fechaInicio, fechaFinal]);
         if (DATOS.rowCount > 0) {
@@ -181,7 +181,8 @@ class ReportesControlador {
 
     public async ListarPermisoAutorizaEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
-        const DATOS = await pool.query('SELECT a.id AS id_autoriza, a.estado, a.id_permiso, p.id_empl_contrato, contrato.id_empleado ' +
+        const DATOS = await pool.query('SELECT a.id AS id_autoriza, a.estado, a.id_permiso, ' +
+            'a.id_documento AS empleado_estado, p.id_empl_contrato, contrato.id_empleado ' +
             'FROM autorizaciones AS a, permisos AS p, empl_contratos AS contrato, empleados AS e ' +
             'WHERE a.id_permiso = p.id AND p.id_empl_contrato = contrato.id AND contrato.id_empleado = e.id AND e.id = $1', [id_empleado]);
         if (DATOS.rowCount > 0) {
@@ -203,7 +204,7 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
-            'AND dh.tipo_accion = \'E\') AS h ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
+            'AND dh.tipo_accion = \'E\') AS h ON e.empl_id = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
             'ON t.id_empleado = h.empl_id AND t.accion LIKE \'E\' AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
             't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
@@ -253,7 +254,7 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ) AS h ' +
-            'ON e.empl_id = $1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON e.empl_id = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
             'ON t.id_empleado = h.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
             'AND t.accion = h.tipo_accion ' +

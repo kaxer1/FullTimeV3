@@ -43,14 +43,14 @@ async function ConsultarVacacion(id_vacacion: number) {
 }
 
 async function ConsultarPerido(id_peri_vacacion: number) {
-    return await pool.query('SELECT dia_vacacion AS dias, horas_vacaciones AS horas, min_vacaciones AS min FROM peri_vacaciones WHERE id = $1',[id_peri_vacacion])
+    return await pool.query('SELECT dia_vacacion AS dias, horas_vacaciones AS horas, min_vacaciones AS min FROM peri_vacaciones WHERE id = $1 AND pv.estado = 1',[id_peri_vacacion])
         .then(result => {
             return result.rows[0]
         })
 }
 
 async function HorasTrabaja(id_periodo: number) {
-    return await pool.query('SELECT ca.hora_trabaja FROM peri_vacaciones AS pv, empl_contratos AS co, empl_cargos AS ca WHERE pv.id = $1 AND pv.id_empl_contrato = co.id AND co.id = ca.id_empl_contrato',[id_periodo]).then(result => {
+    return await pool.query('SELECT ca.hora_trabaja FROM peri_vacaciones AS pv, empl_contratos AS co, empl_cargos AS ca WHERE pv.id = $1 AND pv.estado = 1 AND pv.id_empl_contrato = co.id AND co.id = ca.id_empl_contrato',[id_periodo]).then(result => {
         return result.rows[0].hora_trabaja
     })
 }

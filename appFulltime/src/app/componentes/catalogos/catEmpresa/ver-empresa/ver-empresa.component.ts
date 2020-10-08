@@ -5,11 +5,13 @@ import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 
 import { EditarEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/editar-empresa/editar-empresa.component';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service'
 import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-sucursal/editar-sucursal.component';
-import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { RegistrarSucursalesComponent } from 'src/app/componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { ColoresEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
+
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service'
 
 @Component({
   selector: 'app-ver-empresa',
@@ -79,6 +81,13 @@ export class VerEmpresaComponent implements OnInit {
 
   AbrirVentanaRegistrarSucursal() {
     this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px', data: parseInt(this.idEmpresa) })
+      .afterClosed().subscribe(items => {
+        this.ObtenerSucursal();
+      });
+  }
+
+  AbrirVentanaColores() {
+    this.vistaRegistrarDatos.open(ColoresEmpresaComponent, { width: '300', data: parseInt(this.idEmpresa) })
       .afterClosed().subscribe(items => {
         this.ObtenerSucursal();
       });
