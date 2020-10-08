@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
 
@@ -38,14 +38,14 @@ export interface EmpleadoElemento {
 @Component({
   selector: 'app-lista-empleados',
   templateUrl: './lista-empleados.component.html',
-  styleUrls: ['./lista-empleados.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./lista-empleados.component.css']
 })
+
 export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   nacionalidades: any = [];
-  displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
+  // displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -57,12 +57,12 @@ export class ListaEmpleadosComponent implements OnInit {
   filtroNombre: '';
   filtroApellido: '';
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-  
-  // items de paginacion de la tabla
+
+  // Items de paginación de la tabla Deshabilitados
   tamanio_paginaDes: number = 5;
   numero_paginaDes: number = 1;
   pageSizeOptionsDes = [5, 10, 20, 50];
@@ -87,23 +87,25 @@ export class ListaEmpleadosComponent implements OnInit {
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
+  /** Si el número de elementos seleccionados coincide con el número total de filas. */
   isAllSelected() {
     const numSelected = this.selectionUno.selected.length;
     const numRows = this.empleado.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
   masterToggle() {
     this.isAllSelected() ?
-    this.selectionUno.clear() :
-    this.empleado.forEach(row => this.selectionUno.select(row));
+      this.selectionUno.clear() :
+      this.empleado.forEach(row => this.selectionUno.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
+  /** La etiqueta de la casilla de verificación en la fila pasada*/
   checkboxLabel(row?: EmpleadoElemento): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
@@ -112,10 +114,10 @@ export class ListaEmpleadosComponent implements OnInit {
   }
 
   btnCheckHabilitar: boolean = false;
-  HabilitarSeleccion(){
+  HabilitarSeleccion() {
     if (this.btnCheckHabilitar === false) {
       this.btnCheckHabilitar = true;
-    } else if(this.btnCheckHabilitar === true) {
+    } else if (this.btnCheckHabilitar === true) {
       this.btnCheckHabilitar = false;
     }
   }
@@ -130,7 +132,7 @@ export class ListaEmpleadosComponent implements OnInit {
       });
     } else if (this.Hab_Deshabilitados == true) {
       this.Hab_Deshabilitados = false;
-    }  
+    }
   }
 
   Hab_Deshabilitados: boolean = false;
@@ -138,7 +140,7 @@ export class ListaEmpleadosComponent implements OnInit {
   HabilitarSeleccionDesactivados() {
     if (this.btnCheckDeshabilitado === false) {
       this.btnCheckDeshabilitado = true;
-    } else if(this.btnCheckDeshabilitado === true) {
+    } else if (this.btnCheckDeshabilitado === true) {
       this.btnCheckDeshabilitado = false;
     }
   }
@@ -152,8 +154,8 @@ export class ListaEmpleadosComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggleDos() {
     this.isAllSelectedDos() ?
-    this.selectionDos.clear() :
-    this.desactivados.forEach(row => this.selectionDos.select(row));
+      this.selectionDos.clear() :
+      this.desactivados.forEach(row => this.selectionDos.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -164,8 +166,8 @@ export class ListaEmpleadosComponent implements OnInit {
     return `${this.selectionDos.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
   }
 
-  Deshabilitar(opcion: number){
-    let EmpleadosSeleccionados 
+  Deshabilitar(opcion: number) {
+    let EmpleadosSeleccionados
     if (opcion === 1) {
       EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
         return {
@@ -180,9 +182,16 @@ export class ListaEmpleadosComponent implements OnInit {
           empleado: obj.nombre + ' ' + obj.apellido
         }
       })
+    } else if (opcion === 3) {
+      EmpleadosSeleccionados = this.selectionDos.selected.map(obj => {
+        return {
+          id: obj.id,
+          empleado: obj.nombre + ' ' + obj.apellido
+        }
+      })
     }
     console.log(EmpleadosSeleccionados);
-    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: {opcion: opcion, lista: EmpleadosSeleccionados} }).afterClosed().subscribe(item => {
+    this.vistaRegistrarDatos.open(ConfirmarDesactivadosComponent, { width: '500px', data: { opcion: opcion, lista: EmpleadosSeleccionados } }).afterClosed().subscribe(item => {
       console.log(item);
       if (item === true) {
         this.getEmpleados();
@@ -192,6 +201,7 @@ export class ListaEmpleadosComponent implements OnInit {
         this.Hab_Deshabilitados = false;
         this.selectionUno.clear();
         this.selectionDos.clear();
+        EmpleadosSeleccionados = [];
       };
     });
   }
@@ -212,12 +222,22 @@ export class ListaEmpleadosComponent implements OnInit {
     });
   }
 
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
+    });
+  }
+
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
     console.log('empl ', this.empleado);
   }
-  
+
   ManejarPaginaDes(e: PageEvent) {
     this.tamanio_paginaDes = e.pageSize;
     this.numero_paginaDes = e.pageIndex + 1;
@@ -290,21 +310,26 @@ export class ListaEmpleadosComponent implements OnInit {
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
-    this.archivoSubido = element.target.files;
-    this.nameFile = this.archivoSubido[0].name;
-    let arrayItems = this.nameFile.split(".");
-    let itemExtencion = arrayItems[arrayItems.length - 1];
-    let itemName = arrayItems[0].slice(0, 9);
-    console.log(itemName.toLowerCase());
-    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-      if (itemName.toLowerCase() == 'empleados') {
-        this.plantilla();
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.archivoSubido = element.target.files;
+      this.nameFile = this.archivoSubido[0].name;
+      let arrayItems = this.nameFile.split(".");
+      let itemExtencion = arrayItems[arrayItems.length - 1];
+      let itemName = arrayItems[0].slice(0, 9);
+      console.log(itemName.toLowerCase());
+      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+        if (itemName.toLowerCase() == 'empleados') {
+          this.plantilla();
+        } else {
+          this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+        }
       } else {
-        this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
-    }
+    }, error => {
+      this.toastr.info('Primero configurar el código de empleado.');
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   plantilla() {
@@ -389,7 +414,7 @@ export class ListaEmpleadosComponent implements OnInit {
         this.presentarDataPDFEmpleados(),
       ],
       styles: {
-        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 8 },
         itemsTableD: { fontSize: 8, alignment: 'center' }
       }

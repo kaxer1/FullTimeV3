@@ -24,9 +24,9 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
 
   estados: Estados[] = [
     { valor: 'Pendiente', nombre: 'Pendiente' },
-    { valor: 'Rechazado', nombre: 'Rechazado' },
+    { valor: 'Pre-Autorizado', nombre: 'Pre-Autorizado' },
     { valor: 'Aceptado', nombre: 'Aceptado' },
-    { valor: 'Eliminado', nombre: 'Eliminado' }
+    { valor: 'Rechazado', nombre: 'Rechazado' }
   ];
 
   id_empleado_loggin: number;
@@ -55,10 +55,10 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
     }
 
     this.llenarForm();
-    this.id_empleado_loggin = parseInt(localStorage.getItem('empleado')); 
+    this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
   }
 
-  llenarForm(){
+  llenarForm() {
     this.PermisoForm.patchValue({
       estadoForm: this.data.permiso.estado
     });
@@ -66,10 +66,10 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
 
   resEstado: any = [];
   idNoti: any = [];
-  EditarEstadoPermiso(form){
+  EditarEstadoPermiso(form) {
     let datosPermiso = {
       estado: form.estadoForm,
-      id_permiso: this.data.permiso.id, 
+      id_permiso: this.data.permiso.id,
       id_departamento: this.data.depa[0].id,
       id_empleado: this.data.permiso.id_empleado
     }
@@ -77,20 +77,20 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
     this.restP.ActualizarEstado(this.data.permiso.id, datosPermiso).subscribe(respo => {
       this.resEstado = [respo];
       console.log(this.resEstado);
-  
+
       var f = new Date();
-      let notificacion = { 
+      let notificacion = {
         id: null,
         id_send_empl: this.id_empleado_loggin,
         id_receives_empl: this.data.permiso.id_empleado,
         id_receives_depa: this.data.depa[0].id,
-        estado: form.estadoForm, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+        estado: form.estadoForm,
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
         id_permiso: this.data.permiso.id,
         id_vacaciones: null
       }
       console.log(notificacion);
-      
+
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
         console.log(res);
         this.NotifiRes = res;

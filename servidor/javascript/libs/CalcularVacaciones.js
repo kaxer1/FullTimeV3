@@ -111,11 +111,11 @@ function CalcularDiasAcumulados(dias_obliga, I_Periodo, F_Periodo) {
 }
 function ObtenerPeriodosEmpleado(id_empl, diasObliga, fec_final_Rango, hora_trabaja) {
     return __awaiter(this, void 0, void 0, function* () {
-        let primerPeriodoInicio = yield database_1.default.query('SELECT pv.fec_inicio FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato ORDER BY e.fec_ingreso DESC, pv.fec_inicio LIMIT 1', [id_empl])
+        let primerPeriodoInicio = yield database_1.default.query('SELECT pv.fec_inicio FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND pv.estado = 1 ORDER BY e.fec_ingreso DESC, pv.fec_inicio LIMIT 1', [id_empl])
             .then(result => {
             return result.rows[0].fec_inicio.toJSON().split('T')[0];
         });
-        let arrayPeriodos = yield database_1.default.query('SELECT pv.id as id_peri_vac, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC, pv.fec_inicio', [id_empl, primerPeriodoInicio, fec_final_Rango])
+        let arrayPeriodos = yield database_1.default.query('SELECT pv.id as id_peri_vac, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY e.fec_ingreso DESC, pv.fec_inicio', [id_empl, primerPeriodoInicio, fec_final_Rango])
             .then(result => {
             return result.rows;
         });
@@ -124,7 +124,7 @@ function ObtenerPeriodosEmpleado(id_empl, diasObliga, fec_final_Rango, hora_trab
             // return CalcularDiasAcumulados(diasObliga.dia_obli, obj.fec_inicio, obj.fec_final)
             return DiasHorMinToDecimal(obj.dia_vacacion, obj.horas_vacaciones, obj.min_vacaciones, hora_trabaja);
         });
-        // console.log(acumulado);
+        console.log(acumulado);
         let valorAcumulado = 0;
         acumulado.forEach(obj => {
             valorAcumulado = obj + valorAcumulado;
@@ -191,7 +191,7 @@ function ObtenerDiasAdicionales(aniosLaborados) {
  */
 function PeriodoVacacionContrato(id_empl, ant, pre) {
     return __awaiter(this, void 0, void 0, function* () {
-        let data = yield database_1.default.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
+        let data = yield database_1.default.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
             .then(result => {
             return result.rows[0];
         });

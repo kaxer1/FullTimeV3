@@ -1,13 +1,16 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-extra.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 interface Estado {
   id: number,
@@ -64,6 +67,8 @@ export class PlanHoraExtraComponent implements OnInit {
   constructor(
     private rest: TipoPermisosService,
     private restPE: PlanHoraExtraService,
+    public restCargo: EmplCargosService,
+    public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     private realTime: RealTimeService,
     public dialogRef: MatDialogRef<PlanHoraExtraComponent>,
@@ -71,21 +76,15 @@ export class PlanHoraExtraComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    var f = new Date();
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
+
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.id_cargo_loggin = parseInt(localStorage.getItem("ultimoCargo"));
 
     this.PedirHoraExtraForm.patchValue({
       fechaSolicitudForm: this.FechaActual,
+      estadoForm: 1
     });
   }
 
@@ -99,7 +98,7 @@ export class PlanHoraExtraComponent implements OnInit {
     this.datosSeleccionados = this.data.planifica;
     let dataPlanHoraExtra = {
       id_empl_planifica: this.id_user_loggin,
-      id_empl_realiza: 0,
+      id_empl_realiza: this.data.planifica.id,
       fecha_desde: form1.fechaInicioForm,
       fecha_hasta: form1.FechaFinForm,
       hora_inicio: form1.horaInicioForm,
@@ -107,25 +106,26 @@ export class PlanHoraExtraComponent implements OnInit {
       descripcion: form1.descripcionForm,
       horas_totales: form1.horasForm,
       estado: form1.estadoForm,
+      observacion: false,
+      justifica: false,
+      id_empl_cargo: this.data.planifica.id_cargo,
+      id_empl_contrato: this.data.planifica.id_contrato
     }
     if (this.datosSeleccionados.length != undefined) {
-      console.log('probando', this.datosSeleccionados, this.datosSeleccionados.length - 1, this.datosSeleccionados.length)
       for (var i = 0; i < this.datosSeleccionados.length; i++) {
-        console.log('entra 21')
         dataPlanHoraExtra.id_empl_realiza = this.datosSeleccionados[i].id;
+        dataPlanHoraExtra.id_empl_cargo = this.datosSeleccionados[i].id_cargo;
+        dataPlanHoraExtra.id_empl_contrato = this.datosSeleccionados[i].id_contrato;
         this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
         })
       }
     }
     else {
-      dataPlanHoraExtra.id_empl_realiza = this.data.planifica.id;
       this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
       })
     }
-
-
     this.dialogRef.close();
 
     /*  this.arrayNivelesDepa = response;

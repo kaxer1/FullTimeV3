@@ -3,6 +3,7 @@ import pool from '../../../database';
 import excel from 'xlsx';
 import fs from 'fs';
 import { Md5 } from 'ts-md5';
+import { EstadoHorarioPeriVacacion } from '../../../libs/MetodosHorario'
 const builder = require('xmlbuilder');
 
 class EmpleadoControlador {
@@ -93,7 +94,7 @@ class EmpleadoControlador {
 
     plantilla.forEach(async (data: any) => {
 
-      // realiza un capital letter a los nombres y apellidos
+      // Realiza un capital letter a los nombres y apellidos
       let nombres = data.nombre.split(' ');
       let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
       let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
@@ -104,21 +105,34 @@ class EmpleadoControlador {
       let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
       const apellido = lastname1 + ' ' + lastname2;
 
-      // encriptar contraseña
+      // Encriptar contraseña
       const md5 = new Md5();
       const contrasena = md5.appendStr(data.contrasena).end();
 
-      const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, codigo, usuario, estado_user, rol, app_habilita } = data;
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
 
-      //obtener id del rol
+      //Obtener id del rol
       const id_rol = await pool.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
-      //var id_horario = id_rol.rows[0]['id'];
 
+      // Obtener último código registrado
+      const VALOR = await pool.query('SELECT *FROM codigo');
+      var codigo = parseInt(VALOR.rows[0].valor) + 1;
+      console.log('codigo', codigo);
       if (cedula != undefined) {
+        // Registro de nuevo empleado
         await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+
+        // Obtener el id del empleado ingresado
         const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
         const id_empleado = oneEmpley.rows[0].id;
+
+        // Registro de los datos de usuario
         await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+
+        // Actualización del código
+        await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
+
       } else {
         res.jsonp({ error: 'plantilla equivocada' });
       }
@@ -227,24 +241,24 @@ class EmpleadoControlador {
     console.log(arrayIdsEmpleados);
 
     if (arrayIdsEmpleados.length > 0) {
-      arrayIdsEmpleados.forEach(async(obj: number) => {
+      arrayIdsEmpleados.forEach(async (obj: number) => {
         await pool.query('UPDATE empleados SET estado = 2 WHERE id = $1', [obj]) // 2 => desactivado o inactivo
-        .then(result => {
+          .then(result => {
             console.log(result.command, 'EMPLEADO ====>', obj);
-        });
-        await pool.query('UPDATE usuarios SET estado = false, app_habilita = false WHERE id_empleado = $1',[obj]) // false => Ya no tiene acceso
-        .then(result => {
+          });
+        await pool.query('UPDATE usuarios SET estado = false, app_habilita = false WHERE id_empleado = $1', [obj]) // false => Ya no tiene acceso
+          .then(result => {
             console.log(result.command, 'USUARIO ====>', obj);
-        });
+          });
       });
-      return res.jsonp({message: 'Todos los empleados han sido desactivados'});
+      return res.jsonp({ message: 'Todos los empleados han sido desactivados' });
     }
-    return res.jsonp({message: 'No ha sido desactivado ningún empleado'});
+    return res.jsonp({ message: 'No ha sido desactivado ningún empleado' });
   }
 
   public async listaEmpleadosDesactivados(req: Request, res: Response) {
     const empleado = await pool.query('SELECT * FROM empleados WHERE estado = 2 ORDER BY id');
-    
+
     res.jsonp(empleado.rows);
   }
 
@@ -253,22 +267,45 @@ class EmpleadoControlador {
     console.log(arrayIdsEmpleados);
 
     if (arrayIdsEmpleados.length > 0) {
-      arrayIdsEmpleados.forEach(async(obj: number) => {
+      arrayIdsEmpleados.forEach(async (obj: number) => {
         await pool.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
-        .then(result => {
-          console.log(result.command, 'EMPLEADO ====>', obj);
-        });
-        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1',[obj]) // true => Tiene acceso
-        .then(result => {
-          console.log(result.command, 'USUARIO ====>', obj);
-        });
+          .then(result => {
+            console.log(result.command, 'EMPLEADO ====>', obj);
+          });
+        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+          .then(result => {
+            console.log(result.command, 'USUARIO ====>', obj);
+          });
       });
       // var tiempo = 1000 * arrayIdsEmpleados.length
       // setInterval(() => {
       // }, tiempo)
-      return res.jsonp({message: 'Todos los empleados han sido activados'});
+      return res.jsonp({ message: 'Todos los empleados han sido activados' });
     }
-    return  res.jsonp({message: 'No ha sido activado ningún empleado'});
+    return res.jsonp({ message: 'No ha sido activado ningún empleado' });
+  }
+
+  public async ReactivarMultiplesEmpleados(req: Request, res: Response): Promise<any> {
+    const arrayIdsEmpleados = req.body;
+    console.log(arrayIdsEmpleados);
+
+    if (arrayIdsEmpleados.length > 0) {
+      arrayIdsEmpleados.forEach(async (obj: number) => {
+
+        await pool.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
+          .then(result => {
+            console.log(result.command, 'EMPLEADO ====>', obj);
+          });
+        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+          .then(result => {
+            console.log(result.command, 'USUARIO ====>', obj);
+          });
+        EstadoHorarioPeriVacacion(obj);
+      });
+
+      return res.jsonp({ message: 'Todos los empleados seleccionados han sido reactivados' });
+    }
+    return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
   }
 }
 

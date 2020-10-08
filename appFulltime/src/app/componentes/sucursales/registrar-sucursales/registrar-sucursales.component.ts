@@ -15,8 +15,7 @@ import { startWith, map } from 'rxjs/operators';
 @Component({
   selector: 'app-registrar-sucursales',
   templateUrl: './registrar-sucursales.component.html',
-  styleUrls: ['./registrar-sucursales.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./registrar-sucursales.component.css']
 })
 export class RegistrarSucursalesComponent implements OnInit {
 

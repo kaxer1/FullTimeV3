@@ -69,7 +69,8 @@ export class ListarFeriadosComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerFeriados();
     this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerLogo();
+       this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -85,6 +86,16 @@ export class ListarFeriadosComponent implements OnInit {
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -294,7 +305,7 @@ export class ListarFeriadosComponent implements OnInit {
         this.presentarDataPDFFeriados(),
       ],
       styles: {
-        tableHeader: { fontSize: 13, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 13, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 10, alignment: 'center' },
         itemsTableD: { fontSize: 10 }
       }

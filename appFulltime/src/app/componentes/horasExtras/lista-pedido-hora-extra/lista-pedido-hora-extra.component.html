@@ -1,11 +1,29 @@
 <br>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
-        <div id="resultadosEmpre">Lista de todos las Horas Extras Solicitadas por empleados</div>
+        <div class="d-flex bd-highlight" id="resultadosEmpre">
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccion()" matSuffix
+                matTooltipPosition="right" matTooltip="Autorizar a todos los empleados su Solicitud de Horas Extras"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckHabilitar" class="btn btn-primary" (click)="AutorizarHorasExtrasMultiple()"
+                style="float: left; margin-left: 10px;">Autorizar</button>
+            <span class="w-100 bd-highlight">
+                Lista de todos las Horas Extras Solicitadas por empleados</span>
+            <button class="btn btn-sm" style="float: right; margin-right: 10px;" ngDefaultControl
+                [(ngModel)]="totalHorasExtras" [ngModelOptions]="{standalone: true}">Horas Totales
+                {{totalHorasExtras}}</button>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
+                        <th>
+                            <mat-checkbox *ngIf="btnCheckHabilitar" (change)="$event ? masterToggle() : null"
+                                [checked]="selectionUno.hasValue() && isAllSelected()"
+                                [indeterminate]="selectionUno.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                        </th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Fecha Creación</th>
@@ -18,6 +36,12 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let h of horas_extras | paginate:tamanio_pagina:numero_pagina">
+                        <td>
+                            <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
+                                (change)="$event ? selectionUno.toggle(h) : null" [checked]="selectionUno.isSelected(h)"
+                                [aria-label]="checkboxLabel(h)">
+                            </mat-checkbox>
+                        </td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.estado}}</td>
                         <td>{{h.fec_solicita.split('T')[0]}}</td>
@@ -26,18 +50,32 @@
                         <td>{{h.fec_final.split('T')[0]}}</td>
                         <td>{{h.num_hora}}</td>
                         <td class="d-flex justify-content-center">
-                            <a class="fas fa-file-alt" style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix
-                                matTooltipPosition="right" matTooltip="Cambiar el estado del documento de autorazación"
+                            <a *ngIf="auto_individual" class="fas fa-file-alt"
+                                style="color:rgb(197, 95, 11); margin-left: 15px;" matSuffix matTooltipPosition="right"
+                                matTooltip="Cambiar el estado del documento de autorización"
                                 [routerLink]="['/ver-hora-extra', h.id]">
-                                <p>Documento</p>
+                                <p>Autorizar</p>
                             </a>
+                            <!--   <i id="iconos" class="fas fa-stopwatch"
+                                style="color:rgb(8, 96, 168); margin-left: 15px;"
+                                (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h)"
+                                matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
+                                <p>Autorizar Horas</p>
+                            </i>-->
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <br>
+        <div>
+            <button class="btn btn-sm float-right" ngDefaultControl [(ngModel)]="horasSumadas"
+                style="margin-right: 10px;" [ngModelOptions]="{standalone: true}">Sub-total Horas
+                {{horasSumadas}}</button>
+        </div>
+        <br>
         <mat-paginator [length]="horas_extras.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+            id="estilo" (page)="ManejarPagina($event)" (click)="calcularHoraPaginacion()" showFirstLastButtons>
         </mat-paginator>
     </div>
 </div>

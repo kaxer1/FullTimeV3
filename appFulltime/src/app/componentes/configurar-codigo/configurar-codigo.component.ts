@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-configurar-codigo',
@@ -27,12 +28,14 @@ export class ConfigurarCodigoComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     public rest: EmpleadoService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.rest.ObtenerCodigo().subscribe(datos => {
       this.toastr.info('La configuración de código ya fue realizada.');
       this.Limpiar();
+      this.router.navigate(['/home/']);
     }, error => { });
   }
 
@@ -47,7 +50,8 @@ export class ConfigurarCodigoComponent implements OnInit {
       }
       if (form.inicioForm != '') {
         this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
-          this.toastr.success('Configuración Registrada')
+          this.toastr.success('Configuración Registrada');
+          this.router.navigate(['/empleado/']);
         })
         this.Limpiar();
       }

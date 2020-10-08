@@ -61,6 +61,7 @@ export class ListarEmpresasComponent implements OnInit {
     this.ObtenerEmpresa();
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerLogo();
+    this.ObtnerColores();
   }
 
   // Método para ver la información del empleado 
@@ -77,6 +78,16 @@ export class ListarEmpresasComponent implements OnInit {
     this.rest.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
       //console.log('logo', this.logo)
+    });
+  }
+
+  // Método para obtener colores de empresa
+  p_color: any;
+  s_color: any;
+  ObtnerColores() {
+    this.rest.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.p_color = res[0].color_p;
+      this.s_color = res[0].color_s;
     });
   }
 
@@ -214,7 +225,7 @@ export class ListarEmpresasComponent implements OnInit {
         } else if (f.getMonth() >= 10 && f.getDate() < 10) {
           fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
         }
-         // Formato de hora actual
+        // Formato de hora actual
         if (f.getMinutes() < 10) {
           var time = f.getHours() + ':0' + f.getMinutes();
         }
@@ -242,7 +253,7 @@ export class ListarEmpresasComponent implements OnInit {
         this.presentarDataPDFEmpresas(),
       ],
       styles: {
-        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: '#6495ED' },
+        tableHeader: { fontSize: 12, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 10 },
         itemsTableC: { fontSize: 10, alignment: 'center' },
       }

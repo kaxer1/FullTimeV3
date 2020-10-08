@@ -62,7 +62,7 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 }
 
 [type="file"] + label.btn-2 {
-    background-color: #93a3c7;
+    background-color: rgb(150, 243, 141);
     overflow: hidden;
 }
 
@@ -82,7 +82,7 @@ mat-form-field {padding: 10px 10px 0px 10px;}
 }
 
 [type="file"] + label.btn-2:hover {
-    background-color: rgb(0, 76, 255)
+    background-color: rgb(38, 218, 15);
 }
 
 [type="file"] + label.btn-2:hover::before {

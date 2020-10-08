@@ -17,6 +17,10 @@ export class AuthGuard implements CanActivate {
       if (this.loginService.getRol() >= route.data.rolMix && this.loginService.getEstado() === true) {
         return true;
       }
+      
+      if (this.loginService.getRol() >= route.data.rolMix) { //visualizar avisos de timbres para todos los usuarios
+        return true;
+      }
 
       if (this.loginService.getRol() === route.data.roles) {
         return true;

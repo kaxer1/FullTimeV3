@@ -42,8 +42,8 @@ class EmpresaControlador {
     }
     CrearEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento } = req.body;
-            yield database_1.default.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento]);
+            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s } = req.body;
+            yield database_1.default.query('INSERT INTO cg_empresa (nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, color_p, color_s]);
             res.jsonp({ message: 'La Empresa se registró con éxito' });
         });
     }
@@ -137,6 +137,13 @@ class EmpresaControlador {
             }
             const codificado = yield ImagenCodificacion_1.ImagenBase64LogosEmpresas(logo);
             res.send({ imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message: 'Logo actualizado' });
+        });
+    }
+    ActualizarColores(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { color_p, color_s, id } = req.body;
+            yield database_1.default.query('UPDATE cg_empresa SET color_p = $1, color_s = $2 WHERE id = $3', [color_p, color_s, id]);
+            res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
         });
     }
 }

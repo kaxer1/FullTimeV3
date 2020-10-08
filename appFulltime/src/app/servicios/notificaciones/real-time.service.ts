@@ -42,6 +42,10 @@ export class RealTimeService {
     return this.http.put(`${this.API_URL}/noti-real-time/vista/${id_realtime}`, data);
   }
 
+  EliminarNotificaciones(Seleccionados: any[]) {
+    return this.http.put<any>(`${this.API_URL}/noti-real-time/eliminar-multiples/avisos`, Seleccionados); //Eliminacion de datos seleccionados.
+  }
+
   /*
     METODOS PARA CONFIG_NOTI
   */

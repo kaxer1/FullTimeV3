@@ -13,27 +13,37 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-3" id="verticalLine">
-                        <label id="datosF" class="col-sm col-form-label">RUC:</label>
-                        <label id="datosF" class="col-sm col-form-label">Dirección:</label>
-                        <label id="datosF" class="col-sm col-form-label">Teléfono:</label>
+                    <div class="col" id="verticalLine">
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">RUC:</label>
+                            <label>{{e.ruc}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Dirección:</label>
+                            <label>{{e.direccion}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Teléfono:</label>
+                            <label>{{e.telefono}}</label>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <label class="col-sm col-form-label">{{e.ruc}}</label>
-                        <label class="col-sm col-form-label">{{e.direccion}}</label>
-                        <label class="col-sm col-form-label">{{e.telefono}}</label>
-                    </div>
-                    <div class="col-3" id="verticalLine">
-                        <label id="datosF" class="col-sm col-form-label">Correo:</label>
-                        <label id="datosF" class="col-sm col-form-label">Representante:</label>
-                        <label id="datosF" class="col-sm col-form-label">Tipo de Empresa:</label>
-                        <label id="datosF" class="col-sm col-form-label">Establecimientos:</label>
-                    </div>
-                    <div class="col-3">
-                        <label class="col-sm col-form-label">{{e.correo}}</label>
-                        <label class="col-sm col-form-label">{{e.representante}}</label>
-                        <label class="col-sm col-form-label">{{e.tipo_empresa}}</label>
-                        <label class="col-sm col-form-label">{{e.establecimiento}}</label>
+                    <div class="col" id="verticalLine">
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Correo:</label>
+                            <label>{{e.correo}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Representante:</label>
+                            <label>{{e.representante}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Tipo de Empresa:</label>
+                            <label>{{e.tipo_empresa}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Establecimientos:</label>
+                            <label>{{e.establecimiento}}</label>
+                        </div>
                     </div>
                 </div>
                 <div style="text-align: right;">
@@ -43,44 +53,59 @@
                     </i>
                 </div>
                 <div style="text-align: center;">
-                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarSucursal()">Crear
-                        {{e.establecimiento}}</button>
+                    <button mat-button type="submit" class="btn btn-sm"
+                        (click)="AbrirVentanaColores()">Seleccionar colores</button>
                 </div>
             </div>
             <hr>
-            <div class="container table-responsive" style="padding-bottom: 50px;">
-                <div id="resulSucursales">LISTA DE {{e.establecimiento.toUpperCase()}}</div>
-                <table class="mat-elevation-z8 table table-hover table-sm">
-                    <thead class="thead-light">
-                        <tr style="text-align: center;">
-                            <th scope="col">{{e.establecimiento}}</th>
-                            <th scope="col">Ciudad</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let ds of datosSucursales | paginate:tamanio_pagina:numero_pagina">
-                            <td>{{ds.nombre}}</td>
-                            <td>{{ds.descripcion}}</td>
-                            <td>
-                                <i id="editarI" (click)="AbrirVentanaEditarSucursal(ds)" matSuffix
-                                    matTooltipClass="color-tooltip" matTooltipPosition="right"
-                                    matTooltip="Modificar datos de este registro" class="fas fa-edit">
-                                    <p>Editar</p>
-                                </i>
-                                <i class="far fa-trash-alt" (click)="ConfirmarDelete(ds)"
-                                    style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
-                                    matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
-                                    matTooltip="Eliminar registro">
-                                    <p>Eliminar</p>
-                                </i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <mat-paginator [length]="datosSucursales.length" [pageSize]="tamanio_pagina"
-                    [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
-                </mat-paginator>
+            <div class="container" style="padding-bottom: 50px; text-align: center;">
+                <div class="mat-elevation-z8" style="background: white;">
+                    <div class="d-flex bd-highlight" id="resulSucursales">
+                        <div class="w-100 bd-highlight">
+                            <h5>LISTA DE
+                                {{e.establecimiento.toUpperCase()}}</h5>
+                        </div>
+                        <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
+                            <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;"
+                                (click)="AbrirVentanaRegistrarSucursal()">Crear {{e.establecimiento}}</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="thead-light">
+                                <tr style="text-align: center;">
+                                    <th scope="col">{{e.establecimiento}}</th>
+                                    <th scope="col">Ciudad</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let ds of datosSucursales | paginate:tamanio_pagina:numero_pagina">
+                                    <td>{{ds.nombre}}</td>
+                                    <td>{{ds.descripcion}}</td>
+                                    <td>
+                                        <i id="editarI" (click)="AbrirVentanaEditarSucursal(ds)" matSuffix
+                                            matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                            matTooltip="Modificar datos de este registro" class="fas fa-edit">
+                                            <p>Editar</p>
+                                        </i>
+                                        <i class="far fa-trash-alt" (click)="ConfirmarDelete(ds)"
+                                            style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
+                                            matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
+                                            matTooltip="Eliminar registro">
+                                            <p>Eliminar</p>
+                                        </i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <mat-paginator [length]="datosSucursales.length" [pageSize]="tamanio_pagina"
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+                <br>
                 <input type="submit" class="btn btn-sm" [routerLink]="['/empresa/']" value="Ir a la Lista de Empresa">
             </div>
         </mat-card-content>

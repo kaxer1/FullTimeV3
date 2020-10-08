@@ -23,4 +23,16 @@ export class PlanHoraExtraService {
   ConsultarPlanHoraExtra() {
     return this.http.get(`${this.API_URL}/planificacionHoraExtra`);
   }
+
+  ConsultarPlanHoraExtraObservacion() {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/justificar`);
+  }
+
+  EditarObservacion(id: number, datos: any) {
+    return this.http.put<any>(`${this.API_URL}/planificacionHoraExtra/observacion/${id}`, datos);
+  }
+
+  EditarEstado(id: number, datos: any) {
+    return this.http.put<any>(`${this.API_URL}/planificacionHoraExtra/estado/${id}`, datos);
+  }
 }

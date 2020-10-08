@@ -6,7 +6,7 @@ import fs from 'fs';
 class EmpleadoHorariosControlador {
 
     public async ListarEmpleadoHorarios(req: Request, res: Response) {
-        const HORARIOS = await pool.query('SELECT * FROM empl_horarios');
+        const HORARIOS = await pool.query('SELECT * FROM empl_horarios WHERE estado = 1');
         if (HORARIOS.rowCount > 0) {
             return res.jsonp(HORARIOS.rows)
         }
@@ -106,12 +106,12 @@ class EmpleadoHorariosControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
-    public async ObtenerHorariosEmpleadoFechas(req: Request, res: Response): Promise<any> {
+    public async ObtenerHorariosEmpleadoFechas(req: Request, res: Response): Promise<any> { //Falta verificar q los estados esten con estado 1
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
         const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dec ' +
             'INNER JOIN (SELECT * FROM empl_horarios) AS eh ' +
-            'ON dec.cargo_id = eh.id_empl_cargo AND dec.empl_id = $1 ' +
+            'ON dec.cargo_id = eh.id_empl_cargo AND dec.empl_id = $1 AND dec.estado_empl = 1 ' +
             'AND (eh.fec_inicio BETWEEN $2 AND $3 OR ' +
             'eh.fec_final BETWEEN $2 AND $3)', [id_empleado, fechaInicio, fechaFinal]);
         if (HORARIO.rowCount > 0) {
@@ -128,7 +128,8 @@ class EmpleadoHorariosControlador {
         const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
             '(SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
             'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1',
+            [fechaInicio, fechaFinal, empl_id]);
         if (HORARIO.rowCount > 0) {
             return res.jsonp(HORARIO.rows)
         }
@@ -144,7 +145,8 @@ class EmpleadoHorariosControlador {
         const HORARIO = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
             '(SELECT * FROM empl_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
             'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+            'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $4 AND dc.estado_empl = 1',
+            [fechaInicio, fechaFinal, id, id_emple]);
         if (HORARIO.rowCount > 0) {
             return res.jsonp(HORARIO.rows)
         }

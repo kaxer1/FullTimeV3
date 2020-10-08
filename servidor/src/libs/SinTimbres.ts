@@ -134,7 +134,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
     let horario;
     switch ( num_dia ) {
         case 0: //DOMINGO
-            horario = await pool.query('SELECT domingo FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT domingo FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -144,7 +144,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         case 1: //LUNES
-            horario = await pool.query('SELECT lunes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT lunes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -154,7 +154,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         case 2: //MARTES
-            horario = await pool.query('SELECT martes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT martes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -164,7 +164,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         case 3: //MIERCOLES
-            horario = await pool.query('SELECT miercoles FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT miercoles FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -174,7 +174,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         case 4: //JUEVES
-            horario = await pool.query('SELECT jueves FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT jueves FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -184,7 +184,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         case 5: //VIERNES
-            horario = await pool.query('SELECT viernes FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT viernes FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];
@@ -194,7 +194,7 @@ async function RegistrarNotificacion(id_empleado: number, num_dia: number, fecha
             });
         break;
         default: //SABADO
-            horario = await pool.query('SELECT sabado FROM empl_horarios WHERE id_empl_cargo = $1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
+            horario = await pool.query('SELECT sabado FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1',[IdUltimoCargo.id_cargo])
             .then(result => { 
                 return result.rows.map(obj => {
                     var dias_Horario = [];

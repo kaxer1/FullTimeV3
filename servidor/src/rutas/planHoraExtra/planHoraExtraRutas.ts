@@ -11,8 +11,11 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.get('/', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ListarPlanHoraExtra);
+        this.router.get('/justificar', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ListarPlanHoraExtraObserva);
         this.router.post('/', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.CrearPlanHoraExtra);
         this.router.put('/tiempo-autorizado/:id', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.TiempoAutorizado);
+        this.router.put('/observacion/:id', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ActualizarObservacion);
+        this.router.put('/estado/:id', TokenValidation, PLAN_HORA_EXTRA_CONTROLADOR.ActualizarEstado);
 
     }
 }

@@ -243,27 +243,15 @@
         <mat-expansion-panel-header class="selec7">
           <mat-panel-title>
             <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
-            <span class="item-menu" id="accion">Reportes</span>
+            <span class="item-menu" id="accion">Reportería</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
           <!-- <a mat-list-item [routerLink]="['/kardex/vacacion/dias-calendario']" class="texcol">
             <span matLine>Kardex Vacación</span>
           </a> -->
-          <a mat-list-item [routerLink]="['/kardex/asisitencia/consolidado']" class="texcol">
-            <span matLine>Kardex - Asistencia</span>
-          </a>
-          <a mat-list-item [routerLink]="['/reporteTimbres']" class="texcol">
-            <span matLine>Reporte Timbres</span>
-          </a>
-          <a mat-list-item [routerLink]="['/reportePermisos']" class="texcol">
-            <span matLine>Reporte Permisos</span>
-          </a>
-          <a mat-list-item [routerLink]="['/reporteAtrasos']" class="texcol">
-            <span matLine>Reporte Atrasos</span>
-          </a>
-          <a mat-list-item [routerLink]="['/reporteEntradaSalida']" class="texcol">
-            <span matLine>Reporte Entradas Salidas</span>
+          <a mat-list-item [routerLink]="['/listaReportes']" class="texcol">
+            <span matLine>Reportes - Kardex</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>
@@ -483,13 +471,28 @@
         </button>
         <mat-menu #timbre="matMenu" style="margin-right: 10px; height: 100px;">
           <div class="container" style="text-align: center;">
-            <h4>Timbres</h4>
+            <h4>Avisos Timbres</h4>
           </div>
           <div *ngIf="timbres_noti.message !== 'No se encuentran registros'">
             <div *ngFor="let n of timbres_noti">
 
-              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
-              <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226)">
+              <!-- Avisos ya vistos -->
+              <div *ngIf="n.visto == true " style="background: rgb(226, 226, 226)">
+                <a mat-menu-item type="submit" class="noti_menu">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              
+              <!-- Forma de aviso para 'Te falta timbre de entrada' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'" style="background: rgba(255, 25, 25, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -502,8 +505,8 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <!-- *ngIf="loginService.getEstado()"  -->
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+              <!-- Forma de aviso para 'Te falta timbre de salida' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'" style="background: rgba(255, 25, 25, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -516,42 +519,68 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-
-              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
-              <!-- <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
-                  (click)="CambiarVistaTimbres(n.id)">
+              <!-- Forma de aviso para 'Salio antes al almuerzo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
-                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                      estado de la</li>
-                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                      <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
-                  (click)="CambiarVistaTimbres(n.id)">
+              <!-- Forma de aviso para 'Se tomo mucho tiempo de almuerzo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
-                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                      estado de la</li>
-                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                      <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
-              </div> -->
-
+              </div>
+              <!-- Forma de aviso para 'Llego atrasado al trabajo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Salio antes al trabajo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              
             </div>
           </div>
-          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
-            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
-              Mostrar todas las notificaciones
+          <div class="d-flex justify-content-center">
+            <a type="submit" [routerLink]="['/lista-avisos']" class="mostrar-noti">
+              Mostrar todos los avisos
             </a>
           </div>
         </mat-menu>
@@ -575,8 +604,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      un permiso</li>
+                      solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -588,8 +616,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      vacaciones</li>
+                      solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -601,8 +628,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      hora extra</li>
+                      solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -610,14 +636,13 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+              <div *ngIf="n.visto == false" style="background: rgb(240, 221, 77);">
                 <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
                   mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      un permiso</li>
+                      solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -629,8 +654,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      vacaciones</li>
+                      solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -642,8 +666,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      hora extra</li>
+                      solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -694,7 +717,7 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+              <div *ngIf="n.visto == false" style="background: rgb(98, 192, 61);">
                 <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
                   mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
@@ -812,14 +835,14 @@
         </button>
         <mat-menu #timbre="matMenu" style="margin-right: 10px; height: 100px;">
           <div class="container" style="text-align: center;">
-            <h4>Timbres</h4>
+            <h4>Avisos Timbres</h4>
           </div>
           <div *ngIf="timbres_noti.message !== 'No se encuentran registros'">
             <div *ngFor="let n of timbres_noti">
 
-              <!-- Notificaciones con estilo para la visualizacion de los ADMINISTRADORES CON VISTO Y NO VISTO, ademas personas q autorizan las solicitudes -->
+              <!-- Avisos vistos -->
               <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226)">
-                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <a mat-menu-item type="submit" class="noti_menu">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
                     <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
@@ -831,56 +854,96 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <!-- *ngIf="loginService.getEstado()"  -->
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                  <ul style="list-style: none; margin-left: -15%;">
-                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                    <li style="font-size: 11px; margin-top: -13%;">
-                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                    </li>
-                  </ul>
-                  <mat-divider class="divider"></mat-divider>
-                </a>
-              </div>
-
-              <!-- Notificaciones con estilo para la visualizacion de los EMPLEADOS CON VISTO Y NO VISTO, ademas personas q no autorizan-->
-              <!-- <div *ngIf="n.visto == true" style="background: rgb(226, 226, 226);">
-                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
-                  (click)="CambiarVistaTimbres(n.id)">
-                  <ul style="list-style: none; margin-left: -15%;">
-                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                      estado de la</li>
-                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                      <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
-                  </ul>
-                  <mat-divider class="divider"></mat-divider>
-                </a>
-              </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
-                <a *ngIf="!loginService.getEstado()" mat-menu-item type="submit" class="noti_menu"
-                  (click)="CambiarVistaTimbres(n.id)">
-                  <ul style="list-style: none; margin-left: -15%;">
-                    <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> cambio
-                      estado de la</li>
-                    <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
-                    <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                      <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
-                  </ul>
-                  <mat-divider class="divider"></mat-divider>
-                </a>
-              </div> -->
+             <!-- Forma de aviso para 'Te falta timbre de entrada' -->
+             <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'" style="background: rgba(255, 25, 25, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Forma de aviso para 'Te falta timbre de salida' -->
+            <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'" style="background: rgba(255, 25, 25, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Forma de aviso para 'Salio antes al almuerzo' -->
+            <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Forma de aviso para 'Se tomo mucho tiempo de almuerzo' -->
+            <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Forma de aviso para 'Llego atrasado al trabajo' -->
+            <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Forma de aviso para 'Salio antes al trabajo' -->
+            <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
 
             </div>
           </div>
-          <div class="d-flex justify-content-center" *ngIf="loginService.getEstado() == estado">
-            <a type="submit" [routerLink]="['/lista-notificaciones']" class="mostrar-noti">
-              Mostrar todas las notificaciones
+          <div class="d-flex justify-content-center">
+            <a type="submit" [routerLink]="['/lista-avisos']" class="mostrar-noti">
+              Mostrar todos los avisos
             </a>
           </div>
         </mat-menu>
@@ -904,8 +967,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      un permiso</li>
+                      solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -917,8 +979,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      vacaciones</li>
+                      solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -930,8 +991,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      hora extra</li>
+                      solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -939,14 +999,13 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+              <div *ngIf="n.visto == false" style="background: rgb(240, 221, 77);">
                 <a *ngIf="loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
                   mat-menu-item [routerLink]="['/ver-permiso/', n.id_permiso]" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      un permiso</li>
+                      solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -958,8 +1017,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      vacaciones</li>
+                      solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -971,8 +1029,7 @@
                   (click)="CambiarVistaNotificacion(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.nombre.split(' ')[0]}} {{n.apellido.split(' ')[0]}}</b> a
-                      solicitado
-                      hora extra</li>
+                      solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
                       {{n.create_at.slice(11,16)}}</li>
@@ -1023,7 +1080,7 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              <div *ngIf="n.visto == false" style="background: rgb(161, 161, 161);">
+              <div *ngIf="n.visto == false" style="background: rgb(98, 192, 61);">
                 <a *ngIf="!loginService.getEstado() && n.id_vacaciones === null && n.id_hora_extra === null"
                   mat-menu-item [routerLink]="['/solicitarPermiso']" type="submit" class="noti_menu"
                   (click)="CambiarVistaNotificacion(n.id)">

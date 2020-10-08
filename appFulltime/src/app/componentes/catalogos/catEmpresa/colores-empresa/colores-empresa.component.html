@@ -1,0 +1,26 @@
+<mat-icon class="float-right" id="cerrar" (click)="cerrarVentana()">clear</mat-icon>
+<br>
+<div class="container" style="text-align: center;">
+    <div id="titulo">SELECCIONAR COLORES</div>
+    <div class="container" style="text-align: center;">
+        <form [formGroup]="coloresForm">
+            <br>
+            <label>Color Principal</label>
+            <br>
+            <input type="color" [(ngModel)]="p_color" value="p_color"  [formControl]="principal" matSuffix matTooltipClass="enrol-tooltip"
+                matTooltip="Seleccionar color principal">
+            <br>
+            <br>
+            <label>Color Secundario</label>
+            <br>
+            <input type="color" [(ngModel)]="s_color" value="s_color"  [formControl]="secundario" matSuffix matTooltipClass="enrol-tooltip"
+                matTooltip="Seleccionar color secundario">
+            <br>
+            <br>
+            <div style="margin:auto;">
+                <button type="submit" class="btn" (click)="generarPdf('open')">Visualizar</button>
+                <button type="submit" class="btn" (click)="CambiarColores()">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>

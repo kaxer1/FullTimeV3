@@ -19,7 +19,7 @@ class VacacionesRutas {
         this.router.put('/:id/estado', TokenValidation, VACACIONES_CONTROLADOR.ActualizarEstado);
         this.router.put('/:id/vacacion-solicitada', TokenValidation, VACACIONES_CONTROLADOR.EditarVacaciones);
         this.router.get('/datosSolicitud/:id_emple_vacacion', TokenValidation, VACACIONES_CONTROLADOR.ObtenerSolicitudVacaciones);
-        this.router.get('/datosAutorizacion/:id_vacaciones/:id_empleado', TokenValidation, VACACIONES_CONTROLADOR.ObtenerAutorizacionVacaciones);
+        this.router.get('/datosAutorizacion/:id_vacaciones', TokenValidation, VACACIONES_CONTROLADOR.ObtenerAutorizacionVacaciones);
         this.router.delete('/eliminar/:id_vacacion', TokenValidation, VACACIONES_CONTROLADOR.EliminarVacaciones);
     }
 }
