@@ -304,7 +304,7 @@ export class ReporteAtrasosComponent implements OnInit {
       this.generarPdf('open', id_seleccionado, form, confirmado);
     }
     else if (archivo === 'excel') {
-      this.exportToExcel(this.atrasosHorario);
+      this.exportToExcel(confirmado, id_seleccionado, form);
     }
   }
 
@@ -754,15 +754,193 @@ export class ReporteAtrasosComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
    * ****************************************************************************************************/
 
-  exportToExcel(datos_timbres) {
-    datos_timbres.forEach(obj => {
-      var fecha = moment(obj.fec_hora_timbre).format('DD/MM/YYYY') + ' ' + moment(obj.fec_hora_timbre).format('HH:mm:ss');
-      obj.fec_hora_timbre = fecha;
+  exportToExcel(confirmado: boolean, id_seleccionado, form) {
+
+    // Inicialización de varibles
+    var datosGenerales, mensaje: string;
+    var tiempoTotal: string, horaF: string, minF: string, secondF: string;
+    var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
+    var day, hora1, hora2, formatoHorasDecimal: number = 0, formatoDiasDecimal: number = 0;
+    var tHoras = 0, tMinutos = 0, tSegudos = 0, formatoHorasEntero, minutosEscrito;
+    var t1 = new Date();
+    var t2 = new Date();
+
+    this.totalAtrasos.forEach(obj => {
+      day = moment(obj.fec_hora_timbre).day();
+      hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
+
+      // Control de configuración de cálculos
+      if (confirmado === true) {
+        hora2 = (obj.hora_total).split(":");
+      }
+      else {
+        hora2 = (obj.hora).split(":");
+      }
+
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+
+      //Aquí hago la resta
+      t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+
+      // Establecer formato de hora
+      console.log('horas', t1.getHours());
+      tHoras = tHoras + t1.getHours();
+      console.log('horas', tHoras);
+      tSegudos = tSegudos + t1.getSeconds();
+      tMinutos = tMinutos + t1.getMinutes();
+      if (tHoras < 10) {
+        horaF = '0' + tHoras;
+      }
+      else {
+        horaF = String(tHoras);
+      }
+      if (tMinutos < 10) {
+        minF = '0' + tMinutos;
+      }
+      else {
+        minF = String(tMinutos);
+      }
+      if (tSegudos < 10) {
+        secondF = '0' + tSegudos;
+      }
+      else {
+        secondF = String(tSegudos);
+      }
+      tiempoTotal = horaF + ':' + minF + ':' + secondF;
+
+      // Realización de cálculos
+      minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      horaTDecimal = (minTDecimal / 60) + t1.getHours();
+      console.log('hora decimal', horaTDecimal);
+      formatoHorasDecimal = formatoHorasDecimal + parseFloat(horaTDecimal.toFixed(3));
+      console.log('total hora decimal', formatoHorasDecimal);
+      formatoHorasEntero = parseFloat('0.' + String(formatoHorasDecimal).split('.')[1]) * 60
+
+      // Control de escritura de minutos
+      if (formatoHorasEntero.toFixed(0) < 10) {
+        minutosEscrito = '0' + formatoHorasEntero.toFixed(0);
+      }
+      else {
+        minutosEscrito = formatoHorasEntero.toFixed(0);
+      }
+
+      // Obtención de días de las horas de trabajo del empleado
+      if ((obj.horario_horas).split(":")[1] != undefined) {
+        trabaja = obj.horario_horas + ':00'
+      }
+      else {
+        trabaja = obj.horario_horas + ':00:00'
+      }
+      var hTrabajo = (trabaja).split(":")
+      var t3 = new Date();
+      t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      diasDecimal = horaTDecimal / horaTDecimalH;
+      formatoDiasDecimal = formatoDiasDecimal + parseFloat(diasDecimal.toFixed(3));
+      console.log('total dias decimal', formatoDiasDecimal);
     });
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datos_timbres);
+
+    // Búsqueda de los datos del empleado del cual se obtiene el reporte
+    this.datosEmpleado.forEach(obj => {
+      if (obj.id === id_seleccionado) {
+        datosGenerales = [{
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          cedula: obj.cedula,
+          codigo: obj.codigo,
+          sucursal: obj.sucursal,
+          departamento: obj.departamento,
+          ciudad: obj.ciudad,
+          cargo: obj.cargo,
+          total_atrasos_dias_laborables: formatoDiasDecimal.toFixed(3),
+          total_atrasos_horas_laborables: formatoHorasDecimal
+        }]
+      }
+    });
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosGenerales);
+    const wsa: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.totalAtrasos.map(obj => {
+      // Inicialización de variables
+      var tiempoTotal: string, horaF: string, minF: string, secondF: string;
+      var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
+      var day = moment(obj.fec_hora_timbre).day();
+      var hora1 = (moment(obj.fec_hora_timbre).format('HH:mm:ss')).split(":");
+
+      // Control de configuración de cálculos
+      if (confirmado === true) {
+        var hora2 = (obj.hora_total).split(":");
+        mensaje = 'con_minutos_tolerancia';
+      }
+      else {
+        var hora2 = (obj.hora).split(":");
+        mensaje = 'sin_minutos_tolerancia';
+      }
+
+      var t1 = new Date();
+      var t2 = new Date();
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+
+      //Aquí hago la resta
+      t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
+      // Establecer formato de hora
+      if (t1.getHours() < 10) {
+        horaF = '0' + t1.getHours();
+      }
+      else {
+        horaF = String(t1.getHours());
+      }
+      if (t1.getMinutes() < 10) {
+        minF = '0' + t1.getMinutes();
+      }
+      else {
+        minF = String(t1.getMinutes());
+      }
+      if (t1.getSeconds() < 10) {
+        secondF = '0' + t1.getSeconds();
+      }
+      else {
+        secondF = String(t1.getSeconds());
+      }
+      tiempoTotal = horaF + ':' + minF + ':' + secondF;
+
+      // Realización de cálculos
+      minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      horaTDecimal = (minTDecimal / 60) + t1.getHours();
+
+      // Obtención de días de trabajo del empleado
+      if ((obj.horario_horas).split(":")[1] != undefined) {
+        trabaja = obj.horario_horas + ':00'
+      }
+      else {
+        trabaja = obj.horario_horas + ':00:00'
+      }
+      var hTrabajo = (trabaja).split(":")
+      var t3 = new Date();
+      t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      diasDecimal = horaTDecimal / horaTDecimalH;
+      this.contarRegistros = this.contarRegistros + 1;
+
+      return {
+        numero_registros: this.contarRegistros,
+        dia: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
+        fecha: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
+        horario: obj.hora,
+        minutos_tolerancia: obj.minu_espera + ' min',
+        hora_timbre: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
+        horas_laborables: obj.horario_horas,
+        horas_atraso: tiempoTotal,
+        horas_decimal: horaTDecimal.toFixed(3),
+        dias_decimal: diasDecimal.toFixed(3),
+      }
+    }));
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'timbresEmpleado');
-    xlsx.writeFile(wb, "TimbresEmpleadoEXCEL" + new Date().getTime() + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
+    xlsx.utils.book_append_sheet(wb, wsa, 'Atrasos');
+    xlsx.writeFile(wb, "Atrasos - " + mensaje + ' - ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
 
   /* ****************************************************************************************************
