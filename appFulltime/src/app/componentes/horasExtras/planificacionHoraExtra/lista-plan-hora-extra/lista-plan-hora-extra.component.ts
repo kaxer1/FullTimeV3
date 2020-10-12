@@ -47,6 +47,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
   cedula = new FormControl('', [Validators.minLength(2)]);
 
   filtroCedula: '';
+  filtroCedulaO: '';
 
   // Habilitar o Deshabilitar el icono de autorización individual
   auto_individual: boolean = true;
