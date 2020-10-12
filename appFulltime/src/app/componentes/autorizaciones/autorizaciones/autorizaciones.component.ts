@@ -83,7 +83,7 @@ export class AutorizacionesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data, 'data');
+    console.log(this.data, 'data', this.data.carga);
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
     console.log('fecha Actual', this.FechaActual);
