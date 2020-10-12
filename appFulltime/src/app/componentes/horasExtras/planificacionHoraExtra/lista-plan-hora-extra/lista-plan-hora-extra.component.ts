@@ -98,7 +98,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     this.restHEP.ConsultarPlanHoraExtra().subscribe(res => {
       this.sumaHoras = res;
       for (var i = inicio; i < fin; i++) {
-        console.log('bucle', inicio, fin, i)
+        //console.log('bucle', inicio, fin, i)
         if (i < this.sumaHoras.length) {
           hora1 = (this.sumaHoras[i].hora_total_timbre).split(":");
           t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
@@ -108,10 +108,10 @@ export class ListaPlanHoraExtraComponent implements OnInit {
           tt.setHours(tt.getHours() + t1.getHours(), tt.getMinutes() + t1.getMinutes(), tt.getSeconds() + tt.getSeconds());
           horaT = (moment(tt).format('HH:mm:ss')).split(':');
           this.horasSumadas = (moment(tt).format('HH:mm:ss'));
-          console.log('sjhuwhduw', this.horasSumadas);
+         // console.log('sjhuwhduw', this.horasSumadas);
         }
         else {
-          console.log('break', this.horasSumadas);
+         // console.log('break', this.horasSumadas);
           break;
         }
       }
