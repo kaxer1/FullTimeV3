@@ -288,6 +288,7 @@ import { AvisoEstadoPipe } from './filtros/lista-realtime/avisos/aviso-estado.pi
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
 import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
+import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -504,6 +505,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaPlanHoraExtraComponent,
     PlanHoraExtraAutorizaComponent,
     ColoresEmpresaComponent,
+    ListaReportesComponent,
   ],
 
   imports: [

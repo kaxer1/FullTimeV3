@@ -43,13 +43,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf="Habilitado">
                     <mat-form-field>
                         <mat-label>Departamento</mat-label>
                         <mat-icon id="notifica" matSuffix matTooltipClass="notifica-tooltip" matTooltipPosition="right"
                             matTooltip="Lista de orden">
                             help_outline</mat-icon>
-                        <mat-select [formControl]="idDepartamento" required>
+                        <mat-select [formControl]="idDepartamento">
                             <mat-option *ngFor="let d of departamentos" [value]="d.id_departamento">
                                 {{d.nombre}}
                             </mat-option>

@@ -181,7 +181,8 @@ class ReportesControlador {
 
     public async ListarPermisoAutorizaEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
-        const DATOS = await pool.query('SELECT a.id AS id_autoriza, a.estado, a.id_permiso, p.id_empl_contrato, contrato.id_empleado ' +
+        const DATOS = await pool.query('SELECT a.id AS id_autoriza, a.estado, a.id_permiso, ' +
+            'a.id_documento AS empleado_estado, p.id_empl_contrato, contrato.id_empleado ' +
             'FROM autorizaciones AS a, permisos AS p, empl_contratos AS contrato, empleados AS e ' +
             'WHERE a.id_permiso = p.id AND p.id_empl_contrato = contrato.id AND contrato.id_empleado = e.id AND e.id = $1', [id_empleado]);
         if (DATOS.rowCount > 0) {

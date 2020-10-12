@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
-import { MatDialogRef } from '@angular/material/dialog';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
 interface Estado {
@@ -69,9 +71,8 @@ export class PedidoHoraExtraComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    var f = new Date();
-    
-    this.FechaActual = f.toJSON().split('T')[0];
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
 
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.id_cargo_loggin = parseInt(localStorage.getItem("ultimoCargo"));
@@ -92,17 +93,17 @@ export class PedidoHoraExtraComponent implements OnInit {
     });
   }
 
-  ValidarFechas(formFechas){    
+  ValidarFechas(formFechas) {
     var fi = new Date(formFechas.fechaInicioForm);
     var ff = new Date(formFechas.FechaFinForm)
 
-    console.log(fi.toJSON());   console.log(ff.toJSON());
+    console.log(fi.toJSON()); console.log(ff.toJSON());
     if (fi > ff) {
       this.toastr.error('Fecha inicial no puede ser mayor a fecha final')
       this.fechaInicioF.reset();
       this.FechaFinF.reset()
     }
-    
+
     let valor1 = this.Horario.filter(fil => {
       return fil.fecha === fi.toJSON().split('T')[0];
     }).map(result => {
@@ -114,13 +115,13 @@ export class PedidoHoraExtraComponent implements OnInit {
       return result.estado
     })
 
-    console.log(valor1[0]);   console.log(valor2[0]);
+    console.log(valor1[0]); console.log(valor2[0]);
     if (valor1[0] === undefined || valor2[0] === undefined) {
       this.toastr.error('Fechas seleccionadas no corresponden a la semana laboral actual');
       this.fechaInicioF.reset();
       this.FechaFinF.reset()
     }
-    
+
     if (valor1[0] === true) {
       this.toastr.info('Fecha de inicio tiene dia libre')
       this.fechaInicioF.reset();
@@ -129,9 +130,9 @@ export class PedidoHoraExtraComponent implements OnInit {
       this.toastr.info('Fecha de fin tiene dia libre')
       this.FechaFinF.reset()
     }
-    
+
     console.log(valor1, '===', valor2); // false ===> significa que ese dia labora || true ===> significa que ese dia tiene libre
-    
+
   }
 
 
@@ -139,7 +140,7 @@ export class PedidoHoraExtraComponent implements OnInit {
   NotifiRes: any;
   arrayNivelesDepa: any = [];
   insertarTipoPermiso(form1) {
-    
+
     let horaI = form1.fechaInicioForm._i.year + "/" + form1.fechaInicioForm._i.month + "/" + form1.fechaInicioForm._i.date + "T" + form1.horaInicioForm + ":00"
     let horaF = form1.FechaFinForm._i.year + "/" + form1.FechaFinForm._i.month + "/" + form1.FechaFinForm._i.date + "T" + form1.horaFinForm + ":00"
 
@@ -168,29 +169,29 @@ export class PedidoHoraExtraComponent implements OnInit {
       this.arrayNivelesDepa.forEach(obj => {
 
         let datosHoraExtraCreada = {
-          id_empl_cargo: dataPedirHoraExtra.id_empl_cargo, 
+          id_empl_cargo: dataPedirHoraExtra.id_empl_cargo,
           id_usua_solicita: dataPedirHoraExtra.id_usua_solicita,
-          fec_inicio: dataPedirHoraExtra.fec_inicio, 
-          fec_final: dataPedirHoraExtra.fec_final, 
+          fec_inicio: dataPedirHoraExtra.fec_inicio,
+          fec_final: dataPedirHoraExtra.fec_final,
           fec_solicita: dataPedirHoraExtra.fec_solicita,
-          id: obj.id, 
-          estado: obj.estado, 
-          id_dep: obj.id_dep, 
-          depa_padre: obj.depa_padre, 
-          nivel: obj.nivel, 
-          id_suc: obj.id_suc, 
-          departamento: obj.departamento, 
-          sucursal: obj.sucursal, 
-          cargo: obj.cargo, 
-          contrato: obj.contrato, 
-          empleado: obj.empleado, 
-          nombre: obj.nombre, 
-          apellido: obj.apellido, 
-          cedula: obj.cedula, 
-          correo: obj.correo, 
-          hora_extra_mail: obj.hora_extra_mail, 
+          id: obj.id,
+          estado: obj.estado,
+          id_dep: obj.id_dep,
+          depa_padre: obj.depa_padre,
+          nivel: obj.nivel,
+          id_suc: obj.id_suc,
+          departamento: obj.departamento,
+          sucursal: obj.sucursal,
+          cargo: obj.cargo,
+          contrato: obj.contrato,
+          empleado: obj.empleado,
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          cedula: obj.cedula,
+          correo: obj.correo,
+          hora_extra_mail: obj.hora_extra_mail,
           hora_extra_noti: obj.hora_extra_noti
-        } 
+        }
 
         this.restHE.SendMailNoti(datosHoraExtraCreada).subscribe(res => {
           this.HoraExtraResponse = res;
@@ -207,7 +208,7 @@ export class PedidoHoraExtraComponent implements OnInit {
             id_vacaciones: null,
             id_hora_extra: this.HoraExtraResponse.id
           }
-          
+
           this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
             console.log(resN);
             this.NotifiRes = resN;
@@ -218,11 +219,10 @@ export class PedidoHoraExtraComponent implements OnInit {
           });
 
         })
-        
+
       });
-  
-      }
       
+      }
     });
 
   }

@@ -10,6 +10,8 @@ p { font-size: x-small; }
 
 .fas { cursor: pointer; }
 
-.col-sm { font-weight: bold;}
-
 #iconos { text-align: center; }
+
+#datosF { font-weight: bold; font-size: 16px; padding-right: 10px; }
+
+.caja1 {padding: 0px 15px 0px 15px; width: 300px;}

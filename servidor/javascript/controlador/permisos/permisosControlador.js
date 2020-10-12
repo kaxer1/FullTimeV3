@@ -29,7 +29,12 @@ class PermisosControlador {
     }
     ListarEstadosPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.documento, p.docu_nombre, p.fec_final, p.estado, e.nombre, e.apellido, e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id ORDER BY fec_creacion DESC');
+            const PERMISOS = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                'p.documento, p.docu_nombre, p.fec_final, p.estado, e.id AS id_emple_solicita, e.nombre, e.apellido, ' +
+                'e.cedula, cp.descripcion AS nom_permiso, ec.id AS id_contrato FROM permisos AS p, ' +
+                'empl_contratos AS ec, empleados AS e, cg_tipo_permisos AS cp WHERE p.id_empl_contrato = ec.id AND ' +
+                'ec.id_empleado = e.id AND p.id_tipo_permiso = cp.id  AND (p.estado = \'Pendiente\' OR p.estado = \'Pre-Autorizado\' ) ' +
+                'ORDER BY fec_creacion DESC');
             if (PERMISOS.rowCount > 0) {
                 return res.json(PERMISOS.rows);
             }
@@ -210,6 +215,7 @@ class PermisosControlador {
                         id_permiso: id_permiso,
                         id_vacaciones: null
                     };
+                    console.log(notifi_realtime);
                     let data = {
                         from: obj.correo,
                         to: ele.correo,
@@ -275,8 +281,9 @@ class PermisosControlador {
     ObtenerDatosAutorizacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_permiso;
-            const id_empleado = req.params.id_empleado;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaAutorizaciones WHERE id_permiso = $1 AND id_empleado = $2', [id, id_empleado]);
+            const SOLICITUD = yield database_1.default.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+                'p.id AS permiso_id FROM autorizaciones AS a, permisos AS p ' +
+                'WHERE p.id = a.id_permiso AND p.id = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Validators, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -38,9 +38,9 @@ export interface EmpleadoElemento {
 @Component({
   selector: 'app-lista-empleados',
   templateUrl: './lista-empleados.component.html',
-  styleUrls: ['./lista-empleados.component.css'],
-  //encapsulation: ViewEncapsulation.None
+  styleUrls: ['./lista-empleados.component.css']
 })
+
 export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
@@ -57,12 +57,12 @@ export class ListaEmpleadosComponent implements OnInit {
   filtroNombre: '';
   filtroApellido: '';
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
-  // items de paginacion de la tabla
+  // Items de paginación de la tabla Deshabilitados
   tamanio_paginaDes: number = 5;
   numero_paginaDes: number = 1;
   pageSizeOptionsDes = [5, 10, 20, 50];
@@ -91,21 +91,21 @@ export class ListaEmpleadosComponent implements OnInit {
     this.ObtnerColores();
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
+  /** Si el número de elementos seleccionados coincide con el número total de filas. */
   isAllSelected() {
     const numSelected = this.selectionUno.selected.length;
     const numRows = this.empleado.length;
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /** Selecciona todas las filas si no están todas seleccionadas; de lo contrario, selección clara. */
   masterToggle() {
     this.isAllSelected() ?
       this.selectionUno.clear() :
       this.empleado.forEach(row => this.selectionUno.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
+  /** La etiqueta de la casilla de verificación en la fila pasada*/
   checkboxLabel(row?: EmpleadoElemento): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;

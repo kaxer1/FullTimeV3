@@ -1,9 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
-import { ToastrService } from 'ngx-toastr';
-import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
+
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 
 interface Estado {
@@ -56,16 +58,9 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
   }
 
   tiempo() {
-    var f = new Date();
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
+    console.log('fecha Actual', this.FechaActual);
   }
 
   resAutorizacion: any = [];

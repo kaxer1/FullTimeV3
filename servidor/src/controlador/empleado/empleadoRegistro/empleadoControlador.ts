@@ -289,24 +289,23 @@ class EmpleadoControlador {
     console.log(arrayIdsEmpleados);
 
     if (arrayIdsEmpleados.length > 0) {
-      arrayIdsEmpleados.forEach(async(obj: number) => {
-        
+      arrayIdsEmpleados.forEach(async (obj: number) => {
+
         await pool.query('UPDATE empleados SET estado = 1 WHERE id = $1', [obj]) // 1 => activado 
-        .then(result => {
-          console.log(result.command, 'EMPLEADO ====>', obj);
-        });
-        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1',[obj]) // true => Tiene acceso
-        .then(result => {
-          console.log(result.command, 'USUARIO ====>', obj);
-        });
+          .then(result => {
+            console.log(result.command, 'EMPLEADO ====>', obj);
+          });
+        await pool.query('UPDATE usuarios SET estado = true, app_habilita = true WHERE id_empleado = $1', [obj]) // true => Tiene acceso
+          .then(result => {
+            console.log(result.command, 'USUARIO ====>', obj);
+          });
         EstadoHorarioPeriVacacion(obj);
       });
 
-      return res.jsonp({message: 'Todos los empleados seleccionados han sido reactivados'});
+      return res.jsonp({ message: 'Todos los empleados seleccionados han sido reactivados' });
     }
-    return  res.jsonp({message: 'No ha sido reactivado ningún empleado'});
+    return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
   }
-
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();
