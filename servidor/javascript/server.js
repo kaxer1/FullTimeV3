@@ -187,5 +187,5 @@ avisoVacaciones_1.beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
 avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
-// generarTimbres(14);
-// ModificarTimbresEntrada()
+//generarTimbres(1);
+//ModificarTimbresEntrada();

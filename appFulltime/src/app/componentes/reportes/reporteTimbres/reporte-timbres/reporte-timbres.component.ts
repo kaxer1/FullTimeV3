@@ -514,22 +514,32 @@ export class ReporteTimbresComponent implements OnInit {
     *                                       MÉTODO PARA EXPORTAR A EXCEL
     ******************************************************************************************************/
   exportToExcelTimbres(id_empleado: number, form) {
+    var i = 0;
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
       if (this.datosEmpleado[i].id === id_empleado) {
         var datosEmpleado = [{
-          codigo: this.datosEmpleado[i].codigo,
-          empleado_nombre: this.datosEmpleado[i].nombre,
-          empleado_apellido: this.datosEmpleado[i].apellido,
-          empleado_cedula: this.datosEmpleado[i].cedula,
-          sucursal: this.datosEmpleado[i].sucursal,
-          departamento: this.datosEmpleado[i].departamento,
-          ciudad: this.datosEmpleado[i].ciudad,
-          cargo: this.datosEmpleado[i].cargo
+          CODIGO: this.datosEmpleado[i].codigo,
+          NOMBRE: this.datosEmpleado[i].nombre,
+          APELLIDO: this.datosEmpleado[i].apellido,
+          CEDULA: this.datosEmpleado[i].cedula,
+          SUCURSAL: this.datosEmpleado[i].sucursal,
+          DEPARTAMENTO: this.datosEmpleado[i].departamento,
+          CIUDAD: this.datosEmpleado[i].ciudad,
+          CARGO: this.datosEmpleado[i].cargo
         }]
         break;
       }
     }
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEmpleado);
+
+    const headerE = Object.keys(datosEmpleado[0]); // columns name
+
+    var wscolsE = [];
+    for (var i = 0; i < headerE.length; i++) {  // columns length added
+      wscolsE.push({ wpx: 110 })
+    }
+    wse["!cols"] = wscolsE;
+
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.timbres.map(obj => {
       if (obj.accion === 'E' || obj.accion === '1') {
         this.accionT = 'Entrada';
@@ -551,14 +561,45 @@ export class ReporteTimbresComponent implements OnInit {
       }
       var day = moment(obj.fec_hora_timbre).day()
       return {
-        dia_timbre: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
-        fecha_timbre: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
-        hora_timbre: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
-        id_reloj: obj.id_reloj,
-        accion: this.accionT,
-        observacion: obj.observacion,
+        N_REGISTROS: i = i + 1,
+        DIA_TIMBRE: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
+        FECHA_TIMBRE: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
+        HORA_TIMBRE: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
+        ID_RELOJ: obj.id_reloj,
+        ACCION: this.accionT,
+        OBSERVACION: obj.observacion,
       }
     }));
+
+    const header = Object.keys(this.timbres[0]); // columns name
+
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // columns length added
+      wscols.push({ wpx: 110 })
+    }
+    wst["!cols"] = wscols;
+
+    /* wse["!A1"] = {
+       fill: {
+         patternType: "none", // none / solid
+         fgColor: { rgb: "FFFFAA00" },
+         bgColor: { rgb: "FFFFFFFF" }
+       },
+       font: {
+         name: 'Times New Roman',
+         sz: 16,
+         color: { rgb: "#FF000000" },
+         bold: true,
+         italic: false,
+         underline: false
+       },
+       border: {
+         top: { style: "thin", color: { auto: 1 } },
+         right: { style: "thin", color: { auto: 1 } },
+         bottom: { style: "thin", color: { auto: 1 } },
+         left: { style: "thin", color: { auto: 1 } }
+       }
+     };*/
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wst, 'Timbres');

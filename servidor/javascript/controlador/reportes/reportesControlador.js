@@ -96,7 +96,7 @@ class ReportesControlador {
             const { id_empleado } = req.params;
             const { fechaInicio, fechaFinal } = req.body;
             const DATOS = yield database_1.default.query('SELECT * FROM timbres WHERE id_empleado = $1 AND ' +
-                'fec_hora_timbre::date BETWEEN $2 AND $3 ORDER BY fec_hora_timbre::date ASC', [id_empleado, fechaInicio, fechaFinal]);
+                'fec_hora_timbre::date BETWEEN $2 AND $3 ORDER BY fec_hora_timbre::date, fec_hora_timbre::time ASC', [id_empleado, fechaInicio, fechaFinal]);
             if (DATOS.rowCount > 0) {
                 return res.jsonp(DATOS.rows);
             }
