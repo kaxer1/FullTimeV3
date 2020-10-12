@@ -254,5 +254,5 @@ RegistrarAsistenciaByTimbres();
 
 import { generarTimbres, ModificarTimbresEntrada } from './script/scriptTimbres'
 
-// generarTimbres(14);
-// ModificarTimbresEntrada()
+//generarTimbres(1);
+//ModificarTimbresEntrada();
