@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import { FormControl, Validators } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import * as moment from 'moment';
 
 import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-extra.service';
 import { TiempoAutorizadoComponent } from 'src/app/componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { PlanHoraExtraAutorizaComponent } from 'src/app/componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
+import { ToastrService } from 'ngx-toastr';
+
 
 export interface HoraExtraPlanElemento {
   apellido: string;
@@ -40,6 +43,11 @@ export class ListaPlanHoraExtraComponent implements OnInit {
 
   selectionUno = new SelectionModel<HoraExtraPlanElemento>(true, []);
 
+  // Búsqueda
+  cedula = new FormControl('', [Validators.minLength(2)]);
+
+  filtroCedula: '';
+
   // Habilitar o Deshabilitar el icono de autorización individual
   auto_individual: boolean = true;
 
@@ -62,6 +70,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
 
   constructor(
     private restHEP: PlanHoraExtraService,
+    public toastr: ToastrService,
     private vistaFlotante: MatDialog
   ) { }
 
@@ -397,6 +406,28 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     } else if (this.btnCheckHabilitarO === true) {
       this.btnCheckHabilitarO = false;
       this.auto_individualO = true;
+    }
+  }
+
+  limpiarCampos() {
+    this.cedula.reset();
+  }
+
+  
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      return false;
     }
   }
 
