@@ -207,7 +207,7 @@ SERVIDOR.start();
 
 import { cumpleanios } from './libs/sendBirthday';
 import { beforeFiveDays, beforeTwoDays, Peri_Vacacion_Automatico } from './libs/avisoVacaciones';
-import { conteoPermisos } from './libs/timerPermiso';
+import { conteoPermisos } from './libs/TimerPermiso';
 import { RegistrarAsistenciaByTimbres } from './libs/ContarHoras';
 import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
 import { NotificacionSinTimbres } from './libs/SinTimbres'
@@ -222,10 +222,16 @@ Peri_Vacacion_Automatico();
 
 RegistrarAsistenciaByTimbres();
 
-// conteoPermisos();
+// ----------// conteoPermisos();
 
-NotificacionTimbreAutomatica();
+// NotificacionTimbreAutomatica();
 
-NotificacionSinTimbres();
+// NotificacionSinTimbres();
 
-DesactivarFinContratoEmpleado();
+// DesactivarFinContratoEmpleado();
+
+
+import { generarTimbres, ModificarTimbresEntrada } from './script/scriptTimbres'
+
+// generarTimbres(14);
+// ModificarTimbresEntrada()

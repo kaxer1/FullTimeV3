@@ -179,9 +179,6 @@ SERVIDOR.start();
 const sendBirthday_1 = require("./libs/sendBirthday");
 const avisoVacaciones_1 = require("./libs/avisoVacaciones");
 const ContarHoras_1 = require("./libs/ContarHoras");
-const NotiTimbres_1 = require("./libs/NotiTimbres");
-const SinTimbres_1 = require("./libs/SinTimbres");
-const DesactivarEmpleado_1 = require("./libs/DesactivarEmpleado");
 // llama al meodo de cumpleaños
 sendBirthday_1.cumpleanios();
 // llama al metodo de avisos de vacaciones
@@ -190,7 +187,5 @@ avisoVacaciones_1.beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
 avisoVacaciones_1.Peri_Vacacion_Automatico();
 ContarHoras_1.RegistrarAsistenciaByTimbres();
-// conteoPermisos();
-NotiTimbres_1.NotificacionTimbreAutomatica();
-SinTimbres_1.NotificacionSinTimbres();
-DesactivarEmpleado_1.DesactivarFinContratoEmpleado();
+// generarTimbres(14);
+// ModificarTimbresEntrada()

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
+const moment_1 = __importDefault(require("moment"));
 const HORA_EJECUTA_PROCESO = 12;
 function sumaDias(fecha, dias) {
     fecha.setUTCHours(fecha.getHours());
@@ -29,8 +30,8 @@ function CalcularEntradaAlmuerzo(hora, tiempo_almuerzo) {
     let hora_string;
     var x = tiempo_almuerzo / 60; //min a hora
     let h = hora.split(':'); //hora
-    var a = parseInt(h[1]) / 60; //min a hora    
-    var resultado = parseInt(h[0]) + a + x;
+    var a = parseInt(h[1]) / 60; //min a hora  
+    var resultado = parseInt(h[0]) + parseInt(a.toString().split('.')[0]) + x;
     var z = resultado - parseInt(resultado.toString());
     if (resultado <= 9) {
         hora_string = '0' + parseInt(resultado.toString()) + ':' + (z * 60);
@@ -77,60 +78,136 @@ function ListaTimbresDiarioToEmpleado(hoy) {
         });
     });
 }
-function HorarioEmpleado(id_cargo, dia_inicia_semana, fechaIterada) {
+function GenerarHorarioEmpleado(id_cargo, inicio, final) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT lunes, martes, miercoles, jueves, viernes, sabado, domingo FROM empl_horarios WHERE estado = 1 AND id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, dia_inicia_semana])
-            .then(result => {
-            let respuesta = [];
-            result.rows.forEach(res => {
-                if (fechaIterada.getDay() === 0) {
-                    respuesta.push(res.lunes);
-                }
-                else if (fechaIterada.getDay() === 1) {
-                    respuesta.push(res.martes);
-                }
-                else if (fechaIterada.getDay() === 2) {
-                    respuesta.push(res.miercoles);
-                }
-                else if (fechaIterada.getDay() === 3) {
-                    respuesta.push(res.jueves);
-                }
-                else if (fechaIterada.getDay() === 4) {
-                    respuesta.push(res.viernes);
-                }
-                else if (fechaIterada.getDay() === 5) {
-                    respuesta.push(res.sabado);
-                }
-                else if (fechaIterada.getDay() === 6) {
-                    respuesta.push(res.domingo);
-                }
-            });
-            return {
-                fec_iterada: fechaIterada.toJSON().split('T')[0],
-                boolena_fecha: respuesta[0]
-            };
-        });
-    });
-}
-function UltimoCargoContrato(id_empleado) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT ca.id AS id_cargo, co.id AS id_contrato  FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id ORDER BY co.fec_ingreso DESC, ca.fec_inicio DESC LIMIT 1', [id_empleado])
+        let horarioAnual = yield database_1.default.query('SELECT id_horarios, fec_inicio, fec_final, domingo, lunes, martes, miercoles, jueves, viernes, sabado ' +
+            'FROM empl_horarios WHERE estado = 1 AND id_empl_cargo = $1 AND CAST(fec_inicio AS VARCHAR) like $2 || \'%\' ORDER BY fec_inicio ASC', [id_cargo, inicio.toJSON().split('-')[0]])
             .then(result => {
             return result.rows;
         });
+        // console.log(horarioAnual);
+        if (horarioAnual.length === 0)
+            return { message: 'No tienen asignado horario' };
+        if (horarioAnual.length === 1) { // referencia a horario anual
+            var fecha1 = moment_1.default(horarioAnual[0].fec_inicio.toJSON().split("T")[0]);
+            var fecha2 = moment_1.default(horarioAnual[0].fec_final.toJSON().split("T")[0]);
+            var diasHorario = fecha2.diff(fecha1, 'days');
+            if (diasHorario > 300) { // compruevo si es realmente horario anual
+                console.log('*************************');
+                console.log('LLEGO A HORARIO ANUAL');
+                console.log('*************************');
+                return HorarioConEstado(horarioAnual, inicio, final);
+            }
+        }
+        let horarioMensual = horarioAnual.filter(obj => {
+            return (obj.fec_inicio.toJSON().split('-')[1] === inicio.toJSON().split('-')[1] || obj.fec_final.toJSON().split('-')[1] === final.toJSON().split('-')[1]);
+        });
+        // console.log(horarioMensual);
+        if (horarioMensual.length === 0)
+            return { message: 'No tiene asignado horario para ese mes' };
+        if (horarioMensual.length === 1) { //referencia a un horario mensual
+            var fecha1 = moment_1.default(horarioMensual[0].fec_inicio.toJSON().split("T")[0]);
+            var fecha2 = moment_1.default(horarioMensual[0].fec_final.toJSON().split("T")[0]);
+            var diasHorario = fecha2.diff(fecha1, 'days');
+            if (diasHorario > 25) { // compruevo si es realmente horario mensual
+                console.log('*************************');
+                console.log('LLEGO A HORARIO MENSUAL');
+                console.log('*************************');
+                return HorarioConEstado(horarioMensual, inicio, final);
+            }
+        }
+        console.log('*************************');
+        console.log('LLEGO A SEMANAL');
+        console.log('*************************');
+        let EstadosHorarioSemanal = [];
+        horarioMensual.forEach(obj => {
+            let arr = HorarioConEstado([obj], obj.fec_inicio, obj.fec_final);
+            arr.forEach((ele) => {
+                EstadosHorarioSemanal.push(ele);
+            });
+        });
+        // console.log(EstadosHorarioSemanal);        
+        return EstadosHorarioSemanal.filter((obj) => {
+            var fecha = new Date(obj.fec_iterada);
+            return (fecha >= inicio && fecha <= final);
+        });
     });
 }
-function ListaSinTimbres_DiaLibre(hoy, bool) {
+function HorarioConEstado(estados, inicio, final) {
+    var fecha1 = moment_1.default(inicio.toJSON().split("T")[0]);
+    var fecha2 = moment_1.default(final.toJSON().split("T")[0]);
+    // console.log('ESTADOSSSSSSSS',estados);
+    var diasHorario = fecha2.diff(fecha1, 'days');
+    let horarioSemanalEstados = [];
+    estados.forEach((obj) => {
+        horarioSemanalEstados.push(obj.domingo);
+        horarioSemanalEstados.push(obj.lunes);
+        horarioSemanalEstados.push(obj.martes);
+        horarioSemanalEstados.push(obj.miercoles);
+        horarioSemanalEstados.push(obj.jueves);
+        horarioSemanalEstados.push(obj.viernes);
+        horarioSemanalEstados.push(obj.sabado);
+    });
+    console.log(horarioSemanalEstados);
+    let arrayRespuesta = [];
+    for (let i = 0; i <= diasHorario; i++) {
+        // console.log(inicio.toJSON(),'Dia de la semana',inicio.getUTCDay());
+        let objeto = {
+            fec_iterada: inicio.toJSON().split('T')[0],
+            boolena_fecha: horarioSemanalEstados[inicio.getUTCDay()],
+            id_horarios: estados[0].id_horarios
+        };
+        arrayRespuesta.push(objeto);
+        // console.log(inicio.toJSON(),'Dia de la seman: ', inicio.getDay());
+        inicio.setDate(inicio.getDate() + 1);
+    }
+    return arrayRespuesta;
+}
+function UltimoCargoContrato(id_empleado, desde) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let horarios = yield database_1.default.query('SELECT ho.id_empl_cargo AS id_cargo, ho.fec_inicio, ho.fec_final, ho.id_horarios FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS ho ' +
+            'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id AND ca.id = ho.id_empl_cargo ' +
+            'AND CAST(ho.fec_inicio AS VARCHAR) LIKE $2 || \'%\'', [id_empleado, desde.toJSON().split('-')[0]])
+            .then(result => {
+            return result.rows;
+        });
+        // console.log(horarios);
+        if (horarios.length === 0)
+            return { message: 'No tienen horarios' };
+        let horario;
+        if (horarios.length === 1) {
+            horario = horarios;
+        }
+        else {
+            horario = horarios.filter(obj => {
+                return (obj.fec_inicio.toJSON().split('-')[1] === desde.toJSON().split('-')[1] || obj.fec_final.toJSON().split('-')[1] === desde.toJSON().split('-')[1]);
+            });
+        }
+        // console.log(horario);
+        let _ids = horarios.map(obj => {
+            return {
+                id_cargo: obj.id_cargo,
+                id_horarios: obj.id_horarios
+            };
+        });
+        let set = new Set(_ids.map(obj => { return JSON.stringify(obj); }));
+        let arrSinDuplicaciones = Array.from(set).map(obj => { return JSON.parse(obj); });
+        // console.log(set);
+        return arrSinDuplicaciones;
+    });
+}
+function ListaSinTimbres_DiaLibre(hoy, bool, id_horarios) {
     return [{
             fec_hora_timbre: hoy,
             accion: 'L',
             tecl_funcion: 0,
-            labora: bool
+            labora: bool,
+            id_horarios: id_horarios
         }];
 }
-function ListaTimbresDiario(hoy, id_empleado, bool) {
+function ListaTimbresDiario(hoy, id_empleado, bool, id_horarios) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT fec_hora_timbre, accion, tecl_funcion FROM timbres WHERE id_empleado = $2 AND CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\'', [hoy, id_empleado])
+        return yield database_1.default.query('SELECT fec_hora_timbre, accion, tecl_funcion FROM timbres WHERE id_empleado = $2 AND CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ORDER BY fec_hora_timbre', [hoy, id_empleado])
             .then(result => {
             return result.rows.map(obj => {
                 obj.fec_hora_timbre.setUTCHours(obj.fec_hora_timbre.getHours());
@@ -138,17 +215,18 @@ function ListaTimbresDiario(hoy, id_empleado, bool) {
                     fec_hora_timbre: obj.fec_hora_timbre,
                     accion: obj.accion,
                     tecl_funcion: obj.tecl_funcion,
-                    labora: bool
+                    labora: bool,
+                    id_horarios: id_horarios
                 };
             });
         });
     });
 }
 function DiaEspaniol(dia) {
-    let nom_dia = ['lun', 'mar', 'mié', 'jue', 'vie', 'sáb', 'dom'];
-    return nom_dia[dia - 1];
+    let nom_dia = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+    return nom_dia[dia];
 }
-function CalcularCamposFaltantes(obj, id_cargo, labora) {
+function CalcularCamposFaltantes(obj, labora) {
     var x = new Date(obj.fecha);
     // console.log(obj.fecha, '===========' , x.getDay(), '=========', labora);
     if (obj.E.hora_timbre === '' && labora === false) { //false => son dias normales
@@ -171,23 +249,26 @@ function CalcularCamposFaltantes(obj, id_cargo, labora) {
     }
     return obj;
 }
-function CalculoHoraSalida(t) {
-    // console.log('******************');    
-    var c = t.h_ingreso.getUTCHours(); // hora
-    var d = t.h_ingreso.getUTCMinutes() / 60; // hora
-    var a = t.min_almuerzo / 60; // horas
+/*
+function CalculoHoraSalida(t: ITiempoLaboral) {
+    // console.log('******************');
+    var c = t.h_ingreso.getUTCHours() // hora
+    var d = t.h_ingreso.getUTCMinutes()/60 // hora
+
+    var a = t.min_almuerzo/60 // horas
+    
     var resultado = parseInt(t.h_trabaja.toString()) + a + c + d;
     var z = resultado - parseInt(resultado.toString());
     let hora_string;
     if (resultado <= 9) {
-        hora_string = '0' + parseInt(resultado.toString()) + ':' + (z * 60);
-    }
-    else {
-        hora_string = parseInt(resultado.toString()) + ':' + (z * 60);
+        hora_string = '0' + parseInt(resultado.toString()) + ':' + (z * 60)
+    } else {
+        hora_string = parseInt(resultado.toString()) + ':' + (z * 60)
     }
     // console.log('******************');
-    return hora_string;
+    return hora_string
 }
+*/
 function HHMMtoHorasDecimal(dato) {
     if (dato === '')
         return 0;
@@ -198,6 +279,7 @@ function HHMMtoHorasDecimal(dato) {
     return h + m;
 }
 function HorasDecimalToHHMM(dato) {
+    // console.log('Hora decimal a HHMM ======>',dato);
     var h = parseInt(dato.toString());
     var x = (dato - h) * 60;
     var m = parseInt(x.toString());
@@ -207,15 +289,15 @@ function HorasDecimalToHHMM(dato) {
         hora = '0' + h;
         min = '0' + m;
     }
-    else if (h < 10 && m > 10) {
+    else if (h < 10 && m >= 10) {
         hora = '0' + h;
         min = m;
     }
-    else if (h > 10 && m < 10) {
+    else if (h >= 10 && m < 10) {
         hora = h;
         min = '0' + m;
     }
-    else if (h > 10 && m > 10) {
+    else if (h >= 10 && m >= 10) {
         hora = h;
         min = m;
     }
@@ -272,8 +354,12 @@ function CalcularAtraso(h_default, h_timbre, minu_espera) {
         return '00:00';
     if (h_timbre === '')
         return '00:00';
+    // if (minu_espera === 0) {
+    //     minu_espera = '00:00'
+    // } 
+    // console.log('Horas',h_default, h_timbre, minu_espera);
     var def = parseInt(h_default.split(':')[0]) + (parseInt(h_default.split(':')[1]) / 60);
-    var espera = (parseInt(minu_espera.split(':')[1]) / 60) + (def);
+    var espera = (minu_espera / 60) + (def);
     var timbre = parseInt(h_timbre.split(':')[0]) + (parseInt(h_timbre.split(':')[1]) / 60);
     if (timbre < espera) {
         return '00:00';
@@ -304,27 +390,41 @@ function CalcularAtraso(h_default, h_timbre, minu_espera) {
     return hora + ':' + min;
 }
 function CalcularHorasTrabaja(entrada, salida, atraso, salida_antes, almuerzo) {
+    // console.log(entrada, salida, atraso, salida_antes, almuerzo);    
     if (entrada.descripcion === 'L' && salida.descripcion === 'L')
         return '00:00';
     if (entrada.hora_timbre === '' && salida.hora_timbre === '') {
         var _e = HHMMtoHorasDecimal(entrada.hora_default);
-        var _s = HHMMtoHorasDecimal(salida.hora_default);
+        let _s = HHMMtoHorasDecimal(salida.hora_default);
         var _a = HHMMtoHorasDecimal(almuerzo);
         // console.log(_s -_e - _a);
-        var _res = HorasDecimalToHHMM(_s - _e - _a);
-        // console.log(_res);
-        return _res;
+        if (_s > _e) {
+            return HorasDecimalToHHMM(_s - _e - _a);
+        }
+        else if (_e > _s) {
+            _e = 24 - _e;
+            return HorasDecimalToHHMM((_s + _e) - _a);
+        }
     }
     var _e = HHMMtoHorasDecimal(entrada.hora_timbre);
     var _s = HHMMtoHorasDecimal(salida.hora_timbre);
     var _a = HHMMtoHorasDecimal(almuerzo);
-    var _res = HorasDecimalToHHMM(_s - _e - _a);
+    let _res;
+    if (_s > _e) {
+        _res = HorasDecimalToHHMM(_s - _e - _a);
+    }
+    else if (_e > _s) {
+        _e = 24 - _e;
+        _res = HorasDecimalToHHMM((_s + _e) - _a);
+    }
     return _res;
 }
-function AsistenciaDetalleConsolidado(arr, tlaboral, id_cargo, minu_espera) {
+function AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo) {
+    // console.log('Metodo asistencia detalle consolidado:', IhorarioLaboral);
     let AsistenciaArray = [];
-    let salidaGeneral = CalculoHoraSalida(tlaboral);
+    // let salidaGeneral = CalculoHoraSalida(IhorarioLaboral);
     arr.forEach((result) => {
+        // console.log(result);
         let detalleAsistencia = {
             fecha: '',
             fecha_mostrar: '',
@@ -358,138 +458,133 @@ function AsistenciaDetalleConsolidado(arr, tlaboral, id_cargo, minu_espera) {
         };
         let contador = 0;
         result.forEach((obj) => {
-            if (obj.accion === 'E') {
-                detalleAsistencia.fecha = obj.fec_hora_timbre.toJSON();
-                detalleAsistencia.fecha_mostrar = DiaEspaniol(obj.fec_hora_timbre.getDay()) + ' ' + obj.fec_hora_timbre.toJSON().split('T')[0];
-                detalleAsistencia.E.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-            }
-            else if (obj.accion === 'S/A') {
-                detalleAsistencia.S_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-            }
-            else if (obj.accion === 'E/A') {
-                detalleAsistencia.E_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-            }
-            else if (obj.accion === 'S') {
-                detalleAsistencia.S.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-            }
-            else if (obj.accion === 'L') {
-                var f = new Date(obj.fec_hora_timbre);
-                detalleAsistencia.fecha = f.toJSON();
-                detalleAsistencia.fecha_mostrar = DiaEspaniol(f.getDay() + 1) + ' ' + f.toJSON().split('T')[0];
-                detalleAsistencia.E.hora_default = tlaboral.h_ingreso.toJSON().split('T')[1].slice(0, 5);
-                detalleAsistencia.S_A.hora_default = '13:00';
-                detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo('13:00', tlaboral.min_almuerzo);
-                detalleAsistencia.S.hora_default = salidaGeneral;
-            }
-            contador = contador + 1;
-            if (result.length === contador && obj.accion != 'L') {
-                detalleAsistencia.E.hora_default = tlaboral.h_ingreso.toJSON().split('T')[1].slice(0, 5);
-                detalleAsistencia.S_A.hora_default = '13:00';
-                detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_timbre, tlaboral.min_almuerzo);
-                if (detalleAsistencia.S_A.hora_timbre === '') {
-                    detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_default, tlaboral.min_almuerzo);
+            IhorarioLaboral.filter((ele_filtro) => { return (obj.id_horarios === ele_filtro.id_horario); })
+                .map((ele_map) => {
+                let entrada_default = ele_map.datos[0].hora.split(':')[0] + ':' + ele_map.datos[0].hora.split(':')[1];
+                let salida_almuerzo_default = ele_map.datos[1].hora.split(':')[0] + ':' + ele_map.datos[1].hora.split(':')[1];
+                let entrada_almuerzo_default = ele_map.datos[2].hora.split(':')[0] + ':' + ele_map.datos[2].hora.split(':')[1];
+                let salida_default = ele_map.datos[3].hora.split(':')[0] + ':' + ele_map.datos[3].hora.split(':')[1];
+                if (obj.accion === 'E') {
+                    detalleAsistencia.E.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
                 }
-                detalleAsistencia.S.hora_default = salidaGeneral;
-            }
-            if (result.length === contador) {
-                // atraso
-                detalleAsistencia.atraso = CalcularAtraso(detalleAsistencia.E.hora_default, detalleAsistencia.E.hora_timbre, minu_espera);
-                // Tiempo salidas antes
-                detalleAsistencia.sal_antes = CalcularSalidasAntes(detalleAsistencia.S_A, detalleAsistencia.S);
-                // almuerzo
-                detalleAsistencia.almuerzo = CalcularAlmuerzo(detalleAsistencia.S_A, detalleAsistencia.E_A);
-                // Calculos Faltantes
-                let calculados = CalcularCamposFaltantes(detalleAsistencia, id_cargo, obj.labora);
-                // horas trabaja
-                calculados.hora_trab = CalcularHorasTrabaja(calculados.E, calculados.S, calculados.atraso, calculados.sal_antes, calculados.almuerzo);
-                // console.log(result.length);
-                calculados.hora_supl = '00:00';
-                calculados.hora_ex_L_V = '00:00';
-                calculados.hora_ex_S_D = '00:00';
-                AsistenciaArray.push(calculados);
-            }
+                else if (obj.accion === 'S/A') {
+                    detalleAsistencia.S_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                }
+                else if (obj.accion === 'E/A') {
+                    detalleAsistencia.E_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                }
+                else if (obj.accion === 'S') {
+                    detalleAsistencia.S.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                    // Fecha
+                    detalleAsistencia.fecha = obj.fec_hora_timbre.toJSON();
+                    detalleAsistencia.fecha_mostrar = DiaEspaniol(obj.fec_hora_timbre.getDay()) + ' ' + obj.fec_hora_timbre.toJSON().split('T')[0];
+                }
+                else if (obj.accion === 'L') {
+                    var f = new Date(obj.fec_hora_timbre);
+                    detalleAsistencia.fecha = f.toJSON();
+                    detalleAsistencia.fecha_mostrar = DiaEspaniol(f.getUTCDay()) + ' ' + f.toJSON().split('T')[0];
+                    detalleAsistencia.E.hora_default = entrada_default || '08:30';
+                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default || '12:45';
+                    detalleAsistencia.E_A.hora_default = entrada_almuerzo_default || '14:00';
+                    detalleAsistencia.S.hora_default = salida_default || '17:00';
+                    // detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo('13:00', tlaboral.min_almuerzo)
+                    // detalleAsistencia.S.hora_default = salidaGeneral
+                }
+                contador = contador + 1;
+                if (result.length === contador && obj.accion != 'L') {
+                    detalleAsistencia.E.hora_default = entrada_default || '08:30';
+                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default || '12:45';
+                    detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_timbre, ele_map.min_almuerzo) || entrada_almuerzo_default;
+                    if (detalleAsistencia.S_A.hora_timbre === '') {
+                        detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_default, ele_map.min_almuerzo) || entrada_almuerzo_default;
+                    }
+                    detalleAsistencia.S.hora_default = salida_default || '17:00';
+                    // detalleAsistencia.S.hora_default = salidaGeneral
+                }
+                if (result.length === contador) {
+                    // atraso
+                    detalleAsistencia.atraso = CalcularAtraso(detalleAsistencia.E.hora_default, detalleAsistencia.E.hora_timbre, ele_map.datos[0].minu_espera);
+                    // Tiempo salidas antes
+                    detalleAsistencia.sal_antes = CalcularSalidasAntes(detalleAsistencia.S_A, detalleAsistencia.S);
+                    // almuerzo
+                    detalleAsistencia.almuerzo = CalcularAlmuerzo(detalleAsistencia.S_A, detalleAsistencia.E_A);
+                    // Calculos Faltantes
+                    let calculados = CalcularCamposFaltantes(detalleAsistencia, obj.labora);
+                    // horas trabaja
+                    calculados.hora_trab = CalcularHorasTrabaja(calculados.E, calculados.S, calculados.atraso, calculados.sal_antes, calculados.almuerzo) || '08:00';
+                    // console.log(result.length);
+                    calculados.hora_supl = '00:00';
+                    calculados.hora_ex_L_V = '00:00';
+                    calculados.hora_ex_S_D = '00:00';
+                    AsistenciaArray.push(calculados);
+                }
+            });
         });
     });
-    console.log(AsistenciaArray.length);
+    // console.log(AsistenciaArray.length);
     return AsistenciaArray;
 }
-function MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, TiemposEmpleado, id_cargo) {
+function MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, IhorarioLaboral, id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let arr = [];
-        let minu_espera = yield database_1.default.query('SELECT distinct dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND eh.id_horarios = ch.id AND dh.id_horario = ch.id', [id_cargo])
-            .then(result => { return result.rows[0].minu_espera; });
-        for (let i = 1; i <= hasta.getDate() + 1; i++) {
-            let semanaFecha = ObtenerDiaIniciaSemana(new Date(desde));
-            let horarios = yield HorarioEmpleado(id_cargo, semanaFecha.toJSON().split('T')[0], desde);
-            let aux = yield ListaTimbresDiario(desde.toJSON().split('T')[0], id_empleado, horarios.boolena_fecha);
+        let horarios = yield GenerarHorarioEmpleado(id_cargo, desde, hasta);
+        console.log('horarios===', horarios);
+        let arr = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            let aux = yield ListaTimbresDiario(obj.fec_iterada, id_empleado, obj.boolena_fecha, obj.id_horarios);
             if (aux.length != 0) {
-                arr.push(aux);
+                return aux;
             }
             else {
-                let nuevo = ListaSinTimbres_DiaLibre(desde.toJSON(), horarios.boolena_fecha);
-                arr.push(nuevo);
+                let nuevo = ListaSinTimbres_DiaLibre(obj.fec_iterada, obj.boolena_fecha, obj.id_horarios);
+                return nuevo;
             }
-            desde.setDate(i);
-            desde.setMonth(hasta.getMonth());
-        }
+        })));
         // console.log(arr);
-        let AsistenciaArray = AsistenciaDetalleConsolidado(arr, TiemposEmpleado, id_cargo, minu_espera);
+        let AsistenciaArray = AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo);
         return AsistenciaArray;
     });
 }
-exports.RegistrarAsistenciaByTimbres = function () {
+function DetalleHorario(id_horarios) {
     return __awaiter(this, void 0, void 0, function* () {
-        setInterval(() => __awaiter(this, void 0, void 0, function* () {
-            var f = new Date();
-            let hora = f.getHours();
-            console.log(f.toString());
-            console.log('======================================');
-            if (hora === HORA_EJECUTA_PROCESO) {
-                f.setUTCHours(f.getHours());
-                f.setDate(f.getDate() - 5); // para realizar pruebas
-                let hoy = f.toJSON().split("T")[0];
-                // let rango_dias = ObtenerRango();
-                // console.log(rango_dias);
-                let timbresEmpleado = yield ListaTimbresDiarioToEmpleado(hoy);
-                console.log(timbresEmpleado);
-            }
-            console.log('======================================');
-        }), 1000000);
-    });
-};
-function HoraIngreso_MinAlmuerzo_HorasLabora(id_cargo) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT distinct dh.hora, ch.min_almuerzo, ch.hora_trabajo FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dh WHERE eh.id_empl_cargo = $1 AND eh.estado = 1 AND ch.id = eh.id_horarios AND ch.id = dh.id_horario', [id_cargo])
-            .then(result => {
-            return result.rows[0];
-        });
+        return {
+            id_horario: id_horarios,
+            min_almuerzo: yield database_1.default.query('SELECT min_almuerzo FROM cg_horarios WHERE id = $1', [id_horarios])
+                .then(result => {
+                return result.rows[0].min_almuerzo;
+            }),
+            datos: yield database_1.default.query('SELECT orden, hora, tipo_accion, minu_espera, nocturno FROM deta_horarios WHERE id_horario = $1 ORDER BY orden ASC', [id_horarios])
+                .then(result => {
+                return result.rows;
+            })
+        };
     });
 }
 exports.ContarHorasByCargo = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
-        let ids = yield UltimoCargoContrato(id_empleado);
-        console.log(ids);
-        let horaIngresoEmpl = yield HoraIngreso_MinAlmuerzo_HorasLabora(ids[0].id_cargo).then(result => {
-            var fecha_hora = new Date();
-            fecha_hora.setUTCHours(parseInt(result.hora.split(':')[0]));
-            fecha_hora.setUTCMinutes(parseInt(result.hora.split(':')[1]));
-            fecha_hora.setUTCSeconds(parseInt(result.hora.split(':')[2]));
-            return {
-                h_ingreso: fecha_hora,
-                min_almuerzo: result.min_almuerzo,
-                h_trabaja: result.hora_trabajo
-            };
-        });
+        let ids = yield UltimoCargoContrato(id_empleado, desde); //devuelve los IDs de contrato y cargo, ademas del horarios o los horarios que el usuario ingreso.
+        // console.log(ids);
+        if (ids.message)
+            return ids.message;
+        let horaIngresoEmpl = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            console.log(obj);
+            return yield DetalleHorario(obj.id_horarios).then(result => {
+                return result;
+            });
+        })));
+        // horaIngresoEmpl.forEach(obj => {
+        //     console.log(obj);
+        // })
         const empleado = yield ObtenerInformacionEmpleado(id_empleado);
         const DetalleConsolidado = yield MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, horaIngresoEmpl, ids[0].id_cargo);
+        // console.log(DetalleConsolidado);
         const total = yield CalcularTotal(DetalleConsolidado);
-        console.log(total);
+        // console.log(total);
         let ReporteConsolidadoJsop = {
             empleado: [empleado],
             detalle: DetalleConsolidado,
             operaciones: total
         };
         return ReporteConsolidadoJsop;
+        // return 0
     });
 };
 function CalcularTotal(arr) {
@@ -521,8 +616,8 @@ function CalcularTotal(arr) {
             hora_ex_L_V: HorasDecimalToHHMM(dataDecimal.hora_ex_L_V),
             hora_ex_S_D: HorasDecimalToHHMM(dataDecimal.hora_ex_S_D)
         };
-        console.log(dataDecimal);
-        console.log(dataHHMM);
+        // console.log(dataDecimal);
+        // console.log(dataHHMM);
         return [{
                 decimal: dataDecimal,
                 HHMM: dataHHMM
@@ -548,3 +643,43 @@ function ObtenerInformacionEmpleado(id_empleado) {
         return ObjetoEmpleado;
     });
 }
+function tipoHorario(inicio, final) {
+    var fecha1 = moment_1.default(inicio.toJSON().split("T")[0]);
+    var fecha2 = moment_1.default(final.toJSON().split("T")[0]);
+    var diasHorario = fecha2.diff(fecha1, 'days');
+    if (diasHorario >= 1 && diasHorario <= 7)
+        return 'semanal';
+    if (diasHorario >= 25 && diasHorario <= 35)
+        return 'mensual';
+    return 'anual';
+    /**
+     * semana = 6 (mayor a 1 menor a 7),
+     * mensual (mayor a 25 y menor a 35)
+     * anual = 365 (Hacer que sea mayor 40 y menor a 370)
+     */
+}
+/**********************************************
+ *
+ *      METODO PARA REGISTRAR ASISTENCIA.
+ *
+ ***********************************************/
+exports.RegistrarAsistenciaByTimbres = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+            var f = new Date();
+            let hora = f.getHours();
+            console.log(f.toString());
+            console.log('======================================');
+            if (hora === HORA_EJECUTA_PROCESO) {
+                f.setUTCHours(f.getHours());
+                f.setDate(f.getDate() - 5); // para realizar pruebas
+                let hoy = f.toJSON().split("T")[0];
+                // let rango_dias = ObtenerRango();
+                // console.log(rango_dias);
+                let timbresEmpleado = yield ListaTimbresDiarioToEmpleado(hoy);
+                console.log(timbresEmpleado);
+            }
+            console.log('======================================');
+        }), 1000000);
+    });
+};

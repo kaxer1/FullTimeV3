@@ -32,7 +32,7 @@ export class PedHoraExtraService {
   }
 
   GuardarHoraExtra(datos: any) {
-    return this.http.post(`${this.API_URL}/horas-extras-pedidas`, datos);
+    return this.http.post<any>(`${this.API_URL}/horas-extras-pedidas`, datos);
   }
 
   BuscarDatosSolicitud(id_emple_hora: number) {

@@ -1,8 +1,11 @@
 export interface ITiempoLaboral{
-    h_ingreso: Date,
+    id_horario: number,
     min_almuerzo: number,
-    h_trabaja: number
+    datos: any[]
 }
+// h_ingreso: Date,
+// min_almuerzo: number,
+// h_trabaja: number
 
 export interface IAsistenciaDetalle  {
     fecha: string,
