@@ -70,18 +70,13 @@ export class PedidoHoraExtraComponent implements OnInit {
 
   ngOnInit(): void {
     var f = new Date();
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
+    
+    this.FechaActual = f.toJSON().split('T')[0];
+
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.id_cargo_loggin = parseInt(localStorage.getItem("ultimoCargo"));
-
+    console.log(this.FechaActual);
+    
     this.HorarioEmpleadoSemanal(this.id_cargo_loggin);
     this.PedirHoraExtraForm.patchValue({
       fechaSolicitudForm: this.FechaActual,
@@ -162,6 +157,10 @@ export class PedidoHoraExtraComponent implements OnInit {
     }
 
     this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(response => {
+      if (response.message) {
+        this.toastr.error(response.message);
+      } else {
+
       this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
       this.dialogRef.close()
       this.arrayNivelesDepa = response;
@@ -221,6 +220,8 @@ export class PedidoHoraExtraComponent implements OnInit {
         })
         
       });
+  
+      }
       
     });
 
