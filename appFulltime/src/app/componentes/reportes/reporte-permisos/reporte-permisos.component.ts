@@ -536,7 +536,7 @@ export class ReportePermisosComponent implements OnInit {
         itemsTableD: { fontSize: 9, alignment: 'center' },
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
-        tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, },
+        tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color, },
         itemsTableS: { fontSize: 9, alignment: 'center', },
         quote: { margin: [5, -2, 0, -2], italics: true },
         small: { fontSize: 9, color: 'blue', opacity: 0.5 }
@@ -851,23 +851,29 @@ export class ReportePermisosComponent implements OnInit {
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
       if (this.datosEmpleado[i].id === id_empleado) {
         var datosEmpleado = [{
-          codigo: this.datosEmpleado[i].codigo,
-          empleado_nombre: this.datosEmpleado[i].nombre,
-          empleado_apellido: this.datosEmpleado[i].apellido,
-          empleado_cedula: this.datosEmpleado[i].cedula,
-          sucursal: this.datosEmpleado[i].sucursal,
-          departamento: this.datosEmpleado[i].departamento,
-          ciudad: this.datosEmpleado[i].ciudad,
-          cargo: this.datosEmpleado[i].cargo,
-          total_permisos_dias_decimal: totalDias.toFixed(3),
-          total_permisos_horas_decimal: totalHoras.toFixed(3),
-          total_permisos_dias_horas: String(totalDias).split('.')[0] + ' días ' + ' ' + formatoHoras + ' horas: ' + formatoMinutos + ' minutos',
-          total_prmisos_horas_minutos: String(totalHoras.toFixed(3)).split('.')[0] + ' horas : ' + minutosHoras + ' minutos'
+          CODIGO: this.datosEmpleado[i].codigo,
+          NOMBRE: this.datosEmpleado[i].nombre,
+          APELLIDO: this.datosEmpleado[i].apellido,
+          CEDULA: this.datosEmpleado[i].cedula,
+          SUCURSAL: this.datosEmpleado[i].sucursal,
+          DEPARTAMENTO: this.datosEmpleado[i].departamento,
+          CIUDAD: this.datosEmpleado[i].ciudad,
+          CARGO: this.datosEmpleado[i].cargo,
+          TOTAL_PERMISOS_DIAS_DECIMAL: parseFloat(totalDias.toFixed(3)),
+          TOTAL_PERMISOS_HORAS_DECIMAL: parseFloat(totalHoras.toFixed(3)),
         }]
         break;
       }
     }
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEmpleado);
+
+    const headerE = Object.keys(datosEmpleado[0]); // columns name
+
+    var wscolsE = [];
+    for (var i = 0; i < headerE.length; i++) {  // columns length added
+      wscolsE.push({ wpx: 115 })
+    }
+    wse["!cols"] = wscolsE;
 
     const wsp: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.totalPermisos.map(obj => {
       var estado = '', horas_decimal, dias_decimal, horaT, trabaja, empleadoAutoriza = '';
@@ -909,20 +915,29 @@ export class ReportePermisosComponent implements OnInit {
         }
       }
       return {
-        num_permiso: obj.num_permiso,
-        fecha_creacion: moment(obj.fec_creacion).format("DD/MM/YYYY"),
-        nombre_permiso: obj.nombre_permiso,
-        fecha_inicial: String(moment(obj.fec_inicio, "YYYY/MM/DD").format("DD/MM/YYYY")),
-        fecha_final: String(moment(obj.fec_final, "YYYY/MM/DD").format("DD/MM/YYYY")),
-        dias_permiso: obj.dia,
-        horas_permiso: obj.hora_numero,
-        horas_laborables: obj.horario_horas,
-        estado: estado,
-        empleado_autoriza: empleadoAutoriza,
-        horas_totales: horaT,
-        dias_totales: dias_decimal,
+        N_PERMISOS: obj.num_permiso,
+        FECHA_CREACION: moment(obj.fec_creacion).format("DD/MM/YYYY"),
+        NOMBRE_PERMISO: obj.nombre_permiso,
+        FECHA_INICIAL: String(moment(obj.fec_inicio, "YYYY/MM/DD").format("DD/MM/YYYY")),
+        FECHA_FINAL: String(moment(obj.fec_final, "YYYY/MM/DD").format("DD/MM/YYYY")),
+        DIAS_PERMISO: obj.dia,
+        HORAS_PERMISO: obj.hora_numero,
+        HORAS_LABORABLES: obj.horario_horas,
+        ESTADO: estado,
+        EMPLEADO_AUTORIZA: empleadoAutoriza,
+        HORAS_TOTALES_DECIMAL: parseFloat(horaT),
+        DIAS_TOTALES_DECIMAL: parseFloat(dias_decimal),
       };
     }));
+
+    const header = Object.keys(this.totalPermisos[0]); // columns name
+
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // columns length added
+      wscols.push({ wpx: 120 })
+    }
+    wsp["!cols"] = wscols;
+
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wsp, 'Permisos');

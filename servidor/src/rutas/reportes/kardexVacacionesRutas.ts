@@ -14,6 +14,9 @@ class KardexVacacionesRutas {
         this.router.get('/:desde/:hasta', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdToken);
         // solicita administrador
         this.router.get('/:id_empleado/:desde/:hasta', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularVacacionByIdEmpleado);
+
+        // Reporte de horas extras solo del empleado
+        this.router.get('/hora-extra/:id_empleado/:desde/:hasta', TokenValidation, KARDEX_VACACION_CONTROLADOR.CarcularHorasExtras)
     }
 
 

@@ -243,10 +243,16 @@ Peri_Vacacion_Automatico();
 
 RegistrarAsistenciaByTimbres();
 
-// conteoPermisos();
+// ----------// conteoPermisos();
 
-NotificacionTimbreAutomatica();
+// NotificacionTimbreAutomatica();
 
-NotificacionSinTimbres();
+// NotificacionSinTimbres();
 
-DesactivarFinContratoEmpleado();
+// DesactivarFinContratoEmpleado();
+
+
+import { generarTimbres, ModificarTimbresEntrada } from './script/scriptTimbres'
+
+//generarTimbres(1);
+//ModificarTimbresEntrada();

@@ -1,4 +1,73 @@
 <br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-lg-7" style="margin-bottom: 15px;">
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                        Críterios de Búsqueda
+                        </mat-panel-title>
+                        <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                        matTooltip="Se puede filtra deacuerdo al campo que escriba">search</mat-icon>
+                    </mat-expansion-panel-header>
+            
+                    <form [formGroup]="">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <!--  <mat-form-field>
+                                <mat-label>Ingresar Código</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
+                                    [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el código">
+                                    help_outline</mat-icon>
+                            </mat-form-field>--> 
+                            <mat-form-field>
+                                <mat-label>Ingresar CI o pasaporte</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                          <!--  <mat-form-field>
+                                <mat-label>Ingresar Nombres</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
+                                    [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el nombre">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Ingresar Apellidos</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
+                                    [formControl]="apellido" type="text"
+                                    (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el apellido">
+                                    help_outline</mat-icon>
+                            </mat-form-field>-->
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" id="boton" (click)="limpiarCampos()">Cancelar</button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resultadosEmpre">
@@ -24,6 +93,7 @@
                                 [aria-label]="checkboxLabel()">
                             </mat-checkbox>
                         </th>
+                        <th scope="col">Cédula</th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Fecha Desde</th>
@@ -35,13 +105,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let h of horas_extras_plan | paginate:tamanio_pagina:numero_pagina; index as i">
+                    <tr *ngFor="let h of horas_extras_plan | emplCedula: filtroCedula | paginate:tamanio_pagina:numero_pagina; index as i">
                         <td>
                             <mat-checkbox *ngIf="btnCheckHabilitar" (click)="$event.stopPropagation()"
                                 (change)="$event ? selectionUno.toggle(h) : null" [checked]="selectionUno.isSelected(h)"
                                 [aria-label]="checkboxLabel(h)">
                             </mat-checkbox>
                         </td>
+                        <td>{{h.cedula}}</td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.plan_estado}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>
@@ -79,6 +150,75 @@
     </div>
 </div>
 <br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-lg-7" style="margin-bottom: 15px;">
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                        Críterios de Búsqueda
+                        </mat-panel-title>
+                        <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                        matTooltip="Se puede filtra deacuerdo al campo que escriba">search</mat-icon>
+                    </mat-expansion-panel-header>
+            
+                    <form [formGroup]="">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <!--  <mat-form-field>
+                                <mat-label>Ingresar Código</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
+                                    [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el código">
+                                    help_outline</mat-icon>
+                            </mat-form-field>--> 
+                            <mat-form-field>
+                                <mat-label>Ingresar CI o pasaporte</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCedulaO" maxlength="10"
+                                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                    [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
+                                <mat-error *ngIf="cedula.invalid">Indispensable ingresar dos valores
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                          <!--  <mat-form-field>
+                                <mat-label>Ingresar Nombres</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
+                                    [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el nombre">
+                                    help_outline</mat-icon>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Ingresar Apellidos</mat-label>
+                                <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
+                                    [formControl]="apellido" type="text"
+                                    (keypress)="IngresarSoloLetras($event)">
+                                <mat-error *ngIf="apellido.invalid">Indispensable ingresar dos letras
+                                </mat-error>
+                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
+                                    matTooltipClass="emple-tooltip"
+                                    matTooltip="Búsqueda de empleado por el apellido">
+                                    help_outline</mat-icon>
+                            </mat-form-field>-->
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" id="boton" (click)="limpiarCampos()">Cancelar</button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 50px; text-align: center;" *ngIf="!HabilitarObservacion">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resultadosEmpre">
@@ -104,6 +244,7 @@
                                 [aria-label]="checkboxLabel()">
                             </mat-checkbox>
                         </th>
+                        <th scope="col">Cédula</th>
                         <th scope="col">Empleado</th>
                         <th scope="col">Estado</th>
                         <th scope="col">Fecha Desde</th>
@@ -116,7 +257,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        *ngFor="let h of horas_extras_plan_observacion | paginate:tamanio_pagina_O:numero_pagina_O; index as i">
+                        *ngFor="let h of horas_extras_plan_observacion | emplCedula: filtroCedulaO | paginate:tamanio_pagina_O:numero_pagina_O; index as i">
                         <th>
                             <mat-checkbox *ngIf="btnCheckHabilitarO" (change)="$event ? masterToggleO() : null"
                                 [checked]="selectionUno.hasValue() && isAllSelectedO()"
@@ -124,6 +265,7 @@
                                 [aria-label]="checkboxLabel()">
                             </mat-checkbox>
                         </th>
+                        <td>{{h.cedula}}</td>
                         <td>{{h.nombre}} {{h.apellido}}</td>
                         <td>{{h.plan_estado}}</td>
                         <td>{{h.fecha_desde.split('T')[0]}}</td>

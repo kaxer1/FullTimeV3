@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const MetodosHorario_1 = require("../../libs/MetodosHorario");
+const settingsMail_1 = require("../../libs/settingsMail");
 const nodemailer = require("nodemailer");
 class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
@@ -60,36 +61,45 @@ class HorasExtrasPedidasControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, tipo_funcion, depa_user_loggin } = req.body;
             yield database_1.default.query('INSERT INTO hora_extr_pedidos ( id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, tipo_funcion ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, tipo_funcion]);
-            const JefesDepartamentos = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin]);
-            let depa_padre = JefesDepartamentos.rows[0].depa_padre;
+            const JefesDepartamentos = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, ' +
+                's.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
+                'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c ' +
+                'WHERE da.id_departamento = $1 AND da.estado = true AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin])
+                .then(result => {
+                return result.rows;
+            });
+            if (JefesDepartamentos.length === 0)
+                return res.jsonp({ message: 'Departamento sin nadie a cargo' });
+            let depa_padre = JefesDepartamentos[0].depa_padre;
             let JefeDepaPadre;
             if (depa_padre !== null) {
                 do {
-                    JefeDepaPadre = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre]);
-                    depa_padre = JefeDepaPadre.rows[0].depa_padre;
-                    JefesDepartamentos.rows.push(JefeDepaPadre.rows[0]);
+                    JefeDepaPadre = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_padre])
+                        .then(result => {
+                        return result.rows;
+                    });
+                    if (JefeDepaPadre.length === 0) {
+                        depa_padre = null;
+                    }
+                    else {
+                        depa_padre = JefeDepaPadre[0].depa_padre;
+                        JefesDepartamentos.push(JefeDepaPadre[0]);
+                    }
                 } while (depa_padre !== null);
-                res.jsonp(JefesDepartamentos.rows);
+                return res.jsonp(JefesDepartamentos);
             }
             else {
-                res.jsonp(JefesDepartamentos.rows);
+                return res.jsonp(JefesDepartamentos);
             }
         });
     }
-    SendMailNotifiPermiso(req, res) {
+    SendMailNotifiHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, hora_extra_mail, hora_extra_noti } = req.body;
             const ultimo = yield database_1.default.query('SELECT id, estado FROM hora_extr_pedidos WHERE id_empl_cargo = $1 AND id_usua_solicita = $2 AND fec_inicio = $3 AND fec_final = $4 AND fec_solicita = $5', [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita]);
             const correoInfoPideHoraExtra = yield database_1.default.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecr.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC LIMIT 1', [id_empl_cargo]);
-            const email = process.env.EMAIL;
-            const pass = process.env.PASSWORD;
-            let smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: email,
-                    pass: pass
-                }
-            });
+            console.log(ultimo.rows);
+            console.log(correoInfoPideHoraExtra.rows);
             const estadoAutorizacion = [
                 { id: 1, nombre: 'Pendiente' },
                 { id: 2, nombre: 'Pre-Autorizado' },
@@ -111,32 +121,18 @@ class HorasExtrasPedidasControlador {
                 let id_empleado_autoriza = empleado;
                 let data = {
                     to: correo,
-                    from: email,
+                    from: settingsMail_1.email,
                     subject: 'Solicitud de Hora Extra',
                     html: `<p><b>${correoInfoPideHoraExtra.rows[0].nombre} ${correoInfoPideHoraExtra.rows[0].apellido}</b> con número de
         cédula ${correoInfoPideHoraExtra.rows[0].cedula} solicita autorización de hora extra: </p>
         <a href="${url}/${ultimo.rows[0].id}">Ir a verificar hora extra</a>`
                 };
                 if (hora_extra_mail === true && hora_extra_noti === true) {
-                    smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                        if (error) {
-                            console.log(error);
-                        }
-                        else {
-                            console.log('Email sent: ' + info.response);
-                        }
-                    }));
+                    settingsMail_1.enviarMail(data);
                     res.jsonp({ message: 'Permiso se registró con éxito', notificacion: true, id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado: nombreEstado });
                 }
                 else if (hora_extra_mail === true && hora_extra_noti === false) {
-                    smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                        if (error) {
-                            console.log(error);
-                        }
-                        else {
-                            console.log('Email sent: ' + info.response);
-                        }
-                    }));
+                    settingsMail_1.enviarMail(data);
                     res.jsonp({ message: 'Permiso se registró con éxito', notificacion: false, id: ultimo.rows[0].id, id_departamento_autoriza, id_empleado_autoriza, estado: nombreEstado });
                 }
                 else if (hora_extra_mail === false && hora_extra_noti === true) {

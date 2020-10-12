@@ -461,7 +461,7 @@ export class ReporteAtrasosComponent implements OnInit {
         itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
         itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
         tableHeaderA: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [20, 0, 20, 0], },
-        tableHeaderS: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
+        tableHeaderS: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color },
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableF: { fontSize: 9, alignment: 'center' },
         quote: { margin: [5, -2, 0, -2], italics: true },
@@ -614,7 +614,7 @@ export class ReporteAtrasosComponent implements OnInit {
                   { rowSpan: 2, text: 'TOTAL DE ATRASOS EN HORAS Y MINUTOS: ' + String(formatoHorasDecimal).split('.')[0] + ' horas : ' + minutosEscrito + ' minutos', style: 'itemsTableF', margin: [0, 20, 0, 20] }
                 ],
                 [
-                  { text: 'TOTAL DE ATRASOS EN HORAS LABORABLES DECIMAL: ' + formatoHorasDecimal, style: 'itemsTableF' },
+                  { text: 'TOTAL DE ATRASOS EN HORAS LABORABLES DECIMAL: ' + formatoHorasDecimal.toFixed(3), style: 'itemsTableF' },
 
                 ],
               ]
@@ -660,7 +660,7 @@ export class ReporteAtrasosComponent implements OnInit {
             { text: 'MM. TOLERANCIA', style: 'tableHeader' },
             { text: 'HORA TIMBRE', style: 'tableHeader' },
             { text: 'HH. TRABAJO', style: 'tableHeader' },
-            { text: 'ATRASO', style: 'tableHeader' },
+            { text: 'ATRASO', style: 'tableHeader', fillColor: this.s_color },
             { text: 'HORAS', style: 'tableHeader' },
             { text: 'DÍAS', style: 'tableHeader' },
           ],
@@ -734,7 +734,7 @@ export class ReporteAtrasosComponent implements OnInit {
               { text: obj.minu_espera + ' min', style: 'itemsTableD' },
               { text: moment(obj.fec_hora_timbre).format('HH:mm:ss'), style: 'itemsTableD' },
               { text: obj.horario_horas, style: 'itemsTableD' },
-              { text: tiempoTotal, style: 'itemsTableD', fillColor: '#CCD1D1' },
+              { text: tiempoTotal, style: 'itemsTableD' },
               { text: horaTDecimal.toFixed(3), style: 'itemsTableD' },
               { text: diasDecimal.toFixed(3), style: 'itemsTableD' },
             ];
@@ -846,20 +846,29 @@ export class ReporteAtrasosComponent implements OnInit {
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
         datosGenerales = [{
-          nombre: obj.nombre,
-          apellido: obj.apellido,
-          cedula: obj.cedula,
-          codigo: obj.codigo,
-          sucursal: obj.sucursal,
-          departamento: obj.departamento,
-          ciudad: obj.ciudad,
-          cargo: obj.cargo,
-          total_atrasos_dias_laborables: formatoDiasDecimal.toFixed(3),
-          total_atrasos_horas_laborables: formatoHorasDecimal
+          NOMBRE: obj.nombre,
+          APELLIDO: obj.apellido,
+          CEDULA: obj.cedula,
+          CODIGO: obj.codigo,
+          SUCURSAL: obj.sucursal,
+          DEPARTAMENTO: obj.departamento,
+          CIUDAD: obj.ciudad,
+          CARGO: obj.cargo,
+          TOTAL_ATRASOS_DIAS_LABORABLES: parseFloat(formatoDiasDecimal.toFixed(3)),
+          TOTAL_ATRASOS_HORAS_LABORABLES: parseFloat(formatoHorasDecimal.toFixed(3))
         }]
       }
     });
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosGenerales);
+
+    const headerE = Object.keys(datosGenerales[0]); // columns name
+
+    var wscolsE = [];
+    for (var i = 0; i < headerE.length; i++) {  // columns length added
+      wscolsE.push({ wpx: 115 })
+    }
+    wse["!cols"] = wscolsE;
+
     const wsa: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.totalAtrasos.map(obj => {
       // Inicialización de variables
       var tiempoTotal: string, horaF: string, minF: string, secondF: string;
@@ -925,18 +934,27 @@ export class ReporteAtrasosComponent implements OnInit {
       this.contarRegistros = this.contarRegistros + 1;
 
       return {
-        numero_registros: this.contarRegistros,
-        dia: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
-        fecha: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
-        horario: obj.hora,
-        minutos_tolerancia: obj.minu_espera + ' min',
-        hora_timbre: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
-        horas_laborables: obj.horario_horas,
-        horas_atraso: tiempoTotal,
-        horas_decimal: horaTDecimal.toFixed(3),
-        dias_decimal: diasDecimal.toFixed(3),
+        N_REGISTROS: this.contarRegistros,
+        DIA: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
+        FECHA: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
+        HORARIO: obj.hora,
+        MINUTOS_TOLERANCIA: obj.minu_espera + ' min',
+        HORA_TIMBRE: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
+        HORAS_LABORABLES: obj.horario_horas,
+        HORAS_ATRASOS: tiempoTotal,
+        HORAS_DECIMAL: parseFloat(horaTDecimal.toFixed(3)),
+        DIAS_DECIMAL: parseFloat(diasDecimal.toFixed(3)),
       }
     }));
+
+    const header = Object.keys(this.totalAtrasos[0]); // columns name
+
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // columns length added
+      wscols.push({ wpx: 110 })
+    }
+    wsa["!cols"] = wscols;
+
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wsa, 'Atrasos');

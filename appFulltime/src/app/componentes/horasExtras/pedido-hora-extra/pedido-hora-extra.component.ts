@@ -76,7 +76,8 @@ export class PedidoHoraExtraComponent implements OnInit {
 
     this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.id_cargo_loggin = parseInt(localStorage.getItem("ultimoCargo"));
-
+    console.log(this.FechaActual);
+    
     this.HorarioEmpleadoSemanal(this.id_cargo_loggin);
     this.PedirHoraExtraForm.patchValue({
       fechaSolicitudForm: this.FechaActual,
@@ -157,6 +158,10 @@ export class PedidoHoraExtraComponent implements OnInit {
     }
 
     this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(response => {
+      if (response.message) {
+        this.toastr.error(response.message);
+      } else {
+
       this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
       this.dialogRef.close()
       this.arrayNivelesDepa = response;
@@ -216,7 +221,8 @@ export class PedidoHoraExtraComponent implements OnInit {
         })
 
       });
-
+      
+      }
     });
 
   }

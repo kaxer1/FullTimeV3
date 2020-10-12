@@ -845,22 +845,32 @@ export class ReporteEntradaSalidaComponent implements OnInit {
    * ****************************************************************************************************/
 
   exportToExcel(id_empleado: number, form, fechasTotales) {
+    var i = 0;
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
       if (this.datosEmpleado[i].id === id_empleado) {
         var datosEmpleado = [{
-          codigo: this.datosEmpleado[i].codigo,
-          empleado_nombre: this.datosEmpleado[i].nombre,
-          empleado_apellido: this.datosEmpleado[i].apellido,
-          empleado_cedula: this.datosEmpleado[i].cedula,
-          sucursal: this.datosEmpleado[i].sucursal,
-          departamento: this.datosEmpleado[i].departamento,
-          ciudad: this.datosEmpleado[i].ciudad,
-          cargo: this.datosEmpleado[i].cargo
+          CODIGO: this.datosEmpleado[i].codigo,
+          NOMBRE: this.datosEmpleado[i].nombre,
+          APELLIDO: this.datosEmpleado[i].apellido,
+          CEDULA: this.datosEmpleado[i].cedula,
+          SUCURSAL: this.datosEmpleado[i].sucursal,
+          DEPARTAMENTO: this.datosEmpleado[i].departamento,
+          CIUDAD: this.datosEmpleado[i].ciudad,
+          CARGO: this.datosEmpleado[i].cargo
         }]
         break;
       }
     }
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(datosEmpleado);
+
+    const headerE = Object.keys(datosEmpleado[0]); // columns name
+
+    var wscolsE = [];
+    for (var i = 0; i < headerE.length; i++) {  // columns length added
+      wscolsE.push({ wpx: 110 })
+    }
+    wse["!cols"] = wscolsE;
+
     const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(fechasTotales.map(obj => {
       // Inicialización de variables
       var fecha_timbre, fechaFeriado, dayFecha, day;
@@ -957,22 +967,32 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         almuerzoS = 'LIBRE'
       }
       return {
-        dia_timbre: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1),
-        fecha_timbre: obj.split(' ')[1],
-        horario_entrada: horarioE,
-        timbre_entrada: timbreE,
-        estado_entrada: entrada,
-        horario_salida_almuerzo: horarioAS,
-        timbre_salida_almuerzo: timbreAlmuerzoS,
-        estado_salida_almuerzo: almuerzoS,
-        horario_entrada_almuerzo: horarioAE,
-        timbre_entrada_almuerzo: timbreAlmuerzoE,
-        estado_entrada_almuerzo: almuerzoE,
-        horario_salida: horarioS,
-        timbre_salida: timbreS,
-        estado_salida: salida,
+        N_REGISTROS: i = i + 1,
+        DIA_TIMBRE: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1),
+        FECHA_TIMBRE: obj.split(' ')[1],
+        HORARIO_ENTRADA: horarioE,
+        TIMBRE_ENTRADA: timbreE,
+        ESTADO_ENTRADA: entrada,
+        HORARIO_SALIDA_ALMUERZO: horarioAS,
+        TIMBRE_SALIDA_ALMUERZO: timbreAlmuerzoS,
+        ESTADO_SALIDA_ALMUERZO: almuerzoS,
+        HORARIO_ENTRADA_ALMUERZO: horarioAE,
+        TIMBRE_ENTRADA_ALMUERZO: timbreAlmuerzoE,
+        ESTADO_ENTRADA_ALMUERZO: almuerzoE,
+        HORARIO_SALIDA: horarioS,
+        TIMBRE_SALIDA: timbreS,
+        ESTADO_SALIDA: salida,
       }
     }));
+
+    const header = Object.keys(this.totalEntradasSalidas[0]); // columns name
+
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // columns length added
+      wscols.push({ wpx: 130 })
+    }
+    wst["!cols"] = wscols;
+
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
