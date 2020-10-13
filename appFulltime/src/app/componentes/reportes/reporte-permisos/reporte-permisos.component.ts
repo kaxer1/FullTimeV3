@@ -783,9 +783,11 @@ export class ReportePermisosComponent implements OnInit {
    * ****************************************************************************************************/
 
   exportToExcel(id_empleado, form) {
-    var totalDias = 0, totalHoras = 0, formatoHoras = '', formatoMinutos;
+    var totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
+   
     this.totalPermisos.forEach(obj => {
+      console.log('auto', this.datosAutorizacion)
       this.datosAutorizacion.forEach(element => {
         if (obj.id === element.id_permiso) {
           estado = element.estado;
@@ -811,9 +813,6 @@ export class ReportePermisosComponent implements OnInit {
             totalHoras = totalHoras + horaT;
             totalDias = totalDias + dias_decimal;
           }
-        }
-        else {
-          estado = obj.estado
         }
       });
     });
@@ -847,7 +846,6 @@ export class ReportePermisosComponent implements OnInit {
     else {
       minutosHoras = '0' + minutosHoras.toFixed(0);
     }
-
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
       if (this.datosEmpleado[i].id === id_empleado) {
         var datosEmpleado = [{
@@ -908,6 +906,8 @@ export class ReportePermisosComponent implements OnInit {
           }
           else {
             empleadoAutoriza = this.datosAutorizacion[i].autorizado_por;
+            horaT = 0.000;
+            dias_decimal = 0.000;
           }
           break
         } else {
@@ -934,7 +934,7 @@ export class ReportePermisosComponent implements OnInit {
 
     var wscols = [];
     for (var i = 0; i < header.length; i++) {  // columns length added
-      wscols.push({ wpx: 120 })
+      wscols.push({ wpx: 125 })
     }
     wsp["!cols"] = wscols;
 
@@ -942,7 +942,8 @@ export class ReportePermisosComponent implements OnInit {
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wsp, 'Permisos');
     if (form.inicioForm === '' || form.finalForm === '') {
-      xlsx.writeFile(wb, "Permisos - " + new Date().getTime() + '.xlsx');
+      var f = moment();
+      xlsx.writeFile(wb, "Permisos - " + f.format('YYYY-MM-DD') + '.xlsx');
     }
     else {
       xlsx.writeFile(wb, "Permisos - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
