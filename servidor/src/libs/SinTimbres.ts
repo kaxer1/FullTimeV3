@@ -1,14 +1,15 @@
 import LOGIN_CONTROLADOR from '../controlador/login/loginControlador';
 import pool from '../database';
 
-const MINUTO_TIMER = 15;
+// const MINUTO_TIMER = 15;
+const MINUTO_TIMER = 5;
 
 export const NotificacionSinTimbres = function() {
 
     setInterval(async() => {
         
         var f = new Date();
-        console.log(f.getMinutes());
+        // console.log(f.getMinutes());
         if (f.getMinutes() === MINUTO_TIMER) {
             console.log('FECHA:', f.toLocaleDateString(), 'HORA:', f.toLocaleTimeString());
             

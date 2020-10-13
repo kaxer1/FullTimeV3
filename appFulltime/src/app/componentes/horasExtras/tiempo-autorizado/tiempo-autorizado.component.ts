@@ -27,6 +27,8 @@ export class TiempoAutorizadoComponent implements OnInit {
     mensajeF: this.mensaje
   });
 
+  idEmpleado: number;
+
   constructor(
     private restPH: PedHoraExtraService,
     private restPlanH: PlanHoraExtraService,
@@ -37,6 +39,7 @@ export class TiempoAutorizadoComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('data de la hora', this.data);
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   GuardarTiempoAutorizado(form) {
@@ -121,15 +124,25 @@ export class TiempoAutorizadoComponent implements OnInit {
       let datos = {
         observacion: true
       }
-      this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
-      })
+      // this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
+      // })
     }
 
     // Falta enviar al correo del empleado el mensaje logicamente el empleador indica que se debe justificar por
     //medio del correo del empleador las horas realizadas.
 
     let mensaje = {
+      id_empl_envia: this.idEmpleado,
+      id_empl_recive: this.data.horas_calculadas.id_empl_solicita,
       mensaje: form.mensajeF
     }
+
+    console.log(mensaje);
+    this.restPlanH.EnviarMensajeJustificacion(mensaje).subscribe(res => {
+      console.log(res.message);
+      this.toastr.success(res.message);
+      this.MostrarHoras();
+    })
+    
   }
 }

@@ -575,6 +575,20 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
+              <!-- Mensaje de la planificacion -->
+              <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
               
             </div>
           </div>
