@@ -128,7 +128,7 @@
                             </a>-->
                             <i id="iconos" *ngIf="auto_individual" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
-                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h)"
+                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h, h.empl_id)"
                                 matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
                                 <p>Autorizar Horas</p>
                             </i>
@@ -281,7 +281,7 @@
                             </a>-->
                             <i id="iconos" *ngIf="auto_individualO" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
-                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h)"
+                                (click)="AbrirTiempoAutorizacion(h.hora_total_timbre, h.id_plan_extra, h, h.empl_id)"
                                 matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
                                 <p>Autorizar Horas</p>
                             </i>

@@ -108,10 +108,10 @@ export class ListaPlanHoraExtraComponent implements OnInit {
           tt.setHours(tt.getHours() + t1.getHours(), tt.getMinutes() + t1.getMinutes(), tt.getSeconds() + tt.getSeconds());
           horaT = (moment(tt).format('HH:mm:ss')).split(':');
           this.horasSumadas = (moment(tt).format('HH:mm:ss'));
-         // console.log('sjhuwhduw', this.horasSumadas);
+          // console.log('sjhuwhduw', this.horasSumadas);
         }
         else {
-         // console.log('break', this.horasSumadas);
+          // console.log('break', this.horasSumadas);
           break;
         }
       }
@@ -264,10 +264,11 @@ export class ListaPlanHoraExtraComponent implements OnInit {
   }
 
   // Autorizar horas realizadas o indicar cuantas horas se autorizan
-  AbrirTiempoAutorizacion(num_hora, id, datos) {
+  AbrirTiempoAutorizacion(num_hora, id, datos, id_solicita) {
     let h = {
       id: id,
-      hora: num_hora
+      hora: num_hora,
+      id_empl_solicita: id_solicita
     }
     this.vistaFlotante.open(TiempoAutorizadoComponent, {
       width: '300px',
@@ -275,6 +276,9 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     }).afterClosed().subscribe(items => {
       if (items === true) {
         this.AbrirAutorizaciones(datos, 'individual');
+      }
+      else {
+        window.location.reload();
       }
     });
   }
@@ -284,6 +288,9 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     this.vistaFlotante.open(PlanHoraExtraAutorizaComponent,
       { width: '300px', data: { datosHora: datosHoraExtra, carga: forma } }).afterClosed().subscribe(items => {
         this.obtenerPlanHorasExtras();
+        this.obtenerPlanHorasExtrasObservacion();
+        this.calcularHoraPaginacion1();
+        this.calcularHoraPaginacion2();
       });
   }
 
@@ -414,7 +421,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
     this.cedula.reset();
   }
 
-  
+
   IngresarSoloNumeros(evt) {
     if (window.event) {
       var keynum = evt.keyCode;
