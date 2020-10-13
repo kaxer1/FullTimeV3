@@ -286,6 +286,7 @@ class PlanHoraExtraControlador {
             `
     };
 
+    
     enviarMail(data);
 
     res.jsonp({message: 'Se envio notificacion y correo electrónico.'})

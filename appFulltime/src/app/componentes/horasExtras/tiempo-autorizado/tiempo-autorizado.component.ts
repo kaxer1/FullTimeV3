@@ -119,30 +119,45 @@ export class TiempoAutorizadoComponent implements OnInit {
 
   // Método para cambiar de estado el campo observacion de planificacion de horas extras
   EnviarMensaje(form) {
+
+
     // Si el empleador emite una observacion entonces actualizamos el estado de la observacion de false a true
     if (this.data.pagina === 'plan_hora_extra') {
       let datos = {
         observacion: true
       }
-      // this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
-      // })
+      this.restPlanH.EditarObservacion(this.data.horas_calculadas.id, datos).subscribe(res => {
+      });
+      let mensaje = {
+        id_empl_envia: this.idEmpleado,
+        id_empl_recive: this.data.horas_calculadas.id_empl_solicita,
+        mensaje: form.mensajeF
+      }
+
+      console.log(mensaje);
+      this.restPlanH.EnviarMensajeJustificacion(mensaje).subscribe(res => {
+        console.log(res.message);
+        this.toastr.success(res.message);
+        this.MostrarHoras();
+
+      })
     }
 
     // Falta enviar al correo del empleado el mensaje logicamente el empleador indica que se debe justificar por
     //medio del correo del empleador las horas realizadas.
 
-    let mensaje = {
-      id_empl_envia: this.idEmpleado,
-      id_empl_recive: this.data.horas_calculadas.id_empl_solicita,
-      mensaje: form.mensajeF
-    }
+    /*  let mensaje = {
+        id_empl_envia: this.idEmpleado,
+        id_empl_recive: this.data.horas_calculadas.id_empl_solicita,
+        mensaje: form.mensajeF
+      }
+  
+      console.log(mensaje);
+      this.restPlanH.EnviarMensajeJustificacion(mensaje).subscribe(res => {
+        console.log(res.message);
+        this.toastr.success(res.message);
+        this.MostrarHoras();
+      })*/
 
-    console.log(mensaje);
-    this.restPlanH.EnviarMensajeJustificacion(mensaje).subscribe(res => {
-      console.log(res.message);
-      this.toastr.success(res.message);
-      this.MostrarHoras();
-    })
-    
   }
 }
