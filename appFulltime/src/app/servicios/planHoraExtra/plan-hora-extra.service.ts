@@ -35,4 +35,8 @@ export class PlanHoraExtraService {
   EditarEstado(id: number, datos: any) {
     return this.http.put<any>(`${this.API_URL}/planificacionHoraExtra/estado/${id}`, datos);
   }
+
+  EnviarMensajeJustificacion(data: any) {
+    return this.http.post<any>(`${this.API_URL}/planificacionHoraExtra/send/aviso/`, data);
+  }
 }

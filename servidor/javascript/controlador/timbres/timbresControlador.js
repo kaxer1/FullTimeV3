@@ -33,7 +33,8 @@ class TimbresControlador {
                             visto: obj.visto,
                             id_timbre: obj.id_timbre,
                             empleado: nombre,
-                            id: obj.id
+                            id: obj.id,
+                            tipo: obj.tipo
                         };
                     })));
                 }

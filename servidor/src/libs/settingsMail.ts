@@ -11,7 +11,7 @@ const smtpTransport = nodemailer.createTransport({
     }
 });
 
-export const enviarMail = function(data : any) {
+export const enviarMail = function(data : any) {  
     smtpTransport.sendMail(data, async (error: any, info: any) => {
         if (error) {
           console.log(error);
