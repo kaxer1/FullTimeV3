@@ -11,7 +11,8 @@ class TimbresControlador {
         .then(async(result) => {
 
             if (result.rowCount > 0) {
-                return await Promise.all( result.rows.map(async (obj): Promise<any> => {    
+                return await Promise.all( result.rows.map(async (obj): Promise<any> => {   
+                     
                     let nombre = await pool.query('SELECT nombre, apellido FROM empleados WHERE id = $1',[obj.id_send_empl]).then(ele => {
                         console.log(ele.rows[0].nombre + ele.rows[0].apellido);
                         return ele.rows[0].nombre + ' ' + ele.rows[0].apellido
@@ -22,7 +23,8 @@ class TimbresControlador {
                         visto: obj.visto,
                         id_timbre: obj.id_timbre,
                         empleado: nombre,
-                        id: obj.id
+                        id: obj.id,
+                        tipo: obj.tipo
                     }
                 }));
             }

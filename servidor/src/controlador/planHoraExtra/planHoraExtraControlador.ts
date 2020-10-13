@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import {enviarMail, email} from '../../libs/settingsMail'
 
 class PlanHoraExtraControlador {
 
@@ -259,6 +260,35 @@ class PlanHoraExtraControlador {
          }
        });
      });*/
+  }
+
+  public async EnviarCorreoNotificacion(req: Request, res: Response): Promise<void> {
+    let {id_empl_envia, id_empl_recive, mensaje} = req.body;
+
+    var f = new Date();
+    f.setUTCHours(f.getHours())
+
+    let create_at = f.toJSON();
+    let tipo = 1; // es el tipo de aviso 
+    // console.log(id_empl_envia, id_empl_recive, create_at, mensaje, tipo);
+    await pool.query('INSERT INTO realtime_timbres(create_at, id_send_empl, id_receives_empl, descripcion, tipo) VALUES($1, $2, $3, $4, $5)',[create_at,id_empl_envia,id_empl_recive, mensaje, tipo]);
+
+    const Envia = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1',[id_empl_envia]).then(resultado => {return resultado.rows[0]});
+    const Recibe = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1',[id_empl_recive]).then(resultado => {return resultado.rows[0]});
+    
+    let data = {
+      // from: Envia.correo,
+      from: email,
+      to: Recibe.correo,
+      subject: 'Justificacion Hora Extra',
+      html: `<p><h4><b>${Envia.nombre} ${Envia.apellido}</b> </h4> escribe: <b>${mensaje}</b> 
+            <h4>A usted: <b>${Recibe.nombre} ${Recibe.apellido} </b></h4>
+            `
+    };
+
+    enviarMail(data);
+
+    res.jsonp({message: 'Se envio notificacion y correo electrónico.'})
   }
 }
 

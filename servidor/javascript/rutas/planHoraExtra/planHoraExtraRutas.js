@@ -18,6 +18,7 @@ class DepartamentoRutas {
         this.router.put('/tiempo-autorizado/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.TiempoAutorizado);
         this.router.put('/observacion/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ActualizarObservacion);
         this.router.put('/estado/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ActualizarEstado);
+        this.router.post('/send/aviso/', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.EnviarCorreoNotificacion);
     }
 }
 const PLAN_HORA_EXTRA_RUTAS = new DepartamentoRutas();
