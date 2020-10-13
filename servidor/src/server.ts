@@ -245,9 +245,9 @@ RegistrarAsistenciaByTimbres();
 
 // ----------// conteoPermisos();
 
-// NotificacionTimbreAutomatica();
+NotificacionTimbreAutomatica();
 
-// NotificacionSinTimbres();
+NotificacionSinTimbres();
 
 // DesactivarFinContratoEmpleado();
 

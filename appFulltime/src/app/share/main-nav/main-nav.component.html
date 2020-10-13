@@ -104,8 +104,8 @@
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec2">
           <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">notifications</mat-icon>
-            <span class="item-menu">Notificaciones</span>
+            <mat-icon mat-list-icon class="color-icon">email</mat-icon>
+            <span class="item-menu">Solicitudes</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
@@ -242,7 +242,7 @@
       <mat-expansion-panel class="menus">
         <mat-expansion-panel-header class="selec7">
           <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
+            <mat-icon mat-list-icon class="color-icon">open_in_browser</mat-icon>
             <span class="item-menu" id="accion">Reportería</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -563,6 +563,20 @@
               </div>
               <!-- Forma de aviso para 'Salio antes al trabajo' -->
               <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Mensaje de la planificacion -->
+              <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>

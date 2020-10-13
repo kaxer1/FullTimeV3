@@ -210,10 +210,11 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     });
   }
 
-  AbrirTiempoAutorizacion(num_hora, id_hora) {
+  AbrirTiempoAutorizacion(num_hora, id_hora, id_usua_solicita) {
     let h = {
       id_hora: id_hora,
-      hora: num_hora
+      hora: num_hora,
+      id_empl_solicita: id_usua_solicita
     }
     this.vistaFolante.open(TiempoAutorizadoComponent, {
       width: '300px',

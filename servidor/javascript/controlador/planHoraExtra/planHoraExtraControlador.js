@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const settingsMail_1 = require("../../libs/settingsMail");
 class PlanHoraExtraControlador {
     ListarPlanHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -272,6 +273,30 @@ class PlanHoraExtraControlador {
                  }
                });
              });*/
+        });
+    }
+    EnviarCorreoNotificacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { id_empl_envia, id_empl_recive, mensaje } = req.body;
+            var f = new Date();
+            f.setUTCHours(f.getHours());
+            let create_at = f.toJSON();
+            let tipo = 1; // es el tipo de aviso 
+            // console.log(id_empl_envia, id_empl_recive, create_at, mensaje, tipo);
+            yield database_1.default.query('INSERT INTO realtime_timbres(create_at, id_send_empl, id_receives_empl, descripcion, tipo) VALUES($1, $2, $3, $4, $5)', [create_at, id_empl_envia, id_empl_recive, mensaje, tipo]);
+            const Envia = yield database_1.default.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_envia]).then(resultado => { return resultado.rows[0]; });
+            const Recibe = yield database_1.default.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_recive]).then(resultado => { return resultado.rows[0]; });
+            let data = {
+                // from: Envia.correo,
+                from: settingsMail_1.email,
+                to: Recibe.correo,
+                subject: 'Justificacion Hora Extra',
+                html: `<p><h4><b>${Envia.nombre} ${Envia.apellido}</b> </h4> escribe: <b>${mensaje}</b> 
+            <h4>A usted: <b>${Recibe.nombre} ${Recibe.apellido} </b></h4>
+            `
+            };
+            settingsMail_1.enviarMail(data);
+            res.jsonp({ message: 'Se envio notificacion y correo electrónico.' });
         });
     }
 }
