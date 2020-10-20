@@ -39,10 +39,10 @@
                                     <label id="datosF">Descripción:</label>
                                     <label>{{p.descripcion}}</label>
                                 </div>
-                                <div class="caja1 d-flex justify-content-start">
+                                <!-- <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Estado:</label>
                                     <label>{{p.estado}}</label>
-                                </div>
+                                </div>-->
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Fecha Inicio:</label>
                                     <label>{{p.fec_inicio.split('T')[0]}}</label>
@@ -54,12 +54,10 @@
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Certificado:</label>
                                     <label>
-                                        <a id="iconos" class="fas fa-file-alt"
-                                            style="color:rgb(197, 95, 11); margin-left: 20px; text-align: center;"
-                                            matSuffix matTooltipPosition="right" matTooltip="Certificado"
+                                        <a matSuffix matTooltipPosition="right" matTooltip="Certificado"
                                             href="http://localhost:3000/empleadoPermiso/documentos/{{p.documento}}"
                                             target="_blank">
-                                            <p>{{p.docu_nombre}}</p>
+                                            <label style="font-size: 14px; color: rgb(197, 95, 11);">{{p.docu_nombre}}</label>
                                         </a>
                                     </label>
                                 </div>
@@ -77,11 +75,11 @@
                                     matTooltip="Agrega más tipos de permisos de este departamento.">
                                     <p>Autorización</p>
                                 </i>
-                                <i *ngIf="HabilitarAutorizacion" class="fas fa-edit"
+                                <!-- <i *ngIf="HabilitarAutorizacion" class="fas fa-edit"
                                     style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
                                     (click)="AbrirVentanaEditar(p)" matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>
-                                </i>
+                                </i>-->
                             </div>
                         </div>
                     </div>
@@ -122,12 +120,11 @@
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Solicitud de Permiso:</label>
                                     <label>
-                                        <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
-                                            style="color:red; margin-left: 20px; text-align: center;" matSuffix
-                                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                        <a (click)="generarPdf('download')" matSuffix matTooltipPosition="right"
+                                            matTooltipClass="departamento-tooltip"
                                             matTooltip="Descargar Solicitud de Permiso en formato PDF">
-                                            <p>Permiso</p>
-                                        </i>
+                                            <label style="font-size: 14px; color: red;">Solicitud.pdf</label>
+                                        </a>
                                     </label>
                                 </div>
                             </div>
@@ -137,8 +134,13 @@
                             </div>
                             <div class="col">
                             </div>
-                            <div class="col" style="text-align: right;">
-                                <i class="fas fa-edit" style="color:green; text-align: center;" matSuffix
+                            <div class="col" style="text-align: right;" >
+                                <i *ngIf="a.estado === 1" class="fas fa-edit" style="color:green; text-align: center;" matSuffix
+                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                                    matTooltip="Cambiar el estado del permiso">
+                                    <p>Estado</p>
+                                </i>
+                                <i *ngIf="a.estado === 2" class="fas fa-edit" style="color:green; text-align: center;" matSuffix
                                     matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
                                     matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>

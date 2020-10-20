@@ -18,6 +18,7 @@ class DepartamentoRutas {
         this.router.get('/by-hora-extra/:id_hora_extra', autorizacionesControlador_1.default.ObtenerAutorizacionByHoraExtra);
         this.router.post('/', verificarToken_1.TokenValidation, autorizacionesControlador_1.default.CrearAutorizacion);
         this.router.put('/:id/estado-permiso', verificarToken_1.TokenValidation, autorizacionesControlador_1.default.ActualizarEstadoPermiso);
+        this.router.put('/estado-permiso/multiple', verificarToken_1.TokenValidation, autorizacionesControlador_1.default.ActualizarEstadoAutorizacionPermiso);
         this.router.put('/:id/estado-vacacion', verificarToken_1.TokenValidation, autorizacionesControlador_1.default.ActualizarEstadoVacacion);
         this.router.put('/:id/estado-hora-extra', verificarToken_1.TokenValidation, autorizacionesControlador_1.default.ActualizarEstadoHoraExtra);
     }

@@ -60,6 +60,7 @@ export class RealtimeNotificacionComponent implements OnInit {
   ObtenerNotificaciones(id_empleado: number) {
     this.realtime.ObtenerNotificacionesAllReceives(id_empleado).subscribe(res => {
       this.notificaciones = res;
+      console.log('notificacioneshhjjkkk', res)
 
     });
   }

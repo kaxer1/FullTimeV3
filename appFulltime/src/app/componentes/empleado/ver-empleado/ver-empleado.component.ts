@@ -965,18 +965,25 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
       console.log("idContrato ", this.idContrato[0].max)
-      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
-        this.idPerVacacion = datos;
-        console.log("idPerVaca ", this.idPerVacacion[0].id)
-        this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
-          {
-            width: '1200px',
-            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max, idPerVacacion: this.idPerVacacion[0].id }
-          }).afterClosed().subscribe(item => {
-            this.obtenerPermisos(parseInt(this.idEmpleado));
-          });
+
+      this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idCargo = datos;
+
+        this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+          this.idPerVacacion = datos;
+          console.log("idPerVaca ", this.idPerVacacion[0].id)
+          this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
+            {
+              width: '1200px',
+              data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max, idPerVacacion: this.idPerVacacion[0].id, idCargo: this.idCargo[0].max }
+            }).afterClosed().subscribe(item => {
+              this.obtenerPermisos(parseInt(this.idEmpleado));
+            });
+        }, error => {
+          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
       });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')

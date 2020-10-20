@@ -63,7 +63,7 @@ export class AutorizacionesComponent implements OnInit {
   ];
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente' },
+    //{ id: 1, nombre: 'Pendiente' },
     { id: 2, nombre: 'Pre-autorizado' },
     { id: 3, nombre: 'Autorizado' },
     { id: 4, nombre: 'Negado' },
@@ -86,82 +86,98 @@ export class AutorizacionesComponent implements OnInit {
     console.log(this.data, 'data', this.data.carga);
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
-    console.log('fecha Actual', this.FechaActual);
     this.obtenerDepartamento();
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
   }
 
+
+  resAutorizacion: any = [];
+
+  idNotifica: any = [];
   insertarAutorizacion(form) {
-    var estado_permiso: string;
+
+    // Arreglo de datos para actualizar la autorización de acuerdo al permiso
+    let newAutorizacionesM = {
+      id_documento: '',
+      estado: form.estadoF,
+      id_permiso: this.data.id,
+    }
+
+    if (this.data.carga === 'multiple') {
+      this.data.datosPermiso.map(obj => {
+        if (obj.estado === 'Pre-autorizado') {
+          this.restP.BuscarDatosAutorizacion(obj.id).subscribe(data => {
+            var documento = data[0].empleado_estado;
+            this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+              this.departamentos = res;
+              this.ActualizarDatos(form, documento, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
+            })
+          })
+        }
+        else {
+          this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+            this.departamentos = res;
+            this.IngresarDatos(form, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
+          })
+        }
+      })
+    }
+    else if (this.data.carga === undefined) {
+      this.IngresarDatos(form, this.data.id, form.idDepartamentoF, this.data.id_emple_solicita);
+    }
+  }
+
+  IngresarDatos(form, id_permiso: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para ingresar una autorización
     let newAutorizaciones = {
       orden: form.ordenF,
       estado: form.estadoF,
-      id_departamento: form.idDepartamentoF,
-      id_permiso: this.data.id,
+      id_departamento: id_departamento,
+      id_permiso: id_permiso,
       id_vacacion: null,
       id_hora_extra: null,
       id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       id_plan_hora_extra: null,
-      // id_documento: form.idDocumentoF
     }
-
-    if (this.data.carga === 'multiple') {
-      if (newAutorizaciones.estado === 1) {
-        estado_permiso = 'Pendiente'
-      } else if (newAutorizaciones.estado === 2) {
-        estado_permiso = 'Pre-Autorizado'
-      } else if (newAutorizaciones.estado === 3) {
-        estado_permiso = 'Aceptado'
-      } else if (newAutorizaciones.estado === 4) {
-        estado_permiso = 'Rechazado'
-      }
-
-      this.data.datosPermiso.map(obj => {
-        newAutorizaciones.id_permiso = obj.id;
-        this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_contrato).subscribe(res => {
-          this.departamentos = res;
-          newAutorizaciones.id_departamento = this.departamentos[0].id_departamento;
-          console.log(newAutorizaciones, 'kjkjc');
-          this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-            console.log(newAutorizaciones, 'entra');
-            this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-            console.log(obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita, estado_permiso)
-            this.EditarEstadoPermiso(obj.id, this.departamentos[0].id_departamento, form, obj.id_emple_solicita, estado_permiso)
-          }, error => { })
-        })
-      })
+    this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      this.EditarEstadoPermiso(id_permiso, id_departamento, form, empleado_solicita, form.estadoF);
       this.limpiarCampos();
       this.dialogRef.close();
-    }
-    else {
-      console.log(newAutorizaciones);
-      this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
-          this.limpiarCampos();
-        this.dialogRef.close();
-        window.location.reload();
-      }, error => {
-        console.log(error);
-      })
-    }
+    }, error => { })
+  }
 
+  ActualizarDatos(form, documento, id_permiso: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para actualizar la autorización de acuerdo al permiso
+    let newAutorizacionesM = {
+      id_documento: documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      estado: form.estadoF,
+      id_permiso: id_permiso,
+    }
+    this.restAutorizaciones.PutEstadoAutoPermisoMultiple(newAutorizacionesM).subscribe(resA => {
+      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
+      this.EditarEstadoPermiso(id_permiso, id_departamento, form, empleado_solicita, form.estadoF);
+      this.limpiarCampos();
+      this.dialogRef.close();
+    })
   }
 
   obtenerDepartamento() {
     if (this.data.carga === 'multiple') {
       this.nuevaAutorizacionesForm.patchValue({
         ordenF: 1,
-        estadoF: 1,
+        estadoF: 2,
       });
       this.Habilitado = false;
     }
-    else {
-      this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_contrato).subscribe(res => {
-        console.log(res);
+    else if (this.data.carga === undefined) {
+      console.log('entra departamento');
+      this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_empl_cargo).subscribe(res => {
+        console.log('entra departamento', res);
         this.departamentos = res;
         this.nuevaAutorizacionesForm.patchValue({
           ordenF: 1,
-          estadoF: 1,
+          estadoF: 2,
           idDepartamentoF: this.departamentos[0].id_departamento
         })
       })
@@ -177,34 +193,41 @@ export class AutorizacionesComponent implements OnInit {
       id_departamento: id_departamento,
       id_empleado: id_empleado
     }
-
+    // Actualizar estado del permiso
+    var estado_letras: string = '';
+    if (form.estadoF === 1) {
+      estado_letras = 'Pendiente';
+    }
+    else if (form.estadoF === 2) {
+      estado_letras = 'Pre-autorizado';
+    } else if (form.estadoF === 3) {
+      estado_letras = 'Autorizado';
+    }
+    else if (form.estadoF === 4) {
+      estado_letras = 'Negado';
+    }
     this.restP.ActualizarEstado(id_permiso, datosPermiso).subscribe(respo => {
       this.resEstado = [respo];
-      console.log(this.resEstado);
-      console.log('estado')
       var f = new Date();
       let notificacion = {
         id: null,
         id_send_empl: this.id_empleado_loggin,
         id_receives_empl: id_empleado,
         id_receives_depa: id_departamento,
-        estado:  form.estadoF,
+        estado: estado_letras,
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
         id_permiso: id_permiso,
-        id_vacaciones: null
+        id_vacaciones: null,
+        id_hora_extra: null
       }
-      console.log(notificacion, 'entra');
-
+      // Enviar la respectiva notificación de cambio de estado del permiso
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
-        console.log(res);
         this.NotifiRes = res;
         notificacion.id = this.NotifiRes._id;
         if (this.NotifiRes._id > 0 && this.resEstado[0].notificacion === true) {
           this.restP.sendNotiRealTime(notificacion);
         }
       });
-      this.dialogRef.close();
-      //window.location.reload();
     });
   }
 

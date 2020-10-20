@@ -12,7 +12,7 @@ export interface PermisosElemento {
   descripcion: string;
   docu_nombre: string;
   documento: string;
-  estado: string;
+  estado: number;
   fec_creacion: string;
   fec_final: string;
   fec_inicio: string;
@@ -20,7 +20,8 @@ export interface PermisosElemento {
   id_contrato: number;
   id_emple_solicita: number;
   nom_permiso: string;
-  nombre: string
+  nombre: string,
+  id_empl_cargo: number,
 }
 
 @Component({
@@ -28,11 +29,16 @@ export interface PermisosElemento {
   templateUrl: './listar-empleado-permiso.component.html',
   styleUrls: ['./listar-empleado-permiso.component.css']
 })
+
 export class ListarEmpleadoPermisoComponent implements OnInit {
 
   permisos: any = [];
 
   selectionUno = new SelectionModel<PermisosElemento>(true, []);
+
+  // Visibilizar lista de permisos autorizados
+  lista_autorizados: boolean = false;
+  lista_permisos: boolean = false;
 
   // Habilitar o Deshabilitar el icono de autorización individual
   auto_individual: boolean = true;
@@ -42,6 +48,11 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  // Items de paginación de la tabla autorizados
+  tamanio_pagina_autorizado: number = 5;
+  numero_pagina_autorizado: number = 1;
+  pageSizeOptions_autorizado = [5, 10, 20, 50];
+
   constructor(
     private restP: PermisosService,
     private vistaFlotante: MatDialog,
@@ -49,6 +60,7 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerPermisos();
+    this.ObtenerPermisosAutorizados();
   }
 
   ManejarPagina(e: PageEvent) {
@@ -59,7 +71,17 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
   obtenerPermisos() {
     this.restP.obtenerAllPermisos().subscribe(res => {
       this.permisos = res;
-      console.log(res);
+      for (var i = 0; i <= this.permisos.length - 1; i++) {
+        if (this.permisos[i].estado === 1) {
+          this.permisos[i].estado = 'Pendiente';
+        }
+        else if (this.permisos[i].estado === 2) {
+          this.permisos[i].estado = 'Pre-autorizado';
+        }
+      }
+      if (this.permisos.length != 0) {
+        this.lista_permisos = true;
+      }
     });
   }
 
@@ -103,18 +125,47 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
         id: obj.id,
         empleado: obj.nombre + ' ' + obj.apellido,
         id_contrato: obj.id_contrato,
-        id_emple_solicita: obj.id_emple_solicita
+        id_emple_solicita: obj.id_emple_solicita,
+        id_cargo: obj.id_empl_cargo,
+        estado: obj.estado,
       }
     })
     this.AbrirAutorizaciones(EmpleadosSeleccionados, 'multiple');
   }
 
-  // Autorización de horas extras planificadas
+  // Autorización de permisos
   AbrirAutorizaciones(datos_permiso, forma: string) {
     this.vistaFlotante.open(AutorizacionesComponent,
       { width: '600px', data: { datosPermiso: datos_permiso, carga: forma } }).afterClosed().subscribe(items => {
-       window.location.reload();
+        window.location.reload();
+        this.obtenerPermisos();
+        this.ObtenerPermisosAutorizados();
       });
+  }
+
+  // Lista de permisos que han sido autorizados o negados
+
+  ManejarPaginaAutorizados(e: PageEvent) {
+    this.tamanio_pagina_autorizado = e.pageSize;
+    this.numero_pagina_autorizado = e.pageIndex + 1;
+  }
+
+  permisosAutorizados: any = [];
+  ObtenerPermisosAutorizados() {
+    this.restP.BuscarPermisosAutorizados().subscribe(res => {
+      this.permisosAutorizados = res;
+      for (var i = 0; i <= this.permisosAutorizados.length - 1; i++) {
+        if (this.permisosAutorizados[i].estado === 3) {
+          this.permisosAutorizados[i].estado = 'Autorizado';
+        }
+        else if (this.permisosAutorizados[i].estado === 4) {
+          this.permisosAutorizados[i].estado = 'Negado';
+        }
+      }
+      if (this.permisosAutorizados.length != 0) {
+        this.lista_autorizados = true;
+      }
+    });
   }
 
 }

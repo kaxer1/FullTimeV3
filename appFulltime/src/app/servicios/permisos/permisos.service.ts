@@ -25,6 +25,10 @@ export class PermisosService {
     return this.http.get(`${this.API_URL}/empleadoPermiso/lista`);
   }
 
+  BuscarPermisosAutorizados() {
+    return this.http.get(`${this.API_URL}/empleadoPermiso/lista-autorizados`);
+  }
+
   obtenerUnPermisoEmleado(id_permiso: number) {
     return this.http.get(`${this.API_URL}/empleadoPermiso/un-permiso/${id_permiso}`);
   }

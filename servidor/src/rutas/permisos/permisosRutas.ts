@@ -17,6 +17,7 @@ class PermisosRutas {
     configuracion(): void {
         this.router.get('/', TokenValidation, PERMISOS_CONTROLADOR.ListarPermisos);
         this.router.get('/lista/', TokenValidation, PERMISOS_CONTROLADOR.ListarEstadosPermisos);
+        this.router.get('/lista-autorizados/', TokenValidation, PERMISOS_CONTROLADOR.ListarPermisosAutorizados);
         this.router.get('/:id', TokenValidation, PERMISOS_CONTROLADOR.ObtenerUnPermiso);
         this.router.get('/un-permiso/:id_permiso', TokenValidation, PERMISOS_CONTROLADOR.ListarUnPermisoInfo);
         this.router.post('/', TokenValidation, PERMISOS_CONTROLADOR.CrearPermisos);

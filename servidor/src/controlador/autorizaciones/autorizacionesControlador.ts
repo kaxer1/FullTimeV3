@@ -59,7 +59,8 @@ class AutorizacionesControlador {
         const { id_documento, estado, id_permiso, id_departamento, id_empleado } = req.body;
 
         await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
-        const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
+        res.jsonp({ message: 'Autorizacion guardado' });
+        /*const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoPermisoReenviarEstadoEmpleado = await pool.query('SELECT p.id, p.descripcion, p.estado, e.cedula, e.nombre, e.apellido, e.correo, co.permiso_mail, co.permiso_noti FROM permisos AS p, empl_contratos AS c, empleados AS e, config_noti AS co WHERE p.id = $1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id AND co.id_empleado = e.id AND e.id = $2', [id_permiso, id_empleado]);
 
         // console.log(JefeDepartamento.rows)
@@ -119,14 +120,22 @@ class AutorizacionesControlador {
                     res.json({ message: 'Estado de permiso actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                 }
             });
-        });
+        });*/
+    }
 
+
+    public async ActualizarEstadoAutorizacionPermiso(req: Request, res: Response): Promise<void> {
+        const { id_documento, estado, id_permiso } = req.body;
+
+        await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_permiso = $3',
+            [estado, id_documento, id_permiso]);
+        res.jsonp({ message: 'Autorizacion guardado' });
     }
 
     public async ActualizarEstadoVacacion(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
-        
+
         await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
         const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND pv.estado = 1 AND co.id_empleado = e.id AND e.id = $2', [id_vacaciones, id_empleado]);
@@ -197,7 +206,7 @@ class AutorizacionesControlador {
     public async ActualizarEstadoHoraExtra(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
-        
+
         await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
         const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo, c.hora_extra_mail, c.hora_extra_noti FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h, config_noti AS c WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita AND e.id = c.id_empleado ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
