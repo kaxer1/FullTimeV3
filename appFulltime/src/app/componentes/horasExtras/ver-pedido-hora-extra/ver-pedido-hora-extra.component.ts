@@ -203,14 +203,15 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     })
   }
 
-  AbrirAutorizaciones(datosHoraExtra) {
-    this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', data: datosHoraExtra }).afterClosed().subscribe(items => {
+  AbrirAutorizaciones(datosHoraExtra, nombre) {
+    this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', 
+    data: {pedido_hora: datosHoraExtra, carga: nombre} }).afterClosed().subscribe(items => {
       this.BuscarInfo();
       this.HabilitarAutorizacion = true;
     });
   }
 
-  AbrirTiempoAutorizacion(num_hora, id_hora, id_usua_solicita) {
+  AbrirTiempoAutorizacion(num_hora, id_hora, id_usua_solicita, datos) {
     let h = {
       id_hora: id_hora,
       hora: num_hora,
@@ -221,9 +222,9 @@ export class VerPedidoHoraExtraComponent implements OnInit {
       data: { horas_calculadas: h, pagina: 'solicitud_hora_extra' }
     }).afterClosed().subscribe(items => {
       if (items === true) {
-        this.HabilitarTiempo = true;
+        this.AbrirAutorizaciones(datos, 'individual');
       } else {
-        this.HabilitarTiempo = false;
+        window.location.reload();
       }
     });
   }

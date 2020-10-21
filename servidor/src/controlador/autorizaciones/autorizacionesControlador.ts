@@ -197,18 +197,19 @@ class AutorizacionesControlador {
                 } else if (ele.vaca_mail === false && ele.vaca_noti === false) {
                     res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                 }
-
             });
         });
 
     }
 
     public async ActualizarEstadoHoraExtra(req: Request, res: Response): Promise<void> {
-        const id = req.params.id;
-        const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
+        const id = req.params.id_hora_extra;
+        //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
+        const { id_documento, estado } = req.body;
+        await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_hora_extra = $3', [estado, id_documento, id]);
+        res.jsonp({ message: 'Autorizacion guardado' });
 
-        await pool.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
-        const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
+        /*const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
         const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo, c.hora_extra_mail, c.hora_extra_noti FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h, config_noti AS c WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita AND e.id = c.id_empleado ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
 
         const estadoAutorizacion = [
@@ -266,10 +267,8 @@ class AutorizacionesControlador {
                 }
 
             });
-        });
-
+        });*/
     }
-
 }
 
 export const AUTORIZACION_CONTROLADOR = new AutorizacionesControlador();

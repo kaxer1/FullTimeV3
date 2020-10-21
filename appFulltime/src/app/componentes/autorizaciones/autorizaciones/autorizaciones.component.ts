@@ -95,14 +95,6 @@ export class AutorizacionesComponent implements OnInit {
 
   idNotifica: any = [];
   insertarAutorizacion(form) {
-
-    // Arreglo de datos para actualizar la autorización de acuerdo al permiso
-    let newAutorizacionesM = {
-      id_documento: '',
-      estado: form.estadoF,
-      id_permiso: this.data.id,
-    }
-
     if (this.data.carga === 'multiple') {
       this.data.datosPermiso.map(obj => {
         if (obj.estado === 'Pre-autorizado') {
