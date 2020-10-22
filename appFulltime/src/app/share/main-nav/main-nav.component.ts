@@ -16,6 +16,22 @@ import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
+import {NestedTreeControl} from '@angular/cdk/tree';
+import {MatTreeNestedDataSource} from '@angular/material/tree';
+
+interface MenuNode {
+  name: string;
+  accion?: boolean;
+  estado?: boolean;
+  icono?: string;
+  children?: itemNode[];
+}
+
+interface itemNode {
+  name: string;
+  url: string;
+}
+
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
@@ -55,6 +71,10 @@ export class MainNavComponent implements OnInit {
   num_timbre: number = 0;
 
   buscar_empl: any = [];
+
+  treeControl = new NestedTreeControl<MenuNode>(node => node.children);
+  dataSource = new MatTreeNestedDataSource<MenuNode>();
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
@@ -93,6 +113,8 @@ export class MainNavComponent implements OnInit {
     });
   }
 
+  hasChild = (_: number, node: MenuNode) => !!node.children && node.children.length > 0;
+
   isExpanded = true;
   isShowing = false;
   barraInicial = false;
@@ -126,6 +148,7 @@ export class MainNavComponent implements OnInit {
       this.barraUno = result.matches;
       this.barraDos = result.matches;
     });
+    this.SeleccionMenu();
   }
 
   confRes: any = [];
@@ -262,4 +285,258 @@ export class MainNavComponent implements OnInit {
     })
   }
 
+
+  /**
+   * MENU PRINCIPAL
+  */
+
+  nombreSelect: string = '';
+  manejarEstadoActivo(name) {
+    this.nombreSelect = name;
+  }
+  
+  SeleccionMenu() {
+    // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
+    if (this.loginService.getRolMenu() === true) {
+      this.dataSource.data = this.MenuAdministracion() as MenuNode[];
+    } else {
+      this.dataSource.data = this.MenuEmpleado() as MenuNode[];
+    }
+
+  }
+
+  MenuAdministracion() {
+    return [
+      {
+        name: 'Administración',
+        accion: true,
+        estado: true,
+        icono: 'dashboard',
+        children: [
+          {name: 'Home', url: '/home'},
+          {name: 'Crear Rol', url: '/roles'},
+          {name: 'Crear Feriados', url: '/listarFeriados'},
+          {name: 'Crear Régimen Laboral', url: '/listarRegimen'},
+          {name: 'Crear Título Profesional', url: '/titulos'},
+          {name: 'Crear Nivel de Educación', url: '/nivelTitulos'},
+        ]
+      },
+      {
+        name: 'Empleado',
+        accion: true,
+        estado: true,
+        icono: 'account_circle',
+        children: [
+          {name: 'Configurar Código', url: '/codigo'},
+          {name: 'Crear Empleado', url: '/empleado'},
+        ]
+      },
+      {
+        name: 'Almuerzo',
+        accion: true,
+        estado: true,
+        icono: 'local_dining',
+        children: [
+          {name: 'Tipo de Comidas', url: '/listarTipoComidas'},
+        ]
+      },
+      {
+        name: 'Ubicación',
+        accion: true,
+        estado: true,
+        icono: 'location_on',
+        children: [
+          {name: 'Registrar Provincia', url: '/provincia'},
+          {name: 'Registrar Ciudad', url: '/listarCiudades'},
+          {name: 'Registrar Empresa', url: '/empresa'},
+          {name: 'Registrar Establecimiento', url: '/sucursales'},
+          {name: 'Registrar Departamento', url: '/departamento'},
+        ]
+      },
+      {
+        name: 'Notificaciones',
+        accion: true,
+        estado: true,
+        icono: 'notifications',
+        children: [
+          {name: 'Notificaciones', url: '/suc-notificaciones'},
+          {name: 'Configurar Permisos', url: '/verTipoPermiso'},
+          {name: 'Permisos Solicitados', url: '/permisos-solicitados'},
+          {name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados'},
+          {name: 'Horas Extras Solicitadas', url: '/horas-extras-solicitadas'},
+          {name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras'},
+        ]
+      },
+      {
+        name: 'Dispositivos',
+        accion: true,
+        estado: true,
+        icono: 'schedule',
+        children: [
+          {name: 'Enrolar Empleado', url: '/enrolados'},
+          {name: 'Registrar Dispositivo', url: '/listarRelojes'},
+        ]
+      },
+      {
+        name: 'Horarios',
+        accion: true,
+        estado: true,
+        icono: 'assignment',
+        children: [
+          {name: 'Registrar Horario', url: '/horario'},
+          {name: 'Configurar Horas Extras', url: '/listaHorasExtras'},
+          {name: 'Planificación Múltiple', url: '/planificacion'},
+          {name: 'Planificación Hora Extra', url: '/planificaHoraExtra'},
+          {name: 'Calcular Hora Extra', url: '/horaExtraReal'},
+        ]
+      },
+      {
+        name: 'Timbres',
+        accion: true,
+        estado: true,
+        icono: 'fingerprint',
+        children: [
+          {name: 'Timbres', url: '/timbres'},
+          {name: 'Asistencia', url: '/asistencia'},
+        ]
+      },
+      {
+        name: 'Documentos',
+        accion: true,
+        estado: true,
+        icono: 'insert_drive_file',
+        children: [
+          {name: 'Archivos', url: '/archivos'},
+        ]
+      },
+      {
+        name: 'Acción de Personal',
+        accion: this.HabilitarAccion,
+        estado: true,
+        icono: 'how_to_reg',
+        children: [
+          {name: 'Crear Proceso', url: '/proceso'},
+        ]
+      },
+      {
+        name: 'Cumpleaños',
+        accion: true,
+        estado: true,
+        icono: 'card_giftcard',
+        children: [
+          {name: 'Cumpleaños', url: '/cumpleanios'},
+        ]
+      },
+      {
+        name: 'Reportería',
+        accion: true,
+        estado: true,
+        icono: 'how_to_reg',
+        children: [
+          {name: 'Reportes - Kardex', url: '/listaReportes'},
+        ]
+      }
+    ];
+  }
+
+  MenuEmpleado() {
+    return [
+      {
+        name: 'Perfil',
+        accion: true,
+        estado: true,
+        icono: 'account_circle',
+        children: [
+          {name: 'Datos Generales', url: '/datosEmpleado'},
+          {name: 'Contrato de Trabajo', url: '/cargoEmpleado'},
+        ]
+      },
+      {
+        name: 'Asistencia',
+        accion: true,
+        estado: true,
+        icono: 'mobile_friendly',
+        children: [
+          {name: 'Planificación', url: '/planificacionHorario'},
+          {name: 'Horarios', url: '/horariosEmpleado'},
+        ]
+      },
+      {
+        name: 'Horas Extras',
+        accion: true,
+        estado: true,
+        icono: 'hourglass_full',
+        children: [
+          {name: 'Solicitar Hora Extra', url: '/horaExtraEmpleado'},
+        ]
+      },
+      {
+        name: 'Vacaciones',
+        accion: true,
+        estado: true,
+        icono: 'flight',
+        children: [
+          {name: 'Solicitar Vacaciones', url: '/vacacionesEmpleado'},
+        ]
+      },
+      {
+        name: 'Permisos',
+        accion: true,
+        estado: true,
+        icono: 'transfer_within_a_station',
+        children: [
+          {name: 'Solicitar Permiso', url: '/solicitarPermiso'},
+        ]
+      },
+      {
+        name: 'Almuerzos',
+        accion: true,
+        estado: true,
+        icono: 'restaurant',
+        children: [
+          {name: 'Planificación', url: '/almuerzosEmpleado'},
+        ]
+      },
+      {
+        name: 'Acción de Personal',
+        accion: this.HabilitarAccion,
+        estado: true,
+        icono: 'how_to_reg',
+        children: [
+          {name: 'Procesos', url: '/procesosEmpleado'},
+        ]
+      },
+      {
+        name: 'Autorización',
+        accion: true,
+        estado: true,
+        icono: 'lock_open',
+        children: [
+          {name: 'Autoridad', url: '/autorizaEmpleado'},
+        ]
+      },
+      {
+        name: 'Información',
+        accion: true,
+        estado: true,
+        icono: 'info',
+        children: [
+          {name: 'Autoridades', url: '/informacion'},
+          {name: 'Archivos', url: '/verDocumentacion'},
+          {name: 'Estadísticas Generales', url: '/estadisticas'},
+        ]
+      },
+      {
+        name: 'Notificaciones',
+        accion: true,
+        estado: this.loginService.getEstado(),
+        icono: 'notifications',
+        children: [
+          {name: 'Lista notificaciones', url: '/lista-notificaciones'},
+        ]
+      },
+    ]
+  }
+
 }
+

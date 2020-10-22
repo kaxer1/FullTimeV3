@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
-// const MINUTO_TIMER = 15;
-const MINUTO_TIMER = 5;
+const MINUTO_TIMER = 15;
+// const MINUTO_TIMER = 5; // de prueba
 exports.NotificacionSinTimbres = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();

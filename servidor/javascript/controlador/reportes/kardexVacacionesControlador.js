@@ -54,6 +54,14 @@ class KardexVacacion {
             res.jsonp(jsonData);
         });
     }
+    ReportePeriodosVacaciones(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id_empleado = parseInt(req.params.id_empleado);
+            console.log('llego a periodo de vacion');
+            let jsonData = yield CalcularVacaciones_1.ReportePeriVacaciones(id_empleado);
+            res.jsonp(jsonData);
+        });
+    }
 }
 exports.KARDEX_VACACION_CONTROLADOR = new KardexVacacion();
 exports.default = exports.KARDEX_VACACION_CONTROLADOR;

@@ -8,420 +8,43 @@
       <img src="../../../assets/imagenes/logo/logoAdmin.png" id="logo">
     </div>
 
-    <!-- MENU PARA ADMINISTRADORES -->
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
+      <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+        <li class="material-tree-node">
+          <ul> <a class="btn btn-sm btn-block" [ngClass]="{active: node.name == nombreSelect}"
+            (click)="manejarEstadoActivo(node.name)"
+            [routerLink]="[node.url]" style="text-align: left; color: rgb(28, 28, 28)">{{node.name}}</a></ul>
+        </li>
+      </mat-tree-node>
 
-    <mat-accordion *ngIf="loginService.getRolMenu()">
-      <!-- administración -->
-      <mat-expansion-panel class="menus acordeon">
-        <mat-expansion-panel-header class="selec1">
-          <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">dashboard</mat-icon>
-            <span class="item-menu">Administración</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/home']" class="texcol">
-            <span matLine>Home</span>
-          </a>
-          <a mat-list-item [routerLink]="['/roles']" class="texcol">
-            <span matLine>Crear Rol</span>
-          </a>
-          <a mat-list-item [routerLink]="['/listarFeriados']" class="texcol">
-            <span matLine>Crear Feriados</span>
-          </a>
-          <a mat-list-item [routerLink]="['/listarRegimen']" class="texcol">
-            <span matLine>Crear Régimen Laboral</span>
-          </a>
-          <a mat-list-item [routerLink]="['/titulos']" class="texcol">
-            <span matLine>Crear Título Profesional</span>
-          </a>
-          <a mat-list-item [routerLink]="['/nivelTitulos']" class="texcol">
-            <span matLine>Crear Nivel de Educación</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-      <!-- Empleado -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec2">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">account_circle</mat-icon>
-            <span class="item-menu">Empleado</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/codigo']" class="texcol">
-            <span matLine>Configurar Código</span>
-          </a>
-          <a mat-list-item [routerLink]="['/empleado']" class="texcol">
-            <span matLine>Crear Empleado</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
+      <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+        <li *ngIf="node.accion === true && node.estado">
+          <div class="tree-titulos d-flex bd-highlight" style="background: rgb(119, 119, 119)">
+            <div class="bd-highlight">
+              <mat-icon mat-list-icon id="icono-menu">{{node.icono}}</mat-icon>
+            </div>
+            <div class="bd-highlight">
+              <h5 class="name-uno">{{node.name}}</h5>
+            </div>
+            <div class="ml-auto bd-highlight">
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" >
+                <mat-icon class="mat-icon-rtl-mirror" id="icono-despliega">
+                  <!-- {{treeControl.isExpanded(node) ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}} -->
+                  {{treeControl.isExpanded(node) ? 'remove' : 'add'}}
+                </mat-icon>
+              </button>
+            </div>
+          </div>
+          <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)" 
+            [style.padding]="treeControl.isExpanded(node) ? '20px 0px 20px 0px' : '0px 0px 0px 0px'">
+            <ng-container matTreeNodeOutlet></ng-container>
+          </ul>
+        </li>
+      </mat-nested-tree-node>
+      
+    </mat-tree>
 
-      <!-- Almuerzo -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec3">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">local_dining</mat-icon>
-            <span class="item-menu">Almuerzo</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/listarTipoComidas']" class="texcol">
-            <span matLine>Tipo de Comidas</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Ubicación -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec5">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon"> location_on</mat-icon>
-            <span class="item-menu">Ubicación</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/provincia']" class="texcol">
-            <span matLine>Registrar Provincia</span>
-          </a>
-          <a mat-list-item [routerLink]="['/listarCiudades']" class="texcol">
-            <span matLine>Registrar Ciudad</span>
-          </a>
-          <a mat-list-item [routerLink]="['/empresa']" class="texcol">
-            <span matLine>Registrar Empresa</span>
-          </a>
-          <a mat-list-item [routerLink]="['/sucursales']" class="texcol">
-            <span matLine>Registrar Establecimiento</span>
-          </a>
-          <a mat-list-item [routerLink]="['/departamento']" class="texcol">
-            <span matLine>Registrar Departamento</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Notificaciones -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec2">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">notifications</mat-icon>
-            <span class="item-menu">Notificaciones</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/suc-notificaciones']" class="texcol">
-            <span matLine>Notificaciones</span>
-          </a>
-          <a mat-list-item [routerLink]="['/verTipoPermiso']" class="texcol">
-            <span matLine>Configurar Permisos</span>
-          </a>
-          <a mat-list-item [routerLink]="['/permisos-solicitados']" class="texcol">
-            <span matLine>Permisos Solicitados</span>
-          </a>
-          <a mat-list-item [routerLink]="['/vacaciones-solicitados']" class="texcol">
-            <span matLine>Vacaciones Solicitadas</span>
-          </a>
-          <a mat-list-item [routerLink]="['/horas-extras-solicitadas']" class="texcol">
-            <span matLine>Horas Extras Solicitadas</span>
-          </a>
-          <a mat-list-item [routerLink]="['/planificacionesHorasExtras']" class="texcol">
-            <span matLine>Horas Extras Planificadas</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Dispositivos -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec6">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">schedule</mat-icon>
-            <span class="item-menu">Dispositivos</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/enrolados']" class="texcol">
-            <span matLine>Enrolar Empleado</span>
-          </a>
-          <a mat-list-item [routerLink]="['/listarRelojes']" class="texcol">
-            <span matLine>Registrar Dispositivo</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Horarios -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec7">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">assignment</mat-icon>
-            <span class="item-menu">Horarios</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/horario']" class="texcol">
-            <span matLine>Registrar Horario</span>
-          </a>
-          <a mat-list-item [routerLink]="['/listaHorasExtras']" class="texcol">
-            <span matLine>Configurar Horas Extras</span>
-          </a>
-          <a mat-list-item [routerLink]="['/planificacion']" class="texcol">
-            <span matLine>Planificación Múltiple</span>
-          </a>
-          <a mat-list-item [routerLink]="['/planificaHoraExtra']" class="texcol">
-            <span matLine>Planificación Hora Extra</span>
-          </a>
-          <a mat-list-item [routerLink]="['/horaExtraReal']" class="texcol">
-            <span matLine>Calcular Hora Extra</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Timbres -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec9">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">fingerprint</mat-icon>
-            <span class="item-menu">Timbres</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/timbres']" class="texcol">
-            <span matLine>Timbres</span>
-          </a>
-          <a mat-list-item [routerLink]="['/asistencia']" class="texcol">
-            <span matLine>Asistencia</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!--Documentación-->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec10">
-          <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">insert_drive_file</mat-icon>
-            <span class="item-menu">Documentos</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/archivos']" class="texcol">
-            <span matLine>Archivos</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Acciones de Personal-->
-      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
-        <mat-expansion-panel-header class="selec8">
-          <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
-            <span class="item-menu" id="accion">Acción de Personal</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/proceso']" class="texcol">
-            <span matLine>Crear Proceso</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Cumpleaños -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec5">
-          <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">card_giftcard</mat-icon>
-            <span class="item-menu" id="accion">Cumpleaños</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/cumpleanios']" class="texcol">
-            <span matLine>Cumpleaños</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- Reportes -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec7">
-          <mat-panel-title>
-            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
-            <span class="item-menu" id="accion">Reportería</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <!-- <a mat-list-item [routerLink]="['/kardex/vacacion/dias-calendario']" class="texcol">
-            <span matLine>Kardex Vacación</span>
-          </a> -->
-          <a mat-list-item [routerLink]="['/listaReportes']" class="texcol">
-            <span matLine>Reportes - Kardex</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-    </mat-accordion>
-
-    <!-- MENU PARA EMPLEADOS -->
-    <mat-accordion *ngIf="!loginService.getRolMenu()">
-      <!-- PERFIL -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec1">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">account_circle</mat-icon>
-            <span class="item-menu">Perfil</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/datosEmpleado']" class="texcol">
-            <span matLine>Datos Generales</span>
-          </a>
-          <a mat-list-item [routerLink]="['/cargoEmpleado']" class="texcol">
-            <span matLine>Contrato de Trabajo</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- ASISTENCIA -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec2">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">mobile_friendly</mat-icon>
-            <span class="item-menu">Asistencia</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/planificacionHorario']" class="texcol">
-            <span matLine>Planificación</span>
-          </a>
-          <a mat-list-item [routerLink]="['/horariosEmpleado']" class="texcol">
-            <span matLine>Horarios</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- HORAS EXTRAS -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec3">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">hourglass_full</mat-icon>
-            <span class="item-menu">Horas Extras</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/horaExtraEmpleado']" class="texcol">
-            <span matLine>Solicitar Hora Extra</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- VACACIONES -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec4">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">flight</mat-icon>
-            <span class="item-menu">Vacaciones</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/vacacionesEmpleado']" class="texcol">
-            <span matLine>Solicitar</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- PERMISOS -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec6">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">transfer_within_a_station</mat-icon>
-            <span class="item-menu">Permisos</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/solicitarPermiso']" class="texcol">
-            <span matLine>Solicitar</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- ALMUERZOS -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec8">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">restaurant</mat-icon>
-            <span class="item-menu">Almuerzos</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/almuerzosEmpleado']" class="texcol">
-            <span matLine>Planificación</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- PROCESOS -->
-      <mat-expansion-panel class="menus" *ngIf="!HabilitarAccion">
-        <mat-expansion-panel-header class="selec8">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">how_to_reg</mat-icon>
-            <span class="item-menu" id="accion">Acción de Personal</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/procesosEmpleado']" class="texcol">
-            <span matLine>Procesos</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- AUTORIZACION -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec8">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">lock_open</mat-icon>
-            <span class="item-menu" id="accion">Autorización</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/autorizaEmpleado']" class="texcol">
-            <span matLine>Autoridad</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- INFORMACIÓN -->
-      <mat-expansion-panel class="menus">
-        <mat-expansion-panel-header class="selec7">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">info</mat-icon>
-            <span class="item-menu">Información</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/informacion']" class="texcol">
-            <span matLine>Autoridades</span>
-          </a>
-          <a mat-list-item [routerLink]="['/verDocumentacion']" class="texcol">
-            <span matLine>Archivos</span>
-          </a>
-          <a mat-list-item [routerLink]="['/estadisticas']" class="texcol">
-            <span matLine>Estadísticas Generales</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-
-      <!-- NOTIFICACIONES PARA QUIENES AUTORIZAN LAS SOLICITUDES -->
-      <mat-expansion-panel class="menus" *ngIf="loginService.getEstado() == estado">
-        <mat-expansion-panel-header class="selec2">
-          <mat-panel-title class="item">
-            <mat-icon mat-list-icon class="color-icon">notifications</mat-icon>
-            <span class="item-menu">Notificaciones</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <a mat-list-item [routerLink]="['/lista-notificaciones']" class="texcol">
-            <span matLine>Lista</span>
-          </a>
-        </mat-nav-list>
-      </mat-expansion-panel>
-    </mat-accordion>
+    
 
   </mat-sidenav>
 
@@ -940,6 +563,20 @@
             </div>
             <!-- Forma de aviso para 'Salio antes al trabajo' -->
             <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                <ul style="list-style: none; margin-left: -15%;">
+                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                  <li style="font-size: 11px; margin-top: -13%;">
+                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                  </li>
+                </ul>
+                <mat-divider class="divider"></mat-divider>
+              </a>
+            </div>
+            <!-- Mensaje de la planificacion -->
+            <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
               <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                 <ul style="list-style: none; margin-left: -15%;">
                   <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
