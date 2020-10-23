@@ -272,6 +272,7 @@ function CalculoHoraSalida(t: ITiempoLaboral) {
 function HHMMtoHorasDecimal(dato) {
     if (dato === '')
         return 0;
+    // if (dato === 0) return 0
     // console.log(dato);
     var h = parseInt(dato.split(':')[0]);
     var m = parseInt(dato.split(':')[1]) / 60;
@@ -374,15 +375,15 @@ function CalcularAtraso(h_default, h_timbre, minu_espera) {
         hora = '0' + y;
         min = '0' + z;
     }
-    else if (y < 10 && z > 10) {
+    else if (y < 10 && z >= 10) {
         hora = '0' + y;
         min = z;
     }
-    else if (y > 10 && z < 10) {
+    else if (y >= 10 && z < 10) {
         hora = y;
         min = '0' + z;
     }
-    else if (y > 10 && z > 10) {
+    else if (y >= 10 && z >= 10) {
         hora = y;
         min = z;
     }
@@ -521,7 +522,8 @@ function AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo) {
             });
         });
     });
-    // console.log(AsistenciaArray.length);
+    console.log(AsistenciaArray.length);
+    // console.log(AsistenciaArray);
     return AsistenciaArray;
 }
 function MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, IhorarioLaboral, id_cargo) {
@@ -561,9 +563,9 @@ function DetalleHorario(id_horarios) {
 exports.ContarHorasByCargo = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let ids = yield UltimoCargoContrato(id_empleado, desde); //devuelve los IDs de contrato y cargo, ademas del horarios o los horarios que el usuario ingreso.
-        // console.log(ids);
+        console.log(ids);
         if (ids.message)
-            return ids.message;
+            return ids;
         let horaIngresoEmpl = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
             console.log(obj);
             return yield DetalleHorario(obj.id_horarios).then(result => {

@@ -504,24 +504,14 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
     return dias + h + m;
 }
 /**
- * var d = parseInt(valor.toString().split(".")[0]);
-    var aux_dia = valor - d;
-
-    var aux_hor = aux_dia * 24;
-    var h = parseInt(aux_hor.toString().split(".")[0]);
-
-    var aux_min = (aux_hor - h) * 60;
-    var m = parseInt(aux_min.toString().split(".")[0]);
+ * *****************************************************************************
+ * METODO PARA LOS REPORTES DE PERIODO DE VACACIONES
+ *
+ * *****************************************************************************
  */
-// let year_anterior = restarYear(f, 1).toLocaleDateString().split("-")[0];
-// let year_presente = f_presente.toLocaleDateString().split("-")[0];
-// console.log(year_anterior);
-// console.log(year_presente);
-// for (let j = 0; j < nuevo.length; j++) {
-//     let numMin;
-//     let i = numMin = j;
-//     for (++i; i < nuevo.length; i++) {
-//         ( nuevo[i] < nuevo[ numMin ] ) && ( numMin = i );
-//     }
-//     [ nuevo[ j ], nuevo[ numMin ] ] = [ nuevo[ numMin ], nuevo[ j ] ]
-// } 
+exports.ReportePeriVacaciones = function (id_empleado) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log(id_empleado);
+        return { message: 'Halgo a salido masl en el proceso' };
+    });
+};

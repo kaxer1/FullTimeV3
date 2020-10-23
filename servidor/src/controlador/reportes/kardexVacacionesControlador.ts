@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { vacacionesByIdUser } from '../../libs/CalcularVacaciones';
+import { vacacionesByIdUser, ReportePeriVacaciones } from '../../libs/CalcularVacaciones';
 import { CalcularHoraExtra } from '../../libs/CalcularHorasExtras';
 
 class KardexVacacion {
@@ -43,6 +43,14 @@ class KardexVacacion {
         let fec_desde = req.params.desde
         let fec_hasta = req.params.hasta
         let jsonData = await CalcularHoraExtra(id_empleado, fec_desde, fec_hasta);
+        res.jsonp(jsonData);
+    }
+    
+    public async ReportePeriodosVacaciones(req: Request, res: Response) {
+        let id_empleado = parseInt(req.params.id_empleado)
+        console.log('llego a periodo de vacion');
+        
+        let jsonData = await ReportePeriVacaciones(id_empleado);
         res.jsonp(jsonData);
     }
 }

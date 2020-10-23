@@ -287,6 +287,7 @@ function CalculoHoraSalida(t: ITiempoLaboral) {
 */
 function HHMMtoHorasDecimal(dato: any) {
     if (dato === '') return 0
+    // if (dato === 0) return 0
     // console.log(dato);
     var h = parseInt(dato.split(':')[0]);
     var m = parseInt(dato.split(':')[1])/60;
@@ -394,13 +395,13 @@ function CalcularAtraso(h_default: string, h_timbre: string, minu_espera: any) {
     if (y < 10 && z < 10) {
         hora = '0' + y;
         min = '0' + z;
-    } else if (y < 10 && z > 10) {
+    } else if (y < 10 && z >= 10) {
         hora = '0' + y;
         min = z;
-    } else if (y > 10 && z < 10) {
+    } else if (y >= 10 && z < 10) {
         hora = y;
         min = '0' + z;
-    } else if (y > 10 && z > 10) {
+    } else if (y >= 10 && z >= 10) {
         hora = y;
         min = z;
     }
@@ -556,7 +557,8 @@ function AsistenciaDetalleConsolidado(arr: any, IhorarioLaboral: any, id_cargo: 
         });
     });
 
-    // console.log(AsistenciaArray.length);
+    console.log(AsistenciaArray.length);
+    // console.log(AsistenciaArray);
     
     return AsistenciaArray
 }
@@ -599,8 +601,8 @@ async function DetalleHorario(id_horarios: number) {
 export const ContarHorasByCargo = async function(id_empleado: number, desde: Date, hasta: Date) {
 
     let ids = await UltimoCargoContrato(id_empleado, desde); //devuelve los IDs de contrato y cargo, ademas del horarios o los horarios que el usuario ingreso.
-    // console.log(ids);
-    if (ids.message) return ids.message
+    console.log(ids);
+    if (ids.message) return ids
     
     let horaIngresoEmpl = await Promise.all(ids.map(async(obj:any) => {
         console.log(obj);

@@ -220,8 +220,6 @@ class HorasExtrasPedidasControlador {
                 'AND ecn.id_empleado = e.id AND e.id = c.id_empleado AND da.estado = true', [id_departamento]);
             const InfoHoraExtraReenviarEstadoEmpleado = yield database_1.default.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
             console.log(InfoHoraExtraReenviarEstadoEmpleado.rows);
-            const email = process.env.EMAIL;
-            const pass = process.env.PASSWORD;
             let estadoHoraExtra = [
                 { valor: 1, nombre: 'Pendiente' },
                 { valor: 2, nombre: 'Pre-Autorizado' },
@@ -233,12 +231,7 @@ class HorasExtrasPedidasControlador {
                 if (obj.valor === estado) {
                     nombreEstado = obj.nombre;
                 }
-            });
-            let smtpTransport = nodemailer.createTransport({
-                service: 'Gmail',
-                auth: {
-                    user: email,
-                    pass: pass
+                if (obj.valor === 3) { //cuando este en estado tres se registra la hora_extr_calculos.
                 }
             });
             JefeDepartamento.rows.forEach(obj => {
@@ -270,25 +263,11 @@ class HorasExtrasPedidasControlador {
                     };
                     console.log(data);
                     if (obj.hora_extra_mail === true && obj.hora_extra_noti === true) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
                     }
                     else if (obj.hora_extra_maill === true && obj.hora_extra_noti === false) {
-                        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-                            if (error) {
-                                console.log(error);
-                            }
-                            else {
-                                console.log('Email sent: ' + info.response);
-                            }
-                        }));
+                        settingsMail_1.enviarMail(data);
                         res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                     else if (obj.hora_extra_mail === false && obj.hora_extra_noti === true) {
