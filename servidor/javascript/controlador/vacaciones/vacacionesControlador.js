@@ -18,7 +18,25 @@ const CargarVacacion_1 = require("../../libs/CargarVacacion");
 class VacacionesControlador {
     ListarVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion, e.nombre, e.apellido FROM vacaciones AS v, peri_vacaciones AS p, empl_contratos AS c, empleados AS e WHERE v.id_peri_vacacion = p.id AND p.estado = 1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id ORDER BY id DESC');
+            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.estado, v.dia_libre, ' +
+                'v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion, v.id_empl_cargo, e.id AS id_empl_solicita, ' +
+                'e.nombre, e.apellido FROM vacaciones AS v, peri_vacaciones AS p, empl_contratos AS c, ' +
+                'empleados AS e WHERE v.id_peri_vacacion = p.id AND ' +
+                'p.estado = 1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id  AND (v.estado = 1 OR v.estado = 2) ORDER BY id DESC');
+            if (VACACIONES.rowCount > 0) {
+                return res.jsonp(VACACIONES.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarVacacionesAutorizadas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.estado, v.dia_libre, ' +
+                'v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion, v.id_empl_cargo, e.id AS id_empl_solicita, e.nombre, e.apellido FROM vacaciones AS v, ' +
+                'peri_vacaciones AS p, empl_contratos AS c, empleados AS e WHERE v.id_peri_vacacion = p.id AND ' +
+                'p.estado = 1 AND p.id_empl_contrato = c.id AND c.id_empleado = e.id  AND (v.estado = 3 OR v.estado = 4) ORDER BY id DESC');
             if (VACACIONES.rowCount > 0) {
                 return res.jsonp(VACACIONES.rows);
             }
@@ -30,7 +48,7 @@ class VacacionesControlador {
     ListarUnaVacacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion, pv.id_empl_contrato AS id_contrato, ec.id_empleado FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS ec WHERE v.id = $1 AND pv.estado = 1 AND v.id_peri_vacacion = pv.id AND ec.id = pv.id_empl_contrato', [id]);
+            const VACACIONES = yield database_1.default.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.estado, v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion, v.id_empl_cargo, pv.id_empl_contrato AS id_contrato, ec.id_empleado FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS ec WHERE v.id = $1 AND pv.estado = 1 AND v.id_peri_vacacion = pv.id AND ec.id = pv.id_empl_contrato', [id]);
             if (VACACIONES.rowCount > 0) {
                 return res.jsonp(VACACIONES.rows);
             }
@@ -136,7 +154,7 @@ class VacacionesControlador {
             console.log(estado, id_vacacion, id_rece_emp, id_depa_send);
             const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_depa_send]);
             const InfoVacacionesReenviarEstadoEmpleado = yield database_1.default.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND pv.estado = 1 AND c.id = pv.id_empl_contrato AND co.id_empleado = e.id AND e.id = $2', [id_vacacion, id_rece_emp]);
-            if ('Aceptado' === estado) {
+            if (3 === estado) {
                 CargarVacacion_1.RestarPeriodoVacacionAutorizada(parseInt(id));
             }
             JefeDepartamento.rows.forEach(obj => {
@@ -149,12 +167,25 @@ class VacacionesControlador {
                         id_vacaciones: id_vacacion,
                         id_permiso: null
                     };
+                    var estado_letras;
+                    if (estado === 1) {
+                        estado_letras = 'Pendiente';
+                    }
+                    else if (estado === 2) {
+                        estado_letras = 'Pre-autorizado';
+                    }
+                    else if (estado === 3) {
+                        estado_letras = 'Autorizado';
+                    }
+                    else if (estado === 4) {
+                        estado_letras = 'Negado';
+                    }
                     let data = {
                         from: obj.correo,
                         to: ele.correo,
                         subject: 'Estado de solicitud de Vacaciones',
                         html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
-                cédula ${obj.cedula} a cambiado el estado de su solicitud de vacaciones a: <b>${estado}</b></p>
+                cédula ${obj.cedula} a cambiado el estado de su solicitud de vacaciones a: <b>${estado_letras}</b></p>
                 <h4><b>Informacion de las vacaciones</b></h4>
                 <ul>
                     <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
@@ -188,7 +219,7 @@ class VacacionesControlador {
     ObtenerSolicitudVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_emple_vacacion;
-            const SOLICITUD = yield database_1.default.query('SELECT *FROM VistaDatoSolicitudVacacion WHERE id_emple_vacacion = $1', [id]);
+            const SOLICITUD = yield database_1.default.query('SELECT *FROM vista_datos_solicitud_vacacion WHERE id_emple_vacacion = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }

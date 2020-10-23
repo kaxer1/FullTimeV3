@@ -27,7 +27,7 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
   TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
-  idDepartamento = new FormControl('', Validators.required);
+  idDepartamento = new FormControl('');
 
   public nuevaAutorizacionesForm = new FormGroup({
     idDocumentoF: this.idDocumento,
@@ -47,11 +47,13 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
   ];
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente' },
+    //{ id: 1, nombre: 'Pendiente' },
     { id: 2, nombre: 'Pre-autorizado' },
     { id: 3, nombre: 'Autorizado' },
     { id: 4, nombre: 'Negado' },
   ];
+
+  id_user_loggin: number;
 
   constructor(
     public restAutorizaciones: AutorizacionService,
@@ -64,113 +66,118 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('datos, planificacion', this.data);
+    this.id_user_loggin = parseInt(localStorage.getItem("empleado"));
     this.obtenerDepartamento();
   }
 
   insertarAutorizacion(form) {
-    let newAutorizaciones = {
-      orden: form.ordenF,
-      estado: form.estadoF,
-      id_departamento: form.idDepartamentoF,
-      id_permiso: null,
-      id_vacacion: null,
-      id_hora_extra: null,
-      id_plan_hora_extra: this.data.datosHora.id_plan_extra,
-      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
-    }
-    console.log(newAutorizaciones);
-    if (this.data.carga === 'individual') {
-      this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-        this.EditarEstadoPlan(this.data.datosHora.id_plan_extra, form.idDepartamentoF, this.data.datosHora.empl_id, form.estadoF)
-        this.limpiarCampos();
-        this.dialogRef.close();
-      }, error => {
-        console.log(error);
+    if (this.data.carga === 'multiple') {
+      this.data.datosHora.map(obj => {
+        if (obj.estado === 'Pre-autorizado') {
+          this.restPlanH.BuscarDatosAutorizacion(obj.id).subscribe(data => {
+            var documento = data[0].empleado_estado;
+            this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+              this.departamentos = res;
+              this.ActualizarDatos(form, documento, obj.id_plan_extra, this.departamentos[0].id_departamento, obj.id_usua_solicita);
+            })
+          })
+        }
+        else {
+          this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+            this.departamentos = res;
+            this.IngresarDatos(form, obj.id_plan_extra, this.departamentos[0].id_departamento, obj.id_usua_solicita);
+          })
+        }
       })
     }
     else {
-      this.data.datosHora.map(obj => {
-        // console.log('i', i, ' ', this.data.datosHora.length - 1, this.data.datosHora.length);
-        newAutorizaciones.id_plan_hora_extra = obj.id_plan_extra;
-        //console.log('ejecuta 1', i);
-        this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_empl_contrato).subscribe(res => {
-          this.departamentos = res;
-          //console.log('ejecuta 2', i);
-          newAutorizaciones.id_departamento = this.departamentos[0].id_departamento;
-          this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-            this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-
-            console.log(obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita, form.estadoF);
-
-            this.EditarEstadoPlan(obj.id_plan_extra, this.departamentos[0].id_departamento, obj.empl_id, form.estadoF)
-
-          }, error => { })
-        })
-      })
-
-      this.limpiarCampos();
-      this.dialogRef.close();
+      this.IngresarDatos(form, this.data.datosHora.id_plan_extra, form.idDepartamentoF, this.data.datosHora.empl_id);
     }
   }
 
-  obtenerDepartamento() {
-    this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.datosHora.id_empl_contrato).subscribe(res => {
-      console.log(res);
-      this.departamentos = res;
-      this.nuevaAutorizacionesForm.patchValue({
-        ordenF: 1,
-        estadoF: 1,
-        idDepartamentoF: this.departamentos[0].id_departamento
-      })
+  IngresarDatos(form, id_hora: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para ingresar una autorización
+    let newAutorizaciones = {
+      orden: form.ordenF,
+      estado: form.estadoF,
+      id_departamento: id_departamento,
+      id_permiso: null,
+      id_vacacion: null,
+      id_hora_extra: null,
+      id_plan_hora_extra: id_hora,
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+    }
+    this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      this.EditarEstadoPlan(id_hora, id_departamento, empleado_solicita, form.estadoF);
+      if (form.estadoF === 3) {
+        this.NotificarPlanificacion(empleado_solicita);
+      }
+      this.limpiarCampos();
+      this.dialogRef.close();
+    }, error => { })
+  }
+
+  ActualizarDatos(form, documento, id_hora: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para actualizar la autorización de acuerdo al permiso
+    let newAutorizacionesM = {
+      id_documento: documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      estado: form.estadoF,
+      id_plan_hora_extra: id_hora,
+    }
+    this.restAutorizaciones.PutEstadoAutoPermisoMultiple(newAutorizacionesM).subscribe(resA => {
+      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
+      this.EditarEstadoPlan(id_hora, id_departamento, empleado_solicita, form.estadoF);
+      if (form.estadoF === 3) {
+        this.NotificarPlanificacion(empleado_solicita);
+      }
+      this.limpiarCampos();
+      this.dialogRef.close();
     })
   }
 
-  // Aqui esta la actualizacion del estado de la planificacion falta enviar el mensaje l correo o al sistema 
-  //de que la planificacion 
-  // fue autorizada o lo que sea jejeje
+  Habilitado: boolean = true;
+  obtenerDepartamento() {
+    if (this.data.carga === 'multiple') {
+      this.nuevaAutorizacionesForm.patchValue({
+        ordenF: 1,
+        estadoF: 2,
+      });
+      this.Habilitado = false;
+    }
+    else {
+      this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.datosHora.id_empl_cargo).subscribe(res => {
+        console.log('entra departamento', res);
+        this.departamentos = res;
+        this.nuevaAutorizacionesForm.patchValue({
+          ordenF: 1,
+          estadoF: 2,
+          idDepartamentoF: this.departamentos[0].id_departamento
+        })
+      })
+    }
+  }
+
   resEstado: any = [];
   EditarEstadoPlan(id_hora, id_departamento, usuario_solicita, estado_hora) {
     let datosHorasExtras = {
       estado: estado_hora,
-      //id_hora_extra: id_hora,
-      //id_departamento: id_departamento,
     }
-    console.log('datos', datosHorasExtras);
-
     this.restPlanH.EditarEstado(id_hora, datosHorasExtras).subscribe(res => {
       this.resEstado = [res];
+    })
+  }
 
-      console.log('estado', this.resEstado);
-     //console.log(this.resEstado[0].realtime[0].estado);
-      var f = new Date();
-      // let nomEstado = '';
-      // this.estados.forEach(obj => {
-      //   if(obj.valor = form.estadoForm) {
-      //     nomEstado = obj.nombre
-      //   }
-      // })
-      /*  let notificacion = {
-          id: null,
-          id_send_empl: this.id_empleado_loggin,
-          id_receives_empl: usuario_solicita,
-          id_receives_depa: id_departamento,
-          estado: this.resEstado[0].realtime[0].estado,
-          create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
-          id_permiso: null,
-          id_vacaciones: null,
-          id_hora_extra: id_hora
-        }
-        console.log('noti', notificacion, this.id_empleado_loggin);
-  
-        this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res1 => {
-          console.log(res1);
-          this.NotifiRes = res1;
-          notificacion.id = this.NotifiRes._id;
-          if (this.NotifiRes._id > 0 && this.resEstado[0].notificacion === true) {
-            this.restH.sendNotiRealTime(notificacion);
-          }
-        });*/
+  NotificarPlanificacion(id_empleado_recibe) {
+    let mensaje = {
+      id_empl_envia: this.id_user_loggin,
+      id_empl_recive: id_empleado_recibe,
+      mensaje: 'Horas Extras realizadas Autorizadas'
+    }
+    //console.log(mensaje);
+    this.restPlanH.EnviarMensajePlanificacion(mensaje).subscribe(res => {
+      console.log(res.message);
+      this.toastr.success(res.message);
     })
   }
 

@@ -48,11 +48,15 @@ export class AutorizacionService {
     return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/estado-permiso/multiple`, datos);
   }
 
-  PutEstadoAutoVacacion(id: number, datos: any) {
-    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-vacacion`, datos);
+  PutEstadoAutoVacacion(datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/estado-vacacion`, datos);
   }
 
   PutEstadoAutoHoraExtra(id: number, datos: any) {
     return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-hora-extra`, datos);
+  }
+
+  PutEstadoAutoPlanHoraExtra(id: number, datos: any) {
+    return this.http.put(`${this.AUTORIZACIONES_URL}/autorizaciones/${id}/estado-plan-hora-extra`, datos);
   }
 }

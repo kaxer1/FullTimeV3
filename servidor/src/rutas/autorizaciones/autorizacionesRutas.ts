@@ -17,8 +17,9 @@ class DepartamentoRutas {
         this.router.post('/', TokenValidation, AUTORIZACIONES_CONTROLADOR.CrearAutorizacion);
         this.router.put('/:id/estado-permiso', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoPermiso);
         this.router.put('/estado-permiso/multiple', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoAutorizacionPermiso);
-        this.router.put('/:id/estado-vacacion', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoVacacion);
+        this.router.put('/estado-vacacion', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoVacacion);
         this.router.put('/:id_hora_extra/estado-hora-extra', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoHoraExtra);
+        this.router.put('/:id_plan_hora_extra/estado-plan-hora-extra', TokenValidation, AUTORIZACIONES_CONTROLADOR.ActualizarEstadoPlanificacion);
     }
 }
 

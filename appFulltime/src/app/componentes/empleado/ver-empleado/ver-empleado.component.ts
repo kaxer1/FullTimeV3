@@ -888,16 +888,21 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* Ventana para registrar vacaciones del empleado */
   AbrirVentanaVacaciones(): void {
-    this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion)
-      this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } })
-        .afterClosed().subscribe(item => {
-          this.obtenerVacaciones(parseInt(this.idEmpleado));
-        });
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idPerVacacion = datos;
+        console.log("idPerVaca ", this.idPerVacacion)
+        this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
+          { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato, idCargo: this.idCargo[0].max } })
+          .afterClosed().subscribe(item => {
+            this.obtenerVacaciones(parseInt(this.idEmpleado));
+          });
+      }, error => {
+        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 

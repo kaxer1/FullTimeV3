@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
-const settingsMail_1 = require("../../libs/settingsMail");
 const nodemailer = require("nodemailer");
 class AutorizacionesControlador {
     ListarAutorizaciones(req, res) {
@@ -148,25 +147,28 @@ class AutorizacionesControlador {
     }
     ActualizarEstadoVacacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
-            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
-            const JefeDepartamento = yield database_1.default.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
-            const InfoVacacionesReenviarEstadoEmpleado = yield database_1.default.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND pv.estado = 1 AND co.id_empleado = e.id AND e.id = $2', [id_vacaciones, id_empleado]);
+            //const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
+            const { id_documento, estado, id_vacacion } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_vacacion = $3', [estado, id_documento, id_vacacion]);
+            res.jsonp({ message: 'Autorizacion guardado' });
+            /*  const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo, e.apellido FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
+            const InfoVacacionesReenviarEstadoEmpleado = await pool.query('SELECT v.id, v.estado, v.fec_inicio, v.fec_final, v.fec_ingreso, e.id AS id_empleado, e.cedula, e.nombre, e.apellido, e.correo, co.vaca_mail, co.vaca_noti FROM vacaciones AS v, peri_vacaciones AS pv, empl_contratos AS c, empleados AS e, config_noti AS co WHERE v.id = $1 AND v.id_peri_vacacion = pv.id AND c.id = pv.id_empl_contrato AND pv.estado = 1 AND co.id_empleado = e.id AND e.id = $2', [id_vacaciones, id_empleado]);
             // console.log(JefeDepartamento.rows)
-            // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)   
+            // console.log(InfoVacacionesReenviarEstadoEmpleado.rows)
             const estadoAutorizacion = [
                 { id: 1, nombre: 'Pendiente' },
                 { id: 2, nombre: 'Pre-autorizado' },
                 { id: 3, nombre: 'Autorizado' },
                 { id: 4, nombre: 'Negado' },
             ];
+    
             let nombreEstado = '';
             estadoAutorizacion.forEach(obj => {
                 if (obj.id === estado) {
-                    nombreEstado = obj.nombre;
+                    nombreEstado = obj.nombre
                 }
-            });
+            })
+    
             JefeDepartamento.rows.forEach(obj => {
                 var url = `${process.env.URL_DOMAIN}/datosEmpleado`;
                 InfoVacacionesReenviarEstadoEmpleado.rows.forEach(ele => {
@@ -177,41 +179,40 @@ class AutorizacionesControlador {
                         id_permiso: null,
                         id_vacaciones: id_vacaciones,
                         id_hora_extra: null,
-                    };
+                    }
+    
                     let data = {
                         from: obj.correo,
                         to: ele.correo,
                         subject: 'Estado de la Autorización de Vacaciones',
                         html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
-                    cédula ${obj.cedula} a cambiado el estado de la Autorización de su solicitud de vacaciones a: <b>${nombreEstado}</b></p>
-                    <h4><b>Informacion de las vacaciones</b></h4>
-                    <ul>
-                        <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
-                        <li><b>Cédula</b>: ${ele.cedula} </li>
-                        <li><b>Sucursal</b>: ${obj.sucursal} </li>
-                        <li><b>Departamento</b>: ${obj.departamento} </li>
-                        <li><b>Fecha inicio </b>: ${ele.fec_inicio.toLocaleString().split(" ")[0]} </li> 
-                        <li><b>Fecha final </b>: ${ele.fec_final.toLocaleString().split(" ")[0]} </li>
-                        <li><b>Fecha ingresa </b>: ${ele.fec_ingreso.toLocaleString().split(" ")[0]} </li>
-                        </ul>
-                    <a href="${url}">Ir a verificar estado permisos</a>`
+                        cédula ${obj.cedula} a cambiado el estado de la Autorización de su solicitud de vacaciones a: <b>${nombreEstado}</b></p>
+                        <h4><b>Informacion de las vacaciones</b></h4>
+                        <ul>
+                            <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
+                            <li><b>Cédula</b>: ${ele.cedula} </li>
+                            <li><b>Sucursal</b>: ${obj.sucursal} </li>
+                            <li><b>Departamento</b>: ${obj.departamento} </li>
+                            <li><b>Fecha inicio </b>: ${ele.fec_inicio.toLocaleString().split(" ")[0]} </li>
+                            <li><b>Fecha final </b>: ${ele.fec_final.toLocaleString().split(" ")[0]} </li>
+                            <li><b>Fecha ingresa </b>: ${ele.fec_ingreso.toLocaleString().split(" ")[0]} </li>
+                            </ul>
+                        <a href="${url}">Ir a verificar estado permisos</a>`
                     };
+    
                     if (ele.vaca_mail === true && ele.vaca_noti === true) {
-                        settingsMail_1.enviarMail(data);
+                        enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-                    }
-                    else if (ele.vaca_mail === true && ele.vaca_noti === false) {
-                        settingsMail_1.enviarMail(data);
+                    } else if (ele.vaca_mail === true && ele.vaca_noti === false) {
+                        enviarMail(data);
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-                    }
-                    else if (ele.vaca_mail === false && ele.vaca_noti === true) {
+                    } else if (ele.vaca_mail === false && ele.vaca_noti === true) {
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-                    }
-                    else if (ele.vaca_mail === false && ele.vaca_noti === false) {
+                    } else if (ele.vaca_mail === false && ele.vaca_noti === false) {
                         res.json({ message: 'Estado de las vacaciones actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
                     }
                 });
-            });
+            });*/
         });
     }
     ActualizarEstadoHoraExtra(req, res) {
@@ -220,6 +221,74 @@ class AutorizacionesControlador {
             //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
             const { id_documento, estado } = req.body;
             yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_hora_extra = $3', [estado, id_documento, id]);
+            res.jsonp({ message: 'Autorizacion guardado' });
+            /*const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
+            const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo, c.hora_extra_mail, c.hora_extra_noti FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h, config_noti AS c WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita AND e.id = c.id_empleado ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
+    
+            const estadoAutorizacion = [
+                { id: 1, nombre: 'Pendiente' },
+                { id: 2, nombre: 'Pre-autorizado' },
+                { id: 3, nombre: 'Autorizado' },
+                { id: 4, nombre: 'Negado' },
+            ];
+    
+            let nombreEstado = '';
+            estadoAutorizacion.forEach(obj => {
+                if (obj.id === estado) {
+                    nombreEstado = obj.nombre
+                }
+            })
+    
+            JefeDepartamento.rows.forEach(obj => {
+                var url = `${process.env.URL_DOMAIN}/horaExtraEmpleado`;
+                InfoHoraExtraReenviarEstadoEmpleado.rows.forEach(ele => {
+                    let notifi_realtime = {
+                        id_send_empl: obj.empleado,
+                        id_receives_depa: obj.id_dep,
+                        estado: nombreEstado,
+                        id_permiso: null,
+                        id_vacaciones: null,
+                        id_hora_extra: id_hora_extra
+                    }
+    
+                    let data = {
+                        from: obj.correo,
+                        to: ele.correo,
+                        subject: 'Estado de la Autorización de Hora Extra',
+                        html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
+                        cédula ${obj.cedula} a cambiado el estado de la Autorización de su solicitud de hora extra a: <b>${nombreEstado}</b></p>
+                        <h4><b>Informacion de las vacaciones</b></h4>
+                        <ul>
+                            <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
+                            <li><b>Cédula</b>: ${ele.cedula} </li>
+                            <li><b>Sucursal</b>: ${obj.sucursal} </li>
+                            <li><b>Departamento</b>: ${obj.departamento} </li>
+                            </ul>
+                        <a href="${url}">Ir a verificar estado hora extra</a>`
+                    };
+    
+                    if (ele.hora_extra_mail === true && ele.hora_extra_noti === true) {
+                        enviarMail(data);
+                        res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
+                    } else if (ele.hora_extra_mail === true && ele.hora_extra_noti === false) {
+                        enviarMail(data);
+                        res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
+                    } else if (ele.hora_extra_mail === false && ele.hora_extra_noti === true) {
+                        res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
+                    } else if (ele.hora_extra_mail === false && ele.hora_extra_noti === false) {
+                        res.json({ message: 'Estado de las hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
+                    }
+    
+                });
+            });*/
+        });
+    }
+    ActualizarEstadoPlanificacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_plan_hora_extra;
+            //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
+            const { id_documento, estado } = req.body;
+            yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_plan_hora_extra = $3', [estado, id_documento, id]);
             res.jsonp({ message: 'Autorizacion guardado' });
             /*const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.cedula, e.correo FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id', [id_departamento]);
             const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo, c.hora_extra_mail, c.hora_extra_noti FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h, config_noti AS c WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita AND e.id = c.id_empleado ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);

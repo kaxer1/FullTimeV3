@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import {enviarMail, email} from '../../libs/settingsMail'
+import { enviarMail, email } from '../../libs/settingsMail'
 
 class PlanHoraExtraControlador {
 
@@ -14,7 +14,7 @@ class PlanHoraExtraControlador {
       'FROM empleados AS e, (SELECT * FROM timbres_entrada_plan_hora_extra AS tehe ' +
       'FULL JOIN timbres_salida_plan_hora_extra AS tshe ' +
       'ON tehe.fecha_timbre_e = tshe.fecha_timbre AND tehe.id_empl = tshe.id_empleado) AS t ' +
-      'WHERE t.observacion = false AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = \'1\' OR t.estado = \'2\')');
+      'WHERE t.observacion = false AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = 1 OR t.estado = 2)');
     if (PLAN.rowCount > 0) {
       res.jsonp(PLAN.rows);
     }
@@ -33,7 +33,26 @@ class PlanHoraExtraControlador {
       'FROM empleados AS e, (SELECT * FROM timbres_entrada_plan_hora_extra AS tehe ' +
       'FULL JOIN timbres_salida_plan_hora_extra AS tshe ' +
       'ON tehe.fecha_timbre_e = tshe.fecha_timbre AND tehe.id_empl = tshe.id_empleado) AS t ' +
-      'WHERE t.observacion = true AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = \'1\' OR t.estado = \'2\')');
+      'WHERE t.observacion = true AND (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = 1 OR t.estado = 2)');
+    if (PLAN.rowCount > 0) {
+      res.jsonp(PLAN.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarPlanHoraExtraAutorizada(req: Request, res: Response) {
+    const PLAN = await pool.query('SELECT e.id AS empl_id, e.codigo, e.cedula, e.nombre, e.apellido, ' +
+      't.id_empl_cargo, t.id_empl_contrato, t.id_plan_extra, t.tiempo_autorizado, t.fecha_desde, t.fecha_hasta, ' +
+      't.hora_inicio, t.hora_fin, (t.h_fin::interval - t.h_inicio::interval)::time AS hora_total_plan, ' +
+      't.fecha_timbre, t.timbre_entrada, t.timbre_salida, ' +
+      '(t.timbre_salida::interval - t.timbre_entrada::interval)::time AS hora_total_timbre, t.observacion, ' +
+      't.estado AS plan_estado ' +
+      'FROM empleados AS e, (SELECT * FROM timbres_entrada_plan_hora_extra AS tehe ' +
+      'FULL JOIN timbres_salida_plan_hora_extra AS tshe ' +
+      'ON tehe.fecha_timbre_e = tshe.fecha_timbre AND tehe.id_empl = tshe.id_empleado) AS t ' +
+      'WHERE (e.id = t.id_empleado OR e.id = t.id_empl) AND (t.estado = 3 OR t.estado = 4)');
     if (PLAN.rowCount > 0) {
       res.jsonp(PLAN.rows);
     }
@@ -263,7 +282,7 @@ class PlanHoraExtraControlador {
   }
 
   public async EnviarCorreoNotificacion(req: Request, res: Response): Promise<void> {
-    let {id_empl_envia, id_empl_recive, mensaje} = req.body;
+    let { id_empl_envia, id_empl_recive, mensaje } = req.body;
 
     var f = new Date();
     f.setUTCHours(f.getHours())
@@ -271,11 +290,11 @@ class PlanHoraExtraControlador {
     let create_at = f.toJSON();
     let tipo = 1; // es el tipo de aviso 
     // console.log(id_empl_envia, id_empl_recive, create_at, mensaje, tipo);
-    await pool.query('INSERT INTO realtime_timbres(create_at, id_send_empl, id_receives_empl, descripcion, tipo) VALUES($1, $2, $3, $4, $5)',[create_at,id_empl_envia,id_empl_recive, mensaje, tipo]);
+    await pool.query('INSERT INTO realtime_timbres(create_at, id_send_empl, id_receives_empl, descripcion, tipo) VALUES($1, $2, $3, $4, $5)', [create_at, id_empl_envia, id_empl_recive, mensaje, tipo]);
 
-    const Envia = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1',[id_empl_envia]).then(resultado => {return resultado.rows[0]});
-    const Recibe = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1',[id_empl_recive]).then(resultado => {return resultado.rows[0]});
-    
+    const Envia = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_envia]).then(resultado => { return resultado.rows[0] });
+    const Recibe = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_recive]).then(resultado => { return resultado.rows[0] });
+
     let data = {
       // from: Envia.correo,
       from: email,
@@ -286,10 +305,51 @@ class PlanHoraExtraControlador {
             `
     };
 
-    
+
     enviarMail(data);
 
-    res.jsonp({message: 'Se envio notificacion y correo electrónico.'})
+    res.jsonp({ message: 'Se envio notificacion y correo electrónico.' })
+  }
+
+  public async ObtenerDatosAutorizacion(req: Request, res: Response) {
+    const id = req.params.id_plan_extra;
+    const SOLICITUD = await pool.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
+      'p.id AS id_plan_extra FROM autorizaciones AS a, plan_hora_extra AS p ' +
+      'WHERE p.id = a.id_plan_hora_extra AND p.id = $1', [id]);
+    if (SOLICITUD.rowCount > 0) {
+      return res.json(SOLICITUD.rows)
+    }
+    else {
+      return res.status(404).json({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async EnviarCorreoPlanificacion(req: Request, res: Response): Promise<void> {
+    let { id_empl_envia, id_empl_recive, mensaje } = req.body;
+
+    var f = new Date();
+    f.setUTCHours(f.getHours())
+
+    let create_at = f.toJSON();
+    let tipo = 1; // es el tipo de aviso 
+    // console.log(id_empl_envia, id_empl_recive, create_at, mensaje, tipo);
+    await pool.query('INSERT INTO realtime_timbres(create_at, id_send_empl, id_receives_empl, descripcion, tipo) VALUES($1, $2, $3, $4, $5)', [create_at, id_empl_envia, id_empl_recive, mensaje, tipo]);
+
+    const Envia = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_envia]).then(resultado => { return resultado.rows[0] });
+    const Recibe = await pool.query('SELECT nombre, apellido, correo FROM empleados WHERE id = $1', [id_empl_recive]).then(resultado => { return resultado.rows[0] });
+console.log(Envia.correo, 'djjj', Recibe.correo)
+    let data = {
+      // from: Envia.correo,
+      from: email,
+      to: Recibe.correo,
+      subject: 'Planificación de Horas Extras',
+      html: `<p><h4><b>${Envia.nombre} ${Envia.apellido}</b> </h4> escribe: <b>${mensaje}</b> 
+            <h4>A usted: <b>${Recibe.nombre} ${Recibe.apellido} </b></h4>
+            `
+    };
+    enviarMail(data);
+
+    res.jsonp({ message: 'Se envio notificacion y correo electrónico.' })
   }
 }
 

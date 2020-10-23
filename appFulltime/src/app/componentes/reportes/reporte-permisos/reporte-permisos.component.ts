@@ -238,16 +238,19 @@ export class ReportePermisosComponent implements OnInit {
       if (permisos_horario.length != 0) {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
@@ -255,6 +258,20 @@ export class ReportePermisosComponent implements OnInit {
         this.toastr.info('El empleado no tiene registros de PERMISOS.')
       }
     })
+  }
+
+  // Ordenar los datos según el número de permiso
+  OrdenarDatos(array) {
+    function compare(a, b) {
+      if (a.num_permiso < b.num_permiso) {
+        return -1;
+      }
+      if (a.num_permiso > b.num_permiso) {
+        return 1;
+      }
+      return 0;
+    }
+    array.sort(compare);
   }
 
   // Obtener datos de la autorización de los permisos
@@ -305,6 +322,7 @@ export class ReportePermisosComponent implements OnInit {
           }
           // Verificamos si ya estan todos los datos y pasamos a generar los archivos
           if (this.verificar === this.consultaAutoriza.length) {
+            this.verificar = 0;
             if (archivo === 'pdf') {
               console.log('archivo', archivo)
               this.generarPdf('open', id_seleccionado);
@@ -338,16 +356,19 @@ export class ReportePermisosComponent implements OnInit {
       if (permisos_horario.length != 0) {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
@@ -749,7 +770,18 @@ export class ReportePermisosComponent implements OnInit {
                 }
                 break
               } else {
-                estado = obj.estado
+                if (obj.estado === 1) {
+                  estado = 'Pendiente'
+                }
+                else if (obj.estado === 2) {
+                  estado = 'Pre-autorizado'
+                }
+                else if (obj.estado === 3) {
+                  estado = 'Autorizado'
+                }
+                else if (obj.estado === 4) {
+                  estado = 'Negado'
+                }
               }
             }
             return [
@@ -785,7 +817,7 @@ export class ReportePermisosComponent implements OnInit {
   exportToExcel(id_empleado, form) {
     var totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
-   
+
     this.totalPermisos.forEach(obj => {
       console.log('auto', this.datosAutorizacion)
       this.datosAutorizacion.forEach(element => {
@@ -911,7 +943,18 @@ export class ReportePermisosComponent implements OnInit {
           }
           break
         } else {
-          estado = obj.estado
+          if (obj.estado === 1) {
+            estado = 'Pendiente'
+          }
+          else if (obj.estado === 2) {
+            estado = 'Pre-autorizado'
+          }
+          else if (obj.estado === 3) {
+            estado = 'Autorizado'
+          }
+          else if (obj.estado === 4) {
+            estado = 'Negado'
+          }
         }
       }
       return {

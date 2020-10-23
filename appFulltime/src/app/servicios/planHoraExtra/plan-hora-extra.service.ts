@@ -28,6 +28,10 @@ export class PlanHoraExtraService {
     return this.http.get(`${this.API_URL}/planificacionHoraExtra/justificar`);
   }
 
+  ConsultarPlanHoraExtraAutorizada() {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/autorizacion`);
+  }
+
   EditarObservacion(id: number, datos: any) {
     return this.http.put<any>(`${this.API_URL}/planificacionHoraExtra/observacion/${id}`, datos);
   }
@@ -38,5 +42,13 @@ export class PlanHoraExtraService {
 
   EnviarMensajeJustificacion(data: any) {
     return this.http.post<any>(`${this.API_URL}/planificacionHoraExtra/send/aviso/`, data);
+  }
+
+  EnviarMensajePlanificacion(data: any) {
+    return this.http.post<any>(`${this.API_URL}/planificacionHoraExtra/send/planifica/`, data);
+  }
+
+  BuscarDatosAutorizacion(id_hora_extra: number) {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/datosAutorizacion/${id_hora_extra}`);
   }
 }

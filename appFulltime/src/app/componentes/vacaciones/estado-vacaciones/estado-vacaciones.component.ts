@@ -1,11 +1,13 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl } from '@angular/forms';
+import * as moment from 'moment';
+
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 
 interface Estados {
-  valor: string;
+  valor: number;
   nombre: string
 }
 
@@ -17,10 +19,10 @@ interface Estados {
 export class EstadoVacacionesComponent implements OnInit {
 
   estados: Estados[] = [
-    { valor: 'Solicitado', nombre: 'Solicitado' },
-    { valor: 'Rechazado', nombre: 'Rechazado' },
-    { valor: 'Aceptado', nombre: 'Aceptado' },
-    { valor: 'Eliminado', nombre: 'Eliminado' }
+    { valor: 1, nombre: 'Pendiente' },
+    { valor: 2, nombre: 'Pre-autorizado' },
+    { valor: 3, nombre: 'Autorizado' },
+    { valor: 4, nombre: 'Negado' }
   ];
 
   estadoF = new FormControl('');
@@ -42,21 +44,10 @@ export class EstadoVacacionesComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.data);
-    var f = new Date();
-
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
-
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
     this.llenarForm();
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado')); 
-    
   }
 
   llenarForm(){

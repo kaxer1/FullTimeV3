@@ -2,12 +2,12 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as moment from 'moment';
 
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
-import { NotiAutorizacionesService } from 'src/app/servicios/catalogos/catNotiAutorizaciones/noti-autorizaciones.service';
-import { NotificacionesService } from 'src/app/servicios/catalogos/catNotificaciones/notificaciones.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
-import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 
 interface Orden {
   valor: number
@@ -31,7 +31,7 @@ export class VacacionAutorizacionesComponent implements OnInit {
   estado = new FormControl('', Validators.required);
   idCatNotificacion = new FormControl('', Validators.required);
   idCatNotiAutorizacion = new FormControl('', Validators.required);
-  idDepartamento = new FormControl('', Validators.required);
+  idDepartamento = new FormControl('');
 
   public nuevaAutorizacionesForm = new FormGroup({
     // idDocumentoF: this.idDocumento,
@@ -51,57 +51,159 @@ export class VacacionAutorizacionesComponent implements OnInit {
   ];
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente' },
+    //{ id: 1, nombre: 'Pendiente' },
     { id: 2, nombre: 'Pre-autorizado' },
     { id: 3, nombre: 'Autorizado' },
     { id: 4, nombre: 'Negado' },
   ];
 
+  id_empleado_loggin: number;
+  FechaActual: any;
+  NotifiRes: any;
+
   constructor(
     public restAutorizaciones: AutorizacionService,
     public restDepartamento: DepartamentosService,
+    private realTime: RealTimeService,
+    private restV: VacacionesService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<VacacionAutorizacionesComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log(this.data, 'data_vacaciones');
+    this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
     this.obtenerDepartamento();
   }
 
   insertarAutorizacion(form) {
+    if (this.data.carga === 'multiple') {
+      this.data.datosVacacion.map(obj => {
+        if (obj.estado === 'Pre-autorizado') {
+          this.restV.BuscarDatosAutorizacion(obj.id).subscribe(data => {
+            var documento = data[0].empleado_estado;
+            this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+              this.departamentos = res;
+              this.ActualizarDatos(form, documento, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
+            })
+          })
+        }
+        else {
+          this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+            this.departamentos = res;
+            this.IngresarDatos(form, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
+          })
+        }
+      })
+    }
+    else if (this.data.carga === undefined) {
+      this.IngresarDatos(form, this.data.id, form.idDepartamentoF, this.data.id_empleado);
+    }
+  }
+
+  IngresarDatos(form, id_vacacion: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para ingresar una autorización
     let newAutorizaciones = {
       orden: form.ordenF,
       estado: form.estadoF,
-      id_departamento: form.idDepartamentoF,
+      id_departamento: id_departamento,
       id_permiso: null,
-      id_vacacion: this.data.id,
+      id_vacacion: id_vacacion,
       id_hora_extra: null,
       id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       id_plan_hora_extra: null,
-      // id_documento: form.idDocumentoF
     }
-    console.log(newAutorizaciones);
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
-        this.limpiarCampos();
-        this.dialogRef.close();
-    }, error => {
-      console.log(error);
+      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      this.EditarEstadoVacacion(form, id_vacacion, empleado_solicita, id_departamento);
+      this.limpiarCampos();
+      this.dialogRef.close();
+    }, error => { })
+  }
+
+  ActualizarDatos(form, documento, id_vacacion: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para actualizar la autorización de acuerdo al permiso
+    let newAutorizacionesM = {
+      id_documento: documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      estado: form.estadoF,
+      id_vacacion: id_vacacion,
+    }
+    this.restAutorizaciones.PutEstadoAutoVacacion(newAutorizacionesM).subscribe(resA => {
+      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
+      this.EditarEstadoVacacion(form, id_vacacion, empleado_solicita, id_departamento);
+      this.limpiarCampos();
+      this.dialogRef.close();
     })
   }
 
+  resVacacion: any = [];
+  EditarEstadoVacacion(form, id_vacacion, id_empleado, id_departamento) {
+    let datosVacacion = {
+      estado: form.estadoF,
+      id_vacacion: id_vacacion,
+      id_rece_emp: id_empleado,
+      id_depa_send: id_departamento
+    }
+    this.restV.ActualizarEstado(id_vacacion, datosVacacion).subscribe(respon => {
+      this.resVacacion = respon
+      console.log(this.resVacacion);
+      var f = new Date();
+      var estado_letras: string = '';
+      if (form.estadoF === 1) {
+        estado_letras = 'Pendiente';
+      }
+      else if (form.estadoF === 2) {
+        estado_letras = 'Pre-autorizado';
+      }
+      else if (form.estadoF === 3) {
+        estado_letras = 'Autorizado';
+      }
+      else if (form.estadoF === 4) {
+        estado_letras = 'Negado';
+      }
+      let notificacion = {
+        id: null,
+        id_send_empl: this.id_empleado_loggin,
+        id_receives_empl: id_empleado,
+        id_receives_depa: id_departamento,
+        estado: estado_letras,
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+        id_vacaciones: id_vacacion,
+        id_permiso: null
+      }
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+        this.NotifiRes = res;
+        console.log(this.NotifiRes);
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0 && this.resVacacion.notificacion === true) {
+          this.restV.sendNotiRealTime(notificacion);
+        }
+      });
+    });
+  }
+
+  Habilitado: boolean = true;
   obtenerDepartamento() {
-    this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_contrato).subscribe(res => {
-      console.log(res);
-      this.departamentos = res;
+    if (this.data.carga === 'multiple') {
       this.nuevaAutorizacionesForm.patchValue({
         ordenF: 1,
-        estadoF: 1,
-        idDepartamentoF: this.departamentos[0].id_departamento
+        estadoF: 2,
+      });
+      this.Habilitado = false;
+    }
+    else {
+      this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_empl_cargo).subscribe(res => {
+        this.departamentos = res;
+        this.nuevaAutorizacionesForm.patchValue({
+          ordenF: 1,
+          estadoF: 2,
+          idDepartamentoF: this.departamentos[0].id_departamento
+        })
       })
-    })
+    }
   }
 
   limpiarCampos() {

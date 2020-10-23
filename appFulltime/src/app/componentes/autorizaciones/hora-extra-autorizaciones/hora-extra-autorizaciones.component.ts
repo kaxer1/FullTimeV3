@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ɵbypassSanitizationTrustStyle } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -71,14 +71,14 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.data, 'datammmmmm');
+    console.log(this.data, 'datam');
     this.obtenerDepartamento();
     this.tiempo();
   }
 
   insertarAutorizacion(form) {
     if (this.data.carga === 'individual') {
-      this.IngresarDatos(form, this.data.datosHora.id, form.idDepartamentoF, this.data.datosHora.id_usua_solicita);
+    this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
     }
     else if (this.data.carga === 'multiple') {
       this.data.datosHora.map(obj => {
@@ -105,8 +105,8 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
   }
 
   obtenerDepartamento() {
-    if (this.data.carga != 'individual' && this.data.carga != 'multiple') {
-      this.BusquedaDepartamento(this.data.id_empl_cargo);
+    if (this.data.carga === 'individual') {
+      this.BusquedaDepartamento(this.data.pedido_hora.id_empl_cargo);
     }
     else {
       this.nuevaAutorizacionesForm.patchValue({
@@ -119,7 +119,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
 
   BusquedaDepartamento(cargo_id) {
     this.restDepartamento.ConsultarDepartamentoPorContrato(cargo_id).subscribe(res => {
-      console.log(res);
+      console.log(res, 'departamentos');
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
         ordenF: 1,
@@ -150,6 +150,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
     }
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      console.log('pasa')
       this.EditarEstadoHoraExtra(id_hora_extra, id_departamento, empleado_solicita, form.estadoF)
       this.limpiarCampos();
       this.dialogRef.close();
@@ -174,6 +175,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
 
   resEstado: any = [];
   EditarEstadoHoraExtra(id_hora, id_departamento, usuario_solicita, estado_hora) {
+    console.log('estado', estado_hora)
     let datosHorasExtras = {
       estado: estado_hora,
       id_hora_extra: id_hora,
