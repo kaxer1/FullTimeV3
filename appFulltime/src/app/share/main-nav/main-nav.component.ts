@@ -354,10 +354,10 @@ export class MainNavComponent implements OnInit {
         ]
       },
       {
-        name: 'Notificaciones',
+        name: 'Solicitudes',
         accion: true,
         estado: true,
-        icono: 'notifications',
+        icono: 'email',
         children: [
           {name: 'Notificaciones', url: '/suc-notificaciones'},
           {name: 'Configurar Permisos', url: '/verTipoPermiso'},

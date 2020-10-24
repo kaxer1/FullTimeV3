@@ -5,13 +5,15 @@ import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// Librería para manejar fechas
 import * as moment from 'moment';
 moment.locale('es');
+// Librería para generar archivos PDF
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// Librería para generar archivos EXCEL
 import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
@@ -35,7 +37,6 @@ export class ReportePermisosComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-  nacionalidades: any = [];
 
   // Arreglo datos contrato actual
   datosContratoA: any = [];
@@ -991,64 +992,6 @@ export class ReportePermisosComponent implements OnInit {
     else {
       xlsx.writeFile(wb, "Permisos - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
     }
-
-  }
-
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  urlxml: string;
-  data: any = [];
-  exportToXML() {
-    var objeto;
-    var arregloEmpleado = [];
-    this.empleado.forEach(obj => {
-      let nacionalidad;
-      this.nacionalidades.forEach(element => {
-        if (obj.id_nacionalidad == element.id) {
-          nacionalidad = element.nombre;
-        }
-      });
-
-      objeto = {
-        "empleado": {
-          '@id': obj.id,
-          "cedula": obj.cedula,
-          "apellido": obj.apellido,
-          "nombre": obj.nombre,
-
-
-          "correo": obj.correo,
-          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
-
-          "correoAlternativo": obj.mail_alternativo,
-          "domicilio": obj.domicilio,
-          "telefono": obj.telefono,
-          "nacionalidad": nacionalidad,
-          "imagen": obj.imagen
-        }
-      }
-      arregloEmpleado.push(objeto)
-    });
-
-    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
-      console.log(arregloEmpleado)
-      this.data = res;
-      console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
-
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
-    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
 
 }

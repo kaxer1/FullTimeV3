@@ -25,6 +25,7 @@ class ReportesControlador {
     }
 
     public async ListarEntradaSalidaEmpleado(req: Request, res: Response) {
+        // id_empleado hace referencia al código del empleado
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
         const DATOS = await pool.query('SELECT * FROM TimbresEntrada AS te INNER JOIN TimbresSalida AS ts ' +
@@ -204,8 +205,8 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
-            'AND dh.tipo_accion = \'E\') AS h ON e.empl_id = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
-            'ON t.id_empleado = h.empl_id AND t.accion LIKE \'E\' AND ' +
+            'AND dh.tipo_accion = \'E\') AS h ON e.codigo = $1::varchar(15) AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado::varchar(15) = h.codigo AND t.accion LIKE \'E\' AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
             't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
@@ -230,8 +231,8 @@ class ReportesControlador {
             'deta_horarios AS dh ' +
             'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = \'E\' AND ' +
             'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
-            'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
-            'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+            'ON e.codigo = $1::varchar(15) AND cargo_id = ph.id_cargo) AS ph ' +
+            'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
             'AND t.accion LIKE \'E\' AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
             'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
@@ -254,8 +255,8 @@ class ReportesControlador {
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ) AS h ' +
-            'ON e.empl_id = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
-            'ON t.id_empleado = h.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
+            'ON e.codigo::int = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado::varchar(15) = h.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
             'AND t.accion = h.tipo_accion ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
@@ -280,8 +281,8 @@ class ReportesControlador {
             'deta_horarios AS dh ' +
             'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND ' +
             'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
-            'ON e.empl_id = $1 AND cargo_id = ph.id_cargo) AS ph ' +
-            'ON t.id_empleado = ph.empl_id AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+            'ON e.codigo::int = $1 AND cargo_id = ph.id_cargo) AS ph ' +
+            'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
             'AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
             'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion ' +
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);

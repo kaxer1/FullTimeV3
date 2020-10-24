@@ -39,5 +39,9 @@ export class CiudadFeriadosService {
   EliminarRegistro(id: number){
     return this.http.delete(`${this.API_URL}/ciudadFeriados/eliminar/${id}`);
   }
+
+  BuscarFeriados(id_ciudad: number){
+    return this.http.get(`${this.API_URL}/ciudadFeriados/ciudad/${id_ciudad}`);
+  }
   
 }

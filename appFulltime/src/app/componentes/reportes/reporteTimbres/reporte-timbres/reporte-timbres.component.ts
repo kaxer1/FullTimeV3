@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// Librería para formato de fechas
 import * as moment from 'moment';
 moment.locale('es');
+// Librería para generar archivos PDF
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// Librería para generar archivos EXCEL
 import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
@@ -34,7 +36,6 @@ export class ReporteTimbresComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-  nacionalidades: any = [];
 
   // Arreglo datos contrato actual
   datosContratoA: any = [];
@@ -94,7 +95,6 @@ export class ReporteTimbresComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
     this.ObtenerLogo();
@@ -128,11 +128,13 @@ export class ReporteTimbresComponent implements OnInit {
     });
   }
 
+  // Evento para manejar la páginación
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
+  // Lista de datos de empleados
   cont: number = 0;
   contador: number = 0;
   iteracion: number = 0;
@@ -211,6 +213,7 @@ export class ReporteTimbresComponent implements OnInit {
     });
   }
 
+  // Control para verificar ingreso de fechas
   timbres: any = [];
   VerTimbresEmpleado(id_seleccionado, form, archivo) {
     if (form.inicioForm === '' || form.finalForm === '') {
@@ -298,12 +301,6 @@ export class ReporteTimbresComponent implements OnInit {
     this.fechaFinalF.reset();
   }
 
-  ObtenerNacionalidades() {
-    this.rest.getListaNacionalidades().subscribe(res => {
-      this.nacionalidades = res;
-    });
-  }
-
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
@@ -364,7 +361,7 @@ export class ReporteTimbresComponent implements OnInit {
       content: [
         { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
-          if (obj.id === id_seleccionado) {
+          if (obj.codigo === id_seleccionado) {
             return [
               { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
               { text: 'REPORTE TIMBRES', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
@@ -387,7 +384,7 @@ export class ReporteTimbresComponent implements OnInit {
   presentarDatosGenerales(id_seleccionado, form) {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     this.datosEmpleado.forEach(obj => {
-      if (obj.id === id_seleccionado) {
+      if (obj.codigo === id_seleccionado) {
         nombre = obj.nombre;
         apellido = obj.apellido;
         cedula = obj.cedula;
@@ -514,9 +511,9 @@ export class ReporteTimbresComponent implements OnInit {
     *                                       MÉTODO PARA EXPORTAR A EXCEL
     ******************************************************************************************************/
   exportToExcelTimbres(id_empleado: number, form) {
-    var i = 0;
+    var j = 0;
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
-      if (this.datosEmpleado[i].id === id_empleado) {
+      if (this.datosEmpleado[i].codigo === id_empleado) {
         var datosEmpleado = [{
           CODIGO: this.datosEmpleado[i].codigo,
           NOMBRE: this.datosEmpleado[i].nombre,
@@ -561,7 +558,7 @@ export class ReporteTimbresComponent implements OnInit {
       }
       var day = moment(obj.fec_hora_timbre).day()
       return {
-        N_REGISTROS: i = i + 1,
+        N_REGISTROS: j = j + 1,
         DIA_TIMBRE: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
         FECHA_TIMBRE: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
         HORA_TIMBRE: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
@@ -604,64 +601,6 @@ export class ReporteTimbresComponent implements OnInit {
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
     xlsx.writeFile(wb, "Timbres - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
-  }
-
-
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  urlxml: string;
-  data: any = [];
-  exportToXML() {
-    var objeto;
-    var arregloEmpleado = [];
-    this.empleado.forEach(obj => {
-      let nacionalidad;
-      this.nacionalidades.forEach(element => {
-        if (obj.id_nacionalidad == element.id) {
-          nacionalidad = element.nombre;
-        }
-      });
-
-      objeto = {
-        "empleado": {
-          '@id': obj.id,
-          "cedula": obj.cedula,
-          "apellido": obj.apellido,
-          "nombre": obj.nombre,
-
-
-          "correo": obj.correo,
-          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
-
-          "correoAlternativo": obj.mail_alternativo,
-          "domicilio": obj.domicilio,
-          "telefono": obj.telefono,
-          "nacionalidad": nacionalidad,
-          "imagen": obj.imagen
-        }
-      }
-      arregloEmpleado.push(objeto)
-    });
-
-    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
-      console.log(arregloEmpleado)
-      this.data = res;
-      console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
-
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
-    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
 
 }
