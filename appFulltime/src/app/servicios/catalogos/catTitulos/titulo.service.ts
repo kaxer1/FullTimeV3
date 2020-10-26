@@ -34,4 +34,8 @@ export class TituloService {
     return this.http.delete(`${this.TITULO_URL}/titulo/eliminar/${id}`);
   }
 
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${this.TITULO_URL}/titulo/xmlDownload`, data);
+  }
+
 }

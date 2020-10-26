@@ -5,13 +5,15 @@ import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// Librería para manejar fechas
 import * as moment from 'moment';
 moment.locale('es');
+// Librería para generar archivos PDF
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// Librería para generar archivos EXCEL
 import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
@@ -35,7 +37,6 @@ export class ReportePermisosComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-  nacionalidades: any = [];
 
   // Arreglo datos contrato actual
   datosContratoA: any = [];
@@ -238,16 +239,19 @@ export class ReportePermisosComponent implements OnInit {
       if (permisos_horario.length != 0) {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
@@ -255,6 +259,20 @@ export class ReportePermisosComponent implements OnInit {
         this.toastr.info('El empleado no tiene registros de PERMISOS.')
       }
     })
+  }
+
+  // Ordenar los datos según el número de permiso
+  OrdenarDatos(array) {
+    function compare(a, b) {
+      if (a.num_permiso < b.num_permiso) {
+        return -1;
+      }
+      if (a.num_permiso > b.num_permiso) {
+        return 1;
+      }
+      return 0;
+    }
+    array.sort(compare);
   }
 
   // Obtener datos de la autorización de los permisos
@@ -305,6 +323,7 @@ export class ReportePermisosComponent implements OnInit {
           }
           // Verificamos si ya estan todos los datos y pasamos a generar los archivos
           if (this.verificar === this.consultaAutoriza.length) {
+            this.verificar = 0;
             if (archivo === 'pdf') {
               console.log('archivo', archivo)
               this.generarPdf('open', id_seleccionado);
@@ -338,16 +357,19 @@ export class ReportePermisosComponent implements OnInit {
       if (permisos_horario.length != 0) {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
+        this.OrdenarDatos(this.totalPermisos);
         console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
@@ -502,27 +524,27 @@ export class ReportePermisosComponent implements OnInit {
               {
                 text: [{
                   text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                  alignment: 'left', color: 'blue', opacity: 0.5
+                  alignment: 'left', opacity: 0.3
                 }]
               },
               {
                 text: [{
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
                 }],
               }
-            ], fontSize: 9, color: '#A4B8FF',
+            ], fontSize: 9
           }
         ]
 
       },
       // Título del archivo y sumatoria de cálculos
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),
@@ -539,7 +561,7 @@ export class ReportePermisosComponent implements OnInit {
         tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color, },
         itemsTableS: { fontSize: 9, alignment: 'center', },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }
@@ -749,7 +771,18 @@ export class ReportePermisosComponent implements OnInit {
                 }
                 break
               } else {
-                estado = obj.estado
+                if (obj.estado === 1) {
+                  estado = 'Pendiente'
+                }
+                else if (obj.estado === 2) {
+                  estado = 'Pre-autorizado'
+                }
+                else if (obj.estado === 3) {
+                  estado = 'Autorizado'
+                }
+                else if (obj.estado === 4) {
+                  estado = 'Negado'
+                }
               }
             }
             return [
@@ -785,7 +818,7 @@ export class ReportePermisosComponent implements OnInit {
   exportToExcel(id_empleado, form) {
     var totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
-   
+
     this.totalPermisos.forEach(obj => {
       console.log('auto', this.datosAutorizacion)
       this.datosAutorizacion.forEach(element => {
@@ -911,7 +944,18 @@ export class ReportePermisosComponent implements OnInit {
           }
           break
         } else {
-          estado = obj.estado
+          if (obj.estado === 1) {
+            estado = 'Pendiente'
+          }
+          else if (obj.estado === 2) {
+            estado = 'Pre-autorizado'
+          }
+          else if (obj.estado === 3) {
+            estado = 'Autorizado'
+          }
+          else if (obj.estado === 4) {
+            estado = 'Negado'
+          }
         }
       }
       return {
@@ -948,64 +992,6 @@ export class ReportePermisosComponent implements OnInit {
     else {
       xlsx.writeFile(wb, "Permisos - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
     }
-
-  }
-
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  urlxml: string;
-  data: any = [];
-  exportToXML() {
-    var objeto;
-    var arregloEmpleado = [];
-    this.empleado.forEach(obj => {
-      let nacionalidad;
-      this.nacionalidades.forEach(element => {
-        if (obj.id_nacionalidad == element.id) {
-          nacionalidad = element.nombre;
-        }
-      });
-
-      objeto = {
-        "empleado": {
-          '@id': obj.id,
-          "cedula": obj.cedula,
-          "apellido": obj.apellido,
-          "nombre": obj.nombre,
-
-
-          "correo": obj.correo,
-          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
-
-          "correoAlternativo": obj.mail_alternativo,
-          "domicilio": obj.domicilio,
-          "telefono": obj.telefono,
-          "nacionalidad": nacionalidad,
-          "imagen": obj.imagen
-        }
-      }
-      arregloEmpleado.push(objeto)
-    });
-
-    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
-      console.log(arregloEmpleado)
-      this.data = res;
-      console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
-
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
-    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
 
 }

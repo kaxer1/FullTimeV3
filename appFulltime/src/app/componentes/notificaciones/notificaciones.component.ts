@@ -23,7 +23,7 @@ export class NotificacionesComponent implements OnInit {
   ngOnInit(): void {
     let id_empleado = localStorage.getItem("empleado");
     this.realtime.ObtenerNotificacionesAllReceives(parseInt(id_empleado)).subscribe(res => {
-      console.log(res);
+      console.log('notificaciones', res);
       this.notificaciones = res;
     });
   }

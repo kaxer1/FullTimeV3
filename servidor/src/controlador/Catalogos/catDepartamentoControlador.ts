@@ -116,9 +116,11 @@ class DepartamentoControlador {
     res.sendFile(__dirname.split("servidor")[0] + filePath);
   }
 
-  public async BuscarDepartamentoPorContrato(req: Request, res: Response) {
-    const id = req.params.id_contrato
-    const departamento = await pool.query('SELECT em.id_departamento, d.nombre, em.id AS cargo FROM empl_contratos AS ec, empl_cargos AS em, cg_departamentos AS d WHERE em.id_empl_contrato = ec.id AND d.id = em.id_departamento AND ec.id = $1 ORDER BY cargo DESC', [id]);
+  public async BuscarDepartamentoPorCargo(req: Request, res: Response) {
+    const id = req.params.id_cargo
+    const departamento = await pool.query('SELECT ec.id_departamento, d.nombre, ec.id AS cargo ' +
+      'FROM empl_cargos AS ec, cg_departamentos AS d WHERE d.id = ec.id_departamento AND ec.id = $1 ' +
+      'ORDER BY cargo DESC', [id]);
     if (departamento.rowCount > 0) {
       return res.json([departamento.rows[0]]);
     } else {

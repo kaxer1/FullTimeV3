@@ -27,6 +27,10 @@ export class VacacionesService {
     return this.http.get(`${this.API_URL}/vacaciones`);
   }
   
+  ObtenerListaVacacionesAutorizadas() {
+    return this.http.get(`${this.API_URL}/vacaciones/estado-solicitud`);
+  }
+
   ObtenerUnaVacacion(id: number) {
     return this.http.get(`${this.API_URL}/vacaciones/one/${id}`);
   }

@@ -1,7 +1,8 @@
 import pool from '../database'
 
-// const MINUTO_TIMER = 59;
-const MINUTO_TIMER = 4;
+const MINUTO_TIMER = 59;
+
+// const MINUTO_TIMER = 4; // de prueba
 
 export const NotificacionTimbreAutomatica =  function() {
 

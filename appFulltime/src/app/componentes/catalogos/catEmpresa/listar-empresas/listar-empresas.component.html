@@ -13,8 +13,8 @@
                     <input matInput name="filtroNomEmpresa" placeholder="Nombre de la Empresa"
                         [formControl]="buscarNombre" [(ngModel)]="filtroNomEmpresa">
                     <mat-error *ngIf="buscarNombre.invalid">Indispensable ingresar dos letras</mat-error>
-                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                        matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por su nombre">
+                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc" matTooltipPosition="right"
+                        matTooltip="Búsqueda de la Empresa por su nombre">
                         help_outline</mat-icon>
                 </mat-form-field>
                 <mat-form-field>
@@ -24,8 +24,8 @@
                         (keypress)="IngresarSoloNumeros($event)" [formControl]="buscarRuc"
                         [(ngModel)]="filtroRucEmpresa">
                     <mat-error *ngIf="buscarRuc.invalid">Indispensable ingresar dos valores</mat-error>
-                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc"
-                        matTooltipPosition="right" matTooltip="Búsqueda de la Empresa por el número de RUC">
+                    <mat-icon id="permisoSuc" matSuffix matTooltipClass="color-tooltipSuc" matTooltipPosition="right"
+                        matTooltip="Búsqueda de la Empresa por el número de RUC">
                         help_outline</mat-icon>
                 </mat-form-field>
             </div>
@@ -89,8 +89,9 @@
                 </tbody>
             </table>
         </div>
-        <mat-paginator [length]="empresas.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
-            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons></mat-paginator>
+        <mat-paginator class="d-flex justify-content-end" [length]="empresas.length" [pageSize]="tamanio_pagina"
+            [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
         <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empresas en formato PDF">

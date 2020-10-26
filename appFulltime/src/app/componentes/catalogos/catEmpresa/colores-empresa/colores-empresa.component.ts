@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import * as moment from 'moment';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -46,7 +47,7 @@ export class ColoresEmpresaComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerColores();
     this.ObtenerEmpleados(this.idEmpleado);
-       this.ObtenerLogo();
+    this.ObtenerLogo();
   }
 
   // Método para ver la información del empleado 
@@ -111,26 +112,19 @@ export class ColoresEmpresaComponent implements OnInit {
       // Encabezado de la página
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
+      header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 5, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
         return {
           margin: 10,
@@ -148,8 +142,8 @@ export class ColoresEmpresaComponent implements OnInit {
         }
       },
       content: [
-        { image: this.logo, width: 150 },
-        { text: 'Prueba de Colores', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20], },
+        {image: this.logo, width: 150, margin: [10, -25, 0, 5]},
+        { text: 'Prueba de Colores', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10]  },
         this.presentarDataPDFEmpresas(),
       ],
       styles: {

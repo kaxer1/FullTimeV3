@@ -96,11 +96,10 @@
                             matTooltipPosition="right" matTooltip="Indicar el estado de vacaciones">
                             help_outline
                         </mat-icon>
-                        <mat-select required [formControl]="estadoF" [disabled]="true">
-                            <mat-option value="Solicitado">Solicitado</mat-option>
-                            <mat-option value="Rechazado">Rechazado</mat-option>
-                            <mat-option value="Aceptado">Aceptado</mat-option>
-                            <mat-option value="Eliminado">Eliminado</mat-option>
+                        <mat-select [formControl]="estadoF" disabled required>
+                            <mat-option *ngFor="let e of estados" [value]="e.id">
+                                {{e.nombre}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-radio-group aria-label="Select an option" [formControl]="legalizadoF" required>

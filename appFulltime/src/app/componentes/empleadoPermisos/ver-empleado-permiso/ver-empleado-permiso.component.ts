@@ -260,7 +260,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         }
       },
       content: [
-        { image: this.logo, width: 150 },
+        {       image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
         { text: 'SOLICITUD DE PERMISO', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
         //this.presentarDataPDFPermiso_Uno(),

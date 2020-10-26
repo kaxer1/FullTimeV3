@@ -21,18 +21,20 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
 
   estados: Estado[] = [
     // { id: 1, nombre: 'Pendiente'},
-    { id: 2, nombre: 'Pre-autorizado'},
-    { id: 3, nombre: 'Autorizado'},
-    { id: 4, nombre: 'Negado'},
+    { id: 2, nombre: 'Pre-autorizado' },
+    { id: 3, nombre: 'Autorizado' },
+    { id: 4, nombre: 'Negado' },
   ];
-  
+
   estado = new FormControl('', Validators.required);
 
   public estadoAutorizacionesForm = new FormGroup({
     estadoF: this.estado
   });
 
+  id_empleado_loggin: number;
   FechaActual: any;
+  NotifiRes: any;
 
   constructor(
     private restA: AutorizacionService,
@@ -44,8 +46,9 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
+    console.log(this.data, 'datakjdjddjdndn');
     console.log(this.data.datosSeleccionados);
+    this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
     this.tiempo();
     if (this.data.datosSeleccionados.estado === 1) {
       this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
@@ -64,42 +67,66 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
 
   autorizacion: any = [];
   idNoti: any = [];
-  ActualizarEstadoAutorizacion(form){
+  ActualizarEstadoAutorizacion(form) {
     let newAutorizaciones = {
-      id_documento: this.data.datosSeleccionados.id_documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       estado: form.estadoF,
-      id_vacaciones: this.data.datosSeleccionados.id_vacacion, 
+      id_documento: this.data.datosSeleccionados.id_documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      id_vacacion: this.data.datosSeleccionados.id_vacacion,
       id_departamento: this.data.datosSeleccionados.id_departamento,
       id_empleado: this.data.id_rece_emp
     }
 
-    this.restA.PutEstadoAutoVacacion(this.data.datosSeleccionados.id, newAutorizaciones).subscribe(res => {
+    this.restA.PutEstadoAutoVacacion(newAutorizaciones).subscribe(res => {
       this.autorizacion = [res];
-      
-      this.toastr.success('Operación exitosa','Estado Actualizado');
-      var f = new Date();
-      let notificacion = { 
-        id: null,
-        id_send_empl: this.autorizacion[0].realtime[0].id_send_empl,
-        id_receives_empl: this.data.id_rece_emp,
-        id_receives_depa: this.autorizacion[0].realtime[0].id_receives_depa,
-        estado: this.autorizacion[0].realtime[0].estado, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
-        id_vacaciones: this.autorizacion[0].realtime[0].id_vacaciones,
-        id_permiso: null,
-        id_hora_extra: null
-      }
+      this.toastr.success('Operación Exitosa', 'Estado Actualizado');
+      this.EditarEstadoVacacion(form, this.data.datosSeleccionados.id_vacacion, this.data.id_rece_emp, this.data.datosSeleccionados.id_departamento);
+      this.dialogRef.close();
+    })
+  }
 
-      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(respo => {
-        this.idNoti = [respo];
-        console.log(this.autorizacion[0].notificacion);
-        console.log(this.idNoti[0]._id);
-        notificacion.id = this.idNoti[0]._id;
-        if (this.idNoti[0]._id > 0 && this.autorizacion[0].notificacion === true ) {
+  resVacacion: any = [];
+  EditarEstadoVacacion(form, id_vacacion, id_empleado, id_departamento) {
+    let datosVacacion = {
+      estado: form.estadoF,
+      id_vacacion: id_vacacion,
+      id_rece_emp: id_empleado,
+      id_depa_send: id_departamento
+    }
+    this.restV.ActualizarEstado(id_vacacion, datosVacacion).subscribe(respon => {
+      this.resVacacion = respon
+      console.log(this.resVacacion);
+      var f = new Date();
+      var estado_letras: string = '';
+      if (form.estadoF === 1) {
+        estado_letras = 'Pendiente';
+      }
+      else if (form.estadoF === 2) {
+        estado_letras = 'Pre-autorizado';
+      }
+      else if (form.estadoF === 3) {
+        estado_letras = 'Autorizado';
+      }
+      else if (form.estadoF === 4) {
+        estado_letras = 'Negado';
+      }
+      let notificacion = {
+        id: null,
+        id_send_empl: this.id_empleado_loggin,
+        id_receives_empl: id_empleado,
+        id_receives_depa: id_departamento,
+        estado: estado_letras,
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+        id_vacaciones: id_vacacion,
+        id_permiso: null
+      }
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res => {
+        this.NotifiRes = res;
+        console.log(this.NotifiRes);
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0 && this.resVacacion.notificacion === true) {
           this.restV.sendNotiRealTime(notificacion);
         }
-        this.dialogRef.close();
       });
-    })
+    });
   }
 }

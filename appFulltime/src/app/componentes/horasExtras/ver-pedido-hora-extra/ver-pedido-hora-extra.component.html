@@ -29,10 +29,6 @@
                                     <label>{{h.descripcion}}</label>
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
-                                    <label id="datosF">Estado:</label>
-                                    <label>{{nomEstado}}</label>
-                                </div>
-                                <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Número de Horas:</label>
                                     <label>{{h.num_hora}}</label>
                                 </div>
@@ -55,23 +51,18 @@
                             </div>
                         </div>
                         <div class="col" style="text-align: right;">
-                            <i id="iconos" *ngIf="!HabilitarAutorizacion" class="fas fa-plus-circle"
-                                style="color:rgb(58, 90, 231);" (click)="AbrirAutorizaciones(h)"
+                            <i id="iconos" *ngIf="!HabilitarAutorizacion" class="fas fa-stopwatch"
+                                style="color:rgb(58, 90, 231);" (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h.id_usua_solicita, h)"
                                 matTooltipPosition="right"
                                 matTooltip="Agrega más tipos de permisos de este departamento.">
                                 <p>Autorización</p>
                             </i>
-                            <i id="iconos" *ngIf="!HabilitarTiempo" class="fas fa-stopwatch"
+                            <!--<i id="iconos" *ngIf="!HabilitarTiempo" class="fas fa-stopwatch"
                                 style="color:rgb(8, 96, 168); margin-left: 15px;"
-                                (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h.id_usua_solicita)" matTooltipPosition="right"
-                                matTooltip="Tiempo que se le autoriza de la hora extra.">
+                                (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h.id_usua_solicita)"
+                                matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
                                 <p>Tiempo Autorizado</p>
-                            </i>
-                            <i *ngIf="HabilitarAutorizacion" class="fas fa-edit"
-                                style="color:green; text-align: center; margin-left: 15px;" matSuffix matTooltipPosition="right"
-                                (click)="AbrirVentanaEditar(h)" matTooltip="Cambiar el estado del permiso">
-                                <p>Estado</p>
-                            </i>
+                            </i>-->
                         </div>
                     </div>
                 </mat-card-content>
@@ -111,15 +102,13 @@
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Solicitud de Hora Extra:</label>
                                     <label>
-                                        <i id="iconos" (click)="generarPdf('download')" class="fas fa-file-pdf"
-                                            style="color:red; margin-left: 15px; text-align: center;" matSuffix
+                                        <a id="iconos" (click)="generarPdf('download')" matSuffix
                                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                             matTooltip="Descargar Solicitud de Permiso en formato PDF">
-                                            <p>Hora Extra</p>
-                                        </i>
+                                            <label style="font-size: 14px; color: red; font-weight: bold;">Solicitud.pdf</label>
+                                        </a>
                                     </label>
                                 </div>
-
                             </div>
                         </div>
                         <div class="row" style="margin-top: 5px;">
@@ -128,11 +117,18 @@
                             <div class="col">
                             </div>
                             <div class="col" style="text-align: right;">
-                                <i class="fas fa-edit" style="color:green; text-align: center;" matSuffix
-                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                                <i *ngIf="a.estado === 1" class="fas fa-edit"
+                                    style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
+                                    (click)="AbrirVentanaEditarAutorizacion(a)"
                                     matTooltip="Cambiar el estado de la hora extra">
                                     <p>Estado</p>
                                 </i>
+                                <i *ngIf="a.estado === 2" class="fas fa-edit"
+                                style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
+                                (click)="AbrirVentanaEditarAutorizacion(a)"
+                                matTooltip="Cambiar el estado de la hora extra">
+                                <p>Estado</p>
+                            </i>
                             </div>
                         </div>
                     </div>

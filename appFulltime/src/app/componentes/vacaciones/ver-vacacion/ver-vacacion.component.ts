@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -261,23 +260,22 @@ export class VerVacacionComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,
+            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
             {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', opacity: 0.3
                 }
               ],
             }
-          ], fontSize: 10, color: '#A4B8FF',
+          ], fontSize: 10
         }
       },
       content: [
-        { image: this.logo, width: 150 },
-        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-        { text: 'SOLICITUD DE VACACIONES', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 10] },
+        { text: 'SOLICITUD DE VACACIONES', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 10] },
         this.SeleccionarMetodo(this.ObtenerFecha()),
       ],
       styles: {

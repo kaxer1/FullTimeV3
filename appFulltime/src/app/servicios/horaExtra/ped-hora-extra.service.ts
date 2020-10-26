@@ -23,6 +23,14 @@ export class PedHoraExtraService {
     return this.http.get(`${this.API_URL}/horas-extras-pedidas`);
   }
 
+  ListaAllHoraExtraAutorizada() {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/pedidos_autorizados`);
+  }
+
+  ListaAllHoraExtraObservacion() {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/observaciones`);
+  }
+
   ObtenerUnHoraExtra(id: number) {
     return this.http.get(`${this.API_URL}/horas-extras-pedidas/${id}`);
   }
@@ -67,5 +75,8 @@ export class PedHoraExtraService {
     return this.http.put<any>(`${this.API_URL}/horas-extras-pedidas/tiempo-autorizado/${id_hora}`, hora);
   }
 
-  
+  EditarObservacionPedido(id: number, datos: any) {
+    return this.http.put<any>(`${this.API_URL}/horas-extras-pedidas/observacion/${id}`, datos);
+  }
+
 }

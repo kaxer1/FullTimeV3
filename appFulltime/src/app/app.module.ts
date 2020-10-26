@@ -279,6 +279,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { MatTreeModule } from '@angular/material/tree';
 import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
@@ -291,6 +292,8 @@ import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planifica
 import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
 import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
+import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
+import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
 
 @NgModule({
   declarations: [
@@ -506,6 +509,8 @@ import { ListaReportesComponent } from './componentes/reportes/lista-reportes/li
     PlanHoraExtraAutorizaComponent,
     ColoresEmpresaComponent,
     ListaReportesComponent,
+    ConfigEmpleadosComponent,
+    ConfigAsistenciaComponent,
   ],
 
   imports: [
@@ -554,7 +559,8 @@ import { ListaReportesComponent } from './componentes/reportes/lista-reportes/li
     MatTabsModule,
     MatMenuModule,
     ScrollingModule,
-    JwPaginationModule
+    JwPaginationModule,
+    MatTreeModule
   ],
   providers: [
     AuthGuard,

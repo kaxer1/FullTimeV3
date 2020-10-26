@@ -16,6 +16,7 @@ class CiudadRutas {
         this.router.get('/nombresCiudades/:idferiado', TokenValidation, CIUDAD_FERIADO_CONTROLADOR.EncontrarCiudadesFeriado);
         this.router.put('/', TokenValidation, CIUDAD_FERIADO_CONTROLADOR.ActualizarCiudadFeriado);
         this.router.delete('/eliminar/:id', TokenValidation, CIUDAD_FERIADO_CONTROLADOR.EliminarCiudadFeriado);
+        this.router.get('/ciudad/:id_ciudad', TokenValidation, CIUDAD_FERIADO_CONTROLADOR.ObtenerFeriadosCiudad);
     }
 }
 

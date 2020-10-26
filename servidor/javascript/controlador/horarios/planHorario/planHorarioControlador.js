@@ -91,7 +91,7 @@ class PlanHorarioControlador {
                 'phd.id AS id_detalle_plan, phd.fecha AS fecha_dia, phd.tipo_dia ' +
                 'FROM plan_horarios AS ph, plan_hora_detalles AS phd ' +
                 'WHERE phd.id_plan_horario = ph.id) AS ph ON ' +
-                'dec.cargo_id = ph.id_cargo AND dec.empl_id = $1 ' +
+                'dec.cargo_id = ph.id_cargo AND dec.codigo = $1 ' +
                 'AND ph.fecha_dia BETWEEN $2 AND $3', [id_empleado, fechaInicio, fechaFinal]);
             if (PLAN.rowCount > 0) {
                 return res.jsonp(PLAN.rows);

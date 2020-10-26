@@ -37,12 +37,12 @@ export class ReportesService {
     return this.http.post(`${this.API_URL}/reporte/reporteAtrasos/planificacion/${empleado_id}`, data);
   }
 
-  ObtenerEntradaSalidaHorario(empleado_id: any, data: any) {
-    return this.http.post(`${this.API_URL}/reporte/reporteEntradaSalida/horarios/${empleado_id}`, data);
+  ObtenerEntradaSalidaHorario(codigo: any, data: any) {
+    return this.http.post(`${this.API_URL}/reporte/reporteEntradaSalida/horarios/${codigo}`, data);
   }
 
-  ObtenerEntradaSalidaPlanificacion(empleado_id: any, data: any) {
-    return this.http.post(`${this.API_URL}/reporte/reporteEntradaSalida/planificacion/${empleado_id}`, data);
+  ObtenerEntradaSalidaPlanificacion(codigo: any, data: any) {
+    return this.http.post(`${this.API_URL}/reporte/reporteEntradaSalida/planificacion/${codigo}`, data);
   }
 
   ObtenerPermisosHorariosFechas(empleado_id: any, data: any) {

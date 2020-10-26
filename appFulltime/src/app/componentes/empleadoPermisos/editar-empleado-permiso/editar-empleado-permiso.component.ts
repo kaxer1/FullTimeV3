@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
+
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 
@@ -9,11 +10,17 @@ interface Estados {
   nombre: string
 }
 
+interface Estado {
+  id: number,
+  nombre: string
+}
+
 @Component({
   selector: 'app-editar-empleado-permiso',
   templateUrl: './editar-empleado-permiso.component.html',
   styleUrls: ['./editar-empleado-permiso.component.css']
 })
+
 export class EditarEmpleadoPermisoComponent implements OnInit {
 
   estadoF = new FormControl('');
