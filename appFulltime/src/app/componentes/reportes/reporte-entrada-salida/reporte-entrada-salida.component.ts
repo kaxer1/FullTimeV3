@@ -11,7 +11,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';
+
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
@@ -20,6 +20,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
+import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
@@ -37,7 +38,6 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-  nacionalidades: any = [];
 
   // Arreglo datos contrato actual
   datosContratoA: any = [];
@@ -90,6 +90,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
     public restF: FeriadosService,
+    public restCF: CiudadFeriadosService,
     public restEmpre: EmpresaService,
     public restHorario: EmpleadoHorariosService,
     public restPlan: PlanHorarioService,
@@ -232,6 +233,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   fechasPeriodo: any = [];
   inicioDate: any;
   finDate: any
+  ciudadFeriados: any = [];
   VerEntradasSalidasEmpleado(id_seleccionado, form, archivo) {
     if (form.inicioForm === '' || form.finalForm === '') {
       this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
@@ -256,13 +258,48 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           var newDate = start.setDate(start.getDate() + 1);
           start = new Date(newDate);
         }
-
-        this.VerEntradasSalidasHorario(id_seleccionado, fechas, archivo, form, this.fechasPeriodo);
+        this.ValidarCiudadFeriado(id_seleccionado, fechas, archivo, form, this.fechasPeriodo);
+        //this.VerEntradasSalidasHorario(id_seleccionado, fechas, archivo, form, this.fechasPeriodo);
       }
       else {
         this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
       }
     }
+  }
+
+  feriadosTotales: any = [];
+  ValidarCiudadFeriado(id_seleccionado, datosFecha, archivo, form, fechasTotales) {
+    this.feriadosTotales = [];
+    this.ciudadFeriados = [];
+    this.datosEmpleado.map(obj => {
+      if (obj.codigo === id_seleccionado) {
+        this.restCF.BuscarFeriados(obj.id_ciudad).subscribe(data => {
+          this.ciudadFeriados = data;
+          this.ciudadFeriados.map(datos => {
+            this.feriados.map(element => {
+              let datosF = [
+                {
+                  id: datos.id_feriado,
+                  fecha: element.fecha
+                }
+              ]
+              if (datos.id_feriado === element.id) {
+                if (this.feriadosTotales.length === 0) {
+                  this.feriadosTotales = datosF;
+                }
+                else {
+                  this.feriadosTotales = this.feriadosTotales.concat(datosF);
+                }
+              }
+            })
+          })
+          console.log('feriados', this.feriadosTotales);
+          this.VerEntradasSalidasHorario(id_seleccionado, datosFecha, archivo, form, fechasTotales)
+        }, error => {
+          this.VerEntradasSalidasHorario(id_seleccionado, datosFecha, archivo, form, fechasTotales);
+        })
+      }
+    })
   }
 
   // Método para obtener timbres de entradas y salidas del empleado de acuerdo al horario
@@ -487,7 +524,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
       content: [
         { image: this.logo, width: 150 },
         ...this.datosEmpleado.map(obj => {
-          if (obj.id === id_seleccionado) {
+          if (obj.codigo === id_seleccionado) {
             return [
               {
                 text: obj.empresa.toUpperCase(),
@@ -523,7 +560,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   presentarDatosGenerales(id_seleccionado, form, fechasTotales) {
     var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
     this.datosEmpleado.forEach(obj => {
-      if (obj.id === id_seleccionado) {
+      if (obj.codigo === id_seleccionado) {
         nombre = obj.nombre
         apellido = obj.apellido
         cedula = obj.cedula
@@ -747,10 +784,10 @@ export class ReporteEntradaSalidaComponent implements OnInit {
               }
               // NO EXISTE TIMBRE
               else {
-                if (this.feriados.length != 0) {
+                if (this.feriadosTotales.length != 0) {
                   // Buscar días en la lista de feriados
-                  for (var i = 0; i <= this.feriados.length - 1; i++) {
-                    fechaFeriado = moment(this.feriados[i].fecha).format('DD/MM/YYYY');
+                  for (var i = 0; i <= this.feriadosTotales.length - 1; i++) {
+                    fechaFeriado = moment(this.feriadosTotales[i].fecha).format('DD/MM/YYYY');
                     if (dayFecha === fechaFeriado) {
                       sinTimbre = 'Feriado';
                       break;
@@ -845,9 +882,9 @@ export class ReporteEntradaSalidaComponent implements OnInit {
    * ****************************************************************************************************/
 
   exportToExcel(id_empleado: number, form, fechasTotales) {
-    var i = 0;
+    var j = 0;
     for (var i = 0; i <= this.datosEmpleado.length - 1; i++) {
-      if (this.datosEmpleado[i].id === id_empleado) {
+      if (this.datosEmpleado[i].codigo === id_empleado) {
         var datosEmpleado = [{
           CODIGO: this.datosEmpleado[i].codigo,
           NOMBRE: this.datosEmpleado[i].nombre,
@@ -906,10 +943,10 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         }
         // NO EXISTE TIMBRE
         else {
-          if (this.feriados.length != 0) {
+          if (this.feriadosTotales.length != 0) {
             // Buscar días en la lista de feriados
-            for (var i = 0; i <= this.feriados.length - 1; i++) {
-              fechaFeriado = moment(this.feriados[i].fecha).format('DD/MM/YYYY');
+            for (var i = 0; i <= this.feriadosTotales.length - 1; i++) {
+              fechaFeriado = moment(this.feriadosTotales[i].fecha).format('DD/MM/YYYY');
               if (dayFecha === fechaFeriado) {
                 sinTimbre = 'Feriado';
                 break;
@@ -967,7 +1004,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         almuerzoS = 'LIBRE'
       }
       return {
-        N_REGISTROS: i = i + 1,
+        N_REGISTROS: j = j + 1,
         DIA_TIMBRE: obj.split(' ')[0].charAt(0).toUpperCase() + obj.split(' ')[0].slice(1),
         FECHA_TIMBRE: obj.split(' ')[1],
         HORARIO_ENTRADA: horarioE,
@@ -985,10 +1022,10 @@ export class ReporteEntradaSalidaComponent implements OnInit {
       }
     }));
 
-    const header = Object.keys(this.totalEntradasSalidas[0]); // columns name
+    const header = Object.keys(this.totalEntradasSalidas[0]); // nombres de la columnas
 
     var wscols = [];
-    for (var i = 0; i < header.length; i++) {  // columns length added
+    for (var i = 0; i < header.length; i++) {  // número de columnas
       wscols.push({ wpx: 130 })
     }
     wst["!cols"] = wscols;
@@ -998,63 +1035,5 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
     xlsx.writeFile(wb, "Timbres Entradas-Salidas - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
-
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  urlxml: string;
-  data: any = [];
-  exportToXML() {
-    var objeto;
-    var arregloEmpleado = [];
-    this.empleado.forEach(obj => {
-      let nacionalidad;
-      this.nacionalidades.forEach(element => {
-        if (obj.id_nacionalidad == element.id) {
-          nacionalidad = element.nombre;
-        }
-      });
-
-      objeto = {
-        "empleado": {
-          '@id': obj.id,
-          "cedula": obj.cedula,
-          "apellido": obj.apellido,
-          "nombre": obj.nombre,
-
-
-          "correo": obj.correo,
-          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
-
-          "correoAlternativo": obj.mail_alternativo,
-          "domicilio": obj.domicilio,
-          "telefono": obj.telefono,
-          "nacionalidad": nacionalidad,
-          "imagen": obj.imagen
-        }
-      }
-      arregloEmpleado.push(objeto)
-    });
-
-    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
-      console.log(arregloEmpleado)
-      this.data = res;
-      console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
-
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
-    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
-  }
-
 
 }

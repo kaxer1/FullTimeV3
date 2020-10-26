@@ -174,13 +174,13 @@
                         <td>{{d.cargo}}</td>
                         <td>{{d.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
-                            <i (click)="ConfigurarAtrasos(d.id, fechasForm.value, 'pdf')" id="pdf"
+                            <i (click)="ConfigurarAtrasos(d.codigo, fechasForm.value, 'pdf')" id="pdf"
                                 class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                                 matTooltipClass="departamento-tooltip"
                                 matTooltip="Ver reporte de timbres del empleado en formato PDF">
                                 <p>PDF</p>
                             </i>
-                            <i (click)="ConfigurarAtrasos(d.id, fechasForm.value, 'excel')" id="excel"
+                            <i (click)="ConfigurarAtrasos(d.codigo, fechasForm.value, 'excel')" id="excel"
                                 class="fas fa-file-excel" matSuffix matTooltipPosition="right"
                                 matTooltipClass="departamento-tooltip"
                                 matTooltip="Descargar Lista de Empleados en formato EXCEL">
