@@ -48,7 +48,7 @@ class KardexVacacion {
     
     public async ReportePeriodosVacaciones(req: Request, res: Response) {
         let id_empleado = parseInt(req.params.id_empleado)
-        console.log('llego a periodo de vacion');
+        // console.log('llego a periodo de vacación');
         
         let jsonData = await ReportePeriVacaciones(id_empleado);
         res.jsonp(jsonData);
