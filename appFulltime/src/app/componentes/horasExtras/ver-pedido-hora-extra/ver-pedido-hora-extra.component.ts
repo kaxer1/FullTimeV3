@@ -203,14 +203,15 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     })
   }
 
-  AbrirAutorizaciones(datosHoraExtra) {
-    this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', data: datosHoraExtra }).afterClosed().subscribe(items => {
+  AbrirAutorizaciones(datosHoraExtra, nombre) {
+    this.vistaFolante.open(HoraExtraAutorizacionesComponent, { width: '300px', 
+    data: {pedido_hora: datosHoraExtra, carga: nombre} }).afterClosed().subscribe(items => {
       this.BuscarInfo();
       this.HabilitarAutorizacion = true;
     });
   }
 
-  AbrirTiempoAutorizacion(num_hora, id_hora, id_usua_solicita) {
+  AbrirTiempoAutorizacion(num_hora, id_hora, id_usua_solicita, datos) {
     let h = {
       id_hora: id_hora,
       hora: num_hora,
@@ -221,9 +222,9 @@ export class VerPedidoHoraExtraComponent implements OnInit {
       data: { horas_calculadas: h, pagina: 'solicitud_hora_extra' }
     }).afterClosed().subscribe(items => {
       if (items === true) {
-        this.HabilitarTiempo = true;
+        this.AbrirAutorizaciones(datos, 'individual');
       } else {
-        this.HabilitarTiempo = false;
+        window.location.reload();
       }
     });
   }
@@ -286,22 +287,22 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,
+            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
             {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue', opacity: 0.5
+                  alignment: 'right', opacity: 0.3
                 }
               ],
             }
-          ], fontSize: 10, color: '#A4B8FF',
+          ], fontSize: 10
         }
       },
       content: [
-        { image: this.logo, width: 150 },
-        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-        { text: 'SOLICITUD DE HORAS EXTRAS', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
+        {image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 10]},
+        { text: 'SOLICITUD DE HORAS EXTRAS', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 10] },
         this.SeleccionarMetodo(this.ObtenerFecha()),
       ],
       styles: {

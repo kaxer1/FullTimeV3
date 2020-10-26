@@ -33,19 +33,22 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
     estadoF: this.estado
   });
 
+  id_empleado_loggin: number;
   FechaActual: any;
+  NotifiRes: any;
 
   constructor(
     private restA: AutorizacionService,
     private toastr: ToastrService,
-    private restHE: PedHoraExtraService,
+    public restPH: PedHoraExtraService,
     private realTime: RealTimeService,
     public dialogRef: MatDialogRef<EditarEstadoHoraExtraAutorizacionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
-    console.log(this.data);
     console.log(this.data.empl);
     if (this.data.autorizacion[0].estado === 1) {
       this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
@@ -60,7 +63,6 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
   tiempo() {
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
-    console.log('fecha Actual', this.FechaActual);
   }
 
   resAutorizacion: any = [];
@@ -69,38 +71,47 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
     let newAutorizaciones = {
       id_documento: this.data.autorizacion[0].id_documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
       estado: form.estadoF,
-      id_hora_extra: this.data.autorizacion[0].id_hora_extra, 
+      id_hora_extra: this.data.autorizacion[0].id_hora_extra,
       id_departamento: this.data.autorizacion[0].id_departamento,
     }
     console.log(newAutorizaciones);
-    
-    this.restA.PutEstadoAutoHoraExtra(this.data.autorizacion[0].id, newAutorizaciones).subscribe(res => {
+    this.restA.PutEstadoAutoHoraExtra(this.data.autorizacion[0].id_hora_extra, newAutorizaciones).subscribe(res => {
       this.resAutorizacion = [res];
       console.log(this.resAutorizacion);
-      this.toastr.success('Operación exitosa','Estado Actualizado');
+      this.toastr.success('Operación exitosa', 'Estado Actualizado');
+      this.EditarEstadoHoraExtra(form);
+    })
+  }
+
+  resEstado: any = [];
+  EditarEstadoHoraExtra(form) {
+    let datosHorasExtras = {
+      estado: form.estadoF,
+      id_hora_extra: this.data.autorizacion[0].id_hora_extra,
+      id_departamento: this.data.autorizacion[0].id_departamento,
+    }
+    this.restPH.ActualizarEstado(this.data.autorizacion[0].id_hora_extra, datosHorasExtras).subscribe(res => {
+      this.resEstado = [res];
       var f = new Date();
-      let notificacion = { 
+      let notificacion = {
         id: null,
-        id_send_empl: this.resAutorizacion[0].realtime[0].id_send_empl,
+        id_send_empl: this.id_empleado_loggin,
         id_receives_empl: this.data.empl,
-        id_receives_depa: this.resAutorizacion[0].realtime[0].id_receives_depa,
-        estado: this.resAutorizacion[0].realtime[0].estado, 
-        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+        id_receives_depa: this.data.autorizacion[0].id_departamento,
+        estado: form.estadoF,
+        create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
         id_permiso: null,
         id_vacaciones: null,
-        id_hora_extra: this.resAutorizacion[0].realtime[0].id_hora_extra
+        id_hora_extra: this.data.autorizacion[0].id_hora_extra
       }
-
-      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(respo => {
-        this.idNoti = [respo];
-        console.log(this.resAutorizacion[0].notificacion);
-        console.log(this.idNoti[0]._id);
-        notificacion.id = this.idNoti[0]._id;
-        if (this.idNoti[0]._id > 0 && this.resAutorizacion[0].notificacion === true ) {
-          this.restHE.sendNotiRealTime(notificacion);
+      this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res1 => {
+        this.NotifiRes = res1;
+        notificacion.id = this.NotifiRes._id;
+        if (this.NotifiRes._id > 0 && this.resEstado[0].notificacion === true) {
+          this.restPH.sendNotiRealTime(notificacion);
         }
-        this.dialogRef.close();
       });
+      this.dialogRef.close();
     })
   }
 

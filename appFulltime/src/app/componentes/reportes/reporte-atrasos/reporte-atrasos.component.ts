@@ -1,24 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// Librería para manejar formatos de fechas
 import * as moment from 'moment';
 moment.locale('es');
+// Librería para generar reportes en formato PDF
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// Librería para generar reportes en formato EXCEL
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
-import { MatDialog } from '@angular/material/dialog';
 
+// Importación de servicios
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-
+// Importación de componentes
 import { ConfigurarAtrasosComponent } from 'src/app/componentes/configurar-atrasos/configurar-atrasos.component';
 
 @Component({
@@ -37,7 +41,6 @@ export class ReporteAtrasosComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-  nacionalidades: any = [];
 
   // Arreglo datos contrato actual
   datosContratoA: any = [];
@@ -48,7 +51,7 @@ export class ReporteAtrasosComponent implements OnInit {
   // Arreglo datos del empleado
   datosEmpleado: any = [];
 
-  // Datos del Formulario de búsqueda
+  // Datos del Fórmulario de búsqueda
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
@@ -57,11 +60,11 @@ export class ReporteAtrasosComponent implements OnInit {
   regimenF = new FormControl('', [Validators.minLength(2)]);
   cargoF = new FormControl('', [Validators.minLength(2)]);
 
-  // Datos del Formulario de Periodo
+  // Datos del Fórmulario de Periodo
   fechaInicialF = new FormControl('', [Validators.required]);
   fechaFinalF = new FormControl('', [Validators.required]);
 
-  // Formulario de Periodo
+  // Fórmulario de Periodo
   public fechasForm = new FormGroup({
     inicioForm: this.fechaInicialF,
     finalForm: this.fechaFinalF,
@@ -227,7 +230,7 @@ export class ReporteAtrasosComponent implements OnInit {
           fechaInicio: form.inicioForm,
           fechaFinal: form.finalForm
         }
-        /** Función para indicar cálculo de atrasos*/
+        /** Método para seleccionar forma de cálculo de atrasos*/
         this.vistaConfigurarAtraso.open(ConfigurarAtrasosComponent, { width: '450px' }).afterClosed()
           .subscribe((seleccion: string) => {
             if (seleccion === 'con') {
@@ -272,21 +275,18 @@ export class ReporteAtrasosComponent implements OnInit {
       if (atrasos_horario.length != 0) {
         atrasos_horario = atrasos_horario.concat(this.atrasosPlanificacion);
         this.totalAtrasos = atrasos_horario;
-        console.log('prueba', this.totalAtrasos);
       }
       else {
         this.totalAtrasos = this.atrasosPlanificacion;
-        console.log('prueba1', this.totalAtrasos);
       }
-      // this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+      this.OrdenarDatos(this.totalAtrasos);
       this.GenerarArchivos(id_seleccionado, archivo, form, confirmado);
       this.LimpiarFechas();
       this.LimpiarCampos();
     }, error => {
       if (atrasos_horario.length != 0) {
         this.totalAtrasos = atrasos_horario;
-        console.log('prueba2', this.totalAtrasos);
-        //  this.totalAtrasos = this.totalAtrasos.sort((a, b) => new Date(a.fec_hora_timbre) > new Date(b.fec_hora_timbre));
+        this.OrdenarDatos(this.totalAtrasos);
         this.GenerarArchivos(id_seleccionado, archivo, form, confirmado);
         this.LimpiarFechas();
         this.LimpiarCampos();
@@ -300,7 +300,6 @@ export class ReporteAtrasosComponent implements OnInit {
   // Método para generar los archivos de descarga
   GenerarArchivos(id_seleccionado: number, archivo: string, form, confirmado) {
     if (archivo === 'pdf') {
-      console.log('archivo', archivo)
       this.generarPdf('open', id_seleccionado, form, confirmado);
     }
     else if (archivo === 'excel') {
@@ -362,6 +361,20 @@ export class ReporteAtrasosComponent implements OnInit {
   LimpiarFechas() {
     this.fechaInicialF.reset();
     this.fechaFinalF.reset();
+  }
+
+  // Ordenar los datos según la fecha
+  OrdenarDatos(array) {
+    function compare(a, b) {
+      if (a.fec_hora_timbre < b.fec_hora_timbre) {
+        return -1;
+      }
+      if (a.fec_hora_timbre > b.fec_hora_timbre) {
+        return 1;
+      }
+      return 0;
+    }
+    array.sort(compare);
   }
 
 
@@ -426,33 +439,33 @@ export class ReporteAtrasosComponent implements OnInit {
               {
                 text: [{
                   text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                  alignment: 'left', color: 'blue', opacity: 0.5
+                  alignment: 'left', opacity: 0.3
                 }]
               },
               {
                 text: [{
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
                 }],
               }
-            ], fontSize: 9, color: '#A4B8FF',
+            ], fontSize: 9
           }
         ]
       },
 
       // Títulos del archivo PDF y contenido general 
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
-          if (obj.id === id_seleccionado) {
+          if (obj.codigo === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE DE ATRASOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE DE ATRASOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),
         this.presentarDatosGenerales(id_seleccionado, form, confirmado),
         this.presentarAtrasos(confirmado),
-      ],
+      ], 
 
       // Estilos del archivo PDF
       styles: {
@@ -465,7 +478,7 @@ export class ReporteAtrasosComponent implements OnInit {
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableF: { fontSize: 9, alignment: 'center' },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }
@@ -482,7 +495,7 @@ export class ReporteAtrasosComponent implements OnInit {
     var t2 = new Date();
     // Búsqueda de los datos del empleado del cual se obtiene el reporte
     this.datosEmpleado.forEach(obj => {
-      if (obj.id === id_seleccionado) {
+      if (obj.codigo === id_seleccionado) {
         nombre = obj.nombre
         apellido = obj.apellido
         cedula = obj.cedula
@@ -512,9 +525,7 @@ export class ReporteAtrasosComponent implements OnInit {
       t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 
       // Establecer formato de hora
-      console.log('horas', t1.getHours());
       tHoras = tHoras + t1.getHours();
-      console.log('horas', tHoras);
       tSegudos = tSegudos + t1.getSeconds();
       tMinutos = tMinutos + t1.getMinutes();
       if (tHoras < 10) {
@@ -538,11 +549,11 @@ export class ReporteAtrasosComponent implements OnInit {
       tiempoTotal = horaF + ':' + minF + ':' + secondF;
 
       // Realización de cálculos
+      // Fórmula minutos = (segundos * 60) + minutos
       minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      //Fórmula horas = (minutos / 60) + horas
       horaTDecimal = (minTDecimal / 60) + t1.getHours();
-      console.log('hora decimal', horaTDecimal);
       formatoHorasDecimal = formatoHorasDecimal + parseFloat(horaTDecimal.toFixed(3));
-      console.log('total hora decimal', formatoHorasDecimal);
       formatoHorasEntero = parseFloat('0.' + String(formatoHorasDecimal).split('.')[1]) * 60
 
       // Control de escritura de minutos
@@ -563,11 +574,13 @@ export class ReporteAtrasosComponent implements OnInit {
       var hTrabajo = (trabaja).split(":")
       var t3 = new Date();
       t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      // Fórmula minutos = (segundos * 60) + minutos
       minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      // Fórmula horas = (minutos / 60) + horas
       horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      // Fórmula dias = horasAtrasos / horasLaborables
       diasDecimal = horaTDecimal / horaTDecimalH;
       formatoDiasDecimal = formatoDiasDecimal + parseFloat(diasDecimal.toFixed(3));
-      console.log('total dias decimal', formatoDiasDecimal);
     });
     var diaI = moment(form.inicioForm).day();
     var diaF = moment(form.finalForm).day();
@@ -708,7 +721,9 @@ export class ReporteAtrasosComponent implements OnInit {
             tiempoTotal = horaF + ':' + minF + ':' + secondF;
 
             // Realización de cálculos
+            // Fórmula minutos = (segundos * 60) + minutos
             minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+            // Fórmula horas = (minutos / 60) + minutos
             horaTDecimal = (minTDecimal / 60) + t1.getHours();
 
             // Obtención de días de trabajo del empleado
@@ -721,8 +736,11 @@ export class ReporteAtrasosComponent implements OnInit {
             var hTrabajo = (trabaja).split(":")
             var t3 = new Date();
             t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+            // Fórmula minutos = (segundos * 60) + minutos
             minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+            // Fórmula horas = (minutos / 60) + horas
             horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+            // Fórmula dias = horasAtrasos / horasLaborables
             diasDecimal = horaTDecimal / horaTDecimalH;
             this.contarRegistros = this.contarRegistros + 1;
 
@@ -755,7 +773,7 @@ export class ReporteAtrasosComponent implements OnInit {
    * ****************************************************************************************************/
 
   exportToExcel(confirmado: boolean, id_seleccionado, form) {
-
+    this.contarRegistros = 0;
     // Inicialización de varibles
     var datosGenerales, mensaje: string;
     var tiempoTotal: string, horaF: string, minF: string, secondF: string;
@@ -784,9 +802,7 @@ export class ReporteAtrasosComponent implements OnInit {
       t1.setHours(t1.getHours() - t2.getHours(), t1.getMinutes() - t2.getMinutes(), t1.getSeconds() - t2.getSeconds());
 
       // Establecer formato de hora
-      console.log('horas', t1.getHours());
       tHoras = tHoras + t1.getHours();
-      console.log('horas', tHoras);
       tSegudos = tSegudos + t1.getSeconds();
       tMinutos = tMinutos + t1.getMinutes();
       if (tHoras < 10) {
@@ -810,11 +826,11 @@ export class ReporteAtrasosComponent implements OnInit {
       tiempoTotal = horaF + ':' + minF + ':' + secondF;
 
       // Realización de cálculos
+      // Fórmula minutos = (segundos * 60) + minutos
       minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      // Fórmula horas = (minutos / 60) + horas
       horaTDecimal = (minTDecimal / 60) + t1.getHours();
-      console.log('hora decimal', horaTDecimal);
       formatoHorasDecimal = formatoHorasDecimal + parseFloat(horaTDecimal.toFixed(3));
-      console.log('total hora decimal', formatoHorasDecimal);
       formatoHorasEntero = parseFloat('0.' + String(formatoHorasDecimal).split('.')[1]) * 60
 
       // Control de escritura de minutos
@@ -835,16 +851,18 @@ export class ReporteAtrasosComponent implements OnInit {
       var hTrabajo = (trabaja).split(":")
       var t3 = new Date();
       t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      // Fórmula minutos = (segundos * 60) + minutos
       minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      // Fórmula horas = (minutos / 60) + horas
       horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      // Fórmula dias = horasAtrasos / horasLaborables
       diasDecimal = horaTDecimal / horaTDecimalH;
       formatoDiasDecimal = formatoDiasDecimal + parseFloat(diasDecimal.toFixed(3));
-      console.log('total dias decimal', formatoDiasDecimal);
     });
 
     // Búsqueda de los datos del empleado del cual se obtiene el reporte
     this.datosEmpleado.forEach(obj => {
-      if (obj.id === id_seleccionado) {
+      if (obj.codigo === id_seleccionado) {
         datosGenerales = [{
           NOMBRE: obj.nombre,
           APELLIDO: obj.apellido,
@@ -915,7 +933,9 @@ export class ReporteAtrasosComponent implements OnInit {
       tiempoTotal = horaF + ':' + minF + ':' + secondF;
 
       // Realización de cálculos
+      // Fórmula minutos = (segundos * 60) +  minutos
       minTDecimal = (t1.getSeconds() * 60) + t1.getMinutes();
+      // Fórmula horas = (minutos / 60) + horas
       horaTDecimal = (minTDecimal / 60) + t1.getHours();
 
       // Obtención de días de trabajo del empleado
@@ -928,8 +948,11 @@ export class ReporteAtrasosComponent implements OnInit {
       var hTrabajo = (trabaja).split(":")
       var t3 = new Date();
       t3.setHours(parseInt(hTrabajo[0]), parseInt(hTrabajo[1]), parseInt(hTrabajo[2]));
+      // Fórmula minutos = (segundos * 60) + minutos
       minTDecimalH = (t3.getSeconds() * 60) + t3.getMinutes();
+      // Fórmula horas = (minutos / 60) + horas
       horaTDecimalH = (minTDecimalH / 60) + t3.getHours();
+      // Fórmula dias = horasAtrasos / horasLaborables
       diasDecimal = horaTDecimal / horaTDecimalH;
       this.contarRegistros = this.contarRegistros + 1;
 
@@ -947,10 +970,10 @@ export class ReporteAtrasosComponent implements OnInit {
       }
     }));
 
-    const header = Object.keys(this.totalAtrasos[0]); // columns name
+    const header = Object.keys(this.totalAtrasos[0]); // nombres de las columnas
 
     var wscols = [];
-    for (var i = 0; i < header.length; i++) {  // columns length added
+    for (var i = 0; i < header.length; i++) {  // contar columnas
       wscols.push({ wpx: 110 })
     }
     wsa["!cols"] = wscols;
@@ -959,60 +982,6 @@ export class ReporteAtrasosComponent implements OnInit {
     xlsx.utils.book_append_sheet(wb, wse, 'Empleado');
     xlsx.utils.book_append_sheet(wb, wsa, 'Atrasos');
     xlsx.writeFile(wb, "Atrasos - " + mensaje + ' - ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
-  }
-
-  /* ****************************************************************************************************
-   *                               PARA LA EXPORTACIÓN DE ARCHIVOS XML
-   * ****************************************************************************************************/
-  urlxml: string;
-  data: any = [];
-  exportToXML() {
-    var objeto;
-    var arregloEmpleado = [];
-    this.empleado.forEach(obj => {
-      let nacionalidad;
-      this.nacionalidades.forEach(element => {
-        if (obj.id_nacionalidad == element.id) {
-          nacionalidad = element.nombre;
-        }
-      });
-
-      objeto = {
-        "empleado": {
-          '@id': obj.id,
-          "cedula": obj.cedula,
-          "apellido": obj.apellido,
-          "nombre": obj.nombre,
-          "correo": obj.correo,
-          "fechaNacimiento": obj.fec_nacimiento.split("T")[0],
-          "correoAlternativo": obj.mail_alternativo,
-          "domicilio": obj.domicilio,
-          "telefono": obj.telefono,
-          "nacionalidad": nacionalidad,
-          "imagen": obj.imagen
-        }
-      }
-      arregloEmpleado.push(objeto)
-    });
-
-    this.rest.DownloadXMLRest(arregloEmpleado).subscribe(res => {
-      console.log(arregloEmpleado)
-      this.data = res;
-      console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });
-  }
-
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
-
-  exportToCVS() {
-    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.empleado);
-    const csvDataC = xlsx.utils.sheet_to_csv(wse);
-    const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
-    FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
 
 }

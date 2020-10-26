@@ -1,9 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ɵbypassSanitizationTrustStyle } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
-//moment.locale('es');
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
@@ -26,14 +25,12 @@ interface Estado {
 
 export class HoraExtraAutorizacionesComponent implements OnInit {
 
-  // idDocumento = new FormControl('', Validators.required);
   TipoDocumento = new FormControl('');
   orden = new FormControl('', Validators.required);
   estado = new FormControl('', Validators.required);
   idDepartamento = new FormControl('');
 
   public nuevaAutorizacionesForm = new FormGroup({
-    // idDocumentoF: this.idDocumento,
     ordenF: this.orden,
     estadoF: this.estado,
     idDepartamentoF: this.idDepartamento
@@ -50,7 +47,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
   ];
 
   estados: Estado[] = [
-    { id: 1, nombre: 'Pendiente' },
+    // { id: 1, nombre: 'Pendiente' },
     { id: 2, nombre: 'Pre-autorizado' },
     { id: 3, nombre: 'Autorizado' },
     { id: 4, nombre: 'Negado' },
@@ -71,110 +68,62 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
-   }
+  }
 
   ngOnInit(): void {
-    console.log(this.data, 'data');
+    console.log(this.data, 'datam');
     this.obtenerDepartamento();
     this.tiempo();
   }
 
   insertarAutorizacion(form) {
-    let newAutorizaciones = {
-      orden: form.ordenF,
-      estado: form.estadoF,
-      id_departamento: form.idDepartamentoF,
-      id_permiso: null,
-      id_vacacion: null,
-      id_hora_extra: this.data.id,
-      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
-      id_plan_hora_extra: null,
-      // id_documento: form.idDocumentoF
-    }
     if (this.data.carga === 'individual') {
-      newAutorizaciones.id_hora_extra = this.data.datosHora.id;
-      this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
-          this.limpiarCampos();
-        this.dialogRef.close();
-      }, error => {
-        console.log(error);
-      })
+    this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
     }
     else if (this.data.carga === 'multiple') {
-      console.log('entra');
-      console.log(newAutorizaciones);
-      /*  for (var i = 0; i < this.data.datosHora.length  ; i++) {
-          console.log('i', i, ' ', this.data.datosHora.length - 1, this.data.datosHora.length);
-          newAutorizaciones.id_hora_extra = this.data.datosHora[i].id;
-          console.log('ejecuta 1', i);
-          this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.datosHora[i].id_contrato).subscribe(res => {
-           
-            this.departamentos = res;
-            console.log('ejecuta 2', i);
-            newAutorizaciones.id_departamento = this.departamentos[0].id_departamento;
-            console.log(newAutorizaciones, 'kjkjc', i);
-            this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-              this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-              console.log(this.data.datosHora[i].id, this.departamentos[0].id_departamento, this.data.datosHora[i].id_usua_solicita, form.estadoF)
-              this.EditarEstadoHoraExtra(this.data.datosHora[i].id, this.departamentos[0].id_departamento, this.data.datosHora[i].id_usua_solicita, form.estadoF)
-            }, error => { })
-          })
-          console.log('i', i)
-        }*/
-
       this.data.datosHora.map(obj => {
-        // console.log('i', i, ' ', this.data.datosHora.length - 1, this.data.datosHora.length);
-        newAutorizaciones.id_hora_extra = obj.id;
-        //console.log('ejecuta 1', i);
-        this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_contrato).subscribe(res => {
-
-          this.departamentos = res;
-          //console.log('ejecuta 2', i);
-          newAutorizaciones.id_departamento = this.departamentos[0].id_departamento;
-          console.log(newAutorizaciones, 'kjkjc');
-          this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-            this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-            console.log(obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita, form.estadoF)
-            this.EditarEstadoHoraExtra(obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita, form.estadoF)
-          }, error => { })
-        })
+        if (obj.estado === 'Pre-Autorizado') {
+          this.restH.BuscarDatosAutorizacion(obj.id).subscribe(data => {
+            var documento = data[0].empleado_estado;
+            this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+              this.departamentos = res;
+              this.ActualizarDatos(form, documento, obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita);
+            })
+          })
+        }
+        else {
+          this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
+            this.departamentos = res;
+            this.IngresarDatos(form, obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita);
+          })
+        }
       })
-
-      this.limpiarCampos();
-      this.dialogRef.close();
     }
-    else {
-      this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada'),
-          this.limpiarCampos();
-        this.dialogRef.close();
-      }, error => {
-        console.log(error);
-      })
+    else if (this.data.carga === undefined) {
+      this.IngresarDatos(form, this.data.id, form.idDepartamentoF, this.data.id_usua_solicita);
     }
   }
 
   obtenerDepartamento() {
-    if (this.data.carga != 'individual' && this.data.carga != 'multiple') {
-      this.BusquedaDepartamento(this.data.id_contrato);
+    if (this.data.carga === 'individual') {
+      this.BusquedaDepartamento(this.data.pedido_hora.id_empl_cargo);
     }
     else {
       this.nuevaAutorizacionesForm.patchValue({
         ordenF: 1,
-        estadoF: 1,
+        estadoF: 2,
       })
       this.Habilitado = false;
     }
   }
 
-  BusquedaDepartamento(contrato_id) {
-    this.restDepartamento.ConsultarDepartamentoPorContrato(contrato_id).subscribe(res => {
-      console.log(res);
+  BusquedaDepartamento(cargo_id) {
+    this.restDepartamento.ConsultarDepartamentoPorContrato(cargo_id).subscribe(res => {
+      console.log(res, 'departamentos');
       this.departamentos = res;
       this.nuevaAutorizacionesForm.patchValue({
         ordenF: 1,
-        estadoF: 1,
+        estadoF: 2,
         idDepartamentoF: this.departamentos[0].id_departamento
       })
     })
@@ -186,8 +135,47 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
     console.log('fecha Actual', this.FechaActual);
   }
 
+
+  IngresarDatos(form, id_hora_extra: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para ingresar una autorización
+    let newAutorizaciones = {
+      orden: form.ordenF,
+      estado: form.estadoF,
+      id_departamento: id_departamento,
+      id_permiso: null,
+      id_vacacion: null,
+      id_hora_extra: id_hora_extra,
+      id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      id_plan_hora_extra: null,
+    }
+    this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      console.log('pasa')
+      this.EditarEstadoHoraExtra(id_hora_extra, id_departamento, empleado_solicita, form.estadoF)
+      this.limpiarCampos();
+      this.dialogRef.close();
+    }, error => { })
+  }
+
+  ActualizarDatos(form, documento, id_hora_extra: number, id_departamento: number, empleado_solicita: number) {
+    // Arreglo de datos para actualizar la autorización de acuerdo a la hora extra
+    let newAutorizacionesM = {
+      id_documento: documento + localStorage.getItem('empleado') + '_' + form.estadoF + ',',
+      estado: form.estadoF,
+      id_hora_extra: id_hora_extra,
+      id_departamento: id_departamento,
+    }
+    this.restAutorizaciones.PutEstadoAutoHoraExtra(id_hora_extra, newAutorizacionesM).subscribe(res => {
+      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
+      this.EditarEstadoHoraExtra(id_hora_extra, id_departamento, empleado_solicita, form.estadoF)
+      this.limpiarCampos();
+      this.dialogRef.close();
+    })
+  }
+
   resEstado: any = [];
   EditarEstadoHoraExtra(id_hora, id_departamento, usuario_solicita, estado_hora) {
+    console.log('estado', estado_hora)
     let datosHorasExtras = {
       estado: estado_hora,
       id_hora_extra: id_hora,
@@ -205,21 +193,31 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       //     nomEstado = obj.nombre
       //   }
       // })
+      var estado_letras: string = '';
+      if (estado_hora === 1) {
+        estado_letras = 'Pendiente';
+      }
+      else if (estado_hora === 2) {
+        estado_letras = 'Pre-autorizado';
+      }
+      else if (estado_hora === 3) {
+        estado_letras = 'Autorizado';
+      }
+      else if (estado_hora === 4) {
+        estado_letras = 'Negado';
+      }
       let notificacion = {
         id: null,
         id_send_empl: this.id_empleado_loggin,
         id_receives_empl: usuario_solicita,
         id_receives_depa: id_departamento,
-        estado: this.resEstado[0].realtime[0].estado,
+        estado: estado_letras,
         create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
         id_permiso: null,
         id_vacaciones: null,
         id_hora_extra: id_hora
       }
-      console.log('noti', notificacion, this.id_empleado_loggin);
-
       this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(res1 => {
-        console.log(res1);
         this.NotifiRes = res1;
         notificacion.id = this.NotifiRes._id;
         if (this.NotifiRes._id > 0 && this.resEstado[0].notificacion === true) {

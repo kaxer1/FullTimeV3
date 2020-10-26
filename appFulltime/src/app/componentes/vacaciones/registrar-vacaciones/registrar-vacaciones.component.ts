@@ -5,9 +5,15 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment';
+
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+
+interface Estado {
+  id: number,
+  nombre: string
+}
 
 @Component({
   selector: 'app-registrar-vacaciones',
@@ -20,7 +26,15 @@ import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.serv
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class RegistrarVacacionesComponent implements OnInit {
+
+  estados: Estado[] = [
+    { id: 1, nombre: 'Pendiente' },
+    { id: 2, nombre: 'Pre-autorizado' },
+    { id: 3, nombre: 'Autorizado' },
+    { id: 4, nombre: 'Negado' },
+  ];
 
   empleados: any = [];
   calcular = false;
@@ -63,22 +77,13 @@ export class RegistrarVacacionesComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.datoEmpleado);
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
+
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
     this.VacacionesForm.patchValue({
-      estadoForm: 'Solicitado'
+      estadoForm: 1
     });
-
-    var f = new Date();
-
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
   }
 
   fechasTotales: any = [];
@@ -101,7 +106,7 @@ export class RegistrarVacacionesComponent implements OnInit {
         let diasF = this.ContarDiasHabiles(fechaF, fechaF);
         console.log('total de fechas', diasF);
         if (diasF != 0) {
-         diasFeriado = diasFeriado + 1;
+          diasFeriado = diasFeriado + 1;
         }
         else {
           diasL = diasL + 1;
@@ -243,32 +248,33 @@ export class RegistrarVacacionesComponent implements OnInit {
       dia_laborable: form.dialaborableForm,
       legalizado: form.legalizadoForm,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
-      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
+      depa_user_loggin: parseInt(localStorage.getItem('departamento')),
+      id_empl_cargo: this.datoEmpleado.idCargo
     };
     console.log(datosVacaciones);
     this.restV.RegistrarVacaciones(datosVacaciones).subscribe(response => {
       this.arrayNivelesDepa = response;
-
+      console.log('respuesta', this.arrayNivelesDepa)
       this.arrayNivelesDepa.forEach(obj => {
         let dataVacacionCreada = {
           fec_inicio: datosVacaciones.fec_inicio,
           fec_final: datosVacaciones.fec_final,
           idContrato: this.datoEmpleado.idContrato,
-          id: obj.id, 
-          estado: obj.estado, 
-          id_dep: obj.id_dep, 
-          depa_padre: obj.depa_padre, 
-          nivel: obj.nivel, 
-          id_suc: obj.id_suc, 
-          departamento: obj.departamento, 
-          sucursal: obj.sucursal, 
-          cargo: obj.cargo, 
-          contrato: obj.contrato, 
-          empleado: obj.empleado, 
-          nombre: obj.nombre, 
-          apellido: obj.apellido, 
-          cedula: obj.cedula, 
-          correo: obj.correo, 
+          id: obj.id,
+          estado: obj.estado,
+          id_dep: obj.id_dep,
+          depa_padre: obj.depa_padre,
+          nivel: obj.nivel,
+          id_suc: obj.id_suc,
+          departamento: obj.departamento,
+          sucursal: obj.sucursal,
+          cargo: obj.cargo,
+          contrato: obj.contrato,
+          empleado: obj.empleado,
+          nombre: obj.nombre,
+          apellido: obj.apellido,
+          cedula: obj.cedula,
+          correo: obj.correo,
           vaca_mail: obj.vaca_mail,
           vaca_noti: obj.vaca_noti
         }
@@ -277,13 +283,13 @@ export class RegistrarVacacionesComponent implements OnInit {
           console.log(response);
           this.responseVacacion = res
           var f = new Date();
-          let notificacion = { 
+          let notificacion = {
             id: null,
             id_send_empl: this.datoEmpleado.idEmpleado,
             id_receives_empl: this.responseVacacion.id_empleado_autoriza,
             id_receives_depa: this.responseVacacion.id_departamento_autoriza,
-            estado: this.responseVacacion.estado, 
-            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`, 
+            estado: this.responseVacacion.estado,
+            create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
             id_permiso: null,
             id_vacaciones: this.responseVacacion.id_vacacion,
             id_hora_extra: null,
@@ -300,7 +306,7 @@ export class RegistrarVacacionesComponent implements OnInit {
         })
 
       });
-      
+
       this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas')
       this.CerrarVentanaRegistroVacaciones();
     }, error => {

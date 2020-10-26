@@ -21,7 +21,7 @@
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                     matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
                     help_outline</mat-icon>
-                <mat-select [formControl]="estadoF" required>
+                <mat-select [formControl]="estadoF" required disabled>
                     <mat-option *ngFor="let e of estados" [value]="e.id">
                         {{e.nombre}}
                     </mat-option>

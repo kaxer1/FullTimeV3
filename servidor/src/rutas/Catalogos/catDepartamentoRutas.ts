@@ -17,7 +17,7 @@ class DepartamentoRutas {
         this.router.get('/buscarDepa/:id_sucursal', TokenValidation, DEPARTAMENTO_CONTROLADOR.ObtenerDepartamentosSucursal);
         this.router.post('/', TokenValidation, DEPARTAMENTO_CONTROLADOR.CrearDepartamento);
         this.router.get('/busqueda/:nombre', TokenValidation, DEPARTAMENTO_CONTROLADOR.ObtenerIdDepartamento);
-        this.router.get('/busqueda-contrato/:id_contrato', TokenValidation, DEPARTAMENTO_CONTROLADOR.BuscarDepartamentoPorContrato);
+        this.router.get('/busqueda-cargo/:id_cargo', TokenValidation, DEPARTAMENTO_CONTROLADOR.BuscarDepartamentoPorCargo);
         this.router.put('/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.ActualizarDepartamento);
         this.router.post('/xmlDownload/', TokenValidation, DEPARTAMENTO_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', DEPARTAMENTO_CONTROLADOR.downloadXML);

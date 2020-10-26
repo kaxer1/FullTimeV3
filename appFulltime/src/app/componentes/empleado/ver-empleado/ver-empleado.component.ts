@@ -9,6 +9,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as xlsx from 'xlsx';
 import * as FileSaver from 'file-saver';
+import * as moment from 'moment';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { DiscapacidadService } from 'src/app/servicios/discapacidad/discapacidad.service';
@@ -889,16 +890,21 @@ export class VerEmpleadoComponent implements OnInit {
 
   /* Ventana para registrar vacaciones del empleado */
   AbrirVentanaVacaciones(): void {
-    this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
-      this.idPerVacacion = datos;
-      console.log("idPerVaca ", this.idPerVacacion)
-      this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
-        { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } })
-        .afterClosed().subscribe(item => {
-          this.obtenerVacaciones(parseInt(this.idEmpleado));
-        });
+    this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+      this.idCargo = datos;
+      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idPerVacacion = datos;
+        console.log("idPerVaca ", this.idPerVacacion)
+        this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
+          { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato, idCargo: this.idCargo[0].max } })
+          .afterClosed().subscribe(item => {
+            this.obtenerVacaciones(parseInt(this.idEmpleado));
+          });
+      }, error => {
+        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
     });
   }
 
@@ -966,18 +972,25 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.BuscarIDContratoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idContrato = datos;
       console.log("idContrato ", this.idContrato[0].max)
-      this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
-        this.idPerVacacion = datos;
-        console.log("idPerVaca ", this.idPerVacacion[0].id)
-        this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
-          {
-            width: '1200px',
-            data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max, idPerVacacion: this.idPerVacacion[0].id }
-          }).afterClosed().subscribe(item => {
-            this.obtenerPermisos(parseInt(this.idEmpleado));
-          });
+
+      this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
+        this.idCargo = datos;
+
+        this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
+          this.idPerVacacion = datos;
+          console.log("idPerVaca ", this.idPerVacacion[0].id)
+          this.vistaRegistrarDatos.open(RegistroEmpleadoPermisoComponent,
+            {
+              width: '1200px',
+              data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max, idPerVacacion: this.idPerVacacion[0].id, idCargo: this.idCargo[0].max }
+            }).afterClosed().subscribe(item => {
+              this.obtenerPermisos(parseInt(this.idEmpleado));
+            });
+        }, error => {
+          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
       });
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
@@ -1103,41 +1116,34 @@ export class VerEmpleadoComponent implements OnInit {
 
       // Pie de página
       footer: function (currentPage, pageCount, fecha) {
-        var f = new Date();
-        if (f.getMonth() < 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-          fecha = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-        } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-          fecha = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-        }
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
         // Formato de hora actual
-        if (f.getMinutes() < 10) {
-          var time = f.getHours() + ':0' + f.getMinutes();
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
         }
         else {
-          var time = f.getHours() + ':' + f.getMinutes();
+          var time = h.getHours() + ':' + h.getMinutes();
         }
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + time,
+            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
             {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue', opacity: 0.5
+                  alignment: 'right', opacity: 0.3
                 }
               ],
             }
-          ], fontSize: 10, color: '#A4B8FF',
+          ], fontSize: 10
         }
       },
       content: [
-        { image: this.logoE, width: 150 },
-        { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, 0, 0, 20] },
+        { image: this.logoE, width: 150, margin: [10, -25, 0, 5] },
+        { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10]},
         {
           columns: [
             [
@@ -1378,7 +1384,7 @@ export class VerEmpleadoComponent implements OnInit {
 
       objeto = {
         "empleado": {
-          '@id': obj.id,
+          '@codigo': obj.codigo,
           "cedula": obj.cedula,
           "apellido": obj.apellido,
           "nombre": obj.nombre,
@@ -1403,8 +1409,6 @@ export class VerEmpleadoComponent implements OnInit {
       window.open(this.urlxml, "_blank");
     });
   }
-
-
 
   /** HABILITAR O DESHABILITAR VISTA DE ACCIONES DE PERSONAL */
   VerAccionPersonal() {

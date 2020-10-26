@@ -13,6 +13,9 @@ import * as moment from 'moment';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfigEmpleadosComponent } from '../../reportes-Configuracion/config-report-empleados/config-empleados.component';
+import { IReporteEmpleados, IRestListEmpl } from '../../../model/reportes.model'
 
 @Component({
   selector: 'app-asistencia-consolidado',
@@ -69,12 +72,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     private restEmpleado: EmpleadoService,
     private restKardex: KardexService,
     private restEmpre: EmpresaService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private openVentana: MatDialog
   ) {
-    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
+    this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.ObtenerEmpleados();
     this.ObtenerEmpleadoSolicitaKardex(this.idEmpleado);
     this.ObtnerColores();
@@ -183,9 +187,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   AsistenciaEmpleado(id_empleado: number, palabra: string) {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
-        this.asistencia = res;
         console.log(this.asistencia);
-        this.generarPdf(palabra, 1)
+        if (res.message) {
+          this.toastr.error(res.message);
+        } else {
+          this.asistencia = res;
+          this.generarPdf(palabra, 1)
+        }
       })
     } else {
       this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
@@ -203,6 +211,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     } else {
       this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
     }
+  }
+
+  ConfiguracionReporteEmpleados() {
+    console.log('Esta listo para configurar');
+    this.openVentana.open(ConfigEmpleadosComponent, { width: '500px' }).afterClosed()
+      .subscribe(res => { console.log(res) })
   }
   /* ****************************************************************************************************
   *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF 
@@ -244,7 +258,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
@@ -274,91 +288,44 @@ export class AsistenciaConsolidadoComponent implements OnInit {
                 ]
               ]
             }
-          },          
+          },
           {
             margin: [10, -2, 10, 0],
             columns: [
-              'Fecha: ' + fecha + ' Hora: ' + timer,
               {
-                text: [
-                  {
-                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
-                  }
-                ],
-              }
-            ],
-            fontSize: 10, color: '#A4B8FF',
+                text: [{
+                  text: 'Fecha: ' + fecha + ' Hora: ' + timer, alignment: 'left', opacity: 0.3
+                }]
+              },
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       content: [
+        { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              alignment: 'center',
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Reporte - Asistencia Detalle Consolidado'
+          text: 'Reporte - Asistencia Detalle Consolidado',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         this.CampoInformacionGeneralAsistencia(this.asistencia.empleado[0].ciudad, this.asistencia.empleado[0]),
         this.CampoDetalleAsistencia(this.asistencia.detalle),
         this.CampoOperaciones(this.asistencia.operaciones[0]),
       ],
       styles: {
-        tableTotal: {
-          fontSize: 30,
-          bold: true,
-          alignment: 'center',
-          fillColor: this.p_color
-        },
-        tableHeader: {
-          fontSize: 9,
-          bold: true,
-          alignment: 'center',
-          fillColor: this.p_color
-        },
-        itemsTable: {
-          fontSize: 8,
-          margin: [0, 5, 0, 5]
-        },
-        itemsTableInfo: {
-          fontSize: 10,
-          margin: [0, 5, 0, 5]
-        },
-        subtitulos: {
-          fontSize: 16,
-          alignment: 'center',
-          margin: [0, 5, 0, 10]
-        },
-        tableMargin: {
-          margin: [0, 20, 0, 0]
-        },
-        CabeceraTabla: {
-          fontSize: 12,
-          alignment: 'center',
-          margin: [0, 8, 0, 8],
-          fillColor: this.p_color,
-        },
-        quote: {
-          margin: [1, -2, 0, -2],
-          italics: true
-        },
-        small: {
-          fontSize: 7,
-          color: '#A4B8FF',
-        }
+        tableTotal: { fontSize: 30, bold: true, alignment: 'center', fillColor: this.p_color },
+        tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3], },
+        itemsTableInfo: { fontSize: 10, margin: [0, 5, 0, 5] },
+        subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
+        tableMargin: { margin: [0, 20, 0, 0] },
+        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
+        quote: { margin: [5, -2, 0, -2], italics: true },
+        small: { fontSize: 8, opacity: 0.3 }
       }
     };
   }
@@ -417,6 +384,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       style: 'tableMargin',
       table: {
+        headerRows: 1,
         widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
         body: [
           [
@@ -528,7 +496,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
@@ -536,41 +504,28 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + timer,
+            { text: 'Fecha: ' + fecha + ' Hora: ' + timer, opacity: 0.3 },
             {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue',
-                  opacity: 0.5
+                  alignment: 'right', opacity: 0.3
                 }
               ],
             }
           ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          fontSize: 10
         }
       },
       content: [
+        { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              alignment: 'center',
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Listado - Empleados'
+          text: 'Listado - Empleados',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         {
           style: 'subtitulos',
@@ -579,45 +534,45 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         this.ObtenerListadoDetallado(this.lista),
       ],
       styles: {
-        tableHeaderDetalle: {
-          bold: true,
-          alignment: 'center',
-          fillColor: this.p_color,
-          fontSize: 12,
-          margin: [0, 5, 0, 5]
-        },
-        itemsTableDetalle: {
-          fontSize: 11,
-          margin: [0, 5, 0, 5]
-        },
-        subtitulos: {
-          fontSize: 16,
-          alignment: 'center',
-          margin: [0, 5, 0, 10]
-        }
+        tableHeaderDetalle: { bold: true, alignment: 'center', fillColor: this.p_color, fontSize: 12, margin: [0, 5, 0, 5] },
+        itemsTableDetalle: { fontSize: 10, margin: [0, 5, 0, 5] },
+        subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] }
       }
     };
   }
 
-  ObtenerListadoDetallado(datos: any[]) {
+  ObtenerListadoDetallado(datosRest: any[]) {
+    console.log(!!sessionStorage.getItem('arrayConfig'));
+    console.log(!!sessionStorage.getItem('columnasValidas'));
+    let columnas = parseInt(sessionStorage.getItem('columnasValidas'));
+    let s = JSON.parse(sessionStorage.getItem('arrayConfig')) as IReporteEmpleados;
+    console.log(s);
+
+    // let datos = datosRest.map(obj => {
+    //   if (s.cargo === false) { delete obj.cargo } 
+    //   if (s.codigo === false) { delete obj.codigo }
+    //   if (s.depart === false) { delete obj.departamento }
+    //   if (s.detall === false) { delete obj.detalle_grupo }
+    //   if (s.grupo === false) { delete obj.grupo }
+    //   return obj
+    // });
+    // console.log(datos);
+    // return this.FuncionUno(columnas, s, datos);
+    return this.FuncionUno(columnas, s, datosRest);
+
+  }
+
+  FuncionUno(columnas: number, configuracion: IReporteEmpleados, datos: any[]) {
     let contador = 0;
     return {
       table: {
-        widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*'],
+        headerRows: 1,
+        widths: this.FuncionColumnas(columnas),
         body: [
-          [
-            { text: 'N°', style: 'tableHeaderDetalle' },
-            { text: 'CEDULA', style: 'tableHeaderDetalle' },
-            { text: 'CODIGO', style: 'tableHeaderDetalle' },
-            { text: 'APELLIDOS Y NOMBRES', style: 'tableHeaderDetalle' },
-            { text: 'DEPARTAMENTOS', style: 'tableHeaderDetalle' },
-            { text: 'CARGO', style: 'tableHeaderDetalle' },
-            { text: 'GRUPO', style: 'tableHeaderDetalle' },
-            { text: 'DETALLE GRUPO', style: 'tableHeaderDetalle' }
-          ],
-          ...datos.map(obj => {
-            contador = contador + 1
-            return [
+          this.FuncionTituloColumna(configuracion),
+          ...datos.map((obj: IRestListEmpl) => {
+            contador = contador + 1;
+            var array = [
               { style: 'itemsTableDetalle', text: contador },
               { style: 'itemsTableDetalle', text: obj.cedula },
               { style: 'itemsTableDetalle', text: obj.codigo },
@@ -627,6 +582,54 @@ export class AsistenciaConsolidadoComponent implements OnInit {
               { style: 'itemsTableDetalle', text: obj.grupo },
               { style: 'itemsTableDetalle', text: obj.detalle_grupo }
             ]
+            let index = 0;
+            let cont = 0;
+            if (configuracion.codigo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.codigo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.depart === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.departamento) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.cargo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.cargo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.grupo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.detall === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.detalle_grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            return array
           })
         ]
       },
@@ -638,6 +641,78 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     }
   }
 
+  FuncionColumnas(columnas: number) {
+    console.log(columnas);
+    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
+    // var inicio = 8 - columnas;
+    console.log(col.slice(0, columnas));
+
+    return col.slice(0, columnas);
+  }
+
+  FuncionTituloColumna(configuracion: IReporteEmpleados) {
+
+    var arrayTitulos = [
+      { text: 'N°', style: 'tableHeaderDetalle' },
+      { text: 'CEDULA', style: 'tableHeaderDetalle' },
+      { text: 'CODIGO', style: 'tableHeaderDetalle' },
+      { text: 'APELLIDOS Y NOMBRES', style: 'tableHeaderDetalle' },
+      { text: 'DEPARTAMENTOS', style: 'tableHeaderDetalle' },
+      { text: 'CARGO', style: 'tableHeaderDetalle' },
+      { text: 'GRUPO', style: 'tableHeaderDetalle' },
+      { text: 'DETALLE GRUPO', style: 'tableHeaderDetalle' }
+    ]
+    let index = 0;
+    let contador = 0;
+    if (configuracion.codigo === false) {
+      contador = 0;
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'CODIGO') { index = contador; }
+        contador = contador + 1
+      })
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.depart === false) {
+      contador = 0;
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'DEPARTAMENTOS') { index = contador; }
+        contador = contador + 1
+      })
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.cargo === false) {
+      contador = 0;
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'CARGO') { index = contador; }
+        contador = contador + 1
+      })
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.grupo === false) {
+      contador = 0;
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'GRUPO') { index = contador; }
+        contador = contador + 1
+      })
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.detall === false) {
+      contador = 0;
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'DETALLE GRUPO') { index = contador; }
+        contador = contador + 1
+      })
+      arrayTitulos.splice(index, 1)
+    }
+
+    console.log(arrayTitulos);
+
+    return arrayTitulos
+  }
   /**********************************************
    *  METODOS PARA IMPRIMIR EL KARDEX
    **********************************************/
@@ -651,8 +726,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       // pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
@@ -684,42 +758,25 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           {
             margin: [10, -2, 10, 0],
             columns: [
-              'Fecha: ' + fecha + ' Hora: ' + timer,
+              { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
               {
-                text: [
-                  {
-                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                    alignment: 'right', color: 'blue',
-                    opacity: 0.5
-                  }
-                ],
-              }
-            ],
-            fontSize: 10,
-            color: '#A4B8FF',
+                text: [{
+                  text: 'Fecha: ' + fecha + ' Hora: ' + timer, alignment: 'left', opacity: 0.3
+                }]
+              },
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       content: [
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              alignment: 'center',
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Reporte - Kardex Vacaciones Días Calendario'
+          text: 'Reporte - Kardex Vacaciones Días Calendario',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         this.CampoInformacionGeneralKardex(this.kardex.empleado[0].ciudad, this.kardex.empleado[0]),
         this.CampoDetallePeriodo(this.kardex.detalle),
@@ -731,55 +788,17 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         }
       ],
       styles: {
-        tableHeader: {
-          fontSize: 11,
-          bold: true,
-          alignment: 'center',
-          fillColor: this.p_color
-        },
-        itemsTable: {
-          fontSize: 10,
-          margin: [0, 5, 0, 5]
-        },
-        itemsTableDesHas: {
-          fontSize: 9,
-          margin: [0, 5, 0, 5]
-        },
-        itemsTableCentrado: {
-          fontSize: 10,
-          alignment: 'center',
-          margin: [0, 5, 0, 5]
-        },
-        subtitulos: {
-          fontSize: 16,
-          alignment: 'center',
-          margin: [0, 5, 0, 10]
-        },
-        tableMargin: {
-          margin: [0, 20, 0, 0]
-        },
-        CabeceraTabla: {
-          fontSize: 12,
-          alignment: 'center',
-          margin: [0, 8, 0, 8],
-          fillColor: this.p_color,
-        },
-        itemsTableInfo: {
-          fontSize: 10,
-          margin: [0, 3, 0, 3]
-        },
-        tableLiqPro: {
-          alignment: 'right',
-          margin: [0, 20, 0, 0]
-        },
-        quote: {
-          margin: [1, -2, 0, -2],
-          italics: true
-        },
-        small: {
-          fontSize: 7,
-          color: '#A4B8FF',
-        }
+        tableHeader: { fontSize: 11, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTable: { fontSize: 10, margin: [0, 5, 0, 5] },
+        itemsTableDesHas: { fontSize: 9, margin: [0, 5, 0, 5] },
+        itemsTableCentrado: { fontSize: 10, alignment: 'center', margin: [0, 5, 0, 5] },
+        subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
+        tableMargin: { margin: [0, 20, 0, 0] },
+        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
+        itemsTableInfo: { fontSize: 10, margin: [0, 3, 0, 3] },
+        tableLiqPro: { alignment: 'right', margin: [0, 20, 0, 0] },
+        quote: { margin: [5, -2, 0, -2], italics: true },
+        small: { fontSize: 8, opacity: 0.3 }
       }
     };
   }

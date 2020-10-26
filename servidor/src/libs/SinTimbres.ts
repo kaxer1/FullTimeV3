@@ -1,8 +1,7 @@
-import LOGIN_CONTROLADOR from '../controlador/login/loginControlador';
 import pool from '../database';
 
-// const MINUTO_TIMER = 15;
-const MINUTO_TIMER = 5;
+const MINUTO_TIMER = 15;
+// const MINUTO_TIMER = 5; // de prueba
 
 export const NotificacionSinTimbres = function() {
 

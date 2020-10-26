@@ -1,19 +1,25 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import * as moment from 'moment';
 
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+// Invocación a los servicios
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
-import { LoginService } from 'src/app/servicios/login/login.service';
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
 
 interface opcionesDiasHoras {
   valor: string;
+  nombre: string
+}
+
+interface Estado {
+  id: number,
   nombre: string
 }
 
@@ -21,6 +27,7 @@ interface opcionesDiasHoras {
   selector: 'app-registro-empleado-permiso',
   templateUrl: './registro-empleado-permiso.component.html',
   styleUrls: ['./registro-empleado-permiso.component.css'],
+  // Formato de ingreso de la fecha dd/mm/yyyy
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -31,25 +38,42 @@ interface opcionesDiasHoras {
 
 export class RegistroEmpleadoPermisoComponent implements OnInit {
 
+  estados: Estado[] = [
+    { id: 1, nombre: 'Pendiente' },
+    { id: 2, nombre: 'Pre-autorizado' },
+    { id: 3, nombre: 'Autorizado' },
+    { id: 4, nombre: 'Negado' },
+  ];
+
   permiso: any = [];
+
   // Usado para imprimir datos
   datosPermiso: any = [];
   datoNumPermiso: any = [];
   tipoPermisos: any = [];
+
   diasHoras: opcionesDiasHoras[] = [
     { valor: 'Días', nombre: 'Días' },
     { valor: 'Horas', nombre: 'Horas' },
     { valor: 'Días y Horas', nombre: 'Días y Horas' },
   ];
+
   selec1 = false;
   selec2 = false;
+
+  // Total de días según el tipo de permiso
   Tdias = 0;
+  // Total de horas según el tipo de permiso
   Thoras;
+
+  // Número del permiso
   num: number;
   tipoPermisoSelec: string;
+  // Variable para guardar fecha actual tomada del sistema
   FechaActual: any;
   horasTrabajo: any = [];
 
+  // Variables para ocultar o visibilizar ingreso de datos días, horas, días libres
   HabilitarDias: boolean = true;
   estiloDias: any;
   HabilitarHoras: boolean = true;
@@ -100,21 +124,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.datoEmpleado);
-    var f = new Date();
-
-    if (f.getMonth() < 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-      this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-    } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-      this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-    }
+    var f = moment();
+    this.FechaActual = f.format('YYYY-MM-DD');
+    // Asignación de estado Pendiente en la solicitud de permiso
     this.PermisoForm.patchValue({
       fecCreacionForm: this.FechaActual,
-      estadoForm: 'Pendiente'
+      estadoForm: 1
     });
     this.ObtenerTiposPermiso();
     this.ImprimirNumeroPermiso();
@@ -144,7 +159,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       else {
         this.num = this.datoNumPermiso[0].max + 1;
       }
-      console.log("numPermiso", this.datoNumPermiso[0].max)
     })
   }
 
@@ -154,7 +168,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       days = 0,
       libres = 0;
     while (!from.isAfter(to)) {
-      /** Si no es sábado ni domingo */
+      // Si no es sábado ni domingo
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
         days++;
       }
@@ -178,11 +192,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   dSalida: any;
   validarFechaSalida(event) {
     this.LimpiarCamposFecha();
-    //this.dSalida = event.value._i.date;
     this.dSalida = event.value;
-    console.log('fecha Salida', moment(this.dSalida));
-    console.log(event);
-
   }
 
   dIngreso: any;
@@ -196,7 +206,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       this.dIngreso = event.value;
       this.restH.BuscarNumeroHoras(datosFechas).subscribe(datos => {
         this.horasTrabajo = datos;
-        console.log("horas", this.horasTrabajo[0].horas);
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
       }, error => {
         this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR');
@@ -216,7 +225,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
-      console.log(this.datosPermiso);
       if (this.datosPermiso[0].num_dia_maximo === 0) {
         this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
         this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
@@ -298,8 +306,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         diaLibreForm: '',
       });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
-        this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
-        this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
+      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
     }
   }
@@ -366,7 +374,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       hora_numero: form.horasForm,
       num_permiso: this.num,
       docu_nombre: form.nombreCertificadoForm,
-      depa_user_loggin: parseInt(localStorage.getItem('departamento'))
+      depa_user_loggin: parseInt(localStorage.getItem('departamento')),
+      id_empl_cargo: this.datoEmpleado.idCargo
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);
@@ -382,10 +391,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     else {
       this.GuardarDatos(datos);
     }
-  }
-
-  RegistrarPermiso(form) {
-    this.InsertarPermiso(form);
   }
 
   RevisarIngresoDias(form) {
@@ -465,7 +470,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       }
     }
     else if (this.tipoPermisoSelec === 'Días y Horas') {
-      //console.log("comparar horas", parseInt(datoHora));
       if (parseInt(form.horasForm.split(":")) < datoHora) {
         this.RevisarIngresoHoras();
       }
@@ -492,7 +496,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     if (this.tipoPermisoSelec === 'Días') {
       var contarDias = parseInt(form.diasForm) + 1;
       if (contarDias <= this.Tdias && parseInt(form.horasForm.split(":")) < parseInt(datoHora)) {
-        console.log('verificar dias y horas', contarDias);
         this.RevisarIngresoDiasHoras(contarDias, form);
       }
       else {
@@ -576,8 +579,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
         this.toastr.success('Operación Exitosa', 'Permiso registrado');
         this.arrayNivelesDepa = response;
         this.LimpiarCampos();
-        console.log(this.arrayNivelesDepa);
-
         this.arrayNivelesDepa.forEach(obj => {
           let datosPermisoCreado = {
             fec_creacion: datos.fec_creacion,
@@ -601,7 +602,6 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
             permiso_mail: obj.permiso_mail,
             permiso_noti: obj.permiso_noti
           }
-
           this.restP.SendMailNoti(datosPermisoCreado).subscribe(res => {
             this.idPermisoRes = res;
             console.log(this.idPermisoRes);
@@ -628,23 +628,19 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
               }
             });
           });
-
         });
-
-
       });
     }
     else {
       this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
     }
-
   }
 
   LimpiarCampos() {
     this.PermisoForm.reset();
     this.PermisoForm.patchValue({
       fecCreacionForm: this.FechaActual,
-      estadoForm: 'Pendiente'
+      estadoForm: 1
     });
   }
 
@@ -664,14 +660,11 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   CerrarVentanaPermiso() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
-
-  /** *******************************************************************
-   *  SUBIR ARCHIVO
-   *  *******************************************************************
-   */
+  /* ***************************************
+   * SUBIR ARCHIVO DE SOLICITUD DE PERMISO
+   * ****************************************/
 
   nameFile: string;
   archivoSubido: Array<File>;
@@ -698,10 +691,10 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     });
   }
 
-  /** ********************************************************************************
+  /* *********************************************************************************
    *  MENSAJES QUE INDICAN ERRORES AL INGRESAR DATOS
-   *  ********************************************************************************
-   */
+   *  ********************************************************************************/
+
   ObtenerMensajeErrorDescripcion() {
     if (this.descripcionF.hasError('pattern')) {
       return 'Ingresar una descripción válida';

@@ -13,6 +13,7 @@ class VacacionesRutas {
     }
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, vacacionesControlador_1.default.ListarVacaciones);
+        this.router.get('/estado-solicitud', verificarToken_1.TokenValidation, vacacionesControlador_1.default.ListarVacacionesAutorizadas);
         this.router.get('/:id', verificarToken_1.TokenValidation, vacacionesControlador_1.default.VacacionesIdPeriodo);
         this.router.get('/one/:id', verificarToken_1.TokenValidation, vacacionesControlador_1.default.ListarUnaVacacion);
         this.router.post('/', verificarToken_1.TokenValidation, vacacionesControlador_1.default.CrearVacaciones);

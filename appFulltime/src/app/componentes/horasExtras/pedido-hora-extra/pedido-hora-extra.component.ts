@@ -153,6 +153,7 @@ export class PedidoHoraExtraComponent implements OnInit {
       num_hora: form1.horasForm + ":00",
       descripcion: form1.descripcionForm,
       estado: form1.estadoForm,
+      observacion: false,
       tipo_funcion: form1.funcionForm,
       depa_user_loggin: parseInt(localStorage.getItem('departamento'))
     }

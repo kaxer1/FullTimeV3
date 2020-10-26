@@ -14,11 +14,14 @@ class DepartamentoRutas {
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ListarPlanHoraExtra);
         this.router.get('/justificar', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ListarPlanHoraExtraObserva);
+        this.router.get('/autorizacion', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ListarPlanHoraExtraAutorizada);
         this.router.post('/', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.CrearPlanHoraExtra);
         this.router.put('/tiempo-autorizado/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.TiempoAutorizado);
         this.router.put('/observacion/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ActualizarObservacion);
         this.router.put('/estado/:id', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ActualizarEstado);
         this.router.post('/send/aviso/', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.EnviarCorreoNotificacion);
+        this.router.post('/send/planifica/', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.EnviarCorreoPlanificacion);
+        this.router.get('/datosAutorizacion/:id_plan_extra', verificarToken_1.TokenValidation, planHoraExtraControlador_1.default.ObtenerDatosAutorizacion);
     }
 }
 const PLAN_HORA_EXTRA_RUTAS = new DepartamentoRutas();

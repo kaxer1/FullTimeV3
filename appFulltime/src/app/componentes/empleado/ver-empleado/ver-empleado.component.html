@@ -1039,7 +1039,10 @@
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Estado:</label>
-                                    <label>{{pt.estado}}</label>
+                                    <label *ngIf="pt.estado === 1">Pendiente</label>
+                                    <label *ngIf="pt.estado === 2">Pre-autorizado</label>
+                                    <label *ngIf="pt.estado === 3">Autorizado</label>
+                                    <label *ngIf="pt.estado === 4">Negado</label>
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Fecha Salida:</label>
@@ -1051,19 +1054,17 @@
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Documento:</label>
-                                    <a id="doc" class="fas fa-file-alt"
-                                        style="color:rgb(11, 70, 197); text-align: center;" matSuffix
-                                        matTooltipPosition="right"
+                                    <a matSuffix matTooltipPosition="right"
                                         matTooltip="Dar click para descargar contrato de trabajo"
                                         href="http://192.168.0.192:3001/empleadoPermiso/documentos/{{pt.documento}}"
                                         target="_blank">
-                                        <p>{{pt.docu_nombre}}</p>
+                                        <label style="font-size: 14px;">{{pt.docu_nombre}}</label>
                                     </a>
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                 </div>
                             </div>
-                            <div style="text-align: right;" *ngIf="pt.estado === 'Pendiente'">
+                            <div style="text-align: right;" *ngIf="pt.estado === 1">
                                 <i class="fas fa-edit" id="edit" style="margin-right: 20px;" (click)="EditarPermiso(pt)"
                                     matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                     matTooltip="Modificar los datos generales de este registro">
