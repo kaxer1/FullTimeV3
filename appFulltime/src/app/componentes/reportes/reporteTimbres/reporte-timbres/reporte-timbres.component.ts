@@ -347,24 +347,24 @@ export class ReporteTimbresComponent implements OnInit {
             {
               text: [{
                 text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                alignment: 'left', color: 'blue', opacity: 0.5
+                alignment: 'left', opacity: 0.3
               }]
             },
             {
               text: [{
-                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
               }],
             }
-          ], fontSize: 10, color: '#A4B8FF',
+          ], fontSize: 10
         }
       },
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.codigo === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE TIMBRES', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE TIMBRES', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),

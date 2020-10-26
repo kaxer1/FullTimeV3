@@ -439,33 +439,33 @@ export class ReporteAtrasosComponent implements OnInit {
               {
                 text: [{
                   text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                  alignment: 'left', color: 'blue', opacity: 0.5
+                  alignment: 'left', opacity: 0.3
                 }]
               },
               {
                 text: [{
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
                 }],
               }
-            ], fontSize: 9, color: '#A4B8FF',
+            ], fontSize: 9
           }
         ]
       },
 
       // Títulos del archivo PDF y contenido general 
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.codigo === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE DE ATRASOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE DE ATRASOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),
         this.presentarDatosGenerales(id_seleccionado, form, confirmado),
         this.presentarAtrasos(confirmado),
-      ],
+      ], 
 
       // Estilos del archivo PDF
       styles: {
@@ -478,7 +478,7 @@ export class ReporteAtrasosComponent implements OnInit {
         itemsTableC: { fontSize: 9, alignment: 'center', margin: [50, 5, 5, 5] },
         itemsTableF: { fontSize: 9, alignment: 'center' },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }

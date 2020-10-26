@@ -524,27 +524,27 @@ export class ReportePermisosComponent implements OnInit {
               {
                 text: [{
                   text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                  alignment: 'left', color: 'blue', opacity: 0.5
+                  alignment: 'left', opacity: 0.3
                 }]
               },
               {
                 text: [{
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
                 }],
               }
-            ], fontSize: 9, color: '#A4B8FF',
+            ], fontSize: 9
           }
         ]
 
       },
       // Título del archivo y sumatoria de cálculos
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),
@@ -561,7 +561,7 @@ export class ReportePermisosComponent implements OnInit {
         tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color, },
         itemsTableS: { fontSize: 9, alignment: 'center', },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }

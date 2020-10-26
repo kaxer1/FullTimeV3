@@ -512,27 +512,27 @@ export class ReporteEntradaSalidaComponent implements OnInit {
             columns: [
               {
                 text: [{
-                  text: 'Fecha: ' + fecha + ' Hora: ' + time, alignment: 'left', color: 'blue', opacity: 0.5
+                  text: 'Fecha: ' + fecha + ' Hora: ' + time, alignment: 'left', opacity: 0.3
                 }]
               },
-              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5 }], }
-            ], fontSize: 9, color: '#A4B8FF',
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       // Título e imagen del archivo PDF - Contenido del archivo
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.codigo === id_seleccionado) {
             return [
               {
                 text: obj.empresa.toUpperCase(),
-                bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 15]
+                bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
               },
               {
                 text: 'REPORTE ENTRADAS - SALIDAS',
-                fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20]
+                fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
               },
             ];
           }
@@ -551,7 +551,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
         centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }

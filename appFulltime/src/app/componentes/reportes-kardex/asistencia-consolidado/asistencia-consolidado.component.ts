@@ -15,7 +15,7 @@ import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfigEmpleadosComponent } from '../../reportes-Configuracion/config-report-empleados/config-empleados.component';
-import { IReporteEmpleados, IRestListEmpl} from '../../../model/reportes.model'
+import { IReporteEmpleados, IRestListEmpl } from '../../../model/reportes.model'
 
 @Component({
   selector: 'app-asistencia-consolidado',
@@ -188,7 +188,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
         console.log(this.asistencia);
-        if(res.message) {
+        if (res.message) {
           this.toastr.error(res.message);
         } else {
           this.asistencia = res;
@@ -215,7 +215,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   ConfiguracionReporteEmpleados() {
     console.log('Esta listo para configurar');
-    this.openVentana.open(ConfigEmpleadosComponent,{ width: '500px' }).afterClosed()
+    this.openVentana.open(ConfigEmpleadosComponent, { width: '500px' }).afterClosed()
       .subscribe(res => { console.log(res) })
   }
   /* ****************************************************************************************************
@@ -258,7 +258,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
@@ -288,43 +288,29 @@ export class AsistenciaConsolidadoComponent implements OnInit {
                 ]
               ]
             }
-          },          
+          },
           {
             margin: [10, -2, 10, 0],
             columns: [
-              'Fecha: ' + fecha + ' Hora: ' + timer,
               {
-                text: [
-                  {
-                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
-                  }
-                ],
-              }
-            ],
-            fontSize: 9, color: '#A4B8FF',
+                text: [{
+                  text: 'Fecha: ' + fecha + ' Hora: ' + timer, alignment: 'left', opacity: 0.3
+                }]
+              },
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       content: [
+        { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              margin: [230, 10, 0, 0],
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Reporte - Asistencia Detalle Consolidado'
+          text: 'Reporte - Asistencia Detalle Consolidado',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         this.CampoInformacionGeneralAsistencia(this.asistencia.empleado[0].ciudad, this.asistencia.empleado[0]),
         this.CampoDetalleAsistencia(this.asistencia.detalle),
@@ -333,13 +319,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       styles: {
         tableTotal: { fontSize: 30, bold: true, alignment: 'center', fillColor: this.p_color },
         tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3],  },
+        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3], },
         itemsTableInfo: { fontSize: 10, margin: [0, 5, 0, 5] },
         subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
         tableMargin: { margin: [0, 20, 0, 0] },
-        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color},
+        CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 8, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 8, opacity: 0.3 }
       }
     };
   }
@@ -510,7 +496,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
@@ -518,40 +504,28 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         return {
           margin: 10,
           columns: [
-            'Fecha: ' + fecha + ' Hora: ' + timer,
+            { text: 'Fecha: ' + fecha + ' Hora: ' + timer, opacity: 0.3 },
             {
               text: [
                 {
                   text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', color: 'blue', opacity: 0.5
+                  alignment: 'right', opacity: 0.3
                 }
               ],
             }
           ],
-          fontSize: 10,
-          color: '#A4B8FF',
+          fontSize: 10
         }
       },
       content: [
+        { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              margin: [230, 10, 0, 0],
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Listado - Empleados'
+          text: 'Listado - Empleados',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         {
           style: 'subtitulos',
@@ -571,9 +545,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     console.log(!!sessionStorage.getItem('arrayConfig'));
     console.log(!!sessionStorage.getItem('columnasValidas'));
     let columnas = parseInt(sessionStorage.getItem('columnasValidas'));
-    let s = JSON.parse( sessionStorage.getItem('arrayConfig')) as IReporteEmpleados;
+    let s = JSON.parse(sessionStorage.getItem('arrayConfig')) as IReporteEmpleados;
     console.log(s);
-    
+
     // let datos = datosRest.map(obj => {
     //   if (s.cargo === false) { delete obj.cargo } 
     //   if (s.codigo === false) { delete obj.codigo }
@@ -585,7 +559,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     // console.log(datos);
     // return this.FuncionUno(columnas, s, datos);
     return this.FuncionUno(columnas, s, datosRest);
-    
+
   }
 
   FuncionUno(columnas: number, configuracion: IReporteEmpleados, datos: any[]) {
@@ -596,66 +570,66 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         widths: this.FuncionColumnas(columnas),
         body: [
           this.FuncionTituloColumna(configuracion),
-          ...datos.map((obj:IRestListEmpl) => {
+          ...datos.map((obj: IRestListEmpl) => {
             contador = contador + 1;
             var array = [
               { style: 'itemsTableDetalle', text: contador },
               { style: 'itemsTableDetalle', text: obj.cedula },
-              { style: 'itemsTableDetalle', text: obj.codigo},
-              { style: 'itemsTableDetalle', text: obj.nom_completo},
-              { style: 'itemsTableDetalle', text: obj.departamento},
-              { style: 'itemsTableDetalle', text: obj.cargo},
-              { style: 'itemsTableDetalle', text: obj.grupo},
-              { style: 'itemsTableDetalle', text: obj.detalle_grupo}
+              { style: 'itemsTableDetalle', text: obj.codigo },
+              { style: 'itemsTableDetalle', text: obj.nom_completo },
+              { style: 'itemsTableDetalle', text: obj.departamento },
+              { style: 'itemsTableDetalle', text: obj.cargo },
+              { style: 'itemsTableDetalle', text: obj.grupo },
+              { style: 'itemsTableDetalle', text: obj.detalle_grupo }
             ]
             let index = 0;
             let cont = 0;
-              if (configuracion.codigo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.codigo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              }
-              
-              if (configuracion.depart === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.departamento) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
-              
-              if (configuracion.cargo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.cargo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              } 
-              
-              if (configuracion.grupo === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.grupo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1) 
-              }
-              
-              if (configuracion.detall === false) { 
-                cont = 0;
-                array.forEach(ele => {
-                  if (ele.text === obj.detalle_grupo) { index = cont; }
-                  cont = cont + 1
-                })
-                array.splice(index, 1)  
-              }
+            if (configuracion.codigo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.codigo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
 
-            return array 
+            if (configuracion.depart === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.departamento) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.cargo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.cargo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.grupo === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            if (configuracion.detall === false) {
+              cont = 0;
+              array.forEach(ele => {
+                if (ele.text === obj.detalle_grupo) { index = cont; }
+                cont = cont + 1
+              })
+              array.splice(index, 1)
+            }
+
+            return array
           })
         ]
       },
@@ -669,15 +643,15 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   FuncionColumnas(columnas: number) {
     console.log(columnas);
-    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto']; 
+    let col = ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'];
     // var inicio = 8 - columnas;
-    console.log(col.slice(0,columnas));
-    
+    console.log(col.slice(0, columnas));
+
     return col.slice(0, columnas);
   }
 
   FuncionTituloColumna(configuracion: IReporteEmpleados) {
-    
+
     var arrayTitulos = [
       { text: 'N°', style: 'tableHeaderDetalle' },
       { text: 'CEDULA', style: 'tableHeaderDetalle' },
@@ -690,53 +664,53 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     ]
     let index = 0;
     let contador = 0;
-    if (configuracion.codigo === false) {   
+    if (configuracion.codigo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'CODIGO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.depart === false) { 
+
+    if (configuracion.depart === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'DEPARTAMENTOS') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.cargo === false) { 
+
+    if (configuracion.cargo === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'CARGO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
-    } 
-    
-    if (configuracion.grupo === false) { 
+      arrayTitulos.splice(index, 1)
+    }
+
+    if (configuracion.grupo === false) {
       contador = 0;
-      arrayTitulos.forEach(obj => { 
-        if (obj.text === 'GRUPO') { index = contador;}
+      arrayTitulos.forEach(obj => {
+        if (obj.text === 'GRUPO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
-    if (configuracion.detall === false) { 
+
+    if (configuracion.detall === false) {
       contador = 0;
       arrayTitulos.forEach(obj => {
         if (obj.text === 'DETALLE GRUPO') { index = contador; }
         contador = contador + 1
       })
-      arrayTitulos.splice(index, 1) 
+      arrayTitulos.splice(index, 1)
     }
-    
+
     console.log(arrayTitulos);
-    
+
     return arrayTitulos
   }
   /**********************************************
@@ -752,8 +726,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     return {
       // pageOrientation: 'landscape',
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
-      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
-
+      header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       footer: function (currentPage, pageCount, fecha) {
         fecha = f.toJSON().split("T")[0];
         var timer = f.toJSON().split("T")[1].slice(0, 5);
@@ -785,41 +758,25 @@ export class AsistenciaConsolidadoComponent implements OnInit {
           {
             margin: [10, -2, 10, 0],
             columns: [
-              'Fecha: ' + fecha + ' Hora: ' + timer, 
+              { image: this.urlImagen, width: 150, margin: [10, -25, 0, 5] },
               {
-                text: [
-                  {
-                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                    alignment: 'right', color: 'blue', opacity: 0.5
-                  }
-                ],
-              }
-            ],
-            fontSize: 10,
-            color: '#A4B8FF',
+                text: [{
+                  text: 'Fecha: ' + fecha + ' Hora: ' + timer, alignment: 'left', opacity: 0.3
+                }]
+              },
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       content: [
         {
-          columns: [
-            {
-              image: this.urlImagen,
-              width: 90,
-              height: 40,
-            },
-            {
-              width: '*',
-              text: this.nombreEmpresa,
-              bold: true,
-              fontSize: 20,
-              margin: [100, 10, 0, 0],
-            }
-          ]
+          text: this.nombreEmpresa.toUpperCase(),
+          bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
         },
         {
-          style: 'subtitulos',
-          text: 'Reporte - Kardex Vacaciones Días Calendario'
+          text: 'Reporte - Kardex Vacaciones Días Calendario',
+          fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
         },
         this.CampoInformacionGeneralKardex(this.kardex.empleado[0].ciudad, this.kardex.empleado[0]),
         this.CampoDetallePeriodo(this.kardex.detalle),
@@ -841,7 +798,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
         itemsTableInfo: { fontSize: 10, margin: [0, 3, 0, 3] },
         tableLiqPro: { alignment: 'right', margin: [0, 20, 0, 0] },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 8, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 8, opacity: 0.3 }
       }
     };
   }
