@@ -16,7 +16,7 @@ class TituloRutas {
         this.router.put('/', TokenValidation, TITULO_CONTROLADOR.ActualizarTitulo);
         this.router.delete('/eliminar/:id', TokenValidation, TITULO_CONTROLADOR.EliminarRegistros);
         this.router.post('/xmlDownload/', TokenValidation, TITULO_CONTROLADOR.FileXML);
-        this.router.get('/download/:nameXML', TokenValidation, TITULO_CONTROLADOR.downloadXML);
+        this.router.get('/download/:nameXML', TITULO_CONTROLADOR.downloadXML);
     }
 }
 

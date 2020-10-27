@@ -165,15 +165,30 @@ export class RegistroComponent implements OnInit {
     });
 
     // realiza un capital letter a los nombres y apellidos
+    var NombreCapitalizado: any;
     let nombres = form1.nombreForm.split(' ');
-    let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
-    let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
-    const NombreCapitalizado = name1 + ' ' + name2;
+    if (nombres.length > 1) {
+      console.log('tamaño de la cadena', nombres.length);
+      let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+      let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+      NombreCapitalizado = name1 + ' ' + name2;
+    }
+    else {
+      let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+      var NombreCapitalizado = name1
+    }
 
+    var ApellidoCapitalizado: any;
     let apellidos = form1.apellidoForm.split(' ');
-    let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
-    let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
-    const ApellidoCapitalizado = lastname1 + ' ' + lastname2;
+    if (apellidos.length > 1) {
+      let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+      let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+      ApellidoCapitalizado = lastname1 + ' ' + lastname2;
+    }
+    else {
+      let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+      ApellidoCapitalizado = lastname1
+    }
 
     let dataEmpleado = {
       cedula: form1.cedulaForm,
