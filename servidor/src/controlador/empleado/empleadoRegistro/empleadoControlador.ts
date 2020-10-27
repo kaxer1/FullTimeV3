@@ -95,15 +95,29 @@ class EmpleadoControlador {
     plantilla.forEach(async (data: any) => {
 
       // Realiza un capital letter a los nombres y apellidos
+      var nombreE: any;
       let nombres = data.nombre.split(' ');
-      let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
-      let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
-      const nombre = name1 + ' ' + name2;
+      if (nombres.length > 1) {
+        let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+        let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+        nombreE = name1 + ' ' + name2;
+      }
+      else {
+        let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+        nombreE = name1
+      }
 
+      var apellidoE: any;
       let apellidos = data.apellido.split(' ');
-      let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
-      let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
-      const apellido = lastname1 + ' ' + lastname2;
+      if (apellidos.length > 1) {
+        let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+        let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+        apellidoE = lastname1 + ' ' + lastname2;
+      }
+      else {
+        let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+        apellidoE = lastname1
+      }
 
       // Encriptar contraseña
       const md5 = new Md5();
@@ -121,7 +135,7 @@ class EmpleadoControlador {
       console.log('codigo', codigo);
       if (cedula != undefined) {
         // Registro de nuevo empleado
-        await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+        await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
 
         // Obtener el id del empleado ingresado
         const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);

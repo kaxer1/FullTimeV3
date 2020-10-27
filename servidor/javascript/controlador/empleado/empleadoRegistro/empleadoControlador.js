@@ -110,14 +110,28 @@ class EmpleadoControlador {
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
                 // Realiza un capital letter a los nombres y apellidos
+                var nombreE;
                 let nombres = data.nombre.split(' ');
-                let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
-                let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
-                const nombre = name1 + ' ' + name2;
+                if (nombres.length > 1) {
+                    let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+                    let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+                    nombreE = name1 + ' ' + name2;
+                }
+                else {
+                    let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+                    nombreE = name1;
+                }
+                var apellidoE;
                 let apellidos = data.apellido.split(' ');
-                let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
-                let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
-                const apellido = lastname1 + ' ' + lastname2;
+                if (apellidos.length > 1) {
+                    let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+                    let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+                    apellidoE = lastname1 + ' ' + lastname2;
+                }
+                else {
+                    let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+                    apellidoE = lastname1;
+                }
                 // Encriptar contraseña
                 const md5 = new ts_md5_1.Md5();
                 const contrasena = md5.appendStr(data.contrasena).end();
@@ -131,7 +145,7 @@ class EmpleadoControlador {
                 console.log('codigo', codigo);
                 if (cedula != undefined) {
                     // Registro de nuevo empleado
-                    yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+                    yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
                     // Obtener el id del empleado ingresado
                     const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
                     const id_empleado = oneEmpley.rows[0].id;

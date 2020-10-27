@@ -9,6 +9,7 @@ import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos
   templateUrl: './registrar-asistencia.component.html',
   styleUrls: ['./registrar-asistencia.component.css']
 })
+
 export class RegistrarAsistenciaComponent implements OnInit {
 
       // Control de campos y validaciones del formulario
