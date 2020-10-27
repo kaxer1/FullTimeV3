@@ -19,7 +19,7 @@
                         para continuar.</span>
                 </div>
                 <form [formGroup]="primeroFormGroup">
-                    <div class="d-flex flex-wrap justify-content-between">
+                    <div class="d-flex flex-wrap justify-content-start">
                         <mat-form-field>
                             <mat-label>Nombres</mat-label>
                             <input matInput placeholder="Ej: Kevin Alexander" type="text" formControlName="nombreForm"
@@ -87,7 +87,7 @@
                         </mat-form-field>
                     </div>
                 </form>
-                <div>
+                <div class="d-flex flex-wrap justify-content-between">
                     <a [routerLink]="['/empleado']" class="btn btn-sm button">Regresar a Empleado</a>
                     <button matStepperNext class="btn btn-sm float-right">Siguiente</button>
                 </div>
