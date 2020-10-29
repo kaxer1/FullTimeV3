@@ -570,18 +570,19 @@ export class ReportePermisosComponent implements OnInit {
 
   datosEmpleadoAutoriza: any = [];
   presentarDatosGenerales(id_seleccionado) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
+    var ciudad, nombre, apellido, cedula, codigo, regimen, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
-        nombre = obj.nombre
-        apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
       }
     })
     this.totalPermisos.forEach(obj => {
@@ -653,22 +654,27 @@ export class ReportePermisosComponent implements OnInit {
           [{
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
-              { text: [{ text: 'N° DE PERMISOS: ' + this.totalPermisos.length, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
               { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
-              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] }
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+              { text: [{ text: 'N° DE PERMISOS: ' + this.totalPermisos.length, style: 'itemsTableI' }] },
             ]
           }],
           [{
@@ -890,6 +896,7 @@ export class ReportePermisosComponent implements OnInit {
           DEPARTAMENTO: this.datosEmpleado[i].departamento,
           CIUDAD: this.datosEmpleado[i].ciudad,
           CARGO: this.datosEmpleado[i].cargo,
+          REGIMEN: this.datosEmpleado[i].regimen,
           TOTAL_PERMISOS_DIAS_DECIMAL: parseFloat(totalDias.toFixed(3)),
           TOTAL_PERMISOS_HORAS_DECIMAL: parseFloat(totalHoras.toFixed(3)),
         }]

@@ -292,6 +292,7 @@ import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colo
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
 import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
 import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -511,6 +512,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
+    ReporteHorasPedidasComponent,
   ],
 
   imports: [

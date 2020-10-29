@@ -75,6 +75,7 @@ import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
 import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 
 // Componentes Empleado
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
@@ -163,6 +164,7 @@ const routes: Routes = [
   { path: 'reporteAtrasos', component: ReporteAtrasosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteEntradaSalida', component: ReporteEntradaSalidaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaReportes', component: ListaReportesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'horas/extras', component: ReporteHorasPedidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Rol mixto para las autorizacines
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },

@@ -382,7 +382,7 @@ export class ReporteTimbresComponent implements OnInit {
   }
 
   presentarDatosGenerales(id_seleccionado, form) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, regimen;
     this.datosEmpleado.forEach(obj => {
       if (obj.codigo === id_seleccionado) {
         nombre = obj.nombre;
@@ -393,6 +393,7 @@ export class ReporteTimbresComponent implements OnInit {
         departamento = obj.departamento;
         ciudad = obj.ciudad;
         cargo = obj.cargo;
+        regimen = obj.regimen
       }
     })
     var diaI = moment(form.inicioForm).day();
@@ -406,6 +407,7 @@ export class ReporteTimbresComponent implements OnInit {
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
               { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+              { text: [{ text: '', style: 'itemsTableI' }] },
             ]
           }],
           [{
@@ -413,15 +415,19 @@ export class ReporteTimbresComponent implements OnInit {
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
               { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
-
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
               { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
-              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
               { text: [{ text: 'N° REGISTROS: ' + this.timbres.length, style: 'itemsTableI' }] },
             ]
           }],
@@ -522,7 +528,8 @@ export class ReporteTimbresComponent implements OnInit {
           SUCURSAL: this.datosEmpleado[i].sucursal,
           DEPARTAMENTO: this.datosEmpleado[i].departamento,
           CIUDAD: this.datosEmpleado[i].ciudad,
-          CARGO: this.datosEmpleado[i].cargo
+          CARGO: this.datosEmpleado[i].cargo,
+          REGIMEN: this.datosEmpleado[i].regimen
         }]
         break;
       }

@@ -486,7 +486,7 @@ export class ReporteAtrasosComponent implements OnInit {
   // Datos generales del PDF y sumatoria total de calculos realizados
   presentarDatosGenerales(id_seleccionado, form, confirmado) {
     // Inicialización de varibles
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, regimen;
     var tiempoTotal: string, horaF: string, minF: string, secondF: string;
     var minTDecimal, horaTDecimal, minTDecimalH, horaTDecimalH, diasDecimal, trabaja;
     var day, hora1, hora2, formatoHorasDecimal: number = 0, formatoDiasDecimal: number = 0;
@@ -496,14 +496,15 @@ export class ReporteAtrasosComponent implements OnInit {
     // Búsqueda de los datos del empleado del cual se obtiene el reporte
     this.datosEmpleado.forEach(obj => {
       if (obj.codigo === id_seleccionado) {
-        nombre = obj.nombre
-        apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
       }
     });
     this.totalAtrasos.forEach(obj => {
@@ -594,6 +595,7 @@ export class ReporteAtrasosComponent implements OnInit {
           [{
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: '', style: 'itemsTableI' }] },
               { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
             ]
           }],
@@ -602,14 +604,19 @@ export class ReporteAtrasosComponent implements OnInit {
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
               { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
               { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
-              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
               { text: [{ text: 'N° REGISTROS: ' + this.totalAtrasos.length, style: 'itemsTableI' }] },
             ]
           }],
@@ -872,6 +879,7 @@ export class ReporteAtrasosComponent implements OnInit {
           DEPARTAMENTO: obj.departamento,
           CIUDAD: obj.ciudad,
           CARGO: obj.cargo,
+          REGIMEN: obj.regimen,
           TOTAL_ATRASOS_DIAS_LABORABLES: parseFloat(formatoDiasDecimal.toFixed(3)),
           TOTAL_ATRASOS_HORAS_LABORABLES: parseFloat(formatoHorasDecimal.toFixed(3))
         }]
