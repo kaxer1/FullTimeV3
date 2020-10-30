@@ -61,7 +61,7 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
-import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/empleados-planificar/lista-emple-plan-hora-e.component';
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
 

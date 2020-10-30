@@ -16,6 +16,7 @@ import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtras
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { Router } from '@angular/router';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
+import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
 @Component({
   selector: 'app-reporte-horas-pedidas',
@@ -25,11 +26,6 @@ import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.
 
 export class ReporteHorasPedidasComponent implements OnInit {
 
-  // Arreglo datos contrato actual
-  datosContratoA: any = [];
-
-  // Arreglo datos cargo actual
-  datosCargoA: any = [];
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -68,6 +64,7 @@ export class ReporteHorasPedidasComponent implements OnInit {
     public restH: HorasExtrasRealesService,
     public restEmpre: EmpresaService,
     public restPedido: PedHoraExtraService,
+    public restD: DatosGeneralesService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -118,81 +115,11 @@ export class ReporteHorasPedidasComponent implements OnInit {
   }
 
   // Obtener datos del empleado
-  cont: number = 0;
-  contador: number = 0;
-  iteracion: number = 0;
-  conteo: number = 0;
-  listaTotal: any = [];
-  VerDatosEmpleado() {
-    this.datosContratoA = [];
-    this.datosCargoA = [];
-    this.listaTotal = [];
+    VerDatosEmpleado() {
     this.datosEmpleado = [];
-    this.restH.ObtenerDatosContratoA().subscribe(data => {
-      this.datosContratoA = data;
-      for (var i = 0; i <= this.datosContratoA.length - 1; i++) {
-        this.restH.ObtenerDatosCargoA(this.datosContratoA[i].id).subscribe(datos => {
-          this.datosCargoA = datos;
-          this.iteracion++;
-          if (this.datosCargoA.length != 0) {
-            if (this.contador === 0) {
-              this.listaTotal = datos
-              this.contador++;
-            }
-            else {
-              this.listaTotal = this.listaTotal.concat(datos);
-            }
-          }
-          if (this.iteracion === this.datosContratoA.length) {
-            this.datosContratoA.forEach(obj => {
-              this.listaTotal.forEach(element => {
-                if (obj.id === element.emple_id) {
-                  let cargarDatos = [{
-                    id: obj.id,
-                    apellido: obj.apellido,
-                    cedula: obj.cedula,
-                    codigo: obj.codigo,
-                    correo: obj.correo,
-                    domicilio: obj.domicilio,
-                    esta_civil: obj.esta_civil,
-                    estado: obj.estado,
-                    fec_nacimiento: obj.fec_nacimiento,
-                    genero: obj.genero,
-                    id_contrato: obj.id_contrato,
-                    id_nacionalidad: obj.id_nacionalidad,
-                    imagen: obj.imagen,
-                    mail_alternativo: obj.mail_alternativo,
-                    nombre: obj.nombre,
-                    regimen: obj.regimen,
-                    telefono: obj.telefono,
-                    cargo: element.cargo,
-                    departamento: element.departamento,
-                    id_cargo: element.id_cargo,
-                    id_departamento: element.id_departamento,
-                    id_sucursal: element.id_sucursal,
-                    sucursal: element.sucursal,
-                    id_empresa: element.id_empresa,
-                    empresa: element.empresa,
-                    id_ciudad: element.id_ciudad,
-                    ciudad: element.ciudad
-                  }];
-                  if (this.cont === 0) {
-                    this.datosEmpleado = cargarDatos
-                    this.cont++;
-                  }
-                  else {
-                    this.datosEmpleado = this.datosEmpleado.concat(cargarDatos);
-                  }
-                }
-
-              });
-            });
-            console.log("Datos Totales" + '', this.datosEmpleado);
-          }
-        }, error => {
-          this.iteracion++;
-        })
-      }
+    this.restD.ListarInformacionActual().subscribe(data => {
+      this.datosEmpleado = data;
+      console.log('datos_actuales', this.datosEmpleado)
     });
   }
 
