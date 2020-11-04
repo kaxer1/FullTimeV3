@@ -9,14 +9,10 @@ const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
     port: 5432,
-<<<<<<< HEAD
-    database: 'fulltime',
-    password: 'fulltime'
-=======
     database: 'fulltime3',
     //database: 'timbres',
     password: 'admin'
->>>>>>> 9dcb5cb2d65b85a3d117e6e3df78fa3a223569ea
+
 });
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {

@@ -12,8 +12,8 @@
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
         <li class="material-tree-node">
           <ul> <a class="btn btn-sm btn-block" [ngClass]="{active: node.name == nombreSelect}"
-            (click)="manejarEstadoActivo(node.name)"
-            [routerLink]="[node.url]" style="text-align: left; color: rgb(28, 28, 28)">{{node.name}}</a></ul>
+              (click)="manejarEstadoActivo(node.name)" [routerLink]="[node.url]"
+              style="text-align: left; color: rgb(28, 28, 28)">{{node.name}}</a></ul>
         </li>
       </mat-tree-node>
 
@@ -27,7 +27,7 @@
               <h5 class="name-uno">{{node.name}}</h5>
             </div>
             <div class="ml-auto bd-highlight">
-              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" >
+              <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
                 <mat-icon class="mat-icon-rtl-mirror" id="icono-despliega">
                   <!-- {{treeControl.isExpanded(node) ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}} -->
                   {{treeControl.isExpanded(node) ? 'remove' : 'add'}}
@@ -35,16 +35,16 @@
               </button>
             </div>
           </div>
-          <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)" 
+          <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)"
             [style.padding]="treeControl.isExpanded(node) ? '20px 0px 20px 0px' : '0px 0px 0px 0px'">
             <ng-container matTreeNodeOutlet></ng-container>
           </ul>
         </li>
       </mat-nested-tree-node>
-      
+
     </mat-tree>
 
-    
+
 
   </mat-sidenav>
 
@@ -79,7 +79,8 @@
             <input type="text" placeholder="Buscar Empleados" aria-label="Number" matInput [formControl]="myControl"
               [matAutocomplete]="auto">
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option *ngFor="let option of filteredOptions | async" [value]="option" type="submit" (click)="abrirInfoEmpleado(option)">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option" type="submit"
+                (click)="abrirInfoEmpleado(option)">
                 {{option}}
               </mat-option>
             </mat-autocomplete>
@@ -90,7 +91,8 @@
         <!-- Botón Timbres -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="timbre" (click)="numeroTimbres()">
           <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoTimbres" matBadge="{{num_timbre_false}}"
-            matBadgeColor="warn" style="margin-left: 8px;">report</mat-icon>
+            matBadgeColor="warn" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
+            matTooltipPosition="right" matTooltip="Aviso de Timbres">report</mat-icon>
         </button>
         <mat-menu #timbre="matMenu" style="margin-right: 10px; height: 100px;">
           <div class="container" style="text-align: center;">
@@ -113,9 +115,10 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              
+
               <!-- Forma de aviso para 'Te falta timbre de entrada' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'" style="background: rgba(255, 25, 25, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'"
+                style="background: rgba(255, 25, 25, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -129,7 +132,8 @@
                 </a>
               </div>
               <!-- Forma de aviso para 'Te falta timbre de salida' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'" style="background: rgba(255, 25, 25, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'"
+                style="background: rgba(255, 25, 25, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -143,7 +147,8 @@
                 </a>
               </div>
               <!-- Forma de aviso para 'Salio antes al almuerzo' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'"
+                style="background: rgba(230, 16, 37, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -157,7 +162,8 @@
                 </a>
               </div>
               <!-- Forma de aviso para 'Se tomo mucho tiempo de almuerzo' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'"
+                style="background: rgba(230, 16, 37, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -171,7 +177,8 @@
                 </a>
               </div>
               <!-- Forma de aviso para 'Llego atrasado al trabajo' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'"
+                style="background: rgba(235, 89, 11, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -185,7 +192,8 @@
                 </a>
               </div>
               <!-- Forma de aviso para 'Salio antes al trabajo' -->
-              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'"
+                style="background: rgba(235, 89, 11, 0.7);">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -212,7 +220,7 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-              
+
             </div>
           </div>
           <div class="d-flex justify-content-center">
@@ -225,7 +233,8 @@
         <!-- Botón notificación -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
           <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"
-            matBadgeColor="warn" style="margin-left: 8px;">notifications</mat-icon>
+            matBadgeColor="warn" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
+            matTooltipPosition="right" matTooltip="Notificaciones">notifications</mat-icon>
         </button>
         <mat-menu #menu="matMenu" style="margin-right: 10px; height: 100px;">
           <div class="container" style="text-align: center;">
@@ -406,7 +415,8 @@
         </mat-menu>
         <!-- Botón Configuraciones -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="settings">
-          <mat-icon id="iconos-navegador" style="margin-left: 8px;">settings</mat-icon>
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
+          matTooltipPosition="right" matTooltip="Configuración correo y notificaciones">settings</mat-icon>
         </button>
         <mat-menu #settings="matMenu">
           <div>
@@ -419,11 +429,13 @@
         </mat-menu>
         <!-- Botón Ayuda -->
         <button mat-mini-fab style="margin-left: 10px;" (click)="AbrirVentanaAyuda()">
-          <mat-icon id="iconos-navegador" style="margin-left: 8px;">contact_support</mat-icon>
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
+          matTooltipPosition="right" matTooltip="Contactos Soporte Técnico">contact_support</mat-icon>
         </button>
         <!-- Botón Logout  -->
         <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
-          <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>
+          <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
+          matTooltipPosition="right" matTooltip="Cerrar Sesión"></mat-icon>
         </button>
 
       </mat-toolbar-row>
@@ -495,104 +507,110 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-             <!-- Forma de aviso para 'Te falta timbre de entrada' -->
-             <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'" style="background: rgba(255, 25, 25, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Forma de aviso para 'Te falta timbre de salida' -->
-            <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'" style="background: rgba(255, 25, 25, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Forma de aviso para 'Salio antes al almuerzo' -->
-            <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Forma de aviso para 'Se tomo mucho tiempo de almuerzo' -->
-            <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'" style="background: rgba(230, 16, 37, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Forma de aviso para 'Llego atrasado al trabajo' -->
-            <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Forma de aviso para 'Salio antes al trabajo' -->
-            <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'" style="background: rgba(235, 89, 11, 0.7);">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
-            <!-- Mensaje de la planificacion -->
-            <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
-              <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
-                <ul style="list-style: none; margin-left: -15%;">
-                  <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
-                  <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
-                  <li style="font-size: 11px; margin-top: -13%;">
-                    <b>Fecha:</b> {{n.create_at.split('T')[0]}}
-                    <b>Hora:</b> {{n.create_at.slice(11,16)}}
-                  </li>
-                </ul>
-                <mat-divider class="divider"></mat-divider>
-              </a>
-            </div>
+              <!-- Forma de aviso para 'Te falta timbre de entrada' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de entrada'"
+                style="background: rgba(255, 25, 25, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Te falta timbre de salida' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Te falta timbre de salida'"
+                style="background: rgba(255, 25, 25, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Salio antes al almuerzo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al almuerzo'"
+                style="background: rgba(230, 16, 37, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Se tomo mucho tiempo de almuerzo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Se tomo mucho tiempo de almuerzo'"
+                style="background: rgba(230, 16, 37, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Llego atrasado al trabajo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Llego atrasado al trabajo'"
+                style="background: rgba(235, 89, 11, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Forma de aviso para 'Salio antes al trabajo' -->
+              <div *ngIf="n.visto == false && n.descripcion === 'Salio antes al trabajo'"
+                style="background: rgba(235, 89, 11, 0.7);">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+              <!-- Mensaje de la planificacion -->
+              <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{n.descripcion}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
 
             </div>
           </div>
@@ -602,7 +620,7 @@
             </a>
           </div>
         </mat-menu>
-        
+
         <!-- Botón notificación -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="menu" (click)="numeroNotificacion()">
           <mat-icon id="iconos-navegador" [matBadgeHidden]="estadoNotificacion" matBadge="{{num_noti_false}}"

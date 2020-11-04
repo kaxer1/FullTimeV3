@@ -336,10 +336,16 @@ export class ListaEmpleadosComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
-      this.getEmpleados();
-      window.location.reload();
+    this.rest.verificarArchivoExcel(formData).subscribe(res => {
+      if (res.message === "error") {
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
+      } else {
+        this.rest.subirArchivoExcel(formData).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
+          //this.getEmpleados();
+          window.location.reload();
+        });
+      }
     });
     this.archivoForm.reset();
     this.nameFile = '';
