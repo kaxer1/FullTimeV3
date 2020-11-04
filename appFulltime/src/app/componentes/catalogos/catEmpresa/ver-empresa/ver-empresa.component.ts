@@ -9,6 +9,7 @@ import { EditarSucursalComponent } from 'src/app/componentes/sucursales/editar-s
 import { RegistrarSucursalesComponent } from 'src/app/componentes/sucursales/registrar-sucursales/registrar-sucursales.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { ColoresEmpresaComponent } from 'src/app/componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
+import { LogosComponent } from 'src/app/componentes/catalogos/catEmpresa/logos/logos.component';
 
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service'
@@ -112,12 +113,17 @@ export class VerEmpresaComponent implements OnInit {
   }
 
   EditarLogo() {
+<<<<<<< HEAD
     this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: parseInt(this.idEmpresa) }).afterClosed()
       .subscribe(res => { 
         if(res === true) {
           this.ObtenerLogotipo();
         }
       })
+=======
+    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: localStorage.getItem('empresa') }).afterClosed()
+      .subscribe(res => { console.log(res) })
+>>>>>>> 9dcb5cb2d65b85a3d117e6e3df78fa3a223569ea
   }
 
   /** Función para eliminar registro seleccionado */

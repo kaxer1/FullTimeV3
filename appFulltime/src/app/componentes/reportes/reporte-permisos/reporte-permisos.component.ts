@@ -38,11 +38,6 @@ export class ReportePermisosComponent implements OnInit {
   // Datos del Empleado Timbre
   empleado: any = [];
 
-  // Arreglo datos contrato actual
-  datosContratoA: any = [];
-
-  // Arreglo datos cargo actual
-  datosCargoA: any = [];
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -137,81 +132,11 @@ export class ReportePermisosComponent implements OnInit {
   }
 
   // Obtener lista de empleados que tienen datos de contrato y cargo
-  cont: number = 0;
-  contador: number = 0;
-  iteracion: number = 0;
-  conteo: number = 0;
-  listaTotal: any = [];
-  VerDatosEmpleado() {
-    this.datosContratoA = [];
-    this.datosCargoA = [];
-    this.listaTotal = [];
+    VerDatosEmpleado() {
     this.datosEmpleado = [];
-    this.restH.ObtenerDatosContratoA().subscribe(data => {
-      this.datosContratoA = data;
-      for (var i = 0; i <= this.datosContratoA.length - 1; i++) {
-        this.restH.ObtenerDatosCargoA(this.datosContratoA[i].id).subscribe(datos => {
-          this.datosCargoA = datos;
-          this.iteracion++;
-          if (this.datosCargoA.length != 0) {
-            if (this.contador === 0) {
-              this.listaTotal = datos
-              this.contador++;
-            }
-            else {
-              this.listaTotal = this.listaTotal.concat(datos);
-            }
-          }
-          if (this.iteracion === this.datosContratoA.length) {
-            this.datosContratoA.forEach(obj => {
-              this.listaTotal.forEach(element => {
-                if (obj.id === element.emple_id) {
-                  let cargarDatos = [{
-                    id: obj.id,
-                    apellido: obj.apellido,
-                    cedula: obj.cedula,
-                    codigo: obj.codigo,
-                    correo: obj.correo,
-                    domicilio: obj.domicilio,
-                    esta_civil: obj.esta_civil,
-                    estado: obj.estado,
-                    fec_nacimiento: obj.fec_nacimiento,
-                    genero: obj.genero,
-                    id_contrato: obj.id_contrato,
-                    id_nacionalidad: obj.id_nacionalidad,
-                    imagen: obj.imagen,
-                    mail_alternativo: obj.mail_alternativo,
-                    nombre: obj.nombre,
-                    regimen: obj.regimen,
-                    telefono: obj.telefono,
-                    cargo: element.cargo,
-                    departamento: element.departamento,
-                    id_cargo: element.id_cargo,
-                    id_departamento: element.id_departamento,
-                    id_sucursal: element.id_sucursal,
-                    sucursal: element.sucursal,
-                    id_empresa: element.id_empresa,
-                    empresa: element.empresa,
-                    id_ciudad: element.id_ciudad,
-                    ciudad: element.ciudad
-                  }];
-                  if (this.cont === 0) {
-                    this.datosEmpleado = cargarDatos
-                    this.cont++;
-                  }
-                  else {
-                    this.datosEmpleado = this.datosEmpleado.concat(cargarDatos);
-                  }
-                }
-
-              });
-            });
-            console.log("Datos Totales" + '', this.datosEmpleado);
-          }
-        }, error => {
-          this.iteracion++;
-        })
-      }
+    this.restGeneral.ListarInformacionActual().subscribe(data => {
+      this.datosEmpleado = data;
+      console.log('datos_actuales', this.datosEmpleado)
     });
   }
 
@@ -524,27 +449,27 @@ export class ReportePermisosComponent implements OnInit {
               {
                 text: [{
                   text: 'Fecha: ' + fecha + ' Hora: ' + time,
-                  alignment: 'left', color: 'blue', opacity: 0.5
+                  alignment: 'left', opacity: 0.3
                 }]
               },
               {
                 text: [{
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5
+                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
                 }],
               }
-            ], fontSize: 9, color: '#A4B8FF',
+            ], fontSize: 9
           }
         ]
 
       },
       // Título del archivo y sumatoria de cálculos
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.id === id_seleccionado) {
             return [
-              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
-              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20] },
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
             ];
           }
         }),
@@ -561,7 +486,7 @@ export class ReportePermisosComponent implements OnInit {
         tableHeaderF: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.s_color, },
         itemsTableS: { fontSize: 9, alignment: 'center', },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }
@@ -570,18 +495,19 @@ export class ReportePermisosComponent implements OnInit {
 
   datosEmpleadoAutoriza: any = [];
   presentarDatosGenerales(id_seleccionado) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
+    var ciudad, nombre, apellido, cedula, codigo, regimen, sucursal, departamento, cargo, totalDias = 0, totalHoras = 0, formatoHoras = '0', formatoMinutos;
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
     this.datosEmpleado.forEach(obj => {
       if (obj.id === id_seleccionado) {
-        nombre = obj.nombre
-        apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
       }
     })
     this.totalPermisos.forEach(obj => {
@@ -653,22 +579,27 @@ export class ReportePermisosComponent implements OnInit {
           [{
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
-              { text: [{ text: 'N° DE PERMISOS: ' + this.totalPermisos.length, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] }
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
               { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
-              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] }
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+              { text: [{ text: 'N° DE PERMISOS: ' + this.totalPermisos.length, style: 'itemsTableI' }] },
             ]
           }],
           [{
@@ -890,6 +821,7 @@ export class ReportePermisosComponent implements OnInit {
           DEPARTAMENTO: this.datosEmpleado[i].departamento,
           CIUDAD: this.datosEmpleado[i].ciudad,
           CARGO: this.datosEmpleado[i].cargo,
+          REGIMEN: this.datosEmpleado[i].regimen,
           TOTAL_PERMISOS_DIAS_DECIMAL: parseFloat(totalDias.toFixed(3)),
           TOTAL_PERMISOS_HORAS_DECIMAL: parseFloat(totalHoras.toFixed(3)),
         }]

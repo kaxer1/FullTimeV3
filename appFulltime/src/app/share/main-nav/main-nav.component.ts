@@ -66,7 +66,7 @@ export class MainNavComponent implements OnInit {
   noti_real_time: any = [];
   num_noti_false: number = 0;
   num_noti: number = 0;
-  
+
   timbres_noti: any = [];
   num_timbre_false: number = 0;
   num_timbre: number = 0;
@@ -127,13 +127,13 @@ export class MainNavComponent implements OnInit {
       this.isShowing = true;
     }
   }
-  
+
   mouseleave() {
     if (!this.isExpanded) {
       this.isShowing = false;
     }
   }
-  
+
   ngOnInit() {
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
@@ -143,7 +143,6 @@ export class MainNavComponent implements OnInit {
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
     this.LlamarNotificaciones(this.id_empleado_logueado);
     this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
-    this.VerAccionPersonal();
     this.breakpointObserver.observe('(max-width: 663px)').subscribe(result => {
       this.barraInicial = result.matches;
       this.barraUno = result.matches;
@@ -181,12 +180,12 @@ export class MainNavComponent implements OnInit {
       console.log(error);
       this.router.url
       if (this.router.url !== '/login') {
-        this.toaster.info('Configure si desea que le lleguen notficaciones y avisos al correo electrónico', 
-        'Falta Ajustes del Sistema').onTap.subscribe(items => {
-          this.AbrirSettings();
-        });
+        this.toaster.info('Configure si desea que le lleguen notficaciones y avisos al correo electrónico',
+          'Falta Ajustes del Sistema').onTap.subscribe(items => {
+            this.AbrirSettings();
+          });
       }
-      
+
     });
   }
 
@@ -290,7 +289,6 @@ export class MainNavComponent implements OnInit {
     })
   }
 
-
   /**
    * MENU PRINCIPAL
   */
@@ -299,18 +297,26 @@ export class MainNavComponent implements OnInit {
   manejarEstadoActivo(name) {
     this.nombreSelect = name;
   }
-  
-  SeleccionMenu() {
-    // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
-    if (this.loginService.getRolMenu() === true) {
-      this.dataSource.data = this.MenuAdministracion() as MenuNode[];
-    } else {
-      this.dataSource.data = this.MenuEmpleado() as MenuNode[];
-    }
 
+  SeleccionMenu() {
+    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
+      if (res[0].tipo_empresa === 'Pública') {
+        this.HabilitarAccion = true;
+      }
+      else {
+        this.HabilitarAccion = false;
+      }
+
+      // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
+      if (this.loginService.getRolMenu() === true) {
+        this.dataSource.data = this.MenuAdministracion(res[0].nombre) as MenuNode[];
+      } else {
+        this.dataSource.data = this.MenuEmpleado() as MenuNode[];
+      }
+    })
   }
 
-  MenuAdministracion() {
+  MenuAdministracion(nombre: string) {
     return [
       {
         name: 'Administración',
@@ -318,12 +324,12 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'dashboard',
         children: [
-          {name: 'Home', url: '/home'},
-          {name: 'Crear Rol', url: '/roles'},
-          {name: 'Crear Feriados', url: '/listarFeriados'},
-          {name: 'Crear Régimen Laboral', url: '/listarRegimen'},
-          {name: 'Crear Título Profesional', url: '/titulos'},
-          {name: 'Crear Nivel de Educación', url: '/nivelTitulos'},
+          { name: 'Home', url: '/home' },
+          { name: 'Crear Rol', url: '/roles' },
+          { name: 'Crear Feriados', url: '/listarFeriados' },
+          { name: 'Crear Régimen Laboral', url: '/listarRegimen' },
+          { name: 'Crear Título Profesional', url: '/titulos' },
+          { name: 'Crear Nivel de Educación', url: '/nivelTitulos' },
         ]
       },
       {
@@ -332,8 +338,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'account_circle',
         children: [
-          {name: 'Configurar Código', url: '/codigo'},
-          {name: 'Crear Empleado', url: '/empleado'},
+          { name: 'Configurar Código', url: '/codigo' },
+          { name: 'Crear Empleado', url: '/empleado' },
         ]
       },
       {
@@ -342,7 +348,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'local_dining',
         children: [
-          {name: 'Tipo de Comidas', url: '/listarTipoComidas'},
+          { name: 'Tipo de Comidas', url: '/listarTipoComidas' },
         ]
       },
       {
@@ -351,11 +357,11 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'location_on',
         children: [
-          {name: 'Registrar Provincia', url: '/provincia'},
-          {name: 'Registrar Ciudad', url: '/listarCiudades'},
-          {name: 'Registrar Empresa', url: '/empresa'},
-          {name: 'Registrar Establecimiento', url: '/sucursales'},
-          {name: 'Registrar Departamento', url: '/departamento'},
+          { name: nombre, url: '/vistaEmpresa/' + localStorage.getItem('empresa') },
+          { name: 'Registrar Provincia', url: '/provincia' },
+          { name: 'Registrar Ciudad', url: '/listarCiudades' },
+          { name: 'Registrar Establecimiento', url: '/sucursales' },
+          { name: 'Registrar Departamento', url: '/departamento' },
         ]
       },
       {
@@ -364,12 +370,12 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'email',
         children: [
-          {name: 'Notificaciones', url: '/suc-notificaciones'},
-          {name: 'Configurar Permisos', url: '/verTipoPermiso'},
-          {name: 'Permisos Solicitados', url: '/permisos-solicitados'},
-          {name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados'},
-          {name: 'Horas Extras Solicitadas', url: '/horas-extras-solicitadas'},
-          {name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras'},
+          { name: 'Notificaciones', url: '/suc-notificaciones' },
+          { name: 'Configurar Permisos', url: '/verTipoPermiso' },
+          { name: 'Permisos Solicitados', url: '/permisos-solicitados' },
+          { name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados' },
+          { name: 'Horas Extras Solicitadas', url: '/horas-extras-solicitadas' },
+          { name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras' },
         ]
       },
       {
@@ -378,8 +384,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'schedule',
         children: [
-          {name: 'Enrolar Empleado', url: '/enrolados'},
-          {name: 'Registrar Dispositivo', url: '/listarRelojes'},
+          { name: 'Enrolar Empleado', url: '/enrolados' },
+          { name: 'Registrar Dispositivo', url: '/listarRelojes' },
         ]
       },
       {
@@ -388,11 +394,11 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'assignment',
         children: [
-          {name: 'Registrar Horario', url: '/horario'},
-          {name: 'Configurar Horas Extras', url: '/listaHorasExtras'},
-          {name: 'Planificación Múltiple', url: '/planificacion'},
-          {name: 'Planificación Hora Extra', url: '/planificaHoraExtra'},
-          {name: 'Calcular Hora Extra', url: '/horaExtraReal'},
+          { name: 'Registrar Horario', url: '/horario' },
+          { name: 'Configurar Horas Extras', url: '/listaHorasExtras' },
+          { name: 'Planificación Múltiple', url: '/planificacion' },
+          { name: 'Planificación Hora Extra', url: '/planificaHoraExtra' },
+          { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -401,8 +407,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'fingerprint',
         children: [
-          {name: 'Timbres', url: '/timbres'},
-          {name: 'Asistencia', url: '/asistencia'},
+          { name: 'Timbres', url: '/timbres' },
+          { name: 'Asistencia', url: '/asistencia' },
         ]
       },
       {
@@ -411,7 +417,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'insert_drive_file',
         children: [
-          {name: 'Archivos', url: '/archivos'},
+          { name: 'Archivos', url: '/archivos' },
         ]
       },
       {
@@ -420,7 +426,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'how_to_reg',
         children: [
-          {name: 'Crear Proceso', url: '/proceso'},
+          { name: 'Crear Proceso', url: '/proceso' },
         ]
       },
       {
@@ -429,7 +435,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'card_giftcard',
         children: [
-          {name: 'Cumpleaños', url: '/cumpleanios'},
+          { name: 'Cumpleaños', url: '/cumpleanios' },
         ]
       },
       {
@@ -438,7 +444,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'how_to_reg',
         children: [
-          {name: 'Reportes - Kardex', url: '/listaReportes'},
+          { name: 'Reportes - Kardex', url: '/listaReportes' },
         ]
       }
     ];
@@ -452,8 +458,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'account_circle',
         children: [
-          {name: 'Datos Generales', url: '/datosEmpleado'},
-          {name: 'Contrato de Trabajo', url: '/cargoEmpleado'},
+          { name: 'Datos Generales', url: '/datosEmpleado' },
+          { name: 'Contrato de Trabajo', url: '/cargoEmpleado' },
         ]
       },
       {
@@ -462,8 +468,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'mobile_friendly',
         children: [
-          {name: 'Planificación', url: '/planificacionHorario'},
-          {name: 'Horarios', url: '/horariosEmpleado'},
+          { name: 'Planificación', url: '/planificacionHorario' },
+          { name: 'Horarios', url: '/horariosEmpleado' },
         ]
       },
       {
@@ -472,7 +478,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'hourglass_full',
         children: [
-          {name: 'Solicitar Hora Extra', url: '/horaExtraEmpleado'},
+          { name: 'Solicitar Hora Extra', url: '/horaExtraEmpleado' },
         ]
       },
       {
@@ -481,7 +487,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'flight',
         children: [
-          {name: 'Solicitar Vacaciones', url: '/vacacionesEmpleado'},
+          { name: 'Solicitar Vacaciones', url: '/vacacionesEmpleado' },
         ]
       },
       {
@@ -490,7 +496,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'transfer_within_a_station',
         children: [
-          {name: 'Solicitar Permiso', url: '/solicitarPermiso'},
+          { name: 'Solicitar Permiso', url: '/solicitarPermiso' },
         ]
       },
       {
@@ -499,7 +505,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'restaurant',
         children: [
-          {name: 'Planificación', url: '/almuerzosEmpleado'},
+          { name: 'Planificación', url: '/almuerzosEmpleado' },
         ]
       },
       {
@@ -508,7 +514,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'how_to_reg',
         children: [
-          {name: 'Procesos', url: '/procesosEmpleado'},
+          { name: 'Procesos', url: '/procesosEmpleado' },
         ]
       },
       {
@@ -517,7 +523,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'lock_open',
         children: [
-          {name: 'Autoridad', url: '/autorizaEmpleado'},
+          { name: 'Autoridad', url: '/autorizaEmpleado' },
         ]
       },
       {
@@ -526,9 +532,9 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'info',
         children: [
-          {name: 'Autoridades', url: '/informacion'},
-          {name: 'Archivos', url: '/verDocumentacion'},
-          {name: 'Estadísticas Generales', url: '/estadisticas'},
+          { name: 'Autoridades', url: '/informacion' },
+          { name: 'Archivos', url: '/verDocumentacion' },
+          { name: 'Estadísticas Generales', url: '/estadisticas' },
         ]
       },
       {
@@ -537,7 +543,7 @@ export class MainNavComponent implements OnInit {
         estado: this.loginService.getEstado(),
         icono: 'notifications',
         children: [
-          {name: 'Lista notificaciones', url: '/lista-notificaciones'},
+          { name: 'Lista notificaciones', url: '/lista-notificaciones' },
         ]
       },
     ]

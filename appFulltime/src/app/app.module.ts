@@ -124,7 +124,7 @@ import { ReportePermisosComponent } from './componentes/reportes/reporte-permiso
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
 import { PlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
-import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/empleados-planificar/lista-emple-plan-hora-e.component';
 import { ConfigurarAtrasosComponent } from './componentes/configurar-atrasos/configurar-atrasos.component';
 import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
 import { VerPedidoHoraExtraComponent } from './componentes/horasExtras/ver-pedido-hora-extra/ver-pedido-hora-extra.component';
@@ -295,6 +295,7 @@ import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/
 import { AyudaComponent } from './share/ayuda/ayuda.component';
 import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
 import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -514,9 +515,13 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
+<<<<<<< HEAD
     AyudaComponent,
     ReporteEmpleadosComponent,
     ReporteKardexComponent,
+=======
+    ReporteHorasPedidasComponent,
+>>>>>>> 9dcb5cb2d65b85a3d117e6e3df78fa3a223569ea
   ],
 
   imports: [

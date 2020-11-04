@@ -217,7 +217,7 @@ class HorasExtrasPedidasControlador {
         nombreEstado = obj.nombre
       }
       if (obj.valor === 3) { //cuando este en estado tres se registra la hora_extr_calculos.
-        
+
       }
     });
 
@@ -316,6 +316,61 @@ class HorasExtrasPedidasControlador {
     res.jsonp(respuesta)
   }
 
+  public async ListarPedidosHE(req: Request, res: Response) {
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+      'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.num_hora ' +
+      'FROM hora_extr_pedidos AS ph, empleados AS e ' +
+      'WHERE e.id = ph.id_usua_solicita ORDER BY e.nombre ASC, ph.fec_inicio ASC');
+    if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+      return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarPedidosHEAutorizadas(req: Request, res: Response) {
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+      'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.tiempo_autorizado, ' +
+      'a.estado, a.id_documento FROM hora_extr_pedidos AS ph, empleados AS e, autorizaciones AS a ' +
+      'WHERE e.id = ph.id_usua_solicita AND a.id_hora_extra = ph.id AND a.estado = 3 ' +
+      'ORDER BY e.nombre ASC, ph.fec_inicio ASC');
+    if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+      return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarPedidosHE_Empleado(req: Request, res: Response) {
+    const { id_empleado } = req.params;
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+      'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.num_hora ' +
+      'FROM hora_extr_pedidos AS ph, empleados AS e ' +
+      'WHERE e.id = ph.id_usua_solicita AND e.id = $1 ORDER BY e.nombre ASC, ph.fec_inicio ASC', [id_empleado]);
+    if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+      return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarPedidosHEAutorizadas_Empleado(req: Request, res: Response) {
+    const { id_empleado } = req.params;
+    const HORAS_EXTRAS_PEDIDAS = await pool.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+      'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.tiempo_autorizado, ' +
+      'a.estado, a.id_documento FROM hora_extr_pedidos AS ph, empleados AS e, autorizaciones AS a ' +
+      'WHERE e.id = ph.id_usua_solicita AND a.id_hora_extra = ph.id AND a.estado = 3 AND e.id = $1' +
+      'ORDER BY e.nombre ASC, ph.fec_inicio ASC', [id_empleado]);
+    if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+      return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
 
 }
 

@@ -21,6 +21,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
@@ -39,11 +40,6 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   // Datos del Empleado Timbre
   empleado: any = [];
 
-  // Arreglo datos contrato actual
-  datosContratoA: any = [];
-
-  // Arreglo datos cargo actual
-  datosCargoA: any = [];
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -94,6 +90,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restEmpre: EmpresaService,
     public restHorario: EmpleadoHorariosService,
     public restPlan: PlanHorarioService,
+    public restD: DatosGeneralesService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -151,81 +148,11 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   }
 
   // Obtener lista de empleados con contrato y cargo
-  cont: number = 0;
-  contador: number = 0;
-  iteracion: number = 0;
-  conteo: number = 0;
-  listaTotal: any = [];
-  VerDatosEmpleado() {
-    this.datosContratoA = [];
-    this.datosCargoA = [];
-    this.listaTotal = [];
+    VerDatosEmpleado() {
     this.datosEmpleado = [];
-    this.restH.ObtenerDatosContratoA().subscribe(data => {
-      this.datosContratoA = data;
-      for (var i = 0; i <= this.datosContratoA.length - 1; i++) {
-        this.restH.ObtenerDatosCargoA(this.datosContratoA[i].id).subscribe(datos => {
-          this.datosCargoA = datos;
-          this.iteracion++;
-          if (this.datosCargoA.length != 0) {
-            if (this.contador === 0) {
-              this.listaTotal = datos
-              this.contador++;
-            }
-            else {
-              this.listaTotal = this.listaTotal.concat(datos);
-            }
-          }
-          if (this.iteracion === this.datosContratoA.length) {
-            this.datosContratoA.forEach(obj => {
-              this.listaTotal.forEach(element => {
-                if (obj.id === element.emple_id) {
-                  let cargarDatos = [{
-                    id: obj.id,
-                    apellido: obj.apellido,
-                    cedula: obj.cedula,
-                    codigo: obj.codigo,
-                    correo: obj.correo,
-                    domicilio: obj.domicilio,
-                    esta_civil: obj.esta_civil,
-                    estado: obj.estado,
-                    fec_nacimiento: obj.fec_nacimiento,
-                    genero: obj.genero,
-                    id_contrato: obj.id_contrato,
-                    id_nacionalidad: obj.id_nacionalidad,
-                    imagen: obj.imagen,
-                    mail_alternativo: obj.mail_alternativo,
-                    nombre: obj.nombre,
-                    regimen: obj.regimen,
-                    telefono: obj.telefono,
-                    cargo: element.cargo,
-                    departamento: element.departamento,
-                    id_cargo: element.id_cargo,
-                    id_departamento: element.id_departamento,
-                    id_sucursal: element.id_sucursal,
-                    sucursal: element.sucursal,
-                    id_empresa: element.id_empresa,
-                    empresa: element.empresa,
-                    id_ciudad: element.id_ciudad,
-                    ciudad: element.ciudad
-                  }];
-                  if (this.cont === 0) {
-                    this.datosEmpleado = cargarDatos
-                    this.cont++;
-                  }
-                  else {
-                    this.datosEmpleado = this.datosEmpleado.concat(cargarDatos);
-                  }
-                }
-
-              });
-            });
-            console.log("Datos Totales" + '', this.datosEmpleado);
-          }
-        }, error => {
-          this.iteracion++;
-        })
-      }
+    this.restD.ListarInformacionActual().subscribe(data => {
+      this.datosEmpleado = data;
+      console.log('datos_actuales', this.datosEmpleado)
     });
   }
 
@@ -512,27 +439,27 @@ export class ReporteEntradaSalidaComponent implements OnInit {
             columns: [
               {
                 text: [{
-                  text: 'Fecha: ' + fecha + ' Hora: ' + time, alignment: 'left', color: 'blue', opacity: 0.5
+                  text: 'Fecha: ' + fecha + ' Hora: ' + time, alignment: 'left', opacity: 0.3
                 }]
               },
-              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', color: 'blue', opacity: 0.5 }], }
-            ], fontSize: 9, color: '#A4B8FF',
+              { text: [{ text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3 }], }
+            ], fontSize: 9
           }
         ]
       },
       // Título e imagen del archivo PDF - Contenido del archivo
       content: [
-        { image: this.logo, width: 150 },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
           if (obj.codigo === id_seleccionado) {
             return [
               {
                 text: obj.empresa.toUpperCase(),
-                bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 15]
+                bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5]
               },
               {
                 text: 'REPORTE ENTRADAS - SALIDAS',
-                fontSize: 17, alignment: 'center', margin: [0, 0, 0, 20]
+                fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5]
               },
             ];
           }
@@ -551,24 +478,25 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         tableHeaderES: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
         centrado: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] },
         quote: { margin: [5, -2, 0, -2], italics: true },
-        small: { fontSize: 9, color: 'blue', opacity: 0.5 }
+        small: { fontSize: 9, opacity: 0.3 }
       }
     };
   }
 
   // Estructura de los datos generales del empleado
   presentarDatosGenerales(id_seleccionado, form, fechasTotales) {
-    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo;
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, regimen;
     this.datosEmpleado.forEach(obj => {
       if (obj.codigo === id_seleccionado) {
-        nombre = obj.nombre
-        apellido = obj.apellido
-        cedula = obj.cedula
-        codigo = obj.codigo
-        sucursal = obj.sucursal
-        departamento = obj.departamento
-        ciudad = obj.ciudad
-        cargo = obj.cargo
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
       }
     })
     var diaI = moment(form.inicioForm).day();
@@ -581,8 +509,8 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           [{
             columns: [
               { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: '', style: 'itemsTableI' }] },
               { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
-
             ]
           }],
           [{
@@ -590,14 +518,19 @@ export class ReporteEntradaSalidaComponent implements OnInit {
               { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
               { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
               { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
-              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] }
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
             ]
           }],
           [{
             columns: [
               { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
               { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
-              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
               { text: [{ text: 'N° REGISTROS: ' + fechasTotales.length, style: 'itemsTableI' }] },
             ]
           }],
@@ -893,7 +826,8 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           SUCURSAL: this.datosEmpleado[i].sucursal,
           DEPARTAMENTO: this.datosEmpleado[i].departamento,
           CIUDAD: this.datosEmpleado[i].ciudad,
-          CARGO: this.datosEmpleado[i].cargo
+          CARGO: this.datosEmpleado[i].cargo,
+          REGIMEN: this.datosEmpleado[i].regimen
         }]
         break;
       }

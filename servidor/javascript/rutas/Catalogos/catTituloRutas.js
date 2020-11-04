@@ -17,6 +17,8 @@ class TituloRutas {
         this.router.post('/', verificarToken_1.TokenValidation, catTituloControlador_1.default.create);
         this.router.put('/', verificarToken_1.TokenValidation, catTituloControlador_1.default.ActualizarTitulo);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catTituloControlador_1.default.EliminarRegistros);
+        this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catTituloControlador_1.default.FileXML);
+        this.router.get('/download/:nameXML', catTituloControlador_1.default.downloadXML);
     }
 }
 const TITULO_RUTAS = new TituloRutas();

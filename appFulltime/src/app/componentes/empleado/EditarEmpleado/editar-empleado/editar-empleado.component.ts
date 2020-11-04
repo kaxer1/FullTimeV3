@@ -151,56 +151,66 @@ export class EditarEmpleadoComponent implements OnInit {
     });
 
     // realiza un capital letter a los nombres y apellidos
+    var NombreCapitalizado: any;
     let nombres = form1.nombreForm.split(' ');
-    let NombreCapitalizado = '';
-    let ApellidoCapitalizado = '';
-    if (nombres[1] == undefined) {
-      this.toastr.error('por favor escribir los dos nombres', 'Falta segundo nombre del empleado');
-    } else {
+    if (nombres.length > 1) {
+      console.log('tamaño de la cadena', nombres.length);
       let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
       let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
       NombreCapitalizado = name1 + ' ' + name2;
+    }
+    else {
+      let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+      var NombreCapitalizado = name1
+    }
 
-      let apellidos = form1.apellidoForm.split(' ');
+    var ApellidoCapitalizado: any;
+    let apellidos = form1.apellidoForm.split(' ');
+    if (apellidos.length > 1) {
       let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
       let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
       ApellidoCapitalizado = lastname1 + ' ' + lastname2;
+    }
+    else {
+      let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+      ApellidoCapitalizado = lastname1
+    }
 
-      let dataEmpleado = {
-        cedula: form1.cedulaForm,
-        apellido: ApellidoCapitalizado,
-        nombre: NombreCapitalizado,
-        esta_civil: form2.estadoCivilForm,
-        genero: form2.generoForm,
-        correo: form1.emailForm,
-        fec_nacimiento: form1.fechaForm,
-        estado: form2.estadoForm,
-        mail_alernativo: form1.correoAlternativoForm,
-        domicilio: form2.domicilioForm,
-        telefono: form2.telefonoForm,
-        id_nacionalidad: this.idNacionalidad,
-        codigo: form1.codigoForm
-      };
-      console.log(dataEmpleado);
-      this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
-        console.log('verificar', response.message)
-        if (response.message === 'error') {
-          this.toastr.error('Se le recuerda que el código del empleado debe ser único', 'Verificar un dato Incorrecto');
+    let dataEmpleado = {
+      cedula: form1.cedulaForm,
+      apellido: ApellidoCapitalizado,
+      nombre: NombreCapitalizado,
+      esta_civil: form2.estadoCivilForm,
+      genero: form2.generoForm,
+      correo: form1.emailForm,
+      fec_nacimiento: form1.fechaForm,
+      estado: form2.estadoForm,
+      mail_alernativo: form1.correoAlternativoForm,
+      domicilio: form2.domicilioForm,
+      telefono: form2.telefonoForm,
+      id_nacionalidad: this.idNacionalidad,
+      codigo: form1.codigoForm
+    };
+    console.log(dataEmpleado);
+    this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
+      console.log('verificar', response.message)
+      if (response.message === 'error') {
+        this.toastr.error('Se le recuerda que el código del empleado debe ser único', 'Verificar un dato Incorrecto');
+      }
+      else {
+        if (form3.passForm === '') {
+          let clave = this.usuario[0].contrasena;
+          this.ActualizarUser(form3, clave);
         }
         else {
-          if (form3.passForm === '') {
-            let clave = this.usuario[0].contrasena;
-            this.ActualizarUser(form3, clave);
-          }
-          else {
-            const md5 = new Md5();
-            let clave = md5.appendStr(form3.passForm).end();
-            this.ActualizarUser(form3, clave);
-          }
-
+          const md5 = new Md5();
+          let clave = md5.appendStr(form3.passForm).end();
+          this.ActualizarUser(form3, clave);
         }
-      }, error => { console.log(error); });
-    }
+
+      }
+    }, error => { console.log(error); });
+
   }
 
   ActualizarUser(form3, clave) {
