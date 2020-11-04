@@ -10,3 +10,7 @@
     padding-top: 10px; 
     padding-bottom: 6px; 
 }
+
+#botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px; }
+
+.mensaje-alerta { background-color: rgb(247, 40, 40); margin: 15px; border-radius: 25px; text-align: center;}

@@ -417,6 +417,10 @@
             <span>Correo y notificaciones</span>
           </button>
         </mat-menu>
+        <!-- Botón Ayuda -->
+        <button mat-mini-fab style="margin-left: 10px;" (click)="AbrirVentanaAyuda()">
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;">contact_support</mat-icon>
+        </button>
         <!-- Botón Logout  -->
         <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
           <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;"></mat-icon>

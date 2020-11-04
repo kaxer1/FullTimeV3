@@ -28,13 +28,11 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
-#ver { color: indianred; margin-left: 20px; }
+#ver { color: indianred; margin-left: 20px; cursor: pointer}
 
 #editar { color:green; cursor: pointer; margin-left: 20px; }
 
 #eliminar { color:red; cursor: pointer; margin-left: 20px; }
-
-#logo { color:rgb(0, 132, 255); cursor: pointer; margin-left: 20px; }
 
 table { width: 100%; font-size: 14px; }
 

@@ -151,7 +151,7 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
-import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { AsistenciaConsolidadoComponent } from './componentes/reportes/reporte-asistencia-consolidado/asistencia-consolidado.component';
 import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
 
@@ -292,6 +292,9 @@ import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colo
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
 import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
 import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
+import { AyudaComponent } from './share/ayuda/ayuda.component';
+import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
+import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -511,6 +514,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
+    AyudaComponent,
+    ReporteEmpleadosComponent,
+    ReporteKardexComponent,
   ],
 
   imports: [

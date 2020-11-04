@@ -8,7 +8,19 @@
                 <div class="row">
                     <br>
                     <div class="col">
-                        <label id="datosF" class="col-sm col-form-label text-center">{{e.nombre.toUpperCase()}}</label>
+                        <label id="datosF" class="col-sm col-form-label text-center" style="margin: auto auto">{{e.nombre.toUpperCase()}}</label>
+                    </div>
+                    <div class="col">
+                        <div class="btn-contenedor">
+                            <figure>
+                                <img *ngIf="!imagen_default" src="../../../../../assets/imagenes/photo.png" alt="logo_default" srcset="" id="style_logo">
+                                <img *ngIf="imagen_default" src="{{logo}}" alt="logo_empresa" srcset="" id="style_logo">
+                                <a (click)="EditarLogo()" matSuffix matTooltipPosition="right"
+                                    matTooltip="Editar logo de la empresa">
+                                    <mat-icon id="logo">add_a_photo</mat-icon>
+                                </a>
+                            </figure>
+                        </div>
                     </div>
                 </div>
                 <br>

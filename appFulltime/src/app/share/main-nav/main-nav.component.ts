@@ -18,6 +18,7 @@ import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
 import {NestedTreeControl} from '@angular/cdk/tree';
 import {MatTreeNestedDataSource} from '@angular/material/tree';
+import { AyudaComponent } from '../ayuda/ayuda.component';
 
 interface MenuNode {
   name: string;
@@ -272,6 +273,10 @@ export class MainNavComponent implements OnInit {
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     this.vistaFlotante.open(SettingsComponent, { width: '350px', data: {id_empleado} });
+  }
+
+  AbrirVentanaAyuda() {
+    this.vistaFlotante.open(AyudaComponent, {width: '500px'})
   }
 
   VerAccionPersonal() {
