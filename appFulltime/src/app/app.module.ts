@@ -515,13 +515,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
-<<<<<<< HEAD
     AyudaComponent,
     ReporteEmpleadosComponent,
     ReporteKardexComponent,
-=======
     ReporteHorasPedidasComponent,
->>>>>>> 9dcb5cb2d65b85a3d117e6e3df78fa3a223569ea
   ],
 
   imports: [
