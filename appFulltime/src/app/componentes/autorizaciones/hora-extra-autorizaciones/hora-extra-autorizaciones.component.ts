@@ -78,7 +78,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
 
   insertarAutorizacion(form) {
     if (this.data.carga === 'individual') {
-    this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
+      this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
     }
     else if (this.data.carga === 'multiple') {
       this.data.datosHora.map(obj => {
@@ -149,11 +149,8 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       id_plan_hora_extra: null,
     }
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
       console.log('pasa')
       this.EditarEstadoHoraExtra(id_hora_extra, id_departamento, empleado_solicita, form.estadoF)
-      this.limpiarCampos();
-      this.dialogRef.close();
     }, error => { })
   }
 
@@ -166,14 +163,12 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       id_departamento: id_departamento,
     }
     this.restAutorizaciones.PutEstadoAutoHoraExtra(id_hora_extra, newAutorizacionesM).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
       this.EditarEstadoHoraExtra(id_hora_extra, id_departamento, empleado_solicita, form.estadoF)
-      this.limpiarCampos();
-      this.dialogRef.close();
     })
   }
 
   resEstado: any = [];
+  contador: number = 0;
   EditarEstadoHoraExtra(id_hora, id_departamento, usuario_solicita, estado_hora) {
     console.log('estado', estado_hora)
     let datosHorasExtras = {
@@ -225,6 +220,19 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
         }
       });
     })
+    console.log('contador', this.contador);
+    this.contador = this.contador + 1;
+    if (this.data.carga === 'multiple') {
+      console.log('arreglo', this.data.datosHora.length);
+      if (this.contador === this.data.datosHora.length) {
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+        console.log('idpermiso', 'entra');
+        this.dialogRef.close();
+      }
+    }
+    else {
+      this.dialogRef.close();
+    }
   }
 
   limpiarCampos() {

@@ -12,7 +12,6 @@ const pool = new pg_pool_1.default({
     database: 'fulltime3',
     //database: 'timbres',
     password: 'admin'
-
 });
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {
