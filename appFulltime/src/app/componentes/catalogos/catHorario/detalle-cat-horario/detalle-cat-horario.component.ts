@@ -13,15 +13,13 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
   templateUrl: './detalle-cat-horario.component.html',
   styleUrls: ['./detalle-cat-horario.component.css']
 })
-export class DetalleCatHorarioComponent implements OnInit {
 
-  nocturno = false;
+export class DetalleCatHorarioComponent implements OnInit {
 
   ordenF = new FormControl('', [Validators.required]);
   accionF = new FormControl('', [Validators.required]);
   horaF = new FormControl('', [Validators.required]);
   minEsperaF = new FormControl('');
-  tipoF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public DetalleHorarioForm = new FormGroup({
@@ -29,7 +27,6 @@ export class DetalleCatHorarioComponent implements OnInit {
     accionForm: this.accionF,
     horaForm: this.horaF,
     minEsperaForm: this.minEsperaF,
-    tipoForm: this.tipoF
   });
 
   constructor(
@@ -42,7 +39,6 @@ export class DetalleCatHorarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
   }
 
   ValidarMinEspera(form, datos) {
@@ -56,7 +52,6 @@ export class DetalleCatHorarioComponent implements OnInit {
       orden: form.ordenForm,
       hora: form.horaForm,
       minu_espera: form.minEsperaForm,
-      nocturno: form.tipoForm,
       id_horario: this.data.datosHorario.id,
       tipo_accion: form.accionForm,
     };
@@ -66,13 +61,13 @@ export class DetalleCatHorarioComponent implements OnInit {
     this.rest.IngresarDetalleHorarios(datosDetalleH).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado')
       this.LimpiarCampos();
-      if(this.data.actualizar === true){
+      if (this.data.actualizar === true) {
         this.LimpiarCampos();
       }
       else {
-       this.dialogRef.close();
-       this.router.navigate(['/verHorario/', this.data.datosHorario.id]);
-      }  
+        this.dialogRef.close();
+        this.router.navigate(['/verHorario/', this.data.datosHorario.id]);
+      }
     }, error => {
     });
   }

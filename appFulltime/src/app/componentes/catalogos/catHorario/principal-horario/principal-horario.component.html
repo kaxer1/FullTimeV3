@@ -80,8 +80,7 @@
                         <th scope="col">Nombre</th>
                         <th scope="col">Minutos de almuerzo</th>
                         <th scope="col">Horas de trabajo</th>
-                        <th scope="col">Flexible</th>
-                        <th scope="col">Por horas</th>
+                        <th scope="col">Horario Nocturno</th>
                         <th scope="col">Documento</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -92,10 +91,8 @@
                         <td>{{horario.nombre}}</td>
                         <td>{{horario.min_almuerzo}}</td>
                         <td>{{horario.hora_trabajo}}</td>
-                        <td *ngIf="horario.flexible == true">Sí</td>
-                        <td *ngIf="horario.flexible == false">No</td>
-                        <td *ngIf="horario.por_horas == true">Sí</td>
-                        <td *ngIf="horario.por_horas == false">No</td>
+                        <td *ngIf="horario.nocturno == true">Sí</td>
+                        <td *ngIf="horario.nocturno == false">No</td>
                         <td *ngIf="horario.doc_nombre == '' || horario.doc_nombre == null"></td>
                         <td *ngIf="horario.doc_nombre != '' && horario.doc_nombre != null"> <a class="fas fa-file-alt"
                                 style="color:rgb(197, 95, 11); margin-left: 15px; text-align: center;" matSuffix

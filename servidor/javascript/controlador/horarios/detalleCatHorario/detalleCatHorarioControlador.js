@@ -29,8 +29,8 @@ class DetalleCatalogoHorarioControlador {
     }
     CrearDetalleHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion } = req.body;
-            yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion]);
+            const { orden, hora, minu_espera, id_horario, tipo_accion } = req.body;
+            yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5)', [orden, hora, minu_espera, id_horario, tipo_accion]);
             res.jsonp({ message: 'Detalle de Horario se registró con éxito' });
         });
     }
@@ -77,8 +77,8 @@ class DetalleCatalogoHorarioControlador {
     }
     ActualizarDetalleHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id } = req.body;
-            yield database_1.default.query('UPDATE deta_horarios SET orden = $1, hora = $2, minu_espera = $3, nocturno = $4, id_horario = $5, tipo_accion = $6 WHERE id = $7', [orden, hora, minu_espera, nocturno, id_horario, tipo_accion, id]);
+            const { orden, hora, minu_espera, id_horario, tipo_accion, id } = req.body;
+            yield database_1.default.query('UPDATE deta_horarios SET orden = $1, hora = $2, minu_espera = $3, id_horario = $4, tipo_accion = $5 WHERE id = $6', [orden, hora, minu_espera, id_horario, tipo_accion, id]);
             res.jsonp({ message: 'Detalle de Horario se registró con éxito' });
         });
     }
