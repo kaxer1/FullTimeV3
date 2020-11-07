@@ -50,7 +50,8 @@ export class LoginService {
   }
 
   logout(){
-    localStorage.clear()
+    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/']);
   }
 

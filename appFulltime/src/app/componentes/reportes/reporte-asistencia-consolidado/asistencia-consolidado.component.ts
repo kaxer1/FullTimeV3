@@ -16,6 +16,8 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { MatDialog } from '@angular/material/dialog';
 import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteConsoli} from '../../../model/reportes.model'
 import { ConfigAsistenciaComponent } from '../../reportes-Configuracion/config-report-asistencia/config-asistencia.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { EmpleadoElemento } from 'src/app/model/empleado.model';
 
 @Component({
   selector: 'app-asistencia-consolidado',
@@ -68,6 +70,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     fec_final: this.anio_final
   })
 
+  selection = new SelectionModel<EmpleadoElemento>(true, []);
+
   constructor(
     private restEmpleado: EmpleadoService,
     private restKardex: KardexService,
@@ -85,6 +89,35 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.MensajeInicio();
   }
 
+  btnCheckDeshabilitado: boolean = false;
+  HabilitarSeleccionDesactivados() {
+    if (this.btnCheckDeshabilitado === false) {
+      this.btnCheckDeshabilitado = true;
+    } else if (this.btnCheckDeshabilitado === true) {
+      this.btnCheckDeshabilitado = false;
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.empleados.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.empleados.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabelDos(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  // mensaje de advertencia si tiene o no la configuracion para seleccionar los campos a imprimir
   MensajeInicio() {
     if (!!sessionStorage.getItem('arrayConfigAsistencia') === false) {
       if (this.habilitar === false) {
@@ -103,10 +136,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     }
   }
 
+  // Obtener lista de empleados
+
   ObtenerEmpleados() {
     this.empleados = [];
     this.restEmpleado.getEmpleadosRest().subscribe(res => {
       this.empleados = res;
+      console.log(this.empleados);
     });
   }
 
@@ -134,10 +170,15 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     });
   }
 
+  // Metodo de la paginacion
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
+
+  /**
+   * Funciones para validar los campos y las fechas de rangos del reporte
+   */
 
   f_inicio_req: string = '';
   f_final_req: string = '';
@@ -179,6 +220,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
     }
   }
+
+  /**
+   * Abrir ventana de selecion de campos para imprimir reporte 
+   */
 
   ConfiguracionReporteAsistencia() {
     console.log('Esta listo para configurar');

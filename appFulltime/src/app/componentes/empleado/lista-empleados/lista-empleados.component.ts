@@ -16,24 +16,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
-
-export interface EmpleadoElemento {
-  apellido: string;
-  cedula: string;
-  codigo: string;
-  correo: string;
-  domicilio: string;
-  esta_civil: number;
-  estado: number;
-  fec_nacimiento: string;
-  genero: number;
-  id: number;
-  id_nacionalidad: number;
-  imagen: string
-  mail_alternativo: string;
-  nombre: string;
-  telefono: string;
-}
+import { EmpleadoElemento } from '../../../model/empleado.model'
 
 @Component({
   selector: 'app-lista-empleados',
