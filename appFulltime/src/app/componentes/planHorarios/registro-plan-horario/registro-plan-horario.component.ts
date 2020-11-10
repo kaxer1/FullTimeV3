@@ -41,8 +41,18 @@ export class RegistroPlanHorarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.ObtenerEmpleado(this.datoEmpleado.idEmpleado);
   }
 
+  empleado: any = [];
+  // Método para ver la información del empleado 
+  ObtenerEmpleado(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+      console.log('empleado', this.empleado)
+    })
+  }
 
   ValidarDatosPlanHorario(form) {
     let datosBusqueda = {
@@ -77,6 +87,7 @@ export class RegistroPlanHorarioComponent implements OnInit {
         id_cargo: this.datoEmpleado.idCargo,
         fec_inicio: form.fechaIngresoForm,
         fec_final: form.fechaSalidaForm,
+        codigo: this.empleado[0].codigo
       };
       this.rest.RegistrarPlanHorario(datosPlanHorario).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Planificación de Horario registrado');

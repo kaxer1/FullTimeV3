@@ -14,8 +14,8 @@ class PlanHorarioControlador {
     }
 
     public async CrearPlanHorario(req: Request, res: Response): Promise<void> {
-        const { id_cargo, fec_inicio, fec_final } = req.body;
-        await pool.query('INSERT INTO plan_horarios ( id_cargo, fec_inicio, fec_final ) VALUES ($1, $2, $3)', [id_cargo, fec_inicio, fec_final]);
+        const { id_cargo, fec_inicio, fec_final, codigo } = req.body;
+        await pool.query('INSERT INTO plan_horarios ( id_cargo, fec_inicio, fec_final, codigo ) VALUES ($1, $2, $3, $4)', [id_cargo, fec_inicio, fec_final, codigo]);
         res.jsonp({ message: 'Plan Horario Registrado' });
     }
 

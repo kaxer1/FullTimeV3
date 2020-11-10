@@ -6,8 +6,11 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 
 
 interface Dia {
@@ -50,6 +53,8 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
   constructor(
     public rest: DetallePlanHorarioService,
     public restH: HorarioService,
+    public restD: DetalleCatHorariosService,
+    public restP: PlanGeneralService,
     private toastr: ToastrService,
     private router: Router,
     public dialogRef: MatDialogRef<RegistroDetallePlanHorarioComponent>,
@@ -95,9 +100,37 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
         id_cg_horarios: form.horarioForm,
       };
       this.rest.RegistrarDetallesPlanHorario(datosDetallePlanH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado')
+        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado');
+        this.IngresarPlanGeneral(form);
+        console.log('fechas', moment(form.fechaForm).format('YYYY-MM-DD'))
         this.CerrarVentanaDetallePlanHorario();
       }, error => { });
+    });
+  }
+
+  detalles: any = [];
+  IngresarPlanGeneral(form) {
+    this.detalles = [];
+    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
+      this.detalles = res;
+      this.detalles.map(element => {
+        var accion = 0;
+        if (element.tipo_accion === 'E') {
+          accion = element.minu_espera;
+        }
+        let plan = {
+          fec_hora_horario: moment(form.fechaForm).format('YYYY-MM-DD') + ' ' + element.hora,
+          maxi_min_espera: accion,
+          estado: null,
+          id_det_horario: element.id,
+          fec_horario: form.fechaForm,
+          id_empl_cargo: this.data.planHorario.id_cargo,
+          tipo_entr_salida: element.tipo_accion,
+          codigo: this.data.planHorario.codigo
+        };
+        this.restP.CrearPlanGeneral(plan).subscribe(res => {
+        })
+      })
     });
   }
 

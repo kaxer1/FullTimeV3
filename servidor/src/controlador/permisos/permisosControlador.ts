@@ -73,13 +73,15 @@ class PermisosControlador {
     }
 
     public async CrearPermisos(req: Request, res: Response): Promise<void> {
-        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, id_empl_cargo, depa_user_loggin } = req.body;
+        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado,
+            dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre,
+            id_empl_cargo, hora_salida, hora_ingreso, codigo, depa_user_loggin } = req.body;
         await pool.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, ' +
             'hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, ' +
-            'num_permiso, docu_nombre, id_empl_cargo VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
-            '$13, $14, $15)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
+            'num_permiso, docu_nombre, id_empl_cargo, hora_salida, hora_ingreso, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
+            '$13, $14, $15, $16, $17, $18)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
             estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre,
-            id_empl_cargo]);
+            id_empl_cargo, hora_salida, hora_ingreso, codigo]);
 
         const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, ' +
             'cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ' +
@@ -183,7 +185,26 @@ class PermisosControlador {
     public async ObtenerPermisoContrato(req: Request, res: Response) {
         try {
             const { id_empl_contrato } = req.params;
-            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, t.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                'WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+            return res.jsonp(PERMISO.rows)
+        } catch (error) {
+            return res.jsonp(null);
+        }
+    }
+
+    public async ObtenerPermisoCodigo(req: Request, res: Response) {
+        try {
+            const { codigo } = req.params;
+            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                'p.hora_salida, p.hora_ingreso, p.codigo, ' +
+                't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                'WHERE p.id_tipo_permiso = t.id AND p.codigo = $1 ORDER BY p.num_permiso DESC', [codigo]);
             return res.jsonp(PERMISO.rows)
         } catch (error) {
             return res.jsonp(null);
@@ -246,7 +267,7 @@ class PermisosControlador {
             InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
                 if (estado === 1) {
                     estado_letras = 'Pendiente';
-                } 
+                }
                 else if (estado === 2) {
                     estado_letras = 'Pre-autorizado';
                 }
@@ -264,7 +285,7 @@ class PermisosControlador {
                     id_permiso: id_permiso,
                     id_vacaciones: null
                 }
-             
+
                 console.log(notifi_realtime);
                 let data = {
                     from: obj.correo,

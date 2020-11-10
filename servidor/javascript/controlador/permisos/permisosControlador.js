@@ -90,13 +90,13 @@ class PermisosControlador {
     }
     CrearPermisos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, id_empl_cargo, depa_user_loggin } = req.body;
+            const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, id_empl_cargo, hora_salida, hora_ingreso, codigo, depa_user_loggin } = req.body;
             yield database_1.default.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, ' +
                 'hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, ' +
-                'num_permiso, docu_nombre, id_empl_cargo VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
-                '$13, $14, $15)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
+                'num_permiso, docu_nombre, id_empl_cargo, hora_salida, hora_ingreso, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
+                '$13, $14, $15, $16, $17, $18)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
                 estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre,
-                id_empl_cargo]);
+                id_empl_cargo, hora_salida, hora_ingreso, codigo]);
             const JefesDepartamentos = yield database_1.default.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, ' +
                 'cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ' +
                 'ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.permiso_mail, ' +
@@ -202,7 +202,28 @@ class PermisosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id_empl_contrato } = req.params;
-                const PERMISO = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, t.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+                const PERMISO = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                    'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                    'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                    't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                    'WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+                return res.jsonp(PERMISO.rows);
+            }
+            catch (error) {
+                return res.jsonp(null);
+            }
+        });
+    }
+    ObtenerPermisoCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { codigo } = req.params;
+                const PERMISO = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                    'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                    'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                    'p.hora_salida, p.hora_ingreso, p.codigo, ' +
+                    't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                    'WHERE p.id_tipo_permiso = t.id AND p.codigo = $1 ORDER BY p.num_permiso DESC', [codigo]);
                 return res.jsonp(PERMISO.rows);
             }
             catch (error) {

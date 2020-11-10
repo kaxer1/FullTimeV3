@@ -57,6 +57,7 @@ import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
 import DATOS_GENERALES_RUTAS from './rutas/datosGenerales/datosGeneralesRutas';
 import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
+import PLAN_GENERAL_RUTAS from './rutas/planGeneral/planGeneralRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -147,6 +148,7 @@ class Servidor {
 
         // Timbres
         this.app.use('/timbres', TIMBRES_RUTAS);
+        this.app.use('/planificacion_general', PLAN_GENERAL_RUTAS);
 
         // Plantillas
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
