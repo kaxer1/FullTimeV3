@@ -561,9 +561,23 @@ function ComprobarCalculo(hora_trabaja: number, dias: number, hora: number, min:
  */
 
 
+
+
 export const ReportePeriVacaciones = async function(id_empleado: number) {
 
-    console.log(id_empleado);
+    let periodos = await PeriodosVacacionesEmpleado(id_empleado);
+
+    if (periodos.length === 0) return {message: 'No tiene ningun periodo asignado'}
+    console.log(periodos);
     
-    return {message: 'Halgo a salido masl en el proceso'}
+    return {message: 'Halgo a salido mal en el proceso'}
+}
+
+async function PeriodosVacacionesEmpleado(id_empleado: number) {
+    return await pool.query('SELECT pv.descripcion, pv.dia_vacacion, pv.dia_antiguedad, pv.estado, pv.fec_inicio, pv.fec_final, ' +
+    'pv.dia_perdido, pv.horas_vacaciones, pv.min_vacaciones FROM empl_contratos AS co, peri_vacaciones AS pv ' +
+    'WHERE co.id_empleado = $1 AND co.id = pv.id_empl_contrato AND pv.estado = 1 ORDER BY pv.fec_inicio ASC ', [id_empleado])
+    .then(result => {
+        return result.rows
+    })
 }

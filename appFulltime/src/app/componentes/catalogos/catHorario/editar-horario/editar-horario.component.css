@@ -83,7 +83,7 @@ mat-radio-group { width: 250px; padding: 15px 20px 15px 20x; margin-bottom: 10px
 }
 
 [type="file"] + label.btn-2:hover {
-    background-color: rgb(38, 218, 15);
+    background-color: rgb(21, 130, 1);
 }
 
 [type="file"] + label.btn-2:hover::before {

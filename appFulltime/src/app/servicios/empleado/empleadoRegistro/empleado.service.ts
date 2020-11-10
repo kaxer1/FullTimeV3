@@ -47,8 +47,12 @@ export class EmpleadoService {
       );
   }
 
+  verificarArchivoExcel(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/verificar/plantillaExcel/`, formData);
+  }
+
   subirArchivoExcel(formData) {
-    return this.http.post(`${this.API_URI}/empleado/plantillaExcel/`, formData);
+    return this.http.post<any>(`${this.API_URI}/empleado/cargar/plantillaExcel/`, formData);
   }
 
   // Servicio para insertar el empleado con sus respectivos titulos

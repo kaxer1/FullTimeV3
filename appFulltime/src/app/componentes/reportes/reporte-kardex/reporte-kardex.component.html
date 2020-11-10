@@ -15,7 +15,7 @@
                     <form [formGroup]="">
                         <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
-                                <mat-label>Ingresar Código</mat-label>
+                                <mat-label>Filtrar por Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo"
                                     [formControl]="codigo" (keypress)="IngresarSoloNumeros($event)">
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
@@ -24,7 +24,7 @@
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <mat-form-field>
-                                <mat-label>Ingresar CI o pasaporte</mat-label>
+                                <mat-label>Filtrar por CI o pasaporte</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
                                     oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [formControl]="cedula" type="text" (keypress)="IngresarSoloNumeros($event)">
@@ -36,7 +36,7 @@
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <mat-form-field>
-                                <mat-label>Ingresar Nombres</mat-label>
+                                <mat-label>Filtrar por Nombres</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre"
                                     [formControl]="nombre" type="text" (keypress)="IngresarSoloLetras($event)">
                                 <mat-error *ngIf="nombre.invalid">Indispensable ingresar dos letras
@@ -47,7 +47,7 @@
                                     help_outline</mat-icon>
                             </mat-form-field>
                             <mat-form-field>
-                                <mat-label>Ingresar Apellidos</mat-label>
+                                <mat-label>Filtrar por Apellidos</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido"
                                     [formControl]="apellido" type="text"
                                     (keypress)="IngresarSoloLetras($event)">
@@ -68,32 +68,7 @@
         </div>
         <div class="col-lg-5">
             <mat-accordion multi>
-
-                <mat-expansion-panel hideToggle>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title class="w-100 bd-highlight">
-                        Reporte Listado de Empleados
-                        </mat-panel-title>
-                        <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                        matTooltip="Lista de empleados en su respectivo departamento, cargo y regimen laboral">account_circle</mat-icon>
-                    </mat-expansion-panel-header>
-                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
-                        matTooltip="Descargar lista de empleados de la empresa en formato pdf" class="material-icons" id="upload"
-                        (click)="ListaEmpleadosDetallado('download')"> cloud_download
-                    </i>
-                    <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right" style="margin: 20px 10px 0px 10px;"
-                        matTooltip="Ver la información de empleados en pdf desde el navegador"  class="material-icons" id="pdf"
-                        (click)="ListaEmpleadosDetallado('open')">picture_as_pdf
-                    </i>
-                    <i (click)="exportToExcelListaEmpleados()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                        matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato EXCEL">
-                    </i>
-                    <button mat-icon-button (click)="ConfiguracionReporteEmpleados()">
-                        <mat-icon style="margin-top: -8px; color: black;">settings</mat-icon>
-                    </button>
-                </mat-expansion-panel>
-
-                <mat-expansion-panel hideToggle>
+                <mat-expansion-panel >
                     <mat-expansion-panel-header class="d-flex bd-highlight">
                         <mat-panel-title class="w-100 bd-highlight">
                         Rango Periodo Kardex
@@ -127,42 +102,6 @@
                         </div>
                     </div>
                 </mat-expansion-panel>
-            
-                <mat-expansion-panel hideToggle>
-                    <mat-expansion-panel-header class="d-flex bd-highlight">
-                        <mat-panel-title class="w-100 bd-highlight">
-                        Rango Fechas Asistencia
-                        </mat-panel-title>
-                        <mat-icon class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
-                        matTooltip="Ingresa el rango de fechas para la consulta de Asistencia Detalle Consolidado. 
-                            Se recomienda la fecha de inicio y final de mes">date_range</mat-icon>
-                    </mat-expansion-panel-header>
-            
-                    <div class="d-flex flex-wrap justify-content-center">
-                        <form [formGroup]="fechasForm">
-                            <mat-form-field>
-                                <mat-label>Desde</mat-label>
-                                <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
-                                    [formControl]="fec_inicio_mes" required>
-                                <mat-datepicker-toggle matSuffix [for]="pickerInicial" matTooltipPosition="right" id="ayuda_fec"
-                                    matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #pickerInicial></mat-datepicker>
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Hasta</mat-label>
-                                <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
-                                    [formControl]="fec_final_mes" required>
-                                <mat-datepicker-toggle matSuffix [for]="pickerFinal" matTooltipPosition="right" id="ayuda_fec"
-                                    matTooltip="Ingresa la fecha final del mes que deseas consultar el reporte. Ejm: 31/08/2020"></mat-datepicker-toggle>
-                                <mat-datepicker touchUi #pickerFinal></mat-datepicker>
-                            </mat-form-field>
-                        </form>
-                        <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
-                            <button mat-button type="submit" class="btn btn-sm" id="botones" [disabled]="fechasForm.invalid" (click)="ValidarRangofechas(fechasForm.value)">Aceptar</button>
-                            <button mat-button type="submit" class="btn btn-sm" id="botones" (click)="limpiarCamposRango()">Cancelar</button>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
             </mat-accordion>
         </div>
     </div>
@@ -174,16 +113,16 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
+                        <th scope="col">Código</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Cédula</th>
                         <th scope="col">KARDEX</th>
-                        <th scope="col">Código</th>
-                        <th scope="col">ASISTENCIA</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                        <th scope="row">{{e.codigo}}</th>
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>
                         <td>{{e.cedula}}</td>
@@ -197,20 +136,6 @@
                                 (click)="KardexEmpleado(e.id, 'open')">picture_as_pdf
                             </i>
                         </td>
-                        <th scope="row">{{e.codigo}}</th>
-                        <td class="d-flex justify-content-center">
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
-                                matTooltip="Descargar la asistencia consolidada del empleado" class="material-icons" id="upload"
-                                (click)="AsistenciaEmpleado(e.id, 'download')"> cloud_download
-                            </i>
-                            <i matSuffix matTooltipClass="emple-tooltip" [ngStyle]="estilo" matTooltipPosition="right"
-                                matTooltip="Ver la asistencia consolidada en formato pdf desde el navegador"  class="material-icons" id="pdf"
-                                (click)="AsistenciaEmpleado(e.id, 'open')">picture_as_pdf
-                            </i>
-                            <i (click)="exportToExcelAsistencia(e.id)" [ngStyle]="estilo" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip" matTooltip="Descargar lista de empleados de la empresa en formato EXCEL">
-                            </i>
-                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -220,4 +145,3 @@
         </mat-paginator>
     </div>
 </div>
-

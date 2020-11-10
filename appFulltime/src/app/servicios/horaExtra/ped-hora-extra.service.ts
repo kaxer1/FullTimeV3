@@ -79,4 +79,19 @@ export class PedHoraExtraService {
     return this.http.put<any>(`${this.API_URL}/horas-extras-pedidas/observacion/${id}`, datos);
   }
 
+  ListarPedidosHE() {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/listar/solicitudes`);
+  }
+
+  ListarPedidosHEAutorizadas() {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/solicitudes/autorizadas`);
+  }
+
+  ListarPedidosHE_Empleado(id_empleado: number) {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/listar/solicitudes/empleado/${id_empleado}`);
+  }
+
+  ListarPedidosHEAutorizadas_Empleado(id_empleado: number) {
+    return this.http.get(`${this.API_URL}/horas-extras-pedidas/solicitudes/autorizadas/empleado/${id_empleado}`);
+  }
 }

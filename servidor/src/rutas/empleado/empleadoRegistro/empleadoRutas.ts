@@ -32,7 +32,8 @@ class EmpleadoRutas {
         this.router.post('/', TokenValidation, EMPLEADO_CONTROLADOR.create);
         this.router.post('/xmlDownload/', TokenValidation, EMPLEADO_CONTROLADOR.FileXML);
         this.router.post('/emplTitulos/', TokenValidation, EMPLEADO_CONTROLADOR.createEmpleadoTitulos);
-        this.router.post('/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], EMPLEADO_CONTROLADOR.CargaPlantillaEmpleadoUsuario);
+        this.router.post('/verificar/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], EMPLEADO_CONTROLADOR.VerificarPlantilla);
+        this.router.post('/cargar/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], EMPLEADO_CONTROLADOR.CargarPlantilla);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', TokenValidation, EMPLEADO_CONTROLADOR.eliminarTituloDelEmpleado);
         this.router.post('/buscarDepartamento', TokenValidation, EMPLEADO_CONTROLADOR.ObtenerDepartamentoEmpleado);
         this.router.get('/encontrarDato/codigo', TokenValidation, EMPLEADO_CONTROLADOR.ObtenerCodigo);

@@ -375,32 +375,13 @@ export class VerEmpleadoComponent implements OnInit {
 
 
   /* Método para imprimir datos del permiso */
-  permisosEmpleado: any;
   permisosTotales: any;
   obtenerPermisos(id_empleado: number) {
-    this.permisosEmpleado = [];
     this.permisosTotales = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      console.log("idContrato ", this.idContrato[0].id);
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.permisosEmpleado = datos;
-          if (this.permisosEmpleado.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont === 0) {
-              this.permisosTotales = datos
-              this.cont++;
-            }
-            else {
-              this.permisosTotales = this.permisosTotales.concat(datos);
-              console.log("Datos Permisos" + i + '', this.permisosTotales)
-            }
-          }
-        })
-      }
+    this.restEmpleado.getOneEmpleadoRest(id_empleado).subscribe(datos => {
+      this.restPermiso.BuscarPermisoCodigo(datos[0].codigo).subscribe(datos => {
+        this.permisosTotales = datos;
+      })
     });
   }
 
@@ -1143,7 +1124,7 @@ export class VerEmpleadoComponent implements OnInit {
       },
       content: [
         { image: this.logoE, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10]},
+        { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
         {
           columns: [
             [

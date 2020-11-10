@@ -61,6 +61,7 @@ const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
 const datosGeneralesRutas_1 = __importDefault(require("./rutas/datosGenerales/datosGeneralesRutas"));
 const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
+const planGeneralRutas_1 = __importDefault(require("./rutas/planGeneral/planGeneralRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -154,6 +155,7 @@ class Servidor {
         this.app.use('/noti-real-time', notificacionesRutas_1.default);
         // Timbres
         this.app.use('/timbres', timbresRutas_1.default);
+        this.app.use('/planificacion_general', planGeneralRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
         // Documentos
@@ -198,21 +200,5 @@ class Servidor {
 }
 const SERVIDOR = new Servidor();
 SERVIDOR.start();
-const sendBirthday_1 = require("./libs/sendBirthday");
-const avisoVacaciones_1 = require("./libs/avisoVacaciones");
-const ContarHoras_1 = require("./libs/ContarHoras");
-const NotiTimbres_1 = require("./libs/NotiTimbres");
-const SinTimbres_1 = require("./libs/SinTimbres");
-// llama al meodo de cumpleaños
-sendBirthday_1.cumpleanios();
-// llama al metodo de avisos de vacaciones
-avisoVacaciones_1.beforeFiveDays();
-avisoVacaciones_1.beforeTwoDays();
-// llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-avisoVacaciones_1.Peri_Vacacion_Automatico();
-ContarHoras_1.RegistrarAsistenciaByTimbres();
-// ----------// conteoPermisos();
-NotiTimbres_1.NotificacionTimbreAutomatica();
-SinTimbres_1.NotificacionSinTimbres();
 //generarTimbres(1);
 //ModificarTimbresEntrada();

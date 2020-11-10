@@ -12,6 +12,7 @@ import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { LoginService } from 'src/app/servicios/login/login.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 interface opcionesDiasHoras {
   valor: string;
@@ -95,6 +96,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   legalizarF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
+  horaSalidaF = new FormControl('');
+  horaIngresoF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -109,13 +112,16 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     diaLibreForm: this.diaLibreF,
     estadoForm: this.estadoF,
     legalizarForm: this.legalizarF,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    horaSalidaForm: this.horaSalidaF,
+    horasIngresoForm: this.horaIngresoF
   });
 
   constructor(
     private restTipoP: TipoPermisosService,
     private restP: PermisosService,
     private restH: EmpleadoHorariosService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     private loginServise: LoginService,
     private realTime: RealTimeService,
@@ -133,6 +139,16 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     });
     this.ObtenerTiposPermiso();
     this.ImprimirNumeroPermiso();
+    this.ObtenerEmpleado(this.datoEmpleado.idEmpleado);
+  }
+
+  empleado: any = [];
+  // Método para ver la información del empleado 
+  ObtenerEmpleado(idemploy: any) {
+    this.empleado = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+    })
   }
 
   ObtenerTiposPermiso() {
@@ -375,7 +391,10 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       num_permiso: this.num,
       docu_nombre: form.nombreCertificadoForm,
       depa_user_loggin: parseInt(localStorage.getItem('departamento')),
-      id_empl_cargo: this.datoEmpleado.idCargo
+      id_empl_cargo: this.datoEmpleado.idCargo,
+      hora_salida: form.horaSalidaForm,
+      hora_ingreso: form.horasIngresoForm,
+      codigo: this.empleado[0].codigo
     }
     console.log(datosPermiso);
     this.CambiarValoresDiasHoras(form, datosPermiso);

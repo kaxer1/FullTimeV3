@@ -12,14 +12,16 @@ import { PrincipalHorarioComponent } from '../principal-horario/principal-horari
   templateUrl: './editar-horario.component.html',
   styleUrls: ['./editar-horario.component.css']
 })
+
 export class EditarHorarioComponent implements OnInit {
+
+  nocturno = false;
 
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
-  flexible = new FormControl('', Validators.required);
-  porHoras = new FormControl('', Validators.required);
+  tipoF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
 
@@ -28,9 +30,8 @@ export class EditarHorarioComponent implements OnInit {
     horarioNombreForm: this.nombre,
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
-    horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    tipoForm: this.tipoF
   });
 
   contador: number = 0;
@@ -50,8 +51,6 @@ export class EditarHorarioComponent implements OnInit {
       horarioNombreForm: this.data.horario.nombre,
       horarioMinAlmuerzoForm: this.data.horario.min_almuerzo,
       horarioHoraTrabajoForm: this.data.horario.hora_trabajo,
-      horarioFlexibleForm: this.data.horario.flexible,
-      horarioPorHorasForm: this.data.horario.por_horas,
       nombreCertificadoForm: this.data.horario.doc_nombre,
     });
     if (this.data.horario.doc_nombre != '' && this.data.horario.doc_nombre != null) {
@@ -62,6 +61,11 @@ export class EditarHorarioComponent implements OnInit {
       this.HabilitarBtn = false;
       this.isChecked = false;
     }
+    if (this.data.horario.nocturno === true) {
+      this.nocturno = true;
+    } else {
+      this.nocturno = false;
+    }
   }
 
   ModificarHorario(form) {
@@ -69,9 +73,8 @@ export class EditarHorarioComponent implements OnInit {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
-      flexible: form.horarioFlexibleForm,
-      por_horas: form.horarioPorHorasForm,
-      doc_nombre: form.nombreCertificadoForm
+      doc_nombre: form.nombreCertificadoForm,
+      nocturno: form.tipoForm
     };
     if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;

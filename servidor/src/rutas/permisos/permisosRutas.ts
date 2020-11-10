@@ -31,6 +31,7 @@ class PermisosRutas {
         this.router.get('/datosSolicitud/:id_emple_permiso', TokenValidation, PERMISOS_CONTROLADOR.ObtenerDatosSolicitud);
         this.router.get('/datosAutorizacion/:id_permiso', TokenValidation, PERMISOS_CONTROLADOR.ObtenerDatosAutorizacion);
         this.router.delete('/eliminar/:id_permiso/:doc', TokenValidation, PERMISOS_CONTROLADOR.EliminarPermiso);
+        this.router.get('/permisoCodigo/:codigo', TokenValidation, PERMISOS_CONTROLADOR.ObtenerPermisoCodigo);
     }
 }
 

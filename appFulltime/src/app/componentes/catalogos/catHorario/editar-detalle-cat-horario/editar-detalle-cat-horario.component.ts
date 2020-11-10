@@ -2,7 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
@@ -14,13 +13,10 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 })
 export class EditarDetalleCatHorarioComponent implements OnInit {
 
-  nocturno = false;
-
   ordenF = new FormControl('', [Validators.required]);
   accionF = new FormControl('', [Validators.required]);
   horaF = new FormControl('', [Validators.required]);
   minEsperaF = new FormControl('');
-  tipoF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public DetalleHorarioForm = new FormGroup({
@@ -28,14 +24,12 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
     accionForm: this.accionF,
     horaForm: this.horaF,
     minEsperaForm: this.minEsperaF,
-    tipoForm: this.tipoF
   });
 
   constructor(
     public rest: DetalleCatHorariosService,
     public restH: HorarioService,
     private toastr: ToastrService,
-    private router: Router,
     public dialogRef: MatDialogRef<EditarDetalleCatHorarioComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -55,7 +49,6 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
       orden: form.ordenForm,
       hora: form.horaForm,
       minu_espera: form.minEsperaForm,
-      nocturno: form.tipoForm,
       id_horario: this.data.id_horario,
       tipo_accion: form.accionForm,
       id: this.data.id
@@ -102,14 +95,7 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
       accionForm: this.data.tipo_accion,
       horaForm: this.data.hora,
       minEsperaForm: this.data.minu_espera,
-      tipoForm: this.data.nocturno
     })
-    if (this.data.nocturno === true) {
-      this.nocturno = true;
-    }
-    else {
-      this.nocturno = false;
-    }
     if (this.data.tipo_accion === 'Entrada') {
       this.DetalleHorarioForm.patchValue({
         accionForm: 'E',

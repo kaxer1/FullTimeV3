@@ -41,32 +41,14 @@
                         help_outline</mat-icon>
                     <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
                 </mat-form-field>
-                <mat-radio-group aria-label="Select an option" [formControl]="flexible" required>
-                    <label class="d-flex justify-content-around">
-                        <span>Horario Flexible *</span>
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="El horario flexible indica que se controlará entrada y salida">
-                            help_outline</mat-icon>
-                    </label>
-                    <div class="d-flex justify-content-around">
-                        <mat-radio-button value="true">Si</mat-radio-button>
-                        <mat-radio-button value="false">No</mat-radio-button>
-                    </div>
-                </mat-radio-group>
-                <mat-radio-group aria-label="Select an option" [formControl]="porHoras" required>
-                    <label class="d-flex justify-content-around">
-                        <span>Horario por Horas *</span>
-                        <mat-icon id="iHor" matSuffix matTooltipClass="horario-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="El horario por horas indica que se labora en un rango de horas">
-                            help_outline</mat-icon>
-                    </label>
-                    <div class="d-flex justify-content-around">
-                        <mat-radio-button value="true">Si</mat-radio-button>
-                        <mat-radio-button value="false">No</mat-radio-button>
-                    </div>
-                </mat-radio-group>
+                <div class="caja align-self-center ">
+                    <mat-checkbox style="margin-right: 22px;" [formControl]="tipoF" [(ngModel)]="nocturno">Horario Nocturno
+                        *
+                    </mat-checkbox>
+                    <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar si el horario es Nocturno">
+                        help_outline</mat-icon>
+                </div>
                 <div *ngIf="isChecked">
                     <div class="container">
                         <div class="row">

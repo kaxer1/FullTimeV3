@@ -9,6 +9,8 @@ import * as moment from 'moment';
 
 import { DetallePlanHorarioService } from 'src/app/servicios/horarios/detallePlanHorario/detalle-plan-horario.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 
 
 interface Dia {
@@ -49,6 +51,8 @@ export class EditarDetallePlanComponent implements OnInit {
   constructor(
     public rest: DetallePlanHorarioService,
     public restH: HorarioService,
+    public restD: DetalleCatHorariosService,
+    public restP: PlanGeneralService,
     private toastr: ToastrService,
     private router: Router,
     public dialogRef: MatDialogRef<EditarDetallePlanComponent>,
@@ -56,6 +60,7 @@ export class EditarDetallePlanComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('data', this.data)
     this.BuscarHorarios();
     this.CargarDatos();
   }
@@ -81,24 +86,72 @@ export class EditarDetallePlanComponent implements OnInit {
   }
 
   InsertarDetallePlanHorario(form) {
-    let datosBusqueda = {
+    let datosDetallePlanH = {
+      fecha: form.fechaForm,
       id_plan_horario: this.data.detalle.id_plan_horario,
-      fecha: form.fechaForm
-    }
-    this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
-      this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
-    }, error => {
-      let datosDetallePlanH = {
-        fecha: form.fechaForm,
+      tipo_dia: form.tipoDiaForm,
+      id_cg_horarios: form.horarioForm,
+      id: this.data.detalle.id
+    };
+    console.log('ver fechas', this.data.detalle.fecha, ' ', form.fechaForm)
+    if (this.data.detalle.fecha != form.fechaForm) {
+      let datosBusqueda = {
         id_plan_horario: this.data.detalle.id_plan_horario,
-        tipo_dia: form.tipoDiaForm,
-        id_cg_horarios: form.horarioForm,
-        id: this.data.detalle.id
-      };
-      this.rest.ActualizarRegistro(datosDetallePlanH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado')
-        this.Salir();
-      }, error => { });
+        fecha: form.fechaForm
+      }
+      this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
+        this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
+      }, error => {
+        this.ActualizarDetallePlan(datosDetallePlanH, form);
+      });
+    }
+    else {
+      this.ActualizarDetallePlan(datosDetallePlanH, form);
+    }
+  }
+
+  ActualizarDetallePlan(datos, form) {
+    this.rest.ActualizarRegistro(datos).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado');
+      this.EliminarDatos(form);
+      this.IngresarPlanGeneral(form);
+      this.Salir();
+    });
+  }
+
+  EliminarDatos(form) {
+    console.log('codigo', this.data.plan.codigo, moment(form.fechaForm).format('YYYY-MM-DD'))
+    let plan_fecha = {
+      fec_horario: form.fechaForm.split('T')[0],
+    };
+    this.restP.EliminarRegistro(this.data.plan.codigo, plan_fecha).subscribe(res => {
+      console.log('probando eliminar')
+    })
+  }
+
+  detalles: any = [];
+  IngresarPlanGeneral(form) {
+    this.detalles = [];
+    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
+      this.detalles = res;
+      this.detalles.map(element => {
+        var accion = 0;
+        if (element.tipo_accion === 'E') {
+          accion = element.minu_espera;
+        }
+        let plan = {
+          fec_hora_horario: moment(form.fechaForm).format('YYYY-MM-DD') + ' ' + element.hora,
+          maxi_min_espera: accion,
+          estado: null,
+          id_det_horario: element.id,
+          fec_horario: form.fechaForm,
+          id_empl_cargo: this.data.plan.id_cargo,
+          tipo_entr_salida: element.tipo_accion,
+          codigo: this.data.plan.codigo
+        };
+        this.restP.CrearPlanGeneral(plan).subscribe(res => {
+        })
+      })
     });
   }
 

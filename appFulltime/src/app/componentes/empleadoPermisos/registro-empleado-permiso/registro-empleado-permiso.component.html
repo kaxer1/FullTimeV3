@@ -97,6 +97,16 @@
                         <mat-datepicker touchUi #picker3></mat-datepicker>
                         <mat-error *ngIf="fechaFinalF.invalid">{{ObtenerMensajeFecha()}}</mat-error>
                     </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Hora Salida</mat-label>
+                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
+                            [formControl]="horaSalidaF">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Hora Ingreso</mat-label>
+                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
+                            [formControl]="horaIngresoF">
+                    </mat-form-field>
                     <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
                         <input matInput placeholder="Días libres" [formControl]="diaLibreF"

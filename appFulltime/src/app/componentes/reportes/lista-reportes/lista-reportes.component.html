@@ -1,30 +1,41 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row" *ngIf="mensaje">
+        <div class="col mensaje-alerta">
+            <span style="color: white; font-size: 20px;">Primero debe agregar un logotipo y los colores del reporte para descargar en PDFs</span>
+            <a type="buttom" class="btn btn-sm" id="botones" (click)="IrInfoEmpresa()">Configuración</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="lista">
                 <span id="negrita_dep">LISTA DE REPORTES</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
-                <ul>
+                <ul [ngStyle]="{'visibility': habilitarReportes}">
                     <li type="circle">
-                        <a mat-list-item [routerLink]="['/reporteTimbres']" class="texcol">
+                        <a mat-list-item [routerLink]="['/reporteTimbres']">
                             <span matLine>Reporte Timbres</span>
                         </a>
                     </li>
                     <li type="circle">
-                        <a mat-list-item [routerLink]="['/reportePermisos']" class="texcol">
+                        <a mat-list-item [routerLink]="['/reportePermisos']">
                             <span matLine>Reporte Permisos</span>
                         </a>
                     </li>
                     <li type="circle">
-                        <a mat-list-item [routerLink]="['/reporteAtrasos']" class="texcol">
+                        <a mat-list-item [routerLink]="['/reporteAtrasos']">
                             <span matLine>Reporte Atrasos</span>
                         </a>
                     </li>
                     <li type="circle">
-                        <a mat-list-item [routerLink]="['/reporteEntradaSalida']" class="texcol">
+                        <a mat-list-item [routerLink]="['/reporteEntradaSalida']">
                             <span matLine>Reporte Entradas Salidas</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/horas/extras']" class="texcol">
+                            <span matLine>Reporte Horas Extras</span>
                         </a>
                     </li>
                 </ul>
@@ -35,10 +46,20 @@
                 <span id="negrita_dep">LISTA DE KARDEX</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
-                <ul>
+                <ul [ngStyle]="{'visibility': habilitarReportes}">
                     <li type="circle">
-                        <a mat-list-item [routerLink]="['/kardex/asisitencia/consolidado']" class="texcol">
-                            <span matLine>Kardex - Asistencia</span>
+                        <a mat-list-item [routerLink]="['/reporteAsistenciaConsolidado']">
+                            <span matLine>Asistencia Detalle Consolidado</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporteEmpleados']">
+                            <span matLine>Reporte Empleados</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporteKardex']">
+                            <span matLine>Reporte Kardex</span>
                         </a>
                     </li>
                 </ul>

@@ -93,7 +93,7 @@ export class VerPedidoHoraExtraComponent implements OnInit {
 
       this.id_usua_solicita = this.hora_extra[0].id_usua_solicita;
       this.restA.getUnaAutorizacionByHoraExtraRest(this.dataParams.id).subscribe(res1 => {
-        console.log(res1);
+        console.log('d_auto', res1);
         this.autorizacion = res1;
         this.estados.forEach(obj => {
           if (this.autorizacion[0].estado === obj.id) {
