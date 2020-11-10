@@ -92,7 +92,7 @@ table { width: 100%; font-size: 14px; }
 }
 
 [type="file"] + label.btn-2:hover {
-    background-color: rgb(38, 218, 15);
+    background-color: rgb(21, 130, 1);
 }
 
 [type="file"] + label.btn-2:hover::before {

@@ -26,19 +26,11 @@
                     </div>
                     <br>
                     <div class="col">
-                        <label class="col-sm col-form-label">Horario Flexible:</label>
+                        <label class="col-sm col-form-label">Horario Nocturno:</label>
                         <br>
-                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.flexible == true">Sí</label>
-                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.flexible == false">No</label>
+                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.nocturno == true">Sí</label>
+                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.nocturno == false">No</label>
                     </div>
-                    <br>
-                    <div class="col">
-                        <label class="col-sm col-form-label">Horario por Horas:</label>
-                        <br>
-                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.por_horas == true">Sí</label>
-                        <label id="datosF" class="col-sm col-form-label" *ngIf="h.por_horas == false">No</label>
-                    </div>
-
                 </div>
                 <div style="text-align: right;">
                     <a *ngIf="h.doc_nombre != null" class="fas fa-file-alt"
@@ -65,7 +57,6 @@
                                     <th scope="col">Hora</th>
                                     <th scope="col">Minutos Espera</th>
                                     <th scope="col">Acción</th>
-                                    <th scope="col">Nocturno</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
                             </thead>
@@ -75,8 +66,6 @@
                                     <td>{{dh.hora}}</td>
                                     <td>{{dh.minu_espera}}</td>
                                     <td>{{dh.tipo_accion}}</td>
-                                    <td *ngIf="dh.nocturno == true">Sí</td>
-                                    <td *ngIf="dh.nocturno == false">No</td>
                                     <td>
                                         <i id="editarI" (click)="AbrirVentanaEditarDetalle(dh)" matSuffix
                                             matTooltipClass="color-tooltip" matTooltipPosition="right"
@@ -94,7 +83,8 @@
                         </table>
                     </div>
                     <mat-paginator [length]="datosDetalle.length" [pageSize]="tamanio_pagina"
-                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+                        [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
+                        showFirstLastButtons>
                     </mat-paginator>
                 </div>
             </div>

@@ -48,6 +48,7 @@ export class LogosComponent implements OnInit {
       if (res.imagen != 0) { this.textoBoton = 'Editar'};
       this.toastr.success('Operación Exitosa', 'Logotipo Actualizado.');
       this.archivoForm.reset();
+      this.dialogRef.close(true)
     });
   }
 

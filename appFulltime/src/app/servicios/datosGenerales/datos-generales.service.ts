@@ -19,4 +19,8 @@ export class DatosGeneralesService {
     return this.http.get(`${this.API_URL}/generalidades/empleadoAutoriza/${id_empleado}`);
   }
 
+  ListarInformacionActual() {
+    return this.http.get(`${this.API_URL}/generalidades/info_actual`);
+  }
+
 }

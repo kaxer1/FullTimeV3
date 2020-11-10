@@ -61,7 +61,7 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { VerSucursalComponent } from './componentes/sucursales/ver-sucursal/ver-sucursal.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
-import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/empleados-planificar/lista-emple-plan-hora-e.component';
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
 
@@ -73,8 +73,9 @@ import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/r
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
-import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { AsistenciaConsolidadoComponent } from './componentes/reportes/reporte-asistencia-consolidado/asistencia-consolidado.component';
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 
 // Componentes Empleado
 import { ContratoCargoEmpleadoComponent } from './componentes/rolEmpleado/contrato-cargo-empleado/contrato-cargo-empleado.component';
@@ -93,6 +94,8 @@ import { HoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora-extra
 import { PlanificacionComidasEmpleadoComponent } from './componentes/rolEmpleado/planificacion-comidas-empleado/planificacion-comidas-empleado.component';
 import { ProcesosEmpleadoComponent } from './componentes/rolEmpleado/procesos-empleado/procesos-empleado.component';
 import { AutorizaEmpleadoComponent } from './componentes/rolEmpleado/autoriza-empleado/autoriza-empleado.component';
+import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
+import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -157,12 +160,15 @@ const routes: Routes = [
   { path: 'planificaHoraExtra', component: ListaEmplePlanHoraEComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Reportes
-  { path: 'kardex/asisitencia/consolidado', component: AsistenciaConsolidadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteAsistenciaConsolidado', component: AsistenciaConsolidadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteEmpleados', component: ReporteEmpleadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteKardex', component: ReporteKardexComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteTimbres', component: ReporteTimbresComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reportePermisos', component: ReportePermisosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteAtrasos', component: ReporteAtrasosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteEntradaSalida', component: ReporteEntradaSalidaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaReportes', component: ListaReportesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'horas/extras', component: ReporteHorasPedidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Rol mixto para las autorizacines
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },

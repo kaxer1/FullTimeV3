@@ -13,6 +13,7 @@ class CiudadRutas {
     }
     configuracion() {
         this.router.get('/empleadoAutoriza/:empleado_id', verificarToken_1.TokenValidation, datosGeneralesControlador_1.default.ListarDatosEmpleadoAutoriza);
+        this.router.get('/info_actual', verificarToken_1.TokenValidation, datosGeneralesControlador_1.default.ListarDatosActualesEmpleado);
     }
 }
 const DATOS_GENERALES_RUTAS = new CiudadRutas();

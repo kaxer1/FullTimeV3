@@ -337,7 +337,7 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
           this.pedido_hora_autoriza[i].estado = 'Negado';
         }
         if (this.pedido_hora_autoriza[i].estado === 'Autorizado') {
-          hora1 = (this.pedido_hora_autoriza[i].num_hora).split(":");
+          hora1 = (this.pedido_hora_autoriza[i].tiempo_autorizado).split(":");
           t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
           tt.setHours(parseInt(horaT[0]), parseInt(horaT[1]), parseInt(horaT[2]));
 

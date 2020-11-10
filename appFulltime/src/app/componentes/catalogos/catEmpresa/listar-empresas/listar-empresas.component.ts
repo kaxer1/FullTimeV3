@@ -117,11 +117,6 @@ export class ListarEmpresasComponent implements OnInit {
     //console.log(datosSeleccionados.fecha);
   }
 
-  EditarLogo(id_empresa: number) {
-    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: id_empresa }).afterClosed()
-      .subscribe(res => { console.log(res) })
-  }
-
   LimpiarCampoBuscar() {
     this.BuscarEmpresaForm.setValue({
       buscarNombreForm: '',

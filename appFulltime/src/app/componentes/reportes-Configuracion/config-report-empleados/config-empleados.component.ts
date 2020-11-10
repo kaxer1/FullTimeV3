@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-
-export interface Task {
-  name: string;
-  completed: boolean;
-  subtasks?: Task[];
-}
+import { ToastrService } from 'ngx-toastr';
+import { Task } from '../../../model/reportes.model'
 
 @Component({
   selector: 'app-config-empleados',
@@ -49,13 +45,16 @@ export class ConfigEmpleadosComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<ConfigEmpleadosComponent>,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
-
   }
-
+  
   GuardarConfiguracionEmpleado() {
+    sessionStorage.removeItem('arrayConfig');
+    sessionStorage.removeItem('columnasValidas');
+
     console.log(this.task.subtasks);
     let columnasValidas = this.task.subtasks.filter(obj => {
       return (obj.completed === true)
@@ -63,7 +62,6 @@ export class ConfigEmpleadosComponent implements OnInit {
     console.log(columnasValidas);
     sessionStorage.setItem('columnasValidas', columnasValidas.toString())
 
-    sessionStorage.removeItem('arrayConfig')
     let ObjetoJSON = {
       // cedula: this.task.subtasks.filter(obj => {return (obj.name === 'Cedula')}).map(obj => {return obj.completed})[0],
       // nombre: this.task.subtasks.filter(obj => {return (obj.name === 'Nombre')}).map(obj => {return obj.completed})[0],
@@ -73,10 +71,12 @@ export class ConfigEmpleadosComponent implements OnInit {
       grupo: this.task.subtasks.filter(obj => {return (obj.name === 'Grupo')}).map(obj => {return obj.completed})[0],
       detall: this.task.subtasks.filter(obj => {return (obj.name === 'Detalle Grupo')}).map(obj => {return obj.completed})[0]
     }
+
     let jsonTask = JSON.stringify(ObjetoJSON)
     console.log(jsonTask);
     sessionStorage.setItem('arrayConfig', jsonTask)
-    this.dialogRef.close(true)
+    this.toastr.success('Configuración guardada')
+    this.dialogRef.close()
   }
 
 }

@@ -16,8 +16,9 @@ import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
-import { NestedTreeControl } from '@angular/cdk/tree';
-import { MatTreeNestedDataSource } from '@angular/material/tree';
+import {NestedTreeControl} from '@angular/cdk/tree';
+import {MatTreeNestedDataSource} from '@angular/material/tree';
+import { AyudaComponent } from '../ayuda/ayuda.component';
 
 interface MenuNode {
   name: string;
@@ -270,7 +271,22 @@ export class MainNavComponent implements OnInit {
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: { id_empleado } });
+    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: {id_empleado} });
+  }
+
+  AbrirVentanaAyuda() {
+    this.vistaFlotante.open(AyudaComponent, {width: '500px'})
+  }
+
+  VerAccionPersonal() {
+    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
+      if (res[0].tipo_empresa === 'Pública') {
+        this.HabilitarAccion = false;
+      }
+      else {
+        this.HabilitarAccion = true;
+      }
+    })
   }
 
   /**

@@ -1,12 +1,13 @@
-<h4>Configuracion de reporte</h4>
-
+<div class="d-flex bd-highlight titulo">
+  <h5 class="w-100 bd-highlight align-self-center">Configuración de reporte lista Empleados</h5>
+</div>
 <section class="example-section">
     <span class="example-list-section">
       <mat-checkbox class="example-margin"
                     [checked]="allComplete"
                     [indeterminate]="someComplete()"
                     (change)="setAll($event.checked)">
-        {{task.name}}
+        <b>{{task.name}}</b>
       </mat-checkbox>
     </span>
     <span class="example-list-section">
@@ -20,4 +21,7 @@
       </ul>
     </span>
 </section>
-<button (click)="GuardarConfiguracionEmpleado()">Guardar</button>
+<div class="d-flex justify-content-around">
+  <button class="btn btn-sm" (click)="GuardarConfiguracionEmpleado()">Guardar</button>
+  <button class="btn btn-sm" (click)="dialogRef.close()">Cancelar</button>
+</div>

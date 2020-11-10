@@ -15,6 +15,7 @@ import * as FileSaver from 'file-saver';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
+import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
 @Component({
   selector: 'app-hora-extra-real',
@@ -32,11 +33,6 @@ export class HoraExtraRealComponent implements OnInit {
   empleado: any = [];
   nacionalidades: any = [];
 
-  // Arreglo datos contrato actual
-  datosContratoA: any = [];
-
-  // Arreglo datos cargo actual
-  datosCargoA: any = [];
 
   // Arreglo datos cargo actual
   datosTotales: any = [];
@@ -80,6 +76,7 @@ export class HoraExtraRealComponent implements OnInit {
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public router: Router,
+    public restD: DatosGeneralesService,
     private toastr: ToastrService,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -90,9 +87,7 @@ export class HoraExtraRealComponent implements OnInit {
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
 
-    //this.VerDatosContratoA();
-
-    this.probandoLista();
+    this.VerDatosContratoA();
 
   }
 
@@ -109,169 +104,14 @@ export class HoraExtraRealComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  cont: number = 0;
-  iteracion: number = 0;
   // Mostrar datos de los empleados según su contrato Actual
   VerDatosContratoA(): any {
-    this.cont = 0;
-    this.iteracion = 0;
-    this.datosContratoA = [];
     this.datosTotales = [];
-    this.restH.ObtenerDatosContratoA().subscribe(data => {
-      this.datosContratoA = data;
-      console.log('Datos', this.datosContratoA);
-      for (var i = 0; i <= this.datosContratoA.length - 1; i++) {
-        console.log('i id', this.datosContratoA[i].id);
-        this.restH.ObtenerDatosCargoA(this.datosContratoA[i].id).subscribe(datos => {
-          console.log(datos)
-          if (datos.text === 'error') {
-            console.log('algo')
-          }
-          else {
-            console.log('entra');
-            console.log('i', this.iteracion);
-            this.datosCargoA = [];
-            this.datosCargoA = datos;
-            console.log('num id', this.datosContratoA[this.iteracion].id);
-            if (this.datosCargoA.length != 0) {
-              if (this.datosContratoA[this.iteracion].id === this.datosCargoA[0].emple_id) {
-                console.log('Cargo', this.datosCargoA);
-                let cargarDatos = [{
-                  id: this.datosContratoA[this.iteracion].id,
-                  apellido: this.datosContratoA[this.iteracion].apellido,
-                  cedula: this.datosContratoA[this.iteracion].cedula,
-                  codigo: this.datosContratoA[this.iteracion].codigo,
-                  correo: this.datosContratoA[this.iteracion].correo,
-                  domicilio: this.datosContratoA[this.iteracion].domicilio,
-                  esta_civil: this.datosContratoA[this.iteracion].esta_civil,
-                  estado: this.datosContratoA[this.iteracion].estado,
-                  fec_nacimiento: this.datosContratoA[this.iteracion].fec_nacimiento,
-                  genero: this.datosContratoA[this.iteracion].genero,
-                  id_contrato: this.datosContratoA[this.iteracion].id_contrato,
-                  id_nacionalidad: this.datosContratoA[this.iteracion].id_nacionalidad,
-                  imagen: this.datosContratoA[this.iteracion].imagen,
-                  mail_alternativo: this.datosContratoA[this.iteracion].mail_alternativo,
-                  nombre: this.datosContratoA[this.iteracion].nombre,
-                  regimen: this.datosContratoA[this.iteracion].regimen,
-                  telefono: this.datosContratoA[this.iteracion].telefono,
-                  cargo: this.datosCargoA[0].cargo,
-                  departamento: this.datosCargoA[0].departamento,
-                  id_cargo: this.datosCargoA[0].id_cargo,
-                  id_departamento: this.datosCargoA[0].id_departamento,
-                  id_sucursal: this.datosCargoA[0].id_sucursal,
-                  sucursal: this.datosCargoA[0].sucursal
-                }];
-                if (this.cont === 0) {
-                  this.datosTotales = cargarDatos
-                  this.cont++;
-                  this.iteracion++;
-                }
-                else {
-                  this.datosTotales = this.datosTotales.concat(cargarDatos);
-                  this.iteracion++;
-                }
-              }
-            }
-            if (this.iteracion === this.datosContratoA.length) {
-              console.log("Datos Totales" + '', this.datosTotales);
-            }
-          }
-
-        }, error => {
-          this.iteracion++;
-          console.log('erroreslll')
-        })
-      }
+    this.restD.ListarInformacionActual().subscribe(data => {
+      this.datosTotales = data;
+      console.log('datos_actuales', this.datosTotales)
     });
   }
-
-  cont1 = 0;
-  listaTotal: any = [];
-  probandoLista() {
-    this.cont = 0;
-    this.cont1 = 0;
-    this.iteracion = 0;
-    this.datosContratoA = [];
-    this.datosTotales = [];
-    this.datosCargoA = [];
-    this.listaTotal = [];
-    this.restH.ObtenerDatosContratoA().subscribe(data => {
-      this.datosContratoA = data;
-      console.log('Datos', this.datosContratoA);
-      for (var i = 0; i <= this.datosContratoA.length - 1; i++) {
-        //console.log('i id', this.datosContratoA[i].id);
-        this.restH.ObtenerDatosCargoA(this.datosContratoA[i].id).subscribe(datos => {
-          this.datosCargoA = datos;
-          this.iteracion++;
-          if (this.datosCargoA.length === 0) {
-            console.log("No se encuentran registros")
-          }
-          else {
-            if (this.cont1 === 0) {
-              this.listaTotal = datos
-              this.cont1++;
-            }
-            else {
-              this.listaTotal = this.listaTotal.concat(datos);
-              console.log("Datos T", this.listaTotal)
-            }
-          }
-          if (this.iteracion === this.datosContratoA.length) {
-            this.datosContratoA.forEach(obj => {
-              this.listaTotal.forEach(element => {
-                if (obj.id === element.emple_id) {
-                  let cargarDatos = [{
-                    id: obj.id,
-                    apellido: obj.apellido,
-                    cedula: obj.cedula,
-                    codigo: obj.codigo,
-                    correo: obj.correo,
-                    domicilio: obj.domicilio,
-                    esta_civil: obj.esta_civil,
-                    estado: obj.estado,
-                    fec_nacimiento: obj.fec_nacimiento,
-                    genero: obj.genero,
-                    id_contrato: obj.id_contrato,
-                    id_nacionalidad: obj.id_nacionalidad,
-                    imagen: obj.imagen,
-                    mail_alternativo: obj.mail_alternativo,
-                    nombre: obj.nombre,
-                    regimen: obj.regimen,
-                    telefono: obj.telefono,
-                    cargo: element.cargo,
-                    departamento: element.departamento,
-                    id_cargo: element.id_cargo,
-                    id_departamento: element.id_departamento,
-                    id_sucursal: element.id_sucursal,
-                    sucursal: element.sucursal
-                  }];
-                  if (this.cont === 0) {
-                    this.datosTotales = cargarDatos
-                    this.cont++;
-                  }
-                  else {
-                    this.datosTotales = this.datosTotales.concat(cargarDatos);
-                  }
-                }
-
-              });
-            });
-            console.log("Datos Totales prueba" + '', this.datosTotales);
-          }
-
-        }, error => {
-          this.iteracion++;
-          console.log('erroreslll')
-        })
-      }
-    });
-
-  }
-
-
-
-
-
 
   pedidos: any = [];
   timbres: any = [];

@@ -20,7 +20,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 1 OR h.estado = 2) AND ' +
@@ -36,7 +36,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidasObservacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 1 OR h.estado = 2) AND ' +
@@ -52,7 +52,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidasAutorizadas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 3 OR h.estado = 4) AND ' +
@@ -331,6 +331,66 @@ class HorasExtrasPedidasControlador {
                 return { message: 'Tiempo de hora autorizada confirmada' };
             });
             res.jsonp(respuesta);
+        });
+    }
+    ListarPedidosHE(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+                'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.num_hora ' +
+                'FROM hora_extr_pedidos AS ph, empleados AS e ' +
+                'WHERE e.id = ph.id_usua_solicita ORDER BY e.nombre ASC, ph.fec_inicio ASC');
+            if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+                return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPedidosHEAutorizadas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+                'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.tiempo_autorizado, ' +
+                'a.estado, a.id_documento FROM hora_extr_pedidos AS ph, empleados AS e, autorizaciones AS a ' +
+                'WHERE e.id = ph.id_usua_solicita AND a.id_hora_extra = ph.id AND a.estado = 3 ' +
+                'ORDER BY e.nombre ASC, ph.fec_inicio ASC');
+            if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+                return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPedidosHE_Empleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+                'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.num_hora ' +
+                'FROM hora_extr_pedidos AS ph, empleados AS e ' +
+                'WHERE e.id = ph.id_usua_solicita AND e.id = $1 ORDER BY e.nombre ASC, ph.fec_inicio ASC', [id_empleado]);
+            if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+                return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPedidosHEAutorizadas_Empleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado } = req.params;
+            const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT e.id AS id_empleado, e.nombre, e.apellido, e.codigo, ' +
+                'ph.id AS id_solicitud, ph.fec_inicio, ph.fec_final, ph.descripcion, ph.tiempo_autorizado, ' +
+                'a.estado, a.id_documento FROM hora_extr_pedidos AS ph, empleados AS e, autorizaciones AS a ' +
+                'WHERE e.id = ph.id_usua_solicita AND a.id_hora_extra = ph.id AND a.estado = 3 AND e.id = $1' +
+                'ORDER BY e.nombre ASC, ph.fec_inicio ASC', [id_empleado]);
+            if (HORAS_EXTRAS_PEDIDAS.rowCount > 0) {
+                return res.jsonp(HORAS_EXTRAS_PEDIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

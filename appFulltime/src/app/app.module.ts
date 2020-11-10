@@ -124,7 +124,7 @@ import { ReportePermisosComponent } from './componentes/reportes/reporte-permiso
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
 import { PlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
-import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-emple-plan-hora-e/lista-emple-plan-hora-e.component';
+import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/empleados-planificar/lista-emple-plan-hora-e.component';
 import { ConfigurarAtrasosComponent } from './componentes/configurar-atrasos/configurar-atrasos.component';
 import { ListaPedidoHoraExtraComponent } from './componentes/horasExtras/lista-pedido-hora-extra/lista-pedido-hora-extra.component';
 import { VerPedidoHoraExtraComponent } from './componentes/horasExtras/ver-pedido-hora-extra/ver-pedido-hora-extra.component';
@@ -151,7 +151,7 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
-import { AsistenciaConsolidadoComponent } from './componentes/reportes-kardex/asistencia-consolidado/asistencia-consolidado.component';
+import { AsistenciaConsolidadoComponent } from './componentes/reportes/reporte-asistencia-consolidado/asistencia-consolidado.component';
 import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
 
@@ -294,6 +294,10 @@ import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colo
 import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
 import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
 import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
+import { AyudaComponent } from './share/ayuda/ayuda.component';
+import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
+import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
+import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 
 @NgModule({
   declarations: [
@@ -511,6 +515,10 @@ import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/
     ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
+    AyudaComponent,
+    ReporteEmpleadosComponent,
+    ReporteKardexComponent,
+    ReporteHorasPedidasComponent,
   ],
 
   imports: [

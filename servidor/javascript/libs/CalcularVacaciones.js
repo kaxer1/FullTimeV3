@@ -511,7 +511,20 @@ function ComprobarCalculo(hora_trabaja, dias, hora, min) {
  */
 exports.ReportePeriVacaciones = function (id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empleado);
-        return { message: 'Halgo a salido masl en el proceso' };
+        let periodos = yield PeriodosVacacionesEmpleado(id_empleado);
+        if (periodos.length === 0)
+            return { message: 'No tiene ningun periodo asignado' };
+        console.log(periodos);
+        return { message: 'Halgo a salido mal en el proceso' };
     });
 };
+function PeriodosVacacionesEmpleado(id_empleado) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database_1.default.query('SELECT pv.descripcion, pv.dia_vacacion, pv.dia_antiguedad, pv.estado, pv.fec_inicio, pv.fec_final, ' +
+            'pv.dia_perdido, pv.horas_vacaciones, pv.min_vacaciones FROM empl_contratos AS co, peri_vacaciones AS pv ' +
+            'WHERE co.id_empleado = $1 AND co.id = pv.id_empl_contrato AND pv.estado = 1 ORDER BY pv.fec_inicio ASC ', [id_empleado])
+            .then(result => {
+            return result.rows;
+        });
+    });
+}

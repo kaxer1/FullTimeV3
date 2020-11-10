@@ -13,6 +13,7 @@ import { LogosComponent } from 'src/app/componentes/catalogos/catEmpresa/logos/l
 
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service'
+import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 
 @Component({
   selector: 'app-ver-empresa',
@@ -29,12 +30,17 @@ export class VerEmpresaComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  //imagen
+  logo: string;
+  imagen_default: boolean = false;
+  
   constructor(
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
     public rest: EmpresaService,
     public restS: SucursalService,
     private toastr: ToastrService,
+    private restK: KardexService,
   ) {
     var cadena = this.router.url;
     var aux = cadena.split("/");
@@ -55,6 +61,17 @@ export class VerEmpresaComponent implements OnInit {
     this.datosEmpresa = [];
     this.rest.ConsultarDatosEmpresa(parseInt(this.idEmpresa)).subscribe(datos => {
       this.datosEmpresa = datos;
+      if (this.datosEmpresa[0].logo != null) {
+        this.ObtenerLogotipo();        
+      }
+    });
+  }
+
+  ObtenerLogotipo() {
+    this.restK.LogoEmpresaImagenBase64(this.idEmpresa).subscribe(res => {
+      if (res.imagen === 0) { this.imagen_default = false};
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+      this.imagen_default = true;
     })
   }
 
@@ -95,8 +112,12 @@ export class VerEmpresaComponent implements OnInit {
   }
 
   EditarLogo() {
-    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: localStorage.getItem('empresa') }).afterClosed()
-      .subscribe(res => { console.log(res) })
+    this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: parseInt(this.idEmpresa) }).afterClosed()
+      .subscribe(res => { 
+        if(res === true) {
+          this.ObtenerLogotipo();
+        }
+      })
   }
 
   /** Función para eliminar registro seleccionado */

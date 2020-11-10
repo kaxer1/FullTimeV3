@@ -57,6 +57,7 @@ import REPORTES_RUTAS from './rutas/reportes/reportesRutas';
 import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
 import DATOS_GENERALES_RUTAS from './rutas/datosGenerales/datosGeneralesRutas';
 import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
+import PLAN_GENERAL_RUTAS from './rutas/planGeneral/planGeneralRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -168,6 +169,7 @@ class Servidor {
 
         // Timbres
         this.app.use('/timbres', TIMBRES_RUTAS);
+        this.app.use('/planificacion_general', PLAN_GENERAL_RUTAS);
 
         // Plantillas
         this.app.use('/plantillaD', PLANTILLA_RUTAS);
@@ -234,20 +236,20 @@ import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
 import { NotificacionSinTimbres } from './libs/SinTimbres'
 import { DesactivarFinContratoEmpleado } from './libs/DesactivarEmpleado'
 // llama al meodo de cumpleaños
-cumpleanios();
+// cumpleanios();
 // llama al metodo de avisos de vacaciones
-beforeFiveDays();
-beforeTwoDays();
+// beforeFiveDays();
+// beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-Peri_Vacacion_Automatico();
+// Peri_Vacacion_Automatico();
 
-RegistrarAsistenciaByTimbres();
+// RegistrarAsistenciaByTimbres();
 
 // ----------// conteoPermisos();
 
-NotificacionTimbreAutomatica();
+// NotificacionTimbreAutomatica();
 
-NotificacionSinTimbres();
+// NotificacionSinTimbres();
 
 // DesactivarFinContratoEmpleado();
 
