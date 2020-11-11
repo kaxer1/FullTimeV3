@@ -51,6 +51,8 @@ export class EditarFeriadosComponent implements OnInit {
   feriados: any = [];
   contador: number = 0;
   ActualizarFeriados(form) {
+    this.feriados = [];
+    this.contador = 0;
     let datosFeriado = {
       id: this.data.datosFeriado.id,
       fecha: form.fechaForm,

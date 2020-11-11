@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './editar-rol.component.html',
   styleUrls: ['./editar-rol.component.css']
 })
+
 export class EditarRolComponent implements OnInit {
 
   salir: boolean = false;
@@ -43,18 +44,36 @@ export class EditarRolComponent implements OnInit {
     this.nuevoRolForm.reset();
   }
 
+  roles: any = [];
+  contador: number = 0;
   insertarRol(form) {
+    this.contador = 0;
+    this.roles = [];
     let dataRol = {
       id: this.data.datosRol.id,
       nombre: form.descripcionForm,
     };
-    this.rest.ActualizarRol(dataRol).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Rol actualizado');
-      this.limpiarCampos();
-      this.salir = true;
-      this.dialogRef.close(this.salir);
-    }, error => {
-    });
+    this.rest.ListarRolesActualiza(this.data.datosRol.id).subscribe(response => {
+      this.roles = response;
+      this.roles.forEach(obj => {
+        if (obj.nombre.toUpperCase() === dataRol.nombre.toUpperCase()) {
+          this.contador = this.contador + 1;
+        }
+      })
+      if (this.contador === 0) {
+        this.rest.ActualizarRol(dataRol).subscribe(response => {
+          this.toastr.success('Operacion Exitosa', 'Rol actualizado');
+          this.limpiarCampos();
+          this.salir = true;
+          this.dialogRef.close(this.salir);
+        });
+      }
+      else {
+        this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo nombre rol ' +
+          'que no se encuentre registrado en el sistema.',
+          'Nombre de Rol Duplicado');
+      }
+    })
   }
 
   IngresarSoloLetras(e) {

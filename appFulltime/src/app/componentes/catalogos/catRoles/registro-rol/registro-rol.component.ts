@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { ToastrService } from 'ngx-toastr';
@@ -8,8 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   selector: 'app-registro-rol',
   templateUrl: './registro-rol.component.html',
   styleUrls: ['./registro-rol.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
+
 export class RegistroRolComponent implements OnInit {
 
   salir: boolean = false;
@@ -44,19 +44,35 @@ export class RegistroRolComponent implements OnInit {
     this.nuevoRolForm.reset();
   }
 
+  contador: number = 0;
+  roles: any = [];
   insertarRol(form) {
+    this.contador = 0;
+    this.roles = [];
     let dataRol = {
       nombre: form.descripcionForm,
     };
-
-    this.rest.postRoles(dataRol).subscribe(response => {
-      console.log(response);
-      this.toastr.success('Operacion Exitosa', 'Rol guardado');
-      this.limpiarCampos();
-      this.salir = true;
-    }, error => {
-      console.log(error);
-    });
+    this.rest.getRoles().subscribe(response => {
+      this.roles = response;
+      this.roles.forEach(obj => {
+        if (obj.nombre.toUpperCase() === dataRol.nombre.toUpperCase()) {
+          this.contador = this.contador + 1;
+        }
+      })
+      if (this.contador === 0) {
+        this.rest.postRoles(dataRol).subscribe(response => {
+          console.log(response);
+          this.toastr.success('Operacion Exitosa', 'Rol guardado');
+          this.limpiarCampos();
+          this.salir = true;
+        });
+      }
+      else {
+        this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo nombre rol ' +
+          'que no se encuentre registrado en el sistema.',
+          'Nombre de Rol Duplicado');
+      }
+    })
   }
 
   IngresarSoloLetras(e) {
