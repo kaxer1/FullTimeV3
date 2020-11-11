@@ -21,7 +21,7 @@ export class EmpleadoService {
   getEmpleadosRest() {
     return this.http.get(`${this.API_URI}/empleado`);
   }
-  
+
   getBuscadorEmpledosRest() {
     return this.http.get<any>(`${this.API_URI}/empleado/buscador-empl`);
   }
@@ -119,9 +119,7 @@ export class EmpleadoService {
   }
 
 
-
-
-  // GUARDAR CODIGO
+  // GUARDAR CÓDIGO
 
   CrearCodigo(datos: any) {
     return this.http.post(`${this.API_URI}/empleado/crearCodigo`, datos);
@@ -135,7 +133,16 @@ export class EmpleadoService {
     return this.http.put(`${this.API_URI}/empleado/cambiarCodigo`, datos);
   }
 
-  // servicio para obtener la lista de las nacionalidades
+  ActualizarCodigoTotal(datos: any) {
+    return this.http.put(`${this.API_URI}/empleado/cambiarValores`, datos);
+  }
+
+  ObtenerCodigoMAX() {
+    return this.http.get(`${this.API_URI}/empleado/encontrarDato/codigo/empleado`);
+  }
+
+
+  // Servicio para obtener la lista de las nacionalidades
   getListaNacionalidades() {
     return this.http.get<any>(`${this.API_URI}/nacionalidades`)
   }
@@ -160,15 +167,15 @@ export class EmpleadoService {
   DesactivarVariosUsuarios(data: any[]) {
     return this.http.put<any>(`${this.API_URI}/empleado/desactivar/masivo`, data)
   }
-  
+
   ActivarVariosUsuarios(data: any[]) {
     return this.http.put<any>(`${this.API_URI}/empleado/activar/masivo`, data)
   }
-  
+
   ReActivarVariosUsuarios(data: any[]) {
     return this.http.put<any>(`${this.API_URI}/empleado/re-activar/masivo`, data)
   }
-  
+
   ListaEmpleadosDesactivados() {
     return this.http.get<any>(`${this.API_URI}/empleado/desactivados/empleados`);
   }

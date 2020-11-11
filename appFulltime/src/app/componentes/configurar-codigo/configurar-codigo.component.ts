@@ -14,15 +14,14 @@ export class ConfigurarCodigoComponent implements OnInit {
   inicioF = new FormControl('');
   seleccionF = new FormControl('');
 
-  selec1 = false;
+  automaticoF = false;
+  manualF = false;
   HabilitarDescrip: boolean = true;
   estilo: any;
 
-  datosCodigo: any = [];
-
   public configuracionForm = new FormGroup({
     inicioForm: this.inicioF,
-    seleccionForm: this.seleccionF
+    seleccionForm: this.seleccionF,
   });
 
   constructor(
@@ -32,33 +31,99 @@ export class ConfigurarCodigoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      this.toastr.info('La configuración de código ya fue realizada.');
-      this.Limpiar();
-      this.router.navigate(['/home/']);
-    }, error => { });
   }
 
   RegistrarConfiguracion(form) {
+    console.log('select', this.automaticoF, this.manualF)
     this.rest.ObtenerCodigo().subscribe(datos => {
-      this.toastr.info('La configuración de código ya fue realizada.');
-      this.Limpiar();
-    }, error => {
-      let dataCodigo = {
-        id: 1,
-        valor: form.inicioForm,
-      }
-      if (form.inicioForm != '') {
-        this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
-          this.toastr.success('Configuración Registrada');
-          this.router.navigate(['/empleado/']);
-        })
-        this.Limpiar();
+      if (this.automaticoF === true) {
+        this.ActualizarAutomatico(form);
       }
       else {
-        this.toastr.info('Por favor ingresar un valor para generación de código')
+        this.ActualizarManual();
+      }
+    }, error => {
+      if (this.automaticoF === true) {
+        this.CrearAutomatico(form);
+      }
+      else {
+        this.CrearManual();
       }
     });
+  }
+
+  CrearAutomatico(form) {
+    let dataCodigo = {
+      id: 1,
+      valor: form.inicioForm,
+      automatico: this.automaticoF,
+      manual: this.manualF
+    }
+    if (form.inicioForm != '') {
+      this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
+        this.toastr.success('Configuración Registrada');
+        this.router.navigate(['/empleado/']);
+      })
+      this.Limpiar();
+    }
+    else {
+      this.toastr.info('Por favor ingresar un valor para generación de código')
+    }
+  }
+
+  CrearManual() {
+    let dataCodigo = {
+      id: 1,
+      valor: null,
+      automatico: this.automaticoF,
+      manual: this.manualF
+    }
+    this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
+      this.toastr.success('Configuración Registrada');
+      this.router.navigate(['/empleado/']);
+    })
+    this.Limpiar();
+  }
+
+  ActualizarAutomatico(form) {
+    let dataCodigo = {
+      id: 1,
+      valor: form.inicioForm,
+      automatico: this.automaticoF,
+      manual: this.manualF
+    }
+    if (form.inicioForm != '') {
+      this.rest.ObtenerCodigoMAX().subscribe(datosE => {
+        if (parseInt(datosE[0].codigo) < parseInt(form.inicioForm)) {
+          this.rest.ActualizarCodigoTotal(dataCodigo).subscribe(datos => {
+            this.toastr.success('Configuración Registrada');
+            this.router.navigate(['/empleado/']);
+          })
+          this.Limpiar();
+        }
+        else {
+          this.toastr.info('Para el buen funcionamiento del sistema ingrese un nuevo valor y recuerde que ' +
+            'este debe ser diferente a los valores anteriormente registrados.');
+        }
+      })
+    }
+    else {
+      this.toastr.info('Por favor ingresar un valor para generación de código');
+    }
+  }
+
+  ActualizarManual() {
+    let dataCodigo = {
+      id: 1,
+      valor: null,
+      automatico: this.automaticoF,
+      manual: this.manualF
+    }
+    this.rest.ActualizarCodigoTotal(dataCodigo).subscribe(datos => {
+      this.toastr.success('Configuración Registrada');
+      this.router.navigate(['/empleado/']);
+    })
+    this.Limpiar();
   }
 
   VerCampo() {
@@ -66,7 +131,8 @@ export class ConfigurarCodigoComponent implements OnInit {
     this.configuracionForm.patchValue({
       inicioForm: '',
     })
-
+    this.automaticoF = true;
+    this.manualF = false;
   }
 
   QuitarCampo() {
@@ -74,6 +140,8 @@ export class ConfigurarCodigoComponent implements OnInit {
     this.configuracionForm.patchValue({
       inicioForm: ''
     })
+    this.automaticoF = false;
+    this.manualF = true;
   }
 
   IngresarSoloNumeros(evt) {

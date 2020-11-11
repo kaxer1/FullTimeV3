@@ -31,6 +31,7 @@ export class RegistroComponent implements OnInit {
   nacionalidades: any = [];
   roles: any = [];
   hide = true;
+  escritura = false;
 
   private idNacionalidad: number;
 
@@ -59,6 +60,7 @@ export class RegistroComponent implements OnInit {
   ngOnInit(): void {
     this.cargarRoles();
     this.obtenerNacionalidades();
+    this.VerificarCodigo();
     this.primeroFormGroup = this._formBuilder.group({
       codigoForm: [''],
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
@@ -86,12 +88,25 @@ export class RegistroComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
+    this.segundoFormGroup.patchValue({
+      estadoForm: 1
+    })
+  }
 
+  datosCodigo: any = [];
+  VerificarCodigo() {
+    this.datosCodigo = [];
     this.rest.ObtenerCodigo().subscribe(datos => {
-      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-      this.primeroFormGroup.patchValue({
-        codigoForm: parseInt(datos[0].valor) + 1
-      })
+      this.datosCodigo = datos;
+      if (this.datosCodigo[0].automatico === true) {
+        this.primeroFormGroup.patchValue({
+          codigoForm: parseInt(this.datosCodigo[0].valor) + 1
+        })
+        this.escritura = true;
+      }
+      else {
+        this.escritura = false;
+      }
     }, error => {
       this.toastr.info('Primero configurar el código de empleado.');
       this.router.navigate(['/codigo/']);
@@ -156,7 +171,7 @@ export class RegistroComponent implements OnInit {
 
   insertarEmpleado(form1, form2, form3) {
 
-    // busca el id de la nacionalidad elegida en el autocompletado
+    // Busca el id de la nacionalidad elegida en el autocompletado
     this.nacionalidades.forEach(obj => {
       if (form2.nacionalidadForm == obj.nombre) {
         console.log(obj);
@@ -164,7 +179,7 @@ export class RegistroComponent implements OnInit {
       }
     });
 
-    // realiza un capital letter a los nombres y apellidos
+    // Realizar un capital letter a los nombres y apellidos
     var NombreCapitalizado: any;
     let nombres = form1.nombreForm.split(' ');
     if (nombres.length > 1) {
@@ -205,24 +220,21 @@ export class RegistroComponent implements OnInit {
       id_nacionalidad: this.idNacionalidad,
       codigo: form1.codigoForm
     };
-
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      console.log(dataEmpleado);
-      if (this.contador === 0) {
-        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-          if (response.message === 'error') {
-            this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
-          }
-          else {
-            this.empleadoGuardado = response;
-            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
-          }
-        });
-      }
-      else {
-        this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
-      }
-    });
+ 
+    if (this.contador === 0) {
+      this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
+        if (response.message === 'error') {
+          this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
+        }
+        else {
+          this.empleadoGuardado = response;
+          this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
+        }
+      });
+    }
+    else {
+      this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
+    }
   }
 
   verDatos(id: string) {
@@ -265,12 +277,14 @@ export class RegistroComponent implements OnInit {
   }
 
   ActualizarCodigo(codigo) {
-    let dataCodigo = {
-      valor: codigo,
-      id: 1
+    if (this.datosCodigo[0].automatico === true) {
+      let dataCodigo = {
+        valor: codigo,
+        id: 1
+      }
+      this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
+      })
     }
-    this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
-    })
   }
 
 }

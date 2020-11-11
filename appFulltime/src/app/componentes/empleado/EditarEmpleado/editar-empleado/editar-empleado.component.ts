@@ -24,6 +24,7 @@ import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class EditarEmpleadoComponent implements OnInit {
 
   nacionalidades: any = [];
@@ -60,6 +61,7 @@ export class EditarEmpleadoComponent implements OnInit {
     this.cargarRoles();
     this.obtenerNacionalidades();
     this.obtenerEmpleado();
+    this.VerificarCodigo();
     this.primeroFormGroup = this._formBuilder.group({
       codigoForm: [''],
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
@@ -86,6 +88,24 @@ export class EditarEmpleadoComponent implements OnInit {
       startWith(''),
       map(value => this._filter(value))
     );
+  }
+
+  datosCodigo: any = [];
+  escritura = false;
+  VerificarCodigo() {
+    this.datosCodigo = [];
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.datosCodigo = datos;
+      if (this.datosCodigo[0].automatico === true) {
+        this.escritura = true;
+      }
+      else {
+        this.escritura = false;
+      }
+    }, error => {
+      this.toastr.info('Primero configurar el código de empleado.');
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   private _filter(value: string): string[] {
@@ -186,36 +206,36 @@ export class EditarEmpleadoComponent implements OnInit {
       id_nacionalidad: this.idNacionalidad,
       codigo: form1.codigoForm
     };
-    console.log(dataEmpleado);
+
     if (this.contador === 0) {
       this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
         if (response.message === 'error') {
           this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
         }
         else {
-          this.VerificarContrasena(form3);
+          this.VerificarContrasena(form3, form1);
         }
       });
     }
     else {
-      this.VerificarContrasena(form3);
+      this.VerificarContrasena(form3, form1);
     }
   }
 
-  VerificarContrasena(form3) {
+  VerificarContrasena(form3, form1) {
     if (form3.passForm === '') {
       let clave = this.usuario[0].contrasena;
-      this.ActualizarUser(form3, clave);
+      this.ActualizarUser(form3, clave, form1);
     }
     else {
       const md5 = new Md5();
       let clave = md5.appendStr(form3.passForm).end();
-      this.ActualizarUser(form3, clave);
+      this.ActualizarUser(form3, clave, form1);
     }
   }
 
   contador: number = 0;
-  ActualizarUser(form3, clave) {
+  ActualizarUser(form3, clave, form1) {
     let dataUser = {
       usuario: form3.userForm,
       contrasena: clave,
@@ -229,12 +249,24 @@ export class EditarEmpleadoComponent implements OnInit {
       }
       else {
         this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
+        this.ActualizarCodigo(form1.codigoForm);
         this.limpliarCampos();
         this.guardar();
         this.cancelar();
         this.contador = 0;
       }
     });
+  }
+
+  ActualizarCodigo(codigo) {
+    if (this.datosCodigo[0].automatico === true) {
+      let dataCodigo = {
+        valor: codigo,
+        id: 1
+      }
+      this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
+      })
+    }
   }
 
   limpliarCampos() {

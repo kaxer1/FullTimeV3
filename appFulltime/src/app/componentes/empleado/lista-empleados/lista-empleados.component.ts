@@ -45,7 +45,6 @@ export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   nacionalidades: any = [];
-  // displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -84,6 +83,7 @@ export class ListaEmpleadosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.DescargarPlantilla();
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
@@ -300,6 +300,7 @@ export class ListaEmpleadosComponent implements OnInit {
       this.nacionalidades = res;
     });
   }
+
   /**
    * Metodos y variables para subir plantilla
    */
@@ -309,26 +310,30 @@ export class ListaEmpleadosComponent implements OnInit {
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      this.archivoSubido = element.target.files;
-      this.nameFile = this.archivoSubido[0].name;
-      let arrayItems = this.nameFile.split(".");
-      let itemExtencion = arrayItems[arrayItems.length - 1];
-      let itemName = arrayItems[0].slice(0, 9);
-      console.log(itemName.toLowerCase());
-      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-        if (itemName.toLowerCase() == 'empleados') {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems = this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (this.datosCodigo[0].automatico === true) {
+        var itemName = arrayItems[0].slice(0, 18);
+        if (itemName.toLowerCase() == 'empleadoautomatico') {
           this.plantilla();
         } else {
-          this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta');
         }
-      } else {
-        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    }, error => {
-      this.toastr.info('Primero configurar el código de empleado.');
-      this.router.navigate(['/codigo/']);
-    });
+      else {
+        itemName = arrayItems[0].slice(0, 14);
+        if (itemName.toLowerCase() == 'empleadomanual') {
+          this.plantilla();
+        } else {
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta');
+        }
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+    }
   }
 
   plantilla() {
@@ -336,19 +341,57 @@ export class ListaEmpleadosComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.verificarArchivoExcel(formData).subscribe(res => {
+    if (this.datosCodigo[0].automatico === true) {
+      this.ArchivoAutomatico(formData);
+    }
+    else {
+      this.ArchivoManual(formData);
+    }
+    this.archivoForm.reset();
+    this.nameFile = '';
+  }
+
+  ArchivoAutomatico(datosArchivo) {
+    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
       if (res.message === "error") {
         this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
       } else {
-        this.rest.subirArchivoExcel(formData).subscribe(res => {
+        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
           this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
-          //this.getEmpleados();
           window.location.reload();
         });
       }
     });
-    this.archivoForm.reset();
-    this.nameFile = '';
+  }
+
+  ArchivoManual(datosArchivo) {
+    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
+      if (res.message === "error") {
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
+      } else {
+        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
+          window.location.reload();
+        });
+      }
+    });
+  }
+
+  link: string = null;
+  datosCodigo: any = [];
+  DescargarPlantilla() {
+    this.datosCodigo = [];
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.datosCodigo = datos;
+      if (datos[0].automatico === true) {
+        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoAutomatico.xlsx"
+      } else {
+        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoManual.xlsx"
+      }
+    }, error => {
+      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado');
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   /* ****************************************************************************************************
