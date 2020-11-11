@@ -28,6 +28,18 @@ class FeriadosControlador {
             }
         });
     }
+    ListarFeriadosActualiza(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const FERIADOS = yield database_1.default.query('SELECT * FROM cg_feriados WHERE NOT id = $1', [id]);
+            if (FERIADOS.rowCount > 0) {
+                return res.jsonp(FERIADOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ObtenerUltimoId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const FERIADOS = yield database_1.default.query('SELECT MAX(id) FROM cg_feriados');
@@ -41,16 +53,26 @@ class FeriadosControlador {
     }
     ActualizarFeriado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fecha, descripcion, fec_recuperacion, id } = req.body;
-            yield database_1.default.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
-            res.jsonp({ message: 'Feriado actualizado exitosamente' });
+            try {
+                const { fecha, descripcion, fec_recuperacion, id } = req.body;
+                yield database_1.default.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
+                res.jsonp({ message: 'Feriado actualizado exitosamente' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     CrearFeriados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fecha, descripcion, fec_recuperacion } = req.body;
-            yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
-            res.jsonp({ message: 'Feriado guardado' });
+            try {
+                const { fecha, descripcion, fec_recuperacion } = req.body;
+                yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+                res.jsonp({ message: 'Feriado guardado' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     ObtenerUnFeriado(req, res) {

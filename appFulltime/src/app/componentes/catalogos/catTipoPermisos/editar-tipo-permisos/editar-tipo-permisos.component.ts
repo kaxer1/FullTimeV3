@@ -97,7 +97,6 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.segundoFormGroup = this._formBuilder.group({
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
-      correoForm: ['', Validators.required],
       actualizarForm: ['', Validators.required],
       eliminarForm: ['', Validators.required],
       tipoDescuentoForm: ['', Validators.required],
@@ -140,7 +139,6 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.segundoFormGroup.patchValue({
       vacaAfectaForm: this.tipoPermiso.vaca_afecta,
       anioAcumulaForm: this.tipoPermiso.anio_acumula,
-      correoForm: this.tipoPermiso.correo,
       actualizarForm: this.tipoPermiso.actualizar,
       eliminarForm: this.tipoPermiso.eliminar,
       tipoDescuentoForm: this.tipoPermiso.tipo_descuento
@@ -297,7 +295,6 @@ export class EditarTipoPermisosComponent implements OnInit {
       num_dia_ingreso: form1.numDiaIngresoForm,
       vaca_afecta: form2.vacaAfectaForm,
       anio_acumula: form2.anioAcumulaForm,
-      correo: form2.correoForm,
       gene_justificacion: form3.geneJustificacionForm,
       fec_validar: form3.fecValidarForm,
       acce_empleado: form1.acceEmpleadoForm,

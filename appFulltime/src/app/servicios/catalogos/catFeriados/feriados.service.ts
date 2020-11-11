@@ -15,11 +15,18 @@ export class FeriadosService {
 
   // Invocación del método post para crear nuevo feriado
   CrearNuevoFeriado(datos: any) {
-    return this.http.post(`${this.API_URL}/feriados`, datos);
+    return this.http.post(`${this.API_URL}/feriados`, datos)
+      .pipe(
+        catchError(datos)
+      );
   }
 
   ConsultarFeriado() {
     return this.http.get(`${this.API_URL}/feriados`);
+  }
+
+  ConsultarFeriadoActualiza(id: number) {
+    return this.http.get(`${this.API_URL}/feriados/listar/${id}`);
   }
 
   ConsultarUnFeriado(id: number) {
@@ -27,7 +34,10 @@ export class FeriadosService {
   }
 
   ActualizarUnFeriado(datos: any) {
-    return this.http.put(`${this.API_URL}/feriados`, datos);
+    return this.http.put(`${this.API_URL}/feriados`, datos)
+      .pipe(
+        catchError(datos)
+      );
   }
 
   ConsultarUltimoId() {
