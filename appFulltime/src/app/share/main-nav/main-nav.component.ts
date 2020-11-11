@@ -343,7 +343,7 @@ export class MainNavComponent implements OnInit {
         ]
       },
       {
-        name: 'Almuerzo',
+        name: 'Alimentación',
         accion: true,
         estado: true,
         icono: 'local_dining',
@@ -500,7 +500,7 @@ export class MainNavComponent implements OnInit {
         ]
       },
       {
-        name: 'Almuerzos',
+        name: 'Alimentación',
         accion: true,
         estado: true,
         icono: 'restaurant',

@@ -16,6 +16,17 @@ class FeriadosControlador {
         }
     }
 
+    public async ListarFeriadosActualiza(req: Request, res: Response) {
+        const id = req.params.id;
+        const FERIADOS = await pool.query('SELECT * FROM cg_feriados WHERE NOT id = $1', [id]);
+        if (FERIADOS.rowCount > 0) {
+            return res.jsonp(FERIADOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
     public async ObtenerUltimoId(req: Request, res: Response) {
         const FERIADOS = await pool.query('SELECT MAX(id) FROM cg_feriados');
         if (FERIADOS.rowCount > 0) {
@@ -26,16 +37,26 @@ class FeriadosControlador {
         }
     }
 
-    public async ActualizarFeriado(req: Request, res: Response): Promise<void> {
-        const { fecha, descripcion, fec_recuperacion, id } = req.body;
-        await pool.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
-        res.jsonp({ message: 'Feriado actualizado exitosamente' });
+    public async ActualizarFeriado(req: Request, res: Response) {
+        try {
+            const { fecha, descripcion, fec_recuperacion, id } = req.body;
+            await pool.query('UPDATE cg_feriados SET fecha = $1, descripcion = $2, fec_recuperacion = $3 WHERE id = $4', [fecha, descripcion, fec_recuperacion, id]);
+            res.jsonp({ message: 'Feriado actualizado exitosamente' });
+        }
+        catch (error) {
+            return res.jsonp({ message: 'error' });
+        }
     }
 
-    public async CrearFeriados(req: Request, res: Response): Promise<void> {
-        const { fecha, descripcion, fec_recuperacion } = req.body;
-        await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
-        res.jsonp({ message: 'Feriado guardado' });
+    public async CrearFeriados(req: Request, res: Response) {
+        try {
+            const { fecha, descripcion, fec_recuperacion } = req.body;
+            await pool.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, fec_recuperacion]);
+            res.jsonp({ message: 'Feriado guardado' });
+        }
+        catch (error) {
+            return res.jsonp({ message: 'error' });
+        }
     }
 
     public async ObtenerUnFeriado(req: Request, res: Response): Promise<any> {
@@ -97,7 +118,7 @@ class FeriadosControlador {
     public async EliminarFeriado(req: Request, res: Response): Promise<any> {
         const id = req.params.id;
         await pool.query('DELETE FROM cg_feriados WHERE id = $1', [id]);
-        res.jsonp({text: 'registro eliminado'});
+        res.jsonp({ text: 'registro eliminado' });
     }
 }
 

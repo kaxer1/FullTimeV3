@@ -8,8 +8,6 @@ import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Md5 } from 'ts-md5/dist/md5';
 
-
-
 import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
@@ -141,16 +139,14 @@ export class EditarEmpleadoComponent implements OnInit {
   }
 
   actualizarEmpleado(form1, form2, form3) {
-
-    // busca el id de la nacionalidad elegida en el autocompletado
+    // Busca el id de la nacionalidad elegida en el autocompletado
     this.nacionalidades.forEach(obj => {
       if (form2.nacionalidadForm == obj.nombre) {
         console.log(obj);
         this.idNacionalidad = obj.id;
       }
     });
-
-    // realiza un capital letter a los nombres y apellidos
+    // Realizar un capital letter a los nombres y apellidos
     var NombreCapitalizado: any;
     let nombres = form1.nombreForm.split(' ');
     if (nombres.length > 1) {
@@ -175,7 +171,6 @@ export class EditarEmpleadoComponent implements OnInit {
       let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
       ApellidoCapitalizado = lastname1
     }
-
     let dataEmpleado = {
       cedula: form1.cedulaForm,
       apellido: ApellidoCapitalizado,
@@ -192,29 +187,35 @@ export class EditarEmpleadoComponent implements OnInit {
       codigo: form1.codigoForm
     };
     console.log(dataEmpleado);
-    this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
-      console.log('verificar', response.message)
-      if (response.message === 'error') {
-        this.toastr.error('Se le recuerda que el código del empleado debe ser único', 'Verificar un dato Incorrecto');
-      }
-      else {
-        if (form3.passForm === '') {
-          let clave = this.usuario[0].contrasena;
-          this.ActualizarUser(form3, clave);
+    if (this.contador === 0) {
+      this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
+        if (response.message === 'error') {
+          this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
         }
         else {
-          const md5 = new Md5();
-          let clave = md5.appendStr(form3.passForm).end();
-          this.ActualizarUser(form3, clave);
+          this.VerificarContrasena(form3);
         }
-
-      }
-    }, error => { console.log(error); });
-
+      });
+    }
+    else {
+      this.VerificarContrasena(form3);
+    }
   }
 
+  VerificarContrasena(form3) {
+    if (form3.passForm === '') {
+      let clave = this.usuario[0].contrasena;
+      this.ActualizarUser(form3, clave);
+    }
+    else {
+      const md5 = new Md5();
+      let clave = md5.appendStr(form3.passForm).end();
+      this.ActualizarUser(form3, clave);
+    }
+  }
+
+  contador: number = 0;
   ActualizarUser(form3, clave) {
-    console.log("pass", clave);
     let dataUser = {
       usuario: form3.userForm,
       contrasena: clave,
@@ -222,10 +223,17 @@ export class EditarEmpleadoComponent implements OnInit {
       id_empleado: parseInt(this.idEmpleado),
     }
     this.user.ActualizarDatos(dataUser).subscribe(data => {
-      this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
-      this.limpliarCampos();
-      this.guardar();
-      this.cancelar();
+      if (data.message === 'error') {
+        this.toastr.error('Por favor ingrese otro nombre de usuario', 'Nombre de usuario existente');
+        this.contador = 1;
+      }
+      else {
+        this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
+        this.limpliarCampos();
+        this.guardar();
+        this.cancelar();
+        this.contador = 0;
+      }
     });
   }
 

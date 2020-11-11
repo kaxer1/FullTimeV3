@@ -63,6 +63,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   diaLibreF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
+  horaSalidaF = new FormControl('');
+  horaIngresoF = new FormControl('');
+ 
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -74,7 +77,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     fechaInicioForm: this.fechaInicioF,
     fechaFinalForm: this.fechaFinalF,
     diaLibreForm: this.diaLibreF,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    horaSalidaForm: this.horaSalidaF,
+    horasIngresoForm: this.horaIngresoF
   });
 
   constructor(
@@ -114,7 +119,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       fechaInicioForm: this.datos.fec_inicio,
       fechaFinalForm: this.datos.fec_final,
       diaLibreForm: this.datos.dia_libre,
-      nombreCertificadoForm: this.datos.docu_nombre
+      nombreCertificadoForm: this.datos.docu_nombre,
+      horaSalidaForm: this.datos.hora_salida,
+      horasIngresoForm: this.datos.hora_ingreso
     });
     if (this.datos.dia === 0) {
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
@@ -368,6 +375,8 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       num_permiso: this.num,
       anterior_doc: this.datos.documento,
       docu_nombre: form.nombreCertificadoForm,
+      hora_salida: form.horaSalidaForm,
+      hora_ingreso: form.horasIngresoForm,
     }
     if (this.isChecked === false) {
       datosPermiso.anterior_doc = null,

@@ -97,7 +97,10 @@ export class RegistroProvinciaComponent implements OnInit {
     return this.nombreProvinciaF.hasError('pattern') ? 'Ingrese un nombre válido' : '';
   }
 
+  provincias: any = [];
+  contador: number = 0;
   InsertarProvincia(form) {
+    this.provincias = [];
     let idPais;
     this.paises.forEach(obj => {
       if (obj.nombre === form.nombrePaisForm) {
@@ -108,17 +111,30 @@ export class RegistroProvinciaComponent implements OnInit {
       nombre: form.nombreProvinciaForm,
       id_pais: idPais,
     };
-    
+
     if (dataProvincia.id_pais === 'Seleccionar') {
       this.toastr.info('Seleccionar un país')
     }
     else {
-      this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
-        this.toastr.success('Registro guardado', 'Provincia - Departamento - Estado');
-        this.LimpiarCampos();
-      }, error => {
-        this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada')
-      });
+      this.rest.getProvinciasRest().subscribe(response => {
+        this.provincias = response;
+        this.provincias.forEach(obj => {
+          if (obj.nombre.toUpperCase() === form.nombreProvinciaForm.toUpperCase()) {
+            this.contador = this.contador + 1;
+          }
+        })
+        if (this.contador === 0) {
+          this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
+            this.toastr.success('Registro guardado', 'Provincia - Departamento - Estado');
+            this.LimpiarCampos();
+          }, error => {
+            this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada');
+          });
+        }
+        else {
+          this.toastr.error('La provincia ya se encuentra registrada.', 'Nombre Duplicado');
+        }
+      })
     }
   }
 

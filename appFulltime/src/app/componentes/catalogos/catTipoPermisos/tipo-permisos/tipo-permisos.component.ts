@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
-
 
 interface TipoDescuentos {
   value: string;
@@ -29,7 +28,6 @@ interface opcionesDiasHoras {
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
   styleUrls: ['./tipo-permisos.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class TipoPermisosComponent implements OnInit {
@@ -101,7 +99,6 @@ export class TipoPermisosComponent implements OnInit {
     this.segundoFormGroup = this._formBuilder.group({
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
-      correoForm: ['', Validators.required],
       actualizarForm: ['', Validators.required],
       eliminarForm: ['', Validators.required],
       tipoDescuentoForm: ['', Validators.required],
@@ -126,7 +123,6 @@ export class TipoPermisosComponent implements OnInit {
       num_dia_ingreso: form1.numDiaIngresoForm,
       vaca_afecta: form2.vacaAfectaForm,
       anio_acumula: form2.anioAcumulaForm,
-      correo: form2.correoForm,
       gene_justificacion: form3.geneJustificacionForm,
       fec_validar: form3.fecValidarForm,
       acce_empleado: form1.acceEmpleadoForm,

@@ -2,9 +2,9 @@ import { Router } from 'express';
 import FERIADOS_CONTROLADOR from '../../controlador/catalogos/catFeriadosControlador';
 import { TokenValidation } from '../../libs/verificarToken';
 
-const multipart = require('connect-multiparty');  
+const multipart = require('connect-multiparty');
 
-const multipartMiddleware = multipart({  
+const multipartMiddleware = multipart({
     uploadDir: './plantillas',
 });
 
@@ -17,6 +17,7 @@ class FeriadosRuta {
 
     configuracion(): void {
         this.router.get('/', TokenValidation, FERIADOS_CONTROLADOR.ListarFeriados);
+        this.router.get('/listar/:id', TokenValidation, FERIADOS_CONTROLADOR.ListarFeriadosActualiza);
         this.router.get('/ultimoId', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUltimoId);
         this.router.get('/:id', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUnFeriado);
         this.router.post('/', TokenValidation, FERIADOS_CONTROLADOR.CrearFeriados);

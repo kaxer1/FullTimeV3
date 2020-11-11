@@ -16,7 +16,7 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss'],
-  //encapsulation: ViewEncapsulation.None,
+
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -142,7 +142,7 @@ export class RegistroComponent implements OnInit {
     }
   }
 
-  limpliarCampos() {
+  LimpiarCampos() {
     this.primeroFormGroup.reset();
     this.segundoFormGroup.reset();
     this.terceroFormGroup.reset();
@@ -208,22 +208,24 @@ export class RegistroComponent implements OnInit {
 
     this.rest.ObtenerCodigo().subscribe(datos => {
       console.log(dataEmpleado);
-      this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
-        if (response.message === 'error') {
-          this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
-        }
-        else {
-          this.toastr.success('Operacion Exitosa', 'Empleado guardado');
-          this.empleadoGuardado = response;
-          this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
-          this.ActualizarCodigo(form1.codigoForm);
-          this.limpliarCampos();
-        }
-      }, error => { });
-    }, error => { });
+      if (this.contador === 0) {
+        this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
+          }
+          else {
+            this.empleadoGuardado = response;
+            this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
+          }
+        });
+      }
+      else {
+        this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
+      }
+    });
   }
 
-  agregarDiscapacidad(id: string) {
+  verDatos(id: string) {
     this.router.navigate(['/verEmpleado/', id]);
   }
 
@@ -233,7 +235,8 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  GuardarDatosUsuario(form3, id) {
+  contador: number = 0;
+  GuardarDatosUsuario(form3, id, form1) {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form3.passForm).end();
@@ -247,7 +250,17 @@ export class RegistroComponent implements OnInit {
       app_habilita: true
     }
     this.user.postUsuarioRest(dataUser).subscribe(data => {
-      this.agregarDiscapacidad(id);
+      if (data.message === 'error') {
+        this.toastr.error('Por favor ingrese otro nombre de usuario', 'Nombre de usuario existente');
+        this.contador = 1;
+      }
+      else {
+        this.ActualizarCodigo(form1.codigoForm);
+        this.verDatos(id);
+        this.toastr.success('Operacion Exitosa', 'Empleado guardado');
+        this.LimpiarCampos();
+        this.contador = 0;
+      }
     });
   }
 

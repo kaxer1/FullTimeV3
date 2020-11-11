@@ -1,10 +1,11 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 
@@ -12,7 +13,6 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
   selector: 'app-editar-feriados',
   templateUrl: './editar-feriados.component.html',
   styleUrls: ['./editar-feriados.component.css'],
-  //encapsulation: ViewEncapsulation.None
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -20,6 +20,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class EditarFeriadosComponent implements OnInit {
 
   idFeriado: number;
@@ -43,9 +44,12 @@ export class EditarFeriadosComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
+
     this.ImprimirDatos();
   }
 
+  feriados: any = [];
+  contador: number = 0;
   ActualizarFeriados(form) {
     let datosFeriado = {
       id: this.data.datosFeriado.id,
@@ -53,20 +57,48 @@ export class EditarFeriadosComponent implements OnInit {
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
     };
-    if(datosFeriado.fec_recuperacion === ''){
+    if (datosFeriado.fec_recuperacion === '' || datosFeriado.fec_recuperacion === null) {
       datosFeriado.fec_recuperacion = null;
+      this.RegistrarFeriado(datosFeriado);
     }
-    this.rest.ActualizarUnFeriado(datosFeriado).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Feriado Actualizado')
-      this.LimpiarCampos();
-      this.dialogRef.close();
-      if(this.data.actualizar === true){
-        window.location.reload();
-      } else {
-        this.router.navigate(['/verFeriados/', datosFeriado.id]);
+    else {
+      this.rest.ConsultarFeriadoActualiza(this.data.datosFeriado.id).subscribe(response => {
+        this.feriados = response;
+        this.feriados.forEach(obj => {
+          if (obj.fecha.split('T')[0] === moment(datosFeriado.fec_recuperacion).format('YYYY-MM-DD')) {
+            this.contador = this.contador + 1;
+          }
+        })
+        if (this.contador === 0) {
+          if (Date.parse(form.fechaForm) < Date.parse(datosFeriado.fec_recuperacion)) {
+            this.RegistrarFeriado(datosFeriado);
+          }
+          else {
+            this.toastr.error('La fecha de recuperación debe ser posterior a la fecha del feriado registrado.', 'Fecha de recuperación incorrecta')
+          }
+        }
+        else {
+          this.toastr.error('La fecha de recuperación se encuentra registrada como un feriado.', 'Verificar fecha de recuperación')
+        }
+      })
+    }
+  }
+
+  RegistrarFeriado(datos) {
+    this.rest.ActualizarUnFeriado(datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('La fecha del feriado o la fecha de recuperación se encuentran dentro de otro registro.', 'Verificar las fechas')
       }
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Feriado no se pudo registrar')
+      else {
+        this.toastr.success('Operación Exitosa', 'Feriado Actualizado')
+        this.LimpiarCampos();
+        this.dialogRef.close();
+        if (this.data.actualizar === true) {
+          window.location.reload();
+        } else {
+          this.router.navigate(['/verFeriados/', datos.id]);
+        }
+      }
     });
   }
 

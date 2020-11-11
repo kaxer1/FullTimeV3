@@ -8,7 +8,7 @@
         <form [formGroup]="primeroFormGroup">
             <ng-template matStepLabel>
                 <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Sección 1: Información General">person_add
+                    matTooltip="Sección 1: Información General">description
                 </mat-icon>
             </ng-template>
             <div class="titulo_permisoR">
@@ -109,7 +109,7 @@
         <form [formGroup]="segundoFormGroup">
             <ng-template matStepLabel>
                 <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Sección 2: Efectos del Permiso">person_add
+                    matTooltip="Sección 2: Efectos del Permiso">description
                 </mat-icon>
             </ng-template>
             <div class="titulo_permisoR">
@@ -140,19 +140,6 @@
                             matTooltipPosition="right"
                             matTooltip="Seleccionar si los días o horas del permiso son acumulables en el año">
                             help_outline
-                        </mat-icon>
-                    </label>
-                    <div class="d-flex justify-content-around">
-                        <mat-radio-button [value]="true">Si</mat-radio-button>
-                        <mat-radio-button [value]="false">No</mat-radio-button>
-                    </div>
-                </mat-radio-group>
-                <mat-radio-group aria-label="Select an option" formControlName="correoForm" required>
-                    <label class="d-flex justify-content-start">
-                        <span style="font-size: 12px;">Activar notificación por Correo *</span>
-                        <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip"
-                            matTooltipPosition="right"
-                            matTooltip="Seleccionar si el permiso se notificará por correo">help_outline
                         </mat-icon>
                     </label>
                     <div class="d-flex justify-content-around">
@@ -208,7 +195,7 @@
         <form [formGroup]="terceroFormGroup">
             <ng-template matStepLabel>
                 <mat-icon id="seccion_permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Sección 3: Condiciones del Permiso">person_add
+                    matTooltip="Sección 3: Condiciones del Permiso">description
                 </mat-icon>
             </ng-template>
             <div class="titulo_permisoR">
