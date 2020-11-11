@@ -257,10 +257,18 @@ class EmpleadoControlador {
             }
         });
     }
+    // CREAR CÓDIGO
     CrearCodigo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, valor } = req.body;
-            yield database_1.default.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
+            const { id, valor, automatico, manual } = req.body;
+            yield database_1.default.query('INSERT INTO codigo ( id, valor, automatico, manual) VALUES ($1, $2, $3, $4)', [id, valor, automatico, manual]);
+            res.jsonp({ message: 'Codigo guardado' });
+        });
+    }
+    ActualizarCodigoTotal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { valor, automatico, manual, id } = req.body;
+            yield database_1.default.query('UPDATE codigo SET valor = $1, automatico = $2, manual = $3 WHERE id = $4', [valor, automatico, manual, id]);
             res.jsonp({ message: 'Codigo guardado' });
         });
     }
@@ -274,6 +282,17 @@ class EmpleadoControlador {
     ObtenerCodigo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+            if (VALOR.rowCount > 0) {
+                return res.jsonp(VALOR.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    ObtenerMAXCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const VALOR = yield database_1.default.query('SELECT MAX(codigo) AS codigo FROM empleados');
             if (VALOR.rowCount > 0) {
                 return res.jsonp(VALOR.rows);
             }

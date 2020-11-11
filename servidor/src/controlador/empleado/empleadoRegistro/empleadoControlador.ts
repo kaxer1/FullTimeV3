@@ -245,9 +245,16 @@ class EmpleadoControlador {
     }
   }
 
+  // CREAR CÓDIGO
   public async CrearCodigo(req: Request, res: Response) {
-    const { id, valor } = req.body;
-    await pool.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
+    const { id, valor, automatico, manual } = req.body;
+    await pool.query('INSERT INTO codigo ( id, valor, automatico, manual) VALUES ($1, $2, $3, $4)', [id, valor, automatico, manual]);
+    res.jsonp({ message: 'Codigo guardado' });
+  }
+
+  public async ActualizarCodigoTotal(req: Request, res: Response) {
+    const { valor, automatico, manual, id } = req.body;
+    await pool.query('UPDATE codigo SET valor = $1, automatico = $2, manual = $3 WHERE id = $4', [valor, automatico, manual, id]);
     res.jsonp({ message: 'Codigo guardado' });
   }
 
@@ -259,6 +266,16 @@ class EmpleadoControlador {
 
   public async ObtenerCodigo(req: Request, res: Response): Promise<any> {
     const VALOR = await pool.query('SELECT *FROM codigo');
+    if (VALOR.rowCount > 0) {
+      return res.jsonp(VALOR.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registros no encontrados' });
+    }
+  }
+
+  public async ObtenerMAXCodigo(req: Request, res: Response): Promise<any> {
+    const VALOR = await pool.query('SELECT MAX(codigo) AS codigo FROM empleados');
     if (VALOR.rowCount > 0) {
       return res.jsonp(VALOR.rows)
     }

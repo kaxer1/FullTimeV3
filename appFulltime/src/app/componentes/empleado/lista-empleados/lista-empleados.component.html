@@ -77,8 +77,7 @@
                     <label for="file" class="btn-2">Subir Empleados</label>
                 </form>
                 <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
-                    matTooltip="Dar click para ver o descargar el documento"
-                    href="http://localhost:3000/plantillaD/documento/Empleados.xlsx">
+                    matTooltip="Dar click para ver o descargar el documento" href="{{link}}">
                     <span class="material-icons">cloud_download</span> Descargar Plantilla Empleados
                 </a>
             </mat-card>
@@ -173,13 +172,15 @@
 <div *ngIf="Hab_Deshabilitados" class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <div class="d-flex bd-highlight" id="resulEmpleados">
-            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionDesactivados()" matSuffix matTooltipPosition="right" 
-                matTooltip="Activa o desactiva selección múltiple para habilitar empleados masivamente" id="SelectCheck">library_add_check</mat-icon>
-            <button  *ngIf="btnCheckDeshabilitado" class="btn btn-outline-light" style="float: left; margin-left: 10px;" 
+            <mat-icon class="flex-shrink-1 bd-highlight" (click)="HabilitarSeleccionDesactivados()" matSuffix
+                matTooltipPosition="right"
+                matTooltip="Activa o desactiva selección múltiple para habilitar empleados masivamente"
+                id="SelectCheck">library_add_check</mat-icon>
+            <button *ngIf="btnCheckDeshabilitado" class="btn btn-outline-light" style="float: left; margin-left: 10px;"
                 (click)="Deshabilitar(2)">Activar</button>
-            <button  *ngIf="btnCheckDeshabilitado" class="btn btn-outline-light" style="float: left; margin-left: 10px;" 
+            <button *ngIf="btnCheckDeshabilitado" class="btn btn-outline-light" style="float: left; margin-left: 10px;"
                 (click)="Deshabilitar(3)">Reactivar</button>
-            <span class="w-100 bd-highlight"> 
+            <span class="w-100 bd-highlight">
                 Empleados Desactivados</span>
         </div>
         <div class="table-responsive">
