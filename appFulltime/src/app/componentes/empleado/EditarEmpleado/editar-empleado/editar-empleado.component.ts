@@ -236,6 +236,7 @@ export class EditarEmpleadoComponent implements OnInit {
 
   contador: number = 0;
   ActualizarUser(form3, clave, form1) {
+    this.contador = 0;
     let dataUser = {
       usuario: form3.userForm,
       contrasena: clave,
