@@ -225,7 +225,9 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
     if (this.data.carga === 'multiple') {
       console.log('arreglo', this.data.datosHora.length);
       if (this.contador === this.data.datosHora.length) {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+          timeOut: 6000,
+        });
         console.log('idpermiso', 'entra');
         this.dialogRef.close();
       }

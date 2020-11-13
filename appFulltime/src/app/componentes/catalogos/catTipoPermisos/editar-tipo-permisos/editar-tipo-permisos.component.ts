@@ -69,7 +69,6 @@ export class EditarTipoPermisosComponent implements OnInit {
   isLinear = true;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
-  terceroFormGroup: FormGroup;
 
   estiloJustifica: any;
   HabilitarJustifica: boolean = true;
@@ -97,14 +96,8 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.segundoFormGroup = this._formBuilder.group({
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
-      actualizarForm: ['', Validators.required],
-      eliminarForm: ['', Validators.required],
       tipoDescuentoForm: ['', Validators.required],
-    });
-    this.terceroFormGroup = this._formBuilder.group({
-      autorizarForm: ['', Validators.required],
       legalizarForm: ['', Validators.required],
-      preautorizarForm: ['', Validators.required],
       fecValidarForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
@@ -139,14 +132,8 @@ export class EditarTipoPermisosComponent implements OnInit {
     this.segundoFormGroup.patchValue({
       vacaAfectaForm: this.tipoPermiso.vaca_afecta,
       anioAcumulaForm: this.tipoPermiso.anio_acumula,
-      actualizarForm: this.tipoPermiso.actualizar,
-      eliminarForm: this.tipoPermiso.eliminar,
-      tipoDescuentoForm: this.tipoPermiso.tipo_descuento
-    });
-    this.terceroFormGroup.patchValue({
-      autorizarForm: this.tipoPermiso.autorizar,
+      tipoDescuentoForm: this.tipoPermiso.tipo_descuento,
       legalizarForm: this.tipoPermiso.legalizar,
-      preautorizarForm: this.tipoPermiso.preautorizar,
       fecValidarForm: this.tipoPermiso.fec_validar,
       geneJustificacionForm: this.tipoPermiso.gene_justificacion,
       numDiaJustificaForm: this.tipoPermiso.num_dia_justifica
@@ -195,21 +182,27 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: '00:00' });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
-      this.toastr.info('Ingresar número de días máximos de permiso');
+      this.toastr.info('Ingresar número de días máximos de permiso','', {
+        timeOut: 6000,
+      });
     }
     else if (form.diasHorasForm === 'Horas') {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: this.tipoPermiso.num_hora_maximo });
       this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0 });
       this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+      this.toastr.info('Ingresar número de horas y minutos máximos de permiso','', {
+        timeOut: 6000,
+      });
     }
     else if (form.diasHorasForm === 'Días y Horas') {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: this.tipoPermiso.num_hora_maximo, numDiaMaximoForm: this.tipoPermiso.num_dia_maximo });
       this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0, numHoraMaximoForm: '00:00' });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.toastr.info('Ingresar número de días , horas y minutos máximos de permiso');
+      this.toastr.info('Ingresar número de días , horas y minutos máximos de permiso','', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -233,17 +226,17 @@ export class EditarTipoPermisosComponent implements OnInit {
     }
   }
 
-  HabilitarJustificacion: boolean = false;
+
   estiloJustificacion: any;
   ActivarJustificacionSet(generarJustificacion: boolean) {
     if (generarJustificacion === true) {
-      this.estiloJustificacion = { 'visibility': 'visible' }; this.HabilitarJustificacion = true;
-      this.terceroFormGroup.patchValue({
+      this.estiloJustificacion = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
+      this.segundoFormGroup.patchValue({
         numDiaJustificaForm: this.tipoPermiso.num_dia_justifica
       });
     } else if (generarJustificacion === false) {
-      this.estiloJustificacion = { 'visibility': 'hidden' }; this.HabilitarJustificacion = false;
-      this.terceroFormGroup.patchValue({
+      this.estiloJustificacion = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
+      this.segundoFormGroup.patchValue({
         numDiaJustificaForm: 0
       });
     }
@@ -264,7 +257,9 @@ export class EditarTipoPermisosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -281,13 +276,15 @@ export class EditarTipoPermisosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
 
 
-  ModificarTipoPermiso(form1, form2, form3) {
+  ModificarTipoPermiso(form1, form2) {
     let dataTipoPermiso = {
       descripcion: form1.descripcionForm,
       tipo_descuento: form2.tipoDescuentoForm,
@@ -295,23 +292,21 @@ export class EditarTipoPermisosComponent implements OnInit {
       num_dia_ingreso: form1.numDiaIngresoForm,
       vaca_afecta: form2.vacaAfectaForm,
       anio_acumula: form2.anioAcumulaForm,
-      gene_justificacion: form3.geneJustificacionForm,
-      fec_validar: form3.fecValidarForm,
+      gene_justificacion: form2.geneJustificacionForm,
+      fec_validar: form2.fecValidarForm,
       acce_empleado: form1.acceEmpleadoForm,
-      actualizar: form2.actualizarForm,
-      autorizar: form3.autorizarForm,
-      eliminar: form2.eliminarForm,
-      legalizar: form3.legalizarForm,
-      preautorizar: form3.preautorizarForm,
+      legalizar: form2.legalizarForm,
       almu_incluir: form1.almuIncluirForm,
-      num_dia_justifica: form3.numDiaJustificaForm,
+      num_dia_justifica: form2.numDiaJustificaForm,
       num_hora_maximo: form1.numHoraMaximoForm,
     }
     console.log(dataTipoPermiso);
 
     if (form1.descripcionForm === 'OTRO') {
       if (form1.nombreForm === '') {
-        this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Información General');
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Información General', {
+          timeOut: 6000,
+        });
       } else {
         dataTipoPermiso.descripcion = form1.nombreForm;
         this.Actualizar(this.tipoPermiso.id, dataTipoPermiso);
@@ -324,7 +319,9 @@ export class EditarTipoPermisosComponent implements OnInit {
   Actualizar(id, datos) {
     this.rest.putTipoPermisoRest(id, datos).subscribe(res => {
       console.log(res);
-      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado', {
+        timeOut: 6000,
+      });
       this.dialogRef.close();
     }, error => {
     });
@@ -337,14 +334,16 @@ export class EditarTipoPermisosComponent implements OnInit {
   ActivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
       this.estiloJustifica = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
-      this.toastr.info('Ingresar número de días para presentar justificación')
+      this.toastr.info('Ingresar número de días para presentar justificación','', {
+        timeOut: 6000,
+      })
     }
   }
 
   DesactivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('no')).value = 'false') {
       this.estiloJustifica = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
-      this.terceroFormGroup.patchValue({
+      this.segundoFormGroup.patchValue({
         numDiaJustificaForm: '',
       })
     }

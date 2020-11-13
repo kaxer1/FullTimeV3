@@ -84,7 +84,9 @@ export class VerDocumentosComponent implements OnInit {
     /** Función para eliminar registro seleccionado Planificación*/
     EliminarDocumento(id_detalle: number) {
       this.rest.EliminarRegistro(id_detalle).subscribe(res => {
-        this.toastr.error('Registro eliminado');
+        this.toastr.error('Registro eliminado','', {
+          timeOut: 6000,
+        });
         this.ObtenerDocumentacion();
       });
     }

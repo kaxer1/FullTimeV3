@@ -167,7 +167,9 @@ export class EditarEmpresaComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -194,7 +196,9 @@ export class EditarEmpresaComponent implements OnInit {
   GuardarDatos(datos) {
     this.rest.ActualizarEmpresa(datos).subscribe(response => {
       this.CerrarVentanaRegistroEmpresa();
-      this.toastr.success('Operación Exitosa', 'Datos de Empresa actualizados')
+      this.toastr.success('Operación Exitosa', 'Datos de Empresa actualizados', {
+        timeOut: 6000,
+      })
     }, error => {
     });
   }
@@ -206,7 +210,9 @@ export class EditarEmpresaComponent implements OnInit {
         this.VerificarEstablecimiento(form, datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del tipo de empresa.')
+        this.toastr.info('Ingrese el nombre del tipo de empresa.','', {
+          timeOut: 6000,
+        })
       }
     }
     else {
@@ -221,7 +227,9 @@ export class EditarEmpresaComponent implements OnInit {
         this.GuardarDatos(datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del establecimiento.')
+        this.toastr.info('Ingrese el nombre del establecimiento.','', {
+          timeOut: 6000,
+        })
       }
     }
     else {
@@ -268,7 +276,9 @@ export class EditarEmpresaComponent implements OnInit {
   CambiarNombreOtro() {
     this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
     this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
-    this.toastr.info('Ingresar el nombre del tipo de empresa')
+    this.toastr.info('Ingresar el nombre del tipo de empresa','', {
+      timeOut: 6000,
+    })
     this.valor = 'Representante Legal'
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
@@ -284,7 +294,9 @@ export class EditarEmpresaComponent implements OnInit {
 
   CambiarEstablecimiento() {
     this.estiloOtroE = { 'visibility': 'visible' }; this.HabilitarOtroE = false;
-    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.')
+    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.','', {
+      timeOut: 6000,
+    })
     this.RegistroEmpresaForm.patchValue({
       otroEForm: ''
     })

@@ -97,7 +97,9 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
       this.InsertarEmpleadoHorario(form);
     }
     else {
-      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades')
+      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -107,7 +109,9 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
       fechaFinal: form.fechaFinalForm,
     };
     this.rest.VerificarDuplicidadHorariosEdicion(this.data.datosHorario.id, this.data.idEmpleado, fechas).subscribe(response => {
-      this.toastr.success('Las fechas ingresadas ya se encuntran registradas en otro horario');
+      this.toastr.success('Las fechas ingresadas ya se encuntran registradas en otro horario','', {
+        timeOut: 6000,
+      });
     }, error => {
       let datosempleH = {
         id_empl_cargo: this.data.datosHorario.id_empl_cargo,
@@ -127,7 +131,9 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
       };
       console.log(datosempleH);
       this.rest.ActualizarDatos(datosempleH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario del Empleado actualizado');
+        this.toastr.success('Operación Exitosa', 'Horario del Empleado actualizado', {
+          timeOut: 6000,
+        });
         this.EliminarDatos(form);
         this.IngresarPlanGeneral(form);
         this.CerrarVentanaEmpleadoHorario();
@@ -167,7 +173,9 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
     this.detalles = [];
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
       this.detalles = res;
-      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado');
+      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
+      //  timeOut: 6000,
+      //});
       this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
       this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
       this.finDate = moment(form.fechaFinalForm).format('MM-DD-YYYY');

@@ -105,7 +105,9 @@ export class VerHorarioDetalleComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarDetalle(id_detalle: number) {
     this.restD.EliminarRegistro(id_detalle).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.BuscarDatosHorario(this.idHorario);
       this.ListarDetalles(this.idHorario);
     });

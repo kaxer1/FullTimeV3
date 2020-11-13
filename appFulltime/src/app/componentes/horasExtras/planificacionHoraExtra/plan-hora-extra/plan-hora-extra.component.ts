@@ -117,14 +117,18 @@ export class PlanHoraExtraComponent implements OnInit {
         dataPlanHoraExtra.id_empl_cargo = obj.id_cargo;
         dataPlanHoraExtra.id_empl_contrato = obj.id_contrato;
         this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
+          this.toastr.success('Operación Exitosa', 'Horas Extras planificadas', {
+            timeOut: 6000,
+          });
           this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), obj.id)
         })
       })
     }
     else {
       this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
+        this.toastr.success('Operación Exitosa', 'Horas Extras planificadas', {
+          timeOut: 6000,
+        });
         this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), this.data.planifica.id)
       })
     }
@@ -146,7 +150,9 @@ export class PlanHoraExtraComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -163,7 +169,9 @@ export class PlanHoraExtraComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -194,7 +202,9 @@ export class PlanHoraExtraComponent implements OnInit {
       }
     }
     else {
-      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR')
+      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -207,7 +217,9 @@ export class PlanHoraExtraComponent implements OnInit {
     //console.log(mensaje);
     this.restPE.EnviarMensajePlanificacion(mensaje).subscribe(res => {
       console.log(res.message);
-      this.toastr.success(res.message);
+      this.toastr.success(res.message,'', {
+        timeOut: 6000,
+      });
     })
   }
 

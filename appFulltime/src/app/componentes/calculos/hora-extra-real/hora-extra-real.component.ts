@@ -118,7 +118,9 @@ export class HoraExtraRealComponent implements OnInit {
 
   CalcularEmpleado(id_seleccionado, form) {
     if (form.inicioForm === '' || form.finalForm === '') {
-      this.toastr.info('Ingresar fechas de periodo de búsqueda')
+      this.toastr.info('Ingresar fechas de periodo de búsqueda','', {
+        timeOut: 6000,
+      })
     }
     else {
       if (Date.parse(form.inicioForm) < Date.parse(form.finalForm)) {
@@ -137,7 +139,9 @@ export class HoraExtraRealComponent implements OnInit {
         });
       }
       else {
-        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR')
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+          timeOut: 6000,
+        })
       }
     }
 
@@ -145,7 +149,9 @@ export class HoraExtraRealComponent implements OnInit {
 
   CalcularTodos(form) {
     if (form.inicioForm === '' || form.finalForm === '') {
-      this.toastr.info('Ingresar fechas de Inicio o Fin de periodo de búsqueda.')
+      this.toastr.info('Ingresar fechas de Inicio o Fin de periodo de búsqueda.','', {
+        timeOut: 6000,
+      })
     }
     else {
       if (Date.parse(form.inicioForm) < Date.parse(form.finalForm)) {
@@ -164,7 +170,9 @@ export class HoraExtraRealComponent implements OnInit {
         });
       }
       else {
-        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR')
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+          timeOut: 6000,
+        })
       }
     }
   }
@@ -253,7 +261,9 @@ export class HoraExtraRealComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -270,7 +280,9 @@ export class HoraExtraRealComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

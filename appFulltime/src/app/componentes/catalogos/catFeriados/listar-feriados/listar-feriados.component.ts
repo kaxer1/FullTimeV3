@@ -142,7 +142,9 @@ export class ListarFeriadosComponent implements OnInit {
   Eliminar(id_feriado: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarFeriado(id_feriado).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerFeriados();
     });
   }
@@ -182,7 +184,9 @@ export class ListarFeriadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -211,10 +215,14 @@ export class ListarFeriadosComponent implements OnInit {
         this.ObtenerFeriados();
         //window.location.reload();
       } else {
-        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -226,13 +234,19 @@ export class ListarFeriadosComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       console.log('probando plantilla', res);
       if (res.message === 'error') {
-        this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla');
+        this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
       }
       else if (res.error === 'error') {
-        this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla');
+        this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
       }
       else if (res.message === 'correcto') {
-        this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
+        this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.', {
+          timeOut: 6000,
+        });
         //this.ObtenerFeriados();
         this.archivoForm.reset();
         this.nameFile = '';

@@ -61,7 +61,9 @@ export class EditarTitulosComponent implements OnInit {
     if (form1.tituloNivelForm === undefined) {
       this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
       this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-      this.toastr.info('Ingresar nombre de nivel de titulación');
+      this.toastr.info('Ingresar nombre de nivel de titulación','', {
+        timeOut: 6000,
+      });
     }
     else {
       this.nuevoTituloForm.patchValue({ nombreNivelForm: '' });
@@ -89,7 +91,9 @@ export class EditarTitulosComponent implements OnInit {
       id_nivel: idNivel,
     };
     this.rest.ActualizarUnTitulo(dataTitulo).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Título actualizado');
+      this.toastr.success('Operación Exitosa', 'Título actualizado', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaRegistroTitulo();
     }, error => {
     });
@@ -111,7 +115,9 @@ export class EditarTitulosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -135,7 +141,9 @@ export class EditarTitulosComponent implements OnInit {
         this.GuardarNivel(form);
       }
       else {
-        this.toastr.info('Ingrese un nombre de nivel o seleccione uno de la lista de niveles');
+        this.toastr.info('Ingrese un nombre de nivel o seleccione uno de la lista de niveles', '', {
+          timeOut: 6000,
+        });
       }
     }
     else {

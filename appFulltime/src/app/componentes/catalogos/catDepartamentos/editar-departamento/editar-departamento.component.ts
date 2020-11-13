@@ -119,24 +119,32 @@ export class EditarDepartamentoComponent implements OnInit {
         }
       }
       if (this.contador === 1) {
-        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO');
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO', {
+          timeOut: 6000,
+        });
         this.contador = 0;
       }
       else {
         this.ActualizarDepartamento(datos);
       }
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
   ActualizarDepartamento(datos) {
     this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
       if (response.message === 'error') {
-        this.toastr.error('Existe un error en los datos.');
+        this.toastr.error('Existe un error en los datos.','', {
+          timeOut: 6000,
+        });
       }
       else {
-        this.toastr.success('Operacion Exitosa', 'Departamento modificado');
+        this.toastr.success('Operacion Exitosa', 'Departamento modificado', {
+          timeOut: 6000,
+        });
         //window.location.reload();
         this.dialogRef.close();
       }
@@ -181,7 +189,9 @@ export class EditarDepartamentoComponent implements OnInit {
         departamentoDepartamentoPadreForm: this.descripcionD.departamento_padre
       })
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -198,7 +208,9 @@ export class EditarDepartamentoComponent implements OnInit {
     this.restS.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -209,7 +221,9 @@ export class EditarDepartamentoComponent implements OnInit {
       this.departamentos = datos;
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -218,7 +232,9 @@ export class EditarDepartamentoComponent implements OnInit {
     this.restS.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -228,7 +244,9 @@ export class EditarDepartamentoComponent implements OnInit {
       this.departamentos = datos;
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -240,7 +258,9 @@ export class EditarDepartamentoComponent implements OnInit {
         this.nombreDepa = datos;
         this.selectPadre = this.nombreDepa.nombre;
       }, error => {
-        this.toastr.info('Descripción ingresada no coincide con los registros')
+        this.toastr.info('Descripción ingresada no coincide con los registros','', {
+          timeOut: 6000,
+        })
       });
     } else {
       console.log('llegue');
@@ -266,7 +286,9 @@ export class EditarDepartamentoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

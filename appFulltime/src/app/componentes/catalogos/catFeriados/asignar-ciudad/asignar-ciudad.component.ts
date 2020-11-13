@@ -161,7 +161,9 @@ export class AsignarCiudadComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.paises = [];
       this.provincias = [];
       this.nombreCiudades = [];
@@ -178,7 +180,9 @@ export class AsignarCiudadComponent implements OnInit {
       this.provincias = datos;
       this.seleccionarProvincia = '';
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -190,7 +194,9 @@ export class AsignarCiudadComponent implements OnInit {
       }
     });
     if (idPais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
@@ -210,14 +216,18 @@ export class AsignarCiudadComponent implements OnInit {
       }
       this.seleccionarCiudad = '';
     }, error => {
-      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
   FiltrarCiudades(form) {
     var nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.seleccionarCiudad = '';
     }
     else {
@@ -228,7 +238,9 @@ export class AsignarCiudadComponent implements OnInit {
   SeleccionarCiudad(form) {
     var nombreCiudad = form.nombreCiudadForm;
     if (nombreCiudad === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -256,13 +268,19 @@ export class AsignarCiudadComponent implements OnInit {
         this.ciudadFeriados = [];
         this.restF.BuscarIdCiudad(buscarCiudad).subscribe(datos => {
           this.ciudadFeriados = datos;
-          this.toastr.info('Se le recuerda que ' + obj.descripcion + ' ya fue asignada a este Feriado')
+          this.toastr.info('Se le recuerda que ' + obj.descripcion + ' ya fue asignada a este Feriado','', {
+            timeOut: 6000,
+          })
         }, error => {
           this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
-            this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado');
+            this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado', {
+              timeOut: 6000,
+            });
 
           }, error => {
-            this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado')
+            this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado', {
+              timeOut: 6000,
+            })
           });
         });
       });
@@ -276,7 +294,9 @@ export class AsignarCiudadComponent implements OnInit {
       }
     }
     else {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
     }
 
     console.log('prueba', this.ciudadesSeleccionadas)

@@ -101,7 +101,9 @@ export class RegistroContratoComponent implements OnInit {
         this.InsertarContrato(form);
       }
       else {
-        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso')
+        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso','', {
+          timeOut: 6000,
+        })
       }
     }
   }
@@ -135,7 +137,9 @@ export class RegistroContratoComponent implements OnInit {
         }
       }
       if (this.contador === 1) {
-        this.toastr.error('La fecha de ingreso de contrato ya se encuentra registrada.', 'Contrato ya existe.')
+        this.toastr.error('La fecha de ingreso de contrato ya se encuentra registrada.', 'Contrato ya existe.', {
+          timeOut: 6000,
+        })
         this.contador = 0;
       }
       else {
@@ -174,7 +178,9 @@ export class RegistroContratoComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirContrato(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Contrato subido con exito');
+      this.toastr.success('Operación Exitosa', 'Contrato subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });
@@ -185,27 +191,37 @@ export class RegistroContratoComponent implements OnInit {
   GuardarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.CrearContratoEmpleado(datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.toastr.success('Operación Exitosa', 'Contrato registrado', {
+          timeOut: 6000,
+        })
         this.idContratoRegistrado = response;
         console.log('ver id', response);
         this.CargarContrato(this.idContratoRegistrado.id);
         this.CerrarVentanaRegistroContrato();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     }
   }
 
   RegistrarContrato(form, datos) {
     if (form.nombreContratoForm === '') {
       this.rest.CrearContratoEmpleado(datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Contrato registrado')
+        this.toastr.success('Operación Exitosa', 'Contrato registrado', {
+          timeOut: 6000,
+        })
         this.CerrarVentanaRegistroContrato();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Contrato no fue registrado')
+        this.toastr.error('Operación Fallida', 'Contrato no fue registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {

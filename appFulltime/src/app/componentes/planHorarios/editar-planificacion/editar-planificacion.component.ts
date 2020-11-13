@@ -55,11 +55,15 @@ export class EditarPlanificacionComponent implements OnInit {
           this.InsertarPlanHorario(form);
         }
         else {
-          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso')
+          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso','', {
+            timeOut: 6000,
+          })
         }
       }
       else {
-        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.','', {
+          timeOut: 6000,
+        });
       }
     }, error => { });
   }
@@ -70,7 +74,9 @@ export class EditarPlanificacionComponent implements OnInit {
       fechaFinal: form.fechaSalidaForm,
     };
     this.rest.VerificarDuplicidadPlanEdicion(this.data.datosPlan.id, this.data.idEmpleado, fechas).subscribe(response => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación');
+      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación','', {
+        timeOut: 6000,
+      });
     }, error => {
       let datosPlanHorario = {
         id_cargo: this.data.datosPlan.id_cargo,
@@ -80,7 +86,9 @@ export class EditarPlanificacionComponent implements OnInit {
       };
       this.rest.ActualizarDatos(datosPlanHorario).subscribe(response => {
         console.log('prueba actualizacopn', response)
-        this.toastr.success('Operación Exitosa', 'Planificación de Horario actualizada')
+        this.toastr.success('Operación Exitosa', 'Planificación de Horario actualizada', {
+          timeOut: 6000,
+        })
         this.CerrarVentanaPlanHorario();
       }, error => { });
     });

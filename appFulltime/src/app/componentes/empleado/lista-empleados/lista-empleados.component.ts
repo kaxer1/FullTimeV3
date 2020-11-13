@@ -258,7 +258,9 @@ export class ListaEmpleadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -275,7 +277,9 @@ export class ListaEmpleadosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -320,7 +324,9 @@ export class ListaEmpleadosComponent implements OnInit {
         if (itemName.toLowerCase() == 'empleadoautomatico') {
           this.plantilla();
         } else {
-          this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta');
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
         }
       }
       else {
@@ -328,11 +334,15 @@ export class ListaEmpleadosComponent implements OnInit {
         if (itemName.toLowerCase() == 'empleadomanual') {
           this.plantilla();
         } else {
-          this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta');
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
         }
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -354,10 +364,14 @@ export class ListaEmpleadosComponent implements OnInit {
   ArchivoAutomatico(datosArchivo) {
     this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
       if (res.message === "error") {
-        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+          timeOut: 6000,
+        });
       } else {
         this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+            timeOut: 6000,
+          });
           window.location.reload();
         });
       }
@@ -367,10 +381,14 @@ export class ListaEmpleadosComponent implements OnInit {
   ArchivoManual(datosArchivo) {
     this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
       if (res.message === "error") {
-        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+          timeOut: 6000,
+        });
       } else {
         this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+            timeOut: 6000,
+          });
           window.location.reload();
         });
       }
@@ -389,7 +407,9 @@ export class ListaEmpleadosComponent implements OnInit {
         this.link = "http://localhost:3000/plantillaD/documento/EmpleadoManual.xlsx"
       }
     }, error => {
-      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado');
+      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado','', {
+        timeOut: 6000,
+      });
       this.router.navigate(['/codigo/']);
     });
   }

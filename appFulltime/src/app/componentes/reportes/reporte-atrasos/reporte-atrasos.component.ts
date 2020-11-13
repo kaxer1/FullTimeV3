@@ -148,7 +148,9 @@ export class ReporteAtrasosComponent implements OnInit {
   confirmado: boolean;
   ConfigurarAtrasos(id_seleccionado: any, form, archivo: string) {
     if (form.inicioForm === '' || form.finalForm === '') {
-      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA', {
+        timeOut: 6000,
+      })
     }
     else {
       if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
@@ -173,7 +175,9 @@ export class ReporteAtrasosComponent implements OnInit {
           });
       }
       else {
-        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+          timeOut: 6000,
+        });
       }
     }
   }
@@ -218,7 +222,9 @@ export class ReporteAtrasosComponent implements OnInit {
         this.LimpiarCampos();
       }
       else {
-        this.toastr.info('El empleado no tiene registros de Atrasos.')
+        this.toastr.info('El empleado no tiene registros de Atrasos.','', {
+          timeOut: 6000,
+        })
       }
     })
   }
@@ -249,7 +255,9 @@ export class ReporteAtrasosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -267,7 +275,9 @@ export class ReporteAtrasosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

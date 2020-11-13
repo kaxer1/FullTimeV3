@@ -103,7 +103,9 @@ export class EditarEmpleadoComponent implements OnInit {
         this.escritura = false;
       }
     }, error => {
-      this.toastr.info('Primero configurar el código de empleado.');
+      this.toastr.info('Primero configurar el código de empleado.','', {
+        timeOut: 6000,
+      });
       this.router.navigate(['/codigo/']);
     });
   }
@@ -136,7 +138,9 @@ export class EditarEmpleadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -153,7 +157,9 @@ export class EditarEmpleadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -210,7 +216,9 @@ export class EditarEmpleadoComponent implements OnInit {
     if (this.contador === 0) {
       this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
         if (response.message === 'error') {
-          this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto');
+          this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto', {
+            timeOut: 6000,
+          });
         }
         else {
           this.VerificarContrasena(form3, form1);
@@ -245,11 +253,15 @@ export class EditarEmpleadoComponent implements OnInit {
     }
     this.user.ActualizarDatos(dataUser).subscribe(data => {
       if (data.message === 'error') {
-        this.toastr.error('Por favor ingrese otro nombre de usuario', 'Nombre de usuario existente');
+        this.toastr.error('Por favor ingrese otro nombre de usuario', 'Nombre de usuario existente', {
+          timeOut: 6000,
+        });
         this.contador = 1;
       }
       else {
-        this.toastr.success('Operacion Exitosa', 'Empleado Actualizado');
+        this.toastr.success('Operacion Exitosa', 'Empleado Actualizado', {
+          timeOut: 6000,
+        });
         this.ActualizarCodigo(form1.codigoForm);
         this.limpliarCampos();
         this.guardar();

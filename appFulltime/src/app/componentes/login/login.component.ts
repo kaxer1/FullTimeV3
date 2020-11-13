@@ -72,7 +72,9 @@ export class LoginComponent implements OnInit {
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
       console.log(datos)
       if (datos.message === 'error') {
-        this.toastr.error('Usuario o contraseña no son correctos', 'Oops!')
+        this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
+          timeOut: 6000,
+        })
       }
       else {
         localStorage.setItem('token', datos.token);
@@ -84,7 +86,9 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('departamento', datos.departamento);
         localStorage.setItem('ultimoCargo', datos.cargo);
         localStorage.setItem('autoriza', datos.estado);
-        this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos')
+        this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos', {
+          timeOut: 6000,
+        })
 
         if (datos.rol === 1) { // Admin
           if (!!localStorage.getItem("redireccionar")) {

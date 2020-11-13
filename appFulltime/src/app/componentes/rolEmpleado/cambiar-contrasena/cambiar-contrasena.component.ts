@@ -53,14 +53,18 @@ export class CambiarContrasenaComponent implements OnInit {
       console.log(pass);
       if (pass === this.datosUser[0].contrasena) {
         if (form.nPass != form.cPass) {
-          this.toastr.error('Incorrecto', 'Las contrasenias no coinciden');
+          this.toastr.error('Incorrecto', 'Las contrasenias no coinciden', {
+            timeOut: 6000,
+          });
         }
         else {
           this.EnviarContraseniaConfirmacion(form);
         }
       }
       else {
-        this.toastr.error('Incorrecto', 'La contraseña actual no es la correcta');
+        this.toastr.error('Incorrecto', 'La contraseña actual no es la correcta', {
+          timeOut: 6000,
+        });
       }
     }, error => { });
   }
@@ -74,7 +78,9 @@ export class CambiarContrasenaComponent implements OnInit {
       contrasena: clave
     }
     this.restUser.ActualizarPassword(datos).subscribe(data => {
-      this.toastr.success('Operación Exitosa', 'Contraseña ha sido modificada');
+      this.toastr.success('Operación Exitosa', 'Contraseña ha sido modificada', {
+        timeOut: 6000,
+      });
       this.CerrarRegistro();
     }, error => { });
   }

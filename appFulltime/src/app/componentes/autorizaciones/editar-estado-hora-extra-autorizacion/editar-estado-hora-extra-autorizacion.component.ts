@@ -51,7 +51,9 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.data.empl);
     if (this.data.autorizacion[0].estado === 1) {
-      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
+      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.','', {
+        timeOut: 6000,
+      })
     } else {
       this.estadoAutorizacionesForm.patchValue({
         estadoF: this.data.autorizacion[0].estado
@@ -78,7 +80,9 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
     this.restA.PutEstadoAutoHoraExtra(this.data.autorizacion[0].id_hora_extra, newAutorizaciones).subscribe(res => {
       this.resAutorizacion = [res];
       console.log(this.resAutorizacion);
-      this.toastr.success('Operación exitosa', 'Estado Actualizado');
+      this.toastr.success('Operación exitosa', 'Estado Actualizado', {
+        timeOut: 6000,
+      });
       this.EditarEstadoHoraExtra(form);
     })
   }

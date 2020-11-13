@@ -75,11 +75,15 @@ export class RegistrarFeriadosComponent implements OnInit {
             this.CrearFeriado(datosFeriado);
           }
           else {
-            this.toastr.error('La fecha de recuperación debe ser posterior a la fecha del feriado registrado.', 'Fecha de recuperación incorrecta')
+            this.toastr.error('La fecha de recuperación debe ser posterior a la fecha del feriado registrado.', 'Fecha de recuperación incorrecta', {
+              timeOut: 6000,
+            })
           }
         }
         else {
-          this.toastr.error('La fecha de recuperación se encuentra registrada como un feriado.', 'Verificar fecha de recuperación')
+          this.toastr.error('La fecha de recuperación se encuentra registrada como un feriado.', 'Verificar fecha de recuperación', {
+            timeOut: 6000,
+          })
         }
       })
     }
@@ -88,10 +92,14 @@ export class RegistrarFeriadosComponent implements OnInit {
   CrearFeriado(datos) {
     this.rest.CrearNuevoFeriado(datos).subscribe(response => {
       if (response.message === 'error') {
-        this.toastr.error('La fecha del feriado o la fecha de recuperación se encuentran dentro de otro registro.', 'Verificar las fechas')
+        this.toastr.error('La fecha del feriado o la fecha de recuperación se encuentran dentro de otro registro.', 'Verificar las fechas', {
+          timeOut: 6000,
+        })
       }
       else {
-        this.toastr.success('Operación Exitosa', 'Feriado registrado')
+        this.toastr.success('Operación Exitosa', 'Feriado registrado', {
+          timeOut: 6000,
+        })
         this.rest.ConsultarUltimoId().subscribe(response => {
           this.idUltimoFeriado = response;
           this.LimpiarCampos();
@@ -134,7 +142,9 @@ export class RegistrarFeriadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

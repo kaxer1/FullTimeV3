@@ -48,10 +48,14 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'planificacion multiple') {
         this.plantillaHorario();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta');
+        this.toastr.error('Plantilla seleccionada incorrecta','', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -62,7 +66,9 @@ export class PlanificacionMultipleComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.rest.CargaMultiple(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
     });
@@ -87,10 +93,14 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'multiplesempleados_horariofijo') {
         this.plantillaHorarioFijo();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta');
+        this.toastr.error('Plantilla seleccionada incorrecta','', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -101,7 +111,9 @@ export class PlanificacionMultipleComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.restP.CargarHorarioFijoVarios(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.archivoHorarioFijoForm.reset();
       this.nameFileHorarioFijo = '';
     });
@@ -126,10 +138,14 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'periodo vacaciones') {
         this.plantillaVacacion();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta');
+        this.toastr.error('Plantilla seleccionada incorrecta','', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -140,7 +156,9 @@ export class PlanificacionMultipleComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.restV.CargarPeriodosMultiples(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.archivoVacacionForm.reset();
       this.nameFileVacacion = '';
     });
@@ -165,10 +183,14 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'plandetalle multiples empleados') {
         this.plantillaPrueba();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta');
+        this.toastr.error('Plantilla seleccionada incorrecta','', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -179,7 +201,9 @@ export class PlanificacionMultipleComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.restP.CargarArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.archivoPruebaForm.reset();
       this.nameFilePrueba = '';
     });

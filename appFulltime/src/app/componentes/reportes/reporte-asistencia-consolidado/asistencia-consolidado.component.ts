@@ -148,16 +148,22 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     var f_f = new Date(form.fec_final)
 
     if (f_i < f_f) {
-      this.toastr.success('Fechas validas');
+      this.toastr.success('Fechas validas','', {
+        timeOut: 6000,
+      });
       this.f_inicio_req = f_i.toJSON().split('T')[0];
       this.f_final_req = f_f.toJSON().split('T')[0];
       this.habilitar = true
       this.estilo = { 'visibility': 'visible' };
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial');
+      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+        timeOut: 6000,
+      });
       this.fechasForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final');
+      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+        timeOut: 6000,
+      });
       this.fechasForm.reset();
     }
     // console.log(f_i.toJSON());
@@ -169,14 +175,18 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
         if(res.message) {
-          this.toastr.error(res.message);
+          this.toastr.error(res.message,'', {
+            timeOut: 6000,
+          });
         } else {
           this.asistencia = res;
           this.generarPdf(palabra, 1)
         }
       })
     } else {
-      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
+      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -902,7 +912,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, '2020-08-01', '2020-08-31').subscribe(res => {
       console.log(this.asistencia);
         if(res.message) {
-          this.toastr.error(res.message);
+          this.toastr.error(res.message,'', {
+            timeOut: 6000,
+          });
         } else {
           this.asistencia = res;
           console.log(this.asistencia);
@@ -979,7 +991,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -996,7 +1010,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

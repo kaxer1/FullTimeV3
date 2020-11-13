@@ -60,7 +60,9 @@ export class EditarTituloComponent implements OnInit {
     }
     this.rest.putEmpleadoTituloRest(this.idSelect , dataTituloEmpleado).subscribe(data => {
       this.verEmpleado.obtenerTituloEmpleado(this.idEmpleado);
-      this.toastr.success('Actualización Exitosa', 'Titulo asignado al empleado');
+      this.toastr.success('Actualización Exitosa', 'Titulo asignado al empleado', {
+        timeOut: 6000,
+      });
     });
   }
 
@@ -85,7 +87,9 @@ export class EditarTituloComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

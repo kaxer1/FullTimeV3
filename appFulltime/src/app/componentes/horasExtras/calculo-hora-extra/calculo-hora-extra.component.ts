@@ -76,7 +76,9 @@ export class CalculoHoraExtraComponent implements OnInit {
     this.rest.ListarHorasExtras().subscribe(datos => {
       this.horasExtras = datos;
     }, error => {
-      this.toastr.info('Registros no encontrados')
+      this.toastr.info('Registros no encontrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -103,7 +105,9 @@ export class CalculoHoraExtraComponent implements OnInit {
 
   IngresarDatos(datos) {
     /* this.rest.postTipoPermisoRest(datos).subscribe(res => {
-       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+       this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado', {
+        timeOut: 6000,
+      });
        window.location.reload();
      }, error => {
      });*/
@@ -124,7 +128,9 @@ export class CalculoHoraExtraComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -141,7 +147,9 @@ export class CalculoHoraExtraComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

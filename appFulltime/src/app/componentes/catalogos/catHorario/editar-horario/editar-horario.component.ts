@@ -83,10 +83,14 @@ export class EditarHorarioComponent implements OnInit {
       dataHorario.doc_nombre = null;
       this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
         this.ModificarDocumento();
-        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+          timeOut: 6000,
+        });
         this.SalirActualizar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -102,15 +106,21 @@ export class EditarHorarioComponent implements OnInit {
   ActualizarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+          timeOut: 6000,
+        });
         this.SubirRespaldo(this.data.horario.id);
         this.SalirActualizar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -131,10 +141,14 @@ export class EditarHorarioComponent implements OnInit {
 
   GuardarDatos(datos) {
     this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario actualizado');
+      this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+        timeOut: 6000,
+      });
       this.SalirActualizar();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+      this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -150,7 +164,9 @@ export class EditarHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -167,7 +183,9 @@ export class EditarHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -214,7 +232,9 @@ export class EditarHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

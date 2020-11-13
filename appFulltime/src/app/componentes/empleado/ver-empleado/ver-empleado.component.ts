@@ -324,7 +324,9 @@ export class VerEmpleadoComponent implements OnInit {
     this.restCargo.getInfoCargoEmpleadoRest(form.fechaContratoForm).subscribe(datos => {
       this.listaCargos = datos;
     }, error => {
-      this.toastr.info('El contrato seleccionado no registra ningún cargo', 'VERIFICAR');
+      this.toastr.info('El contrato seleccionado no registra ningún cargo', 'VERIFICAR', {
+        timeOut: 6000,
+      });
     });
   }
 
@@ -588,7 +590,9 @@ export class VerEmpleadoComponent implements OnInit {
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
       this.btnDisc = 'Añadir';
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
     })
   };
 
@@ -608,7 +612,9 @@ export class VerEmpleadoComponent implements OnInit {
   eliminarTituloEmpleado(id: number) {
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
       this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.habilitarBtn();
     });
   }
@@ -628,7 +634,9 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado HORARIO*/
   EliminarHorario(id_horario: number) {
     this.restEmpleHorario.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     });
   }
@@ -649,7 +657,9 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanificacion(id_plan: number) {
     this.restPlanH.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerPlanHorarios(parseInt(this.idEmpleado));
     });
   }
@@ -670,7 +680,9 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanComidas(id_plan: number) {
     this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
     });
   }
@@ -691,7 +703,9 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarProceso(id_plan: number) {
     this.restEmpleadoProcesos.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
     });
   }
@@ -712,7 +726,9 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarAutorizacion(id_auto: number) {
     this.restAutoridad.EliminarRegistro(id_auto).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
     });
   }
@@ -829,7 +845,9 @@ export class VerEmpleadoComponent implements OnInit {
           this.obtenerCargoEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato');
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      });
     });
   }
 
@@ -843,7 +861,9 @@ export class VerEmpleadoComponent implements OnInit {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -855,7 +875,9 @@ export class VerEmpleadoComponent implements OnInit {
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id);
-        this.toastr.info('El empleado ya tiene registrado un periodo de vacaciones y este se actualiza automáticamente')
+        this.toastr.info('El empleado ya tiene registrado un periodo de vacaciones y este se actualiza automáticamente','', {
+          timeOut: 6000,
+        })
       }, error => {
         this.vistaRegistrarDatos.open(RegistrarPeriodoVComponent,
           { width: '900px', data: { idEmpleado: this.idEmpleado, idContrato: this.idContrato[0].max } })
@@ -864,7 +886,9 @@ export class VerEmpleadoComponent implements OnInit {
           });
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -881,10 +905,14 @@ export class VerEmpleadoComponent implements OnInit {
             this.obtenerVacaciones(parseInt(this.idEmpleado));
           });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+          timeOut: 6000,
+        })
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -899,7 +927,9 @@ export class VerEmpleadoComponent implements OnInit {
           this.obtenerPlanHorarios(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -929,7 +959,9 @@ export class VerEmpleadoComponent implements OnInit {
           this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -943,7 +975,9 @@ export class VerEmpleadoComponent implements OnInit {
           this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -967,13 +1001,19 @@ export class VerEmpleadoComponent implements OnInit {
               this.obtenerPermisos(parseInt(this.idEmpleado));
             });
         }, error => {
-          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+            timeOut: 6000,
+          })
         });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+          timeOut: 6000,
+        })
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -1278,7 +1318,9 @@ export class VerEmpleadoComponent implements OnInit {
       console.log("iamge", formData);
     }
     this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'imagen subida.');
+      this.toastr.success('Operación Exitosa', 'imagen subida.', {
+        timeOut: 6000,
+      });
       this.verEmpleado(this.idEmpleado)
       this.archivoForm.reset();
       this.nameFile = '';
@@ -1306,13 +1348,19 @@ export class VerEmpleadoComponent implements OnInit {
           this.plantillaHorario();
           //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
-          this.toastr.error('Plantilla seleccionada incorrecta');
+          this.toastr.error('Plantilla seleccionada incorrecta','', {
+            timeOut: 6000,
+          });
         }
       } else {
-        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+          timeOut: 6000,
+        });
       }
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -1323,7 +1371,9 @@ export class VerEmpleadoComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       //this.actualizar = false;
       //window.location.reload(this.actualizar);

@@ -183,7 +183,9 @@ export class VacacionAutorizacionesComponent implements OnInit {
     if (this.data.carga === 'multiple') {
       console.log('arreglo', this.data.datosVacacion.length);
       if (this.contador === this.data.datosVacacion.length) {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+          timeOut: 6000,
+        });
         console.log('idpermiso', 'entra');
         this.dialogRef.close();
       }
