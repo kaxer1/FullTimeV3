@@ -15,6 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const settingsMail_1 = require("../../libs/settingsMail");
 class PlanHoraExtraControlador {
+    ListarPlanificacion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PLAN = yield database_1.default.query('SELECT * FROM plan_hora_extra ORDER BY fecha_desde DESC');
+            if (PLAN.rowCount > 0) {
+                res.jsonp(PLAN.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ListarPlanHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const PLAN = yield database_1.default.query('SELECT e.id AS empl_id, e.codigo, e.cedula, e.nombre, e.apellido, ' +
@@ -77,19 +88,68 @@ class PlanHoraExtraControlador {
     }
     CrearPlanHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, id_empl_cargo, id_empl_contrato } = req.body;
-            yield database_1.default.query('INSERT INTO plan_hora_extra (id_empl_planifica, id_empl_realiza, fecha_desde, ' +
-                'fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, ' +
-                'id_empl_cargo, id_empl_contrato) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_planifica, id_empl_realiza, fecha_desde, fecha_hasta,
-                hora_inicio, hora_fin, descripcion, horas_totales, estado, observacion, justifica, id_empl_cargo, id_empl_contrato]);
+            const { id_empl_planifica, fecha_desde, fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales } = req.body;
+            yield database_1.default.query('INSERT INTO plan_hora_extra (id_empl_planifica, fecha_desde, ' +
+                'fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empl_planifica, fecha_desde, fecha_hasta,
+                hora_inicio, hora_fin, descripcion, horas_totales]);
             res.jsonp({ message: 'Planificacion registrada' });
+        });
+    }
+    ActualizarPlanHoraExtra(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { id_empl_planifica, fecha_desde, fecha_hasta, hora_inicio, hora_fin, descripcion, horas_totales } = req.body;
+            yield database_1.default.query('UPDATE plan_hora_extra SET id_empl_planifica = $1, fecha_desde = $2, ' +
+                'fecha_hasta = $3, hora_inicio = $4, hora_fin = $5, descripcion = $6, horas_totales = $7 WHERE id = $8 ', [id_empl_planifica, fecha_desde, fecha_hasta,
+                hora_inicio, hora_fin, descripcion, horas_totales, id]);
+            res.jsonp({ message: 'Planificacion registrada' });
+        });
+    }
+    EncontrarUltimoPlan(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PLAN = yield database_1.default.query('SELECT MAX(id) AS id_plan_hora FROM plan_hora_extra');
+            if (PLAN.rowCount > 0) {
+                if (PLAN.rows[0]['id_plan_hora'] != null) {
+                    return res.jsonp(PLAN.rows);
+                }
+                else {
+                    return res.status(404).jsonp({ text: 'Registro no encontrado' });
+                }
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    // PLANIFICACIÓN DE CADA EMPLEADO --- TABLA plan_hora_extra_empleado
+    CrearPlanHoraExtraEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_plan_hora, id_empl_realiza, observacion, id_empl_cargo, id_empl_contrato, estado, codigo } = req.body;
+            yield database_1.default.query('INSERT INTO plan_hora_extra_empleado (id_plan_hora, id_empl_realiza, observacion, ' +
+                'id_empl_cargo, id_empl_contrato, estado, codigo) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_plan_hora, id_empl_realiza, observacion, id_empl_cargo,
+                id_empl_contrato, estado, codigo]);
+            res.jsonp({ message: 'Planificacion registrada' });
+        });
+    }
+    ListarPlanEmpleados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_plan_hora;
+            const PLAN = yield database_1.default.query('SELECT * FROM plan_hora_extra_empleado WHERE id_plan_hora = $1', [id]);
+            if (PLAN.rowCount > 0) {
+                res.jsonp(PLAN.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
     TiempoAutorizado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = parseInt(req.params.id);
             const { hora } = req.body;
-            let respuesta = yield database_1.default.query('UPDATE plan_hora_extra SET tiempo_autorizado = $2 WHERE id = $1', [id, hora]).then(result => {
+            let respuesta = yield database_1.default.query('UPDATE plan_hora_extra_empleado SET tiempo_autorizado = $2 WHERE id = $1', [id, hora]).then(result => {
                 return { message: 'Tiempo de hora autorizada confirmada' };
             });
             res.jsonp(respuesta);
@@ -99,200 +159,16 @@ class PlanHoraExtraControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             const { observacion } = req.body;
-            yield database_1.default.query('UPDATE plan_hora_extra SET observacion = $1 WHERE id = $2', [observacion, id]);
+            yield database_1.default.query('UPDATE plan_hora_extra_empleado SET observacion = $1 WHERE id = $2', [observacion, id]);
             res.jsonp({ message: 'Planificación Actualizada' });
-            /* const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, ' +
-               'cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, ' +
-               'e.nombre, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, ' +
-               'empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, ' +
-               'config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND ' +
-               'da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id ' +
-               'AND ecn.id_empleado = e.id AND e.id = c.id_empleado AND da.estado = true', [id_departamento]);
-             const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
-         
-             console.log(InfoHoraExtraReenviarEstadoEmpleado.rows)
-         
-             const email = process.env.EMAIL;
-             const pass = process.env.PASSWORD;
-         
-             let estadoHoraExtra = [
-               { valor: 1, nombre: 'Pendiente' },
-               { valor: 2, nombre: 'Pre-Autorizado' },
-               { valor: 3, nombre: 'Aceptado' },
-               { valor: 4, nombre: 'Rechazado' }
-             ]
-         
-             let nombreEstado = '';
-             estadoHoraExtra.forEach(obj => {
-               if (obj.valor === estado) {
-                 nombreEstado = obj.nombre
-               }
-             });
-         
-             let smtpTransport = nodemailer.createTransport({
-               service: 'Gmail',
-               auth: {
-                 user: email,
-                 pass: pass
-               }
-             });
-         
-             JefeDepartamento.rows.forEach(obj => {
-               var url = `${process.env.URL_DOMAIN}/horaExtraEmpleado`;
-               InfoHoraExtraReenviarEstadoEmpleado.rows.forEach(ele => {
-                 let notifi_realtime = {
-                   id_send_empl: obj.empleado,
-                   id_receives_depa: obj.id_dep,
-                   estado: nombreEstado,
-                   id_permiso: null,
-                   id_vacaciones: null,
-                   id_hora_extra: id_hora_extra
-                 }
-         
-                 let data = {
-                   from: obj.correo,
-                   to: ele.correo,
-                   subject: 'Estado de solicitud de Hora Extra',
-                   html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
-                         cédula ${obj.cedula} a cambiado el estado de su permiso a: <b>${nombreEstado}</b></p>
-                         <h4><b>Informacion del permiso</b></h4>
-                         <ul>
-                             <li><b>Descripción</b>: ${ele.descripcion} </li>
-                             <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
-                             <li><b>Cédula</b>: ${ele.cedula} </li>
-                             <li><b>Sucursal</b>: ${obj.sucursal} </li>
-                             <li><b>Departamento</b>: ${obj.departamento} </li>
-                             </ul>
-                         <a href="${url}">Ir a verificar estado hora extra</a>`
-                 };
-                 console.log(data);
-                 if (obj.hora_extra_mail === true && obj.hora_extra_noti === true) {
-                   smtpTransport.sendMail(data, async (error: any, info: any) => {
-                     if (error) {
-                       console.log(error);
-                     } else {
-                       console.log('Email sent: ' + info.response);
-                     }
-                   });
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-                 } else if (obj.hora_extra_maill === true && obj.hora_extra_noti === false) {
-                   smtpTransport.sendMail(data, async (error: any, info: any) => {
-                     if (error) {
-                       console.log(error);
-                     } else {
-                       console.log('Email sent: ' + info.response);
-                     }
-                   });
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-                 } else if (obj.hora_extra_mail === false && obj.hora_extra_noti === true) {
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-         
-                 } else if (obj.hora_extra_mail === false && obj.hora_extra_noti === false) {
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-         
-                 }
-               });
-             });*/
         });
     }
     ActualizarEstado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             const { estado } = req.body;
-            yield database_1.default.query('UPDATE plan_hora_extra SET estado = $1 WHERE id = $2', [estado, id]);
+            yield database_1.default.query('UPDATE plan_hora_extra_empleado SET estado = $1 WHERE id = $2', [estado, id]);
             res.jsonp({ message: 'Estado de Planificación Actualizada' });
-            /* const JefeDepartamento = await pool.query('SELECT da.id, cg.id AS id_dep, s.id AS id_suc, ' +
-               'cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, ' +
-               'e.nombre, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti FROM depa_autorizaciones AS da, ' +
-               'empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, ' +
-               'config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND ' +
-               'da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id ' +
-               'AND ecn.id_empleado = e.id AND e.id = c.id_empleado AND da.estado = true', [id_departamento]);
-             const InfoHoraExtraReenviarEstadoEmpleado = await pool.query('SELECT h.descripcion, h.fec_inicio, h.fec_final, h.fec_solicita, h.estado, h.num_hora, h.id, e.id AS empleado, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empleados AS e, empl_cargos AS ecr, hora_extr_pedidos AS h WHERE h.id = $1 AND h.id_empl_cargo = ecr.id AND e.id = h.id_usua_solicita ORDER BY cargo DESC LIMIT 1', [id_hora_extra]);
-         
-             console.log(InfoHoraExtraReenviarEstadoEmpleado.rows)
-         
-             const email = process.env.EMAIL;
-             const pass = process.env.PASSWORD;
-         
-             let estadoHoraExtra = [
-               { valor: 1, nombre: 'Pendiente' },
-               { valor: 2, nombre: 'Pre-Autorizado' },
-               { valor: 3, nombre: 'Aceptado' },
-               { valor: 4, nombre: 'Rechazado' }
-             ]
-         
-             let nombreEstado = '';
-             estadoHoraExtra.forEach(obj => {
-               if (obj.valor === estado) {
-                 nombreEstado = obj.nombre
-               }
-             });
-         
-             let smtpTransport = nodemailer.createTransport({
-               service: 'Gmail',
-               auth: {
-                 user: email,
-                 pass: pass
-               }
-             });
-         
-             JefeDepartamento.rows.forEach(obj => {
-               var url = `${process.env.URL_DOMAIN}/horaExtraEmpleado`;
-               InfoHoraExtraReenviarEstadoEmpleado.rows.forEach(ele => {
-                 let notifi_realtime = {
-                   id_send_empl: obj.empleado,
-                   id_receives_depa: obj.id_dep,
-                   estado: nombreEstado,
-                   id_permiso: null,
-                   id_vacaciones: null,
-                   id_hora_extra: id_hora_extra
-                 }
-         
-                 let data = {
-                   from: obj.correo,
-                   to: ele.correo,
-                   subject: 'Estado de solicitud de Hora Extra',
-                   html: `<p><b>${obj.nombre} ${obj.apellido}</b> jefe/a del departamento de <b>${obj.departamento}</b> con número de
-                         cédula ${obj.cedula} a cambiado el estado de su permiso a: <b>${nombreEstado}</b></p>
-                         <h4><b>Informacion del permiso</b></h4>
-                         <ul>
-                             <li><b>Descripción</b>: ${ele.descripcion} </li>
-                             <li><b>Empleado</b>: ${ele.nombre} ${ele.apellido} </li>
-                             <li><b>Cédula</b>: ${ele.cedula} </li>
-                             <li><b>Sucursal</b>: ${obj.sucursal} </li>
-                             <li><b>Departamento</b>: ${obj.departamento} </li>
-                             </ul>
-                         <a href="${url}">Ir a verificar estado hora extra</a>`
-                 };
-                 console.log(data);
-                 if (obj.hora_extra_mail === true && obj.hora_extra_noti === true) {
-                   smtpTransport.sendMail(data, async (error: any, info: any) => {
-                     if (error) {
-                       console.log(error);
-                     } else {
-                       console.log('Email sent: ' + info.response);
-                     }
-                   });
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-                 } else if (obj.hora_extra_maill === true && obj.hora_extra_noti === false) {
-                   smtpTransport.sendMail(data, async (error: any, info: any) => {
-                     if (error) {
-                       console.log(error);
-                     } else {
-                       console.log('Email sent: ' + info.response);
-                     }
-                   });
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-                 } else if (obj.hora_extra_mail === false && obj.hora_extra_noti === true) {
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: true, realtime: [notifi_realtime] });
-         
-                 } else if (obj.hora_extra_mail === false && obj.hora_extra_noti === false) {
-                   res.json({ message: 'Estado de hora extra actualizado exitosamente', notificacion: false, realtime: [notifi_realtime] });
-         
-                 }
-               });
-             });*/
         });
     }
     EnviarCorreoNotificacion(req, res) {
@@ -323,8 +199,9 @@ class PlanHoraExtraControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_plan_extra;
             const SOLICITUD = yield database_1.default.query('SELECT a.id AS id_autorizacion, a.id_documento AS empleado_estado, ' +
-                'p.id AS id_plan_extra FROM autorizaciones AS a, plan_hora_extra AS p ' +
-                'WHERE p.id = a.id_plan_hora_extra AND p.id = $1', [id]);
+                'p.id AS id_plan_extra, pe.id AS plan_hora_extra_empleado FROM autorizaciones AS a, plan_hora_extra AS p, ' +
+                'plan_hora_extra_empleado AS pe ' +
+                'WHERE pe.id = a.id_plan_hora_extra AND pe.id_plan_hora = p.id AND p.id = $1', [id]);
             if (SOLICITUD.rowCount > 0) {
                 return res.json(SOLICITUD.rows);
             }

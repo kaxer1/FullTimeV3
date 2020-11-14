@@ -397,7 +397,8 @@ export class MainNavComponent implements OnInit {
           { name: 'Registrar Horario', url: '/horario' },
           { name: 'Configurar Horas Extras', url: '/listaHorasExtras' },
           { name: 'Planificación Múltiple', url: '/planificacion' },
-          { name: 'Planificación Hora Extra', url: '/planificaHoraExtra' },
+          { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
+          { name: 'Planificaciones', url: '/listadoPlanificaciones' },
           { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },

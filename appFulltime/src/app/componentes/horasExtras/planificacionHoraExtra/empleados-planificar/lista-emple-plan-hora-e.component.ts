@@ -197,7 +197,8 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
         id: obj.id,
         empleado: obj.nombre + ' ' + obj.apellido,
         id_contrato: obj.id_contrato,
-        id_cargo: obj.id_cargo
+        id_cargo: obj.id_cargo,
+        codigo: obj.codigo
       }
     })
     this.Planificacion(EmpleadosSeleccionados);
