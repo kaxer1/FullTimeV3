@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GenerarHoraExtraCalulo = exports.CalcularHoraExtra = void 0;
 exports.CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(id_empleado, fec_desde, fec_hasta);

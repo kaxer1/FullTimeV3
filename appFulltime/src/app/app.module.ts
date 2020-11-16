@@ -276,8 +276,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
@@ -296,6 +298,7 @@ import { AyudaComponent } from './share/ayuda/ayuda.component';
 import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
 import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
 import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
+import { CorreoEmpresaComponent } from './componentes/catalogos/catEmpresa/correo-empresa/correo-empresa.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -519,6 +522,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReporteEmpleadosComponent,
     ReporteKardexComponent,
     ReporteHorasPedidasComponent,
+    CorreoEmpresaComponent,
   ],
 
   imports: [
@@ -568,7 +572,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatMenuModule,
     ScrollingModule,
     JwPaginationModule,
-    MatTreeModule
+    MatTreeModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     AuthGuard,

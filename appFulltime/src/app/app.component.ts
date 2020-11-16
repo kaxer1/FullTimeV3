@@ -9,7 +9,7 @@ import { LoginService } from './servicios/login/login.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'AppFulltime';
+  title = 'Full Time';
 
   log: boolean;
   ruta: string;
@@ -62,5 +62,3 @@ export class AppComponent {
   }
 
 }
-
-

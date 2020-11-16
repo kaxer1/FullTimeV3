@@ -3,7 +3,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { Socket } from 'ngx-socket-io';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,28 +16,15 @@ import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
-import {NestedTreeControl} from '@angular/cdk/tree';
-import {MatTreeNestedDataSource} from '@angular/material/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { AyudaComponent } from '../ayuda/ayuda.component';
-
-interface MenuNode {
-  name: string;
-  accion?: boolean;
-  estado?: boolean;
-  icono?: string;
-  children?: itemNode[];
-}
-
-interface itemNode {
-  name: string;
-  url: string;
-}
+import { MenuNode } from '../../model/menu.model'
 
 @Component({
   selector: 'app-main-nav',
   templateUrl: './main-nav.component.html',
   styleUrls: ['./main-nav.component.css']
-
 })
 export class MainNavComponent implements OnInit {
 
@@ -76,6 +63,11 @@ export class MainNavComponent implements OnInit {
   treeControl = new NestedTreeControl<MenuNode>(node => node.children);
   dataSource = new MatTreeNestedDataSource<MenuNode>();
 
+  idEmpresa: number;
+  datosEmpresa: any = [];
+  habilitarReportes: string = 'hidden';
+  mensaje: boolean = false;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
@@ -87,7 +79,9 @@ export class MainNavComponent implements OnInit {
     private toaster: ToastrService,
     private socket: Socket,
     private realTime: RealTimeService,
-    private timbresNoti: TimbresService
+    private timbresNoti: TimbresService,
+    private rest: EmpresaService,
+    private route: ActivatedRoute
   ) {
     this.empleadoService.getBuscadorEmpledosRest().subscribe(res => {
       console.log(res);
@@ -135,6 +129,8 @@ export class MainNavComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.idEmpresa = parseInt(localStorage.getItem('empresa'))
+    this.LlamarDatos(); 
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
@@ -149,6 +145,25 @@ export class MainNavComponent implements OnInit {
       this.barraDos = result.matches;
     });
     this.SeleccionMenu();
+  }
+
+  LlamarDatos() {
+    this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
+      this.datosEmpresa = datos;
+      if (this.datosEmpresa[0].logo === null || this.datosEmpresa[0].color_p === null || this.datosEmpresa[0].color_s === null) {
+        this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs','Error configuración', {timeOut: 10000})
+        .onTap.subscribe(obj => {
+          this.IrInfoEmpresa()
+        })
+        this.mensaje = true;
+      } else {
+        this.habilitarReportes = 'visible';
+      }
+    });
+  }
+
+  IrInfoEmpresa() {
+    this.router.navigate(['/vistaEmpresa', this.idEmpresa], {relativeTo: this.route, skipLocationChange: false})
   }
 
   confRes: any = [];

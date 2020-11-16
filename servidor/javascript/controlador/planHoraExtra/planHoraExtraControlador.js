@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PLAN_HORA_EXTRA_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 const settingsMail_1 = require("../../libs/settingsMail");
 class PlanHoraExtraControlador {
@@ -297,6 +298,7 @@ class PlanHoraExtraControlador {
     }
     EnviarCorreoNotificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             let { id_empl_envia, id_empl_recive, mensaje } = req.body;
             var f = new Date();
             f.setUTCHours(f.getHours());
@@ -335,6 +337,7 @@ class PlanHoraExtraControlador {
     }
     EnviarCorreoPlanificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             let { id_empl_envia, id_empl_recive, mensaje } = req.body;
             var f = new Date();
             f.setUTCHours(f.getHours());

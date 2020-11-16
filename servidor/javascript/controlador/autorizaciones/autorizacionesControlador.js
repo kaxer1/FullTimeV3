@@ -12,7 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AUTORIZACION_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
+const settingsMail_1 = require("../../libs/settingsMail");
 const nodemailer = require("nodemailer");
 class AutorizacionesControlador {
     ListarAutorizaciones(req, res) {
@@ -71,6 +73,7 @@ class AutorizacionesControlador {
     }
     ActualizarEstadoPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             const id = req.params.id;
             const { id_documento, estado, id_permiso, id_departamento, id_empleado } = req.body;
             yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id = $3', [estado, id_documento, id]);
@@ -147,6 +150,7 @@ class AutorizacionesControlador {
     }
     ActualizarEstadoVacacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             //const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
             const { id_documento, estado, id_vacacion } = req.body;
             yield database_1.default.query('UPDATE autorizaciones SET estado = $1, id_documento = $2 WHERE id_vacacion = $3', [estado, id_documento, id_vacacion]);
@@ -217,6 +221,7 @@ class AutorizacionesControlador {
     }
     ActualizarEstadoHoraExtra(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             const id = req.params.id_hora_extra;
             //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
             const { id_documento, estado } = req.body;
@@ -285,6 +290,7 @@ class AutorizacionesControlador {
     }
     ActualizarEstadoPlanificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             const id = req.params.id_plan_hora_extra;
             //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
             const { id_documento, estado } = req.body;

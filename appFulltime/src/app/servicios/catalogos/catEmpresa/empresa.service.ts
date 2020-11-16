@@ -59,5 +59,9 @@ export class EmpresaService {
   EditarLogoEmpresa(id_empresa: number, formData) {
     return this.http.put<any>(`${this.API_URL}/empresas/logo/${id_empresa}/uploadImage`, formData);
   }
+  
+  EditarCredenciales(id_empresa: number, data: any) {
+    return this.http.put<any>(`${this.API_URL}/empresas/credenciales/${id_empresa}`, data);
+  }
 
 }

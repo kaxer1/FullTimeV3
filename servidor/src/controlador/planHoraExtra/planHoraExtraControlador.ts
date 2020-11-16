@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { enviarMail, email } from '../../libs/settingsMail'
+import { enviarMail, email, Credenciales } from '../../libs/settingsMail'
 
 class PlanHoraExtraControlador {
 
@@ -282,6 +282,7 @@ class PlanHoraExtraControlador {
   }
 
   public async EnviarCorreoNotificacion(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
     let { id_empl_envia, id_empl_recive, mensaje } = req.body;
 
     var f = new Date();
@@ -325,6 +326,7 @@ class PlanHoraExtraControlador {
   }
 
   public async EnviarCorreoPlanificacion(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa)
     let { id_empl_envia, id_empl_recive, mensaje } = req.body;
 
     var f = new Date();

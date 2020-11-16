@@ -2,6 +2,8 @@ import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
@@ -58,6 +60,14 @@ export class RegistroDepartamentoComponent implements OnInit {
   ];
   selectNivel: string = this.niveles[0].valor;
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+
   constructor(
     private rest: DepartamentosService,
     private restE: EmpresaService,
@@ -100,6 +110,8 @@ export class RegistroDepartamentoComponent implements OnInit {
   }
 
   InsertarDepartamento(form) {
+    this.habilitarprogress = true;
+
     var departamentoPadreId;
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     var datosDepartamento = {
@@ -119,6 +131,7 @@ export class RegistroDepartamentoComponent implements OnInit {
       this.rest.getIdDepartamentoPadre(departamentoPadreNombre).subscribe(datos => {
         departamentoPadreId = datos[0].id;
         datosDepartamento.depa_padre = departamentoPadreId;
+        this.habilitarprogress = false;
         this.GuardarDatos(datosDepartamento);
       })
     }
@@ -127,9 +140,11 @@ export class RegistroDepartamentoComponent implements OnInit {
   revisarNombre: any = [];
   contador: number = 0;
   GuardarDatos(datos) {
+    this.habilitarprogress = true;
     this.revisarNombre = [];
     let idSucursal = datos.id_sucursal;
     this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
+      this.habilitarprogress = false;
       this.revisarNombre = data;
       for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
         if (this.revisarNombre[i].nombre === datos.nombre) {
@@ -141,12 +156,14 @@ export class RegistroDepartamentoComponent implements OnInit {
         this.contador = 0;
       }
       else {
+        this.habilitarprogress = true;
         this.rest.postDepartamentoRest(datos).subscribe(response => {
           if (response.message === 'error') {
             this.toastr.error('Los datos ingresados tienen un error');
           }
           else {
             this.toastr.success('Operación Exitosa', 'Departamento registrado');
+            this.habilitarprogress = false;
             this.LimpiarCampos();
           }
         });

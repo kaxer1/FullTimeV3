@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EMPRESA_CONTROLADOR = void 0;
 const fs_1 = __importDefault(require("fs"));
 const ImagenCodificacion_1 = require("../../libs/ImagenCodificacion");
 const builder = require('xmlbuilder');
@@ -19,7 +20,7 @@ const database_1 = __importDefault(require("../../database"));
 class EmpresaControlador {
     ListarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa ORDER BY nombre ASC');
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa ORDER BY nombre ASC');
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -31,7 +32,7 @@ class EmpresaControlador {
     ListarUnaEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.params;
-            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa WHERE nombre = $1', [nombre]);
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE nombre = $1', [nombre]);
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -85,7 +86,7 @@ class EmpresaControlador {
     ListarEmpresaId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE id = $1', [id]);
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -144,6 +145,15 @@ class EmpresaControlador {
             const { color_p, color_s, id } = req.body;
             yield database_1.default.query('UPDATE cg_empresa SET color_p = $1, color_s = $2 WHERE id = $3', [color_p, color_s, id]);
             res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
+        });
+    }
+    EditarPassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id_empresa;
+            const { correo, password_correo } = req.body;
+            console.log('Objeto ===== ', req.body);
+            yield database_1.default.query('UPDATE cg_empresa SET correo = $1, password_correo = $2 WHERE id = $3', [correo, password_correo, id]);
+            res.status(200).jsonp({ message: 'Guardada la configuracion de credenciales' });
         });
     }
 }
