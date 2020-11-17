@@ -77,6 +77,7 @@ export class ColoresEmpresaComponent implements OnInit {
         timeOut: 6000,
       });
       this.obtenerColores();
+      this.dialogRef.close();
     })
   }
 

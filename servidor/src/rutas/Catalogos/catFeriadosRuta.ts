@@ -21,6 +21,8 @@ class FeriadosRuta {
         this.router.get('/ultimoId', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUltimoId);
         this.router.get('/:id', TokenValidation, FERIADOS_CONTROLADOR.ObtenerUnFeriado);
         this.router.post('/', TokenValidation, FERIADOS_CONTROLADOR.CrearFeriados);
+        this.router.post('/upload/revision', [TokenValidation, multipartMiddleware], FERIADOS_CONTROLADOR.RevisarDatos);
+        this.router.post('/upload/revision_data', [TokenValidation, multipartMiddleware], FERIADOS_CONTROLADOR.RevisarDatos_Duplicados);
         this.router.post('/upload', [TokenValidation, multipartMiddleware], FERIADOS_CONTROLADOR.CrearFeriadoPlantilla);
         this.router.put('/', TokenValidation, FERIADOS_CONTROLADOR.ActualizarFeriado);
         this.router.post('/xmlDownload/', TokenValidation, FERIADOS_CONTROLADOR.FileXML);

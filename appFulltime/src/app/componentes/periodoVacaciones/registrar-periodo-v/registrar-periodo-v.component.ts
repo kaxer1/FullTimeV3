@@ -117,7 +117,7 @@ export class RegistrarPeriodoVComponent implements OnInit {
         this.InsertarPerVacacion(form);
       }
       else {
-        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período','', {
+        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período', '', {
           timeOut: 6000,
         })
       }
@@ -209,7 +209,7 @@ export class RegistrarPeriodoVComponent implements OnInit {
       }
       else {
         this.PerVacacionesForm.patchValue({ fechaInicioForm: '' });
-        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.','', {
+        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.', '', {
           timeOut: 6000,
         });
       }

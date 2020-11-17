@@ -52,6 +52,9 @@ export class VerEmpleadoPermisoComponent implements OnInit {
   datoSolicitud: any = [];
   datosAutorizacion: any = [];
 
+  fechaActual: any;
+  habilitarActualizar: boolean = true;
+
   constructor(
     private restP: PermisosService,
     private restA: AutorizacionService,
@@ -129,10 +132,32 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   // Método para ver la información de la solicitud 
   ObtenerSolicitud(id: any) {
+    var f = moment();
+    this.fechaActual = f.format('YYYY-MM-DD');
     this.datoSolicitud = [];
     this.restP.BuscarDatosSolicitud(id).subscribe(data => {
       this.datoSolicitud = data;
       console.log('datos solicitud', this.datoSolicitud);
+      this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+        var fecha_inicio = moment(this.datoSolicitud[0].fec_inicio);
+        console.log(fecha_inicio.diff(this.fechaActual, 'days'), ' dias de diferencia');
+        if (res[0].cambios === true) {
+          if (res[0].cambios === 0) {
+            this.habilitarActualizar = false;
+          }
+          else {
+            var dias = fecha_inicio.diff(this.fechaActual, 'days');
+            if (dias >= res[0].dias_cambio) {
+              this.habilitarActualizar = false;
+            }
+            else {
+              this.habilitarActualizar = true;
+            }
+          }
+        } else {
+          this.habilitarActualizar = true;
+        }
+      });
     })
   }
 
@@ -260,7 +285,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         }
       },
       content: [
-        {       image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         { text: this.datoSolicitud[0].nom_empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, 0, 0, 20] },
         { text: 'SOLICITUD DE PERMISO', fontSize: 10, alignment: 'center', margin: [0, 0, 0, 20] },
         //this.presentarDataPDFPermiso_Uno(),

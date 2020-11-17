@@ -78,7 +78,15 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
 
   insertarAutorizacion(form) {
     if (this.data.carga === 'individual') {
-      this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
+      if (this.data.pedido_hora.estado === 2 || this.data.pedido_hora.estado === 3 || this.data.pedido_hora.estado === 4) {
+        this.restH.BuscarDatosAutorizacion(this.data.pedido_hora.id).subscribe(data => {
+          var documento = data[0].empleado_estado;
+          this.ActualizarDatos(form, documento, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
+        })
+      }
+      else {
+        this.IngresarDatos(form, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
+      }
     }
     else if (this.data.carga === 'multiple') {
       this.data.datosHora.map(obj => {
@@ -100,7 +108,15 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
       })
     }
     else if (this.data.carga === undefined) {
-      this.IngresarDatos(form, this.data.id, form.idDepartamentoF, this.data.id_usua_solicita);
+      if (this.data.estado === 2 || this.data.estado === 3 || this.data.estado === 4) {
+        this.restH.BuscarDatosAutorizacion(this.data.id).subscribe(data => {
+          var documento = data[0].empleado_estado;
+          this.ActualizarDatos(form, documento, this.data.id, form.idDepartamentoF, this.data.id_usua_solicita);
+        })
+      }
+      else {
+        this.IngresarDatos(form, this.data.id, form.idDepartamentoF, this.data.id_usua_solicita);
+      }
     }
   }
 

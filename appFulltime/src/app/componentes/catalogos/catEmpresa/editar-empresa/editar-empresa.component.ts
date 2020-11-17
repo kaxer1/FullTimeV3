@@ -21,6 +21,8 @@ export class EditarEmpresaComponent implements OnInit {
   selec6 = false;
   selec7 = false;
   selec8 = false;
+  selec9 = false;
+  selec10 = false;
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -33,6 +35,8 @@ export class EditarEmpresaComponent implements OnInit {
   otroF = new FormControl('', [Validators.minLength(3)]);
   establecimientoF = new FormControl('', [Validators.required]);
   otroE = new FormControl('', [Validators.minLength(3)]);
+  dias_cambioF = new FormControl('');
+  cambiosF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public RegistroEmpresaForm = new FormGroup({
@@ -45,7 +49,9 @@ export class EditarEmpresaComponent implements OnInit {
     representanteForm: this.representanteF,
     otroForm: this.otroF,
     establecimientoForm: this.establecimientoF,
-    otroEForm: this.otroE
+    otroEForm: this.otroE,
+    dias_cambioForm: this.dias_cambioF,
+    cambiosForm: this.cambiosF
   });
 
 
@@ -62,6 +68,8 @@ export class EditarEmpresaComponent implements OnInit {
   estiloRepre: any;
   HabilitarOtroE: boolean = true;
   estiloOtroE: any;
+  habilitarDias: boolean = true;
+  estiloDias: any;
 
   ngOnInit(): void {
     this.ImprimirDatos();
@@ -123,7 +131,9 @@ export class EditarEmpresaComponent implements OnInit {
     }
     else {
       this.selec5 = true;
-      this.CambiarNombreOtro();
+      this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
+      this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
+      this.valor = 'Representante Legal';
       this.RegistroEmpresaForm.patchValue({
         otroForm: this.data.tipo_empresa
       })
@@ -138,10 +148,21 @@ export class EditarEmpresaComponent implements OnInit {
     }
     else {
       this.selec8 = true;
-      this.CambiarEstablecimiento();
+      this.estiloOtroE = { 'visibility': 'visible' }; this.HabilitarOtroE = false;
       this.RegistroEmpresaForm.patchValue({
         otroEForm: this.data.establecimiento
       })
+    }
+    if (this.data.cambios === true) {
+      this.selec9 = true
+      this.estiloDias = { 'visibility': 'visible' }; this.habilitarDias = false;
+      this.RegistroEmpresaForm.patchValue({
+        dias_cambioForm: this.data.dias_cambio
+      })
+    }
+    else {
+      this.selec10 = true;
+      this.RealizarCambiosNo();
     }
     this.RegistroEmpresaForm.patchValue({
       nombreForm: this.data.nombre,
@@ -151,7 +172,8 @@ export class EditarEmpresaComponent implements OnInit {
       correoForm: this.data.correo,
       tipoForm: this.data.tipo_empresa,
       representanteForm: this.data.representante,
-      establecimientoForm: this.data.establecimiento
+      establecimientoForm: this.data.establecimiento,
+      cambiosForm: this.data.cambios
     })
   }
 
@@ -188,9 +210,11 @@ export class EditarEmpresaComponent implements OnInit {
       correo: form.correoForm,
       tipo_empresa: form.tipoForm,
       representante: form.representanteForm,
-      establecimiento: form.establecimientoForm
+      establecimiento: form.establecimientoForm,
+      dias_cambio: form.dias_cambioForm,
+      cambios: form.cambiosForm
     };
-    this.VerificarOtroTipo(form, datosEmpresa);
+    this.VerificarCambios(form, datosEmpresa);
   }
 
   GuardarDatos(datos) {
@@ -210,13 +234,30 @@ export class EditarEmpresaComponent implements OnInit {
         this.VerificarEstablecimiento(form, datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del tipo de empresa.','', {
+        this.toastr.info('Ingrese el nombre del tipo de empresa.', '', {
           timeOut: 6000,
         })
       }
     }
     else {
       this.VerificarEstablecimiento(form, datos);
+    }
+  }
+
+  VerificarCambios(form, datos) {
+    if (form.cambiosForm === true) {
+      if (form.dias_cambioForm != '') {
+        this.VerificarOtroTipo(form, datos);
+      }
+      else {
+        this.toastr.info('Ingrese el número de días para realizar cambios antes de la fecha de cumplimiento de una autorización de solicitud de permisos, vacaciones u horas extras.', '', {
+          timeOut: 6000,
+        })
+      }
+    }
+    else {
+      datos.dias_cambio = 0;
+      this.VerificarOtroTipo(form, datos);
     }
   }
 
@@ -227,7 +268,7 @@ export class EditarEmpresaComponent implements OnInit {
         this.GuardarDatos(datos);
       }
       else {
-        this.toastr.info('Ingrese el nombre del establecimiento.','', {
+        this.toastr.info('Ingrese el nombre del establecimiento.', '', {
           timeOut: 6000,
         })
       }
@@ -276,10 +317,10 @@ export class EditarEmpresaComponent implements OnInit {
   CambiarNombreOtro() {
     this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
     this.estiloRepre = { 'visibility': 'visible' }; this.HabilitarRepre = false;
-    this.toastr.info('Ingresar el nombre del tipo de empresa','', {
+    this.toastr.info('Ingresar el nombre del tipo de empresa', '', {
       timeOut: 6000,
     })
-    this.valor = 'Representante Legal'
+    this.valor = 'Representante Legal';
     this.RegistroEmpresaForm.patchValue({
       otroForm: ''
     })
@@ -294,11 +335,28 @@ export class EditarEmpresaComponent implements OnInit {
 
   CambiarEstablecimiento() {
     this.estiloOtroE = { 'visibility': 'visible' }; this.HabilitarOtroE = false;
-    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.','', {
+    this.toastr.info('Ingresar el nombre del establecimiento que tiene la empresa.', '', {
       timeOut: 6000,
     })
     this.RegistroEmpresaForm.patchValue({
       otroEForm: ''
+    })
+  }
+
+  RealizarCambiosNo() {
+    this.estiloDias = { 'visibility': 'hidden' }; this.habilitarDias = true;
+    this.RegistroEmpresaForm.patchValue({
+      dias_cambioForm: ''
+    })
+  }
+
+  RealizarCambiosSi() {
+    this.estiloDias = { 'visibility': 'visible' }; this.habilitarDias = false;
+    this.toastr.info('Ingresar el número de días que tendra para realizar cambios de una autorización antes que se cumpla la fecha de cumpliento de esta.', '', {
+      timeOut: 6000,
+    })
+    this.RegistroEmpresaForm.patchValue({
+      dias_cambioForm: ''
     })
   }
 
