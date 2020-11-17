@@ -81,34 +81,75 @@ class EmpleadoControlador {
     }
   }
 
-  public async VerificarPlantilla(req: Request, res: Response): Promise<void> {
+  public async VerificarPlantilla_Automatica(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
     let filename = cadena.split("\\")[1];
     var filePath = `./plantillas/${filename}`
-
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames;
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-    var numFilas = 0;
+    var contarCodigo = 0;
+    var contarCedula = 0;
+    var contarUsuario = 0;
+    var contarRol = 0;
+    var contarLlenos = 0;
     var contador = 1;
     const VALOR = await pool.query('SELECT * FROM codigo');
     var codigo = parseInt(VALOR.rows[0].valor);
 
     plantilla.forEach(async (data: any) => {
-      codigo = codigo + 1;
-      console.log('codigo', codigo);
-      const VERIFICAR = await pool.query('SELECT * FROM empleados WHERE codigo::int = $1', [codigo]);
-      if (VERIFICAR.rowCount === 0) {
-        numFilas = numFilas + 1;
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio,
+        telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+
+      //Verificar que la cédula no se encuentre registrada
+      const VERIFICAR_CEDULA = await pool.query('SELECT * FROM empleados WHERE cedula = $1', [cedula]);
+      if (VERIFICAR_CEDULA.rowCount === 0) {
+        contarCedula = contarCedula + 1;
       }
+
+      //Verificar que el usuario no se encuentre registrado
+      const VERIFICAR_USUARIO = await pool.query('SELECT * FROM usuarios WHERE usuario = $1', [usuario]);
+      if (VERIFICAR_USUARIO.rowCount === 0) {
+        contarUsuario = contarUsuario + 1;
+      }
+
+      //Verificar que el rol exista dentro del sistema
+      const VERIFICAR_ROL = await pool.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
+      if (VERIFICAR_ROL.rowCount > 0) {
+        contarRol = contarRol + 1;
+      }
+
+      // Verificar que el código no se duplique en los registros
+      codigo = codigo + 1;
+      console.log('codigo_ver', codigo);
+      const VERIFICAR_CODIGO = await pool.query('SELECT * FROM empleados WHERE codigo::int = $1', [codigo]);
+      if (VERIFICAR_CODIGO.rowCount === 0) {
+        contarCodigo = contarCodigo + 1;
+      }
+
+      //Verificar que los datos no esten vacios a excepción del dato mail_alternativo
+      if (cedula != undefined && estado_civil != undefined && genero != undefined && correo != undefined &&
+        fec_nacimiento != undefined && estado != undefined && domicilio != undefined && telefono != undefined &&
+        nacionalidad != undefined && usuario != undefined && estado_user != undefined && rol != undefined &&
+        app_habilita != undefined && data.nombre != undefined && data.apellido != undefined) {
+        contarLlenos = contarLlenos + 1;
+      }
+
+      // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+      console.log('codigo', contarCodigo, plantilla.length, contador);
+      console.log('cedula', contarCedula, plantilla.length, contador);
+      console.log('usuario', contarUsuario, plantilla.length, contador);
+      console.log('rol', contarRol, plantilla.length, contador);
+      console.log('llenos', contarLlenos, plantilla.length, contador);
       if (contador === plantilla.length) {
-        console.log('filas', numFilas);
-        console.log('numero de filas', plantilla.length)
-        if (numFilas === plantilla.length) {
-          res.jsonp({ message: 'correcto' });
+        if (contarCodigo === plantilla.length && contarCedula === plantilla.length &&
+          contarUsuario === plantilla.length && contarLlenos === plantilla.length &&
+          contarRol === plantilla.length) {
+          return res.jsonp({ message: 'correcto' });
         } else {
-          res.jsonp({ message: 'error' });
+          return res.jsonp({ message: 'error' });
         }
       }
       contador = contador + 1;
@@ -116,7 +157,57 @@ class EmpleadoControlador {
     fs.unlinkSync(filePath);
   }
 
-  public async CargarPlantilla(req: Request, res: Response): Promise<void> {
+  public async VerificarPlantilla_DatosAutomatico(req: Request, res: Response) {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var contarCedulaData = 0;
+    var contarUsuarioData = 0;
+    var contador_arreglo = 1;
+    var arreglos_datos: any = [];
+    //Leer la plantilla para llenar un array con los datos cedula y usuario para verificar que no sean duplicados
+    plantilla.forEach(async (data: any) => {
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio,
+        telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+      let datos_array = {
+        cedula: cedula,
+        usuario: usuario,
+      }
+      arreglos_datos.push(datos_array);
+    });
+
+    // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+    for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+      for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+        if (arreglos_datos[i].cedula === arreglos_datos[j].cedula) {
+          contarCedulaData = contarCedulaData + 1;
+        }
+        if (arreglos_datos[i].usuario === arreglos_datos[j].usuario) {
+          contarUsuarioData = contarUsuarioData + 1;
+        }
+      }
+      contador_arreglo = contador_arreglo + 1;
+    }
+
+    // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+    console.log('cedula_data', contarCedulaData, plantilla.length, contador_arreglo);
+    console.log('usuario_data', contarUsuarioData, plantilla.length, contador_arreglo);
+    if ((contador_arreglo - 1) === plantilla.length) {
+      if (contarCedulaData === plantilla.length && contarUsuarioData === plantilla.length) {
+        return res.jsonp({ message: 'correcto' });
+      } else {
+        return res.jsonp({ message: 'error' });
+      }
+    }
+    fs.unlinkSync(filePath);
+  }
+
+  public async CargarPlantilla_Automatico(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
     let filename = cadena.split("\\")[1];
@@ -126,6 +217,9 @@ class EmpleadoControlador {
     const sheet_name_list = workbook.SheetNames;
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
+    const VALOR = await pool.query('SELECT * FROM codigo');
+    var codigo = parseInt(VALOR.rows[0].valor);
+    var contador = 1;
     plantilla.forEach(async (data: any) => {
 
       // Realiza un capital letter a los nombres y apellidos
@@ -161,11 +255,10 @@ class EmpleadoControlador {
       const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
 
       //Obtener id del rol
-      const id_rol = await pool.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
+      const id_rol = await pool.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
 
-      // Obtener último código registrado
-      const VALOR = await pool.query('SELECT * FROM codigo');
-      var codigo = parseInt(VALOR.rows[0].valor) + 1;
+      // Incrementar el valor del código
+      codigo = codigo + 1;
 
       // Registro de nuevo empleado
       await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
@@ -177,12 +270,213 @@ class EmpleadoControlador {
       // Registro de los datos de usuario
       await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
 
-      // Actualización del código
-      await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
+      if (contador === plantilla.length) {
+        console.log('codigo_ver', codigo, VALOR.rows[0].id);
+        // Actualización del código
+        await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
+        return res.jsonp({ message: 'correcto' });
+      }
+      contador = contador + 1;
     });
-
     fs.unlinkSync(filePath);
   }
+
+  /** MÉTODOS PARA VERIFICAR PLANTILLA CON CÓDIGO INGRESADO DE FORMA MANUAL */
+  public async VerificarPlantilla_Manual(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var contarCodigo = 0;
+    var contarCedula = 0;
+    var contarUsuario = 0;
+    var contarRol = 0;
+    var contarLlenos = 0;
+    var contador = 1;
+
+    plantilla.forEach(async (data: any) => {
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, codigo, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio,
+        telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+
+      //Verificar que la cédula no se encuentre registrada
+      const VERIFICAR_CEDULA = await pool.query('SELECT * FROM empleados WHERE cedula = $1', [cedula]);
+      if (VERIFICAR_CEDULA.rowCount === 0) {
+        contarCedula = contarCedula + 1;
+      }
+
+      // Verificar que el código no se duplique en los registros
+      const VERIFICAR_CODIGO = await pool.query('SELECT * FROM empleados WHERE codigo::int = $1', [codigo]);
+      if (VERIFICAR_CODIGO.rowCount === 0) {
+        contarCodigo = contarCodigo + 1;
+      }
+
+      //Verificar que el usuario no se encuentre registrado
+      const VERIFICAR_USUARIO = await pool.query('SELECT * FROM usuarios WHERE usuario = $1', [usuario]);
+      if (VERIFICAR_USUARIO.rowCount === 0) {
+        contarUsuario = contarUsuario + 1;
+      }
+
+      //Verificar que el rol exista dentro del sistema
+      const VERIFICAR_ROL = await pool.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
+      if (VERIFICAR_ROL.rowCount > 0) {
+        contarRol = contarRol + 1;
+      }
+
+      //Verificar que los datos no esten vacios a excepción del dato mail_alternativo
+      if (cedula != undefined && estado_civil != undefined && genero != undefined && correo != undefined &&
+        fec_nacimiento != undefined && estado != undefined && domicilio != undefined && telefono != undefined &&
+        nacionalidad != undefined && usuario != undefined && estado_user != undefined && rol != undefined &&
+        app_habilita != undefined && data.nombre != undefined && data.apellido != undefined) {
+        contarLlenos = contarLlenos + 1;
+      }
+
+      // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+      console.log('codigo', contarCodigo, plantilla.length, contador);
+      console.log('cedula', contarCedula, plantilla.length, contador);
+      console.log('usuario', contarUsuario, plantilla.length, contador);
+      console.log('rol', contarRol, plantilla.length, contador);
+      console.log('llenos', contarLlenos, plantilla.length, contador);
+      if (contador === plantilla.length) {
+        if (contarCodigo === plantilla.length && contarCedula === plantilla.length &&
+          contarUsuario === plantilla.length && contarLlenos === plantilla.length &&
+          contarRol === plantilla.length) {
+          return res.jsonp({ message: 'correcto' });
+        } else {
+          return res.jsonp({ message: 'error' });
+        }
+      }
+      contador = contador + 1;
+    });
+    fs.unlinkSync(filePath);
+  }
+
+  public async VerificarPlantilla_DatosManual(req: Request, res: Response) {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var contarCedulaData = 0;
+    var contarUsuarioData = 0;
+    var contarCodigoData = 0;
+    var contador_arreglo = 1;
+    var arreglos_datos: any = [];
+    //Leer la plantilla para llenar un array con los datos cedula y usuario para verificar que no sean duplicados
+    plantilla.forEach(async (data: any) => {
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, codigo, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio,
+        telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+      let datos_array = {
+        cedula: cedula,
+        usuario: usuario,
+        codigo: codigo
+      }
+      arreglos_datos.push(datos_array);
+    });
+
+    // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+    for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+      for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+        if (arreglos_datos[i].cedula === arreglos_datos[j].cedula) {
+          contarCedulaData = contarCedulaData + 1;
+        }
+        if (arreglos_datos[i].usuario === arreglos_datos[j].usuario) {
+          contarUsuarioData = contarUsuarioData + 1;
+        }
+        if (arreglos_datos[i].codigo === arreglos_datos[j].codigo) {
+          contarCodigoData = contarCodigoData + 1;
+        }
+      }
+      contador_arreglo = contador_arreglo + 1;
+    }
+
+    // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+    console.log('cedula_data', contarCedulaData, plantilla.length, contador_arreglo);
+    console.log('usuario_data', contarUsuarioData, plantilla.length, contador_arreglo);
+    console.log('codigo_data', contarCodigoData, plantilla.length, contador_arreglo);
+    if ((contador_arreglo - 1) === plantilla.length) {
+      if (contarCedulaData === plantilla.length && contarUsuarioData === plantilla.length && contarCodigoData === plantilla.length) {
+        return res.jsonp({ message: 'correcto' });
+      } else {
+        return res.jsonp({ message: 'error' });
+      }
+    }
+    fs.unlinkSync(filePath);
+  }
+
+  public async CargarPlantilla_Manual(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var contador = 1;
+    plantilla.forEach(async (data: any) => {
+
+      // Realiza un capital letter a los nombres y apellidos
+      var nombreE: any;
+      let nombres = data.nombre.split(' ');
+      if (nombres.length > 1) {
+        let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+        let name2 = nombres[1].charAt(0).toUpperCase() + nombres[1].slice(1);
+        nombreE = name1 + ' ' + name2;
+      }
+      else {
+        let name1 = nombres[0].charAt(0).toUpperCase() + nombres[0].slice(1);
+        nombreE = name1
+      }
+
+      var apellidoE: any;
+      let apellidos = data.apellido.split(' ');
+      if (apellidos.length > 1) {
+        let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+        let lastname2 = apellidos[1].charAt(0).toUpperCase() + apellidos[1].slice(1);
+        apellidoE = lastname1 + ' ' + lastname2;
+      }
+      else {
+        let lastname1 = apellidos[0].charAt(0).toUpperCase() + apellidos[0].slice(1);
+        apellidoE = lastname1
+      }
+
+      // Encriptar contraseña
+      const md5 = new Md5();
+      const contrasena = md5.appendStr(data.contrasena).end();
+
+      // Datos que se leen de la plantilla ingresada
+      const { cedula, codigo, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+
+      //Obtener id del rol
+      const id_rol = await pool.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
+
+      // Registro de nuevo empleado
+      await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+
+      // Obtener el id del empleado ingresado
+      const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
+      const id_empleado = oneEmpley.rows[0].id;
+
+      // Registro de los datos de usuario
+      await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+
+      if (contador === plantilla.length) {
+        // Actualización del código
+        await pool.query('UPDATE codigo SET valor = null WHERE id = 1');
+        return res.jsonp({ message: 'correcto' });
+      }
+      contador = contador + 1;
+    });
+    fs.unlinkSync(filePath);
+  }
+
 
   public async createEmpleadoTitulos(req: Request, res: Response): Promise<void> {
     const { observacion, id_empleado, id_titulo } = req.body;

@@ -141,7 +141,7 @@ class FeriadosControlador {
         fs.unlinkSync(filePath);
     }
 
-    public async RevisarDatos_Duplicados(req: Request, res: Response){
+    public async RevisarDatos_Duplicados(req: Request, res: Response) {
         let list: any = req.files;
         let cadena = list.uploads[0].path;
         let filename = cadena.split("\\")[1];
