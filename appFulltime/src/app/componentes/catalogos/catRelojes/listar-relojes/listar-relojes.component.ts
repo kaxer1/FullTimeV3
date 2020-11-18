@@ -163,7 +163,7 @@ export class ListarRelojesComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarRelojes(id_reloj: number) {
     this.rest.EliminarRegistro(id_reloj).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerReloj();
@@ -222,14 +222,37 @@ export class ListarRelojesComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.ObtenerReloj();
-      window.location.reload();
-      this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.', {
-        timeOut: 6000,
-      });
-      this.archivoForm.reset();
-      this.nameFile = '';
+    this.rest.Verificar_Datos_ArchivoExcel(formData).subscribe(res => {
+      if (res.message === 'error') {
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema.',
+          'Verificar los datos ingresados en la plantilla', {
+          timeOut: 10000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      } else {
+        this.rest.VerificarArchivoExcel(formData).subscribe(response => {
+          if (response.message === 'error') {
+            this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema.',
+              'Verificar los datos ingresados en la plantilla', {
+              timeOut: 10000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          } else {
+            this.rest.subirArchivoExcel(formData).subscribe(datos_reloj => {
+              this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.', {
+                timeOut: 10000,
+              });
+              this.archivoForm.reset();
+              this.nameFile = '';
+              window.location.reload();
+            });
+          }
+        });
+      }
     });
   }
 

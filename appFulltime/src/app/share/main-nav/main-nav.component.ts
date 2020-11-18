@@ -348,7 +348,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'local_dining',
         children: [
-          { name: 'Tipo de Comidas', url: '/listarTipoComidas' },
+          { name: 'Almuerzos', url: '/listarTipoComidas' },
         ]
       },
       {
@@ -370,7 +370,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'email',
         children: [
-          { name: 'Notificaciones', url: '/suc-notificaciones' },
+          //{ name: 'Notificaciones', url: '/suc-notificaciones' },
           { name: 'Configurar Permisos', url: '/verTipoPermiso' },
           { name: 'Permisos Solicitados', url: '/permisos-solicitados' },
           { name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados' },
@@ -409,7 +409,7 @@ export class MainNavComponent implements OnInit {
         icono: 'fingerprint',
         children: [
           { name: 'Timbres', url: '/timbres' },
-          { name: 'Asistencia', url: '/asistencia' },
+         // { name: 'Asistencia', url: '/asistencia' },
         ]
       },
       {
