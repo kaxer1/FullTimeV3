@@ -159,8 +159,12 @@ mat-tree {
 
 .texcol{ color: aliceblue; font-size: 14px; text-align: left;}
 
-#icono-menu{ margin: 8px 0px 0px 10px; color: white }
+#icono-menu{ margin: 8px 0px 0px 10px; color: rgb(40, 40, 40) }
 
-#icono-despliega{ color: white}
+#icono-despliega{ color:  rgb(40, 40, 40) }
 
-.name-uno{ margin: 10px 0px 0px 10px; color: white; font-weight: bold; font-size: 18px }
+.name-uno{ margin: 10px 0px 0px 10px; color: rgb(40, 40, 40); font-size: 18px }
+
+#botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px; }
+
+.mensaje-alerta { background-color: rgb(110, 1, 1); margin: 15px; border-radius: 25px; text-align: center;}

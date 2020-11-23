@@ -20,11 +20,15 @@ class RelojesRuta {
         this.router.get('/:id', TokenValidation, RELOJES_CONTROLADOR.ListarUnReloj);
         this.router.post('/', TokenValidation, RELOJES_CONTROLADOR.CrearRelojes);
         this.router.post('/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], RELOJES_CONTROLADOR.CargaPlantillaRelojes);
-        this.router.put('/', TokenValidation,RELOJES_CONTROLADOR.ActualizarReloj);
+        this.router.put('/', TokenValidation, RELOJES_CONTROLADOR.ActualizarReloj);
         this.router.post('/xmlDownload/', TokenValidation, RELOJES_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', RELOJES_CONTROLADOR.downloadXML);
         this.router.delete('/eliminar/:id', TokenValidation, RELOJES_CONTROLADOR.EliminarRegistros);
         this.router.get('/datosReloj/:id', TokenValidation, RELOJES_CONTROLADOR.ListarDatosUnReloj);
+        // Método para verificar datos de plantilla antes de subirlos
+        this.router.post('/verificar_datos/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], RELOJES_CONTROLADOR.VerificarDatos);
+        this.router.post('/verificar_plantilla/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], RELOJES_CONTROLADOR.VerificarPlantilla);
+        this.router.post('/plantillaExcel/', [TokenValidation, multipartMiddlewarePlantilla], RELOJES_CONTROLADOR.CargaPlantillaRelojes);
     }
 }
 

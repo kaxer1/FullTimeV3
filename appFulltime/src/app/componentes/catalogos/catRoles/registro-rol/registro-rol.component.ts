@@ -62,7 +62,9 @@ export class RegistroRolComponent implements OnInit {
       if (this.contador === 0) {
         this.rest.postRoles(dataRol).subscribe(response => {
           console.log(response);
-          this.toastr.success('Operacion Exitosa', 'Rol guardado');
+          this.toastr.success('Operacion Exitosa', 'Rol guardado', {
+            timeOut: 6000,
+          });
           this.limpiarCampos();
           this.salir = true;
         });
@@ -70,7 +72,9 @@ export class RegistroRolComponent implements OnInit {
       else {
         this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo nombre rol ' +
           'que no se encuentre registrado en el sistema.',
-          'Nombre de Rol Duplicado');
+          'Nombre de Rol Duplicado', {
+            timeOut: 6000,
+          });
       }
     })
   }
@@ -90,7 +94,9 @@ export class RegistroRolComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

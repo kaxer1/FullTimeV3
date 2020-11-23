@@ -142,7 +142,9 @@ export class ListarFeriadosComponent implements OnInit {
   Eliminar(id_feriado: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarFeriado(id_feriado).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado', '', {
+        timeOut: 6000,
+      });
       this.ObtenerFeriados();
     });
   }
@@ -182,7 +184,9 @@ export class ListarFeriadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -207,35 +211,61 @@ export class ListarFeriadosComponent implements OnInit {
     console.log(itemName.toLowerCase());
     if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
       if (itemName.toLowerCase() == 'feriados') {
-        this.plantilla();
-        this.ObtenerFeriados();
-        //window.location.reload();
+        this.Revisarplantilla();
       } else {
-        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Seleccione plantilla con nombre Feriados', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
-  plantilla() {
+  Revisarplantilla() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
-      console.log('probando plantilla', res);
+    this.rest.RevisarArchivo(formData).subscribe(res => {
+      console.log('probando plantilla1', res);
       if (res.message === 'error') {
-        this.toastr.error('Uno o varios datos no han sido ingreados por que se encuentran vacios', 'Verificar Plantilla');
-      }
-      else if (res.error === 'error') {
-        this.toastr.error('Uno o varios datos no han sido ingreados por que no tienen el formato adecuado', 'Verificar Plantilla');
-      }
-      else if (res.message === 'correcto') {
-        this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.');
-        //this.ObtenerFeriados();
+        this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados y la fecha de ' +
+          'recuperación debe ser posterior a la fecha del feriado a resgistrar.',
+          'Verificar los datos ingresados en la plantilla', {
+          timeOut: 10000,
+        });
         this.archivoForm.reset();
         this.nameFile = '';
+      }
+      else if (res.message === 'correcto') {
+        this.rest.RevisarArchivoDatos(formData).subscribe(respose => {
+          console.log('probando plantilla2', respose);
+          if (respose.message === 'error') {
+            this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
+              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados y la fecha de ' +
+              'recuperación debe ser posterior a la fecha del feriado a resgistrar.',
+              'Verificar los datos ingresados en la plantilla', {
+              timeOut: 10000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          }
+          else if (respose.message === 'correcto') {
+            this.rest.subirArchivoExcel(formData).subscribe(subido => {
+              console.log('probando plantilla3', subido);
+              window.location.reload();
+              this.toastr.success('Operación Exitosa', 'Plantilla de Feriados importada.', {
+                timeOut: 10000,
+              });
+              this.archivoForm.reset();
+              this.nameFile = '';
+            });
+          }
+        });
       }
     });
   }

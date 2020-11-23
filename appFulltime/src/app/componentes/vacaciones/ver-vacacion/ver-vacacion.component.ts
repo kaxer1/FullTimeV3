@@ -55,6 +55,9 @@ export class VerVacacionComponent implements OnInit {
   datoSolicitud: any = [];
   datosAutorizacion: any = [];
 
+  fechaActual: any;
+  habilitarActualizar: boolean = true;
+
   constructor(
     private restV: VacacionesService,
     private router: Router,
@@ -135,10 +138,32 @@ export class VerVacacionComponent implements OnInit {
 
   // Método para ver la información de la solicitud 
   ObtenerSolicitud(id: any) {
+    var f = moment();
+    this.fechaActual = f.format('YYYY-MM-DD');
     this.datoSolicitud = [];
     this.restV.BuscarDatosSolicitud(id).subscribe(data => {
       this.datoSolicitud = data;
       console.log('datos solicitud', this.datoSolicitud);
+      this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+        var fecha_inicio = moment(this.datoSolicitud[0].fec_inicio);
+        console.log(fecha_inicio.diff(this.fechaActual, 'days'), ' dias de diferencia');
+        if (res[0].cambios === true) {
+          if (res[0].cambios === 0) {
+            this.habilitarActualizar = false;
+          }
+          else {
+            var dias = fecha_inicio.diff(this.fechaActual, 'days');
+            if (dias >= res[0].dias_cambio) {
+              this.habilitarActualizar = false;
+            }
+            else {
+              this.habilitarActualizar = true;
+            }
+          }
+        } else {
+          this.habilitarActualizar = true;
+        }
+      });
     })
   }
 

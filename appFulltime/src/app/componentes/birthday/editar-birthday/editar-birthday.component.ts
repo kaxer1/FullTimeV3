@@ -54,7 +54,9 @@ export class EditarBirthdayComponent implements OnInit {
     console.log(dataMensaje);
     this.restB.EditarBirthday(this.data.id, dataMensaje).subscribe(res => {
       console.log(res);
-      this.toastr.success('Operación exitosa', 'Mensaje Actualizados');
+      this.toastr.success('Operación exitosa', 'Mensaje Actualizados', {
+        timeOut: 6000,
+      });
       this.dialogRef.close(true);
       this.SubirRespaldo(this.data.id)
     })
@@ -90,7 +92,9 @@ export class EditarBirthdayComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.restB.SubirImagenBirthday(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

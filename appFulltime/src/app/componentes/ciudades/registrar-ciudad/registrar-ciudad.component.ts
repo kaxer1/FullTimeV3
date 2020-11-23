@@ -95,7 +95,9 @@ export class RegistrarCiudadComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.paises = [];
       this.provincias = [];
       this.seleccionarPaises = '';
@@ -111,7 +113,9 @@ export class RegistrarCiudadComponent implements OnInit {
       this.provincias = datos;
       this.seleccionarProvincia = '';
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -123,7 +127,9 @@ export class RegistrarCiudadComponent implements OnInit {
       }
     });
     if (idPais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
@@ -140,7 +146,9 @@ export class RegistrarCiudadComponent implements OnInit {
       }
     });
     if (provinciaId === 'Seleccionar') {
-      this.toastr.info('Seleccione una provincia')
+      this.toastr.info('Seleccione una provincia','', {
+        timeOut: 6000,
+      })
     }
     else {
       let datosCiudad = {
@@ -148,10 +156,14 @@ export class RegistrarCiudadComponent implements OnInit {
         id_provincia: provinciaId,
       };
       this.rest.postCiudades(datosCiudad).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Ciudad registrada');
+        this.toastr.success('Operación Exitosa', 'Ciudad registrada', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Ciudad no pudo ser registrada')
+        this.toastr.error('Operación Fallida', 'Ciudad no pudo ser registrada', {
+          timeOut: 6000,
+        })
       });
     }
   }
@@ -183,7 +195,9 @@ export class RegistrarCiudadComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

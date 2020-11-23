@@ -1,7 +1,34 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import { DescargarArchivo, listaCarpetas } from '../../libs/listarArchivos';
 
 class DocumentosControlador {
+
+    public Carpetas(req: Request, res: Response) {
+        let carpetas = [
+            { nombre: 'Contratos', filename: 'contratos' },
+            { nombre: 'Respaldos Horarios', filename: 'docRespaldosHorarios' },
+            { nombre: 'Respaldos Permisos', filename: 'docRespaldosPermisos' },
+            { nombre: 'Documentacion', filename: 'documentacion' }
+        ]
+
+        res.status(200).jsonp(carpetas)
+    }
+
+    public async listarArchivosCarpeta(req: Request, res: Response) {
+        let nombre = req.params.nom_carpeta;
+        res.status(200).jsonp(await listaCarpetas(nombre));
+    }
+    
+    public async DownLoadFile(req: Request, res: Response) {
+        let nombre = req.params.nom_carpeta;
+        let filename = req.params.filename;
+        console.log(nombre, '==========', filename);
+        const path = DescargarArchivo(nombre, filename);
+        console.log(path);
+        
+        res.status(200).sendFile(path);
+    }
 
     public async ListarDocumentos(req: Request, res: Response) {
         const DOCUMENTOS = await pool.query('SELECT * FROM documentacion ORDER BY id');

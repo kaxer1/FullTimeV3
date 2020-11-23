@@ -100,7 +100,9 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   /** Función para eliminar registro seleccionado */
   Eliminar(id_ciudad_asignada: number) {
     this.restF.EliminarRegistro(id_ciudad_asignada).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ListarCiudadesFeriados(this.idFeriado);
     });
   }

@@ -87,7 +87,9 @@ export class EmplCargosComponent implements OnInit {
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -97,7 +99,9 @@ export class EmplCargosComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -117,7 +121,9 @@ export class EmplCargosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -133,11 +139,15 @@ export class EmplCargosComponent implements OnInit {
           this.insertarEmpleadoCargo(form);
         }
         else {
-          this.toastr.info('La fecha de finalización de actividades debe ser posterior a la fecha de inicio de actividades')
+          this.toastr.info('La fecha de finalización de actividades debe ser posterior a la fecha de inicio de actividades','', {
+            timeOut: 6000,
+          })
         }
       }
       else {
-        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.','', {
+          timeOut: 6000,
+        });
       }
     }, error => { });
   }
@@ -155,7 +165,9 @@ export class EmplCargosComponent implements OnInit {
     }
     console.log(dataEmpleadoCargo);
     this.restEmplCargos.postEmpleadoCargosRest(dataEmpleadoCargo).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Cargo del empleado Guardado');
+      this.toastr.success('Operación Exitosa', 'Cargo del empleado Guardado', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaRegistroCargo();
     });
   }

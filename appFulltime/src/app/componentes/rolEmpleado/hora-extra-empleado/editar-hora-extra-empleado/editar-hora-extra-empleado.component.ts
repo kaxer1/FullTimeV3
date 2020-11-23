@@ -100,7 +100,9 @@ export class EditarHoraExtraEmpleadoComponent implements OnInit {
     
     console.log(dataPedirHoraExtra);
     this.restHE.EditarHoraExtra(this.datos.id, dataPedirHoraExtra).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
+      this.toastr.success('Operación Exitosa', 'Hora extra solicitada', {
+        timeOut: 6000,
+      });
       this.dialogRef.close(true);
       console.log(response);
     });
@@ -144,7 +146,9 @@ export class EditarHoraExtraEmpleadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -161,7 +165,9 @@ export class EditarHoraExtraEmpleadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -192,7 +198,9 @@ export class EditarHoraExtraEmpleadoComponent implements OnInit {
       }
     }
     else {
-      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR')
+      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR', {
+        timeOut: 6000,
+      })
     }
   }
 

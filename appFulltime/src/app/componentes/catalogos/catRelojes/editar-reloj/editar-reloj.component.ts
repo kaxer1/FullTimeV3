@@ -144,7 +144,9 @@ export class EditarRelojComponent implements OnInit {
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -154,7 +156,9 @@ export class EditarRelojComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -164,10 +168,14 @@ export class EditarRelojComponent implements OnInit {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro')
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+          timeOut: 6000,
+        })
       }
     }, error => {
-      this.toastr.info('Descripción ingresada no coincide con los registros')
+      this.toastr.info('Descripción ingresada no coincide con los registros','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -193,11 +201,15 @@ export class EditarRelojComponent implements OnInit {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro')
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+          timeOut: 6000,
+        })
       }
       else {
         this.rest.ActualizarDispositivo(datosReloj).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Dispositivo actualizado')
+          this.toastr.success('Operación Exitosa', 'Dispositivo actualizado', {
+            timeOut: 6000,
+          })
           this.CerrarVentanaRegistroReloj();
           if (this.data.actualizar === true) {
             window.location.reload();
@@ -241,7 +253,9 @@ export class EditarRelojComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -258,7 +272,9 @@ export class EditarRelojComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

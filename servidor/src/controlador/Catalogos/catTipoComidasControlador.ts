@@ -82,6 +82,97 @@ class TipoComidasControlador {
         fs.unlinkSync(filePath);
     }
 
+    public async RevisarDatos(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames;
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        var contarDatos = 0;
+        var contarLlenos = 0;
+        var contador = 1;
+
+        plantilla.forEach(async (data: any) => {
+            const { nombre, valor, observacion } = data;
+            if (nombre != undefined && valor != undefined && observacion != undefined) {
+                contarLlenos = contarLlenos + 1;
+            }
+
+            if (observacion != undefined) {
+                var datos_observacion = observacion.toUpperCase();
+            }
+            else {
+                datos_observacion = observacion
+            }
+            const VERIFICAR_DATOS = await pool.query('SELECT * FROM cg_tipo_comidas WHERE UPPER(nombre) = $1 AND ' +
+                'valor = $2 AND UPPER(observacion) = $3',
+                [nombre.toUpperCase(), valor, datos_observacion]);
+            if (VERIFICAR_DATOS.rowCount === 0) {
+                contarDatos = contarDatos + 1;
+            }
+            // Verificación cuando se ha leido todos los datos de la plantilla
+            console.log('datos', contarDatos, plantilla.length, contador);
+            console.log('llenos', contarLlenos, plantilla.length, contador);
+            if (contador === plantilla.length) {
+                if (contarDatos === plantilla.length && contarLlenos === plantilla.length) {
+                    return res.jsonp({ message: 'correcto' });
+                }
+                else {
+                    return res.jsonp({ message: 'error' });
+                }
+            }
+            contador = contador + 1;
+        });
+        fs.unlinkSync(filePath);
+    }
+
+    public async RevisarDatos_Duplicados(req: Request, res: Response) {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames;
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        var contador = 1;
+        var contarDatosData = 0;
+        var array_datos: any = [];
+        plantilla.forEach(async (data: any) => {
+            const { nombre, valor, observacion } = data;
+            let datos_array = {
+                nombre: nombre,
+                valor: valor,
+                observacion: observacion
+            }
+            array_datos.push(datos_array);
+        });
+        console.log('array', array_datos)
+        for (var i = 0; i <= array_datos.length - 1; i++) {
+            for (var j = 0; j <= array_datos.length - 1; j++) {
+                if (array_datos[i].nombre.toUpperCase() === array_datos[j].nombre.toUpperCase() &&
+                    array_datos[i].valor === array_datos[j].valor
+                    && array_datos[i].observacion.toUpperCase() === array_datos[j].observacion.toUpperCase()) {
+                    contarDatosData = contarDatosData + 1;
+                }
+            }
+            contador = contador + 1;
+        }
+        console.log('datos', contarDatosData, plantilla.length, contador);
+        if ((contador - 1) === plantilla.length) {
+            if (contarDatosData === plantilla.length) {
+                return res.jsonp({ message: 'correcto' });
+            }
+            else {
+                return res.jsonp({ message: 'error' });
+            }
+        }
+        fs.unlinkSync(filePath);
+    }
+
     public async EliminarRegistros(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         await pool.query('DELETE FROM cg_tipo_comidas WHERE id = $1', [id]);

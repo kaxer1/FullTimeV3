@@ -12,8 +12,16 @@ export class PlanHoraExtraService {
     private http: HttpClient,
   ) { }
 
+  ConsultarPlanificaciones() {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/planificaciones`);
+  }
+
   CrearPlanificacionHoraExtra(data: any) {
     return this.http.post(`${this.API_URL}/planificacionHoraExtra`, data);
+  }
+
+  ActualizarPlanHoraExtra(id: number, datos: any) {
+    return this.http.put<any>(`${this.API_URL}/planificacionHoraExtra/planificacion/${id}`, datos);
   }
 
   AutorizarTiempoHoraExtra(id: number, hora: any) {
@@ -22,6 +30,10 @@ export class PlanHoraExtraService {
 
   ConsultarPlanHoraExtra() {
     return this.http.get(`${this.API_URL}/planificacionHoraExtra`);
+  }
+
+  ConsultarUltimoPlanHora() {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/id_plan_hora`);
   }
 
   ConsultarPlanHoraExtraObservacion() {
@@ -50,5 +62,14 @@ export class PlanHoraExtraService {
 
   BuscarDatosAutorizacion(id_hora_extra: number) {
     return this.http.get(`${this.API_URL}/planificacionHoraExtra/datosAutorizacion/${id_hora_extra}`);
+  }
+
+  // TABLA plan_hora_extra_empleado
+  CrearPlanHoraExtraEmpleado(data: any) {
+    return this.http.post(`${this.API_URL}/planificacionHoraExtra/hora_extra_empleado`, data);
+  }
+
+  BuscarPlanEmpleados(id_plan_hora: number) {
+    return this.http.get(`${this.API_URL}/planificacionHoraExtra/plan_empleado/${id_plan_hora}`);
   }
 }

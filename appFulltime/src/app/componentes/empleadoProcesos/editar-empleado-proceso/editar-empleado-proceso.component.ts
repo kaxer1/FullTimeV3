@@ -85,7 +85,9 @@ export class EditarEmpleadoProcesoComponent implements OnInit {
       this.InsertarProceso(form);
     }
     else {
-      this.toastr.info('La fecha de finalización debe ser mayor a la fecha de inicio')
+      this.toastr.info('La fecha de finalización debe ser mayor a la fecha de inicio','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -99,10 +101,14 @@ export class EditarEmpleadoProcesoComponent implements OnInit {
     };
     console.log("datos cambiados", datosProceso);
     this.restP.ActualizarUnProceso(datosProceso).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Proceso del Empleado actualizado')
+      this.toastr.success('Operación Exitosa', 'Proceso del Empleado actualizado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroProceso();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Registro Inválido')
+      this.toastr.error('Operación Fallida', 'Registro Inválido', {
+        timeOut: 6000,
+      })
     });
   }
 

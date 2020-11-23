@@ -43,10 +43,14 @@ export class EditarTipoComidasComponent implements OnInit {
       observacion: form.observacionForm
     };
     this.rest.ActualizarUnAlmuerzo(datosTipoComida).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Tipo de comida actualizado')
+      this.toastr.success('Operación Exitosa', 'Tipo de comida actualizado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroTipoComidas();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Tipo de comida no se pudo registrar')
+      this.toastr.error('Operación Fallida', 'Tipo de comida no se pudo registrar', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -70,7 +74,9 @@ export class EditarTipoComidasComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

@@ -49,7 +49,9 @@ export class TituloEmpleadoComponent implements OnInit {
       id_titulo: form.idTituloForm,
     }
     this.restEmpleado.postEmpleadoTitulos(dataTituloEmpleado).subscribe(data => {
-      this.toastr.success('Operacion Exitosa', 'Titulo asignado al empleado');
+      this.toastr.success('Operacion Exitosa', 'Titulo asignado al empleado', {
+        timeOut: 6000,
+      });
       this.limpiarCampos();
       this.metodo.obtenerTituloEmpleado(parseInt(this.idEmploy));
     });
@@ -70,7 +72,9 @@ export class TituloEmpleadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

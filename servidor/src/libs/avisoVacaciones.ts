@@ -144,6 +144,7 @@ export const beforeFiveDays = function () {
         console.log(diaIncrementado);
     
         if (hora === HORA_ENVIO_AVISO_CINCO_DIAS) {
+
             const avisoVacacion = await pool.query('SELECT pv.fec_inicio, pv.fec_final, e.nombre, e.apellido, e.correo FROM peri_vacaciones AS pv, empl_contratos AS ec, empleados AS e WHERE pv.estado = 1 AND pv.id_empl_contrato = ec.id AND ec.id_empleado = e.id AND pv.fec_inicio = $1', [diaIncrementado]);
             console.log(avisoVacacion.rows);
             if (avisoVacacion.rowCount > 0) {

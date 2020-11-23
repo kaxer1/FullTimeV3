@@ -71,7 +71,9 @@ export class EditarRegimenComponent implements OnInit {
       dia_libr_anio_vacacion: form.diaLibreAnioVacacionForm
     };
     if (escribirRegimen === '') {
-      this.toastr.info('Ingresar nombre del Régimen Laboral', 'Campo Obligatorio');
+      this.toastr.info('Ingresar nombre del Régimen Laboral', 'Campo Obligatorio', {
+        timeOut: 6000,
+      });
     }
     else {
       datosRegimen.descripcion = escribirRegimen;
@@ -92,13 +94,19 @@ export class EditarRegimenComponent implements OnInit {
     var diasIncremento = datos.dia_incr_antiguedad;
     var diasAcumulados = datos.max_dia_acumulacion;
     if (parseInt(diasAnio) > parseInt(diasAcumulados)) {
-      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año')
+      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else if (parseInt(diasLibres) > parseInt(diasAnio)) {
-      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año')
+      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else if (parseInt(diasIncremento) > parseInt(diasAnio)) {
-      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año')
+      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else {
       this.FuncionInsertarDatos(datos);
@@ -109,7 +117,9 @@ export class EditarRegimenComponent implements OnInit {
     if ((<HTMLInputElement>document.getElementById('activo')).checked) {
       var diasAnio = form.diaAnioVacacionForm;
       if (diasAnio === '') {
-        this.toastr.info('No ha ingresado días por año');
+        this.toastr.info('No ha ingresado días por año','', {
+          timeOut: 6000,
+        });
         (<HTMLInputElement>document.getElementById('activo')).checked = false;
       }
       else {
@@ -126,7 +136,9 @@ export class EditarRegimenComponent implements OnInit {
 
   FuncionInsertarDatos(datos) {
     this.rest.ActualizarRegimen(datos).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado')
+      this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroRegimen();
       if (this.data.actualizar === true) {
         window.location.reload();
@@ -134,7 +146,9 @@ export class EditarRegimenComponent implements OnInit {
         this.router.navigate(['/verRegimen/', this.data.datosRegimen.id]);
       }
     }, error => {
-      this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó')
+      this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -150,7 +164,9 @@ export class EditarRegimenComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -170,7 +186,9 @@ export class EditarRegimenComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

@@ -93,7 +93,9 @@ export class DispositivosEnroladosComponent implements OnInit {
   /** Función para eliminar registro seleccionado HORARIO*/
   EliminarReloj(id_horario: number) {
     this.restE.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.BuscarDatosEnrolado(this.idEnrolado);
       this.ListarEnroladoDispositivo(this.idEnrolado);
     });

@@ -77,7 +77,9 @@ export class ConfigAsistenciaComponent implements OnInit {
     let jsonTask = JSON.stringify(ObjetoJSON)
     console.log(jsonTask);
     sessionStorage.setItem('arrayConfigAsistencia', jsonTask)
-    this.toastr.success('Configuración guardada')
+    this.toastr.success('Configuración guardada','', {
+      timeOut: 6000,
+    })
     this.dialogRef.close(true)
   }
 }

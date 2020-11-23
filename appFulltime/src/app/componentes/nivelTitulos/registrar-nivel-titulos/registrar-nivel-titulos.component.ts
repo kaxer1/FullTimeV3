@@ -33,7 +33,9 @@ export class RegistrarNivelTitulosComponent implements OnInit {
       nombre: form.NivelTituloNombreForm,
     };
     this.restNivelTitulos.postNivelTituloRest(dataNivelTitulo).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Nivel del título guardado');
+      this.toastr.success('Operación Exitosa', 'Nivel del título guardado', {
+        timeOut: 6000,
+      });
       this.LimpiarCampos();
     }, error => {
     });;
@@ -65,7 +67,9 @@ export class RegistrarNivelTitulosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

@@ -41,12 +41,16 @@ export class OlvidarContraseniaComponent implements OnInit {
     this.rest.forgetPassword(dataPass).subscribe(res => {
       this.respuesta = res;
       if (this.respuesta.mail === 'si') {
-        this.toastr.success('Operción Exitosa', 'Solicitud enviada Revisar su correo electrónico');
+        this.toastr.success('Operción Exitosa', 'Solicitud enviada Revisar su correo electrónico', {
+          timeOut: 6000,
+        });
         this.router.navigate(['/login']);
       }
     }, error => {
       console.log(error);
-      this.toastr.error('Operción Incorrecta', 'El correo no consta en los registros');
+      this.toastr.error('Operción Incorrecta', 'El correo no consta en los registros', {
+        timeOut: 6000,
+      });
       this.correo.reset();
     })
   }

@@ -50,7 +50,9 @@ export class TiempoAutorizadoComponent implements OnInit {
     if (this.data.pagina === 'plan_hora_extra') {
       this.restPlanH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id, h).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message);
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        });
         this.dialogRef.close(true)
       })
     }
@@ -58,7 +60,9 @@ export class TiempoAutorizadoComponent implements OnInit {
       // Guardar horas que el empleador considere de la solicitud de horas extras
       this.restPH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id_hora, h).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message);
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        });
         this.dialogRef.close(true)
       })
     }
@@ -72,7 +76,9 @@ export class TiempoAutorizadoComponent implements OnInit {
     if (this.data.pagina === 'plan_hora_extra') {
       this.restPlanH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id, h).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message);
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        });
         this.dialogRef.close(true)
       })
     }
@@ -80,7 +86,9 @@ export class TiempoAutorizadoComponent implements OnInit {
       // Guardar horas extras realizadas de la solicitud de horas extras
       this.restPH.AutorizarTiempoHoraExtra(this.data.horas_calculadas.id_hora, h).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message);
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        });
         this.dialogRef.close(true)
       })
     }
@@ -98,7 +106,9 @@ export class TiempoAutorizadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -144,7 +154,9 @@ export class TiempoAutorizadoComponent implements OnInit {
     console.log(mensaje);
     this.restPlanH.EnviarMensajeJustificacion(mensaje).subscribe(res => {
       console.log(res.message);
-      this.toastr.success(res.message);
+      this.toastr.success(res.message,'', {
+        timeOut: 6000,
+      });
       this.dialogRef.close(false);
     })
   }

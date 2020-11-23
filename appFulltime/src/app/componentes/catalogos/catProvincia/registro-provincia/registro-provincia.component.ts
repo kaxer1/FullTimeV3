@@ -81,7 +81,9 @@ export class RegistroProvinciaComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.paises = [];
       this.seleccionarPaises = '';
     }
@@ -113,7 +115,9 @@ export class RegistroProvinciaComponent implements OnInit {
     };
 
     if (dataProvincia.id_pais === 'Seleccionar') {
-      this.toastr.info('Seleccionar un país')
+      this.toastr.info('Seleccionar un país','', {
+        timeOut: 6000,
+      })
     }
     else {
       this.rest.getProvinciasRest().subscribe(response => {
@@ -125,14 +129,20 @@ export class RegistroProvinciaComponent implements OnInit {
         })
         if (this.contador === 0) {
           this.rest.postProvinciaRest(dataProvincia).subscribe(response => {
-            this.toastr.success('Registro guardado', 'Provincia - Departamento - Estado');
+            this.toastr.success('Registro guardado', 'Provincia - Departamento - Estado', {
+              timeOut: 6000,
+            });
             this.LimpiarCampos();
           }, error => {
-            this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada');
+            this.toastr.error('Operación Fallida', 'Provincia no pudo ser registrada', {
+              timeOut: 6000,
+            });
           });
         }
         else {
-          this.toastr.error('La provincia ya se encuentra registrada.', 'Nombre Duplicado');
+          this.toastr.error('La provincia ya se encuentra registrada.', 'Nombre Duplicado', {
+            timeOut: 6000,
+          });
         }
       })
     }
@@ -159,7 +169,9 @@ export class RegistroProvinciaComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

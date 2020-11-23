@@ -140,7 +140,9 @@ export class NotificacionesComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -160,10 +162,14 @@ export class NotificacionesComponent implements OnInit {
     }
     this.rest.postNotificacionesRest(newNoti).subscribe(response => {
       if (response.message === 'error') {
-        this.toastr.error('El código ingresado ya esta siendo usado', 'CÓDIGO DE NOTIFICACIÓN DEBE SER ÚNICO');
+        this.toastr.error('El código ingresado ya esta siendo usado', 'CÓDIGO DE NOTIFICACIÓN DEBE SER ÚNICO', {
+          timeOut: 6000,
+        });
       }
       else {
-        this.toastr.success('Operación Exitosa', 'Notificación guardada');
+        this.toastr.success('Operación Exitosa', 'Notificación guardada', {
+          timeOut: 6000,
+        });
         this.limpiarCampos();
         this.setValores();
       }

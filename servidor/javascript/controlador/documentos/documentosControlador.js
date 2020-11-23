@@ -13,7 +13,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
+const listarArchivos_1 = require("../../libs/listarArchivos");
 class DocumentosControlador {
+    Carpetas(req, res) {
+        let carpetas = [
+            { nombre: 'Contratos', filename: 'contratos' },
+            { nombre: 'Respaldos Horarios', filename: 'docRespaldosHorarios' },
+            { nombre: 'Respaldos Permisos', filename: 'docRespaldosPermisos' },
+            { nombre: 'Documentacion', filename: 'documentacion' }
+        ];
+        res.status(200).jsonp(carpetas);
+    }
+    listarArchivosCarpeta(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let nombre = req.params.nom_carpeta;
+            res.status(200).jsonp(yield listarArchivos_1.listaCarpetas(nombre));
+        });
+    }
+    DownLoadFile(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let nombre = req.params.nom_carpeta;
+            let filename = req.params.filename;
+            console.log(nombre, '==========', filename);
+            const path = listarArchivos_1.DescargarArchivo(nombre, filename);
+            console.log(path);
+            res.status(200).sendFile(path);
+        });
+    }
     ListarDocumentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const DOCUMENTOS = yield database_1.default.query('SELECT * FROM documentacion ORDER BY id');

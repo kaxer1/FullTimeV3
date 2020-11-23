@@ -130,7 +130,9 @@ export class SeleccionarRolPermisoComponent implements OnInit {
 
     this.rest.postRolPermisoRest(dataRol).subscribe(res => {
 
-      this.toastr.success('Operacion Exitosa', 'Rol Permiso guardado');
+      this.toastr.success('Operacion Exitosa', 'Rol Permiso guardado', {
+        timeOut: 6000,
+      });
       
       // sacar id de la tabla rol permiso
       this.guardarRol = res;

@@ -278,8 +278,10 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { MatTreeModule } from '@angular/material/tree';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
@@ -298,6 +300,11 @@ import { AyudaComponent } from './share/ayuda/ayuda.component';
 import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
 import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
 import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
+import { CorreoEmpresaComponent } from './componentes/catalogos/catEmpresa/correo-empresa/correo-empresa.component';
+import { ListaPlanificacionesComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-planificaciones/lista-planificaciones.component';
+import { EditarPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/editar-plan-hora-extra/editar-plan-hora-extra.component';
+import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
+import { EmplLeafletComponent } from './componentes/settings/leaflet/empl-leaflet/empl-leaflet.component';
 
 @NgModule({
   declarations: [
@@ -519,6 +526,11 @@ import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-hor
     ReporteEmpleadosComponent,
     ReporteKardexComponent,
     ReporteHorasPedidasComponent,
+    CorreoEmpresaComponent,
+    ListaPlanificacionesComponent,
+    EditarPlanHoraExtraComponent,
+    ListaArchivosComponent,
+    EmplLeafletComponent,
   ],
 
   imports: [
@@ -568,7 +580,8 @@ import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-hor
     MatMenuModule,
     ScrollingModule,
     JwPaginationModule,
-    MatTreeModule
+    MatTreeModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     AuthGuard,

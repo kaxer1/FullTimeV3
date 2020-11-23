@@ -57,7 +57,9 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
     this.ValidarMinEspera(form, datosDetalleH);
     console.log(datosDetalleH);
     this.rest.ActualizarRegistro(datosDetalleH).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado')
+      this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaDetalleHorario();
     }, error => {
     });
@@ -75,7 +77,9 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

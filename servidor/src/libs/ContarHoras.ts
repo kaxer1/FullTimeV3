@@ -1,5 +1,5 @@
 import pool from '../database';
-import moment from 'moment';
+import moment, { min } from 'moment';
 import {ITiempoLaboral, IAsistenciaDetalle} from '../class/Asistencia'
 
 const HORA_EJECUTA_PROCESO = 12;
@@ -214,12 +214,13 @@ function ListaSinTimbres_DiaLibre(hoy: string, bool: boolean, id_horarios: numbe
         accion: 'L', 
         tecl_funcion: 0,
         labora: bool,
-        id_horarios: id_horarios
+        id_horarios: id_horarios,
+        orden: 0
     }]
 }
 
-async function ListaTimbresDiario(hoy: any, id_empleado: number, bool: boolean, id_horarios: number) {
-    return await pool.query('SELECT fec_hora_timbre, accion, tecl_funcion FROM timbres WHERE id_empleado = $2 AND CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ORDER BY fec_hora_timbre', [hoy, id_empleado])
+async function ListaTimbresDiario(hoy: any, id_empleado: number, bool: boolean, id_horarios: number, IhorarioLaboral: any) {
+    let timbres = await pool.query('SELECT fec_hora_timbre, accion, tecl_funcion FROM timbres WHERE id_empleado = $2 AND CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ORDER BY fec_hora_timbre', [hoy, id_empleado])
     .then(result => {
         return result.rows.map(obj => {
             obj.fec_hora_timbre.setUTCHours(obj.fec_hora_timbre.getHours());
@@ -228,10 +229,43 @@ async function ListaTimbresDiario(hoy: any, id_empleado: number, bool: boolean, 
                 accion: obj.accion, 
                 tecl_funcion: obj.tecl_funcion,
                 labora: bool,
-                id_horarios: id_horarios
+                id_horarios: id_horarios,
+                orden: IhorarioLaboral.map((mapping1:ITiempoLaboral) => {
+                    return mapping1.datos.filter(o => {
+
+                        const hora: number = parseInt(o.hora.split(':')[0]);
+
+                        let fi_hora = hora - 1;
+                        fi_hora < 0 ? fi_hora = 23 : fi_hora = fi_hora;
+                        
+                        let ff_hora = hora + 1;
+                        ff_hora === 24 ? ff_hora = 0: ff_hora = ff_hora;
+
+                        var fi = new Date(obj.fec_hora_timbre)
+                        fi.setUTCHours(fi_hora)
+                        fi.setUTCMinutes(0)
+                        fi.setUTCSeconds(0)
+
+                        var fhora = new Date(obj.fec_hora_timbre)
+
+                        var ff = new Date(obj.fec_hora_timbre)
+                        ff.setUTCHours(ff_hora)
+                        ff.setUTCMinutes(0)
+                        ff.setUTCSeconds(0)
+                        
+                        // console.log(ff, fhora, fi);
+                        return (ff >= fhora && fi <= fhora)
+                    }).map(mapping2 => {
+                        return mapping2.orden
+                    })[0]
+                })[0]
             }
-        })
+        });
     });
+
+    console.log(timbres);
+    
+    return timbres
 }
 
 function DiaEspaniol(dia: number) {
@@ -489,16 +523,16 @@ function AsistenciaDetalleConsolidado(arr: any, IhorarioLaboral: any, id_cargo: 
                 let entrada_almuerzo_default = ele_map.datos[2].hora.split(':')[0] + ':' + ele_map.datos[2].hora.split(':')[1];
                 let salida_default = ele_map.datos[3].hora.split(':')[0] + ':' + ele_map.datos[3].hora.split(':')[1];
 
-                if ( obj.accion === 'E') {
+                if ( obj.orden === 1) {
                     detalleAsistencia.E.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0,5)
 
-                } else if ( obj.accion === 'S/A') {
+                } else if ( obj.orden === 2) {
                     detalleAsistencia.S_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0,5)
                     
-                } else if ( obj.accion === 'E/A') {
+                } else if ( obj.orden === 3) {
                     detalleAsistencia.E_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0,5)
                     
-                } else if ( obj.accion === 'S') {
+                } else if ( obj.orden === 4) {
                     detalleAsistencia.S.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0,5)
                     // Fecha
                     detalleAsistencia.fecha = obj.fec_hora_timbre.toJSON();
@@ -539,12 +573,16 @@ function AsistenciaDetalleConsolidado(arr: any, IhorarioLaboral: any, id_cargo: 
                     detalleAsistencia.sal_antes = CalcularSalidasAntes(detalleAsistencia.S_A, detalleAsistencia.S);
                     // almuerzo
                     detalleAsistencia.almuerzo = CalcularAlmuerzo(detalleAsistencia.S_A, detalleAsistencia.E_A);
+                    // 
+                    // detalleAsistencia.hora_trab = '';
+                    // detalleAsistencia.hora_ex_L_V = '';
+                    // detalleAsistencia.hora_ex_S_D = '';
     
                     // Calculos Faltantes
                     let calculados = CalcularCamposFaltantes(detalleAsistencia, obj.labora) as IAsistenciaDetalle
                     // horas trabaja
                     calculados.hora_trab = CalcularHorasTrabaja(calculados.E, calculados.S, calculados.atraso, calculados.sal_antes, calculados.almuerzo) || '08:00'
-                    // console.log(result.length);
+
                     calculados.hora_supl = '00:00';
                     calculados.hora_ex_L_V = '00:00';
                     calculados.hora_ex_S_D = '00:00';
@@ -567,9 +605,10 @@ async function MetodoModelarDetalleAsistencia(id_empleado: number, desde: Date, 
     
     let horarios = await GenerarHorarioEmpleado(id_cargo, desde, hasta);
     console.log('horarios===',horarios);
+
     let arr: any[] = await Promise.all(horarios.map(async(obj:any) => {
 
-        let aux = await ListaTimbresDiario(obj.fec_iterada, id_empleado, obj.boolena_fecha, obj.id_horarios)
+        let aux = await ListaTimbresDiario(obj.fec_iterada, id_empleado, obj.boolena_fecha, obj.id_horarios, IhorarioLaboral)
         if (aux.length != 0) {
             return aux
         } else {
@@ -577,7 +616,9 @@ async function MetodoModelarDetalleAsistencia(id_empleado: number, desde: Date, 
             return nuevo
         }        
     }))
+    // console.log('########################################################');
     // console.log(arr);
+    // console.log('########################################################');
     
     let AsistenciaArray = AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo);
 
@@ -611,9 +652,10 @@ export const ContarHorasByCargo = async function(id_empleado: number, desde: Dat
             return result
         }) as ITiempoLaboral;
     }))
-    // horaIngresoEmpl.forEach(obj => {
-    //     console.log(obj);
-    // })
+    console.log('IhorarioLaboral===');
+    horaIngresoEmpl.forEach(obj => {
+        console.log(obj);
+    })
     
     const empleado = await ObtenerInformacionEmpleado(id_empleado)
     

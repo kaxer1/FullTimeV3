@@ -61,13 +61,17 @@ export class ConfigurarCodigoComponent implements OnInit {
     }
     if (form.inicioForm != '') {
       this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
-        this.toastr.success('Configuración Registrada');
+        this.toastr.success('Configuración Registrada','', {
+          timeOut: 6000,
+        });
         this.router.navigate(['/empleado/']);
       })
       this.Limpiar();
     }
     else {
-      this.toastr.info('Por favor ingresar un valor para generación de código')
+      this.toastr.info('Por favor ingresar un valor para generación de código','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -79,7 +83,9 @@ export class ConfigurarCodigoComponent implements OnInit {
       manual: this.manualF
     }
     this.rest.CrearCodigo(dataCodigo).subscribe(datos => {
-      this.toastr.success('Configuración Registrada');
+      this.toastr.success('Configuración Registrada','', {
+        timeOut: 6000,
+      });
       this.router.navigate(['/empleado/']);
     })
     this.Limpiar();
@@ -96,19 +102,25 @@ export class ConfigurarCodigoComponent implements OnInit {
       this.rest.ObtenerCodigoMAX().subscribe(datosE => {
         if (parseInt(datosE[0].codigo) < parseInt(form.inicioForm)) {
           this.rest.ActualizarCodigoTotal(dataCodigo).subscribe(datos => {
-            this.toastr.success('Configuración Registrada');
+            this.toastr.success('Configuración Registrada','', {
+              timeOut: 6000,
+            });
             this.router.navigate(['/empleado/']);
           })
           this.Limpiar();
         }
         else {
           this.toastr.info('Para el buen funcionamiento del sistema ingrese un nuevo valor y recuerde que ' +
-            'este debe ser diferente a los valores anteriormente registrados.');
+            'este debe ser diferente a los valores anteriormente registrados.', '',{
+              timeOut: 6000,
+            });
         }
       })
     }
     else {
-      this.toastr.info('Por favor ingresar un valor para generación de código');
+      this.toastr.info('Por favor ingresar un valor para generación de código','', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -120,7 +132,9 @@ export class ConfigurarCodigoComponent implements OnInit {
       manual: this.manualF
     }
     this.rest.ActualizarCodigoTotal(dataCodigo).subscribe(datos => {
-      this.toastr.success('Configuración Registrada');
+      this.toastr.success('Configuración Registrada','', {
+        timeOut: 6000,
+      });
       this.router.navigate(['/empleado/']);
     })
     this.Limpiar();
@@ -156,7 +170,9 @@ export class ConfigurarCodigoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

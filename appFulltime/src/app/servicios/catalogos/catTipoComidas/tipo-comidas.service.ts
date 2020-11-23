@@ -29,11 +29,20 @@ export class TipoComidasService {
     return this.http.post(`${this.API_URL}/tipoComidas/xmlDownload`, data);
   }
 
-  subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/tipoComidas/upload', formData)
-  }
-
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/tipoComidas/eliminar/${id}`);
+  }
+
+  // Servicios para verificar y subir datos
+  subirArchivoExcel(formData) {
+    return this.http.post<any>(this.API_URL + '/tipoComidas/upload', formData)
+  }
+
+  Verificar_Datos_ArchivoExcel(formData) {
+    return this.http.post<any>(this.API_URL + '/tipoComidas/verificar_datos/upload', formData)
+  }
+
+  VerificarArchivoExcel(formData) {
+    return this.http.post<any>(this.API_URL + '/tipoComidas/verificar_plantilla/upload', formData)
   }
 }

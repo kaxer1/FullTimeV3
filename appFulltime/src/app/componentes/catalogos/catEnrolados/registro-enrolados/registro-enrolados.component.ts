@@ -94,7 +94,9 @@ export class RegistroEnroladosComponent implements OnInit {
       codigo: form.codigoForm
     };
     this.rest.postEnroladosRest(dataEnrolado).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Enrolado con éxito');
+      this.toastr.success('Operacion Exitosa', 'Enrolado con éxito', {
+        timeOut: 6000,
+      });
       this.rest.BuscarUltimoId().subscribe(response => {
         this.idUltimoEnrolado = response;
         console.log(this.idUltimoEnrolado);
@@ -115,12 +117,16 @@ export class RegistroEnroladosComponent implements OnInit {
       console.log("id_user", this.idUser[0].id)
       this.rest.BuscarRegistroUsuario(this.idUser[0].id).subscribe(datos => {
         this.usuariosEnrolados = datos;
-        this.toastr.info('Se le recuerda que el usuario ya fue enrolado')
+        this.toastr.info('Se le recuerda que el usuario ya fue enrolado','', {
+          timeOut: 6000,
+        })
       }, error => {
         this.insertarEnrolado(form, this.idUser[0].id);
       });
     }, error => {
-      this.toastr.info('Registro no encontrado')
+      this.toastr.info('Registro no encontrado','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -139,7 +145,9 @@ export class RegistroEnroladosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -156,7 +164,9 @@ export class RegistroEnroladosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

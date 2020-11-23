@@ -27,17 +27,6 @@
                     help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Estado</mat-label>
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Indica atraso o puntualidad de ingreso a trabajar">
-                    help_outline</mat-icon>
-                <mat-select [formControl]="estadoF" required [disabled]="true">
-                    <mat-option *ngFor="let e of estados" [value]="e.id">
-                        {{e.nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field>
                 <mat-label>Fecha Inicio Actividades</mat-label>
                 <input matInput [matDatepicker]="picker2" [formControl]="fechaInicioF" required>
                 <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
@@ -77,13 +66,6 @@
                     (click)="LimpiarCampoHoras()">
                 <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                     matTooltip="Hora en la que finaliza las actividades de horas extras">
-                    help_outline</mat-icon>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Tipo de Función</mat-label>
-                <input matInput [formControl]="funcionF">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Indicar si hay control de entrada y salida">
                     help_outline</mat-icon>
             </mat-form-field>
         </div>

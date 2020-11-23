@@ -67,7 +67,9 @@ export class RegistroProcesoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -92,7 +94,9 @@ export class RegistroProcesoComponent implements OnInit {
 
       this.rest.postProcesoRest(dataProceso)
         .subscribe(response => {
-          this.toastr.success('Operacion Exitosa', 'Proceso guardado');
+          this.toastr.success('Operacion Exitosa', 'Proceso guardado', {
+            timeOut: 6000,
+          });
           this.limpiarCampos();
         }, error => {
           console.log(error);
@@ -110,7 +114,9 @@ export class RegistroProcesoComponent implements OnInit {
 
         this.rest.postProcesoRest(dataProceso)
           .subscribe(response => {
-            this.toastr.success('Operacion Exitosa', 'Proceso guardado');
+            this.toastr.success('Operacion Exitosa', 'Proceso guardado', {
+              timeOut: 6000,
+            });
             this.limpiarCampos();
           }, error => {
             console.log(error);

@@ -87,7 +87,9 @@ export class PlanificacionComidasComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -123,7 +125,9 @@ export class PlanificacionComidasComponent implements OnInit {
       hora_fin: form.horaFinForm
     };
     this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Registrado')
+      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Registrado', {
+        timeOut: 6000,
+      })
       this.CerrarRegistroPlanificacion();
     }, error => {
     });

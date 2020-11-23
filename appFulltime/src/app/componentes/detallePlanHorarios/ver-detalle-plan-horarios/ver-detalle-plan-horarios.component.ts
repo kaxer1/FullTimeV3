@@ -90,7 +90,9 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarDetalle(id_detalle: number) {
     this.restDP.EliminarRegistro(id_detalle).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ListarDetalles(this.idPlanH);
     });
   }
@@ -123,10 +125,14 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       if (itemName.toLowerCase() == 'detalle planificacion empleado') {
         this.plantillaDetalle();
       } else {
-        this.toastr.error('Solo se acepta Platilla con nombre Detalle Planificacion Empleado', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta Platilla con nombre Detalle Planificacion Empleado', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -137,7 +143,9 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       console.log('ver', this.archivoSubido[i])
     }
     this.restDP.subirArchivoExcel(parseInt(this.idPlanH), formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.ListarDetalles(this.idPlanH);
       this.archivo1Form.reset();
       this.nameFile = '';

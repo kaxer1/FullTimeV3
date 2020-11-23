@@ -51,7 +51,9 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
     this.id_empleado_loggin = parseInt(localStorage.getItem('empleado'));
     this.tiempo();
     if (this.data.datosSeleccionados.estado === 1) {
-      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
+      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.','', {
+        timeOut: 6000,
+      })
     } else {
       this.estadoAutorizacionesForm.patchValue({
         estadoF: this.data.datosSeleccionados.estado
@@ -78,7 +80,9 @@ export class EditarEstadoVacacionAutoriacionComponent implements OnInit {
 
     this.restA.PutEstadoAutoVacacion(newAutorizaciones).subscribe(res => {
       this.autorizacion = [res];
-      this.toastr.success('Operación Exitosa', 'Estado Actualizado');
+      this.toastr.success('Operación Exitosa', 'Estado Actualizado', {
+        timeOut: 6000,
+      });
       this.EditarEstadoVacacion(form, this.data.datosSeleccionados.id_vacacion, this.data.id_rece_emp, this.data.datosSeleccionados.id_departamento);
       this.dialogRef.close();
     })

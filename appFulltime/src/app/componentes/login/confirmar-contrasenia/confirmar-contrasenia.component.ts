@@ -40,7 +40,9 @@ export class ConfirmarContraseniaComponent implements OnInit {
 
   compararContrasenia(form){
     if (form.nPass != form.cPass){
-      this.toastr.error('Incorrecto', 'Las constrasenias no coinciden');
+      this.toastr.error('Incorrecto', 'Las constrasenias no coinciden', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -58,10 +60,14 @@ export class ConfirmarContraseniaComponent implements OnInit {
       this.mensaje = res;
       if (this.mensaje.expiro === 'si') {
         this.router.navigate(['/olvidar-contrasenia']);
-        this.toastr.error(this.mensaje.message, 'Ups algo a salido mal' );
+        this.toastr.error(this.mensaje.message, 'Ups algo a salido mal', {
+          timeOut: 6000,
+        } );
       } else {
         this.router.navigate(['/login']);
-        this.toastr.success('Operación exitosa', this.mensaje.message);
+        this.toastr.success('Operación exitosa', this.mensaje.message, {
+          timeOut: 6000,
+        });
       }
     });
   }

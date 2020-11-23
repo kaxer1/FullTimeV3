@@ -80,7 +80,9 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -90,7 +92,9 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -107,7 +111,9 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     }
     console.log(autorizarDepar);
     this.restAutoriza.ActualizarDatos(autorizarDepar).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorización actualizada');
+      this.toastr.success('Operación Exitosa', 'Autorización actualizada', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaAutorizar();
       this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
     });

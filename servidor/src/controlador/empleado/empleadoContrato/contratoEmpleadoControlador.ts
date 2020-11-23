@@ -32,7 +32,6 @@ class ContratoEmpleadoControlador {
         res.jsonp({ message: 'El contrato ha sido registrado', id: ultimo.rows[0].id });
     }
 
-
     public async EncontrarIdContrato(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
         const CONTRATO = await pool.query('SELECT ec.id FROM empl_contratos AS ec, empleados AS e WHERE ec.id_empleado = e.id AND e.id = $1 ORDER BY ec.fec_ingreso DESC ', [id_empleado]);

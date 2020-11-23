@@ -1,3 +1,9 @@
+@media (max-width: 992px) {
+    .home-inner {
+        padding-top: 100px;
+    }
+}
+
 mat-form-field { width: 230px; }
 
 img { width: 100%};
@@ -23,8 +29,3 @@ mat-card { width: 300px; border-style: groove; border-radius: 25px; text-align: 
 
 .caja2 { text-align: center; font-size: 13px; margin-bottom: 10px; margin-top: 12px; color: rgb(177, 173, 173);}
 
-@media (max-width: 992px) {
-    .home-inner {
-        padding-top: 100px;
-    }
-}

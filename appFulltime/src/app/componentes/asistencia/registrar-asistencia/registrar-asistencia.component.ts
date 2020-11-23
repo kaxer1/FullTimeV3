@@ -56,7 +56,9 @@ export class RegistrarAsistenciaComponent implements OnInit {
   
     IngresarDatos(datos) {
       this.rest.postTipoPermisoRest(datos).subscribe(res => {
-        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado', {
+          timeOut: 6000,
+        });
         window.location.reload();
       }, error => {
       });
@@ -78,7 +80,9 @@ export class RegistrarAsistenciaComponent implements OnInit {
         }
       }
       if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-        this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+        this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+          timeOut: 6000,
+        })
         return false;
       }
     }

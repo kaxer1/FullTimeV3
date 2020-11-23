@@ -81,7 +81,9 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
       this.InsertarDetallePlanHorario(form);
     }
     else {
-      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.');
+      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.','', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -91,7 +93,9 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
       fecha: form.fechaForm
     }
     this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
-      this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
+      this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.','', {
+        timeOut: 6000,
+      })
     }, error => {
       let datosDetallePlanH = {
         fecha: form.fechaForm,
@@ -100,7 +104,9 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
         id_cg_horarios: form.horarioForm,
       };
       this.rest.RegistrarDetallesPlanHorario(datosDetallePlanH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado');
+        this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario registrado', {
+          timeOut: 6000,
+        });
         this.IngresarPlanGeneral(form);
         console.log('fechas', moment(form.fechaForm).format('YYYY-MM-DD'))
         this.CerrarVentanaDetallePlanHorario();

@@ -61,21 +61,140 @@ class RelojesControlador {
         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
         plantilla.forEach(async (data: any) => {
+            // Dtaos de la plantilla ingresada
+            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante,
+                mac, tiene_funciones, sucursal, departamento } = data;
+            // Buscar id de la sucursal ingresada
+            const id_sucursal = await pool.query('SELECT id FROM sucursales WHERE UPPER(nombre) = $1', [sucursal.toUpperCase()]);
 
-            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tiene_funciones, sucursal, departamento } = data;
+            const id_departamento = await pool.query('SELECT id FROM cg_departamentos WHERE UPPER(nombre) = $1 AND ' +
+                'id_sucursal = $2', [departamento.toUpperCase(), id_sucursal.rows[0]['id']]);
 
-            const id_sucursal = await pool.query('SELECT id FROM sucursales WHERE nombre = $1', [sucursal]);
-
-            const id_departamento = await pool.query('SELECT id FROM cg_departamentos WHERE nombre = $1 AND id_sucursal = $2', [departamento, id_sucursal.rows[0]['id']]);
-
-            if (nombre != undefined) {
-                console.log(data);
-                await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac, tiene_funciones, id_sucursal.rows[0]['id'], id_departamento.rows[0]['id']]);
-            } else {
-                res.jsonp({ error: 'plantilla equivocada' });
-            }
+            await pool.query('INSERT INTO cg_relojes (nombre, ip, puerto, contrasenia, marca, modelo, serie, ' +
+                'id_fabricacion, fabricante, mac, tien_funciones, id_sucursal, id_departamento ) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)',
+                [nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante, mac,
+                    tiene_funciones, id_sucursal.rows[0]['id'], id_departamento.rows[0]['id']]);
+            return res.jsonp({ message: 'correcto' });
         });
-        res.jsonp({ message: 'La plantilla a sido receptada' });
+        fs.unlinkSync(filePath);
+    }
+
+    public async VerificarDatos(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames;
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        var contarNombre = 0;
+        var contarIP = 0;
+        var contarSucursal = 0;
+        var contarDepartamento = 0;
+        var contarLlenos = 0;
+        var contador = 1;
+        plantilla.forEach(async (data: any) => {
+            // Datos que se leen de la plantilla ingresada
+            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante,
+                mac, tiene_funciones, sucursal, departamento } = data;
+
+            //Verificar que el nombre del equipo no se encuentre registrado
+            const VERIFICAR_NOMBRE = await pool.query('SELECT * FROM cg_relojes WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
+            if (VERIFICAR_NOMBRE.rowCount === 0) {
+                contarNombre = contarNombre + 1;
+            }
+
+            //Verificar que la IP del dispositivo no se encuentre registrado
+            const VERIFICAR_IP = await pool.query('SELECT * FROM cg_relojes WHERE ip = $1', [ip]);
+            if (VERIFICAR_IP.rowCount === 0) {
+                contarIP = contarIP + 1;
+            }
+
+            //Verificar que la sucursal exista dentro del sistema
+            const VERIFICAR_SUCURSAL = await pool.query('SELECT id FROM sucursales WHERE UPPER(nombre) = $1', [sucursal.toUpperCase()]);
+            if (VERIFICAR_SUCURSAL.rowCount > 0) {
+                contarSucursal = contarSucursal + 1;
+                // Verificar que el departamento exista dentro del sistema
+                const VERIFICAR_DEPARTAMENTO = await pool.query('SELECT id FROM cg_departamentos WHERE UPPER(nombre) = $1 AND id_sucursal = $2',
+                    [departamento.toUpperCase(), VERIFICAR_SUCURSAL.rows[0]['id']]);
+                if (VERIFICAR_DEPARTAMENTO.rowCount > 0) {
+                    contarDepartamento = contarDepartamento + 1;
+                }
+            }
+
+            //Verificar que los datos obligatorios no esten vacios
+            if (nombre != undefined && ip != undefined && puerto != undefined && sucursal != undefined &&
+                departamento != undefined && tiene_funciones != undefined) {
+                contarLlenos = contarLlenos + 1;
+            }
+
+            // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+            console.log('nombre', contarNombre, plantilla.length, contador);
+            console.log('ip', contarIP, plantilla.length, contador);
+            console.log('sucursal', contarSucursal, plantilla.length, contador);
+            console.log('departamento', contarDepartamento, plantilla.length, contador);
+            console.log('llenos', contarLlenos, plantilla.length, contador);
+            if (contador === plantilla.length) {
+                if (contarNombre === plantilla.length && contarIP === plantilla.length &&
+                    contarSucursal === plantilla.length && contarLlenos === plantilla.length &&
+                    contarDepartamento === plantilla.length) {
+                    return res.jsonp({ message: 'correcto' });
+                } else {
+                    return res.jsonp({ message: 'error' });
+                }
+            }
+            contador = contador + 1;
+        });
+        fs.unlinkSync(filePath);
+    }
+
+    public async VerificarPlantilla(req: Request, res: Response) {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames;
+        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        var contarNombreData = 0;
+        var contarIP_Data = 0;
+        var contador_arreglo = 1;
+        var arreglos_datos: any = [];
+        //Leer la plantilla para llenar un array con los datos cedula y usuario para verificar que no sean duplicados
+        plantilla.forEach(async (data: any) => {
+            // Datos que se leen de la plantilla ingresada
+            const { nombre, ip, puerto, contrasenia, marca, modelo, serie, id_fabricacion, fabricante,
+                mac, tiene_funciones, sucursal, departamento } = data;
+            let datos_array = {
+                nombre: nombre,
+                ip: ip,
+            }
+            arreglos_datos.push(datos_array);
+        });
+        // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+        for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+            for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+                if (arreglos_datos[i].nombre.toUpperCase() === arreglos_datos[j].nombre.toUpperCase()) {
+                    contarNombreData = contarNombreData + 1;
+                }
+                if (arreglos_datos[i].ip === arreglos_datos[j].ip) {
+                    contarIP_Data = contarIP_Data + 1;
+                }
+            }
+            contador_arreglo = contador_arreglo + 1;
+        }
+
+        // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+        console.log('nombre_data', contarNombreData, plantilla.length, contador_arreglo);
+        console.log('ip', contarIP_Data, plantilla.length, contador_arreglo);
+        if ((contador_arreglo - 1) === plantilla.length) {
+            if (contarNombreData === plantilla.length && contarIP_Data === plantilla.length) {
+                return res.jsonp({ message: 'correcto' });
+            } else {
+                return res.jsonp({ message: 'error' });
+            }
+        }
         fs.unlinkSync(filePath);
     }
 
