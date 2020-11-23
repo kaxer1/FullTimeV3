@@ -49,4 +49,8 @@ export class UsuarioService {
       );
   }
 
+  crearAccesosSistema(data: any) {
+    return this.http.post(`${this.API_URL}/usuarios/acceso`, data);
+  }
+
 }

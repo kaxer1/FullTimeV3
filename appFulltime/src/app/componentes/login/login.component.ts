@@ -3,8 +3,10 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Md5 } from 'ts-md5/dist/md5';
-
+import * as moment from 'moment';
+moment.locale('es');
 import { LoginService } from '../../servicios/login/login.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +34,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public rest: LoginService,
+    public restU: UsuarioService,
     private router: Router,
     private toastr: ToastrService) {
     this.validarCredencialesF.setValue({
@@ -42,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.url = this.router.url;
-    console.log(this.url); 
+    console.log(this.url);
     // console.log(window.history.back());
   }
 
@@ -62,7 +65,7 @@ export class LoginComponent implements OnInit {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form.passwordF).end();
-    
+
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
       pass: clave
@@ -72,6 +75,7 @@ export class LoginComponent implements OnInit {
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
       console.log(datos)
       if (datos.message === 'error') {
+        this.IngresoSistema(form.usuarioF, 'Fallido');
         this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
           timeOut: 6000,
         })
@@ -93,7 +97,7 @@ export class LoginComponent implements OnInit {
         if (datos.rol === 1) { // Admin
           if (!!localStorage.getItem("redireccionar")) {
             let id_permiso = parseInt(localStorage.getItem("redireccionar"));
-            this.router.navigate(['/ver-permiso/',id_permiso]);
+            this.router.navigate(['/ver-permiso/', id_permiso]);
             localStorage.removeItem("redireccionar");
           } else {
             this.router.navigate(['/home'])
@@ -102,11 +106,33 @@ export class LoginComponent implements OnInit {
         if (datos.rol === 2) { //Empleado
           this.router.navigate(['/estadisticas']);
         }
-        
+        this.IngresoSistema(form.usuarioF, 'Exitoso');
       }
     }, error => {
 
     })
+  }
+
+  IngresoSistema(user, acceso: string) {
+    var h = new Date();
+    var f = moment();
+    var fecha = f.format('YYYY-MM-DD');
+    // Formato de hora actual
+    if (h.getMinutes() < 10) {
+      var time = h.getHours() + ':0' + h.getMinutes();
+    }
+    else {
+      var time = h.getHours() + ':' + h.getMinutes();
+    }
+
+    let dataAcceso = {
+      modulo: 'login',
+      user_name: user,
+      fecha: fecha,
+      hora: time,
+      acceso: acceso
+    }
+    this.restU.crearAccesosSistema(dataAcceso).subscribe(datos => { })
   }
 
 }

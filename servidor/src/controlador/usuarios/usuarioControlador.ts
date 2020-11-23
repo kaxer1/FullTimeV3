@@ -84,6 +84,16 @@ class UsuarioControlador {
     }
   }
 
+
+  //ACCESOS AL SISTEMA
+  public async AuditarAcceso(req: Request, res: Response) {
+    const { modulo, user_name, fecha, hora, acceso } = req.body;
+    await pool.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso ) ' +
+      'VALUES ($1, $2, $3, $4, $5)', [modulo, user_name, fecha, hora, acceso]);
+    return res.jsonp({ message: 'Auditoria Realizada' });
+  }
+
+
 }
 
 export const USUARIO_CONTROLADOR = new UsuarioControlador();

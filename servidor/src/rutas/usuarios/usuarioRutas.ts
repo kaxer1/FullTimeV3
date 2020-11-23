@@ -17,6 +17,7 @@ class UsuarioRutas {
         this.router.put('/', TokenValidation, USUARIO_CONTROLADOR.CambiarPasswordUsuario);
         this.router.get('/noEnrolados', TokenValidation, USUARIO_CONTROLADOR.ListarUsuriosNoEnrolados);
         this.router.put('/actualizarDatos', TokenValidation, USUARIO_CONTROLADOR.ActualizarUsuario);
+        this.router.post('/acceso', USUARIO_CONTROLADOR.AuditarAcceso);
     }
 }
 
