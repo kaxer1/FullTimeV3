@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
 import { VerificarHorario } from '../../libs/MetodosHorario';
-import { enviarMail, email } from '../../libs/settingsMail'
+import { enviarMail, email, Credenciales } from '../../libs/settingsMail'
 const nodemailer = require("nodemailer");
 
 class HorasExtrasPedidasControlador {
@@ -73,11 +73,12 @@ class HorasExtrasPedidasControlador {
   }
 
   public async CrearHoraExtraPedida(req: Request, res: Response): Promise<any> {
-    const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, depa_user_loggin } = req.body;
+    const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora,
+      descripcion, estado, observacion, tipo_funcion, depa_user_loggin, codigo } = req.body;
     await pool.query('INSERT INTO hora_extr_pedidos ( id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, ' +
-      'fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion ) ' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
-      [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion]);
+      'fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo ) ' +
+      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)',
+      [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, num_hora, descripcion, estado, observacion, tipo_funcion, codigo]);
 
     const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, ' +
       's.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.hora_extra_mail, c.hora_extra_noti ' +
@@ -120,6 +121,7 @@ class HorasExtrasPedidasControlador {
   }
 
   public async SendMailNotifiHoraExtra(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
     const { id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, hora_extra_mail, hora_extra_noti } = req.body;
     const ultimo = await pool.query('SELECT id, estado FROM hora_extr_pedidos WHERE id_empl_cargo = $1 AND id_usua_solicita = $2 AND fec_inicio = $3 AND fec_final = $4 AND fec_solicita = $5', [id_empl_cargo, id_usua_solicita, fec_inicio, fec_final, fec_solicita]);
     const correoInfoPideHoraExtra = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecr.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC LIMIT 1', [id_empl_cargo]);
@@ -187,6 +189,7 @@ class HorasExtrasPedidasControlador {
   }
 
   public async ActualizarEstado(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
     const id = req.params.id;
     const { estado, id_hora_extra, id_departamento } = req.body;
     console.log(estado, id_hora_extra, id_departamento);

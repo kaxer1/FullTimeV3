@@ -86,7 +86,9 @@ export class EditarPlanComidasComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -123,7 +125,9 @@ export class EditarPlanComidasComponent implements OnInit {
       id: this.data.id
     };
     this.restPlan.ActualizarDatos(datosPlanComida).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado')
+      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado', {
+        timeOut: 6000,
+      })
       this.CerrarRegistroPlanificacion();
     }, error => {
     });

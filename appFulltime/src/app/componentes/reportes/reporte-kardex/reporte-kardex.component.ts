@@ -112,16 +112,22 @@ export class ReporteKardexComponent implements OnInit {
     var f_f = new Date(form.fec_final)
 
     if (f_i < f_f) {
-      this.toastr.success('Fechas validas');
+      this.toastr.success('Fechas validas','', {
+        timeOut: 6000,
+      });
       this.f_inicio_reqK = f_i.toJSON().split('T')[0];
       this.f_final_reqK = f_f.toJSON().split('T')[0];
       this.habilitarK = true
       this.estiloK = { 'visibility': 'visible' };
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial');
+      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+        timeOut: 6000,
+      });
       this.fechasKardexForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final');
+      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+        timeOut: 6000,
+      });
       this.fechasKardexForm.reset();
     }
     console.log(f_i.toJSON());
@@ -137,7 +143,9 @@ export class ReporteKardexComponent implements OnInit {
         this.generarPdf(palabra, 3)
       })
     } else {
-      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
+      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -493,7 +501,9 @@ export class ReporteKardexComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -510,7 +520,9 @@ export class ReporteKardexComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

@@ -42,8 +42,6 @@ td { padding-top: 10px; text-align: center; }
     display:flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
-    height: 150px;
 }
 
 .btn-contenedor figure{

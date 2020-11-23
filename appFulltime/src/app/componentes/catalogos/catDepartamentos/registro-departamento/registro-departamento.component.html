@@ -70,3 +70,12 @@
         (click)="InsertarDepartamento(nuevoDepartamentoForm.value)" value="Guardar">
     <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroDepartamento()" value="Salir">
 </div>
+
+<div class="pantalla-progress" *ngIf="habilitarprogress">
+    <mat-progress-spinner
+        class="progress"
+        [color]="color"
+        [mode]="mode"
+        [value]="value">
+    </mat-progress-spinner>
+</div>

@@ -111,11 +111,15 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
           this.InsertarEmpleadoHorario(form);
         }
         else {
-          this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.');
+          this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.','', {
+            timeOut: 6000,
+          });
         }
       }
       else {
-        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.');
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.','', {
+          timeOut: 6000,
+        });
       }
     }, error => {
     });
@@ -130,7 +134,9 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       fechaFinal: form.fechaFinalForm,
     };
     this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(response => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario');
+      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario','', {
+        timeOut: 6000,
+      });
     }, error => {
       let datosempleH = {
         id_empl_cargo: this.datoEmpleado.idCargo,
@@ -149,7 +155,9 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
       };
       console.log(datosempleH);
       this.rest.IngresarEmpleadoHorarios(datosempleH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado');
+        this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
+          timeOut: 6000,
+        });
         this.IngresarPlanGeneral(form);
         this.CerrarVentanaEmpleadoHorario();
       });
@@ -161,7 +169,9 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     this.detalles = [];
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
       this.detalles = res;
-      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado');
+      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
+      //  timeOut: 6000,
+      //});
       this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
       this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
       this.finDate = moment(form.fechaFinalForm).format('MM-DD-YYYY');

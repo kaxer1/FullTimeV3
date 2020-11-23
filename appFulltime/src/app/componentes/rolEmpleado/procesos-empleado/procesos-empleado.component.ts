@@ -84,7 +84,9 @@ export class ProcesosEmpleadoComponent implements OnInit {
           this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -92,7 +94,9 @@ export class ProcesosEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarProceso(id_plan: number) {
     this.restEmpleadoProcesos.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
     });
   }

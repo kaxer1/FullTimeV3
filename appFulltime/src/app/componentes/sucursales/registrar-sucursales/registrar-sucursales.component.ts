@@ -147,7 +147,9 @@ export class RegistrarSucursalesComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.paises = [];
       this.provincias = [];
       this.nombreCiudades = [];
@@ -164,7 +166,9 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.provincias = datos;
       this.seleccionarProvincia = '';
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -176,7 +180,9 @@ export class RegistrarSucursalesComponent implements OnInit {
       }
     });
     if (idPais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
@@ -191,14 +197,18 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.nombreCiudades = datos;
       this.seleccionarCiudad = '';
     }, error => {
-      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
   FiltrarCiudades(form) {
     let nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.seleccionarCiudad = '';
     }
     else {
@@ -209,7 +219,9 @@ export class RegistrarSucursalesComponent implements OnInit {
   SeleccionarCiudad(form) {
     var nombreCiudad = form.idCiudadForm;
     if (nombreCiudad === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -245,7 +257,9 @@ export class RegistrarSucursalesComponent implements OnInit {
     };
 
     this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Sucursal guardada');
+      this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
+        timeOut: 6000,
+      });
       this.LimpiarCampos();
       //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
       this.restSucursal.EncontrarUltimoId().subscribe(datos => {

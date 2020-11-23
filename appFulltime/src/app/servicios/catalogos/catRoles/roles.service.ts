@@ -19,6 +19,10 @@ export class RolesService {
     return this.http.get<any>(`${this.API_URI}/rol/${id}`);
   }
 
+  ListarRolesActualiza(id: number) {
+    return this.http.get<any>(`${this.API_URI}/rol/actualiza/${id}`);
+  }
+
   postRoles(data: any) {
     console.log(data);
     return this.http.post(`${this.API_URI}/rol`, data);

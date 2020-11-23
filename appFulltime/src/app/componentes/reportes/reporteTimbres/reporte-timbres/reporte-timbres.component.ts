@@ -144,7 +144,9 @@ export class ReporteTimbresComponent implements OnInit {
   timbres: any = [];
   VerTimbresEmpleado(id_seleccionado, form, archivo) {
     if (form.inicioForm === '' || form.finalForm === '') {
-      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+      this.toastr.info('Ingresar fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA', {
+        timeOut: 6000,
+      })
     }
     else {
       if (Date.parse(form.inicioForm) <= Date.parse(form.finalForm)) {
@@ -165,12 +167,16 @@ export class ReporteTimbresComponent implements OnInit {
             this.LimpiarFechas();
           }
         }, error => {
-          this.toastr.info('No existen timbres registrado en el periodo indicado.', 'VERIFICAR')
+          this.toastr.info('No existen timbres registrado en el periodo indicado.', 'VERIFICAR', {
+            timeOut: 6000,
+          })
         }
         );
       }
       else {
-        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+        this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+          timeOut: 6000,
+        });
       }
     }
 
@@ -191,7 +197,9 @@ export class ReporteTimbresComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -208,7 +216,9 @@ export class ReporteTimbresComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

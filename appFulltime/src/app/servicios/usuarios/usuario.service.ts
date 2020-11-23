@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,10 @@ export class UsuarioService {
   }
 
   postUsuarioRest(data: any) {
-    return this.http.post(`${this.API_URL}/usuarios`, data);
+    return this.http.post(`${this.API_URL}/usuarios`, data)
+      .pipe(
+        catchError(data)
+      );
   }
 
   BuscarDatosUser(id: number) {
@@ -39,7 +43,12 @@ export class UsuarioService {
   }
 
   ActualizarDatos(data: any) {
-    return this.http.put(`${this.API_URL}/usuarios/actualizarDatos`, data);
+    return this.http.put(`${this.API_URL}/usuarios/actualizarDatos`, data).pipe(
+      catchError(data));
+  }
+
+  crearAccesosSistema(data: any) {
+    return this.http.post(`${this.API_URL}/usuarios/acceso`, data);
   }
 
 }

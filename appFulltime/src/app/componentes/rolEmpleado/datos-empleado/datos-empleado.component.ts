@@ -419,7 +419,9 @@ export class DatosEmpleadoComponent implements OnInit {
       this.vistaRegistrarDatos.open(RegistrarVacacionesComponent,
         { width: '900px', data: { idEmpleado: this.idEmpleado, idPerVacacion: this.idPerVacacion[0].id, idContrato: this.idPerVacacion[0].idcontrato } }).disableClose = true;
     }, error => {
-      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+      this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -431,7 +433,9 @@ export class DatosEmpleadoComponent implements OnInit {
       this.vistaRegistrarDatos.open(RegistroPlanHorarioComponent,
         { width: '300px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).disableClose = true;
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -451,10 +455,14 @@ export class DatosEmpleadoComponent implements OnInit {
             this.obtenerPermisos(parseInt(this.idEmpleado));
           });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+        this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+          timeOut: 6000,
+        })
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -660,7 +668,9 @@ export class DatosEmpleadoComponent implements OnInit {
       formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.restEmpleado.subirImagen(formData, parseInt(this.idEmpleado)).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'imagen subida.');
+      this.toastr.success('Operación Exitosa', 'imagen subida.', {
+        timeOut: 6000,
+      });
       this.verEmpleado(this.idEmpleado)
       this.archivoForm.reset();
       this.nameFile = '';

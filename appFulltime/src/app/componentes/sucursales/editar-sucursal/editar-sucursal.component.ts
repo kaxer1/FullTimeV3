@@ -90,7 +90,9 @@ export class EditarSucursalComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.paises = [];
       this.provincias = [];
       this.nombreCiudades = [];
@@ -108,14 +110,18 @@ export class EditarSucursalComponent implements OnInit {
       //console.log("datos-provincia2:", this.provincias)
       //this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados')
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+        timeOut: 6000,
+      })
     })
   }
 
   FiltrarProvincias(form) {
     var nombrePais = form.nombrePaisForm;
     if (nombrePais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.provincias = [];
       this.seleccionarProvincia = '';
     }
@@ -131,14 +137,18 @@ export class EditarSucursalComponent implements OnInit {
       // console.log("todas las ciuaddaes", this.nombreCiudades);
       //this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
     }, error => {
-      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas')
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
   FiltrarCiudades(form) {
     var nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
       this.seleccionarCiudad = '';
     }
     else {
@@ -149,7 +159,9 @@ export class EditarSucursalComponent implements OnInit {
   SeleccionarCiudad(form) {
     var nombreCiudad = form.idCiudadForm;
     if (nombreCiudad === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -205,7 +217,9 @@ export class EditarSucursalComponent implements OnInit {
       id_empresa: form.idEmpresaForm
     };
     this.restSucursal.ActualizarSucursal(dataSucursal).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Sucursal actualizada');
+      this.toastr.success('Operación Exitosa', 'Sucursal actualizada', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaRegistroSucursal();
     }, error => {
     });

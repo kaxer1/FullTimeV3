@@ -16,6 +16,17 @@ class RolesControlador {
     }
   }
 
+  public async ListarRolesActualiza(req: Request, res: Response) {
+    const id = req.params.id;
+    const ROL = await pool.query('SELECT * FROM cg_roles WHERE NOT id = $1', [id]);
+    if (ROL.rowCount > 0) {
+      return res.jsonp(ROL.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
   public async ObtnenerUnRol(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
     const ROL = await pool.query('SELECT * FROM cg_roles WHERE id = $1', [id]);
@@ -41,7 +52,7 @@ class RolesControlador {
   public async EliminarRol(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
     await pool.query('DELETE FROM cg_roles WHERE id = $1', [id]);
-      res.jsonp({ message: 'Registro eliminado' });
+    res.jsonp({ message: 'Registro eliminado' });
   }
 
   // public async update(req: Request, res: Response): Promise<void> {
@@ -61,16 +72,16 @@ class RolesControlador {
   // }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
-    var xml = builder.create('root').ele(req.body).end({ pretty: true});
+    var xml = builder.create('root').ele(req.body).end({ pretty: true });
     console.log(req.body.userName);
     let filename = "Roles-" + req.body.userName + '-' + req.body.userId + '-' + new Date().getTime() + '.xml';
-    fs.writeFile(`xmlDownload/${filename}`, xml, function(err) {
-      if(err) {
+    fs.writeFile(`xmlDownload/${filename}`, xml, function (err) {
+      if (err) {
         return console.log(err);
       }
       console.log("Archivo guardado");
     });
-    res.jsonp({ text: 'XML creado', name: filename});
+    res.jsonp({ text: 'XML creado', name: filename });
   }
 
   public async downloadXML(req: Request, res: Response): Promise<any> {

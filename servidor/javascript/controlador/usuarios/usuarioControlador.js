@@ -77,16 +77,35 @@ class UsuarioControlador {
     // }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
-            yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
-            res.jsonp({ message: 'Usuario Guardado' });
+            try {
+                const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
+                yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
+                res.jsonp({ message: 'Usuario Guardado' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
         });
     }
     ActualizarUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { usuario, contrasena, id_rol, id_empleado } = req.body;
-            yield database_1.default.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
-            res.jsonp({ message: 'Usuario Actualizado' });
+            try {
+                const { usuario, contrasena, id_rol, id_empleado } = req.body;
+                yield database_1.default.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
+                res.jsonp({ message: 'Usuario Actualizado' });
+            }
+            catch (error) {
+                return res.jsonp({ message: 'error' });
+            }
+        });
+    }
+    //ACCESOS AL SISTEMA
+    AuditarAcceso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { modulo, user_name, fecha, hora, acceso } = req.body;
+            yield database_1.default.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso ) ' +
+                'VALUES ($1, $2, $3, $4, $5)', [modulo, user_name, fecha, hora, acceso]);
+            return res.jsonp({ message: 'Auditoria Realizada' });
         });
     }
 }

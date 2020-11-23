@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -14,7 +14,6 @@ interface opcionesRegimen {
   selector: 'app-regimen',
   templateUrl: './regimen.component.html',
   styleUrls: ['./regimen.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegimenComponent implements OnInit {
@@ -69,7 +68,9 @@ export class RegimenComponent implements OnInit {
       this.LimpiarDiasMeses();
       this.IngresarDatosOtro();
       this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-      this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Etiqueta Régimen Laboral Activa')
+      this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Etiqueta Régimen Laboral Activa', {
+        timeOut: 6000,
+      })
     }
     else if (nombreRegimen === 'CODIGO DE TRABAJO') {
       this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
@@ -90,7 +91,9 @@ export class RegimenComponent implements OnInit {
       this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.IngresarDatosOtro();
       this.LimpiarDiasMeses();
-      this.toastr.info('No ha seleccionado ninguna opción')
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -144,7 +147,9 @@ export class RegimenComponent implements OnInit {
     };
     if (nombreRegimen === 'OTRO') {
       if (escribirRegimen === '') {
-        this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Campo Obligatorio');
+        this.toastr.info('Ingresar nombre del nuevo Régimen Laboral', 'Campo Obligatorio', {
+          timeOut: 6000,
+        });
       }
       else {
         datosRegimen.descripcion = escribirRegimen;
@@ -153,7 +158,9 @@ export class RegimenComponent implements OnInit {
       }
     }
     else if (nombreRegimen === 'Seleccionar') {
-      this.toastr.info('Seleccionar nombre del nuevo Régimen Laboral', 'Campo Obligatorio');
+      this.toastr.info('Seleccionar nombre del nuevo Régimen Laboral', 'Campo Obligatorio', {
+        timeOut: 6000,
+      });
     }
     else {
       datosRegimen.descripcion = nombreRegimen;
@@ -174,13 +181,19 @@ export class RegimenComponent implements OnInit {
     var diasIncremento = datos.dia_incr_antiguedad;
     var diasAcumulados = datos.max_dia_acumulacion;
     if (parseInt(diasAnio) > parseInt(diasAcumulados)) {
-      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año')
+      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else if (parseInt(diasLibres) > parseInt(diasAnio)) {
-      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año')
+      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else if (parseInt(diasIncremento) > parseInt(diasAnio)) {
-      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año')
+      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año','', {
+        timeOut: 6000,
+      })
     }
     else {
       this.FuncionInsertarDatos(datos);
@@ -191,7 +204,9 @@ export class RegimenComponent implements OnInit {
     if ((<HTMLInputElement>document.getElementById('activo')).checked) {
       var diasAnio = form.diaAnioVacacionForm;
       if (diasAnio === '') {
-        this.toastr.info('No ha ingresado días por año');
+        this.toastr.info('No ha ingresado días por año','', {
+          timeOut: 6000,
+        });
         (<HTMLInputElement>document.getElementById('activo')).checked = false;
       }
       else {
@@ -209,14 +224,20 @@ export class RegimenComponent implements OnInit {
   FuncionInsertarDatos(datos) {
     this.rest.CrearNuevoRegimen(datos).subscribe(response => {
       if (response.message === 'error') {
-        this.toastr.error('Revisarlo en la lista y actualizar los datos si desea realizar cambios en la configuración del Régimen Laboral', 'Régimen Laboral ya esta configurado');
+        this.toastr.error('Revisarlo en la lista y actualizar los datos si desea realizar cambios en la configuración del Régimen Laboral', 'Régimen Laboral ya esta configurado', {
+          timeOut: 6000,
+        });
       }
       else {
-        this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado');
+        this.toastr.success('Operación Exitosa', 'Régimen Laboral guardado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
       }
     }, error => {
-      this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó')
+      this.toastr.error('Operación Fallida', 'Régimen Laboral no se guardó', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -232,7 +253,9 @@ export class RegimenComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -252,7 +275,9 @@ export class RegimenComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

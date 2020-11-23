@@ -16,24 +16,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
-
-export interface EmpleadoElemento {
-  apellido: string;
-  cedula: string;
-  codigo: string;
-  correo: string;
-  domicilio: string;
-  esta_civil: number;
-  estado: number;
-  fec_nacimiento: string;
-  genero: number;
-  id: number;
-  id_nacionalidad: number;
-  imagen: string
-  mail_alternativo: string;
-  nombre: string;
-  telefono: string;
-}
+import { EmpleadoElemento } from '../../../model/empleado.model'
 
 @Component({
   selector: 'app-lista-empleados',
@@ -45,7 +28,6 @@ export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   nacionalidades: any = [];
-  // displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -84,6 +66,7 @@ export class ListaEmpleadosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.DescargarPlantilla();
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
@@ -258,7 +241,9 @@ export class ListaEmpleadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -275,7 +260,9 @@ export class ListaEmpleadosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -300,6 +287,7 @@ export class ListaEmpleadosComponent implements OnInit {
       this.nacionalidades = res;
     });
   }
+
   /**
    * Metodos y variables para subir plantilla
    */
@@ -309,26 +297,42 @@ export class ListaEmpleadosComponent implements OnInit {
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      this.archivoSubido = element.target.files;
-      this.nameFile = this.archivoSubido[0].name;
-      let arrayItems = this.nameFile.split(".");
-      let itemExtencion = arrayItems[arrayItems.length - 1];
-      let itemName = arrayItems[0].slice(0, 9);
-      console.log(itemName.toLowerCase());
-      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-        if (itemName.toLowerCase() == 'empleados') {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems = this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (this.datosCodigo[0].automatico === true) {
+        var itemName = arrayItems[0].slice(0, 18);
+        if (itemName.toLowerCase() == 'empleadoautomatico') {
+          console.log('entra_automatico');
           this.plantilla();
         } else {
-          this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
         }
-      } else {
-        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    }, error => {
-      this.toastr.info('Primero configurar el código de empleado.');
-      this.router.navigate(['/codigo/']);
-    });
+      else {
+        itemName = arrayItems[0].slice(0, 14);
+        if (itemName.toLowerCase() == 'empleadomanual') {
+          console.log('entra_manual');
+          this.plantilla();
+        } else {
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
+          this.archivoForm.reset();
+          this.nameFile = '';
+        }
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
+      this.archivoForm.reset();
+      this.nameFile = '';
+    }
   }
 
   plantilla() {
@@ -336,19 +340,107 @@ export class ListaEmpleadosComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.verificarArchivoExcel(formData).subscribe(res => {
+    if (this.datosCodigo[0].automatico === true) {
+      this.ArchivoAutomatico(formData);
+    }
+    else {
+      this.ArchivoManual(formData);
+    }
+  }
+
+  ArchivoAutomatico(datosArchivo) {
+    this.rest.verificarArchivoExcel_Automatico(datosArchivo).subscribe(res => {
+      console.log('plantilla 1', res);
       if (res.message === "error") {
-        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido');
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+          'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+          'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+          'Registro Fallido. Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
       } else {
-        this.rest.subirArchivoExcel(formData).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
-          //this.getEmpleados();
-          window.location.reload();
+        this.rest.verificarArchivoExcel_DatosAutomatico(datosArchivo).subscribe(response => {
+          console.log('plantilla 2', response);
+          if (response.message === "error") {
+            this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+              'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+              'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+              'Registro Fallido. Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          } else {
+            this.rest.subirArchivoExcel_Automatico(datosArchivo).subscribe(datos_archivo => {
+              console.log('plantilla 3', datos_archivo);
+              this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+                timeOut: 6000,
+              });
+              window.location.reload();
+            });
+          }
         });
       }
     });
-    this.archivoForm.reset();
-    this.nameFile = '';
+  }
+
+  ArchivoManual(datosArchivo) {
+    this.rest.verificarArchivoExcel_Manual(datosArchivo).subscribe(res => {
+      console.log('plantilla 1', res);
+      if (res.message === "error") {
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+          'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+          'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+          'Registro Fallido. Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivoForm.reset();
+        this.nameFile = '';
+      } else {
+        this.rest.verificarArchivoExcel_DatosManual(datosArchivo).subscribe(response => {
+          console.log('plantilla 2', response);
+          if (response.message === "error") {
+            this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+              'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+              'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+              'Registro Fallido. Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          } else {
+            this.rest.subirArchivoExcel_Manual(datosArchivo).subscribe(datos_archivo => {
+              console.log('plantilla 3', datos_archivo);
+              this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+                timeOut: 6000,
+              });
+              window.location.reload();
+            });
+          }
+        });
+      }
+    });
+  }
+
+  link: string = null;
+  datosCodigo: any = [];
+  DescargarPlantilla() {
+    this.datosCodigo = [];
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.datosCodigo = datos;
+      if (datos[0].automatico === true) {
+        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoAutomatico.xlsx"
+      } else {
+        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoManual.xlsx"
+      }
+    }, error => {
+      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado', '', {
+        timeOut: 6000,
+      });
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   /* ****************************************************************************************************

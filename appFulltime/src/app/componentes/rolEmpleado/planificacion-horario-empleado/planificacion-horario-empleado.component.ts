@@ -101,7 +101,9 @@ export class PlanificacionHorarioEmpleadoComponent implements OnInit {
           this.obtenerPlanHorarios(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -114,7 +116,9 @@ export class PlanificacionHorarioEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanificacion(id_plan: number) {
     this.restPlanH.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerPlanHorarios(parseInt(this.idEmpleado));
     });
   }

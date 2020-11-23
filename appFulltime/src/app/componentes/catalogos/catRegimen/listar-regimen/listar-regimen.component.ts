@@ -127,7 +127,9 @@ export class ListarRegimenComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -157,7 +159,9 @@ export class ListarRegimenComponent implements OnInit {
   Eliminar(id_regimen: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_regimen).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerRegimen();
     });
   }

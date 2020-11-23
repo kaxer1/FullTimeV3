@@ -9,7 +9,7 @@ const pool = new pg_pool_1.default({
     user: 'fulltime',
     host: '192.168.0.156',
     port: 5432,
-    database: 'fullTimeV3',
+    database: 'fulltimeActual3',
     password: 'fulltime',
 });
 pool.query('SELECT NOW()', (err, res) => {

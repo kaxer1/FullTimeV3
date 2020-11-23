@@ -176,7 +176,9 @@ export class RegistrarVacacionesComponent implements OnInit {
   ImprimirCalculos(form) {
     console.log(form.calcularForm);
     if (form.fecInicioForm === '' || form.fecFinalForm === '') {
-      this.toastr.info('Aún no ha ingresado fecha de inicio o fin de vacaciones')
+      this.toastr.info('Aún no ha ingresado fecha de inicio o fin de vacaciones', '', {
+        timeOut: 6000,
+      })
       this.LimpiarCalculo();
     }
     else {
@@ -185,7 +187,9 @@ export class RegistrarVacacionesComponent implements OnInit {
           this.VerificarFeriado(form);
         }
         else {
-          this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
+          this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones', '', {
+            timeOut: 6000,
+          });
           (<HTMLInputElement>document.getElementById('activo')).checked = false;
         }
       } else {
@@ -227,11 +231,15 @@ export class RegistrarVacacionesComponent implements OnInit {
         this.InsertarVacaciones(form);
       }
       else {
-        this.toastr.info('La fecha de ingreso a laborar no es la adecuada')
+        this.toastr.info('La fecha de ingreso a laborar no es la adecuada', '', {
+          timeOut: 6000,
+        })
       }
     }
     else {
-      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones');
+      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones', '', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -249,7 +257,8 @@ export class RegistrarVacacionesComponent implements OnInit {
       legalizado: form.legalizadoForm,
       id_peri_vacacion: this.datoEmpleado.idPerVacacion,
       depa_user_loggin: parseInt(localStorage.getItem('departamento')),
-      id_empl_cargo: this.datoEmpleado.idCargo
+      id_empl_cargo: this.datoEmpleado.idCargo,
+      codigo: this.empleados[0].codigo
     };
     console.log(datosVacaciones);
     this.restV.RegistrarVacaciones(datosVacaciones).subscribe(response => {
@@ -307,10 +316,14 @@ export class RegistrarVacacionesComponent implements OnInit {
 
       });
 
-      this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas')
+      this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroVacaciones();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Registro Inválido')
+      this.toastr.error('Operación Fallida', 'Registro Inválido', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -336,7 +349,9 @@ export class RegistrarVacacionesComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

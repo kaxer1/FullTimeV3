@@ -375,20 +375,19 @@ class PermisosControlador {
 
     public async EditarPermiso(req: Request, res: Response): Promise<void> {
         const id = req.params.id
-        const { descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre } = req.body;
+        const { descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre, hora_salida, hora_ingreso } = req.body;
         console.log(descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre);
         if (anterior_doc === null && docu_nombre === null) {
-            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8 WHERE id = $9', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, id]);
+            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, hora_salida = $9, hora_ingreso = $10 WHERE id = $11', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, hora_salida, hora_ingreso, id]);
             res.jsonp({ message: 'Permiso Editado' });
         } else {
-            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, docu_nombre = $9 WHERE id = $10', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, docu_nombre, id]);
+            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, docu_nombre = $9, hora_salida = $10, hora_ingreso = $11 WHERE id = $12', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, docu_nombre, hora_salida, hora_ingreso, id]);
             console.log(anterior_doc, docu_nombre);
             let filePath = `servidor\\docRespaldosPermisos\\${anterior_doc}`
             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
             fs.unlinkSync(direccionCompleta);
             res.jsonp({ message: 'Permiso Editado' });
         }
-
     }
 }
 

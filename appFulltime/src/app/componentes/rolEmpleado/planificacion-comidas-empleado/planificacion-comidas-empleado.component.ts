@@ -63,7 +63,9 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanComidas(id_plan: number) {
     this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
     });
   }

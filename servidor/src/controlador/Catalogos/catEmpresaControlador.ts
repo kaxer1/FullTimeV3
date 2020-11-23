@@ -8,7 +8,7 @@ import pool from '../../database';
 class EmpresaControlador {
 
     public async ListarEmpresa(req: Request, res: Response) {
-        const EMPRESA = await pool.query('SELECT * FROM cg_empresa ORDER BY nombre ASC');
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa ORDER BY nombre ASC');
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -19,7 +19,7 @@ class EmpresaControlador {
 
     public async ListarUnaEmpresa(req: Request, res: Response) {
         const { nombre } = req.params;
-        const EMPRESA = await pool.query('SELECT * FROM cg_empresa WHERE nombre = $1', [nombre]);
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE nombre = $1', [nombre]);
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -35,8 +35,8 @@ class EmpresaControlador {
     }
 
     public async ActualizarEmpresa(req: Request, res: Response): Promise<void> {
-        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id } = req.body;
-        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 WHERE id = $9', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id]);
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, cambios = $10 WHERE id = $11', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id]);
         res.jsonp({ message: 'Empresa actualizada exitosamente' });
     }
 
@@ -67,7 +67,7 @@ class EmpresaControlador {
 
     public async ListarEmpresaId(req: Request, res: Response) {
         const { id } = req.params;
-        const EMPRESA = await pool.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE id = $1', [id]);
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -126,6 +126,15 @@ class EmpresaControlador {
         const { color_p, color_s, id } = req.body;
         await pool.query('UPDATE cg_empresa SET color_p = $1, color_s = $2 WHERE id = $3', [color_p, color_s, id]);
         res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
+    }
+
+    public async EditarPassword(req: Request, res: Response): Promise<void> {
+        const id = req.params.id_empresa
+        const {correo, password_correo} = req.body;
+        console.log('Objeto ===== ',req.body);
+
+        await pool.query('UPDATE cg_empresa SET correo = $1, password_correo = $2 WHERE id = $3',[correo, password_correo, id]);
+        res.status(200).jsonp({message: 'Guardada la configuracion de credenciales'})
     }
     
 }

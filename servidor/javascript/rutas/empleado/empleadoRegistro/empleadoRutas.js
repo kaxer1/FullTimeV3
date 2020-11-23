@@ -31,13 +31,22 @@ class EmpleadoRutas {
         this.router.post('/', verificarToken_1.TokenValidation, empleadoControlador_1.default.create);
         this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, empleadoControlador_1.default.FileXML);
         this.router.post('/emplTitulos/', verificarToken_1.TokenValidation, empleadoControlador_1.default.createEmpleadoTitulos);
-        this.router.post('/verificar/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.VerificarPlantilla);
-        this.router.post('/cargar/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargarPlantilla);
+        /** Rutas de acceso a la carga de datos de forma automática */
+        this.router.post('/verificar/automatico/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.VerificarPlantilla_Automatica);
+        this.router.post('/verificar/datos/automatico/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.VerificarPlantilla_DatosAutomatico);
+        this.router.post('/cargar_automatico/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargarPlantilla_Automatico);
+        /** Rutas de acceso a la carga de datos de forma manual */
+        this.router.post('/verificar/manual/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.VerificarPlantilla_Manual);
+        this.router.post('/verificar/datos/manual/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.VerificarPlantilla_DatosManual);
+        this.router.post('/cargar_manual/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], empleadoControlador_1.default.CargarPlantilla_Manual);
         this.router.delete('/eliminar/titulo/:id_empleado_titulo', verificarToken_1.TokenValidation, empleadoControlador_1.default.eliminarTituloDelEmpleado);
         this.router.post('/buscarDepartamento', verificarToken_1.TokenValidation, empleadoControlador_1.default.ObtenerDepartamentoEmpleado);
+        // Código del empleado
         this.router.get('/encontrarDato/codigo', verificarToken_1.TokenValidation, empleadoControlador_1.default.ObtenerCodigo);
         this.router.post('/crearCodigo', verificarToken_1.TokenValidation, empleadoControlador_1.default.CrearCodigo);
         this.router.put('/cambiarCodigo', verificarToken_1.TokenValidation, empleadoControlador_1.default.ActualizarCodigo);
+        this.router.put('/cambiarValores', verificarToken_1.TokenValidation, empleadoControlador_1.default.ActualizarCodigoTotal);
+        this.router.get('/encontrarDato/codigo/empleado', verificarToken_1.TokenValidation, empleadoControlador_1.default.ObtenerMAXCodigo);
         this.router.get('/desactivados/empleados', verificarToken_1.TokenValidation, empleadoControlador_1.default.listaEmpleadosDesactivados);
         this.router.put('/desactivar/masivo', verificarToken_1.TokenValidation, empleadoControlador_1.default.DesactivarMultiplesEmpleados);
         this.router.put('/activar/masivo', verificarToken_1.TokenValidation, empleadoControlador_1.default.ActivarMultiplesEmpleados);

@@ -151,7 +151,9 @@ export class ListarTitulosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -167,7 +169,9 @@ export class ListarTitulosComponent implements OnInit {
   Eliminar(id_titulo: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_titulo).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerTitulos();
     });
   }

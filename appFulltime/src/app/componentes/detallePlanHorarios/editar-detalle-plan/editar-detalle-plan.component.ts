@@ -81,7 +81,9 @@ export class EditarDetallePlanComponent implements OnInit {
       this.InsertarDetallePlanHorario(form);
     }
     else {
-      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.');
+      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.','', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -100,7 +102,9 @@ export class EditarDetallePlanComponent implements OnInit {
         fecha: form.fechaForm
       }
       this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
-        this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.')
+        this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.','', {
+          timeOut: 6000,
+        })
       }, error => {
         this.ActualizarDetallePlan(datosDetallePlanH, form);
       });
@@ -112,7 +116,9 @@ export class EditarDetallePlanComponent implements OnInit {
 
   ActualizarDetallePlan(datos, form) {
     this.rest.ActualizarRegistro(datos).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado');
+      this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado', {
+        timeOut: 6000,
+      });
       this.EliminarDatos(form);
       this.IngresarPlanGeneral(form);
       this.Salir();

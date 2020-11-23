@@ -16,8 +16,7 @@ export class RegimenService {
   // Invocación del método post para crear nuevo régimen laboral
   CrearNuevoRegimen(datos: any) {
     return this.http.post(`${this.API_URL}/regimenLaboral`, datos).pipe(
-      catchError(datos)
-    );
+      catchError(datos));
   }
 
   ConsultarRegimen() {

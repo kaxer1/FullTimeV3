@@ -75,7 +75,9 @@ export class ConfigEmpleadosComponent implements OnInit {
     let jsonTask = JSON.stringify(ObjetoJSON)
     console.log(jsonTask);
     sessionStorage.setItem('arrayConfig', jsonTask)
-    this.toastr.success('Configuración guardada')
+    this.toastr.success('Configuración guardada','', {
+      timeOut: 6000,
+    })
     this.dialogRef.close()
   }
 

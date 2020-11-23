@@ -77,13 +77,17 @@ export class DiscapacidadComponent implements OnInit {
         this.GuardarTipoRegistro(form1);
       }
       else {
-        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad','', {
+          timeOut: 6000,
+        })
       }
     }
     else {
       if (form1.tipoForm === null) {
         console.log('probando2', form1.tipoForm)
-        this.toastr.info('Se le indica que debe seleccionar un tipo de discapacidad')
+        this.toastr.info('Se le indica que debe seleccionar un tipo de discapacidad','', {
+          timeOut: 6000,
+        })
       }
       else {
         this.RegistarDatos(form1, form1.tipoForm);
@@ -98,7 +102,9 @@ export class DiscapacidadComponent implements OnInit {
         this.GuardarTipoActualizacion(form1);
       }
       else {
-        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad')
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad','', {
+          timeOut: 6000,
+        })
       }
     }
     else {
@@ -114,7 +120,9 @@ export class DiscapacidadComponent implements OnInit {
       tipo: idTipoD,
     }
     this.rest.postDiscapacidadRest(dataCarnet).subscribe(response => {
-      this.toastr.success('Operacion Exitosa', 'Discapacidad guardada');
+      this.toastr.success('Operacion Exitosa', 'Discapacidad guardada', {
+        timeOut: 6000,
+      });
       this.limpiarCampos();
       this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
       this.texto = 'Añadir';
@@ -128,7 +136,9 @@ export class DiscapacidadComponent implements OnInit {
       tipo: idTipoD,
     }
     this.rest.putDiscapacidadUsuarioRest(parseInt(this.idEmploy), dataUpdate).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Discapacidad Actualiza');
+      this.toastr.success('Operación Exitosa', 'Discapacidad Actualiza', {
+        timeOut: 6000,
+      });
       this.metodo.obtenerDiscapacidadEmpleado(this.idEmploy);
       this.cerrarRegistro();
     });
@@ -177,7 +187,9 @@ export class DiscapacidadComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -194,7 +206,9 @@ export class DiscapacidadComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -239,7 +253,9 @@ export class DiscapacidadComponent implements OnInit {
         nombreForm: '',
       });
       this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-      this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad', 'Etiqueta Nuevo Tipo activa')
+      this.toastr.info('Ingresar nombre del nuevo Tipo de Discapacidad', 'Etiqueta Nuevo Tipo activa', {
+        timeOut: 6000,
+      })
     }
     else {
       this.nuevoCarnetForm.patchValue({

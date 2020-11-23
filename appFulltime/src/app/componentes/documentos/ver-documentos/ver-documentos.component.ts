@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { DocumentosService } from 'src/app/servicios/documentos/documentos.service';
 import { EditarDocumentoComponent } from 'src/app/componentes/documentos/editar-documento/editar-documento.component'
@@ -37,15 +37,29 @@ export class VerDocumentosComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  // Array de carpetas
+  array_carpetas: any = [];
   constructor(
     private rest: DocumentosService,
     private toastr: ToastrService,
     public router: Router,
+    private route: ActivatedRoute,
     public vistaRegistrarDatos: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.ObtenerDocumentacion();
+    this.ObtenerCarpetas();
+  }
+
+  ObtenerCarpetas() {
+    this.rest.ListarCarpeta().subscribe(res => {
+      this.array_carpetas = res
+    })
+  }
+
+  AbrirCarpeta(nombre_carpeta: string) {
+    this.router.navigate([nombre_carpeta ], { relativeTo: this.route, skipLocationChange: false });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -84,7 +98,9 @@ export class VerDocumentosComponent implements OnInit {
     /** Función para eliminar registro seleccionado Planificación*/
     EliminarDocumento(id_detalle: number) {
       this.rest.EliminarRegistro(id_detalle).subscribe(res => {
-        this.toastr.error('Registro eliminado');
+        this.toastr.error('Registro eliminado','', {
+          timeOut: 6000,
+        });
         this.ObtenerDocumentacion();
       });
     }

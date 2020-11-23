@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { enviarMail, email } from '../../libs/settingsMail'
+import { enviarMail, email, Credenciales } from '../../libs/settingsMail'
 import { RestarPeriodoVacacionAutorizada } from '../../libs/CargarVacacion'
 
 class VacacionesControlador {
@@ -44,11 +44,21 @@ class VacacionesControlador {
   }
 
   public async CrearVacaciones(req: Request, res: Response): Promise<void> {
-    const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion, depa_user_loggin } = req.body;
-    await pool.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion]);
+    const { fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado,
+      id_peri_vacacion, depa_user_loggin, id_empl_cargo, codigo } = req.body;
+    await pool.query('INSERT INTO vacaciones (fec_inicio, fec_final, fec_ingreso, estado, dia_libre, ' +
+      'dia_laborable, legalizado, id_peri_vacacion, id_empl_cargo, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+      [fec_inicio, fec_final, fec_ingreso, estado, dia_libre, dia_laborable, legalizado, id_peri_vacacion, id_empl_cargo, codigo]);
 
     console.log('******************', depa_user_loggin);
-    const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND e.id = c.id_empleado', [depa_user_loggin]);
+    const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, ' +
+      'cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ' +
+      'ecn.id AS contrato, e.id AS empleado, e.nombre, e.apellido, e.cedula, e.correo, c.vaca_mail, ' +
+      'c.vaca_noti FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, ' +
+      'sucursales AS s, empl_contratos AS ecn, empleados AS e, config_noti AS c ' +
+      'WHERE da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND ' +
+      'cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id AND ' +
+      'e.id = c.id_empleado', [depa_user_loggin]);
     console.log('******************', JefesDepartamentos.rows[0]);
     let depa_padre = JefesDepartamentos.rows[0].depa_padre;
     let JefeDepaPadre;
@@ -70,10 +80,10 @@ class VacacionesControlador {
     } else {
       res.jsonp(JefesDepartamentos.rows);
     }
-
   }
 
   public async SendMailNotifiPermiso(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
     const { idContrato, fec_inicio, fec_final, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, vaca_mail, vaca_noti } = req.body;
     const ultimo = await pool.query('SELECT * FROM vacaciones WHERE fec_inicio = $1 AND fec_final = $2  ORDER BY id DESC LIMIT 1', [fec_inicio, fec_final])
     const correoInfoPidePermiso = await pool.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [idContrato]);
@@ -130,6 +140,7 @@ class VacacionesControlador {
   }
 
   public async ActualizarEstado(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa)
     const id = req.params.id;
     const { estado, id_vacacion, id_rece_emp, id_depa_send } = req.body;
     await pool.query('UPDATE vacaciones SET estado = $1 WHERE id = $2', [estado, id]);

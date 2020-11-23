@@ -29,8 +29,7 @@ export class TipoPermisosService {
 
   postTipoPermisoRest(data: any) {
     return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data).pipe(
-      catchError(data)
-    );
+      catchError(data));
   }
 
   putTipoPermisoRest(id: number, data: any) {

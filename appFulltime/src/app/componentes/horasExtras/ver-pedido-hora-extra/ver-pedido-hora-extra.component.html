@@ -58,12 +58,6 @@
                                 matTooltip="Agrega más tipos de permisos de este departamento.">
                                 <p>Autorización</p>
                             </i>
-                            <!--<i id="iconos" *ngIf="!HabilitarTiempo" class="fas fa-stopwatch"
-                                style="color:rgb(8, 96, 168); margin-left: 15px;"
-                                (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h.id_usua_solicita)"
-                                matTooltipPosition="right" matTooltip="Tiempo que se le autoriza de la hora extra.">
-                                <p>Tiempo Autorizado</p>
-                            </i>-->
                         </div>
                     </div>
                 </mat-card-content>
@@ -118,23 +112,13 @@
                             </div>
                             <div class="col">
                             </div>
-                            <div class="col" style="text-align: right;">
+                            <div class="col" style="text-align: right;" *ngIf="!habilitarActualizar">
                                 <i *ngFor="let h of hora_extra" id="iconos" class="fas fa-stopwatch"
                                     style="color:rgb(58, 90, 231); margin-right: 10px;"
                                     (click)="AbrirTiempoAutorizacion(h.num_hora, h.id, h.id_usua_solicita, h)"
                                     matTooltipPosition="right"
                                     matTooltip="Agrega más tipos de permisos de este departamento.">
                                     <p>Horas</p>
-                                </i>
-                                <i class="fas fa-edit" style="color:green; text-align: center;" matSuffix
-                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
-                                    matTooltip="Cambiar el estado de la hora extra">
-                                    <p>Estado</p>
-                                </i>
-                                <i class="fas fa-edit" style="color:green; text-align: center;" matSuffix
-                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
-                                    matTooltip="Cambiar el estado de la hora extra">
-                                    <p>Estado</p>
                                 </i>
                             </div>
                         </div>

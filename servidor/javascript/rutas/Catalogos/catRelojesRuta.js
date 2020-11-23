@@ -25,6 +25,10 @@ class RelojesRuta {
         this.router.get('/download/:nameXML', catRelojesControlador_1.default.downloadXML);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catRelojesControlador_1.default.EliminarRegistros);
         this.router.get('/datosReloj/:id', verificarToken_1.TokenValidation, catRelojesControlador_1.default.ListarDatosUnReloj);
+        // Método para verificar datos de plantilla antes de subirlos
+        this.router.post('/verificar_datos/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], catRelojesControlador_1.default.VerificarDatos);
+        this.router.post('/verificar_plantilla/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], catRelojesControlador_1.default.VerificarPlantilla);
+        this.router.post('/plantillaExcel/', [verificarToken_1.TokenValidation, multipartMiddlewarePlantilla], catRelojesControlador_1.default.CargaPlantillaRelojes);
     }
 }
 const RELOJES_RUTA = new RelojesRuta();

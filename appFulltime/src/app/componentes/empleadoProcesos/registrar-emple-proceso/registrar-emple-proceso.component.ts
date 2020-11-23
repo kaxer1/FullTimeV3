@@ -75,7 +75,9 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
       this.InsertarProceso(form);
     }
     else {
-      this.toastr.info('La fecha de finalización debe ser mayor a la fecha de inicio')
+      this.toastr.info('La fecha de finalización debe ser mayor a la fecha de inicio','', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -87,10 +89,14 @@ export class RegistrarEmpleProcesoComponent implements OnInit {
       id: form.idProcesoForm
     };
     this.restP.RegistrarEmpleProcesos(datosProceso).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Período de Procesos del Empleado registrados')
+      this.toastr.success('Operación Exitosa', 'Período de Procesos del Empleado registrados', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroProceso();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Registro Inválido')
+      this.toastr.error('Operación Fallida', 'Registro Inválido', {
+        timeOut: 6000,
+      })
     });
   }
 

@@ -16,6 +16,8 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { MatDialog } from '@angular/material/dialog';
 import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteConsoli} from '../../../model/reportes.model'
 import { ConfigAsistenciaComponent } from '../../reportes-Configuracion/config-report-asistencia/config-asistencia.component';
+import { SelectionModel } from '@angular/cdk/collections';
+import { EmpleadoElemento } from 'src/app/model/empleado.model';
 
 @Component({
   selector: 'app-asistencia-consolidado',
@@ -68,6 +70,8 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     fec_final: this.anio_final
   })
 
+  selection = new SelectionModel<EmpleadoElemento>(true, []);
+
   constructor(
     private restEmpleado: EmpleadoService,
     private restKardex: KardexService,
@@ -85,6 +89,35 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.MensajeInicio();
   }
 
+  btnCheckDeshabilitado: boolean = false;
+  HabilitarSeleccionDesactivados() {
+    if (this.btnCheckDeshabilitado === false) {
+      this.btnCheckDeshabilitado = true;
+    } else if (this.btnCheckDeshabilitado === true) {
+      this.btnCheckDeshabilitado = false;
+    }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.empleados.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.empleados.forEach(row => this.selection.select(row));
+  }
+
+  checkboxLabelDos(row?: EmpleadoElemento): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+  // mensaje de advertencia si tiene o no la configuracion para seleccionar los campos a imprimir
   MensajeInicio() {
     if (!!sessionStorage.getItem('arrayConfigAsistencia') === false) {
       if (this.habilitar === false) {
@@ -103,10 +136,13 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     }
   }
 
+  // Obtener lista de empleados
+
   ObtenerEmpleados() {
     this.empleados = [];
     this.restEmpleado.getEmpleadosRest().subscribe(res => {
       this.empleados = res;
+      console.log(this.empleados);
     });
   }
 
@@ -134,10 +170,15 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     });
   }
 
+  // Metodo de la paginacion
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
+
+  /**
+   * Funciones para validar los campos y las fechas de rangos del reporte
+   */
 
   f_inicio_req: string = '';
   f_final_req: string = '';
@@ -148,16 +189,22 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     var f_f = new Date(form.fec_final)
 
     if (f_i < f_f) {
-      this.toastr.success('Fechas validas');
+      this.toastr.success('Fechas validas','', {
+        timeOut: 6000,
+      });
       this.f_inicio_req = f_i.toJSON().split('T')[0];
       this.f_final_req = f_f.toJSON().split('T')[0];
       this.habilitar = true
       this.estilo = { 'visibility': 'visible' };
     } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial');
+      this.toastr.info('Fecha final es menor a la fecha inicial','', {
+        timeOut: 6000,
+      });
       this.fechasForm.reset();
     } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final');
+      this.toastr.info('Fecha inicial es igual a la fecha final','', {
+        timeOut: 6000,
+      });
       this.fechasForm.reset();
     }
     // console.log(f_i.toJSON());
@@ -169,16 +216,24 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
         if(res.message) {
-          this.toastr.error(res.message);
+          this.toastr.error(res.message,'', {
+            timeOut: 6000,
+          });
         } else {
           this.asistencia = res;
           this.generarPdf(palabra, 1)
         }
       })
     } else {
-      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas');
+      this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas', {
+        timeOut: 6000,
+      });
     }
   }
+
+  /**
+   * Abrir ventana de selecion de campos para imprimir reporte 
+   */
 
   ConfiguracionReporteAsistencia() {
     console.log('Esta listo para configurar');
@@ -902,7 +957,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, '2020-08-01', '2020-08-31').subscribe(res => {
       console.log(this.asistencia);
         if(res.message) {
-          this.toastr.error(res.message);
+          this.toastr.error(res.message,'', {
+            timeOut: 6000,
+          });
         } else {
           this.asistencia = res;
           console.log(this.asistencia);
@@ -979,7 +1036,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -996,7 +1055,9 @@ export class AsistenciaConsolidadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

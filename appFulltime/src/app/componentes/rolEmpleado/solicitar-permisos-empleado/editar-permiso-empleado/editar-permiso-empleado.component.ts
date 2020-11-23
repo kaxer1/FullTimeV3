@@ -63,6 +63,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   diaLibreF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
+  horaSalidaF = new FormControl('');
+  horaIngresoF = new FormControl('');
+ 
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -74,7 +77,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     fechaInicioForm: this.fechaInicioF,
     fechaFinalForm: this.fechaFinalF,
     diaLibreForm: this.diaLibreF,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    horaSalidaForm: this.horaSalidaF,
+    horasIngresoForm: this.horaIngresoF
   });
 
   constructor(
@@ -114,7 +119,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       fechaInicioForm: this.datos.fec_inicio,
       fechaFinalForm: this.datos.fec_final,
       diaLibreForm: this.datos.dia_libre,
-      nombreCertificadoForm: this.datos.docu_nombre
+      nombreCertificadoForm: this.datos.docu_nombre,
+      horaSalidaForm: this.datos.hora_salida,
+      horasIngresoForm: this.datos.hora_ingreso
     });
     if (this.datos.dia === 0) {
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
@@ -216,12 +223,16 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         console.log("horas", this.horasTrabajo[0].horas);
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
       }, error => {
-        this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR');
+        this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR', {
+          timeOut: 6000,
+        });
         this.LimpiarCamposFecha();
       });
     }
     else {
-      this.toastr.error('Aún no selecciona un Tipo de Permiso o aún no ingresa fecha de salida.', 'VERIFICAR');
+      this.toastr.error('Aún no selecciona un Tipo de Permiso o aún no ingresa fecha de salida.', 'VERIFICAR', {
+        timeOut: 6000,
+      });
       this.LimpiarCamposFecha();
     }
   }
@@ -283,7 +294,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
       this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
-      this.toastr.info('Ingresar número de días de permiso');
+      this.toastr.info('Ingresar número de días de permiso','', {
+        timeOut: 6000,
+      });
     }
     else if (form.solicitarForm === 'Horas') {
       this.LimpiarCamposFecha();
@@ -294,7 +307,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
       this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
-      this.toastr.info('Ingresar número de horas y minutos de permiso');
+      this.toastr.info('Ingresar número de horas y minutos de permiso','', {
+        timeOut: 6000,
+      });
     }
     else {
       this.LimpiarCamposFecha();
@@ -306,7 +321,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
+      this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso','', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -334,7 +351,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -351,7 +370,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -368,6 +389,8 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       num_permiso: this.num,
       anterior_doc: this.datos.documento,
       docu_nombre: form.nombreCertificadoForm,
+      hora_salida: form.horaSalidaForm,
+      hora_ingreso: form.horasIngresoForm,
     }
     if (this.isChecked === false) {
       datosPermiso.anterior_doc = null,
@@ -399,7 +422,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       console.log('datos', resta, ' ');
       if (resta != form.diasForm) {
         this.toastr.error('Recuerde el día de ingreso no puede superar o ser menor a los días de permiso solicitados.',
-          'Día de ingreso incorrecto.');
+          'Día de ingreso incorrecto.', {
+            timeOut: 6000,
+          });
         this.LimpiarCamposFecha();
       }
       else {
@@ -408,7 +433,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     }
     else {
       this.toastr.info('Los días de permiso que puede solicitar deben ser menores o iguales a: ' + String(this.Tdias) + ' días.',
-        'De acuerdo con la configuración de este tipo de permiso.')
+        'De acuerdo con la configuración de este tipo de permiso.', {
+          timeOut: 6000,
+        })
       this.LimpiarCamposFecha();
     }
   }
@@ -417,7 +444,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     const resta = this.dIngreso.diff(this.dSalida, 'days');
     if (resta != 0) {
       this.toastr.error('Recuerde su permiso es por horas, y debe ingresar el mismo día en el que sale.',
-        'Día de ingreso incorrecto');
+        'Día de ingreso incorrecto', {
+          timeOut: 6000,
+        });
       this.LimpiarCamposFecha();
     }
   }
@@ -426,12 +455,16 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     if (this.tipoPermisoSelec === 'Días' || this.tipoPermisoSelec === 'Días y Horas') {
       this.toastr.info('Usted puede solicitar hasta: ' + String(this.Tdias) +
         ' dias de permiso. Si solicita horas recuerde que deben ser menor a ' + hora_empleado + ' horas.',
-        'De acuerdo con la configuración de este tipo de permiso');
+        'De acuerdo con la configuración de este tipo de permiso', {
+          timeOut: 6000,
+        });
       this.LimpiarCamposFecha();
     }
     else if (this.tipoPermisoSelec === 'Horas') {
       this.toastr.info('Las horas de permiso que puede solicitar deben ser menores o iguales a: ' + String(this.Thoras) + ' horas',
-        'De acuerdo con la configuración de este tipo de permiso');
+        'De acuerdo con la configuración de este tipo de permiso', {
+          timeOut: 6000,
+        });
       this.LimpiarCamposFecha();
     }
   }
@@ -443,7 +476,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     else if (this.tipoPermisoSelec === 'Horas') {
       this.toastr.info
         ('No puede solicitar días de permiso. Las horas de permiso que puede solicitar deben ser menores o iguales a: ' + String(this.Thoras) + ' horas.',
-          'Este tipo de permiso esta configurado por horas.')
+          'Este tipo de permiso esta configurado por horas.', {
+            timeOut: 6000,
+          })
       this.LimpiarCamposFecha();
     }
     else if (this.tipoPermisoSelec === 'Días y Horas') {
@@ -484,7 +519,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     const resta = this.dIngreso.diff(this.dSalida, 'days');
     if (resta != contarDias) {
       this.toastr.error('Recuerde el día de ingreso no puede superar o ser menor a los días de permiso solicitados',
-        'Día de ingreso incorrecto');
+        'Día de ingreso incorrecto', {
+          timeOut: 6000,
+        });
       this.LimpiarCamposFecha();
     }
     else {
@@ -503,7 +540,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       else {
         this.toastr.info('Los días de permiso que puede solicitar deben ser menores a : '
           + String(this.Tdias) + ' días y las horas deben ser menores a ' + datoHora + ' horas. Tenga en cuenta que solicita días y adicional horas.',
-          'De acuerdo con la configuración de este tipo de permiso.')
+          'De acuerdo con la configuración de este tipo de permiso.', {
+            timeOut: 6000,
+          })
         this.LimpiarCamposFecha();
       }
 
@@ -512,7 +551,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       this.toastr.info
         ('No puede solicitar días de permiso. Las horas de permiso que puede solicitar deben ser menores o iguales a: '
           + String(this.Thoras) + ' horas. Tenga en cuenta que solicita días y adicional horas',
-          'Este tipo de permiso esta configurado por horas.')
+          'Este tipo de permiso esta configurado por horas.', {
+            timeOut: 6000,
+          })
       this.LimpiarCamposFecha();
 
     }
@@ -529,7 +570,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.toastr.info
           ('Los días de permiso que puede solicitar deben ser menores o iguales a: ' + String(this.Tdias) +
             ' día y las horas deben ser menores o iguales a: ' + String(this.Thoras) + ' horas',
-            'De acuerdo con la configuración de este tipo de permiso.');
+            'De acuerdo con la configuración de este tipo de permiso.', {
+              timeOut: 6000,
+            });
         this.LimpiarCamposFecha();
       }
     }
@@ -539,7 +582,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   VerificarDiasHoras(form, hora_empleado) {
     if (form.solicitarForm === 'Días') {
       if (form.diasForm === '' || form.diasForm == 0) {
-        this.toastr.info('Aún no ha ingresado número de días de permiso.');
+        this.toastr.info('Aún no ha ingresado número de días de permiso.','', {
+          timeOut: 6000,
+        });
         this.LimpiarCamposFecha();
       }
       else {
@@ -549,7 +594,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
     else if (form.solicitarForm === 'Horas') {
       if (form.horasForm === '' || form.horasForm === '00:00') {
-        this.toastr.info('Aún no ha ingresado número de horas y minutos de permiso.');
+        this.toastr.info('Aún no ha ingresado número de horas y minutos de permiso.','', {
+          timeOut: 6000,
+        });
         this.LimpiarCamposFecha();
       }
       else {
@@ -562,7 +609,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         (form.diasForm == 0 && form.horasForm == '' || form.horasForm == '00:00') ||
         (form.diasForm != 0 && form.horasForm == '' || form.horasForm == '00:00') ||
         (form.horasForm != '' && form.diasForm == 0 || form.diasForm === '')) {
-        this.toastr.info('Aún no ha ingresado número de días u horas y minutos de permiso.', 'VERIFICAR');
+        this.toastr.info('Aún no ha ingresado número de días u horas y minutos de permiso.', 'VERIFICAR', {
+          timeOut: 6000,
+        });
         this.LimpiarCamposFecha();
       }
       else {
@@ -578,23 +627,31 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       if (this.archivoSubido != undefined) {
         if (this.archivoSubido[0].size <= 2e+6) {
           this.restP.EditarPermiso(this.datos.id ,datos).subscribe(response => {
-            this.toastr.success('Operación Exitosa', 'Permiso Editado');
+            this.toastr.success('Operación Exitosa', 'Permiso Editado', {
+              timeOut: 6000,
+            });
             this.LimpiarCampos();
             console.log(response);
             this.SubirRespaldo(this.datos.id)
           });
         }
         else {
-          this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+          this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+            timeOut: 6000,
+          });
         }
       } else {
-        this.toastr.info('Falta que suba un archivo', 'Seleccione un archivo');
+        this.toastr.info('Falta que suba un archivo', 'Seleccione un archivo', {
+          timeOut: 6000,
+        });
       }
       
     } else {
       console.log(datos);
       this.restP.EditarPermiso(this.datos.id ,datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Permiso Editado');
+        this.toastr.success('Operación Exitosa', 'Permiso Editado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
         this.dialogRef.close(true)
         console.log(response);
@@ -650,7 +707,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.restP.SubirArchivoRespaldo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
       this.dialogRef.close(true);

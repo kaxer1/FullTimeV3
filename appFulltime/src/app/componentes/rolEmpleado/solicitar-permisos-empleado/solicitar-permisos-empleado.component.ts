@@ -87,13 +87,19 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
               this.obtenerPermisos(parseInt(this.idEmpleado));
             });
         }, error => {
-          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+            timeOut: 6000,
+          })
         });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+          timeOut: 6000,
+        })
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      })
     });
   }
 

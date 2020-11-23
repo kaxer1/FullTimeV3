@@ -110,7 +110,9 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
         this.ActualizarPerVacacion(form);
       }
       else {
-        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período')
+        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período','', {
+          timeOut: 6000,
+        })
       }
     }
   }
@@ -130,10 +132,14 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
       min_vacaciones: form.minVacacionForm,
     };
     this.restV.ActualizarPeriodoV(datosPerVacaciones).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Período de Vacaciones actualizado')
+      this.toastr.success('Operación Exitosa', 'Período de Vacaciones actualizado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroPerVacaciones();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue actualizado')
+      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue actualizado', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -165,7 +171,9 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -195,7 +203,9 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
       }
       else {
         this.PerVacacionesForm.patchValue({ fechaInicioForm: '' });
-        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.');
+        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.','', {
+          timeOut: 6000,
+        });
       }
     })
   }

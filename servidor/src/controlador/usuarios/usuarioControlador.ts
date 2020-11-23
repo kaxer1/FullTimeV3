@@ -62,17 +62,37 @@ class UsuarioControlador {
   //   res.status(404).jsonp({ text: 'No se ha encontrado el usuario' });
   // }
 
-  public async create(req: Request, res: Response): Promise<void> {
-    const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
-    await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
-    res.jsonp({ message: 'Usuario Guardado' });
+  public async create(req: Request, res: Response) {
+    try {
+      const { usuario, contrasena, estado, id_rol, id_empleado, app_habilita } = req.body;
+      await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado, id_rol, id_empleado, app_habilita]);
+      res.jsonp({ message: 'Usuario Guardado' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
 
-  public async ActualizarUsuario(req: Request, res: Response): Promise<void> {
-    const { usuario, contrasena, id_rol, id_empleado } = req.body;
-    await pool.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
-    res.jsonp({ message: 'Usuario Actualizado' });
+  public async ActualizarUsuario(req: Request, res: Response) {
+    try {
+      const { usuario, contrasena, id_rol, id_empleado } = req.body;
+      await pool.query('UPDATE usuarios SET usuario = $1, contrasena = $2, id_rol = $3 WHERE id_empleado = $4', [usuario, contrasena, id_rol, id_empleado]);
+      res.jsonp({ message: 'Usuario Actualizado' });
+    }
+    catch (error) {
+      return res.jsonp({ message: 'error' });
+    }
   }
+
+
+  //ACCESOS AL SISTEMA
+  public async AuditarAcceso(req: Request, res: Response) {
+    const { modulo, user_name, fecha, hora, acceso } = req.body;
+    await pool.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso ) ' +
+      'VALUES ($1, $2, $3, $4, $5)', [modulo, user_name, fecha, hora, acceso]);
+    return res.jsonp({ message: 'Auditoria Realizada' });
+  }
+
 
 }
 

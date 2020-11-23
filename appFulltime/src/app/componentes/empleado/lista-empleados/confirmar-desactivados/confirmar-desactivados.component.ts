@@ -48,21 +48,27 @@ export class ConfirmarDesactivadosComponent implements OnInit {
       console.log('DESACTIVAR EMPLEADO');
       this.restE.DesactivarVariosUsuarios(this.ids).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message)
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        })
       });
       this.dialogRef.close(true);
     } else if (this.Empleados.opcion === 2) {
       console.log('ACTIVAR EMPLEADO');
       this.restE.ActivarVariosUsuarios(this.ids).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message)
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        })
       });
       this.dialogRef.close(true);
     } else if (this.Empleados.opcion === 3) {
       console.log('ACTIVAR EMPLEADO');
       this.restE.ReActivarVariosUsuarios(this.ids).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message)
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        })
       });
       this.dialogRef.close(true);
     }

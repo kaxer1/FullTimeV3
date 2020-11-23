@@ -56,10 +56,14 @@ export class RegistroHorarioComponent implements OnInit {
     }
     if (form.nombreCertificadoForm === '') {
       this.rest.postHorarioRest(dataHorario).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.toastr.success('Operación Exitosa', 'Horario registrado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -71,16 +75,22 @@ export class RegistroHorarioComponent implements OnInit {
   GuardarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.postHorarioRest(datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.toastr.success('Operación Exitosa', 'Horario registrado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
         this.idHorario = response;
         this.SubirRespaldo(this.idHorario.id);
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -96,7 +106,9 @@ export class RegistroHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -113,7 +125,9 @@ export class RegistroHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -166,7 +180,9 @@ export class RegistroHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

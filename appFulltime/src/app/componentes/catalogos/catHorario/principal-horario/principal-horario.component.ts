@@ -117,7 +117,7 @@ export class PrincipalHorarioComponent implements OnInit {
   }
 
   AbrirVentanaRegistrarHorario(): void {
-    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '900px' }).afterClosed().subscribe(items => {
+    this.vistaRegistrarDatos.open(RegistroHorarioComponent, { width: '1200px' }).afterClosed().subscribe(items => {
       this.ObtenerHorarios();
     });
   }
@@ -145,7 +145,9 @@ export class PrincipalHorarioComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarDetalle(id_horario: number) {
     this.rest.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerHorarios();
     });
   }
@@ -179,10 +181,14 @@ export class PrincipalHorarioComponent implements OnInit {
       if (itemName.toLowerCase() == 'catalogo horarios') {
         this.plantillaHorario();
       } else {
-        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -192,7 +198,9 @@ export class PrincipalHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.CargarHorariosMultiples(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.ObtenerHorarios();
       this.archivo1Form.reset();
       this.nameFile = '';
@@ -216,10 +224,14 @@ export class PrincipalHorarioComponent implements OnInit {
       if (itemName.toLowerCase() == 'detalles horarios') {
         this.plantillaDetalle();
       } else {
-        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -229,7 +241,9 @@ export class PrincipalHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubidoDetalle[i], this.archivoSubidoDetalle[i].name);
     }
     this.restD.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Detalle de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Detalle de Horario importada.', {
+        timeOut: 6000,
+      });
       this.archivo2Form.reset();
       this.nameFileDetalle = '';
     });

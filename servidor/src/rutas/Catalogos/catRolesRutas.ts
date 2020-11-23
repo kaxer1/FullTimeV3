@@ -12,9 +12,9 @@ class PruebasRutas {
     configuracion(): void {
         this.router.get('/', TokenValidation, ROLES_CONTROLADOR.ListarRoles);
         this.router.get('/:id', TokenValidation, ROLES_CONTROLADOR.ObtnenerUnRol);
+        this.router.get('/actualiza/:id', TokenValidation, ROLES_CONTROLADOR.ListarRolesActualiza);
         this.router.post('/', TokenValidation, ROLES_CONTROLADOR.CrearRol);
         this.router.put('/', TokenValidation, ROLES_CONTROLADOR.ActualizarRol);
-        // this.router.delete('/:id', pruebaControlador.delete);
         this.router.post('/xmlDownload/', TokenValidation, ROLES_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', ROLES_CONTROLADOR.downloadXML);
         this.router.delete('/eliminar/:id', TokenValidation, ROLES_CONTROLADOR.EliminarRol);

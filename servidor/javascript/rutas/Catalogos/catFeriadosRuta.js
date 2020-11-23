@@ -17,9 +17,12 @@ class FeriadosRuta {
     }
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ListarFeriados);
+        this.router.get('/listar/:id', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ListarFeriadosActualiza);
         this.router.get('/ultimoId', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ObtenerUltimoId);
         this.router.get('/:id', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ObtenerUnFeriado);
         this.router.post('/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.CrearFeriados);
+        this.router.post('/upload/revision', [verificarToken_1.TokenValidation, multipartMiddleware], catFeriadosControlador_1.default.RevisarDatos);
+        this.router.post('/upload/revision_data', [verificarToken_1.TokenValidation, multipartMiddleware], catFeriadosControlador_1.default.RevisarDatos_Duplicados);
         this.router.post('/upload', [verificarToken_1.TokenValidation, multipartMiddleware], catFeriadosControlador_1.default.CrearFeriadoPlantilla);
         this.router.put('/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ActualizarFeriado);
         this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.FileXML);

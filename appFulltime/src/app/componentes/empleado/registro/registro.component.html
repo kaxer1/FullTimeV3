@@ -18,6 +18,9 @@
                     <span>Por favor llenar todos los campos obligatorios (*) del formulario y dar click en Siguiente
                         para continuar.</span>
                 </div>
+                <button mat-button class="btn" (click)="AbrirLeaflet()">
+                    ubicacion
+                </button>
                 <form [formGroup]="primeroFormGroup">
                     <div class="d-flex flex-wrap justify-content-start">
                         <mat-form-field>
@@ -39,9 +42,10 @@
                                 help_outline
                             </mat-icon>
                         </mat-form-field>
-                        <mat-form-field *ngIf="!HabilitarDescrip">
+                        <mat-form-field>
                             <mat-label>Código</mat-label>
-                            <input matInput type="text" formControlName="codigoForm" readonly [ngStyle]="estilo">
+                            <input matInput type="text" formControlName="codigoForm" [readonly]="escritura"
+                                (keypress)="IngresarSoloNumeros($event)">
                             <mat-icon id="icono_emple" matSuffix matTooltipPosition="right"
                                 matTooltip="Ingrese un Código de identificacion, este campo es alternativo.">
                                 help_outline
@@ -157,11 +161,10 @@
                         <mat-form-field>
                             <mat-label>Estado</mat-label>
                             <mat-icon id="icono_emple" matSuffix matTooltipClass="empleadoR-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Seleccionar el estado del nuevo empleado. Por defecto seleccionar Activo">
+                                matTooltipPosition="right" matTooltip="Estado del empleado dentro del sistema">
                                 help_outline
                             </mat-icon>
-                            <mat-select required formControlName="estadoForm">
+                            <mat-select required formControlName="estadoForm" [disabled]="true">
                                 <mat-option [value]="1">Activo</mat-option>
                                 <mat-option [value]="2">Inactivo</mat-option>
                             </mat-select>

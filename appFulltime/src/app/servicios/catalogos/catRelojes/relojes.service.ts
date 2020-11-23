@@ -29,10 +29,6 @@ export class RelojesService {
     return this.http.put(`${this.API_URL}/relojes`, datos);
   }
 
-  subirArchivoExcel(formData) {
-    return this.http.post(`${this.API_URL}/relojes/plantillaExcel/`, formData);
-  }
-
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/relojes/xmlDownload`, data);
   }
@@ -43,5 +39,18 @@ export class RelojesService {
 
   ConsultarDatosId(id: number) {
     return this.http.get(`${this.API_URL}/relojes/datosReloj/${id}`);
+  }
+
+  // Métodos para verificar datos de plantilla antes de registralos en el sistema
+  subirArchivoExcel(formData) {
+    return this.http.post<any>(`${this.API_URL}/relojes/plantillaExcel/`, formData);
+  }
+
+  Verificar_Datos_ArchivoExcel(formData) {
+    return this.http.post<any>(`${this.API_URL}/relojes/verificar_datos/plantillaExcel/`, formData);
+  }
+
+  VerificarArchivoExcel(formData) {
+    return this.http.post<any>(`${this.API_URL}/relojes/verificar_plantilla/plantillaExcel/`, formData);
   }
 }

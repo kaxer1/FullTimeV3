@@ -14,9 +14,9 @@ class PruebasRutas {
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.ListarRoles);
         this.router.get('/:id', verificarToken_1.TokenValidation, catRolesControlador_1.default.ObtnenerUnRol);
+        this.router.get('/actualiza/:id', verificarToken_1.TokenValidation, catRolesControlador_1.default.ListarRolesActualiza);
         this.router.post('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.CrearRol);
         this.router.put('/', verificarToken_1.TokenValidation, catRolesControlador_1.default.ActualizarRol);
-        // this.router.delete('/:id', pruebaControlador.delete);
         this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catRolesControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catRolesControlador_1.default.downloadXML);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catRolesControlador_1.default.EliminarRol);

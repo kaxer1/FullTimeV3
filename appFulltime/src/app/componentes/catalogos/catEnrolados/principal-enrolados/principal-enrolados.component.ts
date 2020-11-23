@@ -141,7 +141,9 @@ export class PrincipalEnroladosComponent implements OnInit {
   Eliminar(id_enrolado: number) {
     //console.log("probando id", id_enrolado)
     this.rest.EliminarRegistro(id_enrolado).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.getEnrolados();
     });
   }
@@ -173,7 +175,9 @@ export class PrincipalEnroladosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -190,7 +194,9 @@ export class PrincipalEnroladosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -221,10 +227,14 @@ export class PrincipalEnroladosComponent implements OnInit {
       if (itemName.toLowerCase() == 'enrolados') {
         this.plantilla();
       } else {
-        this.toastr.error('Solo se acepta Enrolados', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta Enrolados', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -234,7 +244,9 @@ export class PrincipalEnroladosComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Enrolados importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Enrolados importada.', {
+        timeOut: 6000,
+      });
       this.getEnrolados();
       window.location.reload();
       this.archivoForm.reset();

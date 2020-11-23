@@ -74,11 +74,15 @@ l
     this.enroladoReloj = [];
     this.rest.BuscarIdReloj(buscarReloj).subscribe(datos => {
       this.enroladoReloj = datos;
-      this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo')
+      this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo','', {
+        timeOut: 6000,
+      })
       this.LimpiarCampos();
     }, error => {
       this.rest.CrearEnroladoReloj(buscarReloj).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo');
+        this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo', {
+          timeOut: 6000,
+        });
         this.actualizarPagina = this.data.actualizar;
         if (this.actualizarPagina === true) {
           this.LimpiarCampos();
@@ -88,7 +92,9 @@ l
           this.router.navigate(['/enroladoDispositivo/', id]);
         }
       }, error => {
-        this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo')
+        this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo', {
+          timeOut: 6000,
+        })
       });
     });
   }

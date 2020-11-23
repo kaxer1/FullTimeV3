@@ -45,11 +45,15 @@ export class SubirDocumentoComponent implements OnInit {
         this.LimpiarNombreArchivo();
         this.CerrarVentanaEditar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Documento no pudo ser cargado en el sistema')
+        this.toastr.error('Operación Fallida', 'Documento no pudo ser cargado en el sistema', {
+          timeOut: 6000,
+        })
       })
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     };
   }
 
@@ -74,7 +78,9 @@ export class SubirDocumentoComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con éxito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con éxito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

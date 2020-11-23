@@ -150,7 +150,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -168,7 +170,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -210,7 +214,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.GenerarPdfEmpleado(action, 'autorizadas', id_seleccionado);
         this.reporte = false;
       }, error => {
-        this.toastr.info('No se encuentran registros de solicitudes de horas extras')
+        this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -218,7 +224,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.solicitudes_empleado = data;
         this.GenerarPdfEmpleado(action, 'solicitudes', id_seleccionado);
       }, error => {
-        this.toastr.info('No se encuentran registros de solicitudes de horas extras')
+        this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
+          timeOut: 6000,
+        })
       });
     }
   }
@@ -231,7 +239,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.GenerarExcelEmpleado('autorizadas', id_seleccionado);
         this.reporte = false;
       }, error => {
-        this.toastr.info('No se encuentran registros de solicitudes de horas extras')
+        this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -239,7 +249,9 @@ export class ReporteHorasPedidasComponent implements OnInit {
         this.solicitudes_empleado = data;
         this.GenerarExcelEmpleado('solicitudes', id_seleccionado);
       }, error => {
-        this.toastr.info('No se encuentran registros de solicitudes de horas extras')
+        this.toastr.info('No se encuentran registros de solicitudes de horas extras','', {
+          timeOut: 6000,
+        })
       });
     }
   }
