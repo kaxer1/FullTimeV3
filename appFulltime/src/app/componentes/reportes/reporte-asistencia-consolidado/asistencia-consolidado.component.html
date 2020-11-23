@@ -118,6 +118,13 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
+                        <!-- <th>
+                            <mat-checkbox *ngIf="btnCheckDeshabilitado" (change)="$event ? masterToggle() : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                [aria-label]="checkboxLabel()">
+                            </mat-checkbox>
+                        </th> -->
                         <th scope="col">Código</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
@@ -127,6 +134,12 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let e of empleados | emplCodigo: filtroCodigo | emplCedula: filtroCedula | emplNombre: filtroNombre | emplApellido: filtroApellido | paginate:tamanio_pagina:numero_pagina">
+                        <!-- <td>
+                            <mat-checkbox *ngIf="btnCheckDeshabilitado" (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(e) : null" [checked]="selection.isSelected(e)"
+                                [aria-label]="checkboxLabel(e)">
+                            </mat-checkbox>
+                        </td> -->
                         <th scope="row">{{e.codigo}}</th>
                         <td>{{e.nombre}}</td>
                         <td>{{e.apellido}}</td>

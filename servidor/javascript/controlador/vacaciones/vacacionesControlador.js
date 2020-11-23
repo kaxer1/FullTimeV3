@@ -96,6 +96,7 @@ class VacacionesControlador {
     }
     SendMailNotifiPermiso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             const { idContrato, fec_inicio, fec_final, id, estado, id_dep, depa_padre, nivel, id_suc, departamento, sucursal, cargo, contrato, empleado, nombre, apellido, cedula, correo, vaca_mail, vaca_noti } = req.body;
             const ultimo = yield database_1.default.query('SELECT * FROM vacaciones WHERE fec_inicio = $1 AND fec_final = $2  ORDER BY id DESC LIMIT 1', [fec_inicio, fec_final]);
             const correoInfoPidePermiso = yield database_1.default.query('SELECT e.correo, e.nombre, e.apellido, e.cedula, ecr.id_departamento, ecr.id_sucursal, ecr.id AS cargo FROM empl_contratos AS ecn, empleados AS e, empl_cargos AS ecr WHERE ecn.id = $1 AND ecn.id_empleado = e.id AND ecn.id = ecr.id_empl_contrato ORDER BY cargo DESC', [idContrato]);
@@ -156,6 +157,7 @@ class VacacionesControlador {
     }
     ActualizarEstado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             const id = req.params.id;
             const { estado, id_vacacion, id_rece_emp, id_depa_send } = req.body;
             yield database_1.default.query('UPDATE vacaciones SET estado = $1 WHERE id = $2', [estado, id]);

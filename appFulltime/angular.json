@@ -13,6 +13,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js",
+              "xlsx",
+              "file-saver",
+              "echarts",
+              "socket.io-client",
+              "chartjs-plugin-datalabels",
+              "chartjs-plugin-annotation"
+            ],
             "outputPath": "dist/appFulltime",
             "index": "src/index.html",
             "main": "src/main.ts",

@@ -43,10 +43,8 @@ export class UsuarioService {
   }
 
   ActualizarDatos(data: any) {
-    return this.http.put(`${this.API_URL}/usuarios/actualizarDatos`, data)
-      .pipe(
-        catchError(data)
-      );
+    return this.http.put(`${this.API_URL}/usuarios/actualizarDatos`, data).pipe(
+      catchError(data));
   }
 
   crearAccesosSistema(data: any) {

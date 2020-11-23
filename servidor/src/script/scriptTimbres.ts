@@ -60,29 +60,34 @@ export const generarTimbres = async function(id_empleado: number) {
                     let observacion: string;
                     let latitud = '-0.928755'
                     let longitud =  '-78.606327'
+                    let tecla_funcion: number;
                     switch (itera.orden) {
                         case 1:
                             f.setUTCHours(f.getUTCHours() - 1)
-                            accion = 'E';
+                            accion = 'EoS';
                             observacion = 'Entrada';
+                            tecla_funcion = 0;
                             break;
                         case 2:
-                            accion = 'S/A';                            
+                            accion = 'AES';                            
                             observacion = 'Salida Almuerzo';
+                            tecla_funcion = 1;
                             break;
                         case 3:
-                            accion = 'E/A';
+                            accion = 'AES';
                             observacion = 'Entrada Almuerzo';
+                            tecla_funcion = 1;
                             break;
                         default: //es orden 4
-                            accion = 'S';
+                            accion = 'EoS';
                             observacion = 'Salida';
+                            tecla_funcion = 0;
                             break;
                     }
                     console.log('accion:', accion,f.toJSON());
 
                     await pool.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj)' +
-                    'values($1,$2,$3,$4,$5,$6,$7,$8)', [f.toJSON(),accion,itera.orden, observacion, latitud, longitud, id_empleado, 3])
+                    'values($1,$2,$3,$4,$5,$6,$7,$8)', [f.toJSON(), accion, tecla_funcion , observacion, latitud, longitud, id_empleado, 3])
                 });
             }
         })

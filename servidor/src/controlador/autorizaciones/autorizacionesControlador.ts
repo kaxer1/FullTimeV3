@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
-import { enviarMail } from '../../libs/settingsMail';
+import { Credenciales, enviarMail } from '../../libs/settingsMail';
 const nodemailer = require("nodemailer");
 
 class AutorizacionesControlador {
@@ -55,6 +55,8 @@ class AutorizacionesControlador {
     }
 
     public async ActualizarEstadoPermiso(req: Request, res: Response): Promise<void> {
+        Credenciales(req.id_empresa);
+
         const id = req.params.id;
         const { id_documento, estado, id_permiso, id_departamento, id_empleado } = req.body;
 
@@ -133,6 +135,7 @@ class AutorizacionesControlador {
     }
 
     public async ActualizarEstadoVacacion(req: Request, res: Response): Promise<void> {
+        Credenciales(req.id_empresa);
         //const { id_documento, estado, id_vacaciones, id_departamento, id_empleado } = req.body;
         const { id_documento, estado, id_vacacion} = req.body;
 
@@ -205,6 +208,7 @@ class AutorizacionesControlador {
     }
 
     public async ActualizarEstadoHoraExtra(req: Request, res: Response): Promise<void> {
+        Credenciales(req.id_empresa);
         const id = req.params.id_hora_extra;
         //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
         const { id_documento, estado } = req.body;
@@ -273,6 +277,7 @@ class AutorizacionesControlador {
     }
 
     public async ActualizarEstadoPlanificacion(req: Request, res: Response): Promise<void> {
+        Credenciales(req.id_empresa);
         const id = req.params.id_plan_hora_extra;
         //const { id_documento, estado, id_hora_extra, id_departamento } = req.body;
         const { id_documento, estado } = req.body;

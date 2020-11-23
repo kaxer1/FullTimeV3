@@ -14,6 +14,7 @@ export class ListaReportesComponent implements OnInit {
   datosEmpresa: any = [];
   habilitarReportes: string = 'hidden';
   mensaje: boolean = false;
+  
   constructor(
     private rest: EmpresaService,
     private toast: ToastrService,

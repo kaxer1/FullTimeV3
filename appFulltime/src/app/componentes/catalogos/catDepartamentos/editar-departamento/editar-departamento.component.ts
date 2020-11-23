@@ -6,6 +6,8 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 interface Nivel {
   valor: number;
@@ -53,6 +55,14 @@ export class EditarDepartamentoComponent implements OnInit {
     { valor: 5, nombre: '5' }
   ];
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+
   constructor(
     private rest: DepartamentosService,
     private restE: EmpresaService,
@@ -71,6 +81,7 @@ export class EditarDepartamentoComponent implements OnInit {
   }
 
   ModificarDepartamento(form) {
+    this.habilitarprogress = true;
     var departamentoPadreId
     var departamentoPadreNombre = form.departamentoDepartamentoPadreForm;
     console.log(form.departamentoDepartamentoPadreForm);
@@ -112,6 +123,7 @@ export class EditarDepartamentoComponent implements OnInit {
     this.revisarNombre = [];
     let idSucursal = datos.id_sucursal;
     this.rest.BuscarDepartamentoSucursal(idSucursal).subscribe(data => {
+      this.habilitarprogress = false;
       this.revisarNombre = data;
       for (var i = 0; i <= this.revisarNombre.length - 1; i++) {
         if (this.revisarNombre[i].nombre === datos.nombre) {
@@ -136,6 +148,7 @@ export class EditarDepartamentoComponent implements OnInit {
 
   ActualizarDepartamento(datos) {
     this.rest.updateDepartamento(this.descripcionD.id, datos).subscribe(response => {
+      this.habilitarprogress = false;
       if (response.message === 'error') {
         this.toastr.error('Existe un error en los datos.','', {
           timeOut: 6000,
@@ -148,6 +161,8 @@ export class EditarDepartamentoComponent implements OnInit {
         //window.location.reload();
         this.dialogRef.close();
       }
+    }, error => {
+      this.habilitarprogress = false;
     });
   }
 

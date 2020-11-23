@@ -31,17 +31,13 @@ export class EmpleadoService {
   }
 
   postEmpleadoRest(data: any) {
-    return this.http.post(`${this.API_URI}/empleado`, data)
-      .pipe(
-        catchError(data)
-      );
+    return this.http.post(`${this.API_URI}/empleado`, data).pipe(
+      catchError(data));
   }
 
   putEmpleadoRest(data: any, id: number) {
-    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data)
-      .pipe(
-        catchError(data)
-      );
+    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data).pipe(
+      catchError(data));
   }
 
   /** Verificar datos de la plantilla de datos con código generado de forma automática */

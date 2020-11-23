@@ -9,7 +9,6 @@ const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
     port: 5432,
-    //database: 'fulltime',
     database: 'prueba_auditar',
     //database: 'fullTimeV3',
     password: 'admin'

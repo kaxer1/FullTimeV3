@@ -173,6 +173,7 @@ class PlanHoraExtraControlador {
     }
     EnviarCorreoNotificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             let { id_empl_envia, id_empl_recive, mensaje } = req.body;
             var f = new Date();
             f.setUTCHours(f.getHours());
@@ -212,6 +213,7 @@ class PlanHoraExtraControlador {
     }
     EnviarCorreoPlanificacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            settingsMail_1.Credenciales(req.id_empresa);
             let { id_empl_envia, id_empl_recive, mensaje } = req.body;
             var f = new Date();
             f.setUTCHours(f.getHours());
