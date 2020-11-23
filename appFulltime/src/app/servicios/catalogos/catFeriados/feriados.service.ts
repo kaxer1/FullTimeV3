@@ -45,10 +45,15 @@ export class FeriadosService {
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/feriados/upload', formData)
-      .pipe(
-        catchError(formData)
-      );
+    return this.http.post<any>(this.API_URL + '/feriados/upload', formData);
+  }
+
+  RevisarArchivo(formData) {
+    return this.http.post<any>(this.API_URL + '/feriados/upload/revision', formData);
+  }
+
+  RevisarArchivoDatos(formData) {
+    return this.http.post<any>(this.API_URL + '/feriados/upload/revision_data', formData);
   }
 
   DownloadXMLRest(data: any) {

@@ -34,7 +34,10 @@ export class VerEmpresaComponent implements OnInit {
   //imagen
   logo: string;
   imagen_default: boolean = false;
-  
+  sinCambios: boolean = true;
+  conCambios: boolean = true;
+  cambiosTodos: boolean = true;
+
   constructor(
     public router: Router,
     public vistaRegistrarDatos: MatDialog,
@@ -63,14 +66,31 @@ export class VerEmpresaComponent implements OnInit {
     this.rest.ConsultarDatosEmpresa(parseInt(this.idEmpresa)).subscribe(datos => {
       this.datosEmpresa = datos;
       if (this.datosEmpresa[0].logo != null) {
-        this.ObtenerLogotipo();        
+        this.ObtenerLogotipo();
+      }
+      if (this.datosEmpresa[0].cambios === true) {
+        if (this.datosEmpresa[0].dias_cambio === 0) {
+          this.cambiosTodos = false;
+          this.conCambios = true;
+          this.sinCambios = true;
+        }
+        else {
+          this.conCambios = false;
+          this.sinCambios = true;
+          this.cambiosTodos = true;
+        }
+      }
+      else {
+        this.sinCambios = false;
+        this.conCambios = true;
+        this.cambiosTodos = true;
       }
     });
   }
 
   ObtenerLogotipo() {
     this.restK.LogoEmpresaImagenBase64(this.idEmpresa).subscribe(res => {
-      if (res.imagen === 0) { this.imagen_default = false};
+      if (res.imagen === 0) { this.imagen_default = false };
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
       this.imagen_default = true;
     })
@@ -87,6 +107,8 @@ export class VerEmpresaComponent implements OnInit {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '800px', data: datosSeleccionados })
       .afterClosed().subscribe(item => {
+        this.ObtenerSucursal();
+        this.ObtenerLogotipo();
         this.CargarDatosEmpresa();
       });
   }
@@ -109,13 +131,15 @@ export class VerEmpresaComponent implements OnInit {
     this.vistaRegistrarDatos.open(ColoresEmpresaComponent, { width: '300', data: parseInt(this.idEmpresa) })
       .afterClosed().subscribe(items => {
         this.ObtenerSucursal();
+        this.ObtenerLogotipo();
+        this.CargarDatosEmpresa();
       });
   }
 
   EditarLogo() {
     this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: parseInt(this.idEmpresa) }).afterClosed()
-      .subscribe(res => { 
-        if(res === true) {
+      .subscribe(res => {
+        if (res === true) {
           this.ObtenerLogotipo();
         }
       })
@@ -134,7 +158,7 @@ export class VerEmpresaComponent implements OnInit {
   Eliminar(id_sucursal: number) {
     //console.log("probando id", id_prov)
     this.restS.EliminarRegistro(id_sucursal).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerSucursal();

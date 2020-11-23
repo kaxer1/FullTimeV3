@@ -44,12 +44,30 @@ export class EmpleadoService {
       );
   }
 
-  verificarArchivoExcel(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/verificar/plantillaExcel/`, formData);
+  /** Verificar datos de la plantilla de datos con código generado de forma automática */
+  verificarArchivoExcel_Automatico(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/verificar/automatico/plantillaExcel/`, formData);
   }
 
-  subirArchivoExcel(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/cargar/plantillaExcel/`, formData);
+  verificarArchivoExcel_DatosAutomatico(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/verificar/datos/automatico/plantillaExcel/`, formData);
+  }
+
+  subirArchivoExcel_Automatico(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/cargar_automatico/plantillaExcel/`, formData);
+  }
+
+  /** Verifcar datos de la plantilla de datos con código generado de forma automática */
+  verificarArchivoExcel_Manual(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/verificar/manual/plantillaExcel/`, formData);
+  }
+
+  verificarArchivoExcel_DatosManual(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/verificar/datos/manual/plantillaExcel/`, formData);
+  }
+
+  subirArchivoExcel_Manual(formData) {
+    return this.http.post<any>(`${this.API_URI}/empleado/cargar_manual/plantillaExcel/`, formData);
   }
 
   // Servicio para insertar el empleado con sus respectivos titulos

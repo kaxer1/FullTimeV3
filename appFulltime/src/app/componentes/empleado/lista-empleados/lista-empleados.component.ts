@@ -305,6 +305,7 @@ export class ListaEmpleadosComponent implements OnInit {
       if (this.datosCodigo[0].automatico === true) {
         var itemName = arrayItems[0].slice(0, 18);
         if (itemName.toLowerCase() == 'empleadoautomatico') {
+          console.log('entra_automatico');
           this.plantilla();
         } else {
           this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta', {
@@ -315,17 +316,22 @@ export class ListaEmpleadosComponent implements OnInit {
       else {
         itemName = arrayItems[0].slice(0, 14);
         if (itemName.toLowerCase() == 'empleadomanual') {
+          console.log('entra_manual');
           this.plantilla();
         } else {
           this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta', {
             timeOut: 6000,
           });
+          this.archivoForm.reset();
+          this.nameFile = '';
         }
       }
     } else {
       this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
         timeOut: 6000,
       });
+      this.archivoForm.reset();
+      this.nameFile = '';
     }
   }
 
@@ -340,39 +346,79 @@ export class ListaEmpleadosComponent implements OnInit {
     else {
       this.ArchivoManual(formData);
     }
-    this.archivoForm.reset();
-    this.nameFile = '';
   }
 
   ArchivoAutomatico(datosArchivo) {
-    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
+    this.rest.verificarArchivoExcel_Automatico(datosArchivo).subscribe(res => {
+      console.log('plantilla 1', res);
       if (res.message === "error") {
-        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+          'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+          'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+          'Registro Fallido. Verificar Plantilla', {
           timeOut: 6000,
         });
+        this.archivoForm.reset();
+        this.nameFile = '';
       } else {
-        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
-            timeOut: 6000,
-          });
-          window.location.reload();
+        this.rest.verificarArchivoExcel_DatosAutomatico(datosArchivo).subscribe(response => {
+          console.log('plantilla 2', response);
+          if (response.message === "error") {
+            this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+              'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+              'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+              'Registro Fallido. Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          } else {
+            this.rest.subirArchivoExcel_Automatico(datosArchivo).subscribe(datos_archivo => {
+              console.log('plantilla 3', datos_archivo);
+              this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+                timeOut: 6000,
+              });
+              window.location.reload();
+            });
+          }
         });
       }
     });
   }
 
   ArchivoManual(datosArchivo) {
-    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
+    this.rest.verificarArchivoExcel_Manual(datosArchivo).subscribe(res => {
+      console.log('plantilla 1', res);
       if (res.message === "error") {
-        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+          'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+          'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+          'Registro Fallido. Verificar Plantilla', {
           timeOut: 6000,
         });
+        this.archivoForm.reset();
+        this.nameFile = '';
       } else {
-        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
-          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
-            timeOut: 6000,
-          });
-          window.location.reload();
+        this.rest.verificarArchivoExcel_DatosManual(datosArchivo).subscribe(response => {
+          console.log('plantilla 2', response);
+          if (response.message === "error") {
+            this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla, ' +
+              'recuerde que la cédula, código y nombre de usuario son datos únicos por ende no deben constar ' +
+              'en otros registros. Asegurese de que el rol ingresado exista en el sistema.',
+              'Registro Fallido. Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoForm.reset();
+            this.nameFile = '';
+          } else {
+            this.rest.subirArchivoExcel_Manual(datosArchivo).subscribe(datos_archivo => {
+              console.log('plantilla 3', datos_archivo);
+              this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+                timeOut: 6000,
+              });
+              window.location.reload();
+            });
+          }
         });
       }
     });
@@ -390,7 +436,7 @@ export class ListaEmpleadosComponent implements OnInit {
         this.link = "http://localhost:3000/plantillaD/documento/EmpleadoManual.xlsx"
       }
     }, error => {
-      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado','', {
+      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado', '', {
         timeOut: 6000,
       });
       this.router.navigate(['/codigo/']);

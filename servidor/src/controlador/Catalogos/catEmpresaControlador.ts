@@ -35,8 +35,8 @@ class EmpresaControlador {
     }
 
     public async ActualizarEmpresa(req: Request, res: Response): Promise<void> {
-        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id } = req.body;
-        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 WHERE id = $9', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, id]);
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, cambios = $10 WHERE id = $11', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id]);
         res.jsonp({ message: 'Empresa actualizada exitosamente' });
     }
 

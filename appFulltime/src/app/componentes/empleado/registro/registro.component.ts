@@ -302,7 +302,7 @@ export class RegistroComponent implements OnInit {
   }
 
   AbrirLeaflet() {
-    this.openView.open(EmplLeafletComponent, {width: '550px', height: '550px'}).afterClosed().subscribe(res => {
+    this.openView.open(EmplLeafletComponent, {width: '550px', height: '600px'}).afterClosed().subscribe(res => {
       console.log(res);
       
     });

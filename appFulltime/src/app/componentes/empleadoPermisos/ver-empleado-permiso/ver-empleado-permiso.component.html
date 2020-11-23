@@ -57,7 +57,8 @@
                                         <a matSuffix matTooltipPosition="right" matTooltip="Certificado"
                                             href="http://localhost:3000/empleadoPermiso/documentos/{{p.documento}}"
                                             target="_blank">
-                                            <label style="font-size: 14px; color: rgb(197, 95, 11);">{{p.docu_nombre}}</label>
+                                            <label
+                                                style="font-size: 14px; color: rgb(197, 95, 11);">{{p.docu_nombre}}</label>
                                         </a>
                                     </label>
                                 </div>
@@ -134,14 +135,10 @@
                             </div>
                             <div class="col">
                             </div>
-                            <div class="col" style="text-align: right;" >
-                                <i *ngIf="a.estado === 1" class="fas fa-edit" style="color:green; text-align: center;" matSuffix
-                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
-                                    matTooltip="Cambiar el estado del permiso">
-                                    <p>Estado</p>
-                                </i>
-                                <i *ngIf="a.estado === 2" class="fas fa-edit" style="color:green; text-align: center;" matSuffix
-                                    matTooltipPosition="right" (click)="AbrirVentanaEditarAutorizacion(a)"
+                            <div class="col" style="text-align: right;">
+                                <i *ngIf="!habilitarActualizar" class="fas fa-edit"
+                                    style="color:green; text-align: center;" matSuffix matTooltipPosition="right"
+                                    (click)="AbrirVentanaEditarAutorizacion(a)"
                                     matTooltip="Cambiar el estado del permiso">
                                     <p>Estado</p>
                                 </i>
