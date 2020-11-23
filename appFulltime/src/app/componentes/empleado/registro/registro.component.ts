@@ -11,12 +11,14 @@ import { startWith, map } from 'rxjs/operators';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { MatDialog } from '@angular/material/dialog';
+import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
 
 @Component({
   selector: 'app-registro',
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss'],
-  //encapsulation: ViewEncapsulation.None,
+
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -31,6 +33,7 @@ export class RegistroComponent implements OnInit {
   nacionalidades: any = [];
   roles: any = [];
   hide = true;
+  escritura = false;
 
   private idNacionalidad: number;
 
@@ -49,7 +52,7 @@ export class RegistroComponent implements OnInit {
     private user: UsuarioService,
     private _formBuilder: FormBuilder,
     private router: Router,
-
+    private openView: MatDialog
   ) { }
 
   date: any;
@@ -59,6 +62,7 @@ export class RegistroComponent implements OnInit {
   ngOnInit(): void {
     this.cargarRoles();
     this.obtenerNacionalidades();
+    this.VerificarCodigo();
     this.primeroFormGroup = this._formBuilder.group({
       codigoForm: [''],
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
@@ -86,14 +90,29 @@ export class RegistroComponent implements OnInit {
         startWith(''),
         map(value => this._filter(value))
       );
+    this.segundoFormGroup.patchValue({
+      estadoForm: 1
+    })
+  }
 
+  datosCodigo: any = [];
+  VerificarCodigo() {
+    this.datosCodigo = [];
     this.rest.ObtenerCodigo().subscribe(datos => {
-      this.estilo = { 'visibility': 'visible' }; this.HabilitarDescrip = false;
-      this.primeroFormGroup.patchValue({
-        codigoForm: parseInt(datos[0].valor) + 1
-      })
+      this.datosCodigo = datos;
+      if (this.datosCodigo[0].automatico === true) {
+        this.primeroFormGroup.patchValue({
+          codigoForm: parseInt(this.datosCodigo[0].valor) + 1
+        })
+        this.escritura = true;
+      }
+      else {
+        this.escritura = false;
+      }
     }, error => {
-      this.toastr.info('Primero configurar el código de empleado.');
+      this.toastr.info('Primero configurar el código de empleado.','', {
+        timeOut: 6000,
+      });
       this.router.navigate(['/codigo/']);
     });
   }
@@ -120,7 +139,9 @@ export class RegistroComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -137,12 +158,14 @@ export class RegistroComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
 
-  limpliarCampos() {
+  LimpiarCampos() {
     this.primeroFormGroup.reset();
     this.segundoFormGroup.reset();
     this.terceroFormGroup.reset();
@@ -156,7 +179,7 @@ export class RegistroComponent implements OnInit {
 
   insertarEmpleado(form1, form2, form3) {
 
-    // busca el id de la nacionalidad elegida en el autocompletado
+    // Busca el id de la nacionalidad elegida en el autocompletado
     this.nacionalidades.forEach(obj => {
       if (form2.nacionalidadForm == obj.nombre) {
         console.log(obj);
@@ -164,7 +187,7 @@ export class RegistroComponent implements OnInit {
       }
     });
 
-    // realiza un capital letter a los nombres y apellidos
+    // Realizar un capital letter a los nombres y apellidos
     var NombreCapitalizado: any;
     let nombres = form1.nombreForm.split(' ');
     if (nombres.length > 1) {
@@ -205,25 +228,26 @@ export class RegistroComponent implements OnInit {
       id_nacionalidad: this.idNacionalidad,
       codigo: form1.codigoForm
     };
-
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      console.log(dataEmpleado);
+ 
+    if (this.contador === 0) {
       this.rest.postEmpleadoRest(dataEmpleado).subscribe(response => {
         if (response.message === 'error') {
-          this.toastr.error('Recuerde que el código del empleado es único, por tanto no se puede repetir en otro registros', 'Uno de los datos ingresados es Incorrecto');
+          this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto', {
+            timeOut: 6000,
+          });
         }
         else {
-          this.toastr.success('Operacion Exitosa', 'Empleado guardado');
           this.empleadoGuardado = response;
-          this.GuardarDatosUsuario(form3, this.empleadoGuardado.id);
-          this.ActualizarCodigo(form1.codigoForm);
-          this.limpliarCampos();
+          this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
         }
-      }, error => { });
-    }, error => { });
+      });
+    }
+    else {
+      this.GuardarDatosUsuario(form3, this.empleadoGuardado.id, form1);
+    }
   }
 
-  agregarDiscapacidad(id: string) {
+  verDatos(id: string) {
     this.router.navigate(['/verEmpleado/', id]);
   }
 
@@ -233,7 +257,8 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  GuardarDatosUsuario(form3, id) {
+  contador: number = 0;
+  GuardarDatosUsuario(form3, id, form1) {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form3.passForm).end();
@@ -247,17 +272,40 @@ export class RegistroComponent implements OnInit {
       app_habilita: true
     }
     this.user.postUsuarioRest(dataUser).subscribe(data => {
-      this.agregarDiscapacidad(id);
+      if (data.message === 'error') {
+        this.toastr.error('Por favor ingrese otro nombre de usuario', 'Nombre de usuario existente', {
+          timeOut: 6000,
+        });
+        this.contador = 1;
+      }
+      else {
+        this.ActualizarCodigo(form1.codigoForm);
+        this.verDatos(id);
+        this.toastr.success('Operacion Exitosa', 'Empleado guardado', {
+          timeOut: 6000,
+        });
+        this.LimpiarCampos();
+        this.contador = 0;
+      }
     });
   }
 
   ActualizarCodigo(codigo) {
-    let dataCodigo = {
-      valor: codigo,
-      id: 1
+    if (this.datosCodigo[0].automatico === true) {
+      let dataCodigo = {
+        valor: codigo,
+        id: 1
+      }
+      this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
+      })
     }
-    this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
-    })
+  }
+
+  AbrirLeaflet() {
+    this.openView.open(EmplLeafletComponent, {width: '550px', height: '550px'}).afterClosed().subscribe(res => {
+      console.log(res);
+      
+    });
   }
 
 }

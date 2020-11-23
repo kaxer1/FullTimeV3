@@ -130,7 +130,9 @@ export class ListarTipoComidasComponent implements OnInit {
   Eliminar(id_tipo: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_tipo).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerTipoComidas();
     });
   }
@@ -312,10 +314,14 @@ export class ListarTipoComidasComponent implements OnInit {
         this.ObtenerTipoComidas();
         window.location.reload();
       } else {
-        this.toastr.error('Solo se acepta Tipo Comidas', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta Tipo Comidas', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -325,7 +331,9 @@ export class ListarTipoComidasComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Tipo Comidas importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Tipo Comidas importada.', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

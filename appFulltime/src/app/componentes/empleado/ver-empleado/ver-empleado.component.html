@@ -936,13 +936,13 @@
     <mat-tab>
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">local_dining</mat-icon>
-            Almuerzos
+            Alimentación
         </ng-template>
         <div class="container" style="padding-top: 15px; padding-bottom: 25px;">
             <mat-card class="mat-elevation-z8">
                 <div class="d-flex bd-highlight barraTitulo">
                     <div class="w-100 bd-highlight">
-                        <h5>Planificación Comidas</h5>
+                        <h5>Alimentación</h5>
                     </div>
                     <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
                         <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;"
@@ -1051,6 +1051,14 @@
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Fecha Ingreso:</label>
                                     <label>{{pt.fec_final.split("T")[0]}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Hora Salida:</label>
+                                    <label>{{pt.hora_salida}}</label>
+                                </div>
+                                <div class="caja1 d-flex justify-content-start">
+                                    <label id="datosF">Hora Ingreso:</label>
+                                    <label>{{pt.hora_ingreso}}</label>
                                 </div>
                                 <div class="caja1 d-flex justify-content-start">
                                     <label id="datosF">Documento:</label>

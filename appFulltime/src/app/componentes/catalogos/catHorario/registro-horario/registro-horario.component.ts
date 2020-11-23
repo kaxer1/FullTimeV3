@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -9,19 +9,18 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
   selector: 'app-registro-horario',
   templateUrl: './registro-horario.component.html',
   styleUrls: ['./registro-horario.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class RegistroHorarioComponent implements OnInit {
 
+  nocturno = false;
   isChecked: boolean = false;
   
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
-  flexible = new FormControl('', Validators.required);
-  porHoras = new FormControl('', Validators.required);
+  tipoF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
 
@@ -30,9 +29,8 @@ export class RegistroHorarioComponent implements OnInit {
     horarioNombreForm: this.nombre,
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
-    horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    tipoForm: this.tipoF
   });
 
   constructor(
@@ -50,19 +48,22 @@ export class RegistroHorarioComponent implements OnInit {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
-      flexible: form.horarioFlexibleForm,
-      por_horas: form.horarioPorHorasForm,
-      doc_nombre: form.nombreCertificadoForm
+      doc_nombre: form.nombreCertificadoForm,
+      nocturno: form.tipoForm
     };
     if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
     }
     if (form.nombreCertificadoForm === '') {
       this.rest.postHorarioRest(dataHorario).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.toastr.success('Operación Exitosa', 'Horario registrado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -74,16 +75,22 @@ export class RegistroHorarioComponent implements OnInit {
   GuardarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.postHorarioRest(datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario registrado');
+        this.toastr.success('Operación Exitosa', 'Horario registrado', {
+          timeOut: 6000,
+        });
         this.LimpiarCampos();
         this.idHorario = response;
         this.SubirRespaldo(this.idHorario.id);
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -99,7 +106,9 @@ export class RegistroHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -116,7 +125,9 @@ export class RegistroHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -169,7 +180,9 @@ export class RegistroHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

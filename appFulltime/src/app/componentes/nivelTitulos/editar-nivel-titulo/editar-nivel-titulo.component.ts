@@ -35,7 +35,9 @@ export class EditarNivelTituloComponent implements OnInit {
       nombre: form.NivelTituloNombreForm,
     };
     this.restNivelTitulos.ActualizarNivelTitulo(dataNivelTitulo).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Nivel del título actualizado');
+      this.toastr.success('Operación Exitosa', 'Nivel del título actualizado', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaRegistroTitulo();
     }, error => {
     });
@@ -73,7 +75,9 @@ export class EditarNivelTituloComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

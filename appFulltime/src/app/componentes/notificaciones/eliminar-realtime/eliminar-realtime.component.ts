@@ -45,7 +45,9 @@ export class EliminarRealtimeComponent implements OnInit {
       console.log('Eliminacion de notificaciones de timbres');
       this.restAvisos.EliminarAvisos(this.ids).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message)
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        })
       });
       this.dialogRef.close(true);
       
@@ -53,7 +55,9 @@ export class EliminarRealtimeComponent implements OnInit {
       console.log('Eliminacion de notificaciones de permisos, horas extras y vacaciones');
       this.realtime.EliminarNotificaciones(this.ids).subscribe(res => {
         console.log(res);
-        this.toastr.success(res.message)
+        this.toastr.success(res.message,'', {
+          timeOut: 6000,
+        })
       });
       this.dialogRef.close(true);
     }

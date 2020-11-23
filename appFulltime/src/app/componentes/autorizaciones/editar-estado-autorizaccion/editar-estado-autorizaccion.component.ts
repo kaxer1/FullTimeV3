@@ -52,7 +52,9 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
     console.log(this.data.empl[0].id_empleado);
     console.log(this.data.empl[0].estado);
     if (this.data.empl[0].estado === 1) {
-      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.')
+      this.toastr.info('La autorización esta en pendiente. Pre-autoriza o Autoriza el permiso.','', {
+        timeOut: 6000,
+      })
     } else {
       this.estadoAutorizacionesForm.patchValue({
         estadoF: this.data.auto.estado
@@ -83,7 +85,9 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
     this.restA.PutEstadoAutoPermiso(this.data.auto.id, newAutorizaciones).subscribe(res => {
       this.resAutorizacion = [res];
       console.log(this.resAutorizacion);
-      this.toastr.success('Operación exitosa', 'Estado Actualizado');
+      this.toastr.success('Operación exitosa', 'Estado Actualizado', {
+        timeOut: 6000,
+      });
       this.EditarEstadoPermiso(this.data.auto.id_permiso, this.data.auto.id_departamento, form, this.data.empl[0].id_empleado, form.estadoF);
     })
   }

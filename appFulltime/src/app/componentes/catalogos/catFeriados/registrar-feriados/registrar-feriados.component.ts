@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 
@@ -12,7 +13,6 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
   selector: 'app-registrar-feriados',
   templateUrl: './registrar-feriados.component.html',
   styleUrls: ['./registrar-feriados.component.css'],
-  //encapsulation: ViewEncapsulation.None
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -48,26 +48,66 @@ export class RegistrarFeriadosComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  feriados: any = [];
+  contador: number = 0;
   InsertarFeriado(form) {
+    this.feriados = [];
+    this.contador = 0;
     let datosFeriado = {
       fecha: form.fechaForm,
       descripcion: form.descripcionForm,
       fec_recuperacion: form.fechaRecuperacionForm
     };
-    if (datosFeriado.fec_recuperacion === '') {
+    if (datosFeriado.fec_recuperacion === '' || datosFeriado.fec_recuperacion === null) {
       datosFeriado.fec_recuperacion = null;
+      this.CrearFeriado(datosFeriado);
     }
-    this.rest.CrearNuevoFeriado(datosFeriado).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Feriado registrado')
-      this.rest.ConsultarUltimoId().subscribe(response => {
-        this.idUltimoFeriado = response;
-        this.LimpiarCampos();
-        this.salir = true;
-        this.dialogRef.close(this.salir)
-        this.router.navigate(['/verFeriados/', this.idUltimoFeriado[0].max]);
-      }, error => { });
-    }, error => {
-      this.toastr.error('Operación Fallida', 'Feriado no se pudo registrar')
+    else {
+      this.rest.ConsultarFeriado().subscribe(response => {
+        this.feriados = response;
+        this.feriados.forEach(obj => {
+          if (obj.fecha.split('T')[0] === moment(datosFeriado.fec_recuperacion).format('YYYY-MM-DD')) {
+            this.contador = this.contador + 1;
+          }
+        })
+        if (this.contador === 0) {
+          if (Date.parse(form.fechaForm) < Date.parse(datosFeriado.fec_recuperacion)) {
+            this.CrearFeriado(datosFeriado);
+          }
+          else {
+            this.toastr.error('La fecha de recuperación debe ser posterior a la fecha del feriado registrado.', 'Fecha de recuperación incorrecta', {
+              timeOut: 6000,
+            })
+          }
+        }
+        else {
+          this.toastr.error('La fecha de recuperación se encuentra registrada como un feriado.', 'Verificar fecha de recuperación', {
+            timeOut: 6000,
+          })
+        }
+      })
+    }
+  }
+
+  CrearFeriado(datos) {
+    this.rest.CrearNuevoFeriado(datos).subscribe(response => {
+      if (response.message === 'error') {
+        this.toastr.error('La fecha del feriado o la fecha de recuperación se encuentran dentro de otro registro.', 'Verificar las fechas', {
+          timeOut: 6000,
+        })
+      }
+      else {
+        this.toastr.success('Operación Exitosa', 'Feriado registrado', {
+          timeOut: 6000,
+        })
+        this.rest.ConsultarUltimoId().subscribe(response => {
+          this.idUltimoFeriado = response;
+          this.LimpiarCampos();
+          this.salir = true;
+          this.dialogRef.close(this.salir)
+          this.router.navigate(['/verFeriados/', this.idUltimoFeriado[0].max]);
+        });
+      }
     });
   }
 
@@ -102,7 +142,9 @@ export class RegistrarFeriadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

@@ -131,7 +131,9 @@ export class ListarRelojesComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -161,7 +163,9 @@ export class ListarRelojesComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarRelojes(id_reloj: number) {
     this.rest.EliminarRegistro(id_reloj).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerReloj();
     });
   }
@@ -202,10 +206,14 @@ export class ListarRelojesComponent implements OnInit {
       if (itemName.toLowerCase() == 'dispositivos') {
         this.plantilla();
       } else {
-        this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta');
+        this.toastr.error('Solo se acepta Dispositvos', 'Plantilla seleccionada incorrecta', {
+          timeOut: 6000,
+        });
       }
     } else {
-      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -217,7 +225,9 @@ export class ListarRelojesComponent implements OnInit {
     this.rest.subirArchivoExcel(formData).subscribe(res => {
       this.ObtenerReloj();
       window.location.reload();
-      this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Relojes importada.', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

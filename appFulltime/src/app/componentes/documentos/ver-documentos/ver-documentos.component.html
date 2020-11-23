@@ -1,4 +1,21 @@
 <br>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active" aria-current="page">Carpetas</li>
+    </ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-center" style="margin-bottom: 25px">
+    <div *ngFor="let c of array_carpetas" style="padding: 20px 20px 20px 20px; height: 120px; width: 120px;">
+        <button class="btn" type="button" id="cajas-carpetas" 
+            (click)="AbrirCarpeta(c.filename)">
+            <mat-icon id="icono">folder</mat-icon>
+            <h5 id="letras">{{c.nombre}}</h5>
+        </button>
+    </div>
+</div>
+<!-- 
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
@@ -72,4 +89,4 @@
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
     </div>
-</div>
+</div> -->

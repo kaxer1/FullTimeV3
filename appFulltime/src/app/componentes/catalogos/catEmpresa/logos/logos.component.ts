@@ -46,7 +46,9 @@ export class LogosComponent implements OnInit {
     this.restK.EditarLogoEmpresa(this.data, formData).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
       if (res.imagen != 0) { this.textoBoton = 'Editar'};
-      this.toastr.success('Operación Exitosa', 'Logotipo Actualizado.');
+      this.toastr.success('Operación Exitosa', 'Logotipo Actualizado.', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.dialogRef.close(true)
     });

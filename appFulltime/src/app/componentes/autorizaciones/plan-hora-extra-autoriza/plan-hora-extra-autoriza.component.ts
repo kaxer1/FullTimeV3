@@ -108,7 +108,9 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
       id_documento: localStorage.getItem('empleado') + '_' + form.estadoF + ',',
     }
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
+      this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+        timeOut: 6000,
+      });
       this.EditarEstadoPlan(id_hora, id_departamento, empleado_solicita, form.estadoF);
       if (form.estadoF === 3) {
         this.NotificarPlanificacion(empleado_solicita);
@@ -126,7 +128,9 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
       id_plan_hora_extra: id_hora,
     }
     this.restAutorizaciones.PutEstadoAutoPermisoMultiple(newAutorizacionesM).subscribe(resA => {
-      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
+      this.toastr.success('Operación Exitosa', 'Autorización Guardada', {
+        timeOut: 6000,
+      });
       this.EditarEstadoPlan(id_hora, id_departamento, empleado_solicita, form.estadoF);
       if (form.estadoF === 3) {
         this.NotificarPlanificacion(empleado_solicita);
@@ -177,7 +181,9 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
     //console.log(mensaje);
     this.restPlanH.EnviarMensajePlanificacion(mensaje).subscribe(res => {
       console.log(res.message);
-      this.toastr.success(res.message);
+      this.toastr.success(res.message,'', {
+        timeOut: 6000,
+      });
     })
   }
 

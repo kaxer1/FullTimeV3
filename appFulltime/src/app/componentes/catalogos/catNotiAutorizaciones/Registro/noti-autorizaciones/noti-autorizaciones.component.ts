@@ -61,7 +61,9 @@ export class NotiAutorizacionesComponent implements OnInit {
     }
     console.log(newNotiAutori);
     this.restNotiAutorizaciones.postNotiAutoriRest(newNotiAutori).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion de Notificación guardada'),
+      this.toastr.success('Operación Exitosa', 'Autorizacion de Notificación guardada', {
+        timeOut: 6000,
+      }),
       this.limpiarCampos();
       this.CerrarVentanaRegistroNoti();
     }, error => {

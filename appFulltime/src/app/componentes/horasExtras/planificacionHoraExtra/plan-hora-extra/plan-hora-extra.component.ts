@@ -45,8 +45,6 @@ export class PlanHoraExtraComponent implements OnInit {
   horaInicioF = new FormControl('');
   horaFinF = new FormControl('', [Validators.required]);
   horasF = new FormControl('', [Validators.required]);
-  estadoF = new FormControl('', [Validators.required]);
-  funcionF = new FormControl('', [Validators.required]);
 
   public PedirHoraExtraForm = new FormGroup({
     fechaSolicitudForm: this.fechaSolicitudF,
@@ -56,8 +54,6 @@ export class PlanHoraExtraComponent implements OnInit {
     horaInicioForm: this.horaInicioF,
     horaFinForm: this.horaFinF,
     horasForm: this.horasF,
-    estadoForm: this.estadoF,
-    funcionForm: this.funcionF
   });
 
   FechaActual: any;
@@ -86,6 +82,7 @@ export class PlanHoraExtraComponent implements OnInit {
       fechaSolicitudForm: this.FechaActual,
       estadoForm: 1
     });
+    console.log('datos', this.data)
   }
 
   HoraExtraResponse: any;
@@ -98,37 +95,52 @@ export class PlanHoraExtraComponent implements OnInit {
     this.datosSeleccionados = this.data.planifica;
     let dataPlanHoraExtra = {
       id_empl_planifica: this.id_user_loggin,
-      id_empl_realiza: this.data.planifica.id,
       fecha_desde: form1.fechaInicioForm,
       fecha_hasta: form1.FechaFinForm,
       hora_inicio: form1.horaInicioForm,
       hora_fin: form1.horaFinForm,
       descripcion: form1.descripcionForm,
       horas_totales: form1.horasForm,
-      estado: form1.estadoForm,
-      observacion: false,
-      justifica: false,
-      id_empl_cargo: this.data.planifica.id_cargo,
-      id_empl_contrato: this.data.planifica.id_contrato
     }
-    if (this.datosSeleccionados.length != undefined) {
-      this.data.planifica.map(obj =>{
-        dataPlanHoraExtra.id_empl_realiza = obj.id;
-        dataPlanHoraExtra.id_empl_cargo = obj.id_cargo;
-        dataPlanHoraExtra.id_empl_contrato = obj.id_contrato;
-        this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
-          this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), obj.id)
+    this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
+      let dataPlanHoraExtraEmpleado = {
+        id_plan_hora: 0,
+        id_empl_realiza: this.data.planifica.id,
+        estado: 1,
+        observacion: false,
+        codigo: this.data.planifica.codigo,
+        id_empl_cargo: this.data.planifica.id_cargo,
+        id_empl_contrato: this.data.planifica.id_contrato
+      }
+
+      if (this.datosSeleccionados.length != undefined) {
+        this.restPE.ConsultarUltimoPlanHora().subscribe(data => {
+        this.data.planifica.map(obj => {
+          dataPlanHoraExtraEmpleado.id_empl_realiza = obj.id;
+          dataPlanHoraExtraEmpleado.id_empl_cargo = obj.id_cargo;
+          dataPlanHoraExtraEmpleado.id_empl_contrato = obj.id_contrato;
+          dataPlanHoraExtraEmpleado.codigo = obj.codigo;
+          console.log('codigo', obj.codigo)
+            dataPlanHoraExtraEmpleado.id_plan_hora = data[0].id_plan_hora;
+            this.restPE.CrearPlanHoraExtraEmpleado(dataPlanHoraExtraEmpleado).subscribe(response => {
+              this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), obj.id)
+            })
+          })
         })
-      })
-    }
-    else {
-      this.restPE.CrearPlanificacionHoraExtra(dataPlanHoraExtra).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horas Extras planificadas');
-        this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), this.data.planifica.id)
-      })
-    }
+      }
+      else {
+        this.restPE.ConsultarUltimoPlanHora().subscribe(data => {
+          dataPlanHoraExtraEmpleado.id_plan_hora = data[0].id_plan_hora;
+          this.restPE.CrearPlanHoraExtraEmpleado(dataPlanHoraExtraEmpleado).subscribe(response => {
+            this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), this.data.planifica.id)
+          })
+        })
+      }
+    })
     this.dialogRef.close();
+    this.toastr.success('Operación Exitosa', 'Horas Extras planificadas', {
+      timeOut: 10000,
+    });
   }
 
   IngresarSoloLetras(e) {
@@ -146,7 +158,9 @@ export class PlanHoraExtraComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -163,7 +177,9 @@ export class PlanHoraExtraComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -194,7 +210,9 @@ export class PlanHoraExtraComponent implements OnInit {
       }
     }
     else {
-      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR')
+      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -204,10 +222,8 @@ export class PlanHoraExtraComponent implements OnInit {
       id_empl_recive: id_empleado_recibe,
       mensaje: 'Puede realizar horas extras \n' + inicio + ' - ' + fin
     }
-    //console.log(mensaje);
     this.restPE.EnviarMensajePlanificacion(mensaje).subscribe(res => {
       console.log(res.message);
-      this.toastr.success(res.message);
     })
   }
 

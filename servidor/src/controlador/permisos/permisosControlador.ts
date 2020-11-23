@@ -73,13 +73,15 @@ class PermisosControlador {
     }
 
     public async CrearPermisos(req: Request, res: Response): Promise<void> {
-        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre, id_empl_cargo, depa_user_loggin } = req.body;
+        const { fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado, estado,
+            dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre,
+            id_empl_cargo, hora_salida, hora_ingreso, codigo, depa_user_loggin } = req.body;
         await pool.query('INSERT INTO permisos (fec_creacion, descripcion, fec_inicio, fec_final, dia, ' +
             'hora_numero, legalizado, estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, ' +
-            'num_permiso, docu_nombre, id_empl_cargo VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
-            '$13, $14, $15)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
+            'num_permiso, docu_nombre, id_empl_cargo, hora_salida, hora_ingreso, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, ' +
+            '$13, $14, $15, $16, $17, $18)', [fec_creacion, descripcion, fec_inicio, fec_final, dia, hora_numero, legalizado,
             estado, dia_libre, id_tipo_permiso, id_empl_contrato, id_peri_vacacion, num_permiso, docu_nombre,
-            id_empl_cargo]);
+            id_empl_cargo, hora_salida, hora_ingreso, codigo]);
 
         const JefesDepartamentos = await pool.query('SELECT da.id, da.estado, cg.id AS id_dep, cg.depa_padre, ' +
             'cg.nivel, s.id AS id_suc, cg.nombre AS departamento, s.nombre AS sucursal, ecr.id AS cargo, ' +
@@ -183,7 +185,26 @@ class PermisosControlador {
     public async ObtenerPermisoContrato(req: Request, res: Response) {
         try {
             const { id_empl_contrato } = req.params;
-            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, t.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                'WHERE p.id_tipo_permiso = t.id AND p.id_empl_contrato = $1', [id_empl_contrato]);
+            return res.jsonp(PERMISO.rows)
+        } catch (error) {
+            return res.jsonp(null);
+        }
+    }
+
+    public async ObtenerPermisoCodigo(req: Request, res: Response) {
+        try {
+            const { codigo } = req.params;
+            const PERMISO = await pool.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                'p.hora_salida, p.hora_ingreso, p.codigo, ' +
+                't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                'WHERE p.id_tipo_permiso = t.id AND p.codigo = $1 ORDER BY p.num_permiso DESC', [codigo]);
             return res.jsonp(PERMISO.rows)
         } catch (error) {
             return res.jsonp(null);
@@ -246,7 +267,7 @@ class PermisosControlador {
             InfoPermisoReenviarEstadoEmpleado.rows.forEach(ele => {
                 if (estado === 1) {
                     estado_letras = 'Pendiente';
-                } 
+                }
                 else if (estado === 2) {
                     estado_letras = 'Pre-autorizado';
                 }
@@ -264,7 +285,7 @@ class PermisosControlador {
                     id_permiso: id_permiso,
                     id_vacaciones: null
                 }
-             
+
                 console.log(notifi_realtime);
                 let data = {
                     from: obj.correo,
@@ -353,20 +374,19 @@ class PermisosControlador {
 
     public async EditarPermiso(req: Request, res: Response): Promise<void> {
         const id = req.params.id
-        const { descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre } = req.body;
+        const { descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre, hora_salida, hora_ingreso } = req.body;
         console.log(descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, anterior_doc, docu_nombre);
         if (anterior_doc === null && docu_nombre === null) {
-            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8 WHERE id = $9', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, id]);
+            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, hora_salida = $9, hora_ingreso = $10 WHERE id = $11', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, hora_salida, hora_ingreso, id]);
             res.jsonp({ message: 'Permiso Editado' });
         } else {
-            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, docu_nombre = $9 WHERE id = $10', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, docu_nombre, id]);
+            await pool.query('UPDATE permisos SET descripcion = $1, fec_inicio = $2, fec_final = $3, dia = $4, dia_libre = $5, id_tipo_permiso = $6, hora_numero = $7, num_permiso = $8, docu_nombre = $9, hora_salida = $10, hora_ingreso = $11 WHERE id = $12', [descripcion, fec_inicio, fec_final, dia, dia_libre, id_tipo_permiso, hora_numero, num_permiso, docu_nombre, hora_salida, hora_ingreso, id]);
             console.log(anterior_doc, docu_nombre);
             let filePath = `servidor\\docRespaldosPermisos\\${anterior_doc}`
             let direccionCompleta = __dirname.split("servidor")[0] + filePath;
             fs.unlinkSync(direccionCompleta);
             res.jsonp({ message: 'Permiso Editado' });
         }
-
     }
 }
 

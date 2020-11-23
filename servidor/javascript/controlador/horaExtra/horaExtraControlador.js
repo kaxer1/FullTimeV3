@@ -21,7 +21,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 1 OR h.estado = 2) AND ' +
@@ -37,7 +37,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidasObservacion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 1 OR h.estado = 2) AND ' +
@@ -53,7 +53,7 @@ class HorasExtrasPedidasControlador {
     ListarHorasExtrasPedidasAutorizadas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const HORAS_EXTRAS_PEDIDAS = yield database_1.default.query('SELECT h.id, h.fec_inicio, h.fec_final, h.estado, ' +
-                'h.fec_solicita, h.descripcion, h.num_hora, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
+                'h.fec_solicita, h.descripcion, h.num_hora, h.tiempo_autorizado, e.id AS id_usua_solicita, h.id_empl_cargo, ' +
                 'e.nombre, e.apellido, contrato.id AS id_contrato FROM hora_extr_pedidos AS h, empleados AS e, ' +
                 'empl_contratos As contrato, empl_cargos AS cargo WHERE h.id_usua_solicita = e.id AND ' +
                 '(h.estado = 3 OR h.estado = 4) AND ' +

@@ -61,6 +61,7 @@ const reportesRutas_1 = __importDefault(require("./rutas/reportes/reportesRutas"
 const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/planHoraExtraRutas"));
 const datosGeneralesRutas_1 = __importDefault(require("./rutas/datosGenerales/datosGeneralesRutas"));
 const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
+const planGeneralRutas_1 = __importDefault(require("./rutas/planGeneral/planGeneralRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -132,6 +133,7 @@ class Servidor {
         this.app.use('/noti-real-time', notificacionesRutas_1.default);
         // Timbres
         this.app.use('/timbres', timbresRutas_1.default);
+        this.app.use('/planificacion_general', planGeneralRutas_1.default);
         // Plantillas
         this.app.use('/plantillaD', plantillaRutas_1.default);
         // Documentos

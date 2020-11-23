@@ -117,10 +117,7 @@ export class VacacionAutorizacionesComponent implements OnInit {
       id_plan_hora_extra: null,
     }
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
       this.EditarEstadoVacacion(form, id_vacacion, empleado_solicita, id_departamento);
-      this.limpiarCampos();
-      this.dialogRef.close();
     }, error => { })
   }
 
@@ -132,14 +129,12 @@ export class VacacionAutorizacionesComponent implements OnInit {
       id_vacacion: id_vacacion,
     }
     this.restAutorizaciones.PutEstadoAutoVacacion(newAutorizacionesM).subscribe(resA => {
-      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
       this.EditarEstadoVacacion(form, id_vacacion, empleado_solicita, id_departamento);
-      this.limpiarCampos();
-      this.dialogRef.close();
     })
   }
 
   resVacacion: any = [];
+  contador: number = 0;
   EditarEstadoVacacion(form, id_vacacion, id_empleado, id_departamento) {
     let datosVacacion = {
       estado: form.estadoF,
@@ -183,6 +178,21 @@ export class VacacionAutorizacionesComponent implements OnInit {
         }
       });
     });
+    console.log('contador', this.contador);
+    this.contador = this.contador + 1;
+    if (this.data.carga === 'multiple') {
+      console.log('arreglo', this.data.datosVacacion.length);
+      if (this.contador === this.data.datosVacacion.length) {
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+          timeOut: 6000,
+        });
+        console.log('idpermiso', 'entra');
+        this.dialogRef.close();
+      }
+    }
+    else {
+      this.dialogRef.close();
+    }
   }
 
   Habilitado: boolean = true;

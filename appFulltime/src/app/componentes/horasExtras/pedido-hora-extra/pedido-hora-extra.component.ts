@@ -99,7 +99,9 @@ export class PedidoHoraExtraComponent implements OnInit {
 
     console.log(fi.toJSON()); console.log(ff.toJSON());
     if (fi > ff) {
-      this.toastr.error('Fecha inicial no puede ser mayor a fecha final')
+      this.toastr.error('Fecha inicial no puede ser mayor a fecha final','', {
+        timeOut: 6000,
+      })
       this.fechaInicioF.reset();
       this.FechaFinF.reset()
     }
@@ -117,17 +119,23 @@ export class PedidoHoraExtraComponent implements OnInit {
 
     console.log(valor1[0]); console.log(valor2[0]);
     if (valor1[0] === undefined || valor2[0] === undefined) {
-      this.toastr.error('Fechas seleccionadas no corresponden a la semana laboral actual');
+      this.toastr.error('Fechas seleccionadas no corresponden a la semana laboral actual','', {
+        timeOut: 6000,
+      });
       this.fechaInicioF.reset();
       this.FechaFinF.reset()
     }
 
     if (valor1[0] === true) {
-      this.toastr.info('Fecha de inicio tiene dia libre')
+      this.toastr.info('Fecha de inicio tiene dia libre','', {
+        timeOut: 6000,
+      })
       this.fechaInicioF.reset();
     }
     if (valor2[0] === true) {
-      this.toastr.info('Fecha de fin tiene dia libre')
+      this.toastr.info('Fecha de fin tiene dia libre','', {
+        timeOut: 6000,
+      })
       this.FechaFinF.reset()
     }
 
@@ -160,10 +168,14 @@ export class PedidoHoraExtraComponent implements OnInit {
 
     this.restHE.GuardarHoraExtra(dataPedirHoraExtra).subscribe(response => {
       if (response.message) {
-        this.toastr.error(response.message);
+        this.toastr.error(response.message,'', {
+          timeOut: 6000,
+        });
       } else {
 
-      this.toastr.success('Operación Exitosa', 'Hora extra solicitada');
+      this.toastr.success('Operación Exitosa', 'Hora extra solicitada', {
+        timeOut: 6000,
+      });
       this.dialogRef.close()
       this.arrayNivelesDepa = response;
       console.log(this.arrayNivelesDepa);
@@ -230,7 +242,9 @@ export class PedidoHoraExtraComponent implements OnInit {
 
   IngresarDatos(datos) {
     this.rest.postTipoPermisoRest(datos).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+      this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado', {
+        timeOut: 6000,
+      });
       window.location.reload();
     }, error => {
     });
@@ -251,7 +265,9 @@ export class PedidoHoraExtraComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -268,7 +284,9 @@ export class PedidoHoraExtraComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -299,7 +317,9 @@ export class PedidoHoraExtraComponent implements OnInit {
       }
     }
     else {
-      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR')
+      this.toastr.info('Debe ingresar la hora de inicio y la hora de fin de actividades.', 'VERIFICAR', {
+        timeOut: 6000,
+      })
     }
   }
 

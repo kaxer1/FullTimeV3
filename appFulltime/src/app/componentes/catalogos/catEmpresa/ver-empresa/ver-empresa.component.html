@@ -1,19 +1,18 @@
 <div class="container" *ngFor="let e of datosEmpresa" style="padding-top: 15px;">
     <mat-card class="example-card mat-elevation-z8">
         <div class="barraTituloD">
-            <span>DATOS GENERALES</span>
+            <span>{{e.nombre.toUpperCase()}}</span>
         </div>
         <mat-card-content>
             <div class="container" style="padding-top: 15px;">
+                <br>
                 <div class="row">
-                    <br>
-                    <div class="col">
-                        <label id="datosF" class="col-sm col-form-label text-center" style="margin: auto auto">{{e.nombre.toUpperCase()}}</label>
-                    </div>
+                    <div class="col"></div>
                     <div class="col">
                         <div class="btn-contenedor">
-                            <figure>
-                                <img *ngIf="!imagen_default" src="../../../../../assets/imagenes/photo.png" alt="logo_default" srcset="" id="style_logo">
+                            <figure class="text-center">
+                                <img *ngIf="!imagen_default" src="../../../../../assets/imagenes/photo.png"
+                                    alt="logo_default" srcset="" id="style_logo">
                                 <img *ngIf="imagen_default" src="{{logo}}" alt="logo_empresa" srcset="" id="style_logo">
                                 <a (click)="EditarLogo()" matSuffix matTooltipPosition="right"
                                     matTooltip="Editar logo de la empresa">
@@ -22,6 +21,7 @@
                             </figure>
                         </div>
                     </div>
+                    <div class="col"></div>
                 </div>
                 <br>
                 <div class="row">

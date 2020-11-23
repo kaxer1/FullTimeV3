@@ -117,7 +117,9 @@ export class HorasExtrasComponent implements OnInit {
 
     this.rest.postHoraExtraRest(dataHoraExtra)
       .subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Hora extra guardada');
+        this.toastr.success('Operación Exitosa', 'Hora extra guardada', {
+          timeOut: 6000,
+        });
       }, error => {
         console.log(error);
       });;

@@ -103,7 +103,6 @@ export class ReportePermisosComponent implements OnInit {
     this.empleadoLogueado = [];
     this.rest.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoLogueado = data;
-      console.log('emple', this.empleadoLogueado)
     })
   }
 
@@ -132,7 +131,7 @@ export class ReportePermisosComponent implements OnInit {
   }
 
   // Obtener lista de empleados que tienen datos de contrato y cargo
-    VerDatosEmpleado() {
+  VerDatosEmpleado() {
     this.datosEmpleado = [];
     this.restGeneral.ListarInformacionActual().subscribe(data => {
       this.datosEmpleado = data;
@@ -165,23 +164,22 @@ export class ReportePermisosComponent implements OnInit {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
       else {
-        this.toastr.info('El empleado no tiene registros de PERMISOS.')
+        this.toastr.info('El empleado no tiene registros de PERMISOS.','', {
+          timeOut: 6000,
+        })
       }
     })
   }
@@ -209,10 +207,10 @@ export class ReportePermisosComponent implements OnInit {
     this.restR.ObtenerAutorizacionPermiso(id_seleccionado).subscribe(dataA => {
       this.consultaAutoriza = dataA;
       // Este parametro nos permite verificar si ya recorrimos todo el array de datos
-      this.verificar = 0;
+      this.verificar = 1;
       // Recorremos el array de datos para cambiar el estado
       this.consultaAutoriza.map(obj => {
-        this.verificar = this.verificar + 1;
+
         if (obj.estado === 1) {
           obj.estado = 'Pendiente';
         }
@@ -241,22 +239,22 @@ export class ReportePermisosComponent implements OnInit {
             autorizado_por: dataE[0].e_nombre + ' ' + dataE[0].e_apellido
           }]
           // LLenamos el array de todos los datos encontrados
-          if (this.datosAutorizacion.length == 0) {
-            this.datosAutorizacion = datosAutoriza;
-          } else {
+          if (this.datosAutorizacion.length != 0) {
             this.datosAutorizacion = this.datosAutorizacion.concat(datosAutoriza)
+          } else {
+            this.datosAutorizacion = datosAutoriza;
           }
           // Verificamos si ya estan todos los datos y pasamos a generar los archivos
           if (this.verificar === this.consultaAutoriza.length) {
-            this.verificar = 0;
+            this.verificar = 1;
             if (archivo === 'pdf') {
-              console.log('archivo', archivo)
               this.generarPdf('open', id_seleccionado);
             }
             else if (archivo === 'excel') {
               this.exportToExcel(id_seleccionado, form);
             }
           }
+          this.verificar = this.verificar + 1;
         });
       })
     })
@@ -283,23 +281,22 @@ export class ReportePermisosComponent implements OnInit {
         permisos_horario = permisos_horario.concat(this.permisosPlanificacion);
         this.totalPermisos = permisos_horario;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba', this.totalPermisos);
       }
       else {
         this.totalPermisos = this.permisosPlanificacion;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba1', this.totalPermisos);
       }
       this.VerDatosAutorizacion(id_seleccionado, archivo, form);
     }, error => {
       if (permisos_horario.length != 0) {
         this.totalPermisos = permisos_horario;
         this.OrdenarDatos(this.totalPermisos);
-        console.log('prueba2', this.totalPermisos);
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
       else {
-        this.toastr.info('El empleado no tiene registros de PERMISOS.')
+        this.toastr.info('El empleado no tiene registros de PERMISOS.','', {
+          timeOut: 6000,
+        })
       }
     })
   }
@@ -311,7 +308,9 @@ export class ReportePermisosComponent implements OnInit {
     }
     else {
       if (form.inicioForm === '' || form.finalForm === '') {
-        this.toastr.info('Ingresar las dos fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA')
+        this.toastr.info('Ingresar las dos fechas de periodo de búsqueda.', 'VERIFICAR DATOS DE FECHA', {
+          timeOut: 6000,
+        })
       }
       else {
         console.log('fechas', form.inicioForm)
@@ -324,7 +323,9 @@ export class ReportePermisosComponent implements OnInit {
           this.LimpiarFechas();
         }
         else {
-          this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR');
+          this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
+            timeOut: 6000,
+          });
         }
       }
     }
@@ -346,7 +347,9 @@ export class ReportePermisosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -364,7 +367,9 @@ export class ReportePermisosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -511,7 +516,6 @@ export class ReportePermisosComponent implements OnInit {
       }
     })
     this.totalPermisos.forEach(obj => {
-      console.log('auto', this.datosAutorizacion)
       this.datosAutorizacion.forEach(element => {
         if (obj.id === element.id_permiso) {
           estado = element.estado;
@@ -751,7 +755,6 @@ export class ReportePermisosComponent implements OnInit {
     var estado, horas_decimal, dias_decimal, horas_horario, minutosHoras, tDias, horasDias, horaT, horaTDecimalH;
 
     this.totalPermisos.forEach(obj => {
-      console.log('auto', this.datosAutorizacion)
       this.datosAutorizacion.forEach(element => {
         if (obj.id === element.id_permiso) {
           estado = element.estado;

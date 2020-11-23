@@ -67,7 +67,9 @@ export class SettingsComponent implements OnInit {
     this.restN.IngresarConfigNotiEmpleado(data).subscribe(res => {
       console.log(res);
       this.dialogRef.close();
-      this.toaster.success('Operación exitosa', 'Configuración Guardada');
+      this.toaster.success('Operación exitosa', 'Configuración Guardada', {
+        timeOut: 6000,
+      });
     });
   }
 
@@ -84,7 +86,9 @@ export class SettingsComponent implements OnInit {
     this.restN.ActualizarConfigNotiEmpl(this.data.id_empleado, data).subscribe(res => {
       console.log(res);
       this.dialogRef.close();
-      this.toaster.success('Operación exitosa', 'Configuración Actualizada');
+      this.toaster.success('Operación exitosa', 'Configuración Actualizada', {
+        timeOut: 6000,
+      });
     });
   }
 }

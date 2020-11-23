@@ -126,7 +126,9 @@ export class EditarHorasExtrasComponent implements OnInit {
 
     this.rest.ActualizarDatos(dataHoraExtra)
       .subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Hora extra actualizada');
+        this.toastr.success('Operación Exitosa', 'Hora extra actualizada', {
+          timeOut: 6000,
+        });
         this.CerrarVentana();
       }, error => {
         console.log(error);

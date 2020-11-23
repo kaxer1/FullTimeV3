@@ -299,6 +299,10 @@ import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-emplea
 import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
 import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
 import { CorreoEmpresaComponent } from './componentes/catalogos/catEmpresa/correo-empresa/correo-empresa.component';
+import { ListaPlanificacionesComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-planificaciones/lista-planificaciones.component';
+import { EditarPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/editar-plan-hora-extra/editar-plan-hora-extra.component';
+import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
+import { EmplLeafletComponent } from './componentes/settings/leaflet/empl-leaflet/empl-leaflet.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -523,6 +527,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReporteKardexComponent,
     ReporteHorasPedidasComponent,
     CorreoEmpresaComponent,
+    ListaPlanificacionesComponent,
+    EditarPlanHoraExtraComponent,
+    ListaArchivosComponent,
+    EmplLeafletComponent,
   ],
 
   imports: [

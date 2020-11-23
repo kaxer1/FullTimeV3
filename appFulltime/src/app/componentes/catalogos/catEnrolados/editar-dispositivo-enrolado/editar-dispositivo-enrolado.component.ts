@@ -70,14 +70,20 @@ export class EditarDispositivoEnroladoComponent implements OnInit {
     this.enroladoReloj = [];
     this.rest.BuscarIdReloj(buscarReloj).subscribe(datos => {
       this.enroladoReloj = datos;
-      this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo')
+      this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo','', {
+        timeOut: 6000,
+      })
       this.LimpiarCampos();
     }, error => {
       this.rest.ActualizarDatos(buscarReloj).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo');
+        this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo', {
+          timeOut: 6000,
+        });
         this.CerrarVentanaAsignarReloj();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo')
+        this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo', {
+          timeOut: 6000,
+        })
       });
     });
   }

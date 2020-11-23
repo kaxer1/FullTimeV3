@@ -71,7 +71,9 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
     this.restCargo.getInfoCargoEmpleadoRest(form.fechaContratoForm).subscribe(datos => {
       this.listaCargos = datos;
     }, error => {
-      this.toastr.info('El contrato seleccionado no registra ningún cargo', 'VERIFICAR');
+      this.toastr.info('El contrato seleccionado no registra ningún cargo', 'VERIFICAR', {
+        timeOut: 6000,
+      });
     });
   }
 

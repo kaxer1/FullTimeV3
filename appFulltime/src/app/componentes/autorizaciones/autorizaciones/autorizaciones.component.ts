@@ -94,10 +94,12 @@ export class AutorizacionesComponent implements OnInit {
   resAutorizacion: any = [];
 
   idNotifica: any = [];
+  contador: number = 1;
   insertarAutorizacion(form) {
     if (this.data.carga === 'multiple') {
       this.data.datosPermiso.map(obj => {
         if (obj.estado === 'Pre-autorizado') {
+          console.log('idpermiso-up', obj.id);
           this.restP.BuscarDatosAutorizacion(obj.id).subscribe(data => {
             var documento = data[0].empleado_estado;
             this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
@@ -107,6 +109,7 @@ export class AutorizacionesComponent implements OnInit {
           })
         }
         else {
+          console.log('idpermiso', obj.id);
           this.restDepartamento.ConsultarDepartamentoPorContrato(obj.id_cargo).subscribe(res => {
             this.departamentos = res;
             this.IngresarDatos(form, obj.id, this.departamentos[0].id_departamento, obj.id_emple_solicita);
@@ -132,10 +135,7 @@ export class AutorizacionesComponent implements OnInit {
       id_plan_hora_extra: null,
     }
     this.restAutorizaciones.postAutorizacionesRest(newAutorizaciones).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Autorizacion guardada');
-      this.EditarEstadoPermiso(id_permiso, id_departamento, form, empleado_solicita, form.estadoF);
-      this.limpiarCampos();
-      this.dialogRef.close();
+      this.EditarEstadoPermiso(id_permiso, id_departamento, empleado_solicita, form.estadoF);
     }, error => { })
   }
 
@@ -147,10 +147,7 @@ export class AutorizacionesComponent implements OnInit {
       id_permiso: id_permiso,
     }
     this.restAutorizaciones.PutEstadoAutoPermisoMultiple(newAutorizacionesM).subscribe(resA => {
-      this.toastr.success('Operación Exitosa', 'Autorización Guardada');
-      this.EditarEstadoPermiso(id_permiso, id_departamento, form, empleado_solicita, form.estadoF);
-      this.limpiarCampos();
-      this.dialogRef.close();
+      this.EditarEstadoPermiso(id_permiso, id_departamento, empleado_solicita, form.estadoF);
     })
   }
 
@@ -163,9 +160,7 @@ export class AutorizacionesComponent implements OnInit {
       this.Habilitado = false;
     }
     else if (this.data.carga === undefined) {
-      console.log('entra departamento');
       this.restDepartamento.ConsultarDepartamentoPorContrato(this.data.id_empl_cargo).subscribe(res => {
-        console.log('entra departamento', res);
         this.departamentos = res;
         this.nuevaAutorizacionesForm.patchValue({
           ordenF: 1,
@@ -178,7 +173,7 @@ export class AutorizacionesComponent implements OnInit {
 
   resEstado: any = [];
   idNoti: any = [];
-  EditarEstadoPermiso(id_permiso, id_departamento, form, id_empleado, estado_permiso) {
+  EditarEstadoPermiso(id_permiso, id_departamento, id_empleado, estado_permiso) {
     let datosPermiso = {
       estado: estado_permiso,
       id_permiso: id_permiso,
@@ -187,15 +182,15 @@ export class AutorizacionesComponent implements OnInit {
     }
     // Actualizar estado del permiso
     var estado_letras: string = '';
-    if (form.estadoF === 1) {
+    if (estado_permiso === 1) {
       estado_letras = 'Pendiente';
     }
-    else if (form.estadoF === 2) {
+    else if (estado_permiso === 2) {
       estado_letras = 'Pre-autorizado';
-    } else if (form.estadoF === 3) {
+    } else if (estado_permiso === 3) {
       estado_letras = 'Autorizado';
     }
-    else if (form.estadoF === 4) {
+    else if (estado_permiso === 4) {
       estado_letras = 'Negado';
     }
     this.restP.ActualizarEstado(id_permiso, datosPermiso).subscribe(respo => {
@@ -221,6 +216,21 @@ export class AutorizacionesComponent implements OnInit {
         }
       });
     });
+    console.log('contador', this.contador);
+    this.contador = this.contador + 1;
+    if (this.data.carga === 'multiple') {
+      console.log('arreglo', this.data.datosPermiso.length);
+      if (this.contador === this.data.datosPermiso.length) {
+        this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+          timeOut: 6000,
+        });
+        console.log('idpermiso', 'entra');
+        this.dialogRef.close();
+      }
+    }
+    else {
+      this.dialogRef.close();
+    }
   }
 
   limpiarCampos() {

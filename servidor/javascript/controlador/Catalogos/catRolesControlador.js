@@ -27,6 +27,18 @@ class RolesControlador {
             }
         });
     }
+    ListarRolesActualiza(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const ROL = yield database_1.default.query('SELECT * FROM cg_roles WHERE NOT id = $1', [id]);
+            if (ROL.rowCount > 0) {
+                return res.jsonp(ROL.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ObtnenerUnRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;

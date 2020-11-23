@@ -62,6 +62,7 @@ export class RegistrarPeriodoVComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
+    this.ObtenerContrato();
     this.PerVacacionesForm.patchValue({
       diaVacacionForm: 0,
       horaVacacionForm: 0,
@@ -83,6 +84,30 @@ export class RegistrarPeriodoVComponent implements OnInit {
     })
   }
 
+
+  // Método para ver la información del empleado 
+  datosContrato: any = [];
+  ObtenerContrato() {
+    this.datosContrato = [];
+    this.rest.BuscarDatosContrato(this.datoEmpleado.idContrato).subscribe(data => {
+      this.datosContrato = data;
+      var fecha = new Date(String(data[0].fec_ingreso));
+      this.PerVacacionesForm.patchValue({ fechaInicioForm: data[0].fec_ingreso });
+      if (data[0].descripcion === 'CODIGO DE TRABAJO') {
+        fecha.setMonth(fecha.getMonth() + 12);
+        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+      }
+      else if (data[0].descripcion === 'LOSEP') {
+        fecha.setMonth(fecha.getMonth() + 11);
+        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+      }
+      else if (data[0].descripcion === 'LOES') {
+        fecha.setMonth(fecha.getMonth() + 11);
+        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
+      }
+    })
+  }
+
   ValidarDatosPerVacacion(form) {
     if (form.fechaFinForm === '') {
       form.fechaFinForm = null;
@@ -92,7 +117,9 @@ export class RegistrarPeriodoVComponent implements OnInit {
         this.InsertarPerVacacion(form);
       }
       else {
-        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período')
+        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período','', {
+          timeOut: 6000,
+        })
       }
     }
   }
@@ -111,10 +138,14 @@ export class RegistrarPeriodoVComponent implements OnInit {
       min_vacaciones: form.minVacacionForm,
     };
     this.restV.CrearPerVacaciones(datosPerVacaciones).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Período de Vacaciones registrado')
+      this.toastr.success('Operación Exitosa', 'Período de Vacaciones registrado', {
+        timeOut: 6000,
+      })
       this.CerrarVentanaRegistroPerVacaciones();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue registrado')
+      this.toastr.error('Operación Fallida', 'Período de Vacaciones no fue registrado', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -146,7 +177,9 @@ export class RegistrarPeriodoVComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -176,7 +209,9 @@ export class RegistrarPeriodoVComponent implements OnInit {
       }
       else {
         this.PerVacacionesForm.patchValue({ fechaInicioForm: '' });
-        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.');
+        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.','', {
+          timeOut: 6000,
+        });
       }
     })
   }

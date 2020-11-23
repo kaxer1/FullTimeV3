@@ -58,46 +58,14 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
   */
 
   /* Método para imprimir datos del permiso */
-  permisosEmpleado: any;
   permisosTotales: any;
   obtenerPermisos(id_empleado: number) {
-    this.permisosEmpleado = [];
     this.permisosTotales = [];
-    this.restEmpleado.BuscarIDContrato(id_empleado).subscribe(datos => {
-      this.idContrato = datos;
-      console.log("idContrato ", this.idContrato);
-      for (let i = 0; i <= this.idContrato.length - 1; i++) {
-        this.restPermiso.BuscarPermisoContrato(this.idContrato[i]['id']).subscribe(datos => {
-          this.permisosEmpleado = datos;
-          console.log(this.permisosTotales);
-          if (this.permisosEmpleado.length != 0) {
-            if (this.cont === 0) {
-              this.permisosTotales = datos;
-              this.OrdenarDatos(this.permisosTotales);
-              this.cont++;
-            }
-            else {
-              this.permisosTotales = this.permisosTotales.concat(datos);
-              this.OrdenarDatos(this.permisosTotales);
-            }
-          }
-        })
-      }
+    this.restEmpleado.getOneEmpleadoRest(id_empleado).subscribe(datos => {
+      this.restPermiso.BuscarPermisoCodigo(datos[0].codigo).subscribe(datos => {
+        this.permisosTotales = datos;
+      })
     });
-  }
-
-  // Ordenar los datos según el número de permiso
-  OrdenarDatos(array) {
-    function compare(a, b) {
-      if (a.num_permiso < b.num_permiso) {
-        return -1;
-      }
-      if (a.num_permiso > b.num_permiso) {
-        return 1;
-      }
-      return 0;
-    }
-    array.sort(compare);
   }
 
   /* Ventana para registrar permisos del empleado */
@@ -119,13 +87,19 @@ export class SolicitarPermisosEmpleadoComponent implements OnInit {
               this.obtenerPermisos(parseInt(this.idEmpleado));
             });
         }, error => {
-          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones')
+          this.toastr.info('El empleado no tiene registrado Periodo de Vacaciones', 'Primero Registrar Periodo de Vacaciones', {
+            timeOut: 6000,
+          })
         });
       }, error => {
-        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+        this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+          timeOut: 6000,
+        })
       });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato')
+      this.toastr.info('El empleado no tiene registrado un Contrato', 'Primero Registrar Contrato', {
+        timeOut: 6000,
+      })
     });
   }
 

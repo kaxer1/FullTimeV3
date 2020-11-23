@@ -58,11 +58,15 @@ export class EditarDocumentoComponent implements OnInit {
           this.LimpiarNombreArchivo();
           this.CerrarVentanaEditar();
         }, error => {
-          this.toastr.error('Operación Fallida', 'Documento no pudo ser cargado en el sistema')
+          this.toastr.error('Operación Fallida', 'Documento no pudo ser cargado en el sistema', {
+            timeOut: 6000,
+          })
         })
       }
       else {
-        this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+        this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+          timeOut: 6000,
+        });
       };
     }
     else {
@@ -92,7 +96,9 @@ export class EditarDocumentoComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento Actualizado');
+      this.toastr.success('Operación Exitosa', 'Documento Actualizado', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

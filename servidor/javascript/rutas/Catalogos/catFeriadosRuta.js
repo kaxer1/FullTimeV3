@@ -17,6 +17,7 @@ class FeriadosRuta {
     }
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ListarFeriados);
+        this.router.get('/listar/:id', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ListarFeriadosActualiza);
         this.router.get('/ultimoId', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ObtenerUltimoId);
         this.router.get('/:id', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.ObtenerUnFeriado);
         this.router.post('/', verificarToken_1.TokenValidation, catFeriadosControlador_1.default.CrearFeriados);

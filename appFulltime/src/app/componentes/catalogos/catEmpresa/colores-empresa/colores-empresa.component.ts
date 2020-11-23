@@ -73,7 +73,9 @@ export class ColoresEmpresaComponent implements OnInit {
       id: this.data
     }
     this.rest.ActualizarColores(datos).subscribe(data => {
-      this.toastr.success('Nuevos colores registrados exitosamente');
+      this.toastr.success('Nuevos colores registrados exitosamente','', {
+        timeOut: 6000,
+      });
       this.obtenerColores();
     })
   }

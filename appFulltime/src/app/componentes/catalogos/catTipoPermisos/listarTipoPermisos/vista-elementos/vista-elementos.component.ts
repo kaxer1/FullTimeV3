@@ -121,7 +121,9 @@ export class VistaElementosComponent implements OnInit {
   Eliminar(id_permiso: number) {
     //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_permiso).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerTipoPermiso();
     });
   }

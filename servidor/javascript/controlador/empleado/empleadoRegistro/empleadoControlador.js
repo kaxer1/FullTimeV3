@@ -100,7 +100,42 @@ class EmpleadoControlador {
             }
         });
     }
-    CargaPlantillaEmpleadoUsuario(req, res) {
+    VerificarPlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames;
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var numFilas = 0;
+            var contador = 1;
+            const VALOR = yield database_1.default.query('SELECT * FROM codigo');
+            var codigo = parseInt(VALOR.rows[0].valor);
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                codigo = codigo + 1;
+                console.log('codigo', codigo);
+                const VERIFICAR = yield database_1.default.query('SELECT * FROM empleados WHERE codigo::int = $1', [codigo]);
+                if (VERIFICAR.rowCount === 0) {
+                    numFilas = numFilas + 1;
+                }
+                if (contador === plantilla.length) {
+                    console.log('filas', numFilas);
+                    console.log('numero de filas', plantilla.length);
+                    if (numFilas === plantilla.length) {
+                        res.jsonp({ message: 'correcto' });
+                    }
+                    else {
+                        res.jsonp({ message: 'error' });
+                    }
+                }
+                contador = contador + 1;
+            }));
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    CargarPlantilla(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
@@ -141,25 +176,18 @@ class EmpleadoControlador {
                 //Obtener id del rol
                 const id_rol = yield database_1.default.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
                 // Obtener último código registrado
-                const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+                const VALOR = yield database_1.default.query('SELECT * FROM codigo');
                 var codigo = parseInt(VALOR.rows[0].valor) + 1;
-                console.log('codigo', codigo);
-                if (cedula != undefined) {
-                    // Registro de nuevo empleado
-                    yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
-                    // Obtener el id del empleado ingresado
-                    const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
-                    const id_empleado = oneEmpley.rows[0].id;
-                    // Registro de los datos de usuario
-                    yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
-                    // Actualización del código
-                    yield database_1.default.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
-                }
-                else {
-                    res.jsonp({ error: 'plantilla equivocada' });
-                }
+                // Registro de nuevo empleado
+                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+                // Obtener el id del empleado ingresado
+                const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
+                const id_empleado = oneEmpley.rows[0].id;
+                // Registro de los datos de usuario
+                yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+                // Actualización del código
+                yield database_1.default.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
             }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -192,7 +220,9 @@ class EmpleadoControlador {
             if (unEmpleadoTitulo.rowCount > 0) {
                 return res.jsonp(unEmpleadoTitulo.rows);
             }
-            res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
+            else {
+                res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
+            }
         });
     }
     FileXML(req, res) {
@@ -228,10 +258,18 @@ class EmpleadoControlador {
             }
         });
     }
+    // CREAR CÓDIGO
     CrearCodigo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id, valor } = req.body;
-            yield database_1.default.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
+            const { id, valor, automatico, manual } = req.body;
+            yield database_1.default.query('INSERT INTO codigo ( id, valor, automatico, manual) VALUES ($1, $2, $3, $4)', [id, valor, automatico, manual]);
+            res.jsonp({ message: 'Codigo guardado' });
+        });
+    }
+    ActualizarCodigoTotal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { valor, automatico, manual, id } = req.body;
+            yield database_1.default.query('UPDATE codigo SET valor = $1, automatico = $2, manual = $3 WHERE id = $4', [valor, automatico, manual, id]);
             res.jsonp({ message: 'Codigo guardado' });
         });
     }
@@ -245,6 +283,17 @@ class EmpleadoControlador {
     ObtenerCodigo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const VALOR = yield database_1.default.query('SELECT *FROM codigo');
+            if (VALOR.rowCount > 0) {
+                return res.jsonp(VALOR.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    ObtenerMAXCodigo(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const VALOR = yield database_1.default.query('SELECT MAX(codigo) AS codigo FROM empleados');
             if (VALOR.rowCount > 0) {
                 return res.jsonp(VALOR.rows);
             }

@@ -93,7 +93,9 @@ export class EditarCatProcesosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -132,7 +134,9 @@ export class EditarCatProcesosComponent implements OnInit {
   ActualizarDatos(datos) {
     this.rest.ActualizarUnProceso(datos).subscribe(response => {
       console.log(datos)
-      this.toastr.success('Operacion Exitosa', 'Proceso actualizado');
+      this.toastr.success('Operacion Exitosa', 'Proceso actualizado', {
+        timeOut: 6000,
+      });
       this.CerrarVentanaRegistroProceso();
     }, error => { });
   }

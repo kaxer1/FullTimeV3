@@ -28,8 +28,8 @@ class PlanHorarioControlador {
     }
     CrearPlanHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_cargo, fec_inicio, fec_final } = req.body;
-            yield database_1.default.query('INSERT INTO plan_horarios ( id_cargo, fec_inicio, fec_final ) VALUES ($1, $2, $3)', [id_cargo, fec_inicio, fec_final]);
+            const { id_cargo, fec_inicio, fec_final, codigo } = req.body;
+            yield database_1.default.query('INSERT INTO plan_horarios ( id_cargo, fec_inicio, fec_final, codigo ) VALUES ($1, $2, $3, $4)', [id_cargo, fec_inicio, fec_final, codigo]);
             res.jsonp({ message: 'Plan Horario Registrado' });
         });
     }

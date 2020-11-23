@@ -39,7 +39,7 @@
                     <tr style="text-align: center;">
                         <th scope="col">Id </th>
                         <th scope="col">Descripción</th>
-                        <th scope="col">Autorización</th>
+                        <th scope="col">Incluye Almuerzo</th>
                         <th scope="col">Legalización</th>
                         <th scope="col">Acción</th>
                     </tr>
@@ -49,7 +49,7 @@
                         *ngFor="let tp of tipoPermiso | filtroNombre: filtroDescripcion | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{tp.id}}</th>
                         <td style="padding-top: 10px;text-align: center;">{{tp.descripcion}}</td>
-                        <td style="padding-top: 10px;text-align: center;">{{tp.actualizar}}</td>
+                        <td style="padding-top: 10px;text-align: center;">{{tp.almu_incluir}}</td>
                         <td style="padding-top: 10px;text-align: center;">{{tp.legalizar}}</td>
                         <td style="padding-top: 10px;text-align: center;" class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"

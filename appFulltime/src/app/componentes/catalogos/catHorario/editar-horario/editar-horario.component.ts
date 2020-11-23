@@ -12,14 +12,16 @@ import { PrincipalHorarioComponent } from '../principal-horario/principal-horari
   templateUrl: './editar-horario.component.html',
   styleUrls: ['./editar-horario.component.css']
 })
+
 export class EditarHorarioComponent implements OnInit {
+
+  nocturno = false;
 
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
   horaTrabajo = new FormControl('', [Validators.required, Validators.pattern("^[0-9]*(:[0-9][0-9])?$")]);
-  flexible = new FormControl('', Validators.required);
-  porHoras = new FormControl('', Validators.required);
+  tipoF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
 
@@ -28,9 +30,8 @@ export class EditarHorarioComponent implements OnInit {
     horarioNombreForm: this.nombre,
     horarioMinAlmuerzoForm: this.minAlmuerzo,
     horarioHoraTrabajoForm: this.horaTrabajo,
-    horarioFlexibleForm: this.flexible,
-    horarioPorHorasForm: this.porHoras,
-    nombreCertificadoForm: this.nombreCertificadoF
+    nombreCertificadoForm: this.nombreCertificadoF,
+    tipoForm: this.tipoF
   });
 
   contador: number = 0;
@@ -50,8 +51,6 @@ export class EditarHorarioComponent implements OnInit {
       horarioNombreForm: this.data.horario.nombre,
       horarioMinAlmuerzoForm: this.data.horario.min_almuerzo,
       horarioHoraTrabajoForm: this.data.horario.hora_trabajo,
-      horarioFlexibleForm: this.data.horario.flexible,
-      horarioPorHorasForm: this.data.horario.por_horas,
       nombreCertificadoForm: this.data.horario.doc_nombre,
     });
     if (this.data.horario.doc_nombre != '' && this.data.horario.doc_nombre != null) {
@@ -62,6 +61,11 @@ export class EditarHorarioComponent implements OnInit {
       this.HabilitarBtn = false;
       this.isChecked = false;
     }
+    if (this.data.horario.nocturno === true) {
+      this.nocturno = true;
+    } else {
+      this.nocturno = false;
+    }
   }
 
   ModificarHorario(form) {
@@ -69,9 +73,8 @@ export class EditarHorarioComponent implements OnInit {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
       hora_trabajo: form.horarioHoraTrabajoForm,
-      flexible: form.horarioFlexibleForm,
-      por_horas: form.horarioPorHorasForm,
-      doc_nombre: form.nombreCertificadoForm
+      doc_nombre: form.nombreCertificadoForm,
+      nocturno: form.tipoForm
     };
     if (dataHorario.min_almuerzo === '') {
       dataHorario.min_almuerzo = 0;
@@ -80,10 +83,14 @@ export class EditarHorarioComponent implements OnInit {
       dataHorario.doc_nombre = null;
       this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
         this.ModificarDocumento();
-        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+          timeOut: 6000,
+        });
         this.SalirActualizar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -99,15 +106,21 @@ export class EditarHorarioComponent implements OnInit {
   ActualizarDatos(datos) {
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario actualizado');
+        this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+          timeOut: 6000,
+        });
         this.SubirRespaldo(this.data.horario.id);
         this.SalirActualizar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+          timeOut: 6000,
+        })
       });
     }
     else {
-      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB');
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
+      });
     }
   }
 
@@ -128,10 +141,14 @@ export class EditarHorarioComponent implements OnInit {
 
   GuardarDatos(datos) {
     this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Horario actualizado');
+      this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+        timeOut: 6000,
+      });
       this.SalirActualizar();
     }, error => {
-      this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado')
+      this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -147,7 +164,9 @@ export class EditarHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -164,7 +183,9 @@ export class EditarHorarioComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -211,7 +232,9 @@ export class EditarHorarioComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Documento subido con exito');
+      this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
+        timeOut: 6000,
+      });
       this.archivoForm.reset();
       this.nameFile = '';
     });

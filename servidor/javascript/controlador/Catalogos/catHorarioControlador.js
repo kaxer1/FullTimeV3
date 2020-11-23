@@ -44,9 +44,9 @@ class HorarioControlador {
     CrearHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
-            const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre } = req.body;
-            console.log({ nombre, min_almuerzo, hora_trabajo, flexible, por_horas });
-            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre) VALUES ($1, $2, $3, $4, $5, $6)', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre]);
+            const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
+            console.log({ nombre, min_almuerzo, hora_trabajo, nocturno });
+            yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno]);
             const ultimo = yield database_1.default.query('SELECT MAX(id) AS id FROM cg_horarios');
             res.jsonp({ message: 'El horario ha sido registrado', id: ultimo.rows[0].id });
         });
@@ -117,8 +117,8 @@ class HorarioControlador {
     EditarHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre } = req.body;
-            yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, flexible = $4, por_horas = $5, doc_nombre = $6 WHERE id = $7', [nombre, min_almuerzo, hora_trabajo, flexible, por_horas, doc_nombre, id]);
+            const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
+            yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, doc_nombre = $4, nocturno = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, id]);
             res.jsonp({ message: 'Tipo Permiso Actualizado' });
         });
     }

@@ -28,7 +28,6 @@ export class ListaEmpleadosComponent implements OnInit {
 
   empleado: any = [];
   nacionalidades: any = [];
-  // displayedColumns: string[] = ['id', 'nombre', 'apellido', 'cedula'];
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -67,6 +66,7 @@ export class ListaEmpleadosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.DescargarPlantilla();
     this.getEmpleados();
     this.obtenerNacionalidades();
     this.ObtenerEmpleados(this.idEmpleado);
@@ -241,7 +241,9 @@ export class ListaEmpleadosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -258,7 +260,9 @@ export class ListaEmpleadosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -283,6 +287,7 @@ export class ListaEmpleadosComponent implements OnInit {
       this.nacionalidades = res;
     });
   }
+
   /**
    * Metodos y variables para subir plantilla
    */
@@ -292,26 +297,36 @@ export class ListaEmpleadosComponent implements OnInit {
   archivoForm = new FormControl('', Validators.required);
 
   fileChange(element) {
-    this.rest.ObtenerCodigo().subscribe(datos => {
-      this.archivoSubido = element.target.files;
-      this.nameFile = this.archivoSubido[0].name;
-      let arrayItems = this.nameFile.split(".");
-      let itemExtencion = arrayItems[arrayItems.length - 1];
-      let itemName = arrayItems[0].slice(0, 9);
-      console.log(itemName.toLowerCase());
-      if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
-        if (itemName.toLowerCase() == 'empleados') {
+    this.archivoSubido = element.target.files;
+    this.nameFile = this.archivoSubido[0].name;
+    let arrayItems = this.nameFile.split(".");
+    let itemExtencion = arrayItems[arrayItems.length - 1];
+    if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
+      if (this.datosCodigo[0].automatico === true) {
+        var itemName = arrayItems[0].slice(0, 18);
+        if (itemName.toLowerCase() == 'empleadoautomatico') {
           this.plantilla();
         } else {
-          this.toastr.error('Solo se acepta Empleados', 'Plantilla seleccionada incorrecta');
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoAutomatico', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
         }
-      } else {
-        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
       }
-    }, error => {
-      this.toastr.info('Primero configurar el código de empleado.');
-      this.router.navigate(['/codigo/']);
-    });
+      else {
+        itemName = arrayItems[0].slice(0, 14);
+        if (itemName.toLowerCase() == 'empleadomanual') {
+          this.plantilla();
+        } else {
+          this.toastr.error('Cargar la plantilla con nombre EmpleadoManual', 'Plantilla seleccionada incorrecta', {
+            timeOut: 6000,
+          });
+        }
+      }
+    } else {
+      this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+        timeOut: 6000,
+      });
+    }
   }
 
   plantilla() {
@@ -319,13 +334,67 @@ export class ListaEmpleadosComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.');
-      this.getEmpleados();
-      window.location.reload();
-    });
+    if (this.datosCodigo[0].automatico === true) {
+      this.ArchivoAutomatico(formData);
+    }
+    else {
+      this.ArchivoManual(formData);
+    }
     this.archivoForm.reset();
     this.nameFile = '';
+  }
+
+  ArchivoAutomatico(datosArchivo) {
+    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
+      if (res.message === "error") {
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+          timeOut: 6000,
+        });
+      } else {
+        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+            timeOut: 6000,
+          });
+          window.location.reload();
+        });
+      }
+    });
+  }
+
+  ArchivoManual(datosArchivo) {
+    this.rest.verificarArchivoExcel(datosArchivo).subscribe(res => {
+      if (res.message === "error") {
+        this.toastr.error('Verificar uno o más datos no son correctos.', 'Registro Fallido', {
+          timeOut: 6000,
+        });
+      } else {
+        this.rest.subirArchivoExcel(datosArchivo).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Plantilla de Empleados importada.', {
+            timeOut: 6000,
+          });
+          window.location.reload();
+        });
+      }
+    });
+  }
+
+  link: string = null;
+  datosCodigo: any = [];
+  DescargarPlantilla() {
+    this.datosCodigo = [];
+    this.rest.ObtenerCodigo().subscribe(datos => {
+      this.datosCodigo = datos;
+      if (datos[0].automatico === true) {
+        this.link = "http://localhost:3000/plantillaD/documento/EmpleadoAutomatico.xlsx"
+      } else {
+        this.link = "http://localhost:3000/plantillaD/documento/EmpleadoManual.xlsx"
+      }
+    }, error => {
+      this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado','', {
+        timeOut: 6000,
+      });
+      this.router.navigate(['/codigo/']);
+    });
   }
 
   /* ****************************************************************************************************

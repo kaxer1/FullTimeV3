@@ -104,7 +104,9 @@ export class HorariosEmpleadoComponent implements OnInit {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -144,13 +146,19 @@ export class HorariosEmpleadoComponent implements OnInit {
           this.plantillaHorario();
           //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
-          this.toastr.error('Plantilla seleccionada incorrecta');
+          this.toastr.error('Plantilla seleccionada incorrecta','', {
+            timeOut: 6000,
+          });
         }
       } else {
-        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada');
+        this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
+          timeOut: 6000,
+        });
       }
     }, error => {
-      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo')
+      this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -161,7 +169,9 @@ export class HorariosEmpleadoComponent implements OnInit {
       console.log("toda la data", formData)
     }
     this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.');
+      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+        timeOut: 6000,
+      });
       this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       this.archivoHorarioForm.reset();
       this.nameFileHorario = '';
@@ -171,7 +181,9 @@ export class HorariosEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado HORARIO*/
   EliminarHorario(id_horario: number) {
     this.restEmpleHorario.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado');
+      this.toastr.error('Registro eliminado','', {
+        timeOut: 6000,
+      });
       this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
     });
   }

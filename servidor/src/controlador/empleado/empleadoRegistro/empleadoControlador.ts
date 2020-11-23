@@ -81,7 +81,42 @@ class EmpleadoControlador {
     }
   }
 
-  public async CargaPlantillaEmpleadoUsuario(req: Request, res: Response): Promise<void> {
+  public async VerificarPlantilla(req: Request, res: Response): Promise<void> {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var numFilas = 0;
+    var contador = 1;
+    const VALOR = await pool.query('SELECT * FROM codigo');
+    var codigo = parseInt(VALOR.rows[0].valor);
+
+    plantilla.forEach(async (data: any) => {
+      codigo = codigo + 1;
+      console.log('codigo', codigo);
+      const VERIFICAR = await pool.query('SELECT * FROM empleados WHERE codigo::int = $1', [codigo]);
+      if (VERIFICAR.rowCount === 0) {
+        numFilas = numFilas + 1;
+      }
+      if (contador === plantilla.length) {
+        console.log('filas', numFilas);
+        console.log('numero de filas', plantilla.length)
+        if (numFilas === plantilla.length) {
+          res.jsonp({ message: 'correcto' });
+        } else {
+          res.jsonp({ message: 'error' });
+        }
+      }
+      contador = contador + 1;
+    });
+    fs.unlinkSync(filePath);
+  }
+
+  public async CargarPlantilla(req: Request, res: Response): Promise<void> {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
     let filename = cadena.split("\\")[1];
@@ -129,29 +164,23 @@ class EmpleadoControlador {
       const id_rol = await pool.query('SELECT id FROM cg_roles WHERE nombre = $1', [rol]);
 
       // Obtener último código registrado
-      const VALOR = await pool.query('SELECT *FROM codigo');
+      const VALOR = await pool.query('SELECT * FROM codigo');
       var codigo = parseInt(VALOR.rows[0].valor) + 1;
-      console.log('codigo', codigo);
-      if (cedula != undefined) {
-        // Registro de nuevo empleado
-        await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
 
-        // Obtener el id del empleado ingresado
-        const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
-        const id_empleado = oneEmpley.rows[0].id;
+      // Registro de nuevo empleado
+      await pool.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
 
-        // Registro de los datos de usuario
-        await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+      // Obtener el id del empleado ingresado
+      const oneEmpley = await pool.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
+      const id_empleado = oneEmpley.rows[0].id;
 
-        // Actualización del código
-        await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
+      // Registro de los datos de usuario
+      await pool.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
 
-      } else {
-        res.jsonp({ error: 'plantilla equivocada' });
-      }
+      // Actualización del código
+      await pool.query('UPDATE codigo SET valor = $1 WHERE id = $2', [codigo, VALOR.rows[0].id]);
     });
 
-    res.jsonp({ message: 'La plantilla a sido receptada' });
     fs.unlinkSync(filePath);
   }
 
@@ -180,7 +209,10 @@ class EmpleadoControlador {
     if (unEmpleadoTitulo.rowCount > 0) {
       return res.jsonp(unEmpleadoTitulo.rows)
     }
-    res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
+    else {
+      res.status(404).jsonp({ text: 'El empleado no tiene titulos asignados' });
+    }
+
   }
 
   public async FileXML(req: Request, res: Response): Promise<any> {
@@ -213,9 +245,16 @@ class EmpleadoControlador {
     }
   }
 
+  // CREAR CÓDIGO
   public async CrearCodigo(req: Request, res: Response) {
-    const { id, valor } = req.body;
-    await pool.query('INSERT INTO codigo ( id, valor) VALUES ($1, $2)', [id, valor]);
+    const { id, valor, automatico, manual } = req.body;
+    await pool.query('INSERT INTO codigo ( id, valor, automatico, manual) VALUES ($1, $2, $3, $4)', [id, valor, automatico, manual]);
+    res.jsonp({ message: 'Codigo guardado' });
+  }
+
+  public async ActualizarCodigoTotal(req: Request, res: Response) {
+    const { valor, automatico, manual, id } = req.body;
+    await pool.query('UPDATE codigo SET valor = $1, automatico = $2, manual = $3 WHERE id = $4', [valor, automatico, manual, id]);
     res.jsonp({ message: 'Codigo guardado' });
   }
 
@@ -227,6 +266,16 @@ class EmpleadoControlador {
 
   public async ObtenerCodigo(req: Request, res: Response): Promise<any> {
     const VALOR = await pool.query('SELECT *FROM codigo');
+    if (VALOR.rowCount > 0) {
+      return res.jsonp(VALOR.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registros no encontrados' });
+    }
+  }
+
+  public async ObtenerMAXCodigo(req: Request, res: Response): Promise<any> {
+    const VALOR = await pool.query('SELECT MAX(codigo) AS codigo FROM empleados');
     if (VALOR.rowCount > 0) {
       return res.jsonp(VALOR.rows)
     }

@@ -84,7 +84,9 @@ export class RegistroDepartamentoComponent implements OnInit {
         this.departamentos = datos;
         this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
       }, error => {
-        this.toastr.info('Sucursal no cuenta con departamentos registrados')
+        this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+          timeOut: 6000,
+        })
       });
     }
     else {
@@ -105,7 +107,9 @@ export class RegistroDepartamentoComponent implements OnInit {
     this.restS.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas')
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -152,24 +156,31 @@ export class RegistroDepartamentoComponent implements OnInit {
         }
       }
       if (this.contador === 1) {
-        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO');
+        this.toastr.error('No es posible registrar dos departamentos con el mismo nombre.', 'REVISAR EL NOMBRE DEL DEPARTAMENTO', {
+          timeOut: 6000,
+        });
         this.contador = 0;
       }
       else {
         this.habilitarprogress = true;
         this.rest.postDepartamentoRest(datos).subscribe(response => {
           if (response.message === 'error') {
-            this.toastr.error('Los datos ingresados tienen un error');
+            this.toastr.error('Los datos ingresados tienen un error','', {
+              timeOut: 6000,
+            });
           }
           else {
-            this.toastr.success('Operación Exitosa', 'Departamento registrado');
-            this.habilitarprogress = false;
+            this.toastr.success('Operación Exitosa', 'Departamento registrado', {
+              timeOut: 6000,
+            });
             this.LimpiarCampos();
           }
         });
       }
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -180,7 +191,9 @@ export class RegistroDepartamentoComponent implements OnInit {
       this.departamentos = datos;
       this.selectPadre = this.departamentos[this.departamentos.length - 1].nombre;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados')
+      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -189,7 +202,9 @@ export class RegistroDepartamentoComponent implements OnInit {
     this.rest.EncontrarUnDepartamento(id).subscribe(datos => {
       this.selectPadre = datos[0].nombre
     }, error => {
-      this.toastr.info('Descripción ingresada no coincide con los registros')
+      this.toastr.info('Descripción ingresada no coincide con los registros','', {
+        timeOut: 6000,
+      })
     });
   }
 
@@ -218,7 +233,9 @@ export class RegistroDepartamentoComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }

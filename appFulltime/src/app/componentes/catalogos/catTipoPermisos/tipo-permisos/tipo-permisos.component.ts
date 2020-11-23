@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
-
 
 interface TipoDescuentos {
   value: string;
@@ -29,7 +28,6 @@ interface opcionesDiasHoras {
   selector: 'app-tipo-permisos',
   templateUrl: './tipo-permisos.component.html',
   styleUrls: ['./tipo-permisos.component.css'],
-  //encapsulation: ViewEncapsulation.None
 })
 
 export class TipoPermisosComponent implements OnInit {
@@ -70,7 +68,6 @@ export class TipoPermisosComponent implements OnInit {
   isLinear = true;
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
-  terceroFormGroup: FormGroup;
 
   constructor(
     private rest: TipoPermisosService,
@@ -101,22 +98,15 @@ export class TipoPermisosComponent implements OnInit {
     this.segundoFormGroup = this._formBuilder.group({
       vacaAfectaForm: ['', Validators.required],
       anioAcumulaForm: ['', Validators.required],
-      correoForm: ['', Validators.required],
-      actualizarForm: ['', Validators.required],
-      eliminarForm: ['', Validators.required],
-      tipoDescuentoForm: ['', Validators.required],
-    });
-    this.terceroFormGroup = this._formBuilder.group({
-      autorizarForm: ['', Validators.required],
       legalizarForm: ['', Validators.required],
-      preautorizarForm: ['', Validators.required],
       fecValidarForm: ['', Validators.required],
+      tipoDescuentoForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
     });
   }
 
-  insertarTipoPermiso(form1, form2, form3) {
+  insertarTipoPermiso(form1, form2) {
     var nombrePermiso = form1.descripcionForm;
     var nuevoPermiso = form1.nombreForm;
     let dataTipoPermiso = {
@@ -126,22 +116,19 @@ export class TipoPermisosComponent implements OnInit {
       num_dia_ingreso: form1.numDiaIngresoForm,
       vaca_afecta: form2.vacaAfectaForm,
       anio_acumula: form2.anioAcumulaForm,
-      correo: form2.correoForm,
-      gene_justificacion: form3.geneJustificacionForm,
-      fec_validar: form3.fecValidarForm,
+      gene_justificacion: form2.geneJustificacionForm,
+      fec_validar: form2.fecValidarForm,
       acce_empleado: form1.acceEmpleadoForm,
-      actualizar: form2.actualizarForm,
-      autorizar: form3.autorizarForm,
-      eliminar: form2.eliminarForm,
-      legalizar: form3.legalizarForm,
-      preautorizar: form3.preautorizarForm,
+      legalizar: form2.legalizarForm,
       almu_incluir: form1.almuIncluirForm,
-      num_dia_justifica: form3.numDiaJustificaForm,
+      num_dia_justifica: form2.numDiaJustificaForm,
       num_hora_maximo: form1.numHoraMaximoForm,
     }
     if (nombrePermiso === 'OTRO') {
       if (nuevoPermiso === '') {
-        this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Información General');
+        this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Información General', {
+          timeOut: 6000,
+        });
       }
       else {
         dataTipoPermiso.descripcion = nuevoPermiso;
@@ -149,7 +136,9 @@ export class TipoPermisosComponent implements OnInit {
       }
     }
     else if (nombrePermiso === 'Seleccionar') {
-      this.toastr.info('Seleccionar o definir una descripción del nuevo tipo de permiso', 'Información General');
+      this.toastr.info('Seleccionar o definir una descripción del nuevo tipo de permiso', 'Información General', {
+        timeOut: 6000,
+      });
     }
     else {
       this.VerificarJustificacion(form1, dataTipoPermiso);
@@ -160,10 +149,14 @@ export class TipoPermisosComponent implements OnInit {
     this.validarGuardar = true;
     this.rest.postTipoPermisoRest(datos).subscribe(res => {
       if (res.message === 'error') {
-        this.toastr.error('Revisarlo en la lista de Tipo de Permisos y actualizar los datos si desea realizar cambios en la configuración del permiso', 'Tipo de Permiso ya esta configurado');
+        this.toastr.error('Revisarlo en la lista de Tipo de Permisos y actualizar los datos si desea realizar cambios en la configuración del permiso', 'Tipo de Permiso ya esta configurado', {
+          timeOut: 6000,
+        });
       }
       else {
-        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado');
+        this.toastr.success('Operación Exitosa', 'Tipo Permiso guardado', {
+          timeOut: 6000,
+        });
         window.location.reload();
       }
     }, error => { });
@@ -173,12 +166,16 @@ export class TipoPermisosComponent implements OnInit {
     var nombreTipoPermiso = form1.descripcionForm;
     if (nombreTipoPermiso === 'OTRO') {
       this.estiloOtro = { 'visibility': 'visible' }; this.HabilitarOtro = false;
-      this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Etiqueta Descripción activa')
+      this.toastr.info('Ingresar nombre del nuevo Tipo de Permiso', 'Etiqueta Descripción activa', {
+        timeOut: 6000,
+      })
     }
     else if (nombreTipoPermiso === 'Seleccionar') {
       this.LimpiarCampoNombre();
       this.estiloOtro = { 'visibility': 'hidden' }; this.HabilitarOtro = true;
-      this.toastr.info('No ha seleccionado ninguna opción');
+      this.toastr.info('No ha seleccionado ninguna opción','', {
+        timeOut: 6000,
+      });
     }
     else {
       this.LimpiarCampoNombre();
@@ -190,14 +187,16 @@ export class TipoPermisosComponent implements OnInit {
   ActivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
       this.estiloJustifica = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
-      this.toastr.info('Ingresar número de días para presentar justificación')
+      this.toastr.info('Ingresar número de días para presentar justificación','', {
+        timeOut: 6000,
+      })
     }
   }
 
   DesactivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('no')).value = 'false') {
       this.estiloJustifica = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
-      this.terceroFormGroup.patchValue({
+      this.segundoFormGroup.patchValue({
         numDiaJustificaForm: '',
       })
     }
@@ -205,7 +204,9 @@ export class TipoPermisosComponent implements OnInit {
 
   VerificarJustificacion(form1, datos) {
     if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'true') {
-      this.toastr.info('Ingresar número de días para presentar justificación')
+      this.toastr.info('Ingresar número de días para presentar justificación','', {
+        timeOut: 6000,
+      })
     }
     else if (datos.num_dia_justifica != '' && datos.gene_justificacion === 'true') {
       this.CambiarValoresDiasHoras(form1, datos);
@@ -225,31 +226,39 @@ export class TipoPermisosComponent implements OnInit {
       });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
-      this.toastr.info('Ingresar número de días máximos de permiso');
+      this.toastr.info('Ingresar número de días máximos de permiso','', {
+        timeOut: 6000,
+      });
     }
     else if (form.diasHorasForm === 'Horas') {
       this.primeroFormGroup.patchValue({
         numHoraMaximoForm: '',
       });
-      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras= false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
-      this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+      this.toastr.info('Ingresar número de horas y minutos máximos de permiso','', {
+        timeOut: 6000,
+      });
     }
     else {
       this.primeroFormGroup.patchValue({
         numHoraMaximoForm: '',
         numDiaMaximoForm: ''
       });
-      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras= false;
+      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
-      this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso');
+      this.toastr.info('Ingresar número de días máximos y horas permitidas de permiso','', {
+        timeOut: 6000,
+      });
     }
   }
 
   CambiarValoresDiasHoras(form, datos) {
     if (form.diasHorasForm === 'Días') {
       if (datos.num_dia_maximo === '') {
-        this.toastr.info('Ingresar número de días máximos de permiso');
+        this.toastr.info('Ingresar número de días máximos de permiso','', {
+          timeOut: 6000,
+        });
       }
       else {
         datos.num_hora_maximo = '00:00';
@@ -257,7 +266,9 @@ export class TipoPermisosComponent implements OnInit {
     }
     else if (form.diasHorasForm === 'Horas') {
       if (datos.num_hora_maximo === '') {
-        this.toastr.info('Ingresar número de horas y minutos máximos de permiso');
+        this.toastr.info('Ingresar número de horas y minutos máximos de permiso','', {
+          timeOut: 6000,
+        });
       }
       else {
         datos.num_dia_maximo = 0;
@@ -265,7 +276,9 @@ export class TipoPermisosComponent implements OnInit {
     }
     else if (form.diasHorasForm === 'Días y Horas') {
       if (datos.num_hora_maximo === '' || datos.num_dia_maximo === '') {
-        this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso');
+        this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso','', {
+          timeOut: 6000,
+        });
       }
     }
   }
@@ -285,7 +298,9 @@ export class TipoPermisosComponent implements OnInit {
       }
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras')
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
       return false;
     }
   }
@@ -302,7 +317,9 @@ export class TipoPermisosComponent implements OnInit {
       return true;
     }
     else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números')
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      });
       return false;
     }
   }
