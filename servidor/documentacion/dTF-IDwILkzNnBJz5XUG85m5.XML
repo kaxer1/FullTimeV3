@@ -1,0 +1,85 @@
+<autorizacion><estado>AUTORIZADO</estado><numeroAutorizacion>2310202001099214446700120040040000390231234567812</numeroAutorizacion><fechaAutorizacion>2020-10-23T09:45:16-05:00</fechaAutorizacion><ambiente>PRODUCCIÓN</ambiente><comprobante>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;factura id="comprobante" version="1.1.0"&gt;&lt;infoTributaria&gt;
+&lt;ambiente&gt;2&lt;/ambiente&gt;&lt;tipoEmision&gt;1&lt;/tipoEmision&gt;&lt;razonSocial&gt;MACOSER S.A.&lt;/razonSocial&gt;&lt;nombreComercial&gt;MACOSER S.A.&lt;/nombreComercial&gt;&lt;ruc&gt;0992144467001&lt;/ruc&gt;&lt;claveAcceso&gt;2310202001099214446700120040040000390231234567812&lt;/claveAcceso&gt;&lt;codDoc&gt;01&lt;/codDoc&gt;&lt;estab&gt;004&lt;/estab&gt;&lt;ptoEmi&gt;004&lt;/ptoEmi&gt;&lt;secuencial&gt;000039023&lt;/secuencial&gt;&lt;dirMatriz&gt;FRANCISCO DE PAULA ICAZA 608 E/ ESCOBEDO Y BOYACA&lt;/dirMatriz&gt;&lt;/infoTributaria&gt;&lt;infoFactura&gt;        
+&lt;fechaEmision&gt;23/10/2020&lt;/fechaEmision&gt;&lt;contribuyenteEspecial&gt;1477&lt;/contribuyenteEspecial&gt;&lt;obligadoContabilidad&gt;SI&lt;/obligadoContabilidad&gt;&lt;tipoIdentificacionComprador&gt;04&lt;/tipoIdentificacionComprador&gt;&lt;razonSocialComprador&gt;CASA PAZMIÑO S.A.&lt;/razonSocialComprador&gt;&lt;identificacionComprador&gt;1792095468001&lt;/identificacionComprador&gt;&lt;totalSinImpuestos&gt;120.29&lt;/totalSinImpuestos&gt;&lt;totalDescuento&gt;0.00&lt;/totalDescuento&gt;&lt;totalConImpuestos&gt;            
+&lt;totalImpuesto&gt;                
+&lt;codigo&gt;2&lt;/codigo&gt;&lt;codigoPorcentaje&gt;2&lt;/codigoPorcentaje&gt;&lt;baseImponible&gt;120.29&lt;/baseImponible&gt;&lt;valor&gt;14.43&lt;/valor&gt;&lt;/totalImpuesto&gt;&lt;/totalConImpuestos&gt;&lt;propina&gt;0.00&lt;/propina&gt;&lt;importeTotal&gt;134.72&lt;/importeTotal&gt;&lt;moneda&gt;DOLAR&lt;/moneda&gt;&lt;pagos&gt; 
+&lt;pago&gt;
+&lt;formaPago&gt;20&lt;/formaPago&gt;&lt;total&gt;134.72&lt;/total&gt;&lt;plazo&gt;30&lt;/plazo&gt;&lt;unidadTiempo&gt;dias&lt;/unidadTiempo&gt;&lt;/pago&gt;&lt;/pagos&gt;&lt;/infoFactura&gt;&lt;detalles&gt;        &lt;detalle&gt;
+&lt;codigoPrincipal&gt;DR-120R-WE&lt;/codigoPrincipal&gt;&lt;descripcion&gt;CALCULADORA C/IMPRESORA CASIO Color Blanco 12 DÌGI&lt;/descripcion&gt;&lt;cantidad&gt;1&lt;/cantidad&gt;&lt;precioUnitario&gt;61.7925&lt;/precioUnitario&gt;&lt;descuento&gt;0.00&lt;/descuento&gt;&lt;precioTotalSinImpuesto&gt;61.79&lt;/precioTotalSinImpuesto&gt;&lt;impuestos&gt;                
+&lt;impuesto&gt;                    
+&lt;codigo&gt;2&lt;/codigo&gt;&lt;codigoPorcentaje&gt;2&lt;/codigoPorcentaje&gt;&lt;tarifa&gt;12&lt;/tarifa&gt;&lt;baseImponible&gt;61.79&lt;/baseImponible&gt;&lt;valor&gt;7.41&lt;/valor&gt;&lt;/impuesto&gt;&lt;/impuestos&gt;&lt;/detalle&gt;&lt;detalle&gt;
+&lt;codigoPrincipal&gt;DR-240TM&lt;/codigoPrincipal&gt;&lt;descripcion&gt;CALCULADORA C/IMPRESION CASIO 14 Digitos Resistent&lt;/descripcion&gt;&lt;cantidad&gt;1&lt;/cantidad&gt;&lt;precioUnitario&gt;58.5000&lt;/precioUnitario&gt;&lt;descuento&gt;0.00&lt;/descuento&gt;&lt;precioTotalSinImpuesto&gt;58.50&lt;/precioTotalSinImpuesto&gt;&lt;impuestos&gt;                
+&lt;impuesto&gt;                    
+&lt;codigo&gt;2&lt;/codigo&gt;&lt;codigoPorcentaje&gt;2&lt;/codigoPorcentaje&gt;&lt;tarifa&gt;12&lt;/tarifa&gt;&lt;baseImponible&gt;58.50&lt;/baseImponible&gt;&lt;valor&gt;7.02&lt;/valor&gt;&lt;/impuesto&gt;&lt;/impuestos&gt;&lt;/detalle&gt;&lt;/detalles&gt;&lt;infoAdicional&gt;       &lt;campoAdicional nombre="Dirección"&gt;AV.CORUÑA 11-23 Y AV.COLON PB&lt;/campoAdicional&gt;&lt;campoAdicional nombre="Teléfono"&gt;022557512&lt;/campoAdicional&gt;&lt;campoAdicional nombre="Email"&gt;info@casapazmino.com.ec&lt;/campoAdicional&gt;&lt;/infoAdicional&gt;&lt;ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="SignatureN0"&gt;&lt;ds:SignedInfo Id="Signature-SignedInfo379688"&gt;&lt;ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/&gt;&lt;ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/&gt;&lt;ds:Reference Id="SignedPropertiesID429911" Type="http://uri.etsi.org/01903#SignedProperties" URI="#SignatureN0-SignedPropertiesN0"&gt;&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;&lt;ds:DigestValue&gt;YFWECQVG5PfRKufZBlBqW0vmn7U=&lt;/ds:DigestValue&gt;&lt;/ds:Reference&gt;&lt;ds:Reference URI="#CertificateN0"&gt;&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;&lt;ds:DigestValue&gt;pdtKxw+Emvi6nc5oXxxQiEb3PYA=&lt;/ds:DigestValue&gt;&lt;/ds:Reference&gt;&lt;ds:Reference Id="Reference-ID-N0" URI="#comprobante"&gt;&lt;ds:Transforms&gt;&lt;ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/&gt;&lt;/ds:Transforms&gt;&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;&lt;ds:DigestValue&gt;sQhTgQ3LqfjQGKNt1Ok2RliRmjg=&lt;/ds:DigestValue&gt;&lt;/ds:Reference&gt;&lt;/ds:SignedInfo&gt;&lt;ds:SignatureValue Id="SignatureValueN0"&gt;qSSdVwwmk55T5kLqBiwq3M/M64bjVtfZqj84aj5Xu8+b+6LRlrg7qxA02rfQmtRT
+6KjTo+Tx4NefXfJxbvt7vdR/EpiKj4yps9lj7TyP+bk7uLyqWWFQ6HteFeOyjDep
+g3iVUTEDtaxLNcjtw8EI6kK6Ag+X0cvF7g/PhHuzhXoD0s159+QuG62XNAz/ljhk
+ozVAHmlE5cCifz5bS1tRrjvMk5DoPFvbs4dnteKwyTgE8JDYp4DyKY/PTckjVb7A
+JZLu7ScYNhSLy9TyhIhKmE74HDJUiOAyc+22VGJ53+D7yqyrIs9pb40zRCd7cFXY
+m2zvf7UmG/PTM4z4/knq6Q==&lt;/ds:SignatureValue&gt;&lt;ds:KeyInfo Id="CertificateN0"&gt;&lt;ds:X509Data&gt;&lt;ds:X509Certificate&gt;MIIJuzCCCKOgAwIBAgIEXcpm0TANBgkqhkiG9w0BAQsFADCBkzELMAkGA1UEBhMC
+RUMxGzAZBgNVBAoTElNFQ1VSSVRZIERBVEEgUy5BLjEwMC4GA1UECxMnRU5USURB
+RCBERSBDRVJUSUZJQ0FDSU9OIERFIElORk9STUFDSU9OMTUwMwYDVQQDEyxBVVRP
+UklEQUQgREUgQ0VSVElGSUNBQ0lPTiBTVUIgU0VDVVJJVFkgREFUQTAeFw0xOTEx
+MjExOTE4MTZaFw0yNDExMjExOTQ4MTZaMIGZMQswCQYDVQQGEwJFQzEbMBkGA1UE
+ChMSU0VDVVJJVFkgREFUQSBTLkEuMTAwLgYDVQQLEydFTlRJREFEIERFIENFUlRJ
+RklDQUNJT04gREUgSU5GT1JNQUNJT04xOzATBgNVBAUTDDIxMTExOTE0MzkxODAk
+BgNVBAMTHUxVSVMgTUFHRE9OSU8gRVNDQU5ET04gUFJJRVRPMIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvnFoURSY3mBhcBmEsUr30lo2VbNvTYE5YlT0
+PBNuKV91P8q3vCaZgB/pepNbaqYoS3m99jtKBY17/DhSvv6juon5CkoJvdlRMhQ9
+R4QLjdskRViT5YvVzVeb6pX9YqzQjCIkETeQwD5VmoXFJdUPtQj+dh1EuxvhBuIx
+JDgKVsmiZPBHoq+BvsNexHQ2mfPATT75EVLUPKjEh9WNI1KE7jgs+e7Ws/GzYwjM
+JD0wQKX4+9+WMvVxNSU9ZHguF4NnCziA+LNYw2CQMNBCvabckpa+DlXJ9agYs7WF
+Op+pO2vg3Hcp/JvhRQGzVOFCbdwuvQzCGRLF/s/ICKh89GMYDQIDAQABo4IGDTCC
+BgkwCwYDVR0PBAQDAgXgMFkGCCsGAQUFBwEBBE0wSzBJBggrBgEFBQcwAYY9aHR0
+cDovL29jc3Bndy5zZWN1cml0eWRhdGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9z
+dGF0dXMvb2NzcDCBzAYDVR0gBIHEMIHBMEAGCisGAQQBgqZyAgkwMjAwBggrBgEF
+BQcCAjAkGiJDZXJ0aWZpY2FkbyBkZSBSZXByZXNlbnRhbnRlIExlZ2FsMH0GCisG
+AQQBgqZyAgMwbzBtBggrBgEFBQcCARZhaHR0cHM6Ly93d3cuc2VjdXJpdHlkYXRh
+Lm5ldC5lYy9sZXllc19ub3JtYXRpdmFzL1BvbGl0aWNhcyBkZSBDZXJ0aWZpY2Fk
+byBSZXByZXNlbnRhbnRlIExlZ2FsLnBkZjAcBgorBgEEAYKmcgMKBA4TDE1BQ09T
+RVIgUy5BLjAdBgorBgEEAYKmcgMLBA8TDTA5OTIxNDQ0NjcwMDEwGgYKKwYBBAGC
+pnIDAQQMEwowMTAzMTI2OTkxMB0GCisGAQQBgqZyAwIEDxMNTFVJUyBNQUdET05J
+TzAYBgorBgEEAYKmcgMDBAoTCEVTQ0FORE9OMBYGCisGAQQBgqZyAwQECBMGUFJJ
+RVRPMB8GCisGAQQBgqZyAwUEERMPR0VSRU5URSBHRU5FUkFMMDsGCisGAQQBgqZy
+AwcELRMrRlJBTkNJU0NPIERFIFBBVUxBIElDQVpBIDYwOC02MTAgWSBFU0NPQkVE
+TzAbBgorBgEEAYKmcgMIBA0TCzU5MzQyMzEzOTE1MBkGCisGAQQBgqZyAwkECxMJ
+R1VBWUFRVUlMMBcGCisGAQQBgqZyAwwECRMHRUNVQURPUjAfBgorBgEEAYKmcgMg
+BBETDzAwMTAwMjAwMDAzMTM1MzAbBgorBgEEAYKmcgMhBA0TC1VTQlNELTAxNDkw
+MCcGA1UdEQQgMB6BHGx1aXMuZXNjYW5kb25AbWFjb3Nlci1zYS5jb20wggJ7BgNV
+HR8EggJyMIICbjCCAmqgggJmoIICYoY9aHR0cDovL29jc3Bndy5zZWN1cml0eWRh
+dGEubmV0LmVjL2VqYmNhL3B1YmxpY3dlYi9zdGF0dXMvb2NzcIaB1WxkYXA6Ly9k
+aXJlY3Quc2VjdXJpdHlkYXRhLm5ldC5lYy9jbj1DUkw1NjAsY249QVVUT1JJREFE
+JTIwREUlMjBDRVJUSUZJQ0FDSU9OJTIwU1VCJTIwU0VDVVJJVFklMjBEQVRBLG91
+PUVOVElEQUQlMjBERSUyMENFUlRJRklDQUNJT04lMjBERSUyMElORk9STUFDSU9O
+LG89U0VDVVJJVFklMjBEQVRBJTIwUy5BLixjPUVDP2NlcnRpZmljYXRlUmV2b2Nh
+dGlvbkxpc3Q/YmFzZYaBnmh0dHBzOi8vZGlyZWN0LnNlY3VyaXR5ZGF0YS5uZXQu
+ZWMvfmNybC9hdXRvcmlkYWRfZGVfY2VydGlmaWNhY2lvbl9zdWJfc2VjdXJpdHlf
+ZGF0YV9lbnRpZGFkX2RlX2NlcnRpZmljYWNpb25fZGVfaW5mb3JtYWNpb25fY3Vy
+aXR5X2RhdGFfcy5hLl9jX2VjX2NybGZpbGUuY3JspIGnMIGkMQswCQYDVQQGEwJF
+QzEbMBkGA1UEChMSU0VDVVJJVFkgREFUQSBTLkEuMTAwLgYDVQQLEydFTlRJREFE
+IERFIENFUlRJRklDQUNJT04gREUgSU5GT1JNQUNJT04xNTAzBgNVBAMTLEFVVE9S
+SURBRCBERSBDRVJUSUZJQ0FDSU9OIFNVQiBTRUNVUklUWSBEQVRBMQ8wDQYDVQQD
+EwZDUkw1NjAwKwYDVR0QBCQwIoAPMjAxOTExMjExOTE4MTZagQ8yMDI0MTEyMTE5
+NDgxNlowHwYDVR0jBBgwFoAU9y9M4HXnYqN4llsGti5xO8xsP5AwHQYDVR0OBBYE
+FOimGnF7vvTl0RuWTfZmcIs7XLKjMAkGA1UdEwQCMAAwGQYJKoZIhvZ9B0EABAww
+ChsEVjguMQMCA6gwDQYJKoZIhvcNAQELBQADggEBAADdJ/rtLczsid0uSqTe7zfW
+whhh30nDZ85Nd/v2pByxJsgkRsptLzSIyEmOTFmtMPIPw8y8STCQZAU/iVRhqpeD
+zZo5ZwYcw1Cw0+ELA7+QKmOjV1tiZ67TWwYLayUhW38yF/QEEYCpxbPg/KLB+fYT
+8nNFKqC30qURM2sxfaPWUA1I22YneXrZq27pNE6qwdxrMKNKmUyx0bHgPijoPc1r
+7lrG0Ep4EdStHKmdjopOnEHg/S2b0JiGmrsD02yyg1yrq2REVqoCiq31lUYfhtPI
+GwGDJ/oYyxIe6eaqJ3Mmlozu5y/tax7sd7WXmDOCZkYggG3Y7wU7/iXg6y3+tXY=&lt;/ds:X509Certificate&gt;&lt;/ds:X509Data&gt;&lt;ds:KeyValue&gt;
+&lt;ds:RSAKeyValue&gt;
+&lt;ds:Modulus&gt;
+vnFoURSY3mBhcBmEsUr30lo2VbNvTYE5YlT0PBNuKV91P8q3vCaZgB/pepNbaqYo
+S3m99jtKBY17/DhSvv6juon5CkoJvdlRMhQ9R4QLjdskRViT5YvVzVeb6pX9YqzQ
+jCIkETeQwD5VmoXFJdUPtQj+dh1EuxvhBuIxJDgKVsmiZPBHoq+BvsNexHQ2mfPA
+TT75EVLUPKjEh9WNI1KE7jgs+e7Ws/GzYwjMJD0wQKX4+9+WMvVxNSU9ZHguF4Nn
+CziA+LNYw2CQMNBCvabckpa+DlXJ9agYs7WFOp+pO2vg3Hcp/JvhRQGzVOFCbdwu
+vQzCGRLF/s/ICKh89GMYDQ==
+&lt;/ds:Modulus&gt;
+&lt;ds:Exponent&gt;
+AQAB
+&lt;/ds:Exponent&gt;
+&lt;/ds:RSAKeyValue&gt;
+&lt;/ds:KeyValue&gt;&lt;/ds:KeyInfo&gt;&lt;ds:Object Id="SignatureN0-ObjectN0"&gt;&lt;etsi:QualifyingProperties Target="#SignatureN0"&gt;&lt;etsi:SignedProperties Id="SignatureN0-SignedPropertiesN0"&gt;&lt;etsi:SignedSignatureProperties&gt;&lt;etsi:SigningTime&gt;2020-10-23T09:35:29&lt;/etsi:SigningTime&gt;&lt;etsi:SigningCertificate&gt;&lt;etsi:Cert&gt;&lt;etsi:CertDigest&gt;&lt;ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/&gt;&lt;ds:DigestValue&gt;9UZLcDneiwG0HpCbEfIadwuA01o=&lt;/ds:DigestValue&gt;&lt;/etsi:CertDigest&gt;&lt;etsi:IssuerSerial&gt;&lt;ds:X509IssuerName&gt;CN=AUTORIDAD DE CERTIFICACION SUB SECURITY DATA,OU=ENTIDAD DE CERTIFICACION DE INFORMACION,O=SECURITY DATA S.A.,C=EC&lt;/ds:X509IssuerName&gt;&lt;ds:X509SerialNumber&gt;1573545681&lt;/ds:X509SerialNumber&gt;&lt;/etsi:IssuerSerial&gt;&lt;/etsi:Cert&gt;&lt;/etsi:SigningCertificate&gt;&lt;/etsi:SignedSignatureProperties&gt;&lt;etsi:SignedDataObjectProperties&gt;&lt;etsi:DataObjectFormat ObjectReference="#Reference-ID-N0"&gt;&lt;etsi:Description&gt;contenido comprobante&lt;/etsi:Description&gt;&lt;etsi:MimeType&gt;text/xml&lt;/etsi:MimeType&gt;&lt;/etsi:DataObjectFormat&gt;&lt;/etsi:SignedDataObjectProperties&gt;&lt;/etsi:SignedProperties&gt;&lt;/etsi:QualifyingProperties&gt;&lt;/ds:Object&gt;&lt;/ds:Signature&gt;&lt;/factura&gt;
+</comprobante><mensajes/></autorizacion>
