@@ -72,6 +72,7 @@ export class EditarEmpresaComponent implements OnInit {
   estiloDias: any;
 
   ngOnInit(): void {
+    console.log('data', this.data)
     this.ImprimirDatos();
   }
 

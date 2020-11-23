@@ -67,7 +67,7 @@ class EmpresaControlador {
 
     public async ListarEmpresaId(req: Request, res: Response) {
         const { id } = req.params;
-        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE id = $1', [id]);
+        const EMPRESA = await pool.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
