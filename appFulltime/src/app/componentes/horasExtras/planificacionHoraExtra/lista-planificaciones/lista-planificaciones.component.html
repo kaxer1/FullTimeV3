@@ -27,7 +27,7 @@
                         <td>{{p.hora_fin}}</td>
                         <td>{{p.horas_totales}}</td>
                         <td class="d-flex justify-content-center">
-                            <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                            <i *ngIf = "p.fecha_desde.split('T')[0] > fecha" class="fas fa-edit" matSuffix matTooltipPosition="right"
                                 matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro"
                                 (click)="EditarPlanificacion(p)">

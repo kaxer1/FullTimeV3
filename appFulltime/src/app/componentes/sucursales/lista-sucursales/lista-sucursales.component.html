@@ -70,10 +70,11 @@
                         <td>{{s.descripcion}}</td>
                         <td class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Ver datos generales de este feriado" class="fas fa-eye" id="ver"
+                                matTooltip="Ver datos generales de este establecimiento" class="fa fa-building" id="ver"
                                 [routerLink]="['/vistaSucursales/', s.id]">
-                                <p>Ver</p>
+                                <p>Departamento</p>
                             </i>
+                            
                             <i id="editar" class="fas fa-edit" (click)="AbrirVentanaEditar(s)" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Modificar los datos generales de este registro">

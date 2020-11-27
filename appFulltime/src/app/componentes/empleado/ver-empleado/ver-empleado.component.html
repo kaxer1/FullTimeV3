@@ -84,6 +84,10 @@
                                 </div>
                             </div>
                         </mat-card-content>
+                        <div class="col" style="text-align: center;" *ngIf="activar">
+                            <button type="submit" class="btn" id="boton" (click)="CambiarContrasena()">Modificar
+                                Contraseña</button>
+                        </div>
                         <div style="text-align: right;">
                             <a href="{{ruta}}" mat-button type="submit" (click)="verRegistroEdicion(false)"
                                 [disabled]="!btnActualizar">

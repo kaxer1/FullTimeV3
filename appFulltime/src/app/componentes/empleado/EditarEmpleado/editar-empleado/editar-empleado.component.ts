@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Md5 } from 'ts-md5/dist/md5';
 
 import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -82,7 +81,6 @@ export class EditarEmpleadoComponent implements OnInit {
     this.terceroFormGroup = this._formBuilder.group({
       rolForm: ['', Validators.required],
       userForm: ['', Validators.required],
-      passForm: [''],
     });
     this.filteredOptions = this.NacionalidadControl.valueChanges.pipe(
       startWith(''),
@@ -221,33 +219,22 @@ export class EditarEmpleadoComponent implements OnInit {
           });
         }
         else {
-          this.VerificarContrasena(form3, form1);
+          this.ActualizarUser(form3, form1);
         }
       });
     }
     else {
-      this.VerificarContrasena(form3, form1);
+      this.ActualizarUser(form3, form1);
     }
   }
 
-  VerificarContrasena(form3, form1) {
-    if (form3.passForm === '') {
-      let clave = this.usuario[0].contrasena;
-      this.ActualizarUser(form3, clave, form1);
-    }
-    else {
-      const md5 = new Md5();
-      let clave = md5.appendStr(form3.passForm).end();
-      this.ActualizarUser(form3, clave, form1);
-    }
-  }
 
   contador: number = 0;
-  ActualizarUser(form3, clave, form1) {
+  ActualizarUser(form3, form1) {
     this.contador = 0;
     let dataUser = {
       usuario: form3.userForm,
-      contrasena: clave,
+      contrasena: this.usuario[0].contrasena,
       id_rol: form3.rolForm,
       id_empleado: parseInt(this.idEmpleado),
     }

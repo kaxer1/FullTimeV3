@@ -12,15 +12,10 @@
             </div>
             <div class="d-flex flex-wrap justify-content-between">
                 <mat-form-field>
-                    <mat-label id="selec">Seleccionar Empresa</mat-label>
+                    <mat-label id="selec">Código</mat-label>
+                    <input matInput placeholder="Código del dispositivo" [formControl]="codigoF" required (keypress)="IngresarSoloNumeros($event)">
                     <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                        matTooltip="Lista de Empresas">help_outline</mat-icon>
-                    <mat-select [formControl]="idEmpresaF" required>
-                        <mat-option *ngFor="let empre of empresas" [value]="empre.id"
-                            (click)="FiltrarSucursales(RelojesForm.value)">
-                            {{empre.nombre}}
-                        </mat-option>
-                    </mat-select>
+                        matTooltip="Ingresar el código que tiene el dispositivo">help_outline</mat-icon>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label id="selec">Seleccionar Establecimiento</mat-label>
@@ -44,17 +39,23 @@
                 </mat-form-field>
                 <mat-radio-group aria-label="Select an option" formControlName="funcionesForm" required>
                     <label class="d-flex justify-content-start">
-                        <span style="margin-left: 10px;">Tiene funciones *</span>
+                        <span style="margin-left: 10px;">Tiene acciones *</span>
                         <mat-icon id="dispositivo" matSuffix matTooltipClass="relojRegistro-tooltip"
                             matTooltipPosition="right" matTooltip="El dispositivo tiene o no funciones">
                             help_outline
                         </mat-icon>
                     </label>
                     <div class="d-flex justify-content-around">
-                        <mat-radio-button value="true">Si</mat-radio-button>
-                        <mat-radio-button value="false">No</mat-radio-button>
+                        <mat-radio-button value="true" (click)="activarVista()">Si</mat-radio-button>
+                        <mat-radio-button value="false" (click)="desactivarVista()">No</mat-radio-button>
                     </div>
                 </mat-radio-group>
+                <mat-form-field *ngIf=(activarCampo)>
+                    <mat-label>Número de Acciones</mat-label>
+                    <input matInput placeholder="Acciones del dispositivo" [formControl]="numeroF" required (keypress)="IngresarSoloNumeros($event)">
+                    <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                        matTooltip="Ingresar el número de acciones que tiene el dispositivo">help_outline</mat-icon>
+                </mat-form-field>
                 <mat-form-field>
                     <mat-label>Nombre del Dispositivo</mat-label>
                     <input matInput placeholder="Nombre del dispositivo" [formControl]="nombreF" required>

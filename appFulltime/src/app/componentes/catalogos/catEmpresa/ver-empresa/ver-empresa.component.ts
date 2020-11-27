@@ -61,10 +61,17 @@ export class VerEmpresaComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1
   }
 
+  nombre_establecimiento: any;
   CargarDatosEmpresa() {
     this.datosEmpresa = [];
     this.rest.ConsultarDatosEmpresa(parseInt(this.idEmpresa)).subscribe(datos => {
       this.datosEmpresa = datos;
+      if (this.datosEmpresa[0].establecimiento === null || this.datosEmpresa[0].establecimiento === '' || this.datosEmpresa[0].establecimiento === undefined) {
+        this.nombre_establecimiento = 'establecimientos';
+      }
+      else {
+        this.nombre_establecimiento = this.datosEmpresa[0].establecimiento;
+      }
       if (this.datosEmpresa[0].logo != null) {
         this.ObtenerLogotipo();
       }

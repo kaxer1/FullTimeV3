@@ -21,6 +21,8 @@ p { font-size: x-small; text-align: center; }
 
 #verticalLine { border-left: 1px solid rgb(52,65,84); }
 
+#ver { color: rgb(78, 20, 238); margin-left: 20px; }
+
 #resulSucursales { 
     font-size: 17px; 
     text-align: center; 

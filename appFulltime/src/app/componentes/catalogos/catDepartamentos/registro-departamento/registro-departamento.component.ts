@@ -26,11 +26,9 @@ export class RegistroDepartamentoComponent implements OnInit {
   nombre = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   nivel = new FormControl('', Validators.required);
   departamentoPadre = new FormControl('');
-  idEmpresaF = new FormControl('');
   idSucursalF = new FormControl('');
 
   // Datos Departamento
-  empresas: any = [];
   sucursales: any = [];
   departamentos: any = [];
   departamentoId: any = [];
@@ -46,7 +44,6 @@ export class RegistroDepartamentoComponent implements OnInit {
     departamentoNombreForm: this.nombre,
     departamentoNivelForm: this.nivel,
     departamentoDepartamentoPadreForm: this.departamentoPadre,
-    idEmpresaForm: this.idEmpresaF,
     idSucursalForm: this.idSucursalF,
   });
 
@@ -70,14 +67,14 @@ export class RegistroDepartamentoComponent implements OnInit {
 
   constructor(
     private rest: DepartamentosService,
-    private restE: EmpresaService,
     private restS: SucursalService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroDepartamentoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-    this.BuscarEmpresas();
+    console.log('data', this.data)
+    this.FiltrarSucursales();
     if (this.data != undefined) {
       this.Habilitar = true;
       this.rest.BuscarDepartamentoSucursal(this.data).subscribe(datos => {
@@ -94,20 +91,13 @@ export class RegistroDepartamentoComponent implements OnInit {
     }
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
-  }
-
-  FiltrarSucursales(form) {
-    let idEmpre = form.idEmpresaForm
+  FiltrarSucursales() {
+    let idEmpre = parseInt(localStorage.getItem('empresa'));
     this.sucursales = [];
     this.restS.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+      this.toastr.info('No existe registro de establecimeintos','', {
         timeOut: 6000,
       })
     })

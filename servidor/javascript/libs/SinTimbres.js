@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NotificacionSinTimbres = void 0;
 const database_1 = __importDefault(require("../database"));
 const MINUTO_TIMER = 15;
 // const MINUTO_TIMER = 5; // de prueba

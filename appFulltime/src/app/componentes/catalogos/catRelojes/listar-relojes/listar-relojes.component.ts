@@ -157,7 +157,13 @@ export class ListarRelojesComponent implements OnInit {
   /* Ventana para editar datos de dispositivo seleccionado */
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarRelojComponent, { width: '1200px', data: { datosReloj: datosSeleccionados, actualizar: true } }).disableClose = true;
+    this.vistaRegistrarDatos.open(EditarRelojComponent, {
+      width: '1200px',
+      data: { datosReloj: datosSeleccionados, actualizar: true }
+    })
+      .afterClosed().subscribe(item => {
+        this.ObtenerReloj();
+      });;
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
@@ -185,7 +191,10 @@ export class ListarRelojesComponent implements OnInit {
 
   /** Ventana para registrar datos de un nuevo dispositivo */
   AbrirVentanaRegistrarReloj(): void {
-    this.vistaRegistrarDatos.open(RelojesComponent, { width: '1200px' }).disableClose = true;
+    this.vistaRegistrarDatos.open(RelojesComponent, { width: '1200px' })
+      .afterClosed().subscribe(item => {
+        this.ObtenerReloj();
+      });;
   }
 
   /*************************************************************************************
@@ -225,7 +234,9 @@ export class ListarRelojesComponent implements OnInit {
     this.rest.Verificar_Datos_ArchivoExcel(formData).subscribe(res => {
       if (res.message === 'error') {
         this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema.',
+          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema, ' +
+          'es decir el nombre del equipo, código y la dirección IP son datos únicos de cada registro Aseguresa ' +
+          'que el nombre de la sucursal y el departamento exitan dentro del sistema.',
           'Verificar los datos ingresados en la plantilla', {
           timeOut: 10000,
         });
@@ -235,7 +246,9 @@ export class ListarRelojesComponent implements OnInit {
         this.rest.VerificarArchivoExcel(formData).subscribe(response => {
           if (response.message === 'error') {
             this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema.',
+              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados dentro del sistema ' +
+              'es decir el nombre del equipo, código y la dirección IP son datos únicos de cada registro. Aseguresa ' +
+              'que el nombre de la sucursal y el departamento exitan dentro del sistema.',
               'Verificar los datos ingresados en la plantilla', {
               timeOut: 10000,
             });

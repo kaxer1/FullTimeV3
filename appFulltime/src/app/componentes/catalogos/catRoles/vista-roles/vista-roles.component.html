@@ -53,12 +53,12 @@
                                 [routerLink]="['/seleccionarPermisos/', rol.id]">
                                 <p>Funciones</p>
                             </i>
-                            <i matSuffix (click)="AbrirVentanaEditar(rol)" matTooltipClass="enrolado-tooltip"
+                            <i *ngIf="rol.id != 1 && rol.id != 2" matSuffix (click)="AbrirVentanaEditar(rol)" matTooltipClass="enrolado-tooltip"
                                 matTooltipPosition="right" id="editar"
-                                matTooltip="Modificar datos generales del empleado enrolado" class="fas fa-edit">
+                                matTooltip="Modificar datos generales de este registro" class="fas fa-edit">
                                 <p>Editar</p>
                             </i>
-                            <i class="far fa-trash-alt" (click)="ConfirmarDelete(rol)"
+                            <i *ngIf="rol.id != 1 && rol.id != 2" class="far fa-trash-alt" (click)="ConfirmarDelete(rol)"
                             style="color:red; margin-left: 15px;" id="iprocesoL" matSuffix
                             matTooltipClass="procesoL-tooltip" matTooltipPosition="right"
                             matTooltip="Eliminar registro">

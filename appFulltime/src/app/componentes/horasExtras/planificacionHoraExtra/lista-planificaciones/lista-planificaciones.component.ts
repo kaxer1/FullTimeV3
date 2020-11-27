@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
+import * as moment from 'moment';
 
 import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-extra.service';
 
@@ -29,7 +30,10 @@ export class ListaPlanificacionesComponent implements OnInit {
     public vistaRegistrarDatos: MatDialog
   ) { }
 
+  fecha: any;
   ngOnInit(): void {
+    var f = moment();
+    this.fecha = f.format('YYYY-MM-DD');
     this.listarPlanificaciones();
   }
 

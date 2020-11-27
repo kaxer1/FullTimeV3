@@ -405,7 +405,7 @@ export class DatosEmpleadoComponent implements OnInit {
   ****************************************************************************************************
   */
 
-  /* Ventana para ingresar planificación de comidas */
+  /* Ventana para realizar cambio de contraseña */
   CambiarContrasena(): void {
     console.log(this.idEmpleado);
     this.vistaRegistrarDatos.open(CambiarContrasenaComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;

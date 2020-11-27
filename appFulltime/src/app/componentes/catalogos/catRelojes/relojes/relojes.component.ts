@@ -4,7 +4,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { ToastrService } from 'ngx-toastr';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 
 
@@ -16,10 +15,12 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 })
 export class RelojesComponent implements OnInit {
 
-  empresas: any = [];
   sucursales: any = [];
   departamento: any = [];
   nomDepartamento: any = [];
+
+  // Activar ingreso de número de acciones
+  activarCampo: boolean = false;
 
   // Control de campos y validaciones del formulario
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -33,9 +34,10 @@ export class RelojesComponent implements OnInit {
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);
   macF = new FormControl('');
-  idEmpresaF = new FormControl('', Validators.required);
+  codigoF = new FormControl('', Validators.required);
   idSucursalF = new FormControl('', Validators.required);
   idDepartamentoF = new FormControl('', [Validators.required]);
+  numeroF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public RelojesForm = new FormGroup({
@@ -52,36 +54,29 @@ export class RelojesComponent implements OnInit {
     funcionesForm: this.funcionesF,
     idSucursalForm: this.idSucursalF,
     idDepartamentoForm: this.idDepartamentoF,
-    idEmpresaForm: this.idEmpresaF,
+    codigoForm: this.codigoF,
+    numeroForm: this.numeroF
   });
 
   constructor(
     private rest: RelojesService,
     private restCatDepartamento: DepartamentosService,
     private restSucursales: SucursalService,
-    private restE: EmpresaService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RelojesComponent>,
   ) { }
 
   ngOnInit(): void {
-    this.BuscarEmpresas();
+    this.FiltrarSucursales();
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
-  }
-
-  FiltrarSucursales(form) {
-    let idEmpre = form.idEmpresaForm
+  FiltrarSucursales() {
+    let idEmpre = parseInt(localStorage.getItem('empresa'));
     this.sucursales = [];
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+      this.toastr.info('No se han encntrado registros de establecimientos', '', {
         timeOut: 6000,
       })
     })
@@ -93,7 +88,7 @@ export class RelojesComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados', '', {
         timeOut: 6000,
       })
     });
@@ -105,12 +100,12 @@ export class RelojesComponent implements OnInit {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro', '', {
           timeOut: 6000,
         })
       }
     }, error => {
-      this.toastr.info('Descripción ingresada no coincide con los registros','', {
+      this.toastr.info('Descripción ingresada no coincide con los registros', '', {
         timeOut: 6000,
       })
     });
@@ -130,23 +125,34 @@ export class RelojesComponent implements OnInit {
       mac: form.macForm,
       tien_funciones: form.funcionesForm,
       id_sucursal: form.idSucursalForm,
-      id_departamento: form.idDepartamentoForm
+      id_departamento: form.idDepartamentoForm,
+      id: form.codigoForm,
+      numero_accion: form.numeroForm
     };
     this.nomDepartamento = [];
     this.restCatDepartamento.EncontrarUnDepartamento(form.idDepartamentoForm).subscribe(datos => {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro', '', {
           timeOut: 6000,
         })
       }
       else {
         this.rest.CrearNuevoReloj(datosReloj).subscribe(response => {
-          this.LimpiarCampos();
-          this.toastr.success('Operación Exitosa', 'Dispositivo registrado', {
-            timeOut: 6000,
-          })
+          if (response.message === 'guardado') {
+            this.LimpiarCampos();
+            this.toastr.success('Operación Exitosa', 'Dispositivo registrado', {
+              timeOut: 6000,
+            })
+          }
+          else {
+            this.toastr.error('Verificar que el código de reloj y la ip del dispositivo no se encuentren registrados.',
+              'Operación Fallida', {
+              timeOut: 6000,
+            })
+          }
+
         }, error => { });
       }
     }, error => { });
@@ -211,6 +217,20 @@ export class RelojesComponent implements OnInit {
     }
   }
 
+  activarVista() {
+    this.activarCampo = true;
+    this.RelojesForm.patchValue({
+      numeroForm: ''
+    })
+  }
+
+  desactivarVista() {
+    this.activarCampo = false;
+    this.RelojesForm.patchValue({
+      numeroForm: 0
+    })
+  }
+
   LimpiarCampos() {
     this.RelojesForm.reset();
   }
@@ -218,7 +238,6 @@ export class RelojesComponent implements OnInit {
   CerrarVentanaRegistroReloj() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    window.location.reload();
   }
 
 }

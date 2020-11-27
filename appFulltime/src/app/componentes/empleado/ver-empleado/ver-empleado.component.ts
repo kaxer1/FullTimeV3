@@ -54,6 +54,8 @@ import { CancelarHoraExtraComponent } from 'src/app/componentes/rolEmpleado/hora
 import { EditarHoraExtraEmpleadoComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
 import { CancelarVacacionesComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
+import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -116,6 +118,7 @@ export class VerEmpleadoComponent implements OnInit {
   HabilitarHorasE: boolean;
 
   constructor(
+    public restU: UsuarioService,
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
     public restDiscapacidad: DiscapacidadService,
@@ -168,6 +171,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.VerHorasExtras();
     this.ObtenerLogo();
     this.ObtnerColores();
+    this.VerAccionContrasena(this.idEmpleado);
   }
 
   // Método para ver la información del empleado 
@@ -590,7 +594,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restDiscapacidad.deleteDiscapacidadUsuarioRest(id_discapacidad).subscribe(res => {
       this.obtenerDiscapacidadEmpleado(this.idEmpleado);
       this.btnDisc = 'Añadir';
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
     })
@@ -612,7 +616,7 @@ export class VerEmpleadoComponent implements OnInit {
   eliminarTituloEmpleado(id: number) {
     this.restEmpleado.deleteEmpleadoTituloRest(id).subscribe(res => {
       this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.habilitarBtn();
@@ -634,7 +638,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado HORARIO*/
   EliminarHorario(id_horario: number) {
     this.restEmpleHorario.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
@@ -657,7 +661,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanificacion(id_plan: number) {
     this.restPlanH.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.obtenerPlanHorarios(parseInt(this.idEmpleado));
@@ -680,7 +684,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanComidas(id_plan: number) {
     this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -703,7 +707,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarProceso(id_plan: number) {
     this.restEmpleadoProcesos.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.obtenerEmpleadoProcesos(parseInt(this.idEmpleado));
@@ -726,7 +730,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarAutorizacion(id_auto: number) {
     this.restAutoridad.EliminarRegistro(id_auto).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerAutorizaciones(parseInt(this.idEmpleado));
@@ -875,7 +879,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.restPerV.BuscarIDPerVacaciones(parseInt(this.idEmpleado)).subscribe(datos => {
         this.idPerVacacion = datos;
         console.log("idPerVaca ", this.idPerVacacion[0].id);
-        this.toastr.info('El empleado ya tiene registrado un periodo de vacaciones y este se actualiza automáticamente','', {
+        this.toastr.info('El empleado ya tiene registrado un periodo de vacaciones y este se actualiza automáticamente', '', {
           timeOut: 6000,
         })
       }, error => {
@@ -1348,7 +1352,7 @@ export class VerEmpleadoComponent implements OnInit {
           this.plantillaHorario();
           //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
-          this.toastr.error('Plantilla seleccionada incorrecta','', {
+          this.toastr.error('Plantilla seleccionada incorrecta', '', {
             timeOut: 6000,
           });
         }
@@ -1460,6 +1464,29 @@ export class VerEmpleadoComponent implements OnInit {
       this.HabilitarHorasE = true;
     }
   }
+
+  /* Ventana para ingresar planificación de comidas */
+  CambiarContrasena(): void {
+    console.log(this.idEmpleado);
+    this.vistaRegistrarDatos.open(CambiarContrasenaComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  usuario: any = [];
+  activar: boolean = false;
+  VerAccionContrasena(idEmpleado) {
+    this.usuario = [];
+    this.restU.BuscarDatosUser(idEmpleado).subscribe(res => {
+      this.usuario = res;
+      if (this.usuario[0].id_rol === 1) {
+        this.activar = true;
+      }
+      else {
+        this.activar = false;
+      }
+    });
+
+  }
+
 
 }
 
