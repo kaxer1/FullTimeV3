@@ -42,8 +42,13 @@ class TipoPermisosControlador {
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
-                yield database_1.default.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo]);
+                const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo, fecha } = req.body;
+                yield database_1.default.query('INSERT INTO cg_tipo_permisos (descripcion, tipo_descuento, num_dia_maximo, ' +
+                    'num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, ' +
+                    'legalizar, almu_incluir, num_dia_justifica, num_hora_maximo, fecha) VALUES ($1, $2, $3, $4, $5, $6, $7, ' +
+                    '$8, $9, $10, $11, $12, $13, $14)', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso,
+                    vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir,
+                    num_dia_justifica, num_hora_maximo, fecha]);
                 res.jsonp({ message: 'Registro guardado exitosamente' });
             }
             catch (error) {
@@ -54,8 +59,13 @@ class TipoPermisosControlador {
     editar(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo } = req.body;
-            yield database_1.default.query('UPDATE cg_tipo_permisos SET descripcion = $1, tipo_descuento = $2, num_dia_maximo = $3, num_dia_ingreso = $4, vaca_afecta = $5, anio_acumula = $6, gene_justificacion = $7, fec_validar = $8, acce_empleado = $9, legalizar = $10, almu_incluir = $11, num_dia_justifica = $12, num_hora_maximo = $13 WHERE id = $14', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo, id]);
+            const { descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta, anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir, num_dia_justifica, num_hora_maximo, fecha } = req.body;
+            yield database_1.default.query('UPDATE cg_tipo_permisos SET descripcion = $1, tipo_descuento = $2, num_dia_maximo = $3, ' +
+                'num_dia_ingreso = $4, vaca_afecta = $5, anio_acumula = $6, gene_justificacion = $7, fec_validar = $8, ' +
+                'acce_empleado = $9, legalizar = $10, almu_incluir = $11, num_dia_justifica = $12, num_hora_maximo = $13, ' +
+                'fecha = $14 WHERE id = $15', [descripcion, tipo_descuento, num_dia_maximo, num_dia_ingreso, vaca_afecta,
+                anio_acumula, gene_justificacion, fec_validar, acce_empleado, legalizar, almu_incluir,
+                num_dia_justifica, num_hora_maximo, fecha, id]);
             res.jsonp({ message: 'Tipo Permiso Actualizado' });
         });
     }

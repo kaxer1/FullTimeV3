@@ -34,8 +34,16 @@ export class PeriodoVacacionesService {
     return this.http.put(`${this.API_URL}/perVacacion`, datos);
   }
 
+  // Verificar datos de la plantilla de periodo de vacaciones y luego cargar al sistema
   CargarPeriodosMultiples(formData) {
-    return this.http.post(`${this.API_URL}/perVacacion/cargarPeriodo/upload`, formData);
+    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/upload`, formData);
   }
 
+  VerificarDatos(formData) {
+    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/verificarDatos/upload`, formData);
+  }
+
+  VerificarPlantilla(formData) {
+    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/verificarPlantilla/upload`, formData);
+  }
 }

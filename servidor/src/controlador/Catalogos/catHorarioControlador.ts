@@ -30,7 +30,7 @@ class HorarioControlador {
   public async CrearHorario(req: Request, res: Response): Promise<void> {
     //HORA_TRABAJO --SOLO PERMITE 2 Nùmeros 1 entero, un decimal 
     const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
-    console.log({ nombre, min_almuerzo, hora_trabajo, nocturno});
+    console.log({ nombre, min_almuerzo, hora_trabajo, nocturno });
     await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno) VALUES ($1, $2, $3, $4, $5)', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno]);
     const ultimo = await pool.query('SELECT MAX(id) AS id FROM cg_horarios');
 
@@ -48,26 +48,21 @@ class HorarioControlador {
     const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
     /** Horarios */
     plantilla.forEach(async (data: any) => {
-      var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
-      if (nombre_horario != undefined) {
-        if (minutos_almuerzo != undefined) {
-          //console.log("datos", data);
-          await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-        } else {
-          minutos_almuerzo = 0;
-          await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-        }
-      }
-      else {
-        console.log("vacio")
+      var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
+      if (minutos_almuerzo != undefined) {
+        await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, nocturno) VALUES ($1, $2, $3, $4)', [nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno]);
+        res.jsonp({ message: 'correcto' });
+      } else {
+        minutos_almuerzo = 0;
+        await pool.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, nocturno) VALUES ($1, $2, $3, $4)', [nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno]);
+        res.jsonp({ message: 'correcto' });
       }
     });
-
-    res.jsonp({ message: 'La plantilla a sido receptada' });
     fs.unlinkSync(filePath);
   }
 
-  public async CrearHorarioyDetallePlantilla(req: Request, res: Response): Promise<void> {
+  /** Verificar si existen datos duplicados dentro del sistema */
+  public async VerificarDatos(req: Request, res: Response) {
     let list: any = req.files;
     let cadena = list.uploads[0].path;
     let filename = cadena.split("\\")[1];
@@ -75,28 +70,82 @@ class HorarioControlador {
 
     const workbook = excel.readFile(filePath);
     const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-    const plantillaD = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    /** Horarios */
+    var contarNombre = 0;
+    var contarDatos = 0;
+    var contador = 1;
+    plantilla.forEach(async (data: any) => {
+      var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
 
-    /** Detalle de Horarios */
-    plantillaD.forEach(async (data: any) => {
-      var { nombre_horarios, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
-      var nombre = nombre_horarios;
-      console.log("datos", nombre);
-      //console.log("datos", data)
-      const horariosTotales = await pool.query('SELECT * FROM cg_horarios');
-      console.log(horariosTotales.rows)
-      const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
-      var id_horario = idHorario.rows[0]['id'];
-      console.log("horarios", id_horario)
-      if (minutos_espera != undefined) {
-        console.log("entra");
-        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
-      } else {
-        minutos_espera = 0;
-        await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
+      // Verificar que los datos obligatorios existan
+      if (nombre_horario != undefined && hora_trabajo != undefined && horario_nocturno != undefined) {
+        contarDatos = contarDatos + 1;
       }
+
+      // Verificar que el nombre del horario no se encuentre registrado
+      if (nombre_horario != undefined) {
+        const NOMBRES = await pool.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1',
+          [nombre_horario.toUpperCase()]);
+        if (NOMBRES.rowCount === 0) {
+          contarNombre = contarNombre + 1;
+        }
+      }
+
+      // Verificar que todos los datos sean correctos
+      if (contador === plantilla.length) {
+        if (contarNombre === plantilla.length && contarDatos === plantilla.length) {
+          return res.jsonp({ message: 'correcto' });
+        } else {
+          return res.jsonp({ message: 'error' });
+        }
+      }
+      contador = contador + 1;
     });
-    res.jsonp({ message: 'La plantilla a sido receptada' });
+    fs.unlinkSync(filePath);
+  }
+
+  /** Verificar que los datos dentro de la plantilla no se encuntren duplicados */
+  public async VerificarPlantilla(req: Request, res: Response) {
+    let list: any = req.files;
+    let cadena = list.uploads[0].path;
+    let filename = cadena.split("\\")[1];
+    var filePath = `./plantillas/${filename}`
+    const workbook = excel.readFile(filePath);
+    const sheet_name_list = workbook.SheetNames;
+    const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+    var contarNombreData = 0;
+    var contador_arreglo = 1;
+    var arreglos_datos: any = [];
+    //Leer la plantilla para llenar un array con los datos nombre para verificar que no sean duplicados
+    plantilla.forEach(async (data: any) => {
+      // Datos que se leen de la plantilla ingresada
+      var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
+      let datos_array = {
+        nombre: nombre_horario,
+      }
+      arreglos_datos.push(datos_array);
+    });
+
+    // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+    for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+      for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+        if (arreglos_datos[i].nombre.toUpperCase() === arreglos_datos[j].nombre.toUpperCase()) {
+          contarNombreData = contarNombreData + 1;
+        }
+      }
+      contador_arreglo = contador_arreglo + 1;
+    }
+
+    // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+    console.log('nombre_data', contarNombreData, plantilla.length, contador_arreglo);
+    if ((contador_arreglo - 1) === plantilla.length) {
+      if (contarNombreData === plantilla.length) {
+        return res.jsonp({ message: 'correcto' });
+      } else {
+        return res.jsonp({ message: 'error' });
+      }
+    }
     fs.unlinkSync(filePath);
   }
 
@@ -154,6 +203,31 @@ class HorarioControlador {
     const id = req.params.id;
     await pool.query('DELETE FROM cg_horarios WHERE id = $1', [id]);
     res.jsonp({ message: 'Registro eliminado' });
+  }
+
+  public async VerificarDuplicados(req: Request, res: Response) {
+    const { nombre } = req.params;
+    const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1',
+      [nombre.toUpperCase()]);
+    if (HORARIOS.rowCount > 0) {
+      return res.jsonp(HORARIOS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async VerificarDuplicadosEdicion(req: Request, res: Response) {
+    const { nombre } = req.params;
+    const id = req.params.id;
+    const HORARIOS = await pool.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2',
+      [id, nombre.toUpperCase()]);
+    if (HORARIOS.rowCount > 0) {
+      return res.jsonp(HORARIOS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
   }
 
 }

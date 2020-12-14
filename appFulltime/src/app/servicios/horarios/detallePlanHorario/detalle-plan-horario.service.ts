@@ -24,10 +24,6 @@ export class DetallePlanHorarioService {
     return this.http.get<any>(`${this.API_URL}/detallePlanHorario/infoPlan/${id_plan_horario}`);
   }
 
-  subirArchivoExcel(id_plan_horario: number, formData) {
-    return this.http.post(`${this.API_URL}/detallePlanHorario/${id_plan_horario}/upload`, formData)
-  }
-
   ActualizarRegistro(data: any) {
     return this.http.put(`${this.API_URL}/detallePlanHorario`, data);
   }
@@ -40,4 +36,21 @@ export class DetallePlanHorarioService {
     return this.http.post(`${this.API_URL}/detallePlanHorario/verificarRegistro`, datos);
   }
 
+  VerificarDuplicidadEdicion(datos: any, id: number) {
+    return this.http.post(`${this.API_URL}/detallePlanHorario/verificarDuplicado/${id}`, datos);
+  }
+
+  // Verificar Datos de detalle de plantilla
+  VerificarDatos(id_plan_horario: number, formData) {
+    return this.http.post<any>(`${this.API_URL}/detallePlanHorario/verificarDatos/${id_plan_horario}/upload`, formData)
+  }
+  VerificarPlantilla(formData) {
+    return this.http.post<any>(`${this.API_URL}/detallePlanHorario/verificarPlantilla/upload`, formData)
+  }
+  subirArchivoExcel(id_plan_horario: number, formData) {
+    return this.http.post<any>(`${this.API_URL}/detallePlanHorario/${id_plan_horario}/upload`, formData)
+  }
+  CrearPlanificacionGeneral(id: number, codigo: number, formData) {
+    return this.http.post<any>(`${this.API_URL}/detallePlanHorario/plan_general/${id}/${codigo}/upload`, formData)
+  }
 }

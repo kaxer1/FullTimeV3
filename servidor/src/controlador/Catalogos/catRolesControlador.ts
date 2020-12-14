@@ -38,14 +38,14 @@ class RolesControlador {
   }
 
   public async CrearRol(req: Request, res: Response): Promise<void> {
-    const { nombre } = req.body;
-    await pool.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
+    const { nombre, logged } = req.body;
+    await pool.query('INSERT INTO cg_roles (nombre, logged) VALUES ($1, $2)', [nombre, logged]);
     res.jsonp({ message: 'Rol guardado' });
   }
 
   public async ActualizarRol(req: Request, res: Response): Promise<void> {
-    const { nombre, id } = req.body;
-    await pool.query('UPDATE cg_roles SET nombre = $1 WHERE id = $2', [nombre, id]);
+    const { nombre, logged, id } = req.body;
+    await pool.query('UPDATE cg_roles SET nombre = $1, logged = $2 WHERE id = $3', [nombre, logged, id]);
     res.jsonp({ message: 'Registro Actualizado' });
   }
 

@@ -76,7 +76,7 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Fecha de Salida</mat-label>
-                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event)" readonly
+                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event, PermisoForm.value)" readonly
                             placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"

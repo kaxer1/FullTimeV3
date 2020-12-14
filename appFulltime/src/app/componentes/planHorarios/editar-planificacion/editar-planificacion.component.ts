@@ -73,8 +73,8 @@ export class EditarPlanificacionComponent implements OnInit {
       fechaInicio: form.fechaIngresoForm,
       fechaFinal: form.fechaSalidaForm,
     };
-    this.rest.VerificarDuplicidadPlanEdicion(this.data.datosPlan.id, this.data.idEmpleado, fechas).subscribe(response => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación','', {
+    this.rest.VerificarDuplicidadPlanEdicion(this.data.datosPlan.id, this.data.datosPlan.codigo, fechas).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación.','', {
         timeOut: 6000,
       });
     }, error => {

@@ -46,9 +46,7 @@
                         <mat-error id="hora" *ngIf="nombre.invalid">{{ObtenerMensajeErrorHoraTrabajo()}}</mat-error>
                     </mat-form-field>
                     <div>
-                        <mat-checkbox [formControl]="tipoF" [(ngModel)]="nocturno">Horario
-                            Nocturno
-                            *
+                        <mat-checkbox [formControl]="tipoF" [(ngModel)]="nocturno">Horario Nocturno
                         </mat-checkbox>
                         <mat-icon id="icono" matSuffix matTooltipClass="icono-tooltip" matTooltipPosition="right"
                             matTooltip="Indicar si el horario es Nocturno">

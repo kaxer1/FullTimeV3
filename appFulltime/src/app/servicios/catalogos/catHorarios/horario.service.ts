@@ -30,10 +30,6 @@ export class HorarioService {
     return this.http.put(`${this.API_URL}/horario/editar/${id}`, data);
   }
 
-  CargarHorariosDetalles(formData) {
-    return this.http.post(this.API_URL + '/horario/cargaMultiple/upload', formData)
-  }
-
   DownloadXMLRest(data: any) {
     return this.http.post(`${this.API_URL}/horario/xmlDownload`, data);
   }
@@ -46,12 +42,27 @@ export class HorarioService {
     return this.http.put(`${this.API_URL}/horario/editar/editarDocumento/${id}`, data);
   }
 
-  CargarHorariosMultiples(formData) {
-    return this.http.post(`${this.API_URL}/horario/cargarHorario/upload`, formData);
-  }
-
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/horario/eliminar/${id}`);
+  }
+
+  VerificarDuplicados(nombre: string) {
+    return this.http.get(`${this.API_URL}/horario/verificarDuplicados/${nombre}`);
+  }
+
+  VerificarDuplicadosEdicion(id: number, nombre: string) {
+    return this.http.get(`${this.API_URL}/horario/verificarDuplicados/edicion/${id}/${nombre}`);
+  }
+
+  // Verificar datos de la plantilla de catálogo horario y cargar al sistema
+  VerificarDatosHorario(formData) {
+    return this.http.post<any>(`${this.API_URL}/horario/cargarHorario/verificarDatos/upload`, formData);
+  }
+  VerificarPlantillaHorario(formData) {
+    return this.http.post<any>(`${this.API_URL}/horario/cargarHorario/verificarPlantilla/upload`, formData);
+  }
+  CargarHorariosMultiples(formData) {
+    return this.http.post<any>(`${this.API_URL}/horario/cargarHorario/upload`, formData);
   }
 
 }

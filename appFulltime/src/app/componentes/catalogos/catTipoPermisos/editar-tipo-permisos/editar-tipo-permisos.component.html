@@ -1,7 +1,8 @@
 <div class="d-flex bd-highlight barraTitulo">
     <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">
         open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Editar Tipo Permiso</h5>
+    <h5 class="w-100 bd-highlight align-self-center" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        Editar Tipo Permiso</h5>
 </div>
 <mat-horizontal-stepper [linear]="isLinear" #stepper>
     <mat-step [stepControl]="primeroFormGroup">
@@ -175,20 +176,35 @@
                             <mat-radio-button [value]="false">No</mat-radio-button>
                         </div>
                     </mat-radio-group>
-                    <br>
                     <mat-radio-group aria-label="Select an option" formControlName="fecValidarForm" required>
                         <label class="d-flex justify-content-start">
-                            <span style="font-size: 12px;">Restrición por fecha *</span>
+                            <span>Restrición por fecha *</span>
                             <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
                                 matTooltip="Seleccionar si el permiso tendrá alguna restrición por la fecha">
                                 help_outline
                             </mat-icon>
                         </label>
                         <div class="d-flex justify-content-start">
-                            <mat-radio-button [value]="true">Si</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button (click)="verCalendario()" ngDefaultControl [(ngModel)]="selec1"
+                                [checked]="selec1" [ngModelOptions]="{standalone: true}" value="true">Si
+                            </mat-radio-button>
+                            <mat-radio-button (click)="ocultarCalendario()" ngDefaultControl [(ngModel)]="selec2"
+                                [checked]="selec2" [ngModelOptions]="{standalone: true}" value="false">No
+                            </mat-radio-button>
                         </div>
                     </mat-radio-group>
+                    <br>
+                    <mat-form-field *ngIf="calendario">
+                        <mat-label>Seleccionar Fecha</mat-label>
+                        <input matInput [matDatepicker]="picker2" readonly placeholder="dd/mm/aaaa"
+                            formControlName="fechaForm" min="1950-01-31" max="2050-01-31"
+                            (dateInput)="VerificarFecha($event)">
+                        <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar la fecha en la que no se concedera permisos. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker2></mat-datepicker>
+                    </mat-form-field>
                 </div>
                 <div class="col">
                     <mat-radio-group aria-label="Select an option" formControlName="geneJustificacionForm" required>

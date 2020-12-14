@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const moment_1 = __importDefault(require("moment"));
 class EmpleadoHorariosControlador {
     ListarEmpleadoHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -29,8 +30,11 @@ class EmpleadoHorariosControlador {
     }
     CrearEmpleadoHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado } = req.body;
-            yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado]);
+            const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, codigo } = req.body;
+            yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, ' +
+                'lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, codigo) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves,
+                viernes, sabado, domingo, id_horarios, estado, codigo]);
             res.jsonp({ message: 'El horario del empleado se registró con éxito' });
         });
     }
@@ -46,6 +50,172 @@ class EmpleadoHorariosControlador {
             }
         });
     }
+    /** Verificar datos de plantilla de multiples horarios para un solo empleado */
+    VerificarDatos_PlantillaEmpleado_Horario(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var contarDatos = 0;
+            var contarHorario = 0;
+            var contarDetalles = 0;
+            var contarCargo = 0;
+            var contarFechas = 0;
+            var contarFechasValidas = 0;
+            var contador = 1;
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { id } = req.params;
+                const { fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
+                // Verificar que existan los datos
+                if (fecha_inicio != undefined && fecha_final != undefined && lunes != undefined && martes != undefined && miercoles != undefined &&
+                    jueves != undefined && viernes != undefined && sabado != undefined && domingo != undefined && nombre_horario != undefined &&
+                    estado != undefined) {
+                    contarDatos = contarDatos + 1;
+                }
+                // Verificar que exista horario
+                if (nombre_horario != undefined && fecha_inicio != undefined && fecha_final != undefined) {
+                    const HORARIO = yield database_1.default.query('SELECT id FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre_horario.toUpperCase()]);
+                    if (HORARIO.rowCount != 0) {
+                        contarHorario = contarHorario + 1;
+                        // Verificar que exista detalles de horario
+                        const DETALLES = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [HORARIO.rows[0]['id']]);
+                        if (DETALLES.rowCount != 0) {
+                            contarDetalles = contarDetalles + 1;
+                            // Verificar que no exista registrado Horario en el empleado
+                            const FECHAS = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
+                                '(SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+                                'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+                                'OR fec_final BETWEEN $1 AND $2) AND id_horarios = $4) AS h ' +
+                                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1', [fecha_inicio, fecha_final, id, HORARIO.rows[0]['id']]);
+                            if (FECHAS.rowCount === 0) {
+                                contarFechas = contarFechas + 1;
+                            }
+                        }
+                    }
+                }
+                // Verificar que las fechas sean validas
+                if (fecha_inicio != undefined && fecha_final != undefined) {
+                    var inicio = new Date(fecha_inicio.split('/')[2] + '-' + fecha_inicio.split('/')[1] + '-' + fecha_inicio.split('/')[0] + 'T00:00:00');
+                    var final = new Date(fecha_final.split('/')[2] + '-' + fecha_final.split('/')[1] + '-' + fecha_final.split('/')[0] + 'T00:00:00');
+                    console.log('fecha_inicio', Date.parse(moment_1.default(inicio).format('YYYY-MM-DD')), 'fecha_fin', Date.parse(moment_1.default(final).format('YYYY-MM-DD')));
+                    if (Date.parse(moment_1.default(inicio).format('YYYY-MM-DD')) <= Date.parse(moment_1.default(final).format('YYYY-MM-DD'))) {
+                        contarFechasValidas = contarFechasValidas + 1;
+                    }
+                }
+                // Verificar que exista cargo del empleado
+                const CARGO = yield database_1.default.query('SELECT MAX(ec.id) FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e ' +
+                    'WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
+                if (CARGO.rowCount != 0) {
+                    contarCargo = contarCargo + 1;
+                }
+                console.log('datos', contarFechas, contarFechasValidas, contarHorario, contarDatos, contarDetalles, contarCargo, contador);
+                if (contador === plantilla.length) {
+                    if (contarDatos === plantilla.length && contarHorario === plantilla.length &&
+                        contarDetalles === plantilla.length && contarFechas === plantilla.length &&
+                        contarCargo === plantilla.length && contarFechasValidas === plantilla.length) {
+                        return res.jsonp({ message: 'correcto' });
+                    }
+                    else {
+                        return res.jsonp({ message: 'error' });
+                    }
+                }
+                contador = contador + 1;
+            }));
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    /** Verificar que los datos de la plantilla no se encuentren duplicados */
+    VerificarPlantilla_HorarioEmpleado(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames;
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var contarDatosData = 0;
+            var contarFechas = 0;
+            var contador_arreglo = 1;
+            var arreglos_datos = [];
+            //Leer la plantilla para llenar un array con los datos cedula y usuario para verificar que no sean duplicados
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                // Datos que se leen de la plantilla ingresada
+                const { fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
+                let datos_array = {
+                    fec_inicio: fecha_inicio,
+                    fec_final: fecha_final,
+                    horario: nombre_horario
+                };
+                arreglos_datos.push(datos_array);
+            }));
+            function compare(a, b) {
+                var inicio_1 = new Date(a.fec_inicio.split('/')[2] + '-' + a.fec_inicio.split('/')[1] + '-' + a.fec_inicio.split('/')[0] + 'T00:00:00');
+                var inicio_2 = new Date(b.fec_inicio.split('/')[2] + '-' + b.fec_inicio.split('/')[1] + '-' + b.fec_inicio.split('/')[0] + 'T00:00:00');
+                if (Date.parse(moment_1.default(inicio_1).format('YYYY-MM-DD')) < Date.parse(moment_1.default(inicio_2).format('YYYY-MM-DD'))) {
+                    return -1;
+                }
+                if (Date.parse(moment_1.default(inicio_1).format('YYYY-MM-DD')) > Date.parse(moment_1.default(inicio_2).format('YYYY-MM-DD'))) {
+                    return 1;
+                }
+                return 0;
+            }
+            arreglos_datos.sort(compare);
+            // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+            for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+                for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+                    if (arreglos_datos[i].horario.toUpperCase() === arreglos_datos[j].horario.toUpperCase() &&
+                        arreglos_datos[i].fec_inicio === arreglos_datos[j].fec_inicio &&
+                        arreglos_datos[i].fec_final === arreglos_datos[j].fec_final) {
+                        contarDatosData = contarDatosData + 1;
+                    }
+                    if (j > i) {
+                        var inicio_1 = new Date(arreglos_datos[i].fec_inicio.split('/')[2] + '-' + arreglos_datos[i].fec_inicio.split('/')[1] + '-' + arreglos_datos[i].fec_inicio.split('/')[0] + 'T00:00:00');
+                        var inicio_2 = new Date(arreglos_datos[j].fec_inicio.split('/')[2] + '-' + arreglos_datos[j].fec_inicio.split('/')[1] + '-' + arreglos_datos[j].fec_inicio.split('/')[0] + 'T00:00:00');
+                        var final_1 = new Date(arreglos_datos[i].fec_final.split('/')[2] + '-' + arreglos_datos[i].fec_final.split('/')[1] + '-' + arreglos_datos[i].fec_final.split('/')[0] + 'T00:00:00');
+                        console.log('if', Date.parse(moment_1.default(inicio_1).format('YYYY-MM-DD')), Date.parse(moment_1.default(inicio_2).format('YYYY-MM-DD')), Date.parse(moment_1.default(final_1).format('YYYY-MM-DD')));
+                        if (Date.parse(moment_1.default(inicio_1).format('YYYY-MM-DD')) <= Date.parse(moment_1.default(inicio_2).format('YYYY-MM-DD')) &&
+                            Date.parse(moment_1.default(inicio_2).format('YYYY-MM-DD')) > Date.parse(moment_1.default(final_1).format('YYYY-MM-DD'))) {
+                        }
+                        else {
+                            if (arreglos_datos[i].horario.toUpperCase() === arreglos_datos[j].horario.toUpperCase()) {
+                                contarFechas = contarFechas + 1;
+                            }
+                        }
+                    }
+                }
+                if (contarFechas != 0) {
+                    // break;
+                    console.log('conto 1');
+                }
+                contador_arreglo = contador_arreglo + 1;
+            }
+            console.log('intermedios', contarFechas);
+            if (contarFechas != 0) {
+                return res.jsonp({ message: 'error' });
+            }
+            else {
+                if (contarDatosData === plantilla.length) {
+                    return res.jsonp({ message: 'correcto' });
+                }
+                else {
+                    return res.jsonp({ message: 'error' });
+                }
+            }
+            fs_1.default.unlinkSync(filePath);
+            /* if ((contador_arreglo - 1) === plantilla.length) {
+                 if (contarDatosData === plantilla.length && contarFechas === 0) {
+                     return res.jsonp({ message: 'correcto' });
+                 } else {
+                     return res.jsonp({ message: 'error' });
+                 }
+             }*/
+        });
+    }
     CrearHorarioEmpleadoPlantilla(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
@@ -57,18 +227,90 @@ class EmpleadoHorariosControlador {
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
                 const { id } = req.params;
+                const { codigo } = req.params;
                 var { fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
                 const id_cargo = yield database_1.default.query('SELECT MAX(ec.id) FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
                 var id_empl_cargo = id_cargo.rows[0]['max'];
                 ;
                 var nombre = nombre_horario;
-                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
                 var id_horarios = idHorario.rows[0]['id'];
                 var id_hora = 1;
-                yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [id_empl_cargo, id_hora, fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0]]);
-                console.log("carga exitosa");
+                yield database_1.default.query('INSERT INTO empl_horarios (id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)', [id_empl_cargo, id_hora, fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado.split("-")[0], codigo]);
+                res.jsonp({ message: 'correcto' });
             }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    /** Crear Planificacion General con los datos de la plantilla ingresada */
+    CrearPlanificacionGeneral(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames;
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var arrayDetalles = [];
+            //Leer la plantilla para llenar un array con los datos cedula y usuario para verificar que no sean duplicados
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { id } = req.params;
+                const { codigo } = req.params;
+                // Datos que se leen de la plantilla ingresada
+                const { fecha_inicio, fecha_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, nombre_horario, estado } = data;
+                const HORARIO = yield database_1.default.query('SELECT id FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre_horario.toUpperCase()]);
+                const CARGO = yield database_1.default.query('SELECT MAX(ec.id) FROM empl_cargos AS ec, empl_contratos AS ce, empleados AS e ' +
+                    'WHERE ce.id_empleado = e.id AND ec.id_empl_contrato = ce.id AND e.id = $1', [id]);
+                // Detalle de horario
+                const DETALLES = yield database_1.default.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [HORARIO.rows[0]['id']]);
+                arrayDetalles = DETALLES.rows;
+                var fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
+                // Inicializar datos de fecha
+                var start = new Date(fecha_inicio.split('/')[2] + '-' + fecha_inicio.split('/')[1] + '-' + fecha_inicio.split('/')[0] + 'T00:00:00');
+                var end = new Date(fecha_final.split('/')[2] + '-' + fecha_final.split('/')[1] + '-' + fecha_final.split('/')[0] + 'T00:00:00');
+                // Lógica para obtener el nombre de cada uno de los día del periodo indicado
+                while (start <= end) {
+                    /* console.log(moment(start).format('dddd DD/MM/YYYY'), form.lunesForm)
+                     if (moment(start).format('dddd') === 'lunes' && form.lunesForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'martes' && form.martesForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'miércoles' && form.miercolesForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'jueves' && form.juevesForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'viernes' && form.viernesForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'sábado' && form.sabadoForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }
+                     if (moment(start).format('dddd') === 'domingo' && form.domingoForm === false) {
+                       this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+                     }*/
+                    fechasHorario.push(moment_1.default(start).format('YYYY-MM-DD'));
+                    var newDate = start.setDate(start.getDate() + 1);
+                    start = new Date(newDate);
+                }
+                fechasHorario.map(obj => {
+                    arrayDetalles.map((element) => __awaiter(this, void 0, void 0, function* () {
+                        var accion = 0;
+                        if (element.tipo_accion === 'E') {
+                            accion = element.minu_espera;
+                        }
+                        var estado = null;
+                        yield database_1.default.query('INSERT INTO plan_general (fec_hora_horario, maxi_min_espera, estado, id_det_horario, ' +
+                            'fec_horario, id_empl_cargo, tipo_entr_salida, codigo, id_horario) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [obj + ' ' + element.hora, accion, estado, element.id,
+                            obj, CARGO.rows[0]['max'], element.tipo_accion, codigo, HORARIO.rows[0]['id']]);
+                    }));
+                });
+                return res.jsonp({ message: 'correcto' });
+            }));
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -142,12 +384,13 @@ class EmpleadoHorariosControlador {
     }
     VerificarFechasHorario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { fechaInicio, fechaFinal } = req.body;
+            const { fechaInicio, fechaFinal, id_horario } = req.body;
             const { empl_id } = req.params;
             const HORARIO = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
                 '(SELECT * FROM empl_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
-                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1', [fechaInicio, fechaFinal, empl_id]);
+                'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+                'OR fec_final BETWEEN $1 AND $2) AND id_horarios = $4) AS h ' +
+                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $3 AND dc.estado_empl = 1', [fechaInicio, fechaFinal, empl_id, id_horario]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }
@@ -159,12 +402,12 @@ class EmpleadoHorariosControlador {
     VerificarFechasHorarioEdicion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { id_emple } = req.params;
-            const { fechaInicio, fechaFinal } = req.body;
-            const HORARIO = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
-                '(SELECT * FROM empl_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
-                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-                'ON h.id_empl_cargo = dc.cargo_id  AND dc.empl_id = $4 AND dc.estado_empl = 1', [fechaInicio, fechaFinal, id, id_emple]);
+            const { codigo } = req.params;
+            const { fechaInicio, fechaFinal, id_horario } = req.body;
+            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE NOT id=$3 AND ' +
+                '($1 BETWEEN fec_inicio AND fec_final OR $2 BETWEEN fec_inicio AND fec_final ' +
+                'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) AND id_horarios = $5 ' +
+                'AND codigo = $4', [fechaInicio, fechaFinal, id, codigo, id_horario]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }

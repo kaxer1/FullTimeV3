@@ -136,6 +136,7 @@ export class RegistrarPeriodoVComponent implements OnInit {
       dia_perdido: form.diaPerdidoForm,
       horas_vacaciones: form.horaVacacionForm,
       min_vacaciones: form.minVacacionForm,
+      codigo: parseInt(this.empleados[0].codigo)
     };
     this.restV.CrearPerVacaciones(datosPerVacaciones).subscribe(response => {
       this.toastr.success('Operación Exitosa', 'Período de Vacaciones registrado', {

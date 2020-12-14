@@ -23,10 +23,6 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario`, datos);
   }
 
-  SubirArchivoExcel(formData, id) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/upload/${id}`, formData)
-  }
-
   BuscarHorarioCargo(id: any) {
     return this.http.get(`${this.API_URL}/empleadoHorario/horarioCargo/${id}`);
   }
@@ -55,8 +51,22 @@ export class EmpleadoHorariosService {
     return this.http.post(`${this.API_URL}/empleadoHorario/validarFechas/${id_empl}`, datos);
   }
 
-  VerificarDuplicidadHorariosEdicion(id: number, id_empl: number, datos: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/validarFechas/horarioEmpleado/${id}/empleado/${id_empl}`, datos);
+  VerificarDuplicidadHorariosEdicion(id: number, codigo: number, datos: any) {
+    return this.http.post(`${this.API_URL}/empleadoHorario/validarFechas/horarioEmpleado/${id}/empleado/${codigo}`, datos);
   }
 
+  // Verificar datos de la plantilla de horario fijo
+  VerificarDatos_EmpleadoHorario(formData: any, id: number) {
+    console.log('entra')
+    return this.http.post<any>(`${this.API_URL}/empleadoHorario/revisarData/${id}`, formData)
+  }
+  VerificarPlantilla_EmpleadoHorario(formData: any) {
+    return this.http.post<any>(`${this.API_URL}/empleadoHorario/verificarPlantilla/upload`, formData)
+  }
+  CreaPlanificacion(formData: any, id: number, codigo: number) {
+    return this.http.post<any>(`${this.API_URL}/empleadoHorario/plan_general/upload/${id}/${codigo}`, formData)
+  }
+  SubirArchivoExcel(formData: any, id: number, codigo: number) {
+    return this.http.post<any>(`${this.API_URL}/empleadoHorario/upload/${id}/${codigo}`, formData)
+  }
 }

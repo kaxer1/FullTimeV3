@@ -111,13 +111,13 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
           this.InsertarEmpleadoHorario(form);
         }
         else {
-          this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.','', {
+          this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades.', '', {
             timeOut: 6000,
           });
         }
       }
       else {
-        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.','', {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.', '', {
           timeOut: 6000,
         });
       }
@@ -132,9 +132,10 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     let fechas = {
       fechaInicio: form.fechaInicioForm,
       fechaFinal: form.fechaFinalForm,
+      id_horario: form.horarioForm
     };
     this.rest.VerificarDuplicidadHorarios(this.datoEmpleado.idEmpleado, fechas).subscribe(response => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario','', {
+      this.toastr.info('Las fechas ingresadas ya se encuentran registradas en otro horario', '', {
         timeOut: 6000,
       });
     }, error => {
@@ -151,13 +152,12 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
         sabado: form.sabadoForm,
         domingo: form.domingoForm,
         id_horarios: form.horarioForm,
-        estado: form.estadoForm
+        estado: form.estadoForm,
+        codigo: this.empleado[0].codigo
       };
       console.log(datosempleH);
       this.rest.IngresarEmpleadoHorarios(datosempleH).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
-          timeOut: 6000,
-        });
+
         this.IngresarPlanGeneral(form);
         this.CerrarVentanaEmpleadoHorario();
       });
@@ -222,12 +222,17 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
             fec_horario: obj,
             id_empl_cargo: this.datoEmpleado.idCargo,
             tipo_entr_salida: element.tipo_accion,
-            codigo: this.empleado[0].codigo
+            codigo: this.empleado[0].codigo,
+            id_horario: form.horarioForm
           };
           this.restP.CrearPlanGeneral(plan).subscribe(res => {
           })
+
         })
       })
+      this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
+        timeOut: 6000,
+      });
     });
   }
 
@@ -247,7 +252,19 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   CerrarVentanaEmpleadoHorario() {
     this.LimpiarCampos();
     this.dialogRef.close(this.dataItem);
-    //window.location.reload();
+  }
+
+  VerificarDetalles(form) {
+    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
+    },
+      erro => {
+        this.EmpleadoHorarioForm.patchValue({
+          horarioForm: ''
+        });
+        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', 'Primero registrar detalle de horario.', {
+          timeOut: 6000,
+        });
+      })
   }
 
 

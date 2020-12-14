@@ -56,6 +56,7 @@ import { CancelarVacacionesComponent } from 'src/app/componentes/rolEmpleado/vac
 import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -135,6 +136,8 @@ export class VerEmpleadoComponent implements OnInit {
     public restAutoridad: AutorizaDepartamentoService,
     public restEmpresa: EmpresaService,
     private restHE: PedHoraExtraService,
+    private restDetallesP: DetallePlanHorarioService,
+    private restPlanGeneral: PlanGeneralService,
     public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
@@ -647,15 +650,35 @@ export class VerEmpleadoComponent implements OnInit {
 
   /** Función para confirmar si se elimina o no un registro */
   ConfirmarDeleteHorario(datos: any) {
-    console.log(datos);
+    console.log('datos horario', datos);
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
+          this.EliminarPlanGeneral(datos.fec_inicio, datos.fec_final, datos.id_horarios, datos.codigo)
           this.EliminarHorario(datos.id);
         } else {
           this.router.navigate(['/verEmpleado/', this.idEmpleado]);
         }
       });
+  }
+
+  /* Buscar fechas de horario*/
+  id_planificacion_general: any = [];
+  EliminarPlanGeneral(fec_inicio, fec_final, horario, codigo) {
+    this.id_planificacion_general = [];
+    let plan_fecha = {
+      fec_inicio: fec_inicio.split('T')[0],
+      fec_final: fec_final.split('T')[0],
+      id_horario: horario,
+      codigo: parseInt(codigo)
+    };
+    this.restPlanGeneral.BuscarFechas(plan_fecha).subscribe(res => {
+      this.id_planificacion_general = res;
+      this.id_planificacion_general.map(obj => {
+        this.restPlanGeneral.EliminarRegistro(obj.id).subscribe(res => {
+        })
+      })
+    })
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
@@ -670,15 +693,46 @@ export class VerEmpleadoComponent implements OnInit {
 
   /** Función para confirmar si se elimina o no un registro */
   ConfirmarDeletePlanificacion(datos: any) {
-    console.log(datos);
+    console.log('planificacion', datos);
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
+          this.BuscarDatosPlanHorario(datos.id, datos.codigo)
           this.EliminarPlanificacion(datos.id);
         } else {
           this.router.navigate(['/verEmpleado/', this.idEmpleado]);
         }
       });
+  }
+
+  /* Buscar detalles de la planificación */
+  detallesPlanificacion: any = [];
+  BuscarDatosPlanHorario(id_planificacion: any, codigo) {
+    this.detallesPlanificacion = [];
+    this.restDetallesP.ObtenerPlanHoraDetallePorIdPlanHorario(id_planificacion).subscribe(datos => {
+      this.detallesPlanificacion = datos;
+      console.log('detalles', this.detallesPlanificacion);
+      this.detallesPlanificacion.map(obj => {
+        this.EliminarPlanificacionGeneral(obj.fecha, obj.id_horario, codigo)
+      })
+    })
+  }
+
+  /** Eliminar registros de planificacion general */
+  EliminarPlanificacionGeneral(fecha, horario, codigo) {
+    this.id_planificacion_general = [];
+    let plan_fecha = {
+      fec_inicio: fecha.split('T')[0],
+      id_horario: horario,
+      codigo: parseInt(codigo)
+    };
+    this.restPlanGeneral.BuscarFecha(plan_fecha).subscribe(res => {
+      this.id_planificacion_general = res;
+      this.id_planificacion_general.map(obj => {
+        this.restPlanGeneral.EliminarRegistro(obj.id).subscribe(res => {
+        })
+      })
+    })
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
@@ -1345,7 +1399,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.nameFileHorario = this.archivoSubidoHorario[0].name;
       let arrayItems = this.nameFileHorario.split(".");
       let itemExtencion = arrayItems[arrayItems.length - 1];
-      let itemName = arrayItems[0].slice(0, 50);
+      let itemName = arrayItems[0].slice(0, 16);
       console.log(itemName.toLowerCase());
       if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
         if (itemName.toLowerCase() == 'horario empleado') {
@@ -1355,16 +1409,22 @@ export class VerEmpleadoComponent implements OnInit {
           this.toastr.error('Plantilla seleccionada incorrecta', '', {
             timeOut: 6000,
           });
+          this.archivoHorarioForm.reset();
+          this.nameFileHorario = '';
         }
       } else {
         this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
           timeOut: 6000,
         });
+        this.archivoHorarioForm.reset();
+        this.nameFileHorario = '';
       }
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
         timeOut: 6000,
       })
+       this.archivoHorarioForm.reset();
+                this.nameFileHorario = '';
     });
   }
 
@@ -1372,17 +1432,55 @@ export class VerEmpleadoComponent implements OnInit {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubidoHorario.length; i++) {
       formData.append("uploads[]", this.archivoSubidoHorario[i], this.archivoSubidoHorario[i].name);
-      console.log("toda la data", formData)
+      console.log("toda la data", this.archivoSubidoHorario[i])
     }
-    this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-      //this.actualizar = false;
-      //window.location.reload(this.actualizar);
-      this.archivoHorarioForm.reset();
-      this.nameFileHorario = '';
+    this.restEmpleHorario.VerificarDatos_EmpleadoHorario(formData, parseInt(this.idEmpleado)).subscribe(res => {
+      console.log('entra')
+      if (res.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+          'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+          'el empleado debe tener registrado un contrato de trabajo y las fechas indicadas no deben estar duplicadas dentro del sistema. ' +
+          'Las fechas deben estar ingresadas correctamente, la fecha de inicio no debe ser posterior a la fecha final.', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivoHorarioForm.reset();
+        this.nameFileHorario = '';
+      }
+      else {
+        this.restEmpleHorario.VerificarPlantilla_EmpleadoHorario(formData).subscribe(resD => {
+          if (resD.message === 'error') {
+            this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+              'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+              'el empleado debe tener registrado un contrato de trabajo y las fechas indicadas no deben estar duplicadas dentro del sistema.', 'Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoHorarioForm.reset();
+            this.nameFileHorario = '';
+          }
+          else {
+            this.restEmpleHorario.SubirArchivoExcel(formData, parseInt(this.idEmpleado), parseInt(this.empleadoUno[0].codigo)).subscribe(resC => {
+
+              this.restEmpleHorario.CreaPlanificacion(formData, parseInt(this.idEmpleado), parseInt(this.empleadoUno[0].codigo)).subscribe(resP => {
+                this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                  timeOut: 6000,
+                });
+                this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+              //this.actualizar = false;
+              //window.location.reload(this.actualizar);
+              this.archivoHorarioForm.reset();
+              this.nameFileHorario = '';
+              });
+              /*this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+              //this.actualizar = false;
+              //window.location.reload(this.actualizar);
+              this.archivoHorarioForm.reset();
+              this.nameFileHorario = '';*/
+            });
+          }
+        });
+      }
+    }, error  => {
+      console.log('entra', error)
     });
   }
 

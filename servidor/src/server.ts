@@ -74,6 +74,7 @@ class Servidor {
         this.rutas();
         this.server = createServer(this.app);
         this.io = socketIo(this.server);
+        this.app.use(cors());
 
     }
 
@@ -84,7 +85,7 @@ class Servidor {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
         this.app.use(express.raw({ type: 'image/*', limit: '2Mb' }));
-
+        this.app.set('trust proxy', true);
     }
 
     rutas(): void {
@@ -199,7 +200,6 @@ class Servidor {
                 console.log(data_llega);
                 socket.broadcast.emit('enviar_notification', data_llega);
             });
-
         });
     }
 }

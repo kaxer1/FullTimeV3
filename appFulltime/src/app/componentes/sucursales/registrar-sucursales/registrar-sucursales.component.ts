@@ -17,6 +17,7 @@ import { startWith, map } from 'rxjs/operators';
   templateUrl: './registrar-sucursales.component.html',
   styleUrls: ['./registrar-sucursales.component.css']
 })
+
 export class RegistrarSucursalesComponent implements OnInit {
 
   // Datos Provincias, Continentes, Países y Ciudades
@@ -199,7 +200,11 @@ export class RegistrarSucursalesComponent implements OnInit {
     }
   }
 
+  contador: number = 0;
+  listaSucursales: any = [];
   InsertarSucursal(form) {
+    this.contador = 0;
+    this.listaSucursales = [];
     let idEmpr = localStorage.getItem('empresa');
     let idCiud;
     this.nombreCiudades.forEach(obj => {
@@ -212,29 +217,46 @@ export class RegistrarSucursalesComponent implements OnInit {
       id_ciudad: idCiud,
       id_empresa: idEmpr
     };
-
-    this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
-        timeOut: 6000,
-      });
-      this.LimpiarCampos();
-      //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
-      this.restSucursal.EncontrarUltimoId().subscribe(datos => {
-        this.ultimoId = datos;
-        console.log("id sucursal: ", this.ultimoId[0].max);
-        let datosDepartamentos = {
-          nombre: 'Ninguno',
-          nivel: 1,
-          depa_padre: null,
-          id_sucursal: this.ultimoId[0].max
-        };
-        console.log("insertar departamento: ", datosDepartamentos);
-        this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
-          this.ultimoId = [];
-          console.log('depa-guardado')
+    this.restSucursal.VerSucursalesRegistro().subscribe(responseS => {
+      this.listaSucursales = responseS;
+      console.log('sucursales lista', this.listaSucursales);
+      for (var i = 0; i <= this.listaSucursales.length - 1; i++) {
+        if (this.listaSucursales[i].nombre.toUpperCase() === form.sucursalNombreForm.toUpperCase()) {
+          console.log('nombre', this.listaSucursales[i].nombre.toUpperCase(), 'form', form.sucursalNombreForm.toUpperCase());
+          this.contador = 1;
+        }
+      }
+      console.log('contador', this.contador)
+      if (this.contador === 1) {
+        this.toastr.error('El nombre de la Sucursal ya se encuentra registrado.', 'Operación Fallida', {
+          timeOut: 6000,
         });
-      }, error => { });
-    }, error => { });
+      }
+      else {
+        this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
+            timeOut: 6000,
+          });
+          this.LimpiarCampos();
+          //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
+          this.restSucursal.EncontrarUltimoId().subscribe(datos => {
+            this.ultimoId = datos;
+            console.log("id sucursal: ", this.ultimoId[0].max);
+            let datosDepartamentos = {
+              nombre: 'Ninguno',
+              nivel: 1,
+              depa_padre: null,
+              id_sucursal: this.ultimoId[0].max
+            };
+            console.log("insertar departamento: ", datosDepartamentos);
+            this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+              this.ultimoId = [];
+              console.log('depa-guardado')
+            });
+          }, error => { });
+        }, error => { });
+      }
+    })
   }
 
   LimpiarCampos() {

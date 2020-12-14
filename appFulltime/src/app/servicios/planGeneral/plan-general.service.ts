@@ -16,8 +16,16 @@ export class PlanGeneralService {
     return this.http.post(`${this.API_URL}/planificacion_general/`, datos);
   }
 
-  EliminarRegistro(codigo: number, datos: any) {
-    return this.http.delete(`${this.API_URL}/planificacion_general/eliminar/${codigo}`, datos);
+  EliminarRegistro(id: number,) {
+    return this.http.delete(`${this.API_URL}/planificacion_general/eliminar/${id}`);
+  }
+
+  BuscarFechas(datos: any) {
+    return this.http.post(`${this.API_URL}/planificacion_general/buscar_fechas`, datos);
+  }
+
+  BuscarFecha(datos: any) {
+    return this.http.post(`${this.API_URL}/planificacion_general/buscar_fecha/plan`, datos);
   }
 
 }

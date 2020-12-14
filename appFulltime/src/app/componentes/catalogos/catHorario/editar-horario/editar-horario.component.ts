@@ -80,25 +80,43 @@ export class EditarHorarioComponent implements OnInit {
       dataHorario.min_almuerzo = 0;
     }
     if (form.nombreCertificadoForm === '') {
-      dataHorario.doc_nombre = null;
-      this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
-        this.ModificarDocumento();
-        this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+      this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
+        this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
           timeOut: 6000,
         });
-        this.SalirActualizar();
       }, error => {
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
-          timeOut: 6000,
-        })
+        dataHorario.doc_nombre = null;
+        this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
+          this.ModificarDocumento();
+          this.toastr.success('Operación Exitosa', 'Horario actualizado', {
+            timeOut: 6000,
+          });
+          this.SalirActualizar();
+        }, error => {
+          this.toastr.error('Operación Fallida', 'Horario no pudo ser actualizado', {
+            timeOut: 6000,
+          })
+        });
       });
     }
     else {
       if (this.contador === 0) {
-        this.GuardarDatos(dataHorario);
+        this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
+          this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+            timeOut: 6000,
+          });
+        }, error => {
+          this.GuardarDatos(dataHorario);
+        });
       }
       else {
-        this.ActualizarDatos(dataHorario);
+        this.rest.VerificarDuplicadosEdicion(this.data.horario.id, form.horarioNombreForm).subscribe(response => {
+          this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+            timeOut: 6000,
+          });
+        }, error => {
+          this.ActualizarDatos(dataHorario);
+        });
       }
     }
   }

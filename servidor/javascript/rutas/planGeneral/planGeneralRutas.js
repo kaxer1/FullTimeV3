@@ -13,7 +13,9 @@ class DepartamentoRutas {
     }
     configuracion() {
         this.router.post('/', verificarToken_1.TokenValidation, planGeneralControlador_1.default.CrearPlanificacion);
-        this.router.delete('/eliminar/:codigo', verificarToken_1.TokenValidation, planGeneralControlador_1.default.EliminarRegistros);
+        this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, planGeneralControlador_1.default.EliminarRegistros);
+        this.router.post('/buscar_fechas', verificarToken_1.TokenValidation, planGeneralControlador_1.default.BuscarFechas);
+        this.router.post('/buscar_fecha/plan', verificarToken_1.TokenValidation, planGeneralControlador_1.default.BuscarFecha);
     }
 }
 const PLAN_GENERAL_RUTAS = new DepartamentoRutas();

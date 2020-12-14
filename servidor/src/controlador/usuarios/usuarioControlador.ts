@@ -87,9 +87,9 @@ class UsuarioControlador {
 
   //ACCESOS AL SISTEMA
   public async AuditarAcceso(req: Request, res: Response) {
-    const { modulo, user_name, fecha, hora, acceso } = req.body;
-    await pool.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso ) ' +
-      'VALUES ($1, $2, $3, $4, $5)', [modulo, user_name, fecha, hora, acceso]);
+    const { modulo, user_name, fecha, hora, acceso, ip_address } = req.body;
+    await pool.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso, ip_address ) ' +
+      'VALUES ($1, $2, $3, $4, $5, $6)', [modulo, user_name, fecha, hora, acceso, ip_address]);
     return res.jsonp({ message: 'Auditoria Realizada' });
   }
 

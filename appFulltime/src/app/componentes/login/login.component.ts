@@ -7,6 +7,7 @@ import * as moment from 'moment';
 moment.locale('es');
 import { LoginService } from '../../servicios/login/login.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +34,7 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(
+    private http: HttpClient,
     public rest: LoginService,
     public restU: UsuarioService,
     private router: Router,
@@ -46,7 +48,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.url);
-    // console.log(window.history.back());
   }
 
   ObtenerMensajeCampoUsuarioError() {
@@ -73,9 +74,9 @@ export class LoginComponent implements OnInit {
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
-      console.log(datos)
+      console.log('ingreso', datos)
       if (datos.message === 'error') {
-        this.IngresoSistema(form.usuarioF, 'Fallido');
+        this.IngresoSistema(form.usuarioF, 'Fallido', datos.text);
         this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
           timeOut: 6000,
         })
@@ -90,7 +91,8 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('departamento', datos.departamento);
         localStorage.setItem('ultimoCargo', datos.cargo);
         localStorage.setItem('autoriza', datos.estado);
-        this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos', {
+        localStorage.setItem('ip', datos.ip_adress);
+        this.toastr.success('Ingreso Existoso! ' + datos.usuario + ' ' + datos.ip_adress, 'Usuario y contraseña válidos', {
           timeOut: 6000,
         })
 
@@ -106,14 +108,14 @@ export class LoginComponent implements OnInit {
         if (datos.rol === 2) { //Empleado
           this.router.navigate(['/estadisticas']);
         }
-        this.IngresoSistema(form.usuarioF, 'Exitoso');
+        this.IngresoSistema(form.usuarioF, 'Exitoso', datos.ip_adress);
       }
     }, error => {
 
     })
   }
 
-  IngresoSistema(user, acceso: string) {
+  IngresoSistema(user, acceso: string, dir_ip) {
     var h = new Date();
     var f = moment();
     var fecha = f.format('YYYY-MM-DD');
@@ -130,7 +132,8 @@ export class LoginComponent implements OnInit {
       user_name: user,
       fecha: fecha,
       hora: time,
-      acceso: acceso
+      acceso: acceso,
+      ip_address: dir_ip
     }
     this.restU.crearAccesosSistema(dataAcceso).subscribe(datos => { })
   }

@@ -145,7 +145,7 @@ export class PrincipalHorarioComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarDetalle(id_horario: number) {
     this.rest.EliminarRegistro(id_horario).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerHorarios();
@@ -197,14 +197,39 @@ export class PrincipalHorarioComponent implements OnInit {
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
-    this.rest.CargarHorariosMultiples(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.ObtenerHorarios();
-      this.archivo1Form.reset();
-      this.nameFile = '';
-      window.location.reload();
+    this.rest.VerificarDatosHorario(formData).subscribe(res => {
+      if (res.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla. ' +
+          'Son datos obligatorios: nombre de horario, horas de trabajo y tipo de horario, además el nombre ' +
+          'de horario debe ser único en cada registro.', 'Operación Fallida', {
+          timeOut: 6000,
+        });
+        this.archivo1Form.reset();
+        this.nameFile = '';
+      }
+      else {
+        this.rest.VerificarPlantillaHorario(formData).subscribe(res => {
+          if (res.message === 'error') {
+            this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla. ' +
+              'Son datos obligatorios: nombre de horario, horas de trabajo y tipo de horario, además el nombre ' +
+              'de horario debe ser único en cada registro.', 'Operación Fallida', {
+              timeOut: 6000,
+            });
+            this.archivo1Form.reset();
+            this.nameFile = '';
+          }
+          else {
+            this.rest.CargarHorariosMultiples(formData).subscribe(res => {
+              this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                timeOut: 6000,
+              });
+              this.archivo1Form.reset();
+              this.nameFile = '';
+              window.location.reload();
+            });
+          }
+        });
+      }
     });
   }
 
@@ -240,12 +265,25 @@ export class PrincipalHorarioComponent implements OnInit {
     for (var i = 0; i < this.archivoSubidoDetalle.length; i++) {
       formData.append("uploads[]", this.archivoSubidoDetalle[i], this.archivoSubidoDetalle[i].name);
     }
-    this.restD.subirArchivoExcel(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Detalle de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.archivo2Form.reset();
-      this.nameFileDetalle = '';
+    this.restD.VerificarDatosDetalles(formData).subscribe(res => {
+      if (res.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verifique los datos de su plantilla. ' +
+          'Son datos obligatorios: nombre de horario, orden, hora y tipo de accion, además el nombre ' +
+          'de horario debe existir dentro del sistema.', 'Operación Fallida', {
+          timeOut: 6000,
+        });
+        this.archivo2Form.reset();
+        this.nameFileDetalle = '';
+      }
+      else {
+        this.restD.CargarPlantillaDetalles(formData).subscribe(res => {
+          this.toastr.success('Operación Exitosa', 'Plantilla de Detalle de Horario importada.', {
+            timeOut: 6000,
+          });
+          this.archivo2Form.reset();
+          this.nameFileDetalle = '';
+        });
+      }
     });
   }
 

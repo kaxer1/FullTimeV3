@@ -11,6 +11,8 @@ import { EditarDetallePlanComponent } from 'src/app/componentes/detallePlanHorar
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-ver-detalle-plan-horarios',
@@ -38,6 +40,8 @@ export class VerDetallePlanHorariosComponent implements OnInit {
     public router: Router,
     private restDP: DetallePlanHorarioService,
     private restPH: PlanHorarioService,
+    private restP: PlanGeneralService,
+    private restEmpleado: EmpleadoService,
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
   ) {
@@ -48,6 +52,7 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ObtenerEmpleado(parseInt(this.idEmpleado))
     this.BuscarDatosPlanHorario(this.idPlanH);
     this.ListarDetalles(this.idPlanH);
   }
@@ -80,34 +85,61 @@ export class VerDetallePlanHorariosComponent implements OnInit {
 
   AbrirVentanaEditar(datosSeleccionados: any, datosPlan: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarDetallePlanComponent, 
-      { width: '350px', data: {detalle: datosSeleccionados, plan: datosPlan} })
+    this.vistaRegistrarDatos.open(EditarDetallePlanComponent,
+      { width: '350px', data: { detalle: datosSeleccionados, plan: datosPlan } })
       .afterClosed().subscribe(item => {
         this.ListarDetalles(this.idPlanH);
       });
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
-  EliminarDetalle(id_detalle: number) {
+  EliminarDetalle(id_detalle: number, fecha, horario, codigo) {
     this.restDP.EliminarRegistro(id_detalle).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ListarDetalles(this.idPlanH);
+      this.EliminarPlanificacion(fecha, horario, codigo)
     });
+  }
+
+  id_planificacion_general: any = [];
+  EliminarPlanificacion(fecha, horario, codigo) {
+    this.id_planificacion_general = [];
+    let plan_fecha = {
+      fec_inicio: fecha.split('T')[0],
+      id_horario: horario,
+      codigo: parseInt(codigo)
+    };
+    this.restP.BuscarFecha(plan_fecha).subscribe(res => {
+      this.id_planificacion_general = res;
+      this.id_planificacion_general.map(obj => {
+        this.restP.EliminarRegistro(obj.id).subscribe(res => {
+        })
+      })
+    })
   }
 
   /** Función para confirmar si se elimina o no un registro */
   ConfirmarDelete(datos: any) {
-    console.log(datos);
+    console.log('detalle plan', datos);
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          this.EliminarDetalle(datos.id);
+          this.EliminarDetalle(datos.id, datos.fecha, datos.id_horario, parseInt(this.empleado[0].codigo));
         } else {
           this.router.navigate(['/verDetalles/', this.idPlanH, this.idEmpleado]);
         }
       });
+  }
+
+  empleado: any = [];
+  // Método para ver la información del empleado 
+  ObtenerEmpleado(idemploy: any) {
+    this.empleado = [];
+    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleado = data;
+    })
   }
 
   /****************************************************************************************************** 
@@ -142,14 +174,48 @@ export class VerDetallePlanHorariosComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
       console.log('ver', this.archivoSubido[i])
     }
-    this.restDP.subirArchivoExcel(parseInt(this.idPlanH), formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.ListarDetalles(this.idPlanH);
-      this.archivo1Form.reset();
-      this.nameFile = '';
-      // window.location.reload();
+    this.restDP.VerificarDatos(parseInt(this.idPlanH), formData).subscribe(resD => {
+      if (resD.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+          'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+          'el empleado debe tener registrado un contrato de trabajo y la fecha indicada no deben estar duplicada dentro del sistema. ' +
+          'A menos que tenga un diferente detalle de horario.', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivo1Form.reset();
+        this.nameFile = '';
+      }
+      else {
+        this.restDP.VerificarPlantilla(formData).subscribe(resP => {
+          if (resP.message === 'error') {
+            this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+              'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+              'el empleado debe tener registrado un contrato de trabajo y la fecha indicada no deben estar duplicada dentro del sistema. ' +
+              'A menos que tenga un diferente detalle de horario.', 'Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivo1Form.reset();
+            this.nameFile = '';
+          }
+          else {
+            this.restDP.subirArchivoExcel(parseInt(this.idPlanH), formData).subscribe(resS => {
+              this.restDP.CrearPlanificacionGeneral(parseInt(this.idEmpleado), parseInt(this.empleado[0].codigo), formData).subscribe(resPG => {
+                this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                  timeOut: 6000,
+                });
+                this.ListarDetalles(this.idPlanH);
+                this.archivo1Form.reset();
+                this.nameFile = '';
+                // window.location.reload();
+              });
+              /*this.ListarDetalles(this.idPlanH);
+              this.archivo1Form.reset();
+              this.nameFile = '';
+              // window.location.reload();*/
+            });
+          }
+        });
+      }
     });
   }
 }

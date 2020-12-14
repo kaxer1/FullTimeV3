@@ -41,7 +41,8 @@
                             matTooltip="Lista de países del continente seleccionado">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
-                            <mat-option *ngFor="let h of horarios" [value]="h.id">
+                            <mat-option *ngFor="let h of horarios" [value]="h.id"
+                                (click)="VerificarDetalles(DetallePlanHorarioForm.value)">
                                 {{h.nombre}}
                             </mat-option>
                         </mat-select>

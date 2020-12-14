@@ -90,7 +90,7 @@ export class EditarSucursalComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.paises = [];
@@ -110,7 +110,7 @@ export class EditarSucursalComponent implements OnInit {
       //console.log("datos-provincia2:", this.provincias)
       //this.seleccionarProvincia = this.provincias[this.provincias.length - 1].nombre;
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados', '', {
         timeOut: 6000,
       })
     })
@@ -119,7 +119,7 @@ export class EditarSucursalComponent implements OnInit {
   FiltrarProvincias(form) {
     var nombrePais = form.nombrePaisForm;
     if (nombrePais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.provincias = [];
@@ -137,7 +137,7 @@ export class EditarSucursalComponent implements OnInit {
       // console.log("todas las ciuaddaes", this.nombreCiudades);
       //this.seleccionarCiudad = this.nombreCiudades[this.nombreCiudades.length - 1].descripcion;
     }, error => {
-      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas','', {
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas', '', {
         timeOut: 6000,
       })
     })
@@ -146,7 +146,7 @@ export class EditarSucursalComponent implements OnInit {
   FiltrarCiudades(form) {
     var nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.seleccionarCiudad = '';
@@ -159,7 +159,7 @@ export class EditarSucursalComponent implements OnInit {
   SeleccionarCiudad(form) {
     var nombreCiudad = form.idCiudadForm;
     if (nombreCiudad === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
     }
@@ -209,20 +209,40 @@ export class EditarSucursalComponent implements OnInit {
     })
   }
 
+  listaSucursales: any = [];
+  contador: number = 0;
   InsertarSucursal(form) {
+    this.listaSucursales = [];
+    this.contador = 0;
     let dataSucursal = {
       id: this.data.id,
       nombre: form.sucursalNombreForm,
       id_ciudad: form.idCiudadForm,
       id_empresa: form.idEmpresaForm
     };
-    this.restSucursal.ActualizarSucursal(dataSucursal).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Sucursal actualizada', {
-        timeOut: 6000,
-      });
-      this.CerrarVentanaRegistroSucursal();
-    }, error => {
-    });
+    this.restSucursal.VerSucursalActualizar(this.data.id).subscribe(res => {
+      this.listaSucursales = res;
+      console.log('lista', this.listaSucursales);
+      for (var i = 0; i <= this.listaSucursales.length - 1; i++) {
+        if (this.listaSucursales[i].nombre.toUpperCase() === form.sucursalNombreForm.toUpperCase()) {
+          this.contador = 1;
+        }
+      }
+      if (this.contador === 1) {
+        this.toastr.error('El nombre de la Sucursal ya se encuentra registrado.', 'Operación Fallida', {
+          timeOut: 6000,
+        });
+      }
+      else {
+        this.restSucursal.ActualizarSucursal(dataSucursal).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Sucursal actualizada', {
+            timeOut: 6000,
+          });
+          this.CerrarVentanaRegistroSucursal();
+        }, error => { });
+      }
+    })
+
   }
 
   LimpiarCampos() {

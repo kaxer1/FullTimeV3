@@ -15,7 +15,13 @@ import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.s
 @Component({
   selector: 'app-editar-horario-empleado',
   templateUrl: './editar-horario-empleado.component.html',
-  styleUrls: ['./editar-horario-empleado.component.css']
+  styleUrls: ['./editar-horario-empleado.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  ]
 })
 export class EditarHorarioEmpleadoComponent implements OnInit {
 
@@ -71,6 +77,7 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('datos', this.data)
     this.BuscarHorarios();
     this.CargarDatos();
     this.ObtenerEmpleado(this.data.idEmpleado);
@@ -97,7 +104,7 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
       this.InsertarEmpleadoHorario(form);
     }
     else {
-      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades','', {
+      this.toastr.info('La fecha de inicio de actividades debe ser mayor a la fecha de fin de actividades', '', {
         timeOut: 6000,
       })
     }
@@ -107,9 +114,10 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
     let fechas = {
       fechaInicio: form.fechaInicioForm,
       fechaFinal: form.fechaFinalForm,
+      id_horario: form.horarioForm
     };
-    this.rest.VerificarDuplicidadHorariosEdicion(this.data.datosHorario.id, this.data.idEmpleado, fechas).subscribe(response => {
-      this.toastr.success('Las fechas ingresadas ya se encuntran registradas en otro horario','', {
+    this.rest.VerificarDuplicidadHorariosEdicion(this.data.datosHorario.id, this.data.datosHorario.codigo, fechas).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuntran registradas en otro horario.', '', {
         timeOut: 6000,
       });
     }, error => {
@@ -134,33 +142,27 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
         this.toastr.success('Operación Exitosa', 'Horario del Empleado actualizado', {
           timeOut: 6000,
         });
-        this.EliminarDatos(form);
+        this.EliminarPlanificacion();
         this.IngresarPlanGeneral(form);
         this.CerrarVentanaEmpleadoHorario();
       }, error => { });
     });
   }
 
-  EliminarDatos(form) {
-    this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
-    this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
-    this.finDate = moment(form.fechaFinalForm).format('MM-DD-YYYY');
-
-    // Inicializar datos de fecha
-    var start = new Date(this.inicioDate);
-    var end = new Date(this.finDate);
-
-    // Lógica para obtener el nombre de cada uno de los día del periodo indicado
-    while (start <= end) {
-      this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
-      var newDate = start.setDate(start.getDate() + 1);
-      start = new Date(newDate);
-    }
-    this.fechasHorario.map(obj => {
-      let plan_fecha = {
-        fec_hora_horario: obj,
-      };
-      this.restP.EliminarRegistro(this.empleado[0].codigo, plan_fecha).subscribe(res => {
+  id_planificacion_general: any = [];
+  EliminarPlanificacion() {
+    this.id_planificacion_general = [];
+    let plan_fecha = {
+      fec_inicio: this.data.datosHorario.fec_inicio.split('T')[0],
+      fec_final: this.data.datosHorario.fec_final.split('T')[0],
+      id_horario: this.data.datosHorario.id_horarios,
+      codigo: parseInt(this.empleado[0].codigo)
+    };
+    this.restP.BuscarFechas(plan_fecha).subscribe(res => {
+      this.id_planificacion_general = res;
+      this.id_planificacion_general.map(obj => {
+        this.restP.EliminarRegistro(obj.id).subscribe(res => {
+        })
       })
     })
   }
@@ -173,9 +175,6 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
     this.detalles = [];
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
       this.detalles = res;
-      //this.toastr.success('Operación Exitosa', 'Horario del Empleado registrado', {
-      //  timeOut: 6000,
-      //});
       this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado 
       this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
       this.finDate = moment(form.fechaFinalForm).format('MM-DD-YYYY');
@@ -226,7 +225,8 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
             fec_horario: obj,
             id_empl_cargo: this.data.datosHorario.id_empl_cargo,
             tipo_entr_salida: element.tipo_accion,
-            codigo: this.empleado[0].codigo
+            codigo: this.empleado[0].codigo,
+            id_horario: form.horarioForm
           };
           this.restP.CrearPlanGeneral(plan).subscribe(res => {
           })
@@ -242,7 +242,6 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
   CerrarVentanaEmpleadoHorario() {
     this.LimpiarCampos();
     this.dialogRef.close(this.dataItem);
-    //window.location.reload();
   }
 
   CargarDatos() {
@@ -266,6 +265,19 @@ export class EditarHorarioEmpleadoComponent implements OnInit {
     this.viernes = this.data.datosHorario.viernes;
     this.sabado = this.data.datosHorario.sabado;
     this.domingo = this.data.datosHorario.domingo;
+  }
+
+  VerificarDetalles(form) {
+    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
+    },
+      erro => {
+        this.EmpleadoHorarioForm.patchValue({
+          horarioForm: ''
+        });
+        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', 'Primero registrar detalle de horario.', {
+          timeOut: 6000,
+        });
+      })
   }
 
 

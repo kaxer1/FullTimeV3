@@ -1,9 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment';
 
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 interface TipoDescuentos {
   value: string;
   viewValue: string;
@@ -27,7 +30,13 @@ interface opcionesDiasHoras {
 @Component({
   selector: 'app-editar-tipo-permisos',
   templateUrl: './editar-tipo-permisos.component.html',
-  styleUrls: ['./editar-tipo-permisos.component.css']
+  styleUrls: ['./editar-tipo-permisos.component.css'],
+  providers: [
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+    { provide: MAT_DATE_LOCALE, useValue: 'es' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  ]
 })
 export class EditarTipoPermisosComponent implements OnInit {
 
@@ -101,10 +110,13 @@ export class EditarTipoPermisosComponent implements OnInit {
       fecValidarForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
+      fechaForm: ['']
     });
     this.SetDatos();
   }
 
+  selec1: boolean = false;
+  selec2: boolean = false;
   SetDatos() {
     let i = 0;
     this.permisos.forEach(obj => {
@@ -136,7 +148,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       legalizarForm: this.tipoPermiso.legalizar,
       fecValidarForm: this.tipoPermiso.fec_validar,
       geneJustificacionForm: this.tipoPermiso.gene_justificacion,
-      numDiaJustificaForm: this.tipoPermiso.num_dia_justifica
+      numDiaJustificaForm: this.tipoPermiso.num_dia_justifica,
     });
 
     let j = 0;
@@ -150,6 +162,19 @@ export class EditarTipoPermisosComponent implements OnInit {
     });
 
     this.ActivarJustificacionSet(this.tipoPermiso.gene_justificacion);
+
+    if (this.tipoPermiso.fecha != '' && this.tipoPermiso.fecha != null) {
+      this.calendario = true;
+      this.selec1 = true;
+      this.selec2 = false;
+      this.segundoFormGroup.patchValue({
+        fechaForm: moment(this.tipoPermiso.fecha, "YYYY/MM/DD").format("YYYY-MM-DD")
+      });
+    } else {
+      this.calendario = false;
+      this.selec2 = true;
+      this.selec1 = false;
+    }
   }
 
   HabilitarDescrip: boolean = false;
@@ -182,7 +207,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ numHoraMaximoForm: '00:00' });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
-      this.toastr.info('Ingresar número de días máximos de permiso','', {
+      this.toastr.info('Ingresar número de días máximos de permiso', '', {
         timeOut: 6000,
       });
     }
@@ -191,7 +216,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0 });
       this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.toastr.info('Ingresar número de horas y minutos máximos de permiso','', {
+      this.toastr.info('Ingresar número de horas y minutos máximos de permiso', '', {
         timeOut: 6000,
       });
     }
@@ -200,7 +225,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.primeroFormGroup.patchValue({ numDiaMaximoForm: 0, numHoraMaximoForm: '00:00' });
       this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
       this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.toastr.info('Ingresar número de días , horas y minutos máximos de permiso','', {
+      this.toastr.info('Ingresar número de días , horas y minutos máximos de permiso', '', {
         timeOut: 6000,
       });
     }
@@ -299,6 +324,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       almu_incluir: form1.almuIncluirForm,
       num_dia_justifica: form2.numDiaJustificaForm,
       num_hora_maximo: form1.numHoraMaximoForm,
+      fecha: form2.fechaForm
     }
     console.log(dataTipoPermiso);
 
@@ -334,7 +360,7 @@ export class EditarTipoPermisosComponent implements OnInit {
   ActivarJustificacion() {
     if ((<HTMLInputElement>document.getElementById('si')).value = 'true') {
       this.estiloJustifica = { 'visibility': 'visible' }; this.HabilitarJustifica = false;
-      this.toastr.info('Ingresar número de días para presentar justificación','', {
+      this.toastr.info('Ingresar número de días para presentar justificación', '', {
         timeOut: 6000,
       })
     }
@@ -345,6 +371,36 @@ export class EditarTipoPermisosComponent implements OnInit {
       this.estiloJustifica = { 'visibility': 'hidden' }; this.HabilitarJustifica = true;
       this.segundoFormGroup.patchValue({
         numDiaJustificaForm: '',
+      })
+    }
+  }
+
+  calendario: boolean = false;
+  verCalendario() {
+    this.calendario = true;
+  }
+
+  ocultarCalendario() {
+    this.calendario = false;
+    this.segundoFormGroup.patchValue({
+      fechaForm: ''
+    })
+  }
+
+  VerificarFecha(event) {
+    var f = moment();
+    var FechaActual = f.format('YYYY-MM-DD');
+    var leer_fecha = event.value._i;
+    var fecha = new Date(String(moment(leer_fecha)));
+    var ingreso = String(moment(fecha, "YYYY/MM/DD").format("YYYY-MM-DD"));
+    if (Date.parse(ingreso) >= Date.parse(FechaActual)) {
+    }
+    else {
+      this.toastr.info('La fecha ingresada no puede ser anterior a la fecha actual', 'Verificar Fecha', {
+        timeOut: 6000,
+      });
+      this.segundoFormGroup.patchValue({
+        fechaForm: ''
       })
     }
   }

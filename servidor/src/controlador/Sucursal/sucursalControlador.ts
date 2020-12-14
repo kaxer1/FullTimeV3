@@ -6,6 +6,27 @@ import pool from '../../database';
 
 class SucursalControlador {
 
+  public async ListarSucursalesRegistro(req: Request, res: Response) {
+    const SUCURSAL = await pool.query('SELECT * FROM sucursales');
+    if (SUCURSAL.rowCount > 0) {
+      return res.jsonp(SUCURSAL.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  public async ListarSucursalesActualizar(req: Request, res: Response) {
+    const id = req.params.id;
+    const SUCURSAL = await pool.query('SELECT * FROM sucursales WHERE NOT id = $1', [id]);
+    if (SUCURSAL.rowCount > 0) {
+      return res.jsonp(SUCURSAL.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
   public async ListarSucursales(req: Request, res: Response) {
     const SUCURSAL = await pool.query('SELECT * FROM NombreCiudadEmpresa ORDER BY nomempresa');
     if (SUCURSAL.rowCount > 0) {

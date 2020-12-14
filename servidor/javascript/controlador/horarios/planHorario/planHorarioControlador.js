@@ -104,11 +104,11 @@ class PlanHorarioControlador {
     VerificarFechasPlan(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { fechaInicio, fechaFinal } = req.body;
-            const { empl_id } = req.params;
-            const PLAN = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
-                '(SELECT * FROM plan_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
-                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-                'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+            const codigo = req.params.codigo;
+            const PLAN = yield database_1.default.query('SELECT * FROM plan_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+                'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+                'OR fec_final BETWEEN $1 AND $2) ' +
+                'AND codigo = $3', [fechaInicio, fechaFinal, codigo]);
             if (PLAN.rowCount > 0) {
                 return res.jsonp(PLAN.rows);
             }
@@ -120,12 +120,12 @@ class PlanHorarioControlador {
     VerificarFechasPlanEdicion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
-            const { id_emple } = req.params;
+            const { codigo } = req.params;
             const { fechaInicio, fechaFinal } = req.body;
-            const PLAN = yield database_1.default.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
-                '(SELECT * FROM plan_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
-                'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-                'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+            const PLAN = yield database_1.default.query('SELECT * FROM plan_horarios WHERE NOT id=$3 AND ' +
+                '($1 BETWEEN fec_inicio AND fec_final OR $2 BETWEEN fec_inicio AND fec_final ' +
+                'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) ' +
+                'AND codigo = $4', [fechaInicio, fechaFinal, id, codigo]);
             if (PLAN.rowCount > 0) {
                 return res.jsonp(PLAN.rows);
             }

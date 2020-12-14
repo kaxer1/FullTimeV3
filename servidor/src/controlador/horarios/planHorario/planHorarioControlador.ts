@@ -84,11 +84,11 @@ class PlanHorarioControlador {
 
     public async VerificarFechasPlan(req: Request, res: Response): Promise<any> {
         const { fechaInicio, fechaFinal } = req.body;
-        const { empl_id } = req.params;
-        const PLAN = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
-            '(SELECT * FROM plan_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
-            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-            'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $3', [fechaInicio, fechaFinal, empl_id]);
+        const codigo = req.params.codigo;
+        const PLAN = await pool.query('SELECT * FROM plan_horarios WHERE ($1 BETWEEN fec_inicio AND fec_final ' +
+            'OR $2 BETWEEN fec_inicio AND fec_final OR fec_inicio BETWEEN $1 AND $2 ' +
+            'OR fec_final BETWEEN $1 AND $2) ' +
+            'AND codigo = $3', [fechaInicio, fechaFinal, codigo]);
         if (PLAN.rowCount > 0) {
             return res.jsonp(PLAN.rows)
         }
@@ -99,12 +99,12 @@ class PlanHorarioControlador {
 
     public async VerificarFechasPlanEdicion(req: Request, res: Response): Promise<any> {
         const id = req.params.id;
-        const { id_emple } = req.params;
+        const { codigo } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
-        const PLAN = await pool.query('SELECT * FROM datos_empleado_cargo AS dc INNER JOIN ' +
-            '(SELECT * FROM plan_horarios WHERE NOT id=$3 AND ($1 BETWEEN fec_inicio AND fec_final ' +
-            'OR $2 BETWEEN fec_inicio AND fec_final)) AS h ' +
-            'ON h.id_cargo = dc.cargo_id  AND dc.empl_id = $4', [fechaInicio, fechaFinal, id, id_emple]);
+        const PLAN = await pool.query('SELECT * FROM plan_horarios WHERE NOT id=$3 AND ' +
+            '($1 BETWEEN fec_inicio AND fec_final OR $2 BETWEEN fec_inicio AND fec_final ' +
+            'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) ' +
+            'AND codigo = $4', [fechaInicio, fechaFinal, id, codigo]);
         if (PLAN.rowCount > 0) {
             return res.jsonp(PLAN.rows)
         }

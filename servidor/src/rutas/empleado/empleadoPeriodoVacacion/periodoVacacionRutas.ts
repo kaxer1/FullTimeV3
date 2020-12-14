@@ -21,7 +21,11 @@ class DepartamentoRutas {
         this.router.get('/buscar/:id_empleado', TokenValidation, PERIODO_VACACION_CONTROLADOR.EncontrarIdPerVacaciones);
         this.router.post('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.CrearPerVacaciones);
         this.router.put('/', TokenValidation, PERIODO_VACACION_CONTROLADOR.ActualizarPeriodo);
+
+        // Verificar datos de la plantilla de de periodo de vacaciones antes de subir al sistema
         this.router.post('/cargarPeriodo/upload', [TokenValidation, multipartMiddleware], PERIODO_VACACION_CONTROLADOR.CargarPeriodoVacaciones);
+        this.router.post('/cargarPeriodo/verificarDatos/upload', [TokenValidation, multipartMiddleware], PERIODO_VACACION_CONTROLADOR.VerificarDatos);
+        this.router.post('/cargarPeriodo/verificarPlantilla/upload', [TokenValidation, multipartMiddleware], PERIODO_VACACION_CONTROLADOR.VerificarPlantilla);
     }
 }
 

@@ -32,7 +32,8 @@ class DetalleCatalogoHorarioControlador {
         }
     }
 
-    public async CrearHorarioDetallePlantilla(req: Request, res: Response): Promise<void> {
+    /** Verificar que el nombre del horario exista dentro del sistema */
+    public async VerificarDatosDetalles(req: Request, res: Response): Promise<void> {
         let list: any = req.files;
         let cadena = list.uploads[0].path;
         let filename = cadena.split("\\")[1];
@@ -40,24 +41,69 @@ class DetalleCatalogoHorarioControlador {
 
         const workbook = excel.readFile(filePath);
         const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-        const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        const plantillaD = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+        var contarHorario = 0;
+        var contarDatos = 0;
+        var contador = 1;
+        /** Detalle de Horarios */
+        plantillaD.forEach(async (data: any) => {
+            const { nombre_horario, orden, hora, tipo_accion, minutos_espera } = data;
 
-        plantilla.forEach(async (data: any) => {
-            var { nombre_horario, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
-            console.log("datos", data)
+            // Verificar que los datos obligatorios existan
+            if (nombre_horario != undefined && orden != undefined && hora != undefined &&
+                tipo_accion != undefined) {
+                contarDatos = contarDatos + 1;
+            }
+
+            // Verificar que exita el nombre del horario
+            if (nombre_horario != undefined) {
+                const HORARIO = await pool.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1',
+                    [nombre_horario.toUpperCase()]);
+                if (HORARIO.rowCount != 0) {
+                    contarHorario = contarHorario + 1;
+                }
+            }
+
+            //Verificar que todos los datos sean correctos
+            console.log('datos', contarHorario, contarDatos)
+            if (contador === plantillaD.length) {
+                if (contarHorario === plantillaD.length && contarDatos === plantillaD.length) {
+                    return res.jsonp({ message: 'correcto' });
+                } else {
+                    return res.jsonp({ message: 'error' });
+                }
+            }
+            contador = contador + 1;
+        });
+        fs.unlinkSync(filePath);
+    }
+
+    public async CrearDetallePlantilla(req: Request, res: Response): Promise<void> {
+        let list: any = req.files;
+        let cadena = list.uploads[0].path;
+        let filename = cadena.split("\\")[1];
+        var filePath = `./plantillas/${filename}`
+
+        const workbook = excel.readFile(filePath);
+        const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+        const plantillaD = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+
+        /** Detalle de Horarios */
+        plantillaD.forEach(async (data: any) => {
+            var { nombre_horario, orden, hora, tipo_accion, minutos_espera } = data;
             var nombre = nombre_horario;
-            console.log("datos", nombre);
-            const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+            const idHorario = await pool.query('SELECT id FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
             var id_horario = idHorario.rows[0]['id'];
-            console.log("horarios", idHorario.rows)
             if (minutos_espera != undefined) {
-                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
-            } else {
+                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5)', [orden, hora, minutos_espera, id_horario, tipo_accion.split("=")[0]]);
+                res.jsonp({ message: 'correcto' });
+            }
+            else {
                 minutos_espera = 0;
-                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+                await pool.query('INSERT INTO deta_horarios (orden, hora, minu_espera, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5)', [orden, hora, minutos_espera, id_horario, tipo_accion.split("=")[0]]);
+                res.jsonp({ message: 'correcto' });
             }
         });
-        res.jsonp({ message: 'La plantilla a sido receptada' });
         fs.unlinkSync(filePath);
     }
 
