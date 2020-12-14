@@ -91,12 +91,12 @@
                     <mat-form-field>
                         <mat-label>Hora Salida</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaSalidaF">
+                            [formControl]="horaSalidaF" required>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Ingreso</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaIngresoF">
+                            [formControl]="horaIngresoF" required>
                     </mat-form-field>
                     <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>

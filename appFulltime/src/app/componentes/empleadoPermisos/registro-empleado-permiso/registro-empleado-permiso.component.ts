@@ -96,8 +96,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   legalizarF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
-  horaSalidaF = new FormControl('');
-  horaIngresoF = new FormControl('');
+  horaSalidaF = new FormControl('', Validators.required);
+  horaIngresoF = new FormControl('', Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -822,5 +822,42 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     if (this.fechaFinalF.hasError('required')) {
       return 'Campo Obligatorio';
     }
+  }
+
+  /** Validar Ingreso de Hora de Salida y Hora de Retorno */
+  ValidarHora_Salida_Entrada(form) {
+    if (form.solicitarForm === 'Horas') {
+      var total = form.horasForm;
+      var hora1 = (String(form.horaSalidaForm) + ':00').split(":"),
+        hora2 = (String(form.horasIngresoForm) + ':00').split(":"),
+        t1 = new Date(),
+        t2 = new Date();
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+      //Aquí hago la resta
+      t1.setHours(t2.getHours() - t1.getHours(), t2.getMinutes() - t1.getMinutes(), t2.getSeconds() - t1.getSeconds());
+      if (t1.getHours() < 10 && t1.getMinutes() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + '0' + t1.getMinutes();
+      }
+      else if (t1.getHours() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + t1.getMinutes();
+      }
+      else if (t1.getMinutes() < 10) {
+        var tiempoTotal: string = t1.getHours() + ':' + '0' + t1.getMinutes();
+      }
+      console.log('horas', tiempoTotal, total)
+      if (tiempoTotal === total) {
+        this.InsertarPermiso(form);
+      }
+      else {
+        this.toastr.error('El total de horas solicitadas no corresponda con el total de horas de salida e ingreso.', 'Verificar la horas de salida e ingreso de permiso.', {
+          timeOut: 6000,
+        });
+      }
+    }
+    else {
+      this.InsertarPermiso(form);
+    }
+
   }
 }

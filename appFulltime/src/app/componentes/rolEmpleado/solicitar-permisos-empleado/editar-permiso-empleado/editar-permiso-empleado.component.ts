@@ -65,9 +65,8 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   diaLibreF = new FormControl('');
   nombreCertificadoF = new FormControl('');
   archivoForm = new FormControl('');
-  horaSalidaF = new FormControl('');
-  horaIngresoF = new FormControl('');
-
+  horaSalidaF = new FormControl('', Validators.required);
+  horaIngresoF = new FormControl('', Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -782,5 +781,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       return 'Campo Obligatorio';
     }
   }
+
+
 
 }
