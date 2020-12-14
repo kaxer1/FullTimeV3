@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -29,6 +31,14 @@ export class DetalleCatHorarioComponent implements OnInit {
     minEsperaForm: this.minEsperaF,
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     public rest: DetalleCatHorariosService,
     public restH: HorarioService,
@@ -48,6 +58,7 @@ export class DetalleCatHorarioComponent implements OnInit {
   }
 
   InsertarDetalleHorario(form) {
+    this.habilitarprogress = true;
     let datosDetalleH = {
       orden: form.ordenForm,
       hora: form.horaForm,
@@ -62,6 +73,7 @@ export class DetalleCatHorarioComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado', {
         timeOut: 6000,
       })
+      this.habilitarprogress = false;
       this.LimpiarCampos();
       if (this.data.actualizar === true) {
         this.LimpiarCampos();

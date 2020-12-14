@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 
 import { EnroladosRelojesService } from 'src/app/servicios/enroladosRelojes/enrolados-relojes.service';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-enrolado-reloj',
@@ -29,7 +31,15 @@ export class EnroladoRelojComponent implements OnInit {
   public asignarRelojForm = new FormGroup({
     dispositivoForm: this.dispositivoF,
   });
-l
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private rest: EnroladosRelojesService,
     private restR: RelojesService,
@@ -65,6 +75,7 @@ l
   }
 
   InsertarEnroladoReloj(form, id) {
+    this.habilitarprogress = true;
     var idEnrolado = this.data.datosEnrolado.id;
     var nombreReloj = form.dispositivoForm;
     var buscarReloj = {
@@ -73,12 +84,14 @@ l
     }
     this.enroladoReloj = [];
     this.rest.BuscarIdReloj(buscarReloj).subscribe(datos => {
+      this.habilitarprogress = false;
       this.enroladoReloj = datos;
       this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo','', {
         timeOut: 6000,
       })
       this.LimpiarCampos();
     }, error => {
+      this.habilitarprogress = false;
       this.rest.CrearEnroladoReloj(buscarReloj).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo', {
           timeOut: 6000,
@@ -91,10 +104,12 @@ l
           this.dialogRef.close();
           this.router.navigate(['/enroladoDispositivo/', id]);
         }
+        this.habilitarprogress = false;
       }, error => {
         this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo', {
           timeOut: 6000,
-        })
+        });
+        this.habilitarprogress = false;
       });
     });
   }

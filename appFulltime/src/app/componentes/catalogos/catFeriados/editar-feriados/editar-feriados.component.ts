@@ -2,12 +2,13 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, ThemePalette } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-feriados',
@@ -36,6 +37,14 @@ export class EditarFeriadosComponent implements OnInit {
     fechaRecuperacionForm: this.fechaRecuperacionF
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private rest: FeriadosService,
     private toastr: ToastrService,
@@ -51,6 +60,7 @@ export class EditarFeriadosComponent implements OnInit {
   feriados: any = [];
   contador: number = 0;
   ActualizarFeriados(form) {
+    this.habilitarprogress = true;
     this.feriados = [];
     this.contador = 0;
     let datosFeriado = {
@@ -63,6 +73,7 @@ export class EditarFeriadosComponent implements OnInit {
       datosFeriado.fec_recuperacion = null;
       this.rest.ConsultarFeriadoActualiza(this.data.datosFeriado.id).subscribe(response => {
         this.feriados = response;
+        this.habilitarprogress = false;
         this.feriados.forEach(obj => {
           if (moment(obj.fec_recuperacion).format('YYYY-MM-DD') === moment(datosFeriado.fecha).format('YYYY-MM-DD')) {
             this.contador = this.contador + 1;
@@ -80,6 +91,7 @@ export class EditarFeriadosComponent implements OnInit {
     }
     else {
       this.rest.ConsultarFeriadoActualiza(this.data.datosFeriado.id).subscribe(response => {
+        this.habilitarprogress = false;
         this.feriados = response;
         this.feriados.forEach(obj => {
           if (obj.fecha.split('T')[0] === moment(datosFeriado.fec_recuperacion).format('YYYY-MM-DD') ||
@@ -107,6 +119,7 @@ export class EditarFeriadosComponent implements OnInit {
   }
 
   RegistrarFeriado(datos) {
+    this.habilitarprogress = true;
     this.rest.ActualizarUnFeriado(datos).subscribe(response => {
       if (response.message === 'error') {
         this.toastr.error('La fecha del feriado o la fecha de recuperación se encuentran dentro de otro registro.', 'Verificar las fechas', {
@@ -119,6 +132,7 @@ export class EditarFeriadosComponent implements OnInit {
         })
         this.LimpiarCampos();
         this.dialogRef.close();
+        this.habilitarprogress = false;
         if (this.data.actualizar === true) {
           window.location.reload();
         } else {

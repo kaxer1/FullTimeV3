@@ -48,5 +48,14 @@
 <div class="d-flex flex-wrap justify-content-center">
     <input type="submit" class="btn btn-sm button" [disabled]="btnDisableGuardar" value="Guardar"
         (click)="GuardarConfiguracion(ConfiguracionCorreoForm.value)">
-    <input type="submit" class="btn btn-sm button" (click)="dialogRef.close(false)" value="Salir">
+    <input type="submit" class="btn btn-sm button" (click)="dialogRef.close({actualizar: false})" value="Salir">
+</div>
+
+<div class="pantalla-progress" *ngIf="habilitarprogress">
+    <mat-progress-spinner
+        class="progress"
+        [color]="color"
+        [mode]="mode"
+        [value]="value">
+    </mat-progress-spinner>
 </div>

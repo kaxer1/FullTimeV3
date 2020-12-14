@@ -1,0 +1,47 @@
+<div class="barraTitulo">
+    <span>Crear Timbre</span>
+</div>
+<form [formGroup]="TimbreForm">
+    <div class="container">
+        <br>
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between">
+            <mat-form-field>
+                <mat-label>Fecha timbre</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa"
+                    [formControl]="FechaF" required>
+                <mat-datepicker-toggle matSuffix [for]="picker" matTooltipPosition="right"
+                    matTooltip="Seleccione la fecha del timbre dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                </mat-datepicker-toggle>
+                <mat-datepicker touchUi #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Hora timbre</mat-label>
+                <input matInput type="time" [formControl]="HoraF">
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Acción</mat-label>
+                <mat-icon id="permiso" matSuffix matTooltipPosition="right" matTooltip="Acción con la que se realizó el timbre">
+                    help_outline</mat-icon>
+                <mat-select [formControl]="accionF">
+                    <mat-option *ngFor="let a of accion" [value]="a.value">
+                        {{a.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Observación</mat-label>
+                <input matInput [formControl]="observacionF">
+                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                    matTooltip="Ingresar una nota que indique el motivo del timbre">
+                    help_outline</mat-icon>
+            </mat-form-field>
+        </div>
+    </div>
+</form>
+<div>
+    <button mat-button class="btn" [disabled]="!TimbreForm.valid" (click)="insertarTimbre(TimbreForm.value)">Enviar Timbre</button>
+    <button mat-button class="btn" (click)="dialogRef.close({close: true})">Salir</button>
+</div>

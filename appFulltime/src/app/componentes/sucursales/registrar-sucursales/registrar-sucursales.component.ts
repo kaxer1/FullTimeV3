@@ -11,6 +11,8 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registrar-sucursales',
@@ -54,6 +56,14 @@ export class RegistrarSucursalesComponent implements OnInit {
     idEmpresaForm: this.idEmpresaF,
 
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     public restCiudad: CiudadService,
@@ -233,6 +243,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   }
 
   InsertarSucursal(form) {
+    this.habilitarprogress = true;
     let idEmpr;
     if (this.data != undefined) {
       idEmpr = this.data;
@@ -274,10 +285,11 @@ export class RegistrarSucursalesComponent implements OnInit {
         console.log("insertar departamento: ", datosDepartamentos);
         this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
           this.ultimoId = [];
+          this.habilitarprogress = false;
           console.log('depa-guardado')
         });
-      }, error => { });
-    }, error => { });
+      }, error => { console.log(error); });
+    }, error => { console.log(error); });
   }
 
   LimpiarCampos() {
@@ -290,7 +302,7 @@ export class RegistrarSucursalesComponent implements OnInit {
 
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: true});
   }
 
   ObtenerMensajeErrorNombre() {

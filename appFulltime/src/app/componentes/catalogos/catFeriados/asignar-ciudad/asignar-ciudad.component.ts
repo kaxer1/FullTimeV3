@@ -8,6 +8,8 @@ import { startWith, map } from 'rxjs/operators';
 
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-asignar-ciudad',
@@ -55,6 +57,14 @@ export class AsignarCiudadComponent implements OnInit {
     nombrePaisForm: this.nombrePaisF,
     tipoForm: this.tipoF,
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     private restF: CiudadFeriadosService,
@@ -251,15 +261,18 @@ export class AsignarCiudadComponent implements OnInit {
     this.provincias = [];
     this.nombreCiudades = [];
     this.Habilitar = true;
+    this.habilitarprogress = false;
   }
 
   CerrarVentanaAsignarCiudad() {
     this.LimpiarCampos();
     this.dialogRef.close();
+    this.habilitarprogress = false;
   }
 
   InsertarFeriadoCiudad() {
     if (this.ciudadesSeleccionadas.length != 0) {
+      this.habilitarprogress = true;
       this.ciudadesSeleccionadas.map(obj => {
         var buscarCiudad = {
           id_feriado: this.data.feriado.id,
@@ -271,12 +284,14 @@ export class AsignarCiudadComponent implements OnInit {
           this.toastr.info('Se le recuerda que ' + obj.descripcion + ' ya fue asignada a este Feriado','', {
             timeOut: 6000,
           })
+          this.habilitarprogress = false;
         }, error => {
+          this.habilitarprogress = true;
           this.restF.CrearCiudadFeriado(buscarCiudad).subscribe(response => {
             this.toastr.success('Operación Exitosa', 'Ciudad asignada a Feriado', {
               timeOut: 6000,
             });
-
+            this.habilitarprogress = false;
           }, error => {
             this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado', {
               timeOut: 6000,

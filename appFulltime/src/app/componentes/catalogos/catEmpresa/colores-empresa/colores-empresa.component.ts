@@ -11,6 +11,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-colores-empresa',
@@ -31,6 +33,14 @@ export class ColoresEmpresaComponent implements OnInit {
   empleado: any = [];
   p_color: any;
   s_color: any;
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     private rest: EmpresaService,
@@ -67,6 +77,7 @@ export class ColoresEmpresaComponent implements OnInit {
   }
 
   CambiarColores() {
+    this.habilitarprogress = true;
     let datos = {
       color_p: this.p_color,
       color_s: this.s_color,
@@ -77,7 +88,8 @@ export class ColoresEmpresaComponent implements OnInit {
         timeOut: 6000,
       });
       this.obtenerColores();
-      this.dialogRef.close();
+      this.dialogRef.close({actualizar: true});
+      this.habilitarprogress = false;
     })
   }
 
@@ -200,7 +212,7 @@ export class ColoresEmpresaComponent implements OnInit {
   }
 
   cerrarVentana() {
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: false});
   }
 
 }

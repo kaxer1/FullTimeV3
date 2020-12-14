@@ -106,40 +106,49 @@ export class VerEmpresaComponent implements OnInit {
   EditarDatosEmpresa(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarEmpresaComponent, { width: '800px', data: datosSeleccionados })
-      .afterClosed().subscribe(item => {
-        this.ObtenerSucursal();
-        this.ObtenerLogotipo();
-        this.CargarDatosEmpresa();
+      .afterClosed().subscribe((items: any) => {
+        if (items.actualizar === true) {
+          this.ObtenerSucursal();
+          this.ObtenerLogotipo();
+          this.CargarDatosEmpresa();
+        }
       });
   }
 
   AbrirVentanaEditarSucursal(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
-    this.vistaRegistrarDatos.open(EditarSucursalComponent, { width: '900px', data: datosSeleccionados }).afterClosed().subscribe(items => {
-      this.ObtenerSucursal();
-    });
+    this.vistaRegistrarDatos.open(EditarSucursalComponent, { width: '900px', data: datosSeleccionados })
+      .afterClosed().subscribe((items: any) => {
+        if (items.actualizar === true) {
+          this.ObtenerSucursal();
+        }
+      });
   }
 
   AbrirVentanaRegistrarSucursal() {
     this.vistaRegistrarDatos.open(RegistrarSucursalesComponent, { width: '900px', data: parseInt(this.idEmpresa) })
-      .afterClosed().subscribe(items => {
-        this.ObtenerSucursal();
+      .afterClosed().subscribe((items: any) => {
+        if (items.actualizar === true) {
+          this.ObtenerSucursal();
+        }
       });
   }
 
   AbrirVentanaColores() {
     this.vistaRegistrarDatos.open(ColoresEmpresaComponent, { width: '300', data: parseInt(this.idEmpresa) })
-      .afterClosed().subscribe(items => {
-        this.ObtenerSucursal();
-        this.ObtenerLogotipo();
-        this.CargarDatosEmpresa();
+      .afterClosed().subscribe((items: any) => {
+        if (items.actualizar === true) {
+          this.ObtenerSucursal();
+          this.ObtenerLogotipo();
+          this.CargarDatosEmpresa();
+        }
       });
   }
 
   EditarLogo() {
     this.vistaRegistrarDatos.open(LogosComponent, { width: '500px', data: parseInt(this.idEmpresa) }).afterClosed()
-      .subscribe(res => {
-        if (res === true) {
+      .subscribe((res: any) => {
+        if (res.actualizar === true) {
           this.ObtenerLogotipo();
         }
       })

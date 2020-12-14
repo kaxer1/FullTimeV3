@@ -177,3 +177,11 @@ td { padding-top: 10px; text-align: center; }
     padding-top: 10px; 
     padding-bottom: 6px;
 }
+
+
+#geolocalizacion {
+    height: 400px;
+    width: 100%;
+    border: 2px solid white ;
+    margin-bottom: 50px;
+}

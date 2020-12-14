@@ -9,6 +9,8 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-sucursal',
@@ -35,13 +37,20 @@ export class EditarSucursalComponent implements OnInit {
   idPais: any = [];
   idContin: any = [];
 
-
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
   idEmpresaF = new FormControl('', Validators.required);
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -210,6 +219,7 @@ export class EditarSucursalComponent implements OnInit {
   }
 
   InsertarSucursal(form) {
+    this.habilitarprogress === true;
     let dataSucursal = {
       id: this.data.id,
       nombre: form.sucursalNombreForm,
@@ -221,6 +231,7 @@ export class EditarSucursalComponent implements OnInit {
         timeOut: 6000,
       });
       this.CerrarVentanaRegistroSucursal();
+      this.habilitarprogress === false;
     }, error => {
     });
   }
@@ -235,13 +246,13 @@ export class EditarSucursalComponent implements OnInit {
 
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close({actualizar: true});
+    // window.location.reload();
   }
 
   Salir() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: false});
   }
 
   ObtenerMensajeErrorNombre() {

@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registro-empresa',
@@ -39,6 +41,14 @@ export class RegistroEmpresaComponent implements OnInit {
     establecimientoForm: this.establecimientoF,
     otroEForm: this.otroE
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -118,6 +128,7 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   InsertarEmpresa(form) {
+    this.habilitarprogress = true;
     let datosEmpresa = {
       nombre: form.nombreForm,
       ruc: form.rucForm,
@@ -134,22 +145,26 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   GuardarDatos(datos) {
+    this.habilitarprogress = true;
     this.rest.IngresarEmpresas(datos).subscribe(response => {
       this.LimpiarCampos();
       this.toastr.success('Operación Exitosa', 'Datos de Empresa registrados', {
         timeOut: 6000,
       })
+      this.habilitarprogress = false
     }, error => {
     });
   }
 
   VerificarOtroTipo(form, datos) {
+    this.habilitarprogress = true;
     if (form.tipoForm === 'Otro') {
       if (form.otroForm != '') {
         datos.tipo_empresa = form.otroForm;
         this.VerificarEstablecimiento(form, datos);
       }
       else {
+        this.habilitarprogress = false;
         this.toastr.info('Ingrese el nombre del tipo de empresa.','', {
           timeOut: 6000,
         })
@@ -161,6 +176,7 @@ export class RegistroEmpresaComponent implements OnInit {
   }
 
   VerificarEstablecimiento(form, datos) {
+    this.habilitarprogress = true;
     if (form.establecimientoForm === 'Otro') {
       if (form.otroEForm != '') {
         datos.establecimiento = form.otroEForm;
@@ -169,7 +185,8 @@ export class RegistroEmpresaComponent implements OnInit {
       else {
         this.toastr.info('Ingrese el nombre del establecimiento.','', {
           timeOut: 6000,
-        })
+        });
+        this.habilitarprogress = false;
       }
     }
     else {

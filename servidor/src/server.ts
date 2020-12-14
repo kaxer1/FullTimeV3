@@ -58,6 +58,8 @@ import PLAN_HORAS_EXTRAS_RUTAS from './rutas/planHoraExtra/planHoraExtraRutas';
 import DATOS_GENERALES_RUTAS from './rutas/datosGenerales/datosGeneralesRutas';
 import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
 import PLAN_GENERAL_RUTAS from './rutas/planGeneral/planGeneralRutas';
+import REPORTE_HORA_EXTRA_RUTAS from './rutas/reportes/reporteHoraExtraRutas';
+import GRAFICAS_RUTAS from './rutas/graficas/graficasRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -164,6 +166,7 @@ class Servidor {
 
         // Reportes
         this.app.use('/reportes/vacacion', KARDEX_VACACION_RUTAS);
+        this.app.use('/reportes/hora-extra', REPORTE_HORA_EXTRA_RUTAS);
         this.app.use('/reporte', REPORTES_RUTAS);
 
         // HORAS EXTRAS
@@ -174,6 +177,9 @@ class Servidor {
 
         // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
         this.app.use('/generalidades', DATOS_GENERALES_RUTAS);
+        
+        // GRAFICAS PARA MOSTRAR EN EL HOME
+        this.app.use('/metricas', GRAFICAS_RUTAS);
 
     }
 

@@ -42,7 +42,7 @@ class KardexVacacion {
         // let fec_hasta = new Date(req.params.hasta)
         let fec_desde = req.params.desde
         let fec_hasta = req.params.hasta
-        let jsonData = await CalcularHoraExtra(id_empleado, fec_desde, fec_hasta);
+        let jsonData = await CalcularHoraExtra(id_empleado, new Date(fec_desde), new Date(fec_hasta));
         res.jsonp(jsonData);
     }
     

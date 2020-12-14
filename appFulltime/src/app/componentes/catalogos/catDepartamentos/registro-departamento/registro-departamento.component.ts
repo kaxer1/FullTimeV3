@@ -173,6 +173,7 @@ export class RegistroDepartamentoComponent implements OnInit {
             this.toastr.success('Operación Exitosa', 'Departamento registrado', {
               timeOut: 6000,
             });
+            this.habilitarprogress = false;
             this.LimpiarCampos();
           }
         });

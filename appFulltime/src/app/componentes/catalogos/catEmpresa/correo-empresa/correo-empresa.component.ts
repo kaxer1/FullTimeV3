@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
@@ -24,6 +26,14 @@ export class CorreoEmpresaComponent implements OnInit {
   btnDisableGuardar: boolean = true;
   dis_correo: boolean = false;
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+
   public ConfiguracionCorreoForm = new FormGroup({
     email: this.emailF,
     passwordF: this.passwordF,
@@ -43,15 +53,17 @@ export class CorreoEmpresaComponent implements OnInit {
   }
 
   GuardarConfiguracion(form) {
-    console.log(form);
+    this.habilitarprogress = true;
+    // console.log(form);
     let data = {
       correo: form.email || this.data.correo, 
       password_correo: form.passwordF
     }
     console.log(data);
     this.restE.EditarCredenciales(this.data.id, data).subscribe(res => {
+      this.habilitarprogress = false;
       this.toastr.success(res.message)
-      this.dialogRef.close(true)
+      this.dialogRef.close({actualizar: true})
     })
   }
 

@@ -85,6 +85,9 @@
                             </div>
                         </mat-card-content>
                         <div style="text-align: right;">
+                            <button mat-button id="boton" (click)="AbrirLeaflet(e.nombre, e.apellido)">
+                                ubicación
+                            </button>
                             <a href="{{ruta}}" mat-button type="submit" (click)="verRegistroEdicion(false)"
                                 [disabled]="!btnActualizar">
                                 <i class="fas fa-edit" id="edit" matSuffix matTooltipPosition="right"
@@ -147,12 +150,16 @@
                         <label class="h4 mb-3" for="">Show your picture in Resume</label>
                         <input type="file" class="form-control-file" (change)="fileChanged($event)">
                     </div> -->
-                    </mat-card>
+                    </mat-card>                    
                 </div>
             </div>
         </div>
         <app-editar-empleado *ngIf="!btnActualizar" id="editar"></app-editar-empleado>
         <br><br>
+        <div class="container">
+            <div id="geolocalizacion"></div>
+        </div>
+
     </mat-tab>
 
     <!-- DISCAPACIDAD Y TITULO DEL EMPLEADO -->
@@ -1086,10 +1093,10 @@
                             </div>
                             <mat-divider style="margin-bottom: 10px;"></mat-divider>
                         </div>
-                        <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
+                        <!-- <mat-paginator [length]="permisosTotales.length" [pageSize]="tamanio_pagina"
                             [pageSizeOptions]="pageSizeOptions" id="estilo" (page)="ManejarPagina($event)"
                             showFirstLastButtons>
-                        </mat-paginator>
+                        </mat-paginator> -->
                     </mat-card>
                 </div>
             </div>

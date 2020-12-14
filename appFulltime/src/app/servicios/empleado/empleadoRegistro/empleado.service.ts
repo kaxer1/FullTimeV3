@@ -37,6 +37,10 @@ export class EmpleadoService {
       );
   }
 
+  putGeolocalizacion(id: number, data: any) {
+    return this.http.put<any>(`${this.API_URI}/empleado/geolocalizacion/${id}`, data)
+  }
+
   putEmpleadoRest(data: any, id: number) {
     return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data)
       .pipe(

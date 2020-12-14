@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
 
@@ -53,9 +55,8 @@ export class HorasExtrasComponent implements OnInit {
   ];
 
   horario: Horario[] = [
-    {value: 1, viewValue: 'Matutina'},
-    {value: 2, viewValue: 'Vespertina'},
-    {value: 3, viewValue: 'Nocturna'}
+    {value: 1, viewValue: 'Diurna'},
+    {value: 2, viewValue: 'Nocturna'}
   ];
 
   dia: Dia[] = [
@@ -68,6 +69,14 @@ export class HorasExtrasComponent implements OnInit {
   primeroFormGroup: FormGroup;
   segundoFormGroup: FormGroup;
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private toastr: ToastrService,
     private rest: HorasExtrasService,

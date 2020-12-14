@@ -663,6 +663,21 @@ class EmpleadoControlador {
     }
     return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
   }
+  public async GeolocalizacionCrokis(req: Request, res: Response): Promise<any> {
+    let id = req.params.id
+    let {lat, lng} = req.body
+    console.log(lat, lng, id);
+    
+    try {
+      await pool.query('UPDATE empleados SET latitud = $1, longitud = $2 WHERE id = $3', [lat, lng, id])
+      .then(result => {console.log(result.command);
+       })
+      res.status(200).jsonp({message: 'Geolocalizacion actulizada'});
+    } catch (error) {
+      res.status(400).jsonp({message: error});
+    }
+  }
+  
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();

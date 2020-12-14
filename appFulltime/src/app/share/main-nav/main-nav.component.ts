@@ -83,13 +83,7 @@ export class MainNavComponent implements OnInit {
     private rest: EmpresaService,
     private route: ActivatedRoute
   ) {
-    this.empleadoService.getBuscadorEmpledosRest().subscribe(res => {
-      console.log(res);
-      res.forEach(obj => {
-        this.options.push(obj.empleado)
-      });
-      this.buscar_empl = res
-    })
+   
     this.socket.on('enviar_notification', (data) => {
       if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
         console.log(data);
@@ -145,7 +139,29 @@ export class MainNavComponent implements OnInit {
       this.barraDos = result.matches;
     });
     this.SeleccionMenu();
+    this.BarraBusquedaEmpleados();
   }
+  BarraBusquedaEmpleados() {
+    if (!!sessionStorage.getItem('lista-empleados')) {
+      // console.log('ya hay lista en la sesion iniciada');
+      let empleados = JSON.parse(sessionStorage.getItem('lista-empleados'));
+
+      empleados.forEach(obj => {
+        this.options.push(obj.empleado)
+      });
+      this.buscar_empl = empleados
+    } else {
+      // console.log('entra aqui solo al iniciar sesion');
+      this.empleadoService.getBuscadorEmpledosRest().subscribe(res => {
+        let ObjetoJSON = JSON.stringify(res)
+        sessionStorage.setItem('lista-empleados', ObjetoJSON)
+        res.forEach(obj => {
+          this.options.push(obj.empleado)
+        });
+        this.buscar_empl = res
+      }) 
+    }
+  };
 
   LlamarDatos() {
     this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
@@ -339,7 +355,7 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'dashboard',
         children: [
-          { name: 'Home', url: '/home' },
+          { name: 'Inicio', url: '/home' },
           { name: 'Crear Rol', url: '/roles' },
           { name: 'Crear Feriados', url: '/listarFeriados' },
           { name: 'Crear Régimen Laboral', url: '/listarRegimen' },
@@ -423,8 +439,8 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'fingerprint',
         children: [
-          { name: 'Timbres', url: '/timbres' },
-         // { name: 'Asistencia', url: '/asistencia' },
+          { name: 'Administrar Timbres', url: '/timbres-admin' },
+         { name: 'Timbres personales', url: '/timbres-personal' },
         ]
       },
       {
@@ -522,6 +538,15 @@ export class MainNavComponent implements OnInit {
         icono: 'restaurant',
         children: [
           { name: 'Planificación', url: '/almuerzosEmpleado' },
+        ]
+      },
+      {
+        name: 'Timbres',
+        accion: true,
+        estado: true,
+        icono: 'fingerprint',
+        children: [
+          { name: 'Timbres personal', url: '/timbres-personal' },
         ]
       },
       {

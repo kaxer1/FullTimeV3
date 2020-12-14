@@ -133,7 +133,7 @@ mat-tree {
 .material-tree-node {
   background: transparent;
   margin-left: 20px;
-  border-left: 3px solid rgb(131, 131, 131);
+  border-left: 3px solid rgb(5, 162, 253);
   width: 100%;
 }
 
@@ -147,7 +147,7 @@ mat-tree {
   margin-left: -30px;
   border-radius: 25px;
   width: 100%;
-  background: rgba(191, 191, 191, 0.739);
+  background: rgba(226, 226, 226, 0.739);
   outline: none;
   box-shadow: none;
 }
@@ -159,12 +159,12 @@ mat-tree {
 
 .texcol{ color: aliceblue; font-size: 14px; text-align: left;}
 
-#icono-menu{ margin: 8px 0px 0px 10px; color: rgb(40, 40, 40) }
+#icono-menu{ margin: 8px 0px 0px 10px; color: rgb(5, 162, 253) }
 
-#icono-despliega{ color:  rgb(40, 40, 40) }
+#icono-despliega{ color:  rgb(5, 162, 253) }
 
 .name-uno{ margin: 10px 0px 0px 10px; color: rgb(40, 40, 40); font-size: 18px }
 
-#botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px; }
+#botones { background-color: rgb(5, 162, 253); color: white; margin: 10px 10px 10px 10px; }
 
 .mensaje-alerta { background-color: rgb(110, 1, 1); margin: 15px; border-radius: 25px; text-align: center;}

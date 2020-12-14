@@ -2,7 +2,7 @@ mat-label { font-size: 14px; }
 
 .btn { background-color: rgb(80,87,97); color: white; margin: 5px 10px 5px 10px;} 
 
-mat-form-field {width: 225px; padding: 10px 10px 0px 10px;}
+mat-form-field {width: 100%; padding: 10px 10px 0px 10px;}
 
 .barraTitulo { 
     font-size: 25px; 
@@ -26,3 +26,18 @@ mat-form-field {width: 225px; padding: 10px 10px 0px 10px;}
     color: rgb(52,65,84);
 }
 
+#botonTimbreInicio {
+    margin: 10px 10px 10px 10px;
+    border-radius: 10px;
+    background: rgb(0, 123, 194);
+    color: white;
+    width: 175px;
+}
+
+#botonTimbreFin {
+    margin: 10px 10px 10px 10px;
+    border-radius: 10px;
+    background: rgb(37, 37, 37);
+    color: white;
+    width: 175px;
+}

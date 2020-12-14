@@ -40,10 +40,55 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  latitud: number;
+  longitud: number;
+
+  private options = {
+    enableHighAccuracy: false,
+    maximumAge: 30000,
+    timeout: 15000
+  };
+
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.url); 
+    this.Geolocalizar();
     // console.log(window.history.back());
+  }
+
+  Geolocalizar() {
+    if (navigator.geolocation)
+    {
+      navigator.geolocation.getCurrentPosition(
+        (objPosition) => {
+          // console.log(objPosition);
+          
+          this.latitud = objPosition.coords.latitude;
+          this.longitud = objPosition.coords.longitude;
+
+          console.log(this.longitud, this.latitud);
+          
+        }, (objPositionError) => {
+          switch (objPositionError.code)
+          {
+            case objPositionError.PERMISSION_DENIED:
+              console.log('No se ha permitido el acceso a la posición del usuario.');
+            break;
+            case objPositionError.POSITION_UNAVAILABLE:
+              console.log('No se ha podido acceder a la información de su posición.');
+            break;
+            case objPositionError.TIMEOUT:
+              console.log('El servicio ha tardado demasiado tiempo en responder.');
+            break;
+            default:
+              console.log('Error desconocido.');
+          }
+        }, this.options);
+    }
+    else
+    {
+      console.log('Su navegador no soporta la API de geolocalización.');
+    }
   }
 
   ObtenerMensajeCampoUsuarioError() {
@@ -65,8 +110,16 @@ export class LoginComponent implements OnInit {
     
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
-      pass: clave
+      pass: clave,
+      latitud: this.latitud,
+      longitud: this.longitud
     };
+    console.log(dataUsuario);
+
+    if (this.latitud === undefined) {
+      this.Geolocalizar();
+      return this.toastr.error('Primero permitir conocer la ubicación del dispositivo')
+    }
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {

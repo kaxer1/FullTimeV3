@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-editar-enrolados',
@@ -45,6 +47,14 @@ export class EditarEnroladosComponent implements OnInit {
     enroladoData_FingerForm: this.data_finger,
     codigoForm: this.codigoF
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     private rest: EnroladoService,
@@ -86,6 +96,7 @@ export class EditarEnroladosComponent implements OnInit {
   }
 
   insertarEnrolado(form) {
+    this.habilitarprogress = true;
     let dataEnrolado = {
       id: this.data.datosEnrolado.id,
       id_usuario: form.enroladoId_UsuarioForm,
@@ -100,6 +111,7 @@ export class EditarEnroladosComponent implements OnInit {
       this.toastr.success('Operacion Exitosa', ' Datos de Usuario Enrolado actualizados', {
         timeOut: 6000,
       });
+        this.habilitarprogress = false;
         console.log(this.data.datosEnrolado.id);
         this.limpiarCampos();
         this.dialogRef.close();
@@ -110,6 +122,7 @@ export class EditarEnroladosComponent implements OnInit {
         }
     }, error => {
       console.log(error);
+      this.habilitarprogress = false;
     });
   }
 

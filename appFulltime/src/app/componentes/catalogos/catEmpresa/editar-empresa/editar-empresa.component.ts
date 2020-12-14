@@ -4,6 +4,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-empresa',
@@ -54,6 +56,13 @@ export class EditarEmpresaComponent implements OnInit {
     cambiosForm: this.cambiosF
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -201,6 +210,7 @@ export class EditarEmpresaComponent implements OnInit {
   }
 
   InsertarEmpresa(form) {
+    this.habilitarprogress === true;
     let datosEmpresa = {
       id: this.data.id,
       nombre: form.nombreForm,
@@ -219,6 +229,7 @@ export class EditarEmpresaComponent implements OnInit {
 
   GuardarDatos(datos) {
     this.rest.ActualizarEmpresa(datos).subscribe(response => {
+      this.habilitarprogress === false;
       this.CerrarVentanaRegistroEmpresa();
       this.toastr.success('Operación Exitosa', 'Datos de Empresa actualizados', {
         timeOut: 6000,
@@ -362,14 +373,13 @@ export class EditarEmpresaComponent implements OnInit {
 
   CerrarVentanaRegistroEmpresa() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close({actualizar: true});
     this.valor = '';
   }
 
   Salir() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: false});
     this.valor = '';
   }
 

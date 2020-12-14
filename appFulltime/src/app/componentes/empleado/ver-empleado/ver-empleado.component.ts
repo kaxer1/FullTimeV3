@@ -54,6 +54,8 @@ import { CancelarHoraExtraComponent } from 'src/app/componentes/rolEmpleado/hora
 import { EditarHoraExtraEmpleadoComponent } from 'src/app/componentes/rolEmpleado/hora-extra-empleado/editar-hora-extra-empleado/editar-hora-extra-empleado.component';
 import { CancelarVacacionesComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
+import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -186,6 +188,24 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
+  // Metodo incluir el crokis
+  AbrirLeaflet(nombre: string, apellido: string) {
+    this.vistaRegistrarDatos.open(EmplLeafletComponent, {width: '500px', height: '500px'}).afterClosed().subscribe((res: any) => {
+      console.log(res);
+      if (res.message === true) {
+        this.restEmpleado.putGeolocalizacion(parseInt(this.idEmpleado), res.latlng).subscribe(respuesta => {
+          this.toastr.success(respuesta.message);
+          this.MAP.off();
+          this.MAP.remove();
+          this.MapGeolocalizar(res.latlng.lat, res.latlng.lng, nombre + ' ' + apellido)
+          // this.verEmpleado(this.idEmpleado);
+        }, err => {
+          this.toastr.error(err)
+        });
+      } 
+    });
+  }
+
   // Método para obtener colores de empresa
   p_color: any;
   s_color: any;
@@ -251,8 +271,12 @@ export class VerEmpleadoComponent implements OnInit {
     this.empleadoUno = [];
     let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      console.log(data);
+      
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
+      var empleado = data[0]['nombre'] + data[0]['apellido'];
+      this.MapGeolocalizar(data[0]['latitud'], data[0]['longitud'], empleado);
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
@@ -268,6 +292,36 @@ export class VerEmpleadoComponent implements OnInit {
         this.textoBoton = 'Subir Foto';
       }
     })
+  }
+  
+  MARKER: any;
+  MAP: any;
+  MapGeolocalizar(latitud: number, longitud: number, empleado: string) {
+
+    let zoom = 19;
+    if (latitud === null && longitud === null) {
+      latitud = -0.9286188999999999; 
+      longitud = -78.6059801;
+      zoom = 7
+    } 
+
+    this.MAP = L.map('geolocalizacion', {
+      center: [latitud, longitud],
+      zoom: zoom
+    });
+
+    const marker = L.marker([latitud, longitud]);
+    if (this.MARKER !== undefined) {
+      this.MAP.removeLayer(this.MARKER);
+    } else {
+      marker.setLatLng([latitud, longitud]);
+    }
+    marker.bindPopup(empleado);
+    this.MAP.addLayer(marker);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(this.MAP);
+    
+    this.MARKER = marker;
   }
 
   /** Método para obtener datos de discapacidad */

@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartType, ChartOptions, ChartDataSets } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
-import { EChartOption } from 'echarts';
+import { GraficasService } from 'src/app/servicios/graficas/graficas.service';
+// import { EChartOption } from 'echarts';
 declare const require: any;
 
 @Component({
@@ -134,7 +135,7 @@ export class HomeComponent implements OnInit{
 
 // es el constructor
   constructor(
-    
+    private restGraficas: GraficasService
   ) { }
 
   ngOnInit(): void {
@@ -143,7 +144,9 @@ export class HomeComponent implements OnInit{
     var f=new Date();
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
     this.cajaUno();
-
+    this.restGraficas.MetricaInasistencia().subscribe(res => {
+      this.inasistencia = res
+    })
    /*var intval = window.setInterval(function probando(){
        // console.log("probando programacion");
        prueba();
@@ -362,17 +365,18 @@ export class HomeComponent implements OnInit{
   };
 
   // caja 1 fila 2
-  optionsFila2 = {
-    xAxis: {
-      type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series: [{
-      data: [120, 932, 901, 934, 1290, 1330, 1320],
-      type: 'line'
-    }]
-  };
+  inasistencia: any;
+  // = {
+  //   xAxis: {
+  //     type: 'category',
+  //     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+  //   },
+  //   yAxis: {
+  //     type: 'value'
+  //   },
+  //   series: [{
+  //     data: [120, 932, 901, 934, 1290, 1330, 1320],
+  //     type: 'line'
+  //   }]
+  // };
 }

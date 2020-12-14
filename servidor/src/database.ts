@@ -6,16 +6,16 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   port: 5432,  
-  database: 'fulltimeV3',
+  database: 'nueva2411',
   //database: 'timbres',
   password: 'fulltime'
 })
 pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.log("Error durante la conexión", err)
-      } else {
-        console.log("Conexión exitosa")
-      }
+  if (err) {
+    console.log("Error durante la conexión", err)
+  } else {
+    console.log("Conexión exitosa")
+  }
 })
 
 export default pool;

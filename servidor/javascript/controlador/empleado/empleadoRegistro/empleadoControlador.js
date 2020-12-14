@@ -657,6 +657,23 @@ class EmpleadoControlador {
             return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
         });
     }
+    GeolocalizacionCrokis(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            let { lat, lng } = req.body;
+            console.log(lat, lng, id);
+            try {
+                yield database_1.default.query('UPDATE empleados SET latitud = $1, longitud = $2 WHERE id = $3', [lat, lng, id])
+                    .then(result => {
+                    console.log(result.command);
+                });
+                res.status(200).jsonp({ message: 'Geolocalizacion actulizada' });
+            }
+            catch (error) {
+                res.status(400).jsonp({ message: error });
+            }
+        });
+    }
 }
 exports.EMPLEADO_CONTROLADOR = new EmpleadoControlador();
 exports.default = exports.EMPLEADO_CONTROLADOR;

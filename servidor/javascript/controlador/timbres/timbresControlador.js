@@ -103,6 +103,84 @@ class TimbresControlador {
             return res.jsonp({ message: 'No seleccionó ningún timbre' });
         });
     }
+    CrearTimbreWeb(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_reloj } = req.body;
+                const id_empleado = req.userIdEmpleado;
+                let code = yield database_1.default.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows; });
+                if (code.length === 0)
+                    return { mensaje: 'El empleado no tiene un codigo asignado.' };
+                var codigo = parseInt(code[0].codigo);
+                yield database_1.default.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo, id_reloj])
+                    .then(result => {
+                    res.status(200).jsonp({ message: 'Timbre enviado' });
+                }).catch(err => {
+                    res.status(400).jsonp({ message: err });
+                });
+            }
+            catch (error) {
+                res.status(400).jsonp({ message: error });
+            }
+        });
+    }
+    CrearTimbreWebAdmin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj } = req.body;
+                console.log(req.body);
+                let code = yield database_1.default.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows; });
+                if (code.length === 0)
+                    return { mensaje: 'El empleado no tiene un codigo asignado.' };
+                var codigo = parseInt(code[0].codigo);
+                yield database_1.default.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo, id_reloj])
+                    .then(result => {
+                    res.status(200).jsonp({ message: 'Timbre guardado' });
+                }).catch(err => {
+                    res.status(400).jsonp({ message: err });
+                });
+            }
+            catch (error) {
+                res.status(400).jsonp({ message: error });
+            }
+        });
+    }
+    ObtenerTimbres(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const id = req.userIdEmpleado;
+                let timbres = yield database_1.default.query('SELECT t.fec_hora_timbre, t.accion, t.tecl_funcion, t.observacion, t.latitud, t.longitud, t.id_empleado, t.id_reloj ' +
+                    'FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado ORDER BY t.fec_hora_timbre DESC LIMIT 100', [id]).then(result => {
+                    return result.rows.map(obj => {
+                        obj.fec_hora_timbre.setUTCHours(obj.fec_hora_timbre.getUTCHours() - 5);
+                        console.log(obj.fec_hora_timbre.getUTCHours());
+                        return obj;
+                    });
+                });
+                if (timbres.length === 0)
+                    return res.status(400).jsonp({ message: 'No hay timbres' });
+                let estado_cuenta = [{
+                        timbres_PES: yield database_1.default.query('SELECT count(*) FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado AND t.accion = \'PES\' ', [id]).then(result => { return result.rows[0].count; }),
+                        timbres_AES: yield database_1.default.query('SELECT count(*) FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado AND t.accion = \'AES\' ', [id]).then(result => { return result.rows[0].count; }),
+                        timbres_EoS: yield database_1.default.query('SELECT count(*) FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado AND t.accion = \'EoS\' ', [id]).then(result => { return result.rows[0].count; }),
+                        total_timbres: yield database_1.default.query('SELECT count(*) FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado', [id]).then(result => { return result.rows[0].count; })
+                    }];
+                return res.status(200).jsonp({
+                    timbres: timbres,
+                    cuenta: estado_cuenta,
+                    info: yield database_1.default.query('SELECT ca.cargo, ca.sueldo, ca.hora_trabaja, eh.fec_inicio, eh.fec_final FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS eh ' +
+                        'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id AND eh.id_empl_cargo = ca.id ORDER BY eh.fec_inicio DESC LIMIT 1', [id]).then(result => {
+                        console.log(result.rows);
+                        return result.rows;
+                    }),
+                });
+            }
+            catch (error) {
+                console.log(error);
+                res.status(400).jsonp({ message: error });
+            }
+        });
+    }
 }
 exports.timbresControlador = new TimbresControlador;
 exports.default = exports.timbresControlador;

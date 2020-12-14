@@ -1,6 +1,7 @@
 import { Component, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import * as L from 'leaflet';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-empl-leaflet',
@@ -9,7 +10,9 @@ import * as L from 'leaflet';
 })
 export class EmplLeafletComponent implements AfterViewInit {
 
-  COORS: any;
+  COORDS: any;
+  MARKER: any;
+
   constructor(
     private view: MatDialogRef<EmplLeafletComponent>
   ) { }
@@ -17,39 +20,38 @@ export class EmplLeafletComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const map = L.map('map-template', {
       center: [-0.9286188999999999, -78.6059801],
-      zoom: 17
+      zoom: 13
     });
 
     map.locate({enableHighAccuracy: true})
-
-    map.on('locationfound', e => {
-      console.log(e);
+    
+    map.on('click', (e: any) => {
+      console.log(e.latlng);
+      console.log(this.COORDS, '===', this.MARKER);
       
       const coords: any = [e.latlng.lat, e.latlng.lng];
-      console.log(coords);
-// @-0.9129748,-78.6129597,15.5z
-      this.COORS = coords
-
       const marker = L.marker(coords);
-      // marker.bindPopup('estas aqui');
-      marker.bindPopup(localStorage.getItem('usuario'));
+      if (this.COORDS !== undefined) {
+        map.removeLayer(this.MARKER);
+      } else {
+        marker.setLatLng(coords);
+      }
+      marker.bindPopup('Ubicación vivienda');
       map.addLayer(marker)
+      this.COORDS = e.latlng;
+      this.MARKER = marker
     })
-    //LatLngExpression
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(map);
-    const marker = L.marker([-0.9286188999999999, -78.6059801])
-    marker.bindPopup(localStorage.getItem('usuario'));
-    map.addLayer(marker)
 
   }
 
   GuardarLocalizacion() {
-    this.view.close(this.COORS)
+    this.view.close({message: true, latlng: this.COORDS})
   }
 
   Salir() {
-    this.view.close(this.COORS)
+    this.view.close({message: false})
   }
 
 }

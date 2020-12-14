@@ -92,3 +92,12 @@
         <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroHorario()" value="Salir">
     </div>
 </div>
+
+<div class="pantalla-progress" *ngIf="habilitarprogress">
+    <mat-progress-spinner
+        class="progress"
+        [color]="color"
+        [mode]="mode"
+        [value]="value">
+    </mat-progress-spinner>
+</div>
