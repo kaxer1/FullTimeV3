@@ -115,7 +115,6 @@
                 <thead class="thead-light">
                     <tr style="text-align: center;">
                         <th scope="col">Código</th>
-                        <th scope="col">Empresa</th>
                         <th scope="col">Establecimiento</th>
                         <th scope="col">Ciudad</th>
                         <th scope="col">Departamento</th>
@@ -123,7 +122,8 @@
                         <th scope="col">IP</th>
                         <th scope="col">Puerto</th>
                         <th scope="col">Modelo</th>
-                        <th scope="col">Tiene Funciones</th>
+                        <th scope="col">Tiene Acciones</th>
+                        <th scope="col">N° Acciones</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -131,7 +131,6 @@
                     <tr
                         *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
                         <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
-                        <td>{{reloj.nomempresa}}</td>
                         <td>{{reloj.nomsucursal}}</td>
                         <td>{{reloj.nomciudad}}</td>
                         <td>{{reloj.nomdepar}}</td>
@@ -141,6 +140,7 @@
                         <td>{{reloj.modelo}}</td>
                         <td *ngIf="reloj.tien_funciones == true">Sí</td>
                         <td *ngIf="reloj.tien_funciones == false">No</td>
+                        <td>{{reloj.numero_accion}}</td>
                         <td class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
                                 matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"

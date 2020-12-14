@@ -47,7 +47,8 @@ class DetalleCatalogoHorarioControlador {
             }
         });
     }
-    CrearHorarioDetallePlantilla(req, res) {
+    /** Verificar que el nombre del horario exista dentro del sistema */
+    VerificarDatosDetalles(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
@@ -55,24 +56,65 @@ class DetalleCatalogoHorarioControlador {
             var filePath = `./plantillas/${filename}`;
             const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                var { nombre_horario, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
-                console.log("datos", data);
+            const plantillaD = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var contarHorario = 0;
+            var contarDatos = 0;
+            var contador = 1;
+            /** Detalle de Horarios */
+            plantillaD.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                const { nombre_horario, orden, hora, tipo_accion, minutos_espera } = data;
+                // Verificar que los datos obligatorios existan
+                if (nombre_horario != undefined && orden != undefined && hora != undefined &&
+                    tipo_accion != undefined) {
+                    contarDatos = contarDatos + 1;
+                }
+                // Verificar que exita el nombre del horario
+                if (nombre_horario != undefined) {
+                    const HORARIO = yield database_1.default.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre_horario.toUpperCase()]);
+                    if (HORARIO.rowCount != 0) {
+                        contarHorario = contarHorario + 1;
+                    }
+                }
+                //Verificar que todos los datos sean correctos
+                console.log('datos', contarHorario, contarDatos);
+                if (contador === plantillaD.length) {
+                    if (contarHorario === plantillaD.length && contarDatos === plantillaD.length) {
+                        return res.jsonp({ message: 'correcto' });
+                    }
+                    else {
+                        return res.jsonp({ message: 'error' });
+                    }
+                }
+                contador = contador + 1;
+            }));
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    CrearDetallePlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
+            const plantillaD = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            /** Detalle de Horarios */
+            plantillaD.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                var { nombre_horario, orden, hora, tipo_accion, minutos_espera } = data;
                 var nombre = nombre_horario;
-                console.log("datos", nombre);
-                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
+                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
                 var id_horario = idHorario.rows[0]['id'];
-                console.log("horarios", idHorario.rows);
                 if (minutos_espera != undefined) {
-                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5)', [orden, hora, minutos_espera, id_horario, tipo_accion.split("=")[0]]);
+                    res.jsonp({ message: 'correcto' });
                 }
                 else {
                     minutos_espera = 0;
-                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("-")[0]]);
+                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5)', [orden, hora, minutos_espera, id_horario, tipo_accion.split("=")[0]]);
+                    res.jsonp({ message: 'correcto' });
                 }
             }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }

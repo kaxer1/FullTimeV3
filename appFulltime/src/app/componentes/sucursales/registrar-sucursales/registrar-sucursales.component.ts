@@ -19,6 +19,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
   templateUrl: './registrar-sucursales.component.html',
   styleUrls: ['./registrar-sucursales.component.css']
 })
+
 export class RegistrarSucursalesComponent implements OnInit {
 
   // Datos Provincias, Continentes, Países y Ciudades
@@ -33,19 +34,15 @@ export class RegistrarSucursalesComponent implements OnInit {
   seleccionarCiudad;
   ultimoId: any = [];
 
-  Habilitar: boolean;
-
   filteredOptPais: Observable<string[]>;
   filteredOptProv: Observable<string[]>;
   filteredOptCiud: Observable<string[]>;
-  filteredOptEmpr: Observable<string[]>;
 
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
-  idEmpresaF = new FormControl('');
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -53,8 +50,6 @@ export class RegistrarSucursalesComponent implements OnInit {
     idProvinciaForm: this.idProvinciaF,
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
-    idEmpresaForm: this.idEmpresaF,
-
   });
 
   /**
@@ -79,7 +74,6 @@ export class RegistrarSucursalesComponent implements OnInit {
 
   ngOnInit(): void {
     this.continentes = this.ObtenerContinentes();
-    this.BuscarEmpresas();
     this.filteredOptPais = this.nombrePaisF.valueChanges
       .pipe(
         startWith(''),
@@ -95,18 +89,6 @@ export class RegistrarSucursalesComponent implements OnInit {
         startWith(''),
         map(value => this._filterCiudad(value))
       );
-    this.filteredOptEmpr = this.idEmpresaF.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => this._filterEmpresa(value))
-      );
-
-    if (this.data != undefined) {
-      this.Habilitar = true;
-    }
-    else {
-      this.Habilitar = false;
-    }
   }
 
   private _filterPais(value: string): string[] {
@@ -130,13 +112,6 @@ export class RegistrarSucursalesComponent implements OnInit {
     }
   }
 
-  private _filterEmpresa(value: string): string[] {
-    if (value != null) {
-      const filterValue = value.toLowerCase();
-      return this.empresas.filter(empresas => empresas.nombre.toLowerCase().includes(filterValue));
-    }
-  }
-
   ObtenerContinentes() {
     this.continentes = [];
     this.restP.BuscarContinente().subscribe(datos => {
@@ -157,7 +132,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   FiltrarPaises(form) {
     var nombreContinente = form.nombreContinenteForm;
     if (nombreContinente === 'Seleccionar' || nombreContinente === '') {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.paises = [];
@@ -176,7 +151,7 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.provincias = datos;
       this.seleccionarProvincia = '';
     }, error => {
-      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados','', {
+      this.toastr.info('El País seleccionado no tiene Provincias, Departamentos o Estados registrados', '', {
         timeOut: 6000,
       })
     })
@@ -190,7 +165,7 @@ export class RegistrarSucursalesComponent implements OnInit {
       }
     });
     if (idPais === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.provincias = [];
@@ -207,7 +182,7 @@ export class RegistrarSucursalesComponent implements OnInit {
       this.nombreCiudades = datos;
       this.seleccionarCiudad = '';
     }, error => {
-      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas','', {
+      this.toastr.info('Provincia, Departamento o Estado no tiene ciudades registradas', '', {
         timeOut: 6000,
       })
     })
@@ -216,7 +191,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   FiltrarCiudades(form) {
     let nombreProvincia = form.idProvinciaForm;
     if (nombreProvincia === 'Seleccionar') {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
       this.seleccionarCiudad = '';
@@ -229,32 +204,19 @@ export class RegistrarSucursalesComponent implements OnInit {
   SeleccionarCiudad(form) {
     var nombreCiudad = form.idCiudadForm;
     if (nombreCiudad === undefined) {
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
     }
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
-  }
-
+  contador: number = 0;
+  listaSucursales: any = [];
   InsertarSucursal(form) {
     this.habilitarprogress = true;
-    let idEmpr;
-    if (this.data != undefined) {
-      idEmpr = this.data;
-    }
-    else {
-      this.empresas.forEach(obj => {
-        if (obj.nombre === form.idEmpresaForm) {
-          idEmpr = obj.id
-        }
-      });
-    }
+    this.contador = 0;
+    this.listaSucursales = [];
+    let idEmpr = localStorage.getItem('empresa');
     let idCiud;
     this.nombreCiudades.forEach(obj => {
       if (obj.descripcion === form.idCiudadForm) {
@@ -266,30 +228,49 @@ export class RegistrarSucursalesComponent implements OnInit {
       id_ciudad: idCiud,
       id_empresa: idEmpr
     };
-
-    this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
-        timeOut: 6000,
-      });
-      this.LimpiarCampos();
-      //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
-      this.restSucursal.EncontrarUltimoId().subscribe(datos => {
-        this.ultimoId = datos;
-        console.log("id sucursal: ", this.ultimoId[0].max);
-        let datosDepartamentos = {
-          nombre: 'Ninguno',
-          nivel: 1,
-          depa_padre: null,
-          id_sucursal: this.ultimoId[0].max
-        };
-        console.log("insertar departamento: ", datosDepartamentos);
-        this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
-          this.ultimoId = [];
-          this.habilitarprogress = false;
-          console.log('depa-guardado')
+    this.restSucursal.VerSucursalesRegistro().subscribe(responseS => {
+      this.listaSucursales = responseS;
+      this.habilitarprogress = false;
+      console.log('sucursales lista', this.listaSucursales);
+      for (var i = 0; i <= this.listaSucursales.length - 1; i++) {
+        if (this.listaSucursales[i].nombre.toUpperCase() === form.sucursalNombreForm.toUpperCase()) {
+          console.log('nombre', this.listaSucursales[i].nombre.toUpperCase(), 'form', form.sucursalNombreForm.toUpperCase());
+          this.contador = 1;
+        }
+      }
+      console.log('contador', this.contador)
+      if (this.contador === 1) {
+        this.toastr.error('El nombre de la Sucursal ya se encuentra registrado.', 'Operación Fallida', {
+          timeOut: 6000,
         });
-      }, error => { console.log(error); });
-    }, error => { console.log(error); });
+        this.habilitarprogress = false;
+      }
+      else {
+        this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
+            timeOut: 6000,
+          });
+          this.habilitarprogress = false;
+          this.LimpiarCampos();
+          //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
+          this.restSucursal.EncontrarUltimoId().subscribe(datos => {
+            this.ultimoId = datos;
+            console.log("id sucursal: ", this.ultimoId[0].max);
+            let datosDepartamentos = {
+              nombre: 'Ninguno',
+              nivel: 1,
+              depa_padre: null,
+              id_sucursal: this.ultimoId[0].max
+            };
+            console.log("insertar departamento: ", datosDepartamentos);
+            this.restD.postDepartamentoRest(datosDepartamentos).subscribe(response => {
+              this.ultimoId = [];
+              console.log('depa-guardado')
+            });
+          }, error => { });
+        }, error => { });
+      }
+    })
   }
 
   LimpiarCampos() {

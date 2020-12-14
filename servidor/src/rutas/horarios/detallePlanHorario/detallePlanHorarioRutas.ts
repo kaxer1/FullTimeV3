@@ -19,11 +19,16 @@ class DetallePlanHorarioRutas {
         this.router.get('/', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.ListarDetallePlanHorario);
         this.router.get('/infoPlan/:id_plan_horario', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.EncontrarPlanHoraDetallesPorIdPlanHorario);
         this.router.post('/', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.CrearDetallePlanHorario);
-        this.router.post('/:id_plan_horario/upload', TokenValidation, multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.CrearDetallePlanificacionPlantilla);
-        this.router.put('/', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.ActualizarDetallePlanHorario);
+       this.router.put('/', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.ActualizarDetallePlanHorario);
         this.router.delete('/eliminar/:id', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.EliminarRegistros);
         this.router.post('/verificarRegistro', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.ObtenerRegistrosFecha);
+        this.router.post('/verificarDuplicado/:id', TokenValidation, DETALLE_PLAN_HORARIO_CONTROLADOR.VerificarDuplicidadEdicion);
 
+        // Verificar datos de la plantilla de detalles del plan horario
+        this.router.post('/verificarDatos/:id_plan_horario/upload', TokenValidation, multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.VerificarDatos);
+        this.router.post('/verificarPlantilla/upload', TokenValidation, multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.VerificarPlantilla);
+        this.router.post('/:id_plan_horario/upload', TokenValidation, multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.CrearDetallePlanificacionPlantilla);
+        this.router.post('/plan_general/:id/:codigo/upload', TokenValidation, multipartMiddleware, DETALLE_PLAN_HORARIO_CONTROLADOR.CrearPlanificacionGeneral);
     }
 }
 

@@ -14,7 +14,7 @@ export class RelojesService {
 
   // Invocación del método post para crear nuevo reloj
   CrearNuevoReloj(datos: any) {
-    return this.http.post(`${this.API_URL}/relojes`, datos);
+    return this.http.post<any>(`${this.API_URL}/relojes`, datos);
   }
 
   ConsultarRelojes() {
@@ -26,7 +26,7 @@ export class RelojesService {
   }
 
   ActualizarDispositivo(datos: any) {
-    return this.http.put(`${this.API_URL}/relojes`, datos);
+    return this.http.put<any>(`${this.API_URL}/relojes`, datos);
   }
 
   DownloadXMLRest(data: any) {

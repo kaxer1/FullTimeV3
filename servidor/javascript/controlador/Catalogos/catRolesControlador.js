@@ -53,15 +53,15 @@ class RolesControlador {
     }
     CrearRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.body;
-            yield database_1.default.query('INSERT INTO cg_roles (nombre) VALUES ($1)', [nombre]);
+            const { nombre, logged } = req.body;
+            yield database_1.default.query('INSERT INTO cg_roles (nombre, logged) VALUES ($1, $2)', [nombre, logged]);
             res.jsonp({ message: 'Rol guardado' });
         });
     }
     ActualizarRol(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, id } = req.body;
-            yield database_1.default.query('UPDATE cg_roles SET nombre = $1 WHERE id = $2', [nombre, id]);
+            const { nombre, logged, id } = req.body;
+            yield database_1.default.query('UPDATE cg_roles SET nombre = $1, logged = $2 WHERE id = $3', [nombre, logged, id]);
             res.jsonp({ message: 'Registro Actualizado' });
         });
     }

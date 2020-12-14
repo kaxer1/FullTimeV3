@@ -19,8 +19,7 @@ export class HorasExtrasRealesService {
 
   ObtenerDatosCargoA(empleado_id: any) {
     return this.http.get(`${this.API_URL}/reporte/horasExtrasReales/${empleado_id}`).pipe(
-      catchError(empleado_id)
-    );
+      catchError(empleado_id));
   }
 
   ObtenerEntradaSalida(empleado_id: any, data: any) {

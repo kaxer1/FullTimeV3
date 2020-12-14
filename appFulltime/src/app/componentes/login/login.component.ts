@@ -3,8 +3,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Md5 } from 'ts-md5/dist/md5';
-
+import * as moment from 'moment';
+moment.locale('es');
 import { LoginService } from '../../servicios/login/login.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +34,9 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(
+    private http: HttpClient,
     public rest: LoginService,
+    public restU: UsuarioService,
     private router: Router,
     private toastr: ToastrService) {
     this.validarCredencialesF.setValue({
@@ -107,7 +112,7 @@ export class LoginComponent implements OnInit {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form.passwordF).end();
-    
+
     let dataUsuario = {
       nombre_usuario: form.usuarioF,
       pass: clave,
@@ -123,8 +128,9 @@ export class LoginComponent implements OnInit {
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
-      console.log(datos)
+      console.log('ingreso', datos)
       if (datos.message === 'error') {
+        this.IngresoSistema(form.usuarioF, 'Fallido', datos.text);
         this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
           timeOut: 6000,
         })
@@ -139,14 +145,15 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('departamento', datos.departamento);
         localStorage.setItem('ultimoCargo', datos.cargo);
         localStorage.setItem('autoriza', datos.estado);
-        this.toastr.success('Ingreso Existoso! ' + datos.usuario, 'Usuario y contraseña válidos', {
+        localStorage.setItem('ip', datos.ip_adress);
+        this.toastr.success('Ingreso Existoso! ' + datos.usuario + ' ' + datos.ip_adress, 'Usuario y contraseña válidos', {
           timeOut: 6000,
         })
 
         if (datos.rol === 1) { // Admin
           if (!!localStorage.getItem("redireccionar")) {
             let id_permiso = parseInt(localStorage.getItem("redireccionar"));
-            this.router.navigate(['/ver-permiso/',id_permiso]);
+            this.router.navigate(['/ver-permiso/', id_permiso]);
             localStorage.removeItem("redireccionar");
           } else {
             this.router.navigate(['/home'])
@@ -155,11 +162,34 @@ export class LoginComponent implements OnInit {
         if (datos.rol === 2) { //Empleado
           this.router.navigate(['/estadisticas']);
         }
-        
+        this.IngresoSistema(form.usuarioF, 'Exitoso', datos.ip_adress);
       }
     }, error => {
 
     })
+  }
+
+  IngresoSistema(user, acceso: string, dir_ip) {
+    var h = new Date();
+    var f = moment();
+    var fecha = f.format('YYYY-MM-DD');
+    // Formato de hora actual
+    if (h.getMinutes() < 10) {
+      var time = h.getHours() + ':0' + h.getMinutes();
+    }
+    else {
+      var time = h.getHours() + ':' + h.getMinutes();
+    }
+
+    let dataAcceso = {
+      modulo: 'login',
+      user_name: user,
+      fecha: fecha,
+      hora: time,
+      acceso: acceso,
+      ip_address: dir_ip
+    }
+    this.restU.crearAccesosSistema(dataAcceso).subscribe(datos => { })
   }
 
 }

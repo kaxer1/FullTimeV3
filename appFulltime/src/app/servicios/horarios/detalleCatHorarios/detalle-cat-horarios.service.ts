@@ -26,10 +26,6 @@ export class DetalleCatHorariosService {
     return this.http.get(`${this.API_URL}/detalleHorario/${id}`);
   }
 
-  subirArchivoExcel(formData) {
-    return this.http.post(this.API_URL + '/detalleHorario/upload', formData)
-  }
-
   ActualizarRegistro(data: any) {
     return this.http.put(`${this.API_URL}/detalleHorario`, data);
   }
@@ -38,4 +34,11 @@ export class DetalleCatHorariosService {
     return this.http.delete(`${this.API_URL}/detalleHorario/eliminar/${id}`);
   }
 
+  // Verificar datos de la plantilla de detalles de horraio y cargarlos al sistema
+  CargarPlantillaDetalles(formData) {
+    return this.http.post<any>(this.API_URL + '/detalleHorario/upload', formData)
+  }
+  VerificarDatosDetalles(formData) {
+    return this.http.post<any>(this.API_URL + '/detalleHorario/verificarDatos/upload', formData)
+  }
 }

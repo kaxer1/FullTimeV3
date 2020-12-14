@@ -11,7 +11,9 @@ class DepartamentoRutas {
 
     configuracion(): void {
         this.router.post('/', TokenValidation, PLAN_GENERAL_CONTROLADOR.CrearPlanificacion);
-        this.router.delete('/eliminar/:codigo', TokenValidation, PLAN_GENERAL_CONTROLADOR.EliminarRegistros);
+        this.router.delete('/eliminar/:id', TokenValidation, PLAN_GENERAL_CONTROLADOR.EliminarRegistros);
+        this.router.post('/buscar_fechas', TokenValidation, PLAN_GENERAL_CONTROLADOR.BuscarFechas);
+        this.router.post('/buscar_fecha/plan', TokenValidation, PLAN_GENERAL_CONTROLADOR.BuscarFecha);
     }
 }
 

@@ -48,7 +48,7 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'planificacion multiple') {
         this.plantillaHorario();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta','', {
+        this.toastr.error('Plantilla seleccionada incorrecta', '', {
           timeOut: 6000,
         });
       }
@@ -93,7 +93,7 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'multiplesempleados_horariofijo') {
         this.plantillaHorarioFijo();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta','', {
+        this.toastr.error('Plantilla seleccionada incorrecta', '', {
           timeOut: 6000,
         });
       }
@@ -138,7 +138,7 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'periodo vacaciones') {
         this.plantillaVacacion();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta','', {
+        this.toastr.error('Plantilla seleccionada incorrecta', '', {
           timeOut: 6000,
         });
       }
@@ -155,12 +155,40 @@ export class PlanificacionMultipleComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubidoVacacion[i], this.archivoSubidoVacacion[i].name);
       console.log("toda la data", formData)
     }
-    this.restV.CargarPeriodosMultiples(formData).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.archivoVacacionForm.reset();
-      this.nameFileVacacion = '';
+    this.restV.VerificarDatos(formData).subscribe(res => {
+      if (res.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de su plantilla. ' +
+          'La cédula del empleado debe existir dentro del sistema, el empleado debe tener registrado ' +
+          'su contrato de trabajo y todos los datos de la plantillas son obligatorios.' +
+          'Verificar que el empleado no tenga ya registrado un período de vacaciones.', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivoVacacionForm.reset();
+        this.nameFileVacacion = '';
+      }
+      else {
+        this.restV.VerificarPlantilla(formData).subscribe(resP => {
+          if (resP.message === 'error') {
+            this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de su plantilla. ' +
+              'La cédula del empleado debe existir dentro del sistema, el empleado debe tener registrado ' +
+              'su contrato de trabajo, todos los datos de la plantillas son obligatorios.' +
+              'Verificar que el empleado no tenga ya registrado un período de vacaciones.', 'Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoVacacionForm.reset();
+            this.nameFileVacacion = '';
+          }
+          else {
+            this.restV.CargarPeriodosMultiples(formData).subscribe(res => {
+              this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                timeOut: 6000,
+              });
+              this.archivoVacacionForm.reset();
+              this.nameFileVacacion = '';
+            });
+          }
+        });
+      }
     });
   }
 
@@ -183,7 +211,7 @@ export class PlanificacionMultipleComponent implements OnInit {
       if (itemName.toLowerCase() === 'plandetalle multiples empleados') {
         this.plantillaPrueba();
       } else {
-        this.toastr.error('Plantilla seleccionada incorrecta','', {
+        this.toastr.error('Plantilla seleccionada incorrecta', '', {
           timeOut: 6000,
         });
       }

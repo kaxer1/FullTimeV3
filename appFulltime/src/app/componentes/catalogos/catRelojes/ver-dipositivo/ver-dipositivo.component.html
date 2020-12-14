@@ -16,6 +16,10 @@
                     <div class="col" id="verticalLine">
                         <label id="datosF" class="col-sm col-form-label text-center">UBICACIÓN</label>
                         <br>
+                        <label class="col-sm col-form-label"><b>Código:</b>
+                            {{r.id}}
+                        </label>
+                        <br>
                         <label class="col-sm col-form-label"><b>Empresa:</b>
                             {{r.nomempresa}}
                         </label>
@@ -35,9 +39,12 @@
                         <label class="col-sm col-form-label"><b>MAC:</b> {{r.mac}}</label>
                         <br>
                         <label class="col-sm col-form-label" *ngIf="r.tien_funciones == true"><b>Tiene
-                                funciones:</b> Sí</label>
+                                acciones:</b> Sí</label>
                         <label class="col-sm col-form-label" *ngIf="r.tien_funciones == false"><b>Tiene
-                                funciones:</b> No</label>
+                                acciones:</b> No</label>
+                        <br>
+                        <label class="col-sm col-form-label" *ngIf="r.tien_funciones == true"><b>N°
+                                de acciones:</b> {{r.numero_accion}}</label>
                     </div>
                     <br>
                     <div class="col" id="verticalLine">

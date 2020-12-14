@@ -12,6 +12,7 @@ import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHora
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-horarios-empleado',
@@ -37,6 +38,7 @@ export class HorariosEmpleadoComponent implements OnInit {
     public restPlanH: PlanHorarioService,
     public vistaRegistrarDatos: MatDialog,
     public restEmpleHorario: EmpleadoHorariosService,
+    public restEmpleado: EmpleadoService,
     public router: Router,
     private toastr: ToastrService,
   ) {
@@ -45,12 +47,22 @@ export class HorariosEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+    this.ObtenerEmpleado(parseInt(this.idEmpleado));
   }
 
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
+
+    // Método para ver la información del empleado 
+    empleado: any = [];
+    ObtenerEmpleado(idemploy: any) {
+      this.empleado = [];
+      this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+        this.empleado = data;
+      })
+    }
 
   /* 
    * ***************************************************************************************************
@@ -139,26 +151,32 @@ export class HorariosEmpleadoComponent implements OnInit {
       this.nameFileHorario = this.archivoSubidoHorario[0].name;
       let arrayItems = this.nameFileHorario.split(".");
       let itemExtencion = arrayItems[arrayItems.length - 1];
-      let itemName = arrayItems[0].slice(0, 50);
+      let itemName = arrayItems[0].slice(0, 16);
       console.log(itemName.toLowerCase());
       if (itemExtencion == 'xlsx' || itemExtencion == 'xls') {
         if (itemName.toLowerCase() == 'horario empleado') {
           this.plantillaHorario();
           //this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         } else {
-          this.toastr.error('Plantilla seleccionada incorrecta','', {
+          this.toastr.error('Plantilla seleccionada incorrecta', '', {
             timeOut: 6000,
           });
+          this.archivoHorarioForm.reset();
+          this.nameFileHorario = '';
         }
       } else {
         this.toastr.error('Error en el formato del documento', 'Plantilla no aceptada', {
           timeOut: 6000,
         });
+        this.archivoHorarioForm.reset();
+        this.nameFileHorario = '';
       }
     }, error => {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
         timeOut: 6000,
       })
+       this.archivoHorarioForm.reset();
+                this.nameFileHorario = '';
     });
   }
 
@@ -168,13 +186,46 @@ export class HorariosEmpleadoComponent implements OnInit {
       formData.append("uploads[]", this.archivoSubidoHorario[i], this.archivoSubidoHorario[i].name);
       console.log("toda la data", formData)
     }
-    this.restEmpleHorario.SubirArchivoExcel(formData, this.idEmpleado).subscribe(res => {
-      this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
-        timeOut: 6000,
-      });
-      this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-      this.archivoHorarioForm.reset();
-      this.nameFileHorario = '';
+    this.restEmpleHorario.VerificarDatos_EmpleadoHorario(formData, parseInt(this.idEmpleado)).subscribe(res => {
+      if (res.message === 'error') {
+        this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+          'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+          'el empleado debe tener registrado un contrato de trabajo y las fechas indicadas no deben estar duplicadas dentro del sistema.', 'Verificar Plantilla', {
+          timeOut: 6000,
+        });
+        this.archivoHorarioForm.reset();
+        this.nameFileHorario = '';
+      }
+      else {
+        this.restEmpleHorario.VerificarPlantilla_EmpleadoHorario(formData).subscribe(resD => {
+          if (resD.message === 'error') {
+            this.toastr.error('Para el buen funcionamiento del sistema verificar los datos de la plantilla. ' +
+              'Recuerde que el horario indicado debe estar registrado en el sistema y debe tener su respectivo detalle de horario, ' +
+              'el empleado debe tener registrado un contrato de trabajo y las fechas indicadas no deben estar duplicadas dentro del sistema.', 'Verificar Plantilla', {
+              timeOut: 6000,
+            });
+            this.archivoHorarioForm.reset();
+            this.nameFileHorario = '';
+          }
+          else {
+            this.restEmpleHorario.SubirArchivoExcel(formData, parseInt(this.idEmpleado), parseInt(this.empleado[0].codigo)).subscribe(resC => {
+              this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                timeOut: 6000,
+              });
+              this.restEmpleHorario.CreaPlanificacion(formData, parseInt(this.idEmpleado), parseInt(this.empleado[0].codigo)).subscribe(resP => {
+                this.toastr.success('Operación Exitosa', 'Plantilla de Horario importada.', {
+                  timeOut: 6000,
+                });
+                this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
+                //this.actualizar = false;
+                //window.location.reload(this.actualizar);
+                this.archivoHorarioForm.reset();
+                this.nameFileHorario = '';
+              });
+            });
+          }
+        });
+      }
     });
   }
 

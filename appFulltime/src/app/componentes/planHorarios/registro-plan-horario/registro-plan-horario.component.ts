@@ -66,13 +66,13 @@ export class RegistroPlanHorarioComponent implements OnInit {
           this.InsertarPlanHorario(form);
         }
         else {
-          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso','', {
+          this.toastr.info('La fecha de salida no debe ser anterior a la fecha de ingreso', '', {
             timeOut: 6000,
           })
         }
       }
       else {
-        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.','', {
+        this.toastr.info('La fecha de inicio de actividades no puede ser anterior a la fecha de ingreso de contrato.', '', {
           timeOut: 6000,
         });
       }
@@ -84,8 +84,8 @@ export class RegistroPlanHorarioComponent implements OnInit {
       fechaInicio: form.fechaIngresoForm,
       fechaFinal: form.fechaSalidaForm,
     };
-    this.rest.VerificarDuplicidadPlan(this.datoEmpleado.idEmpleado, fechas).subscribe(response => {
-      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación','', {
+    this.rest.VerificarDuplicidadPlan(fechas, this.empleado[0].codigo).subscribe(response => {
+      this.toastr.info('Las fechas ingresadas ya se encuentran dentro de otra planificación.', '', {
         timeOut: 6000,
       });
     }, error => {

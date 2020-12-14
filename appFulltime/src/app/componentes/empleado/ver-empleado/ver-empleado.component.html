@@ -84,6 +84,10 @@
                                 </div>
                             </div>
                         </mat-card-content>
+                        <div class="col" style="text-align: center;" *ngIf="activar">
+                            <button type="submit" class="btn" id="boton" (click)="CambiarContrasena()">Modificar
+                                Contraseña</button>
+                        </div>
                         <div style="text-align: right;">
                             <button mat-button id="boton" (click)="AbrirLeaflet(e.nombre, e.apellido)">
                                 ubicación

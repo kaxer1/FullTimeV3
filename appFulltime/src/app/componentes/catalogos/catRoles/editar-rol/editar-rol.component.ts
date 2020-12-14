@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 @Component({
   selector: 'app-editar-rol',
@@ -11,6 +12,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 
 export class EditarRolComponent implements OnInit {
+
+  // Datos empleado logueado
+  empleadoLogueado: any = [];
+  idEmpleadoLogueado: number;
 
   salir: boolean = false;
 
@@ -22,16 +27,27 @@ export class EditarRolComponent implements OnInit {
 
   constructor(
     public rest: RolesService,
+    public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EditarRolComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
+    this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
     this.nuevoRolForm.setValue({
       descripcionForm: this.data.datosRol.nombre,
     });
+  }
+
+  // Método para ver la información del empleado 
+  ObtenerEmpleadoLogueado(idemploy: any) {
+    this.empleadoLogueado = [];
+    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleadoLogueado = data;
+    })
   }
 
   obtenerMensajeErrorDescripcion() {
@@ -52,6 +68,7 @@ export class EditarRolComponent implements OnInit {
     let dataRol = {
       id: this.data.datosRol.id,
       nombre: form.descripcionForm,
+      logged: parseInt(this.empleadoLogueado[0].codigo)
     };
     this.rest.ListarRolesActualiza(this.data.datosRol.id).subscribe(response => {
       this.roles = response;
@@ -74,8 +91,8 @@ export class EditarRolComponent implements OnInit {
         this.toastr.error('Para el correcto funcionamiento del sistema ingresar un nuevo nombre rol ' +
           'que no se encuentre registrado en el sistema.',
           'Nombre de Rol Duplicado', {
-            timeOut: 6000,
-          });
+          timeOut: 6000,
+        });
       }
     })
   }

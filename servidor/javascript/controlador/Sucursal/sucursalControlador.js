@@ -17,6 +17,29 @@ const fs_1 = __importDefault(require("fs"));
 const builder = require('xmlbuilder');
 const database_1 = __importDefault(require("../../database"));
 class SucursalControlador {
+    ListarSucursalesRegistro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const SUCURSAL = yield database_1.default.query('SELECT * FROM sucursales');
+            if (SUCURSAL.rowCount > 0) {
+                return res.jsonp(SUCURSAL.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarSucursalesActualizar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const SUCURSAL = yield database_1.default.query('SELECT * FROM sucursales WHERE NOT id = $1', [id]);
+            if (SUCURSAL.rowCount > 0) {
+                return res.jsonp(SUCURSAL.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     ListarSucursales(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const SUCURSAL = yield database_1.default.query('SELECT * FROM NombreCiudadEmpresa ORDER BY nomempresa');

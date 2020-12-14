@@ -22,7 +22,8 @@ export class EditarRelojComponent implements OnInit {
   departamento: any = [];
   nomDepartamento: any = [];
   datosReloj: any = [];
-  idEmpresa: any = [];
+  idEmpresa: any;
+  activarCampo: boolean = false;
 
   selec1 = false;
   selec2 = false;
@@ -39,9 +40,10 @@ export class EditarRelojComponent implements OnInit {
   fabricanteF = new FormControl('', [Validators.minLength(4)]);
   funcionesF = new FormControl('', [Validators.required]);
   macF = new FormControl('');
-  idEmpresaF = new FormControl('', Validators.required);
+  codigoF = new FormControl('', Validators.required);
   idSucursalF = new FormControl('', Validators.required);
   idDepartamentoF = new FormControl('', [Validators.required]);
+  numeroF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public RelojesForm = new FormGroup({
@@ -58,7 +60,8 @@ export class EditarRelojComponent implements OnInit {
     funcionesForm: this.funcionesF,
     idSucursalForm: this.idSucursalF,
     idDepartamentoForm: this.idDepartamentoF,
-    idEmpresaForm: this.idEmpresaF,
+    codigoForm: this.codigoF,
+    numeroForm: this.numeroF
   });
 
   constructor(
@@ -73,28 +76,35 @@ export class EditarRelojComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.BuscarEmpresas();
+    this.FiltrarSucursales();
     this.ImprimirDatos();
   }
 
   ImprimirDatos() {
-    this.idEmpresa = [];
     this.restE.ConsultarUnaEmpresa(this.data.datosReloj.nomempresa).subscribe(datos => {
-      this.idEmpresa = datos;
-      this.BuscarDatos(this.idEmpresa[0].id);
-      this.ObtenerDatos(this.idEmpresa[0].id);
+      this.idEmpresa = parseInt(localStorage.getItem('empresa'));
+      this.BuscarDatos(this.idEmpresa);
+      this.ObtenerDatos();
     })
   }
 
-  ObtenerDatos(id_empresa) {
+  ObtenerDatos() {
     this.datosReloj = [];
     this.rest.ConsultarUnReloj(this.data.datosReloj.id).subscribe(datos => {
       this.datosReloj = datos;
       if (this.data.datosReloj.tien_funciones === true) {
         this.selec1 = true;
+        this.activarCampo = true;
+        this.RelojesForm.patchValue({
+          numeroForm: this.data.datosReloj.numero_accion
+        })
       }
       else {
         this.selec2 = true;
+        this.activarCampo = false;
+        this.RelojesForm.patchValue({
+          numeroForm: 0
+        })
       }
       this.RelojesForm.patchValue({
         nombreForm: this.data.datosReloj.nombre,
@@ -110,7 +120,7 @@ export class EditarRelojComponent implements OnInit {
         funcionesForm: this.data.datosReloj.tien_funciones,
         idSucursalForm: this.data.datosReloj.id_sucursal,
         idDepartamentoForm: this.data.datosReloj.id_departamento,
-        idEmpresaForm: id_empresa,
+        codigoForm: this.data.datosReloj.id,
       })
     })
   }
@@ -131,20 +141,13 @@ export class EditarRelojComponent implements OnInit {
     });
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
-  }
-
-  FiltrarSucursales(form) {
-    let idEmpre = form.idEmpresaForm
+  FiltrarSucursales() {
+    let idEmpre = parseInt(localStorage.getItem('empresa'));
     this.sucursales = [];
     this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
       this.sucursales = datos;
     }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
+      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas', '', {
         timeOut: 6000,
       })
     })
@@ -156,7 +159,7 @@ export class EditarRelojComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados', '', {
         timeOut: 6000,
       })
     });
@@ -168,12 +171,12 @@ export class EditarRelojComponent implements OnInit {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro', '', {
           timeOut: 6000,
         })
       }
     }, error => {
-      this.toastr.info('Descripción ingresada no coincide con los registros','', {
+      this.toastr.info('Descripción ingresada no coincide con los registros', '', {
         timeOut: 6000,
       })
     });
@@ -181,7 +184,7 @@ export class EditarRelojComponent implements OnInit {
 
   InsertarReloj(form) {
     let datosReloj = {
-      id: this.data.datosReloj.id,
+      id: form.codigoForm,
       nombre: form.nombreForm,
       ip: form.ipForm,
       puerto: form.puertoForm,
@@ -194,27 +197,36 @@ export class EditarRelojComponent implements OnInit {
       mac: form.macForm,
       tien_funciones: form.funcionesForm,
       id_sucursal: form.idSucursalForm,
-      id_departamento: form.idDepartamentoForm
+      id_departamento: form.idDepartamentoForm,
+      numero_accion: form.numeroForm,
+      id_real: this.data.datosReloj.id
     };
     this.nomDepartamento = [];
     this.restCatDepartamento.EncontrarUnDepartamento(form.idDepartamentoForm).subscribe(datos => {
       this.nomDepartamento = datos;
       console.log(this.nomDepartamento.nombre)
       if (this.nomDepartamento.nombre === 'Ninguno') {
-        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro','', {
+        this.toastr.info('No ha seleccionado ningún departamento. Seleccione un departamento y continue con el registro', '', {
           timeOut: 6000,
         })
       }
       else {
         this.rest.ActualizarDispositivo(datosReloj).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Dispositivo actualizado', {
-            timeOut: 6000,
-          })
-          this.CerrarVentanaRegistroReloj();
-          if (this.data.actualizar === true) {
-            window.location.reload();
-          } else {
-            this.router.navigate(['/verDispositivos/', this.data.datosReloj.id]);
+          if (response.message === 'actualizado') {
+            this.toastr.success('Operación Exitosa', 'Dispositivo actualizado', {
+              timeOut: 6000,
+            });
+            if (this.data.actualizar === true) {
+              this.CerrarVentanaRegistroReloj();
+            } else {
+              this.CerrarVentanaRegistroReloj();
+              this.router.navigate(['/verDispositivos/', this.data.datosReloj.id]);
+            }
+          }
+          else {
+            this.toastr.error('Verificar que el código de reloj y la ip del dispositivo no se encuentren registrados.', 'Operación Fallida', {
+              timeOut: 6000,
+            })
           }
         }, error => { });
       }
@@ -279,6 +291,20 @@ export class EditarRelojComponent implements OnInit {
     }
   }
 
+  activarVista() {
+    this.activarCampo = true;
+    this.RelojesForm.patchValue({
+      numeroForm: ''
+    })
+  }
+
+  desactivarVista() {
+    this.activarCampo = false;
+    this.RelojesForm.patchValue({
+      numeroForm: 0
+    })
+  }
+
   LimpiarCampos() {
     this.RelojesForm.reset();
   }
@@ -286,7 +312,6 @@ export class EditarRelojComponent implements OnInit {
   CerrarVentanaRegistroReloj() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
 }

@@ -73,6 +73,7 @@ class Servidor {
         this.rutas();
         this.server = http_1.createServer(this.app);
         this.io = socketIo(this.server);
+        this.app.use(cors_1.default());
     }
     configuracion() {
         this.app.set('puerto', process.env.PORT || 3000);
@@ -81,6 +82,7 @@ class Servidor {
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
         this.app.use(express_1.default.raw({ type: 'image/*', limit: '2Mb' }));
+        this.app.set('trust proxy', true);
     }
     rutas() {
         this.app.use('/', indexRutas_1.default);

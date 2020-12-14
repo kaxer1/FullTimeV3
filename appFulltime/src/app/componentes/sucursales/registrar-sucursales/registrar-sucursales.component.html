@@ -59,18 +59,6 @@
                     matTooltip="Lista de ciudades de la provincia, departamento o estado seleccionado">
                     help_outline</mat-icon>
             </mat-form-field>
-            <mat-form-field *ngIf="!Habilitar">
-                <input type="text" placeholder="Escribir Empresa" aria-label="Number" matInput
-                    [formControl]="idEmpresaF" [matAutocomplete]="auto3">
-                <mat-autocomplete #auto3="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptEmpr | async" [value]="option.nombre">
-                        {{option.nombre}}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-icon id="sucursalR" matSuffix matTooltipClass="sucursalR-tooltip" matTooltipPosition="right"
-                    matTooltip="Lista de Empresas">
-                    help_outline</mat-icon>
-            </mat-form-field>
             <mat-form-field>
                 <mat-label>Nuevo Establecimiento</mat-label>
                 <input matInput placeholder="Ej: nombre de la sucursal" [formControl]="nombre" required>

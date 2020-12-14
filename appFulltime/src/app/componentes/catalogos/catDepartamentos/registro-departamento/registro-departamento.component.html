@@ -10,17 +10,6 @@
         </div>
         <div class="d-flex flex-wrap justify-content-between">
             <mat-form-field *ngIf="!Habilitar">
-                <mat-label>Seleccionar Empresa</mat-label>
-                <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
-                    matTooltip="Lista de Empresas">help_outline</mat-icon>
-                <mat-select [formControl]="idEmpresaF" required>
-                    <mat-option *ngFor="let empre of empresas" [value]="empre.id"
-                        (click)="FiltrarSucursales(nuevoDepartamentoForm.value)">
-                        {{empre.nombre}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-            <mat-form-field *ngIf="!Habilitar">
                 <mat-label id="depSup">Seleccionar Establecimiento</mat-label>
                 <mat-icon id="ayuda" matSuffix matTooltipPosition="right" matTooltipClass="regDepa-tooltip"
                     matTooltip="Lista de Sucursales que pertenecen a la Empresa seleccionada">help_outline

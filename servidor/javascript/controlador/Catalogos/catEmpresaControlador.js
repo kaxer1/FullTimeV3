@@ -86,7 +86,7 @@ class EmpresaControlador {
     ListarEmpresaId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE id = $1', [id]);
+            const EMPRESA = yield database_1.default.query('SELECT * FROM cg_empresa WHERE id = $1', [id]);
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }

@@ -1,3 +1,9 @@
+@media (max-width: 992px) {
+    .home-inner {
+        padding-top: 100px;
+    }
+}
+
 mat-form-field { width: 230px; }
 
 img { width: 100%};
@@ -25,9 +31,5 @@ mat-card { width: 300px; border-style: groove; border-radius: 25px; text-align: 
 
 .verde {color: rgb(23, 173, 9); margin-left: 5px;}
 
-@media (max-width: 992px) {
-    .home-inner {
-        padding-top: 100px;
-    }
-}
+
 

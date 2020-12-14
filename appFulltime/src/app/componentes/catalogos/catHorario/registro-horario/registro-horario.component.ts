@@ -17,7 +17,7 @@ export class RegistroHorarioComponent implements OnInit {
 
   nocturno = false;
   isChecked: boolean = false;
-  
+
   // Validaciones para el formulario
   nombre = new FormControl('', [Validators.required, Validators.minLength(2)]);
   minAlmuerzo = new FormControl('', [Validators.pattern('[0-9]*')]);
@@ -66,21 +66,35 @@ export class RegistroHorarioComponent implements OnInit {
       dataHorario.min_almuerzo = 0;
     }
     if (form.nombreCertificadoForm === '') {
-      this.rest.postHorarioRest(dataHorario).subscribe(response => {
-        this.habilitarprogress = false;
-        this.toastr.success('Operación Exitosa', 'Horario registrado', {
+      this.rest.VerificarDuplicados(form.horarioNombreForm).subscribe(response => {
+        this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
           timeOut: 6000,
         });
-        this.LimpiarCampos();
-      }, error => {
         this.habilitarprogress = false;
-        this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
-          timeOut: 6000,
-        })
+      }, error => {
+        this.rest.postHorarioRest(dataHorario).subscribe(response => {
+          this.toastr.success('Operación Exitosa', 'Horario registrado', {
+            timeOut: 6000,
+          });
+          this.habilitarprogress = false;
+          this.LimpiarCampos();
+        }, error => {
+          this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
+            timeOut: 6000,
+          });
+          this.habilitarprogress = false;
+        });
       });
     }
     else {
-      this.GuardarDatos(dataHorario);
+      this.rest.VerificarDuplicados(form.horarioNombreForm).subscribe(response => {
+        this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
+          timeOut: 6000,
+        });
+      }, error => {
+        this.GuardarDatos(dataHorario);
+      });
+
     }
 
   }

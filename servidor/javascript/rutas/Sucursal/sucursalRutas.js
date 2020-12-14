@@ -13,6 +13,8 @@ class SucursalRutas {
     }
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, sucursalControlador_1.default.ListarSucursales);
+        this.router.get('/registro', verificarToken_1.TokenValidation, sucursalControlador_1.default.ListarSucursalesRegistro);
+        this.router.get('/actualizar/:id', verificarToken_1.TokenValidation, sucursalControlador_1.default.ListarSucursalesActualizar);
         this.router.get('/unaSucursal/:id', verificarToken_1.TokenValidation, sucursalControlador_1.default.ObtenerUnaSucursal);
         this.router.get('/buscar/nombreSuc/:id_empresa', verificarToken_1.TokenValidation, sucursalControlador_1.default.ObtenerSucursalEmpresa);
         this.router.post('/', verificarToken_1.TokenValidation, sucursalControlador_1.default.CrearSucursal);

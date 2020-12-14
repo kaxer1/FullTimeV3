@@ -18,7 +18,8 @@
                             matTooltip="Lista de horarios cargados en el sistema">
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
-                            <mat-option *ngFor="let h of horarios" [value]="h.id">
+                            <mat-option *ngFor="let h of horarios" [value]="h.id"
+                                (click)=VerificarDetalles(EmpleadoHorarioForm.value)>
                                 {{h.nombre}}
                             </mat-option>
                         </mat-select>

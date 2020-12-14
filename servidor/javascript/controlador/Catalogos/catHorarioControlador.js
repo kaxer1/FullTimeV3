@@ -62,26 +62,22 @@ class HorarioControlador {
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             /** Horarios */
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                var { nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas } = data;
-                if (nombre_horario != undefined) {
-                    if (minutos_almuerzo != undefined) {
-                        //console.log("datos", data);
-                        yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-                    }
-                    else {
-                        minutos_almuerzo = 0;
-                        yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, flexible, por_horas) VALUES ($1, $2, $3, $4, $5)', [nombre_horario, minutos_almuerzo, hora_trabajo, flexible, por_horas]);
-                    }
+                var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
+                if (minutos_almuerzo != undefined) {
+                    yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, nocturno) VALUES ($1, $2, $3, $4)', [nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno]);
+                    res.jsonp({ message: 'correcto' });
                 }
                 else {
-                    console.log("vacio");
+                    minutos_almuerzo = 0;
+                    yield database_1.default.query('INSERT INTO cg_horarios (nombre, min_almuerzo, hora_trabajo, nocturno) VALUES ($1, $2, $3, $4)', [nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno]);
+                    res.jsonp({ message: 'correcto' });
                 }
             }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
             fs_1.default.unlinkSync(filePath);
         });
     }
-    CrearHorarioyDetallePlantilla(req, res) {
+    /** Verificar si existen datos duplicados dentro del sistema */
+    VerificarDatos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let list = req.files;
             let cadena = list.uploads[0].path;
@@ -89,28 +85,79 @@ class HorarioControlador {
             var filePath = `./plantillas/${filename}`;
             const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames; // Array de hojas de calculo
-            const plantillaD = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
-            /** Detalle de Horarios */
-            plantillaD.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                var { nombre_horarios, orden, hora, nocturno, tipo_accion, minutos_espera } = data;
-                var nombre = nombre_horarios;
-                console.log("datos", nombre);
-                //console.log("datos", data)
-                const horariosTotales = yield database_1.default.query('SELECT * FROM cg_horarios');
-                console.log(horariosTotales.rows);
-                const idHorario = yield database_1.default.query('SELECT id FROM cg_horarios WHERE nombre = $1', [nombre]);
-                var id_horario = idHorario.rows[0]['id'];
-                console.log("horarios", id_horario);
-                if (minutos_espera != undefined) {
-                    console.log("entra");
-                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            /** Horarios */
+            var contarNombre = 0;
+            var contarDatos = 0;
+            var contador = 1;
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
+                // Verificar que los datos obligatorios existan
+                if (nombre_horario != undefined && hora_trabajo != undefined && horario_nocturno != undefined) {
+                    contarDatos = contarDatos + 1;
+                }
+                // Verificar que el nombre del horario no se encuentre registrado
+                if (nombre_horario != undefined) {
+                    const NOMBRES = yield database_1.default.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre_horario.toUpperCase()]);
+                    if (NOMBRES.rowCount === 0) {
+                        contarNombre = contarNombre + 1;
+                    }
+                }
+                // Verificar que todos los datos sean correctos
+                if (contador === plantilla.length) {
+                    if (contarNombre === plantilla.length && contarDatos === plantilla.length) {
+                        return res.jsonp({ message: 'correcto' });
+                    }
+                    else {
+                        return res.jsonp({ message: 'error' });
+                    }
+                }
+                contador = contador + 1;
+            }));
+            fs_1.default.unlinkSync(filePath);
+        });
+    }
+    /** Verificar que los datos dentro de la plantilla no se encuntren duplicados */
+    VerificarPlantilla(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let list = req.files;
+            let cadena = list.uploads[0].path;
+            let filename = cadena.split("\\")[1];
+            var filePath = `./plantillas/${filename}`;
+            const workbook = xlsx_1.default.readFile(filePath);
+            const sheet_name_list = workbook.SheetNames;
+            const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
+            var contarNombreData = 0;
+            var contador_arreglo = 1;
+            var arreglos_datos = [];
+            //Leer la plantilla para llenar un array con los datos nombre para verificar que no sean duplicados
+            plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
+                // Datos que se leen de la plantilla ingresada
+                var { nombre_horario, minutos_almuerzo, hora_trabajo, horario_nocturno } = data;
+                let datos_array = {
+                    nombre: nombre_horario,
+                };
+                arreglos_datos.push(datos_array);
+            }));
+            // Vamos a verificar dentro de arreglo_datos que no se encuentren datos duplicados
+            for (var i = 0; i <= arreglos_datos.length - 1; i++) {
+                for (var j = 0; j <= arreglos_datos.length - 1; j++) {
+                    if (arreglos_datos[i].nombre.toUpperCase() === arreglos_datos[j].nombre.toUpperCase()) {
+                        contarNombreData = contarNombreData + 1;
+                    }
+                }
+                contador_arreglo = contador_arreglo + 1;
+            }
+            // Cuando todos los datos han sido leidos verificamos si todos los datos son correctos
+            console.log('nombre_data', contarNombreData, plantilla.length, contador_arreglo);
+            if ((contador_arreglo - 1) === plantilla.length) {
+                if (contarNombreData === plantilla.length) {
+                    return res.jsonp({ message: 'correcto' });
                 }
                 else {
-                    minutos_espera = 0;
-                    yield database_1.default.query('INSERT INTO deta_horarios (orden, hora, minu_espera, nocturno, id_horario, tipo_accion) VALUES ($1, $2, $3, $4, $5, $6)', [orden, hora, minutos_espera, nocturno, id_horario, tipo_accion.split("=")[0]]);
+                    return res.jsonp({ message: 'error' });
                 }
-            }));
-            res.jsonp({ message: 'La plantilla a sido receptada' });
+            }
             fs_1.default.unlinkSync(filePath);
         });
     }
@@ -172,6 +219,31 @@ class HorarioControlador {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM cg_horarios WHERE id = $1', [id]);
             res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    VerificarDuplicados(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
+            if (HORARIOS.rowCount > 0) {
+                return res.jsonp(HORARIOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    VerificarDuplicadosEdicion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.params;
+            const id = req.params.id;
+            const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2', [id, nombre.toUpperCase()]);
+            if (HORARIOS.rowCount > 0) {
+                return res.jsonp(HORARIOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

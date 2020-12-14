@@ -81,7 +81,7 @@ export class EditarDetallePlanComponent implements OnInit {
       this.InsertarDetallePlanHorario(form);
     }
     else {
-      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.','', {
+      this.toastr.info('La fecha de inicio de actividades no se encuentra dentro de la planificación registrada.', '', {
         timeOut: 6000,
       });
     }
@@ -96,22 +96,19 @@ export class EditarDetallePlanComponent implements OnInit {
       id: this.data.detalle.id
     };
     console.log('ver fechas', this.data.detalle.fecha, ' ', form.fechaForm)
-    if (this.data.detalle.fecha != form.fechaForm) {
+
       let datosBusqueda = {
         id_plan_horario: this.data.detalle.id_plan_horario,
-        fecha: form.fechaForm
+        fecha: form.fechaForm,
+        id_horario: form.horarioForm
       }
-      this.rest.VerificarDuplicidad(datosBusqueda).subscribe(response => {
-        this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.','', {
+      this.rest.VerificarDuplicidadEdicion(datosBusqueda, this.data.detalle.id).subscribe(response => {
+        this.toastr.info('Se le recuerda que esta fecha ya se encuentra en la lista de detalles.', '', {
           timeOut: 6000,
         })
       }, error => {
         this.ActualizarDetallePlan(datosDetallePlanH, form);
       });
-    }
-    else {
-      this.ActualizarDetallePlan(datosDetallePlanH, form);
-    }
   }
 
   ActualizarDetallePlan(datos, form) {
@@ -119,19 +116,26 @@ export class EditarDetallePlanComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Detalle de Planificación de Horario actualizado', {
         timeOut: 6000,
       });
-      this.EliminarDatos(form);
+      this.EliminarPlanificacion();
       this.IngresarPlanGeneral(form);
       this.Salir();
     });
   }
 
-  EliminarDatos(form) {
-    console.log('codigo', this.data.plan.codigo, moment(form.fechaForm).format('YYYY-MM-DD'))
+  id_planificacion_general: any = [];
+  EliminarPlanificacion() {
+    this.id_planificacion_general = [];
     let plan_fecha = {
-      fec_horario: form.fechaForm.split('T')[0],
+      fec_inicio: this.data.detalle.fecha.split('T')[0],
+      id_horario: this.data.detalle.id_horario,
+      codigo: parseInt(this.data.plan.codigo)
     };
-    this.restP.EliminarRegistro(this.data.plan.codigo, plan_fecha).subscribe(res => {
-      console.log('probando eliminar')
+    this.restP.BuscarFecha(plan_fecha).subscribe(res => {
+      this.id_planificacion_general = res;
+      this.id_planificacion_general.map(obj => {
+        this.restP.EliminarRegistro(obj.id).subscribe(res => {
+        })
+      })
     })
   }
 
@@ -153,7 +157,8 @@ export class EditarDetallePlanComponent implements OnInit {
           fec_horario: form.fechaForm,
           id_empl_cargo: this.data.plan.id_cargo,
           tipo_entr_salida: element.tipo_accion,
-          codigo: this.data.plan.codigo
+          codigo: this.data.plan.codigo,
+          id_horario: form.horarioForm
         };
         this.restP.CrearPlanGeneral(plan).subscribe(res => {
         })
@@ -168,6 +173,19 @@ export class EditarDetallePlanComponent implements OnInit {
   Salir() {
     this.LimpiarCampos();
     this.dialogRef.close();
+  }
+
+  VerificarDetalles(form) {
+    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
+    },
+      erro => {
+        this.DetallePlanHorarioForm.patchValue({
+          horarioForm: ''
+        });
+        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', 'Primero registrar detalle de horario.', {
+          timeOut: 6000,
+        });
+      })
   }
 
   CargarDatos() {

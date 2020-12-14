@@ -34,10 +34,8 @@ export class FeriadosService {
   }
 
   ActualizarUnFeriado(datos: any) {
-    return this.http.put(`${this.API_URL}/feriados`, datos)
-      .pipe(
-        catchError(datos)
-      );
+    return this.http.put(`${this.API_URL}/feriados`, datos).pipe(
+      catchError(datos));
   }
 
   ConsultarUltimoId() {

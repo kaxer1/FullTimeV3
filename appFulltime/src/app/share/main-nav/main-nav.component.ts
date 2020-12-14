@@ -474,7 +474,7 @@ export class MainNavComponent implements OnInit {
         name: 'Reportería',
         accion: true,
         estado: true,
-        icono: 'how_to_reg',
+        icono: 'import_contacts',
         children: [
           { name: 'Reportes - Kardex', url: '/listaReportes' },
         ]

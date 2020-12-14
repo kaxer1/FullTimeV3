@@ -44,11 +44,11 @@ export class PlanHorarioService {
     return this.http.post(`${this.API_URL}/planHorario/fechas_plan/${id_empleado}`, datos);
   }
 
-  VerificarDuplicidadPlan(id_empl: number, datos: any) {
-    return this.http.post(`${this.API_URL}/planHorario/validarFechas/${id_empl}`, datos);
+  VerificarDuplicidadPlan(datos: any, codigo: number,) {
+    return this.http.post(`${this.API_URL}/planHorario/validarFechas/${codigo}`, datos);
   }
 
-  VerificarDuplicidadPlanEdicion(id: number, id_empl: number, datos: any) {
-    return this.http.post(`${this.API_URL}/planHorario/validarFechas/horarioEmpleado/${id}/empleado/${id_empl}`, datos);
+  VerificarDuplicidadPlanEdicion(id: number, codigo: number, datos: any) {
+    return this.http.post(`${this.API_URL}/planHorario/validarFechas/horarioEmpleado/${id}/empleado/${codigo}`, datos);
   }
 }

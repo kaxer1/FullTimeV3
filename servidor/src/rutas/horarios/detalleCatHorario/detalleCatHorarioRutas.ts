@@ -18,9 +18,12 @@ class PermisosRutas {
         this.router.get('/', TokenValidation, DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarDetalleHorarios);
         this.router.post('/', TokenValidation, DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearDetalleHorarios);
         this.router.get('/:id_horario', TokenValidation, DETALLE_CATALOGO_HORARIO_CONTROLADOR.ListarUnDetalleHorario);
-        this.router.post('/upload', [TokenValidation, multipartMiddleware], DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearHorarioDetallePlantilla);
         this.router.put('/', TokenValidation, DETALLE_CATALOGO_HORARIO_CONTROLADOR.ActualizarDetalleHorarios);
         this.router.delete('/eliminar/:id', TokenValidation, DETALLE_CATALOGO_HORARIO_CONTROLADOR.EliminarRegistros);
+
+        // Verificar los datos de la plantilla de detalles de horario y subirlos al sistema
+        this.router.post('/verificarDatos/upload', [TokenValidation, multipartMiddleware], DETALLE_CATALOGO_HORARIO_CONTROLADOR.VerificarDatosDetalles);
+        this.router.post('/upload', [TokenValidation, multipartMiddleware], DETALLE_CATALOGO_HORARIO_CONTROLADOR.CrearDetallePlantilla);
     }
 }
 

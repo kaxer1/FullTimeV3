@@ -5,10 +5,11 @@ import Pool from 'pg-pool';
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  port: 5432,  
-  database: 'nueva2411',
-  //database: 'timbres',
-  password: 'fulltime'
+  port: 5432,
+  database: 'prueba_auditar',
+  //database: 'fullTimeV3',
+  password: 'admin'
+
 })
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {

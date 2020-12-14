@@ -100,6 +100,15 @@ class UsuarioControlador {
             }
         });
     }
+    //ACCESOS AL SISTEMA
+    AuditarAcceso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { modulo, user_name, fecha, hora, acceso, ip_address } = req.body;
+            yield database_1.default.query('INSERT INTO logged_user ( modulo, user_name, fecha, hora, acceso, ip_address ) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6)', [modulo, user_name, fecha, hora, acceso, ip_address]);
+            return res.jsonp({ message: 'Auditoria Realizada' });
+        });
+    }
 }
 exports.USUARIO_CONTROLADOR = new UsuarioControlador();
 exports.default = exports.USUARIO_CONTROLADOR;

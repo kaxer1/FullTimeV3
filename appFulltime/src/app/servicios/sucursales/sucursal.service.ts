@@ -17,6 +17,14 @@ export class SucursalService {
     return this.http.get(`${this.API_URL}/sucursales`);
   }
 
+  VerSucursalesRegistro() {
+    return this.http.get(`${this.API_URL}/sucursales/registro`);
+  }
+
+  VerSucursalActualizar(id: number) {
+    return this.http.get(`${this.API_URL}/sucursales/actualizar/${id}`);
+  }
+
   EncontrarUltimoId() {
     return this.http.get(`${this.API_URL}/sucursales/ultimoId`);
   }

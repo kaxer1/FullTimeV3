@@ -16,15 +16,14 @@ export class NotificacionesService {
   getNotificacionesRest() {
     return this.http.get(`${this.NOTIFICACIONES_URL}/notificaciones`);
   }
-  
+
   getNotiByDepaRest(id_depa: number) {
     return this.http.get(`${this.NOTIFICACIONES_URL}/notificaciones/depa/${id_depa}`);
   }
 
   postNotificacionesRest(data: any) {
     return this.http.post(`${this.NOTIFICACIONES_URL}/notificaciones`, data).pipe(
-      catchError(data)
-    );
+      catchError(data));
   }
 
   BuscarNotificacionPermiso(id: number) {

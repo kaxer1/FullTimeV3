@@ -19,9 +19,11 @@ class PermisosRutas {
         this.router.get('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarDetalleHorarios);
         this.router.post('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.CrearDetalleHorarios);
         this.router.get('/:id_horario', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ListarUnDetalleHorario);
-        this.router.post('/upload', [verificarToken_1.TokenValidation, multipartMiddleware], detalleCatHorarioControlador_1.default.CrearHorarioDetallePlantilla);
         this.router.put('/', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.ActualizarDetalleHorarios);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, detalleCatHorarioControlador_1.default.EliminarRegistros);
+        // Verificar los datos de la plantilla de detalles de horario y subirlos al sistema
+        this.router.post('/verificarDatos/upload', [verificarToken_1.TokenValidation, multipartMiddleware], detalleCatHorarioControlador_1.default.VerificarDatosDetalles);
+        this.router.post('/upload', [verificarToken_1.TokenValidation, multipartMiddleware], detalleCatHorarioControlador_1.default.CrearDetallePlantilla);
     }
 }
 const DETALLE_CATALOGO_HORARIO_RUTAS = new PermisosRutas();

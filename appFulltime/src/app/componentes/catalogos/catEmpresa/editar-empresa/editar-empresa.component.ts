@@ -81,6 +81,7 @@ export class EditarEmpresaComponent implements OnInit {
   estiloDias: any;
 
   ngOnInit(): void {
+    console.log('data', this.data)
     this.ImprimirDatos();
   }
 
@@ -256,7 +257,7 @@ export class EditarEmpresaComponent implements OnInit {
   }
 
   VerificarCambios(form, datos) {
-    if (form.cambiosForm === true) {
+    if (form.cambiosForm === "true" || form.cambiosForm === true) {
       if (form.dias_cambioForm != '') {
         this.VerificarOtroTipo(form, datos);
       }
@@ -276,7 +277,7 @@ export class EditarEmpresaComponent implements OnInit {
     if (form.establecimientoForm === 'Otro') {
       if (form.otroEForm != '') {
         datos.establecimiento = form.otroEForm;
-        this.GuardarDatos(datos);
+        // this.GuardarDatos(datos);
       }
       else {
         this.toastr.info('Ingrese el nombre del establecimiento.', '', {
