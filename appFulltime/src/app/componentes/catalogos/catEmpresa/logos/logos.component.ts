@@ -50,7 +50,7 @@ export class LogosComponent implements OnInit {
         timeOut: 6000,
       });
       this.archivoForm.reset();
-      this.dialogRef.close(true)
+      this.dialogRef.close({actualizar: false})
     });
   }
 

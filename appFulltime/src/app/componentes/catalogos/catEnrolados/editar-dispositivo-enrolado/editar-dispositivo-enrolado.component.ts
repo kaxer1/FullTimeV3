@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { EnroladosRelojesService } from 'src/app/servicios/enroladosRelojes/enrolados-relojes.service';
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-dispositivo-enrolado',
@@ -26,7 +28,15 @@ export class EditarDispositivoEnroladoComponent implements OnInit {
   public asignarRelojForm = new FormGroup({
     dispositivoForm: this.dispositivoF,
   });
-  l
+  
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private rest: EnroladosRelojesService,
     private restR: RelojesService,
@@ -60,6 +70,7 @@ export class EditarDispositivoEnroladoComponent implements OnInit {
   }
 
   InsertarEnroladoReloj(form) {
+    this.habilitarprogress = true;
     var idEnrolado = this.data.enroladoid;
     var nombreReloj = form.dispositivoForm;
     var buscarReloj = {
@@ -73,14 +84,18 @@ export class EditarDispositivoEnroladoComponent implements OnInit {
       this.toastr.info('Se le recuerda que el empleado enrolado ya esta agregado a este dispositivo','', {
         timeOut: 6000,
       })
+      this.habilitarprogress = false;
       this.LimpiarCampos();
     }, error => {
+      this.habilitarprogress = true;
       this.rest.ActualizarDatos(buscarReloj).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Empleado enrolado agregado al dispositivo', {
           timeOut: 6000,
         });
         this.CerrarVentanaAsignarReloj();
+        this.habilitarprogress = false;
       }, error => {
+        this.habilitarprogress = false;
         this.toastr.error('Operación Fallida', 'Empleado enrolado no fue agregado al dispositivo', {
           timeOut: 6000,
         })

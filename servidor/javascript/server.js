@@ -62,6 +62,8 @@ const planHoraExtraRutas_1 = __importDefault(require("./rutas/planHoraExtra/plan
 const datosGeneralesRutas_1 = __importDefault(require("./rutas/datosGenerales/datosGeneralesRutas"));
 const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const planGeneralRutas_1 = __importDefault(require("./rutas/planGeneral/planGeneralRutas"));
+const reporteHoraExtraRutas_1 = __importDefault(require("./rutas/reportes/reporteHoraExtraRutas"));
+const graficasRutas_1 = __importDefault(require("./rutas/graficas/graficasRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -146,6 +148,7 @@ class Servidor {
         this.app.use('/asistencia', asistenciaRutas_1.default);
         // Reportes
         this.app.use('/reportes/vacacion', kardexVacacionesRutas_1.default);
+        this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default);
         this.app.use('/reporte', reportesRutas_1.default);
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
@@ -153,6 +156,8 @@ class Servidor {
         this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
         // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
         this.app.use('/generalidades', datosGeneralesRutas_1.default);
+        // GRAFICAS PARA MOSTRAR EN EL HOME
+        this.app.use('/metricas', graficasRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

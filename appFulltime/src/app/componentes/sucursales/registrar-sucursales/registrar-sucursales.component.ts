@@ -11,6 +11,8 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registrar-sucursales',
@@ -49,6 +51,14 @@ export class RegistrarSucursalesComponent implements OnInit {
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     public restCiudad: CiudadService,
@@ -203,6 +213,7 @@ export class RegistrarSucursalesComponent implements OnInit {
   contador: number = 0;
   listaSucursales: any = [];
   InsertarSucursal(form) {
+    this.habilitarprogress = true;
     this.contador = 0;
     this.listaSucursales = [];
     let idEmpr = localStorage.getItem('empresa');
@@ -219,6 +230,7 @@ export class RegistrarSucursalesComponent implements OnInit {
     };
     this.restSucursal.VerSucursalesRegistro().subscribe(responseS => {
       this.listaSucursales = responseS;
+      this.habilitarprogress = false;
       console.log('sucursales lista', this.listaSucursales);
       for (var i = 0; i <= this.listaSucursales.length - 1; i++) {
         if (this.listaSucursales[i].nombre.toUpperCase() === form.sucursalNombreForm.toUpperCase()) {
@@ -231,12 +243,14 @@ export class RegistrarSucursalesComponent implements OnInit {
         this.toastr.error('El nombre de la Sucursal ya se encuentra registrado.', 'Operación Fallida', {
           timeOut: 6000,
         });
+        this.habilitarprogress = false;
       }
       else {
         this.restSucursal.postSucursalRest(dataSucursal).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Sucursal guardada', {
             timeOut: 6000,
           });
+          this.habilitarprogress = false;
           this.LimpiarCampos();
           //Obtener ultimo ID para registrar un departamento de nombre Ninguno -- útil para cada sucursal registrada
           this.restSucursal.EncontrarUltimoId().subscribe(datos => {
@@ -269,7 +283,7 @@ export class RegistrarSucursalesComponent implements OnInit {
 
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: true});
   }
 
   ObtenerMensajeErrorNombre() {

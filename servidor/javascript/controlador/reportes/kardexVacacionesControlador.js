@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.KARDEX_VACACION_CONTROLADOR = void 0;
 const CalcularVacaciones_1 = require("../../libs/CalcularVacaciones");
 const CalcularHorasExtras_1 = require("../../libs/CalcularHorasExtras");
 class KardexVacacion {
@@ -50,7 +51,7 @@ class KardexVacacion {
             // let fec_hasta = new Date(req.params.hasta)
             let fec_desde = req.params.desde;
             let fec_hasta = req.params.hasta;
-            let jsonData = yield CalcularHorasExtras_1.CalcularHoraExtra(id_empleado, fec_desde, fec_hasta);
+            let jsonData = yield CalcularHorasExtras_1.CalcularHoraExtra(id_empleado, new Date(fec_desde), new Date(fec_hasta));
             res.jsonp(jsonData);
         });
     }

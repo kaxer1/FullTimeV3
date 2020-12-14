@@ -9,6 +9,8 @@ import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/prov
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-sucursal',
@@ -35,13 +37,20 @@ export class EditarSucursalComponent implements OnInit {
   idPais: any = [];
   idContin: any = [];
 
-
   nombre = new FormControl('', [Validators.required, Validators.minLength(4)]);
   idCiudad = new FormControl('', [Validators.required]);
   idProvinciaF = new FormControl('', [Validators.required]);
   nombreContinenteF = new FormControl('', Validators.required);
   nombrePaisF = new FormControl('', Validators.required);
   idEmpresaF = new FormControl('', Validators.required);
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   public nuevaSucursalForm = new FormGroup({
     sucursalNombreForm: this.nombre,
@@ -212,6 +221,7 @@ export class EditarSucursalComponent implements OnInit {
   listaSucursales: any = [];
   contador: number = 0;
   InsertarSucursal(form) {
+    this.habilitarprogress === true;
     this.listaSucursales = [];
     this.contador = 0;
     let dataSucursal = {
@@ -226,18 +236,21 @@ export class EditarSucursalComponent implements OnInit {
       for (var i = 0; i <= this.listaSucursales.length - 1; i++) {
         if (this.listaSucursales[i].nombre.toUpperCase() === form.sucursalNombreForm.toUpperCase()) {
           this.contador = 1;
+          this.habilitarprogress === false;
         }
       }
       if (this.contador === 1) {
         this.toastr.error('El nombre de la Sucursal ya se encuentra registrado.', 'Operación Fallida', {
           timeOut: 6000,
         });
+        this.habilitarprogress === false;
       }
       else {
         this.restSucursal.ActualizarSucursal(dataSucursal).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Sucursal actualizada', {
             timeOut: 6000,
           });
+          this.habilitarprogress === false;
           this.CerrarVentanaRegistroSucursal();
         }, error => { });
       }
@@ -255,13 +268,13 @@ export class EditarSucursalComponent implements OnInit {
 
   CerrarVentanaRegistroSucursal() {
     this.LimpiarCampos();
-    this.dialogRef.close();
-    window.location.reload();
+    this.dialogRef.close({actualizar: true});
+    // window.location.reload();
   }
 
   Salir() {
     this.LimpiarCampos();
-    this.dialogRef.close();
+    this.dialogRef.close({actualizar: false});
   }
 
   ObtenerMensajeErrorNombre() {

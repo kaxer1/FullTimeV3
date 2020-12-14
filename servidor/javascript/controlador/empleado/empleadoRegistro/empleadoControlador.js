@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.EMPLEADO_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
@@ -654,6 +655,23 @@ class EmpleadoControlador {
                 return res.jsonp({ message: 'Todos los empleados seleccionados han sido reactivados' });
             }
             return res.jsonp({ message: 'No ha sido reactivado ningún empleado' });
+        });
+    }
+    GeolocalizacionCrokis(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            let { lat, lng } = req.body;
+            console.log(lat, lng, id);
+            try {
+                yield database_1.default.query('UPDATE empleados SET latitud = $1, longitud = $2 WHERE id = $3', [lat, lng, id])
+                    .then(result => {
+                    console.log(result.command);
+                });
+                res.status(200).jsonp({ message: 'Geolocalizacion actulizada' });
+            }
+            catch (error) {
+                res.status(400).jsonp({ message: error });
+            }
         });
     }
 }

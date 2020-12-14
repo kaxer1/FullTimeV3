@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 
 import { DetalleCatHorariosService } from 'src/app/servicios/horarios/detalleCatHorarios/detalle-cat-horarios.service';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-detalle-cat-horario',
@@ -26,6 +28,14 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
     minEsperaForm: this.minEsperaF,
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     public rest: DetalleCatHorariosService,
     public restH: HorarioService,
@@ -45,6 +55,7 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
   }
 
   InsertarDetalleHorario(form) {
+    this.habilitarprogress = true;
     let datosDetalleH = {
       orden: form.ordenForm,
       hora: form.horaForm,
@@ -57,6 +68,7 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
     this.ValidarMinEspera(form, datosDetalleH);
     console.log(datosDetalleH);
     this.rest.ActualizarRegistro(datosDetalleH).subscribe(response => {
+      this.habilitarprogress = false;
       this.toastr.success('Operación Exitosa', 'Detalle de Horario registrado', {
         timeOut: 6000,
       })

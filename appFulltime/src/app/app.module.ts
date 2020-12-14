@@ -101,7 +101,7 @@ import { EditarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/e
 import { ListarEmpleadoPermisoComponent } from './componentes/empleadoPermisos/listar-empleado-permiso/listar-empleado-permiso.component';
 import { EditarPeriodoVacacionesComponent } from './componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { ListarNotiAutorizacionesComponent } from './componentes/catalogos/catNotiAutorizaciones/listar/listar-noti-autorizaciones/listar-noti-autorizaciones.component';
-import { RegistrarTimbreComponent } from './componentes/timbres/registrar-timbre/registrar-timbre.component';
+import { RegistrarTimbreComponent } from './componentes/timbre-web/registrar-timbre/registrar-timbre.component';
 import { RegistrarAsistenciaComponent } from './componentes/asistencia/registrar-asistencia/registrar-asistencia.component';
 import { PedidoHoraExtraComponent } from './componentes/horasExtras/pedido-hora-extra/pedido-hora-extra.component';
 import { CalculoHoraExtraComponent } from './componentes/horasExtras/calculo-hora-extra/calculo-hora-extra.component';
@@ -202,6 +202,7 @@ import { EmpleadoHorariosService } from './servicios/horarios/empleadoHorarios/e
 import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargos.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
+import { GraficasService } from './servicios/graficas/graficas.service';
 
 // FILTROS DE BÚSQUEDA
 import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
@@ -303,6 +304,10 @@ import { ListaPlanificacionesComponent } from './componentes/horasExtras/planifi
 import { EditarPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/editar-plan-hora-extra/editar-plan-hora-extra.component';
 import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
 import { EmplLeafletComponent } from './componentes/settings/leaflet/empl-leaflet/empl-leaflet.component';
+import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/timbre-web.component';
+import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timbre-admin.component';
+import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
+import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -531,6 +536,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarPlanHoraExtraComponent,
     ListaArchivosComponent,
     EmplLeafletComponent,
+    TimbreWebComponent,
+    TimbreAdminComponent,
+    CrearTimbreComponent,
+    TimbreEmpleadoPipe,
   ],
 
   imports: [
@@ -609,7 +618,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CiudadService,
     EmpleadoHorariosService,
     EmplCargosService,
-
+    GraficasService
   ],
 
   bootstrap: [AppComponent],

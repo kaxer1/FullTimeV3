@@ -19,6 +19,9 @@ class TimbresRutas {
         // this.router.post('/mail-noti/', TokenValidation, TIMBRES_CONTROLADOR.SendMailNotifiPermiso);
         // this.router.put('/:id/estado', TokenValidation, TIMBRES_CONTROLADOR.ActualizarEstado);
         // this.router.delete('/eliminar/:id_vacacion', TokenValidation, TIMBRES_CONTROLADOR.EliminarVacaciones);
+        this.router.post('/', verificarToken_1.TokenValidation, timbresControlador_1.default.CrearTimbreWeb);
+        this.router.post('/admin/', verificarToken_1.TokenValidation, timbresControlador_1.default.CrearTimbreWebAdmin);
+        this.router.get('/', verificarToken_1.TokenValidation, timbresControlador_1.default.ObtenerTimbres);
     }
 }
 const TIMBRES_RUTAS = new TimbresRutas();

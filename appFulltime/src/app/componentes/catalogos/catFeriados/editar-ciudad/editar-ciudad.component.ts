@@ -7,6 +7,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-editar-ciudad',
@@ -46,6 +48,14 @@ export class EditarCiudadComponent implements OnInit {
     nombreContinenteForm: this.nombreContinenteF,
     nombrePaisForm: this.nombrePaisF,
   });
+
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
 
   constructor(
     public restCiudad: CiudadService,
@@ -192,9 +202,11 @@ export class EditarCiudadComponent implements OnInit {
   CerrarVentanaAsignarCiudad() {
     this.LimpiarCampos();
     this.dialogRef.close();
+    this.habilitarprogress === false;
   }
 
   InsertarFeriadoCiudad(form) {
+    this.habilitarprogress === true;
     var idFeriado = this.data.idferiado;
     var nombreCiudad = form.nombreCiudadForm;
     if (nombreCiudad != 'Seleccionar') {
@@ -210,8 +222,10 @@ export class EditarCiudadComponent implements OnInit {
           timeOut: 6000,
         })
         this.CargarDatos();
+        this.habilitarprogress === false;
       }, error => {
         this.restF.ActualizarDatos(buscarCiudad).subscribe(response => {
+          this.habilitarprogress === false;
           this.toastr.success('Operación Exitosa', 'Datos Actualizados', {
             timeOut: 6000,
           });
@@ -219,13 +233,16 @@ export class EditarCiudadComponent implements OnInit {
         }, error => {
           this.toastr.error('Operación Fallida', 'Ciudad no pudo ser asignada a Feriado', {
             timeOut: 6000,
-          })
+          });
+          this.habilitarprogress === false;
         });
+        this.habilitarprogress === false;
       });
     } else {
       this.toastr.info('Debe seleccionar una ciudad','', {
         timeOut: 6000,
-      })
+      });
+      this.habilitarprogress === false;
     }
   }
 

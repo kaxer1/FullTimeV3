@@ -106,12 +106,9 @@ export class ListaHorasExtrasComponent implements OnInit {
           this.horasExtras[i].tipo_descuento = 'Recargo Nocturno';
         }
         if (this.horasExtras[i].hora_jornada === 1) {
-          this.horasExtras[i].hora_jornada = 'Matutina';
+          this.horasExtras[i].hora_jornada = 'Diurna';
         }
         else if (this.horasExtras[i].hora_jornada === 2) {
-          this.horasExtras[i].hora_jornada = 'Vespertina';
-        }
-        else {
           this.horasExtras[i].hora_jornada = 'Nocturna';
         }
         if (this.horasExtras[i].tipo_dia === 1) {

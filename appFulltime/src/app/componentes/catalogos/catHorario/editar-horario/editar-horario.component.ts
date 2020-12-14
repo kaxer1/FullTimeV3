@@ -5,6 +5,8 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
 import { PrincipalHorarioComponent } from '../principal-horario/principal-horario.component';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -38,6 +40,14 @@ export class EditarHorarioComponent implements OnInit {
 
   isChecked: boolean = false;
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
@@ -69,6 +79,7 @@ export class EditarHorarioComponent implements OnInit {
   }
 
   ModificarHorario(form) {
+    this.habilitarprogress = true;
     let dataHorario = {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
@@ -84,6 +95,7 @@ export class EditarHorarioComponent implements OnInit {
         this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
           timeOut: 6000,
         });
+        this.habilitarprogress = false;
       }, error => {
         dataHorario.doc_nombre = null;
         this.rest.putHorarioRest(this.data.horario.id, dataHorario).subscribe(response => {
@@ -122,8 +134,10 @@ export class EditarHorarioComponent implements OnInit {
   }
 
   ActualizarDatos(datos) {
+    this.habilitarprogress = true;
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
+        this.habilitarprogress = false;
         this.toastr.success('Operación Exitosa', 'Horario actualizado', {
           timeOut: 6000,
         });
@@ -150,15 +164,19 @@ export class EditarHorarioComponent implements OnInit {
   }
 
   ModificarDocumento() {
+    this.habilitarprogress = true;
     let datoDocumento = {
       documento: null
     }
     this.rest.EditarDocumento(this.data.horario.id, datoDocumento).subscribe(response => {
+      this.habilitarprogress = false;
     }, error => { });
   }
 
   GuardarDatos(datos) {
+    this.habilitarprogress = true;
     this.rest.putHorarioRest(this.data.horario.id, datos).subscribe(response => {
+      this.habilitarprogress = false;
       this.toastr.success('Operación Exitosa', 'Horario actualizado', {
         timeOut: 6000,
       });

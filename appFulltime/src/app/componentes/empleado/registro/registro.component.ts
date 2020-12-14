@@ -11,8 +11,6 @@ import { startWith, map } from 'rxjs/operators';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
-import { MatDialog } from '@angular/material/dialog';
-import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
 
 @Component({
   selector: 'app-registro',
@@ -52,7 +50,6 @@ export class RegistroComponent implements OnInit {
     private user: UsuarioService,
     private _formBuilder: FormBuilder,
     private router: Router,
-    private openView: MatDialog
   ) { }
 
   date: any;
@@ -299,13 +296,6 @@ export class RegistroComponent implements OnInit {
       this.rest.ActualizarCodigo(dataCodigo).subscribe(res => {
       })
     }
-  }
-
-  AbrirLeaflet() {
-    this.openView.open(EmplLeafletComponent, {width: '550px', height: '600px'}).afterClosed().subscribe(res => {
-      console.log(res);
-      
-    });
   }
 
 }

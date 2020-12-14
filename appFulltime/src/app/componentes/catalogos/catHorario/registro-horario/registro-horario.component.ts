@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registro-horario',
@@ -33,6 +35,14 @@ export class RegistroHorarioComponent implements OnInit {
     tipoForm: this.tipoF
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+  
   constructor(
     private rest: HorarioService,
     private toastr: ToastrService,
@@ -44,6 +54,7 @@ export class RegistroHorarioComponent implements OnInit {
 
   idHorario: any;
   InsertarHorario(form) {
+    this.habilitarprogress = true;
     let dataHorario = {
       nombre: form.horarioNombreForm,
       min_almuerzo: form.horarioMinAlmuerzoForm,
@@ -59,16 +70,19 @@ export class RegistroHorarioComponent implements OnInit {
         this.toastr.info('El nombre de horario ya existe, ingresar un nuevo nombre.', 'Verificar Datos', {
           timeOut: 6000,
         });
+        this.habilitarprogress = false;
       }, error => {
         this.rest.postHorarioRest(dataHorario).subscribe(response => {
           this.toastr.success('Operación Exitosa', 'Horario registrado', {
             timeOut: 6000,
           });
+          this.habilitarprogress = false;
           this.LimpiarCampos();
         }, error => {
           this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
             timeOut: 6000,
           });
+          this.habilitarprogress = false;
         });
       });
     }
@@ -86,15 +100,18 @@ export class RegistroHorarioComponent implements OnInit {
   }
 
   GuardarDatos(datos) {
+    this.habilitarprogress = true;
     if (this.archivoSubido[0].size <= 2e+6) {
       this.rest.postHorarioRest(datos).subscribe(response => {
         this.toastr.success('Operación Exitosa', 'Horario registrado', {
           timeOut: 6000,
         });
+        this.habilitarprogress = false;
         this.LimpiarCampos();
         this.idHorario = response;
         this.SubirRespaldo(this.idHorario.id);
       }, error => {
+        this.habilitarprogress = false;
         this.toastr.error('Operación Fallida', 'Horario no pudo ser registrado', {
           timeOut: 6000,
         })
@@ -188,11 +205,13 @@ export class RegistroHorarioComponent implements OnInit {
   }
 
   SubirRespaldo(id: number) {
+    this.habilitarprogress = true;
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
       formData.append("uploads[]", this.archivoSubido[i], this.archivoSubido[i].name);
     }
     this.rest.SubirArchivoRespaldo(formData, id).subscribe(res => {
+      this.habilitarprogress = false;
       this.toastr.success('Operación Exitosa', 'Documento subido con exito', {
         timeOut: 6000,
       });

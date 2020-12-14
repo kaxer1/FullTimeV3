@@ -33,4 +33,16 @@ export class TimbresService {
     return this.http.put<any>(`${this.API_URL}/timbres/eliminar-multiples/avisos`, Seleccionados); //Eliminacion de datos seleccionados.
   }
 
+  PostTimbreWeb(datos: any) {
+    return this.http.post<any>(`${this.API_URL}/timbres/`, datos);
+  }
+  
+  PostTimbreWebAdmin(datos: any) {
+    return this.http.post<any>(`${this.API_URL}/timbres/admin/`, datos);
+  }
+
+  ObtenerTimbres() {
+    return this.http.get<any>(`${this.API_URL}/timbres/`);
+  }
+
 }

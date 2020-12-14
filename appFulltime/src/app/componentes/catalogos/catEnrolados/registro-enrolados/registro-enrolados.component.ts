@@ -9,6 +9,8 @@ import { map, shareReplay, startWith } from 'rxjs/operators';
 
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-registro-enrolados',
@@ -58,6 +60,14 @@ export class RegistroEnroladosComponent implements OnInit {
     codigoForm: this.codigoF
   });
 
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     private rest: EnroladoService,
@@ -84,6 +94,7 @@ export class RegistroEnroladosComponent implements OnInit {
   }
 
   insertarEnrolado(form, id_user) {
+    this.habilitarprogress = true;
     let dataEnrolado = {
       id_usuario: id_user,
       nombre: form.enroladoNombreForm,
@@ -100,6 +111,7 @@ export class RegistroEnroladosComponent implements OnInit {
       this.rest.BuscarUltimoId().subscribe(response => {
         this.idUltimoEnrolado = response;
         console.log(this.idUltimoEnrolado);
+        this.habilitarprogress = false;
         this.limpiarCampos();
         this.dialogRef.close();
         this.router.navigate(['/enroladoDispositivo/', this.idUltimoEnrolado[0].max]);
