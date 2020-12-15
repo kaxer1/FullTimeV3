@@ -84,4 +84,8 @@ export class PermisosService {
   BuscarPermisoCodigo(codigo: any) {
     return this.http.get(`${this.API_URL}/empleadoPermiso/permisoCodigo/${codigo}`);
   }
+
+  BuscarFechasPermiso(datos: any, codigo: number) {
+    return this.http.post(`${this.API_URL}/empleadoPermiso/fechas_permiso/${codigo}`, datos);
+  }
 }

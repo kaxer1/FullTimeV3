@@ -90,13 +90,13 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Salida</mat-label>
-                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaSalidaF" required>
+                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)" [formControl]="horaSalidaF"
+                            required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Ingreso</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaIngresoF" required>
+                            [formControl]="horaIngresoF" required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
@@ -128,7 +128,7 @@
     <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
     <div style="text-align: center;">
         <br>
-        <button type="submit" class="btn btn-sm" (click)="RegistrarPermiso(PermisoForm.value)"
+        <button type="submit" class="btn btn-sm" (click)="ValidarHora_Salida_Entrada(PermisoForm.value)"
             [disabled]="!PermisoForm.valid"> Guardar </button>
         <button type="submit" class="btn btn-sm" (click)="dialogRef.close(false)"> Salir </button>
     </div>

@@ -406,6 +406,21 @@ class PermisosControlador {
             }
         });
     }
+    ObtenerFechasPermiso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.params.codigo;
+            const { fec_inicio, fec_final } = req.body;
+            const PERMISOS = yield database_1.default.query('SELECT pg.fec_hora_horario::date AS fecha, pg.fec_hora_horario::time AS hora, ' +
+                'pg.tipo_entr_salida FROM plan_general AS pg WHERE(pg.tipo_entr_salida = \'E\' OR pg.tipo_entr_salida = \'S\') ' +
+                'AND pg.codigo = $3 AND(pg.fec_hora_horario:: date = $1 OR pg.fec_hora_horario:: date = $2)', [fec_inicio, fec_final, codigo]);
+            if (PERMISOS.rowCount > 0) {
+                return res.jsonp(PERMISOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.PERMISOS_CONTROLADOR = new PermisosControlador();
 exports.default = exports.PERMISOS_CONTROLADOR;

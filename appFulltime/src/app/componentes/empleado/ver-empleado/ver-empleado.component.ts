@@ -197,7 +197,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   // Metodo incluir el crokis
   AbrirLeaflet(nombre: string, apellido: string) {
-    this.vistaRegistrarDatos.open(EmplLeafletComponent, {width: '500px', height: '500px'}).afterClosed().subscribe((res: any) => {
+    this.vistaRegistrarDatos.open(EmplLeafletComponent, { width: '500px', height: '500px' }).afterClosed().subscribe((res: any) => {
       console.log(res);
       if (res.message === true) {
         this.restEmpleado.putGeolocalizacion(parseInt(this.idEmpleado), res.latlng).subscribe(respuesta => {
@@ -209,7 +209,7 @@ export class VerEmpleadoComponent implements OnInit {
         }, err => {
           this.toastr.error(err)
         });
-      } 
+      }
     });
   }
 
@@ -279,7 +279,7 @@ export class VerEmpleadoComponent implements OnInit {
     let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       console.log(data);
-      
+
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       var empleado = data[0]['nombre'] + data[0]['apellido'];
@@ -300,17 +300,17 @@ export class VerEmpleadoComponent implements OnInit {
       }
     })
   }
-  
+
   MARKER: any;
   MAP: any;
   MapGeolocalizar(latitud: number, longitud: number, empleado: string) {
 
     let zoom = 19;
     if (latitud === null && longitud === null) {
-      latitud = -0.9286188999999999; 
+      latitud = -0.9286188999999999;
       longitud = -78.6059801;
       zoom = 7
-    } 
+    }
 
     this.MAP = L.map('geolocalizacion', {
       center: [latitud, longitud],
@@ -326,8 +326,8 @@ export class VerEmpleadoComponent implements OnInit {
     marker.bindPopup(empleado);
     this.MAP.addLayer(marker);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(this.MAP);
-    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>' }).addTo(this.MAP);
+
     this.MARKER = marker;
   }
 
@@ -1207,8 +1207,11 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  EditarPermiso(dataPermiso) {
-    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, { width: '1200px', data: dataPermiso }).afterClosed().subscribe(items => {
+  EditarPermiso(permisos) {
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {
+      width: '1200px',
+      data: { dataPermiso: permisos, id_empleado: parseInt(this.idEmpleado) }
+    }).afterClosed().subscribe(items => {
       if (items === true) {
         this.obtenerPermisos(parseInt(this.idEmpleado));
       }
@@ -1477,8 +1480,8 @@ export class VerEmpleadoComponent implements OnInit {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
         timeOut: 6000,
       })
-       this.archivoHorarioForm.reset();
-                this.nameFileHorario = '';
+      this.archivoHorarioForm.reset();
+      this.nameFileHorario = '';
     });
   }
 
@@ -1519,10 +1522,10 @@ export class VerEmpleadoComponent implements OnInit {
                   timeOut: 6000,
                 });
                 this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-              //this.actualizar = false;
-              //window.location.reload(this.actualizar);
-              this.archivoHorarioForm.reset();
-              this.nameFileHorario = '';
+                //this.actualizar = false;
+                //window.location.reload(this.actualizar);
+                this.archivoHorarioForm.reset();
+                this.nameFileHorario = '';
               });
               /*this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
               //this.actualizar = false;
@@ -1533,7 +1536,7 @@ export class VerEmpleadoComponent implements OnInit {
           }
         });
       }
-    }, error  => {
+    }, error => {
       console.log('entra', error)
     });
   }

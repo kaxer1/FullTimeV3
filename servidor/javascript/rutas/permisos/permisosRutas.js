@@ -33,6 +33,7 @@ class PermisosRutas {
         this.router.get('/datosAutorizacion/:id_permiso', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerDatosAutorizacion);
         this.router.delete('/eliminar/:id_permiso/:doc', verificarToken_1.TokenValidation, permisosControlador_1.default.EliminarPermiso);
         this.router.get('/permisoCodigo/:codigo', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerPermisoCodigo);
+        this.router.post('/fechas_permiso/:codigo', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerFechasPermiso);
     }
 }
 const PERMISOS_RUTAS = new PermisosRutas();

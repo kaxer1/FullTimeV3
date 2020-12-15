@@ -260,17 +260,45 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   }
 
   dIngreso: any;
+  fechas_horario: any = [];
+  readonly: boolean = false;
   validarFechaIngreso(event, form) {
+    this.readonly = false;
+    this.fechas_horario = [];
     if (form.fechaInicioForm != '' && form.idPermisoForm != '') {
       this.horasTrabajo = [];
       let datosFechas = {
         id_emple: this.datoEmpleado.idEmpleado,
         fecha: form.fechaInicioForm
       }
+      console.log('datos', datosFechas)
       this.dIngreso = event.value;
       this.restH.BuscarNumeroHoras(datosFechas).subscribe(datos => {
         this.horasTrabajo = datos;
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
+        if (form.solicitarForm === 'Días') {
+          let datos = {
+            fec_inicio: form.fechaInicioForm,
+            fec_final: form.fechaFinalForm
+          }
+          this.restP.BuscarFechasPermiso(datos, parseInt(this.empleado[0].codigo)).subscribe(response => {
+            console.log('fechas_permiso', response);
+            this.fechas_horario = response;
+            this.fechas_horario.map(obj => {
+              if (obj.fecha.split('T')[0] === moment(this.dSalida).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horaSalidaForm: obj.hora
+                })
+              }
+              if (obj.fecha.split('T')[0] === moment(this.dIngreso).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horasIngresoForm: obj.hora
+                })
+              }
+            })
+            this.readonly = true;
+          })
+        }
       }, error => {
         this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR', {
           timeOut: 6000,
@@ -290,6 +318,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.LimpiarCamposFecha();
     this.selec1 = false;
     this.selec2 = false;
+    this.readonly = false;
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
@@ -478,6 +507,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   RevisarIngresoDias(form) {
     if (parseInt(form.diasForm) <= this.Tdias) {
+      console.log('revisar', this.dIngreso, this.dSalida)
       const resta = this.dIngreso.diff(this.dSalida, 'days');
       console.log('datos', resta, ' ');
       if (resta != form.diasForm) {
@@ -761,6 +791,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.PermisoForm.patchValue({
       fechaFinalForm: '',
       diaLibreForm: '',
+      horaSalidaForm: '',
+      horasIngresoForm: ''
     });
   }
 
@@ -858,6 +890,5 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     else {
       this.InsertarPermiso(form);
     }
-
   }
 }
