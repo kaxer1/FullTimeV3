@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 
 export class DocumentosService {
 
-  API_URL = 'http://192.168.0.192:3001';
+  API_URL = 'http://186.71.19.82:3001';
 
   constructor(
     private http: HttpClient,

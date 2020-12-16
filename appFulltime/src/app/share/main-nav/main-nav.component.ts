@@ -289,7 +289,7 @@ export class MainNavComponent implements OnInit {
       this.UserEmail = res[0].correo;
       this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
       if (res[0]['imagen'] != null) {
-        this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + res[0]['imagen'];
+        this.urlImagen = 'http://186.71.19.82:3001/empleado/img/' + res[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
       } else {

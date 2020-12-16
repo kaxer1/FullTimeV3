@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class EmpleadoService {
 
-  API_URI = 'http://192.168.0.192:3001';
+  API_URI = 'http://186.71.19.82:3001';
 
   httpOptions = {
     headers: new HttpHeaders({

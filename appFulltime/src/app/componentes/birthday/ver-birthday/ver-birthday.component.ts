@@ -13,7 +13,7 @@ export class VerBirthdayComponent implements OnInit {
 
   cumple: any = [];
   HabilitarBtn: boolean = false;
-  API_URL: string = 'http://192.168.0.192:3001';
+  API_URL: string = 'http://186.71.19.82:3001';
 
   constructor(
     private restB: BirthdayService,

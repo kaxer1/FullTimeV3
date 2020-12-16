@@ -431,9 +431,9 @@ export class ListaEmpleadosComponent implements OnInit {
     this.rest.ObtenerCodigo().subscribe(datos => {
       this.datosCodigo = datos;
       if (datos[0].automatico === true) {
-        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoAutomatico.xlsx"
+        this.link = "http://186.71.19.82:3001/plantillaD/documento/EmpleadoAutomatico.xlsx"
       } else {
-        this.link = "http://192.168.0.192:3001/plantillaD/documento/EmpleadoManual.xlsx"
+        this.link = "http://186.71.19.82:3001/plantillaD/documento/EmpleadoManual.xlsx"
       }
     }, error => {
       this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado', '', {
@@ -626,7 +626,7 @@ export class ListaEmpleadosComponent implements OnInit {
       console.log(arregloEmpleado)
       this.data = res;
       console.log("prueba-empleado", res)
-      this.urlxml = 'http://192.168.0.192:3001/empleado/download/' + this.data.name;
+      this.urlxml = 'http://186.71.19.82:3001/empleado/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

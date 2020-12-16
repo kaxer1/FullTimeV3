@@ -402,7 +402,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloEnrolados).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://192.168.0.192:3001/enrolados/download/' + this.data.name;
+      this.urlxml = 'http://186.71.19.82:3001/enrolados/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }
