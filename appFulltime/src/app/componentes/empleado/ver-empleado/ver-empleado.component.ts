@@ -285,7 +285,7 @@ export class VerEmpleadoComponent implements OnInit {
       var empleado = data[0]['nombre'] + data[0]['apellido'];
       this.MapGeolocalizar(data[0]['latitud'], data[0]['longitud'], empleado);
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
           this.Main.urlImagen = this.urlImagen;
         }
@@ -1594,7 +1594,7 @@ export class VerEmpleadoComponent implements OnInit {
 
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/empleado/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

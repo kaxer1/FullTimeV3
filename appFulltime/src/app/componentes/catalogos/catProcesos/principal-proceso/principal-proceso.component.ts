@@ -346,7 +346,7 @@ export class PrincipalProcesoComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloProcesos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/proceso/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/proceso/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }
