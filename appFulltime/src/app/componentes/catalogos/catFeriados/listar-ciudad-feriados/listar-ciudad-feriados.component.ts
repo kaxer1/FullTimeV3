@@ -5,7 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
 
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
-import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadesFeriadoService } from 'src/app/servicios/ciudadesFeriado/ciudades-feriado.service';
 import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/asignar-ciudad/asignar-ciudad.component';
 import { EditarFeriadosComponent } from 'src/app/componentes/catalogos/catFeriados/editar-feriados/editar-feriados.component';
 import { EditarCiudadComponent } from 'src/app/componentes/catalogos/catFeriados/editar-ciudad/editar-ciudad.component';
@@ -31,7 +31,7 @@ export class ListarCiudadFeriadosComponent implements OnInit {
   constructor(
     public router: Router,
     private rest: FeriadosService,
-    private restF: CiudadFeriadosService,
+    private restF: CiudadesFeriadoService,
     private toastr: ToastrService,
     public vistaRegistrarDatos: MatDialog,
   ) {

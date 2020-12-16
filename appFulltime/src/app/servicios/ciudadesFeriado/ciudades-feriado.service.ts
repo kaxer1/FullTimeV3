@@ -4,10 +4,8 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
+export class CiudadesFeriadoService {
 
-export class CiudadFeriadosService {
-
-  
   API_URL = 'http://192.168.0.192:3001';
 
   constructor(
@@ -43,5 +41,4 @@ export class CiudadFeriadosService {
   BuscarFeriados(id_ciudad: number){
     return this.http.get(`${this.API_URL}/ciudadFeriados/ciudad/${id_ciudad}`);
   }
-  
 }

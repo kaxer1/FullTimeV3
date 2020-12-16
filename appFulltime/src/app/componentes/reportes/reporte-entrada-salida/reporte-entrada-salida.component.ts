@@ -20,7 +20,7 @@ import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriado
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
-import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadesFeriadoService } from 'src/app/servicios/ciudadesFeriado/ciudades-feriado.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
     public restF: FeriadosService,
-    public restCF: CiudadFeriadosService,
+    public restCF: CiudadesFeriadoService,
     public restEmpre: EmpresaService,
     public restHorario: EmpleadoHorariosService,
     public restPlan: PlanHorarioService,

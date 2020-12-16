@@ -197,7 +197,6 @@ import { DepartamentosService } from './servicios/catalogos/catDepartamentos/dep
 import { RolPermisosService } from './servicios/catalogos/catRolPermisos/rol-permisos.service';
 import { TipoPermisosService } from './servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { NotificacionesService } from './servicios/catalogos/catNotificaciones/notificaciones.service';
-import { CiudadFeriadosService } from './servicios/ciudadFeriados/ciudad-feriados.service';
 import { EmpleadoHorariosService } from './servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargos.service';
 import { CiudadService } from './servicios/ciudad/ciudad.service';
@@ -614,7 +613,6 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     RolPermisosService,
     TipoPermisosService,
     DepartamentosService,
-    CiudadFeriadosService,
     CiudadService,
     EmpleadoHorariosService,
     EmplCargosService,

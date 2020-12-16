@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadesFeriadoService } from 'src/app/servicios/ciudadesFeriado/ciudades-feriado.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
@@ -67,7 +67,7 @@ export class AsignarCiudadComponent implements OnInit {
   habilitarprogress: boolean = false;
 
   constructor(
-    private restF: CiudadFeriadosService,
+    private restF: CiudadesFeriadoService,
     private restP: ProvinciaService,
     private toastr: ToastrService,
     private router: Router,

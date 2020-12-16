@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadesFeriadoService } from 'src/app/servicios/ciudadesFeriado/ciudades-feriado.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
 import { ThemePalette } from '@angular/material/core';
@@ -59,7 +59,7 @@ export class EditarCiudadComponent implements OnInit {
 
   constructor(
     public restCiudad: CiudadService,
-    private restF: CiudadFeriadosService,
+    private restF: CiudadesFeriadoService,
     private restP: ProvinciaService,
     private toastr: ToastrService,
     private router: Router,

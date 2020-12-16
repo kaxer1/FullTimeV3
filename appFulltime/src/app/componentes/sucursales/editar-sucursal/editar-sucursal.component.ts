@@ -6,7 +6,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CiudadService } from 'src/app/servicios/ciudad/ciudad.service'
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { ProvinciaService } from 'src/app/servicios/catalogos/catProvincias/provincia.service';
-import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
+import { CiudadesFeriadoService } from 'src/app/servicios/ciudadesFeriado/ciudades-feriado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { ThemePalette } from '@angular/material/core';
@@ -65,7 +65,7 @@ export class EditarSucursalComponent implements OnInit {
     public restCiudad: CiudadService,
     public restSucursal: SucursalService,
     private restP: ProvinciaService,
-    private restF: CiudadFeriadosService,
+    private restF: CiudadesFeriadoService,
     private restE: EmpresaService,
     private restD: DepartamentosService,
     private toastr: ToastrService,
