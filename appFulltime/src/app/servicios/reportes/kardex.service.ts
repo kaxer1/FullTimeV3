@@ -53,4 +53,9 @@ export class KardexService {
     return this.http.get<any>(`${this.API_URL}/asistencia/lista-empleados/${id_empresa}`)
   }
 
+  ReporteHorasExtras(id_empleado: number, desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/reportes/hora-extra/${id_empleado}/${desde}/${hasta}`)
+    // http://localhost:3000/reportes/hora-extra/2/2020-12-01/2020-12-31
+  }
+
 }

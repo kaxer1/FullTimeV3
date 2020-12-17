@@ -100,6 +100,7 @@ import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-emplea
 import { ListaArchivosComponent } from './componentes/documentos/lista-archivos/lista-archivos.component';
 import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/timbre-web.component';
 import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timbre-admin.component';
+import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -175,6 +176,7 @@ const routes: Routes = [
   { path: 'reportePermisos', component: ReportePermisosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteAtrasos', component: ReporteAtrasosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'reporteEntradaSalida', component: ReporteEntradaSalidaComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporteHorasExtras', component: ReporteHorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaReportes', component: ListaReportesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'horas/extras', component: ReporteHorasPedidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 

@@ -45,8 +45,8 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  latitud: number;
-  longitud: number;
+  latitud: number = -0.9847384783;
+  longitud: number = -0.893749384;
 
   private options = {
     enableHighAccuracy: false,
@@ -57,8 +57,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.url); 
-    this.Geolocalizar();
-    // console.log(window.history.back());
+    // this.Geolocalizar();
   }
 
   Geolocalizar() {
@@ -66,7 +65,6 @@ export class LoginComponent implements OnInit {
     {
       navigator.geolocation.getCurrentPosition(
         (objPosition) => {
-          // console.log(objPosition);
           
           this.latitud = objPosition.coords.latitude;
           this.longitud = objPosition.coords.longitude;

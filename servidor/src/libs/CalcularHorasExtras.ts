@@ -14,12 +14,15 @@ export const CalcularHoraExtra = async function(id_empleado: number, fec_desde: 
 
         let ids = await CargoContratoByFecha(id_empleado, fec_desde, fec_hasta);
         console.log('Contrato y cargo', ids);
+        if (ids[0].message) {
+            return ids[0]
+        }
         
         let cg_horas_extras = await CatalogoHorasExtras();
         console.log('Catalgo Horas Extras', cg_horas_extras);
         
         let horas_extras = await Promise.all(ids.map(async(obj) => {
-            return await ListaHorasExtras(codigo, obj.id_cargo, fec_desde, fec_hasta)
+            return await ListaHorasExtras(cg_horas_extras, codigo, obj.id_cargo, fec_desde, fec_hasta, parseInt(obj.sueldo), obj.hora_trabaja)
         }));
 
         let feriados = await Promise.all(ids.map(async(obj) => {
@@ -29,16 +32,27 @@ export const CalcularHoraExtra = async function(id_empleado: number, fec_desde: 
         // console.log('Lista de horas extras ===', horas_extras[0]);
         console.log('Lista de feriados ===', feriados[0]);
 
-        // horas_extras.forEach((obj:any) => {
-        //     console.log(obj);
-        //     obj.forEach((element:any) => {
-        //        element.timbres.forEach((res:any) => {
-        //             console.log(res);
-        //         }); 
-        //     });
-        // })
+        let ArrayDatos = {
+            info: ids,
+            detalle: horas_extras[0].map(obj => {
+                return {
+                    fec_inicio: obj.fec_inicio,
+                    fec_final: obj.fec_final,
+                    descripcion: obj.descripcion,
+                    total_horas: obj.tiempo_autorizado || obj.num_hora,
+                    porcentaje: obj.valores_calculos[0].reca_porcentaje,
+                    valor_recargo: obj.calculos[0].valor_recargo,
+                    valor_hora_total: obj.calculos[0].valor_hora_total,
+                    valor_pago: obj.calculos[0].valor_pago
+                }
+            }),
+            total: {
+                total_pago_hx: SumaValorPagoEmpleado(horas_extras[0]),
+                total_sueldo: SumaValorPagoEmpleado(horas_extras[0]) + parseInt(ids[0].sueldo)
+            }
+        }
         
-        return horas_extras[0]
+        return ArrayDatos
     } catch (error) {
         console.log(error);
         return error
@@ -52,7 +66,16 @@ async function FeriadosPorIdCargo(id_cargo: number, fec_desde: Date, fec_hasta: 
     .then(result => { return result.rows})
 }
 
-async function ListaHorasExtras(codigo: number, id_cargo: number, fec_desde: Date, fec_hasta: Date) {
+function SumaValorPagoEmpleado(horas_extras: any[]) {
+    let sumador: number = 0;
+    horas_extras.forEach(obj => {
+        sumador = sumador + obj.calculos[0].valor_pago
+    });
+
+    return sumador
+}
+
+async function ListaHorasExtras(cg_horas_extras: any,codigo: number, id_cargo: number, fec_desde: Date, fec_hasta: Date, sueldo: number, horas_trabaja: number) {
     let arrayUno = await HorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta)
     let arrayDos = await PlanificacionHorasExtrasSolicitadas(codigo, id_cargo, fec_desde, fec_hasta)
     // console.log('array uno ===', arrayUno); console.log('array dos ===', arrayDos);
@@ -67,15 +90,59 @@ async function ListaHorasExtras(codigo: number, id_cargo: number, fec_desde: Dat
         [arrayUnido[j], arrayUnido[numMin]] = [arrayUnido[numMin], arrayUnido[j]]
     }
 
-    console.log('***************** array unido *****************');
-    arrayUnido.map(obj => {
-        console.log(obj.fec_inicio);
-        console.log(obj.fec_inicio.toJSON());
-        console.log(obj.fec_inicio.getUTCDay());
-    })
-    console.log('**********************************************');
+    // console.log('***************** array unido *****************');
 
+    const valor_dia = sueldo / 30;
+    const valor_hora = valor_dia /horas_trabaja;
+    
+    arrayUnido.forEach(obj => {
+        obj.valores_calculos = cg_horas_extras.filter((res:any) => {
+            if (obj.nocturno === true) {
+                return res;
+            }
+            if (obj.dia_semana >= 1 && obj.dia_semana <= 5 && res.tipo_dia == 'N') {
+                if ( res.hora_inicio <= obj.hora_inicio && res.hora_final >= obj.hora_final) {
+                    return res;
+                }
+            }
+        })
+    });
+
+    /** TIPO DE FUNCION
+     *  1. calcular horas jornada nocturna 25%;
+     *  2. calcular horas suplementarias de 50% y 100%;
+     *  3. calcular horas extraordinarias;
+     */
+    arrayUnido.forEach(obj => {
+        obj.calculos = obj.valores_calculos.map((res:any) => {  
+            if (res.tipo_funcion === 1) {
+                console.log('funcion 1');
+                
+                return 0
+            } else if (res.tipo_funcion === 2) {
+                console.log('funcion 2');
+                return HorasSuplementarias(valor_dia, valor_hora, obj.tiempo_autorizado || obj.num_hora, res.reca_porcentaje)
+            } else if (res.tipo_funcion === 3) {
+                console.log('funcion 3');
+                return 0
+            }
+        }) || 0;
+    })
     return arrayUnido
+}
+
+function HorasSuplementarias(valor_dia: number, valor_hora: number, num_hora: number, porcentaje: any ) {
+    const vr =  porcentaje * valor_hora
+    const vht = valor_hora + vr;
+    const vp = vht * num_hora;
+    console.log(vr, vht, vp);
+    return {
+        valor_dia: valor_dia,
+        valor_hora: valor_hora,
+        valor_recargo: vr,
+        valor_hora_total:  vht,
+        valor_pago: vp
+    }
 }
 
 async function HorasExtrasSolicitadas(id_empleado: number, id_cargo: number, fec_desde: Date, fec_hasta: Date) {
@@ -86,14 +153,25 @@ async function HorasExtrasSolicitadas(id_empleado: number, id_cargo: number, fec
         return Promise.all(result.rows.map(async(obj) => {
             var f1 = new Date(obj.fec_inicio)
             var f2 = new Date(obj.fec_final)
-            f1.setUTCHours(f1.getUTCHours() - 10);
-            f2.setUTCHours(f2.getUTCHours() - 10);
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const dia = f1.getUTCDay();
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
             return {
+                dia_semana: dia,
+                hora_inicio: hora_inicio,
+                hora_final: hora_final,
                 fec_inicio: new Date(f1.toJSON().split('.')[0]),
                 fec_final: new Date(f2.toJSON().split('.')[0]),
                 descripcion: obj.descripcion,
-                num_hora: obj.num_hora,
+                num_hora: HHMMtoHorasDecimal(obj.num_hora),
                 tiempo_autorizado: obj.tiempo_autorizado,
+                valores_calculos: new Array,
+                calculos: new Array,
+                nocturno: false,
                 timbres: await ObtenerTimbres(id_empleado, f1.toJSON().split('T')[0] + 'T00:00:00', f2.toJSON().split('T')[0] + 'T23:59:59')
             }
         }))
@@ -106,16 +184,27 @@ async function PlanificacionHorasExtrasSolicitadas(id_empleado: number, id_cargo
     'AND h.fecha_desde between $2 and $3 AND h.fecha_hasta between $2 and $3 ORDER BY h.fecha_desde',[id_cargo, fec_desde, fec_hasta])
     .then(result => {
         return Promise.all(result.rows.map(async(obj) => {
-            var f1 = new Date(obj.fecha_desde.toJSON().split('T')[0] + 'T' + obj.hora_inicio)
-            var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin)
-            f1.setUTCHours(f1.getUTCHours() - 10);
-            f2.setUTCHours(f2.getUTCHours() - 10);
+            var f1 = new Date(obj.fecha_desde.toJSON().split('T')[0] + 'T' + obj.hora_inicio);
+            var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const dia = f1.getUTCDay();
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
         return {
+            dia_semana: dia,
+            hora_inicio: hora_inicio,
+            hora_final: hora_final,
             fec_inicio: new Date(f1.toJSON().split('.')[0]),
             fec_final: new Date(f2.toJSON().split('.')[0]),
             descripcion: obj.descripcion,
-            num_hora: obj.horas_totales,
+            num_hora: HHMMtoHorasDecimal(obj.horas_totales),
             tiempo_autorizado: obj.tiempo_autorizado,
+            valores_calculos: [],
+            calculos: [],
+            nocturno: false,
             timbres: await ObtenerTimbres(id_empleado, f1.toJSON().split('T')[0] + 'T00:00:00', f2.toJSON().split('T')[0] + 'T23:59:59')
         }
     }))
@@ -139,8 +228,8 @@ async function ObtenerTimbres(id_empleado: number, fec_desde: string, fec_hasta:
 
 async function CargoContratoByFecha(id_empleado: number, fec_desde: Date, fec_hasta: Date): Promise <any[]> {
     try {
-        let cargo_contrato = await pool.query('SELECT ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empl_contratos AS co, empl_cargos AS ca ' +
-                            'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id', [id_empleado])
+        let cargo_contrato = await pool.query('SELECT e.nombre, e.apellido, e.codigo, e.cedula, ca.id AS id_cargo, ca.fec_inicio, ca.fec_final, co.id AS id_contrato, ca.sueldo, ca.hora_trabaja FROM empleados AS e, empl_contratos AS co, empl_cargos AS ca ' +
+                            'WHERE e.id = co.id_empleado AND co.id_empleado = $1 AND ca.id_empl_contrato = co.id', [id_empleado])
                             .then(result => {
                                 return result.rows;
                             });
@@ -155,6 +244,9 @@ async function CargoContratoByFecha(id_empleado: number, fec_desde: Date, fec_ha
         }).map(obj => {
             // console.log('limpio: ',obj);
             return {
+                nombre: obj.nombre + ' ' + obj.apellido,
+                codigo: obj.codigo,
+                cedula: obj.cedula,
                 id_cargo: obj.id_cargo,
                 id_contrato: obj.id_contrato,
                 sueldo: obj.sueldo,
@@ -175,8 +267,10 @@ async function CargoContratoByFecha(id_empleado: number, fec_desde: Date, fec_ha
  * N: NORMAL 
  */
 async function CatalogoHorasExtras() {
-    return await pool.query('SELECT id, descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia FROM cg_hora_extras').then(result => {
+    return await pool.query('SELECT id, descripcion, tipo_descuento, reca_porcentaje, hora_inicio, hora_final, hora_jornada, tipo_dia, tipo_funcion FROM cg_hora_extras').then(result => {
         return result.rows.map(obj => {
+            obj.hora_inicio = HHMMtoHorasDecimal(obj.hora_inicio);
+            obj.hora_final = HHMMtoHorasDecimal(obj.hora_final);
             (obj.tipo_descuento === 1) ? obj.tipo_descuento = 'HE' : obj.tipo_descuento = 'RN';
             obj.reca_porcentaje = parseInt(obj.reca_porcentaje) / 100;
             (obj.hora_jornada === 1)? obj.hora_jornada = 'Diurna' : obj.hora_jornada = 'Nocturna';
@@ -184,6 +278,17 @@ async function CatalogoHorasExtras() {
             return obj
         })
     }) 
+}
+
+function HHMMtoHorasDecimal(dato: any) {
+    if (dato === '') return 0
+    // if (dato === 0) return 0
+    // console.log(dato);
+    var h = parseInt(dato.split(':')[0]);
+    var m = parseInt(dato.split(':')[1])/60;
+    var s = parseInt(dato.split(':')[2])/3600;
+    // console.log(h, '>>>>>', m);
+    return h + m + s
 }
 /**************************************************************************
  *        /\                     _______________  _________
