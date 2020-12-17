@@ -9,6 +9,7 @@ export class AutorizacionService {
 
   AUTORIZACIONES_URL = 'http://186.71.19.82:3001';
 
+  
   constructor(
     private http: HttpClient,
     private socket: Socket
