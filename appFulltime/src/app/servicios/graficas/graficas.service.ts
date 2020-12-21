@@ -12,7 +12,12 @@ export class GraficasService {
     private http: HttpClient,
   ) { }
 
-  MetricaInasistencia() {
-    return this.http.get<any>(`${this.API_URL}/metricas/inasistencia`);
+  MetricaInasistenciaMicro() {
+    return this.http.get<any>(`${this.API_URL}/metricas/admin/inasistencia/micro`);
   }
+  
+  MetricaInasistenciaMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/admin/inasistencia/macro/${desde}/${hasta}`);
+  }
+
 }

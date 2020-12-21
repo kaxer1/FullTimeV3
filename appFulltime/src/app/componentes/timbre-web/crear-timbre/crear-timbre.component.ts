@@ -23,7 +23,6 @@ export class CrearTimbreComponent implements OnInit {
   HoraF = new FormControl('', [Validators.required]);
   accionF = new FormControl('', [Validators.required]);
   teclaFuncionF = new FormControl('',);
-  observacionF = new FormControl('');
 
   accion: any = [
     {value: 'EoS', name: 'Entrada'},
@@ -39,7 +38,6 @@ export class CrearTimbreComponent implements OnInit {
     horaForm: this.HoraF,
     accionForm: this.accionF,
     teclaFuncionForm: this.teclaFuncionF,
-    observacionForm: this.observacionF
   });
 
   nombre: string;
@@ -74,7 +72,7 @@ export class CrearTimbreComponent implements OnInit {
       fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
       accion: form1.accionForm,
       tecl_funcion: this.TeclaFuncion(form1.accionForm),
-      observacion: form1.observacionForm,
+      observacion: 'Timbre creado por administrador '+ ' ' + localStorage.getItem('usuario'),
       latitud: null,
       longitud: null,
       id_empleado: this.data.id,

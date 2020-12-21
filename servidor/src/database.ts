@@ -6,7 +6,7 @@ const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   port: 5432,
-  database: 'nueva2411',
+  database: 'BDD_Fulltime_prueba',
   //database: 'fullTimeV3',
   password: 'fulltime'
 

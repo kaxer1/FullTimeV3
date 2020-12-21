@@ -27,7 +27,7 @@
     <div class="col-sm">
       <!-- caja 1 -->
       <mat-card class="example-card mat-elevation-z8">
-        <div echarts [options]="options" [merge]="updateOptions" class="demo-chart"></div>
+        <div echarts [options]="inasistencia"></div>
       </mat-card>
     </div>
     <div class="col-sm">
@@ -42,7 +42,7 @@
   <div class="row">
     <div class="col">
       <mat-card class="example-card mat-elevation-z8">
-        <div echarts [options]="inasistencia"></div>
+        <div echarts [options]="options" [merge]="updateOptions" class="demo-chart"></div>
       </mat-card>
     </div>
   </div>

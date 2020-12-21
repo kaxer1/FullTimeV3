@@ -144,18 +144,14 @@ export class HomeComponent implements OnInit{
     var f=new Date();
     this.fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
     this.cajaUno();
-    this.restGraficas.MetricaInasistencia().subscribe(res => {
+    this.restGraficas.MetricaInasistenciaMicro().subscribe(res => {
+      console.log('************* Inasistencia Micro **************');
       this.inasistencia = res
-    })
-   /*var intval = window.setInterval(function probando(){
-       // console.log("probando programacion");
-       prueba();
-      },5000);
-
-      function prueba(){
-        alert('Este es un ejemplo');
-      }*/
-    
+    });
+    this.restGraficas.MetricaInasistenciaMacro('2019-01-01','2019-12-31').subscribe(res => {
+      console.log('************* Inasistencia Macro **************');
+      console.log(res);
+    });
   }
 
 
@@ -366,17 +362,5 @@ export class HomeComponent implements OnInit{
 
   // caja 1 fila 2
   inasistencia: any;
-  // = {
-  //   xAxis: {
-  //     type: 'category',
-  //     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-  //   },
-  //   yAxis: {
-  //     type: 'value'
-  //   },
-  //   series: [{
-  //     data: [120, 932, 901, 934, 1290, 1330, 1320],
-  //     type: 'line'
-  //   }]
-  // };
+  
 }
