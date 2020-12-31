@@ -308,6 +308,7 @@ import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/tim
 import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timbre-admin.component';
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
+import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -540,6 +541,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     TimbreAdminComponent,
     CrearTimbreComponent,
     TimbreEmpleadoPipe,
+    SeguridadComponent,
   ],
 
   imports: [

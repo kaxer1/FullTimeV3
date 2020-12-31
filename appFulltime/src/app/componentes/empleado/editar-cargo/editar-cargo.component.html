@@ -14,18 +14,6 @@
                 <div class="row">
                     <div class="col-sm">
                         <mat-form-field>
-                            <mat-label id="selEmpre">Seleccionar Empresa</mat-label>
-                            <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                                matTooltip="Lista de Empresas">help_outline</mat-icon>
-                            <mat-select [formControl]="idEmpresaF" required>
-                                <mat-option *ngFor="let empre of empresas" [value]="empre.id"
-                                    (click)="FiltrarSucursales(nuevoEmplCargosForm.value)">
-                                    {{empre.nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
                             <mat-label id="selEmpre">Seleccionar Sucursal</mat-label>
                             <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
                                 matTooltip="Indicar cuál es la Sucursal en la que va a laborar el empleado">
@@ -70,13 +58,25 @@
                         </mat-form-field>
                     </div>
                     <div class="col-sm">
-                        <mat-form-field>
-                            <mat-label>Cargo a desempeñar</mat-label>
-                            <input matInput placeholder="Ej: Secretaria" [formControl]="cargoF" required>
+                        <mat-form-field *ngIf="habilitarSeleccion">
+                            <mat-label id="selEmpre">Seleccionar Cargo</mat-label>
+                            <mat-icon id="icono" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Seleccione el tipo de cargo que va a desempeñar">
+                                help_outline
+                            </mat-icon>
+                            <mat-select [formControl]="tipoF">
+                                <mat-option *ngFor="let tc of tipoCargo" [value]="tc.id"
+                                    (click)="IngresarOtro(nuevoEmplCargosForm.value)">
+                                    {{tc.cargo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="habilitarCargo">
+                            <mat-label id="selEmpre">Cargo a desempeñar</mat-label>
+                            <input matInput placeholder="Ej: Secretaria" [formControl]="cargoF" [ngStyle]="estilo">
                             <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                                matTooltip="Indicar el cargo que va a desempeñar el empleado">
+                                matTooltip="Regresar a la lista de cargos existentes" (click)="VerTiposCargos()">
                                 help_outline</mat-icon>
-                            <mat-error *ngIf="cargoF.invalid">{{ObtenerMensajeErrorCargoRequerido()}}</mat-error>
                             <mat-error *ngIf="cargoF.invalid">Ingresar un cargo válido</mat-error>
                         </mat-form-field>
                         <br>

@@ -33,6 +33,17 @@
                     <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                 </mat-form-field>
                 <mat-form-field>
+                    <mat-label>Meses Período</mat-label>
+                    <input matInput placeholder="Ingresar meses período" [formControl]="mesesF"
+                        (keypress)="IngresarSoloNumeros($event)" required>
+                    <mat-icon id="iReg" matSuffix matTooltipClass="regimen-tooltip" matTooltipPosition="right"
+                        matTooltip="Indicar el número de meses de duración del período">
+                        help_outline</mat-icon>
+                    <mat-error *ngIf="mesesF.invalid">
+                        {{ObtenerMensajeErrorMeses()}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
                     <mat-label id="anioAnti">Años considerados antiguedad</mat-label>
                     <input matInput placeholder="Ingresar años para antiguedad" [formControl]="anioAntiguedadF"
                         (keypress)="IngresarSoloNumeros($event)" required>

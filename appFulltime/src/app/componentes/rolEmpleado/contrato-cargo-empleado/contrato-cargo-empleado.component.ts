@@ -89,6 +89,7 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
   /** Método para obtener los datos del cargo del empleado */
   cargoEmpleado: any = [];
   cargosTotalesEmpleado: any = [];
+  nombreCargo: string;
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
@@ -97,7 +98,10 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
       let cargoIdActual = this.cargosTotalesEmpleado[0].max;
       this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
         this.cargoEmpleado = datos;
-      }, error => { });
+        this.restCargo.ObtenerUnTipoCargo(this.cargoEmpleado[0].cargo).subscribe(datos => {
+          this.nombreCargo = datos[0].cargo;
+        });
+      });
     });
   }
 
@@ -114,11 +118,15 @@ export class ContratoCargoEmpleadoComponent implements OnInit {
     fechaICargoForm: this.fechaICargo,
   });
   cargoSeleccionado: any = [];
+  nombreCargoSeleccionado: string;
   obtenerCargoSeleccionadoEmpleado(form) {
     this.cargoSeleccionado = [];
     this.restCargo.getUnCargoRest(form.fechaICargoForm).subscribe(datos => {
       this.cargoSeleccionado = datos;
-    }, error => { });
+      this.restCargo.ObtenerUnTipoCargo(this.cargoSeleccionado[0].cargo).subscribe(datos => {
+        this.nombreCargoSeleccionado = datos[0].cargo;
+      });
+    });
   }
 
 }

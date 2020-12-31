@@ -46,4 +46,21 @@ export class EmplCargosService {
     return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/empleadosAutorizan/${id}`);
   }
 
+  // SERVICIOS TIPO CARGO
+  ObtenerTipoCargos() {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/listar/tiposCargo`);
+  }
+
+  CrearTipoCargo(data: any) {
+    return this.http.post(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/tipo_cargo`, data);
+  }
+
+  ObtenerUltimoTipoCargos() {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/ultimoTipo/cargo`);
+  }
+
+  ObtenerUnTipoCargo(id: number) {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/ultimoTipo/nombreCargo/${id}`);
+  }
+
 }

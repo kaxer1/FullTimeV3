@@ -29,8 +29,13 @@ class RegimenControlador {
 
     public async CrearRegimen(req: Request, res: Response) {
         try {
-            const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion } = req.body;
-            await pool.query('INSERT INTO cg_regimenes (descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7)', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion]);
+            const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad,
+                dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo } = req.body;
+            await pool.query('INSERT INTO cg_regimenes (descripcion, dia_anio_vacacion, dia_incr_antiguedad, ' +
+                'anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+                [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion,
+                    max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo]);
             res.jsonp({ message: 'Regimen guardado' });
         }
         catch (error) {
@@ -39,8 +44,13 @@ class RegimenControlador {
     }
 
     public async ActualizarRegimen(req: Request, res: Response): Promise<void> {
-        const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, id } = req.body;
-        await pool.query('UPDATE cg_regimenes  SET descripcion = $1, dia_anio_vacacion = $2, dia_incr_antiguedad = $3, anio_antiguedad = $4, dia_mes_vacacion = $5, max_dia_acumulacion = $6, dia_libr_anio_vacacion = $7 WHERE id = $8', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, id]);
+        const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion,
+            max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo, id } = req.body;
+        await pool.query('UPDATE cg_regimenes SET descripcion = $1, dia_anio_vacacion = $2, ' +
+            'dia_incr_antiguedad = $3, anio_antiguedad = $4, dia_mes_vacacion = $5, max_dia_acumulacion = $6, ' +
+            'dia_libr_anio_vacacion = $7, meses_periodo = $8 WHERE id = $9',
+            [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion,
+                max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo, id]);
         res.jsonp({ message: 'Regimen guardado' });
     }
 

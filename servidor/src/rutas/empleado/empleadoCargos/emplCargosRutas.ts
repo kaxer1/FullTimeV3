@@ -20,6 +20,12 @@ class EmpleadosCargpsRutas {
         this.router.get('/buscar/:id_empleado', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargo);
         this.router.get('/buscar/cargoActual/:id_empleado', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EncontrarIdCargoActual);
         this.router.put('/:id_empl_contrato/:id/actualizar', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.EditarCargo);
+
+        // Crear tipo cargo
+        this.router.post('/tipo_cargo', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.CrearTipoCargo);
+        this.router.get('/listar/tiposCargo', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.ListarTiposCargo);
+        this.router.get('/buscar/ultimoTipo/cargo', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.BuscarUltimoTipo);
+        this.router.get('/buscar/ultimoTipo/nombreCargo/:id', TokenValidation, EMPLEADO_CARGO_CONTROLADOR.BuscarUnTipo);
     }
 }
 
