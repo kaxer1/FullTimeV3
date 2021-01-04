@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EmplCargosService {
 
-  URL_EMPLEADO_CARGOS = 'http://localhost:3000';
+  URL_EMPLEADO_CARGOS = 'http://192.168.0.192:3001';
 
   constructor(private http: HttpClient) { }
 

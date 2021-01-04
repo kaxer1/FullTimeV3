@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class LoginService {
 
-  API_URI = 'http://localhost:3000';
+  API_URI = 'http://192.168.0.192:3001';
 
   constructor(
     private http: HttpClient,

@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class KardexService {
 
-  API_URL = 'http://localhost:3000';
+  API_URL = 'http://192.168.0.192:3001';
 
   constructor(
     private http: HttpClient
@@ -55,7 +55,7 @@ export class KardexService {
 
   ReporteHorasExtras(id_empleado: number, desde: string, hasta: string) {
     return this.http.get<any>(`${this.API_URL}/reportes/hora-extra/${id_empleado}/${desde}/${hasta}`)
-    // http://localhost:3000/reportes/hora-extra/2/2020-12-01/2020-12-31
+    // http://192.168.0.192:3001/reportes/hora-extra/2/2020-12-01/2020-12-31
   }
 
 }

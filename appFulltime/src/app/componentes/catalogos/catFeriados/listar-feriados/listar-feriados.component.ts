@@ -402,7 +402,7 @@ export class ListarFeriadosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloFeriados).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/feriados/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/feriados/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -291,7 +291,7 @@ export class ListarTipoComidasComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloComidas).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/tipoComidas/download/' + this.data.name;
+      this.urlxml = 'http://192.168.0.192:3001/tipoComidas/download/' + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

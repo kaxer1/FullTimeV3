@@ -310,7 +310,7 @@ import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crea
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} };
 
 @NgModule({
   declarations: [
