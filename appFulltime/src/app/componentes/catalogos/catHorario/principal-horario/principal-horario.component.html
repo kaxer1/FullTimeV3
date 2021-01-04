@@ -32,7 +32,6 @@
                 <span>CARGA MÚLTIPLE DE HORARIOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9" id="carta1">
-                <p id="lista">- Horarios</p>
                 <div class="d-flex flex-wrap justify-content-around" style="margin-right: 5%;">
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChangeCatalogoHorario($event)" type="file" [formControl]="archivo1Form"
@@ -49,7 +48,7 @@
                         <span class="material-icons">cloud_download</span> Descargar Plantilla Horario
                     </a>
                 </div>
-                <p id="lista">- Detalles de Horarios</p>
+                <br>
                 <div class="d-flex flex-wrap justify-content-around" style="margin-right: 5%;">
                     <form method="post" enctype="multipart/form-data">
                         <input (change)="fileChangeDetalle($event)" type="file" [formControl]="archivo2Form" id="file2"

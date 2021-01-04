@@ -93,18 +93,8 @@ export class RegistrarPeriodoVComponent implements OnInit {
       this.datosContrato = data;
       var fecha = new Date(String(data[0].fec_ingreso));
       this.PerVacacionesForm.patchValue({ fechaInicioForm: data[0].fec_ingreso });
-      if (data[0].descripcion === 'CODIGO DE TRABAJO') {
-        fecha.setMonth(fecha.getMonth() + 12);
-        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-      }
-      else if (data[0].descripcion === 'LOSEP') {
-        fecha.setMonth(fecha.getMonth() + 11);
-        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-      }
-      else if (data[0].descripcion === 'LOES') {
-        fecha.setMonth(fecha.getMonth() + 11);
-        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-      }
+      fecha.setMonth(fecha.getMonth() + parseInt(data[0].meses_periodo));
+      this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
     })
   }
 

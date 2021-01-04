@@ -5,6 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ToastrService } from 'ngx-toastr';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
+import { SeguridadComponent } from 'src/app/componentes/seguridad/seguridad.component'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-timbre-admin',
@@ -20,22 +22,23 @@ export class TimbreAdminComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
-   /**
-   * Variables Tabla de datos
-   */
-  dataSource: any;  
+  /**
+  * Variables Tabla de datos
+  */
+  dataSource: any;
   filtroEmpleados = '';
 
   constructor(
     private restTimbres: TimbresService,
     private toastr: ToastrService,
-    private openView: MatDialog
+    private openView: MatDialog,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
     this.ObtenerEmpleados();
   }
-  
+
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
@@ -53,7 +56,7 @@ export class TimbreAdminComponent implements OnInit {
   }
 
   RegistrarTibre(empleado) {
-    this.openView.open(CrearTimbreComponent, {width: '400px', data: empleado}).afterClosed().subscribe(data => {
+    this.openView.open(CrearTimbreComponent, { width: '400px', data: empleado }).afterClosed().subscribe(data => {
       console.log(data);
       if (!data.close) {
         this.restTimbres.PostTimbreWebAdmin(data).subscribe(res => {
@@ -67,5 +70,15 @@ export class TimbreAdminComponent implements OnInit {
     })
   }
 
-  
+  /** Función para confirmar creación de timbre */
+  ConfirmarTimbre(datos: any) {
+    this.openView.open(SeguridadComponent, { width: '350px' }).afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.RegistrarTibre(datos);
+        } else {
+          this.router.navigate(['/timbres-admin']);
+        }
+      });
+  }
 }

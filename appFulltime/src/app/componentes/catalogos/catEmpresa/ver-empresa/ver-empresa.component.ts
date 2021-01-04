@@ -158,14 +158,17 @@ export class VerEmpresaComponent implements OnInit {
         if (res.actualizar === true) {
           this.ObtenerLogotipo();
         }
+        else {
+          this.ObtenerLogotipo();
+        }
       })
   }
 
   ConfigurarCorreoElectronico(info_empresa) {
-    this.vistaRegistrarDatos.open(CorreoEmpresaComponent, { width: '400px', data: info_empresa}).afterClosed()
+    this.vistaRegistrarDatos.open(CorreoEmpresaComponent, { width: '400px', data: info_empresa }).afterClosed()
       .subscribe(res => {
         console.log(res);
-        
+
       })
 
   }

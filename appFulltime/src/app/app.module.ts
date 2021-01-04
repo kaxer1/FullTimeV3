@@ -309,6 +309,8 @@ import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timb
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
+import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} };
 
@@ -542,6 +544,7 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     CrearTimbreComponent,
     TimbreEmpleadoPipe,
     ReporteHorasExtrasComponent,
+    SeguridadComponent,
   ],
 
   imports: [

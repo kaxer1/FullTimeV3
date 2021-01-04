@@ -99,6 +99,46 @@ class EmpleadoCargosControlador {
     res.jsonp({ message: 'Cargo del empleado actualizado exitosamente' });
   }
 
+  // CREAR TIPO DE CARGO
+
+  public async CrearTipoCargo(req: Request, res: Response): Promise<void> {
+    const { cargo } = req.body;
+    await pool.query('INSERT INTO tipo_cargo (cargo) VALUES ($1)', [cargo]);
+    console.log(req.body);
+    res.jsonp({ message: 'Cargo empleado guardado' });
+  }
+
+  public async ListarTiposCargo(req: Request, res: Response) {
+    const Cargos = await pool.query('SELECT *FROM tipo_cargo');
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarUltimoTipo(req: Request, res: Response) {
+    const Cargos = await pool.query('SELECT MAX(id) FROM tipo_cargo');
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarUnTipo(req: Request, res: Response) {
+    const id = req.params.id;
+    const Cargos = await pool.query('SELECT *FROM tipo_cargo WHERE id = $1', [id]);
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
 }
 
 export const EMPLEADO_CARGO_CONTROLADOR = new EmpleadoCargosControlador();

@@ -119,10 +119,10 @@ export class LoginComponent implements OnInit {
     };
     console.log(dataUsuario);
 
-    if (this.latitud === undefined) {
+/*if (this.latitud === undefined) {
       this.Geolocalizar();
       return this.toastr.error('Primero permitir conocer la ubicación del dispositivo')
-    }
+    }*/
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {

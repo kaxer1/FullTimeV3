@@ -30,6 +30,7 @@ export class RegimenComponent implements OnInit {
   maxDiasAcumulacionF = new FormControl('', [Validators.required]);
   diaLibreAnioVacacionF = new FormControl('');
   regimenF = new FormControl('');
+  mesesF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public RegimenForm = new FormGroup({
@@ -40,7 +41,8 @@ export class RegimenComponent implements OnInit {
     anioAntiguedadForm: this.anioAntiguedadF,
     maxDiasAcumulacionForm: this.maxDiasAcumulacionF,
     diaLibreAnioVacacionForm: this.diaLibreAnioVacacionF,
-    regimenForm: this.regimenF
+    regimenForm: this.regimenF,
+    mesesForm: this.mesesF
   });
 
   // Arreglo de opcionesRegimen existentes
@@ -91,7 +93,7 @@ export class RegimenComponent implements OnInit {
       this.estilo = { 'visibility': 'hidden' }; this.HabilitarDescrip = true;
       this.IngresarDatosOtro();
       this.LimpiarDiasMeses();
-      this.toastr.info('No ha seleccionado ninguna opción','', {
+      this.toastr.info('No ha seleccionado ninguna opción', '', {
         timeOut: 6000,
       })
     }
@@ -143,7 +145,8 @@ export class RegimenComponent implements OnInit {
       anio_antiguedad: form.anioAntiguedadForm,
       dia_mes_vacacion: form.diaMesVacacionForm,
       max_dia_acumulacion: form.maxDiasAcumulacionForm,
-      dia_libr_anio_vacacion: form.diaLibreAnioVacacionForm
+      dia_libr_anio_vacacion: form.diaLibreAnioVacacionForm,
+      meses_periodo: form.mesesForm
     };
     if (nombreRegimen === 'OTRO') {
       if (escribirRegimen === '') {
@@ -180,23 +183,29 @@ export class RegimenComponent implements OnInit {
     var diasLibres = datos.dia_libr_anio_vacacion;
     var diasIncremento = datos.dia_incr_antiguedad;
     var diasAcumulados = datos.max_dia_acumulacion;
+    var meses = datos.meses_periodo;
     if (parseInt(diasAnio) > parseInt(diasAcumulados)) {
-      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año','', {
+      this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año', '', {
         timeOut: 6000,
       })
     }
     else if (parseInt(diasLibres) > parseInt(diasAnio)) {
-      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año','', {
+      this.toastr.info('Días libres de vacaciones deben ser menores a los días de vacación por año', '', {
         timeOut: 6000,
       })
     }
     else if (parseInt(diasIncremento) > parseInt(diasAnio)) {
-      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año','', {
+      this.toastr.info('Días de incremento por antiguedad deben ser menores a los días de vacación por año', '', {
         timeOut: 6000,
       })
     }
-    else {
+    else if (parseInt(meses) > 0 && parseInt(meses) <= 12) {
       this.FuncionInsertarDatos(datos);
+    }
+    else {
+      this.toastr.info('Meses de duración del período debe ser mayor a 0 y menor o igual a 12 meses.', '', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -204,7 +213,7 @@ export class RegimenComponent implements OnInit {
     if ((<HTMLInputElement>document.getElementById('activo')).checked) {
       var diasAnio = form.diaAnioVacacionForm;
       if (diasAnio === '') {
-        this.toastr.info('No ha ingresado días por año','', {
+        this.toastr.info('No ha ingresado días por año', '', {
           timeOut: 6000,
         });
         (<HTMLInputElement>document.getElementById('activo')).checked = false;
@@ -308,6 +317,12 @@ export class RegimenComponent implements OnInit {
 
   ObtenerMensajeErrorIncreAntiguedadRequerido() {
     if (this.diaIncrAntiguedadF.hasError('required')) {
+      return 'Campo obligatorio ingrese un valor';
+    }
+  }
+
+  ObtenerMensajeErrorMeses() {
+    if (this.mesesF.hasError('required')) {
       return 'Campo obligatorio ingrese un valor';
     }
   }

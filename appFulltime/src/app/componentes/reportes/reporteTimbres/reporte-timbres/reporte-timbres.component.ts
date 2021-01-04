@@ -407,22 +407,22 @@ export class ReporteTimbresComponent implements OnInit {
             '', '', ''
           ],
           ...this.timbres.map(obj => {
-            if (obj.accion === 'E' || obj.accion === '1') {
+            if (obj.accion === 'E' || obj.accion === '0') {
               this.accionT = 'Entrada';
             }
-            else if (obj.accion === 'S' || obj.accion === '2') {
+            else if (obj.accion === 'S' || obj.accion === '1') {
               this.accionT = 'Salida';
             }
-            else if (obj.accion === 'EA' || obj.accion === '3') {
+            else if (obj.accion === 'EA' || obj.accion === '2') {
               this.accionT = 'Entrada Almuerzo';
             }
-            else if (obj.accion === 'SA' || obj.accion === '4') {
+            else if (obj.accion === 'SA' || obj.accion === '3') {
               this.accionT = 'Salida Almuerzo';
             }
-            else if (obj.accion === 'EP' || obj.accion === '5') {
+            else if (obj.accion === 'EP' || obj.accion === '4') {
               this.accionT = 'Entrada Permiso';
             }
-            else if (obj.accion === 'SP' || obj.accion === '6') {
+            else if (obj.accion === 'SP' || obj.accion === '5') {
               this.accionT = 'Salida Permiso';
             }
             var day = moment(obj.fec_hora_timbre).day()

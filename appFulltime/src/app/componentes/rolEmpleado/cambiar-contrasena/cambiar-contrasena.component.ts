@@ -13,6 +13,7 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
   templateUrl: './cambiar-contrasena.component.html',
   styleUrls: ['./cambiar-contrasena.component.css']
 })
+
 export class CambiarContrasenaComponent implements OnInit {
 
   hide1 = true;
