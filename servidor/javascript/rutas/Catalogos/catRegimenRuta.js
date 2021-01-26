@@ -19,6 +19,7 @@ class RegimenRuta {
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catRegimenControlador_1.default.EliminarRegistros);
         this.router.post('/xmlDownload/', verificarToken_1.TokenValidation, catRegimenControlador_1.default.FileXML);
         this.router.get('/download/:nameXML', catRegimenControlador_1.default.downloadXML);
+        this.router.get('/sucursal-regimen/:id', verificarToken_1.TokenValidation, catRegimenControlador_1.default.ListarRegimenSucursal);
     }
 }
 const REGIMEN_RUTA = new RegimenRuta();

@@ -26,6 +26,9 @@ class EmpleadosCargpsRutas {
         this.router.get('/listar/tiposCargo', verificarToken_1.TokenValidation, emplCargosControlador_1.default.ListarTiposCargo);
         this.router.get('/buscar/ultimoTipo/cargo', verificarToken_1.TokenValidation, emplCargosControlador_1.default.BuscarUltimoTipo);
         this.router.get('/buscar/ultimoTipo/nombreCargo/:id', verificarToken_1.TokenValidation, emplCargosControlador_1.default.BuscarUnTipo);
+        this.router.get('/buscar/cargo-departamento/:id', verificarToken_1.TokenValidation, emplCargosControlador_1.default.BuscarTipoDepartamento);
+        this.router.get('/buscar/cargo-sucursal/:id', verificarToken_1.TokenValidation, emplCargosControlador_1.default.BuscarTipoSucursal);
+        this.router.get('/buscar/cargo-regimen/:id', verificarToken_1.TokenValidation, emplCargosControlador_1.default.BuscarTipoRegimen);
     }
 }
 const EMPLEADO_CARGO_RUTAS = new EmpleadosCargpsRutas();

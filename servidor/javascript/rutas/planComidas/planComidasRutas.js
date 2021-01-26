@@ -17,6 +17,10 @@ class DepartamentoRutas {
         this.router.post('/', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearPlanComidas);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, planComidasControlador_1.default.EliminarRegistros);
         this.router.put('/', verificarToken_1.TokenValidation, planComidasControlador_1.default.ActualizarPlanComidas);
+        // Registrar en tabla tipo_comida
+        this.router.post('/tipo_comida', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearTipoComidas);
+        this.router.get('/tipo_comida', verificarToken_1.TokenValidation, planComidasControlador_1.default.ListarTipoComidas);
+        this.router.get('/tipo_comida/ultimo', verificarToken_1.TokenValidation, planComidasControlador_1.default.VerUltimoTipoComidas);
     }
 }
 const PLAN_COMIDAS_RUTAS = new DepartamentoRutas();

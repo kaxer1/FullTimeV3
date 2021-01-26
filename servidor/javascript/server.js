@@ -64,6 +64,7 @@ const timbresRutas_1 = __importDefault(require("./rutas/timbres/timbresRutas"));
 const planGeneralRutas_1 = __importDefault(require("./rutas/planGeneral/planGeneralRutas"));
 const reporteHoraExtraRutas_1 = __importDefault(require("./rutas/reportes/reporteHoraExtraRutas"));
 const graficasRutas_1 = __importDefault(require("./rutas/graficas/graficasRutas"));
+const alimentacionRutas_1 = __importDefault(require("./rutas/reportes/alimentacionRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -150,6 +151,8 @@ class Servidor {
         this.app.use('/reportes/vacacion', kardexVacacionesRutas_1.default);
         this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default);
         this.app.use('/reporte', reportesRutas_1.default);
+        // Modulo Alimentación
+        this.app.use('/alimentacion', alimentacionRutas_1.default);
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default);
         // CARGA MULTIPLE

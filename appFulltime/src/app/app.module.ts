@@ -309,6 +309,12 @@ import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timb
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
+import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
+import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
+import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -542,6 +548,12 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CrearTimbreComponent,
     TimbreEmpleadoPipe,
     SeguridadComponent,
+    TipoSeguridadComponent,
+    FraseSeguridadComponent,
+    PlanComidasComponent,
+    TicketsComponent,
+    AlimentosGeneralComponent,
+    DetallePlanificadosComponent,
   ],
 
   imports: [

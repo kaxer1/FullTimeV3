@@ -78,48 +78,48 @@ class EmpresaControlador {
 
     public async getImagenBase64(req: Request, res: Response): Promise<any> {
 
-        const file_name = 
-        await pool.query('select nombre, logo from cg_empresa where id = $1',[req.params.id_empresa])
-            .then(result => {
-                return result.rows[0];
-            });
+        const file_name =
+            await pool.query('select nombre, logo from cg_empresa where id = $1', [req.params.id_empresa])
+                .then(result => {
+                    return result.rows[0];
+                });
         const codificado = await ImagenBase64LogosEmpresas(file_name.logo);
         if (codificado === 0) {
-            res.send({imagen: 0, nom_empresa: file_name.nombre})
+            res.send({ imagen: 0, nom_empresa: file_name.nombre })
         } else {
-            res.send({imagen: codificado, nom_empresa: file_name.nombre})
+            res.send({ imagen: codificado, nom_empresa: file_name.nombre })
         }
     }
-    
+
     public async ActualizarLogoEmpresa(req: Request, res: Response): Promise<any> {
 
         let list: any = req.files;
         let logo = list.image[0].path.split("\\")[1];
         let id = req.params.id_empresa;
         console.log(logo, '====>', id);
-        
+
         const logo_name = await pool.query('SELECT nombre, logo FROM cg_empresa WHERE id = $1', [id]);
-        
+
         if (logo_name.rowCount > 0) {
             logo_name.rows.map(async (obj) => {
                 if (obj.logo != null) {
-                try {
-                    console.log(obj.logo);
-                    let filePath = `servidor\\logos\\${obj.logo}`;
-                    let direccionCompleta = __dirname.split("servidor")[0] + filePath;
-                    fs.unlinkSync(direccionCompleta);
-                    await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
-                } catch (error) {
-                    await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
-                }
+                    try {
+                        console.log(obj.logo);
+                        let filePath = `servidor\\logos\\${obj.logo}`;
+                        let direccionCompleta = __dirname.split("servidor")[0] + filePath;
+                        fs.unlinkSync(direccionCompleta);
+                        await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                    } catch (error) {
+                        await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                    }
                 } else {
-                await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
+                    await pool.query('Update cg_empresa Set logo = $2 Where id = $1 ', [id, logo]);
                 }
             });
         }
 
         const codificado = await ImagenBase64LogosEmpresas(logo);
-        res.send({imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message:'Logo actualizado'})
+        res.send({ imagen: codificado, nom_empresa: logo_name.rows[0].nombre, message: 'Logo actualizado' })
     }
 
     public async ActualizarColores(req: Request, res: Response): Promise<void> {
@@ -128,15 +128,21 @@ class EmpresaControlador {
         res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
     }
 
+    public async ActualizarSeguridad(req: Request, res: Response): Promise<void> {
+        const { seg_contrasena, seg_frase, seg_ninguna, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET seg_contrasena = $1, seg_frase = $2, seg_ninguna = $3 WHERE id = $4', [seg_contrasena, seg_frase, seg_ninguna, id]);
+        res.jsonp({ message: 'Seguridad exitosamente' });
+    }
+
     public async EditarPassword(req: Request, res: Response): Promise<void> {
         const id = req.params.id_empresa
-        const {correo, password_correo} = req.body;
-        console.log('Objeto ===== ',req.body);
+        const { correo, password_correo } = req.body;
+        console.log('Objeto ===== ', req.body);
 
-        await pool.query('UPDATE cg_empresa SET correo = $1, password_correo = $2 WHERE id = $3',[correo, password_correo, id]);
-        res.status(200).jsonp({message: 'Guardada la configuracion de credenciales'})
+        await pool.query('UPDATE cg_empresa SET correo = $1, password_correo = $2 WHERE id = $3', [correo, password_correo, id]);
+        res.status(200).jsonp({ message: 'Guardada la configuracion de credenciales' })
     }
-    
+
 }
 
 export const EMPRESA_CONTROLADOR = new EmpresaControlador();

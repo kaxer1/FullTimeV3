@@ -63,7 +63,7 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   /** Función para eliminar registro seleccionado Planificación*/
   EliminarPlanComidas(id_plan: number) {
     this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -86,7 +86,10 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
   /* Ventana para ingresar planificación de comidas */
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '1200px', data: this.idEmpleado })
+    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, {
+      width: '1200px',
+      data: { idEmpleado: this.idEmpleado, modo: 'individual' }
+    })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
       });

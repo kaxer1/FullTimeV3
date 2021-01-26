@@ -92,6 +92,20 @@ class RegimenControlador {
             res.jsonp({ message: 'Registro eliminado' });
         });
     }
+    ListarRegimenSucursal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const REGIMEN = yield database_1.default.query(' SELECT r.id, r.descripcion FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+                'empl_contratos AS c WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ec.id_sucursal = $1 ' +
+                'GROUP BY r.id, r.descripcion', [id]);
+            if (REGIMEN.rowCount > 0) {
+                return res.jsonp(REGIMEN.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 const REGIMEN_CONTROLADOR = new RegimenControlador();
 exports.default = REGIMEN_CONTROLADOR;

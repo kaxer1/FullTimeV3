@@ -87,6 +87,9 @@
                         <div class="col" style="text-align: center;" *ngIf="activar">
                             <button type="submit" class="btn" id="boton" (click)="CambiarContrasena()">Modificar
                                 Contraseña</button>
+                            <button *ngIf="frase" type="submit" class="btn" id="boton" style="margin-left: 5px;"
+                                (click)="IngresarFrase()">Frase
+                                Segura</button>
                         </div>
                         <div style="text-align: right;">
                             <button mat-button id="boton" (click)="AbrirLeaflet(e.nombre, e.apellido)">
@@ -154,7 +157,7 @@
                         <label class="h4 mb-3" for="">Show your picture in Resume</label>
                         <input type="file" class="form-control-file" (change)="fileChanged($event)">
                     </div> -->
-                    </mat-card>                    
+                    </mat-card>
                 </div>
             </div>
         </div>
@@ -991,6 +994,17 @@
                             <label>{{pc.observacion}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Descripción:</label>
+                            <label>{{pc.descripcion}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Servicio:</label>
+                            <label>{{pc.tipo_servicio}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Porción:</label>
+                            <label *ngIf="pc.extra === false">Normal</label>
+                            <label *ngIf="pc.extra === true">Extra</label>
                         </div>
                     </div>
                     <div style="text-align: right;">

@@ -27,15 +27,21 @@ class PlanComidasControlador {
     }
     CrearPlanComidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin } = req.body;
-            yield database_1.default.query('INSERT INTO plan_comidas (id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin]);
+            const { id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin, descripcion, tipo_comida, extra } = req.body;
+            yield database_1.default.query('INSERT INTO plan_comidas (id_empleado, fecha, id_comida, observacion, fec_solicita, ' +
+                'hora_inicio, hora_fin, descripcion, tipo_comida, extra) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin,
+                descripcion, tipo_comida, extra]);
             res.jsonp({ message: 'Planificación del almuerzo ha sido guardado con éxito' });
         });
     }
     EncontrarPlanComidaPorIdEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const PLAN_COMIDAS = yield database_1.default.query('SELECT pc.id, pc.id_empleado, pc.fecha, pc.observacion, pc.fec_solicita, pc.hora_inicio, pc.hora_fin, ct.id AS id_tipo_comida, ct.nombre, ct.valor FROM plan_comidas AS pc, cg_tipo_comidas AS ct WHERE pc.id_empleado = $1 AND pc.id_comida = ct.id', [id_empleado]);
+            const PLAN_COMIDAS = yield database_1.default.query('SELECT pc.id, pc.id_empleado, pc.fecha, pc.observacion, ' +
+                'pc.fec_solicita, pc.hora_inicio, pc.hora_fin, pc.descripcion, ct.id AS id_tipo_comida, ct.nombre, ' +
+                'ct.valor, s.nombre AS tipo_servicio, s.id AS id_servicio, pc.extra FROM plan_comidas AS pc, cg_tipo_comidas AS ct, tipo_comida AS s ' +
+                'WHERE pc.id_empleado = $1 AND ' +
+                'pc.id_comida = ct.id AND s.id = pc.tipo_comida', [id_empleado]);
             if (PLAN_COMIDAS.rowCount > 0) {
                 return res.jsonp(PLAN_COMIDAS.rows);
             }
@@ -51,9 +57,41 @@ class PlanComidasControlador {
     }
     ActualizarPlanComidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin, id } = req.body;
-            yield database_1.default.query('UPDATE plan_comidas SET id_empleado = $1, fecha = $2, id_comida = $3, observacion = $4, fec_solicita = $5, hora_inicio = $6, hora_fin = $7 WHERE id = $8', [id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin, id]);
+            const { id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin, tipo_comida, extra, id } = req.body;
+            yield database_1.default.query('UPDATE plan_comidas SET id_empleado = $1, fecha = $2, id_comida = $3, ' +
+                'observacion = $4, fec_solicita = $5, hora_inicio = $6, hora_fin = $7, tipo_comida = $8, extra = $9 ' +
+                'WHERE id = $10', [id_empleado, fecha, id_comida, observacion, fec_solicita, hora_inicio, hora_fin, tipo_comida, extra, id]);
             res.jsonp({ message: 'Planificación del almuerzo ha sido guardado con éxito' });
+        });
+    }
+    /** TABLA TIPO COMIDAS */
+    ListarTipoComidas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PLAN_COMIDAS = yield database_1.default.query('SELECT * FROM tipo_comida');
+            if (PLAN_COMIDAS.rowCount > 0) {
+                return res.jsonp(PLAN_COMIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    CrearTipoComidas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre } = req.body;
+            yield database_1.default.query('INSERT INTO tipo_comida (nombre) VALUES ($1)', [nombre]);
+            res.jsonp({ message: 'Tipo comida ha sido guardado con éxito' });
+        });
+    }
+    VerUltimoTipoComidas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const PLAN_COMIDAS = yield database_1.default.query('SELECT MAX(id) FROM tipo_comida');
+            if (PLAN_COMIDAS.rowCount > 0) {
+                return res.jsonp(PLAN_COMIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
 }
