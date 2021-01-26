@@ -31,12 +31,12 @@ class GraficasRutas {
         this.router.get('/admin/marcaciones-emp/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminMarcacionesEmpleadoMicro);
         this.router.get('/admin/marcaciones-emp/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminMarcacionesEmpleadoMacro);
         
-        // this.router.get('/inasistencia/micro', TokenValidation, GRAFICAS_CONTROLADOR.ObtenerInasistencia);
-        // this.router.get('/inasistencia/micro', TokenValidation, GRAFICAS_CONTROLADOR.ObtenerInasistencia);
-        // this.router.post('/insertar', TokenValidation, ENROLADO_RELOJ_CONTROLADOR.AsignarRelojEnrolado);
-        // this.router.post('/buscar', TokenValidation, ENROLADO_RELOJ_CONTROLADOR.ObtenerIdReloj);
-        // this.router.put('/', TokenValidation, ENROLADO_RELOJ_CONTROLADOR.ActualizarRelojEnrolado);
-        // this.router.delete('/eliminar/:id', TokenValidation, ENROLADO_RELOJ_CONTROLADOR.EliminarRelojEnrolado);
+        //empleado
+        this.router.get('/user/hora-extra/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoHorasExtrasMicro);
+        this.router.get('/user/vacaciones/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoVacacionesMicro);
+        this.router.get('/user/permisos/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoPermisosMicro);
+        this.router.get('/user/atrasos/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoAtrasosMicro);
+        
     }
 }
 

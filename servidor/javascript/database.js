@@ -9,8 +9,9 @@ const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
     port: 5432,
-    database: 'BDD_Fulltime_prueba',
-    //database: 'fullTimeV3',
+    // database: 'BDD_Fulltime_prueba',
+    // database: 'fulltimeV3',
+    database: 'nueva2411',
     password: 'fulltime'
 });
 pool.query('SELECT NOW()', (err, res) => {

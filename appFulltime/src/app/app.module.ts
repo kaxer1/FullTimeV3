@@ -309,6 +309,13 @@ import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timb
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
+import { InasistenciaMacroComponent } from './componentes/graficas-macro/inasistencia-macro/inasistencia-macro.component';
+import { AsistenciaMacroComponent } from './componentes/graficas-macro/asistencia-macro/asistencia-macro.component';
+import { HoraExtraMacroComponent } from './componentes/graficas-macro/hora-extra-macro/hora-extra-macro.component';
+import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/jornada-vs-hora-extra-macro/jornada-vs-hora-extra-macro.component';
+import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
+import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
+import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -542,6 +549,13 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CrearTimbreComponent,
     TimbreEmpleadoPipe,
     ReporteHorasExtrasComponent,
+    InasistenciaMacroComponent,
+    AsistenciaMacroComponent,
+    HoraExtraMacroComponent,
+    JornadaVsHoraExtraMacroComponent,
+    MarcacionesEmpMacroComponent,
+    RetrasosMacroComponent,
+    TiempoJornadaVsHoraExtMacroComponent,
   ],
 
   imports: [

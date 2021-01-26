@@ -1436,9 +1436,16 @@ export class VerEmpleadoComponent implements OnInit {
       this.verEmpleado(this.idEmpleado)
       this.archivoForm.reset();
       this.nameFile = '';
+      this.ResetDataMain(); 
     });
   }
 
+  ResetDataMain() {
+    localStorage.removeItem('fullname');
+    localStorage.removeItem('correo');
+    localStorage.removeItem('iniciales');
+    localStorage.removeItem('view_imagen');
+  }
   /* ****************************************************************************************************
    *                               CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA
    * ****************************************************************************************************/
