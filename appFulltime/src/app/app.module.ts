@@ -316,6 +316,13 @@ import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/j
 import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
+import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
+import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
+import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
+import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -556,6 +563,13 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MarcacionesEmpMacroComponent,
     RetrasosMacroComponent,
     TiempoJornadaVsHoraExtMacroComponent,
+    SeguridadComponent,
+    TipoSeguridadComponent,
+    FraseSeguridadComponent,
+    PlanComidasComponent,
+    TicketsComponent,
+    AlimentosGeneralComponent,
+    DetallePlanificadosComponent,
   ],
 
   imports: [

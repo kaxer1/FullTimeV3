@@ -99,6 +99,83 @@ class EmpleadoCargosControlador {
     res.jsonp({ message: 'Cargo del empleado actualizado exitosamente' });
   }
 
+  // CREAR TIPO DE CARGO
+
+  public async CrearTipoCargo(req: Request, res: Response): Promise<void> {
+    const { cargo } = req.body;
+    await pool.query('INSERT INTO tipo_cargo (cargo) VALUES ($1)', [cargo]);
+    console.log(req.body);
+    res.jsonp({ message: 'Cargo empleado guardado' });
+  }
+
+  public async ListarTiposCargo(req: Request, res: Response) {
+    const Cargos = await pool.query('SELECT *FROM tipo_cargo');
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarUltimoTipo(req: Request, res: Response) {
+    const Cargos = await pool.query('SELECT MAX(id) FROM tipo_cargo');
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarUnTipo(req: Request, res: Response) {
+    const id = req.params.id;
+    const Cargos = await pool.query('SELECT *FROM tipo_cargo WHERE id = $1', [id]);
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarTipoDepartamento(req: Request, res: Response) {
+    const id = req.params.id;
+    const Cargos = await pool.query('SELECT tc.id, tc.cargo FROM tipo_cargo AS tc, empl_cargos AS ec ' +
+      'WHERE tc.id = ec.cargo AND id_departamento = $1 GROUP BY tc.cargo, tc.id', [id]);
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarTipoSucursal(req: Request, res: Response) {
+    const id = req.params.id;
+    const Cargos = await pool.query('SELECT tc.id, tc.cargo FROM tipo_cargo AS tc, empl_cargos AS ec ' +
+      'WHERE tc.id = ec.cargo AND id_sucursal = $1 GROUP BY tc.cargo, tc.id', [id]);
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
+  public async BuscarTipoRegimen(req: Request, res: Response) {
+    const id = req.params.id;
+    const Cargos = await pool.query('SELECT tc.id, tc.cargo FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+      'empl_contratos AS c, tipo_cargo AS tc WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ' +
+      'ec.cargo = tc.id AND r.id = $1 GROUP BY tc.id, tc.cargo', [id]);
+    if (Cargos.rowCount > 0) {
+      return res.jsonp(Cargos.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'Registro no encontrado' });
+    }
+  }
+
 }
 
 export const EMPLEADO_CARGO_CONTROLADOR = new EmpleadoCargosControlador();

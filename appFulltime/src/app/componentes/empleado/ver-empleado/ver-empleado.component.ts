@@ -59,6 +59,7 @@ import * as L from 'leaflet';
 import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
+import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -177,6 +178,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.ObtenerLogo();
     this.ObtnerColores();
     this.VerAccionContrasena(this.idEmpleado);
+    this.VerEmpresa();
   }
 
   // Método para ver la información del empleado 
@@ -197,7 +199,7 @@ export class VerEmpleadoComponent implements OnInit {
 
   // Metodo incluir el crokis
   AbrirLeaflet(nombre: string, apellido: string) {
-    this.vistaRegistrarDatos.open(EmplLeafletComponent, {width: '500px', height: '500px'}).afterClosed().subscribe((res: any) => {
+    this.vistaRegistrarDatos.open(EmplLeafletComponent, { width: '500px', height: '500px' }).afterClosed().subscribe((res: any) => {
       console.log(res);
       if (res.message === true) {
         this.restEmpleado.putGeolocalizacion(parseInt(this.idEmpleado), res.latlng).subscribe(respuesta => {
@@ -209,7 +211,7 @@ export class VerEmpleadoComponent implements OnInit {
         }, err => {
           this.toastr.error(err)
         });
-      } 
+      }
     });
   }
 
@@ -279,11 +281,10 @@ export class VerEmpleadoComponent implements OnInit {
     let idEmpleadoActivo = localStorage.getItem('empleado');
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       console.log(data);
-      
+
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       var empleado = data[0]['nombre'] + data[0]['apellido'];
-      this.MapGeolocalizar(data[0]['latitud'], data[0]['longitud'], empleado);
       if (data[0]['imagen'] != null) {
         this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
@@ -298,19 +299,20 @@ export class VerEmpleadoComponent implements OnInit {
         this.mostrarImagen = false;
         this.textoBoton = 'Subir Foto';
       }
+      this.MapGeolocalizar(data[0]['latitud'], data[0]['longitud'], empleado);
     })
   }
-  
+
   MARKER: any;
   MAP: any;
   MapGeolocalizar(latitud: number, longitud: number, empleado: string) {
 
     let zoom = 19;
     if (latitud === null && longitud === null) {
-      latitud = -0.9286188999999999; 
+      latitud = -0.9286188999999999;
       longitud = -78.6059801;
       zoom = 7
-    } 
+    }
 
     this.MAP = L.map('geolocalizacion', {
       center: [latitud, longitud],
@@ -326,8 +328,8 @@ export class VerEmpleadoComponent implements OnInit {
     marker.bindPopup(empleado);
     this.MAP.addLayer(marker);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(this.MAP);
-    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>' }).addTo(this.MAP);
+
     this.MARKER = marker;
   }
 
@@ -337,7 +339,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.restDiscapacidad.getDiscapacidadUsuarioRest(idEmployDisca).subscribe(data => {
       this.discapacidadUser = data;
       this.habilitarBtn();
-    }, error => { console.log("") });
+    });
   }
 
   /** Método para obtener los títulos de un empleado a través de la tabla EMPL_TITULOS 
@@ -346,7 +348,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.relacionTituloEmpleado = [];
     this.restEmpleado.getEmpleadoTituloRest(idEmployTitu).subscribe(data => {
       this.relacionTituloEmpleado = data;
-    }, error => { console.log("") });
+    });
   }
 
   /** Método para obtener el contrato de un empleado con su respectivo régimen laboral */
@@ -356,8 +358,8 @@ export class VerEmpleadoComponent implements OnInit {
       this.idContrato = datos;
       this.restEmpleado.BuscarDatosContrato(this.idContrato[0].max).subscribe(res => {
         this.contratoEmpleado = res;
-      }, error => { });
-    }, error => { });
+      });
+    });
   }
 
   /** Método para ver lista de todos los contratos*/
@@ -366,7 +368,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.contratoBuscado = [];
     this.restEmpleado.BuscarContratoEmpleadoRegimen(parseInt(this.idEmpleado)).subscribe(res => {
       this.contratoBuscado = res;
-    }, error => { });
+    });
   }
 
   /** Método para ver datos del contrato seleccionado */
@@ -403,6 +405,7 @@ export class VerEmpleadoComponent implements OnInit {
   /** Método para obtener los datos del cargo del empleado */
   cargoEmpleado: any = [];
   cargosTotalesEmpleado: any = [];
+  nombreCargo: string;
   obtenerCargoEmpleado(id_empleado: number) {
     this.cargoEmpleado = [];
     this.cargosTotalesEmpleado = [];
@@ -411,7 +414,10 @@ export class VerEmpleadoComponent implements OnInit {
       let cargoIdActual = this.cargosTotalesEmpleado[0].max;
       this.restCargo.getUnCargoRest(cargoIdActual).subscribe(datos => {
         this.cargoEmpleado = datos;
-      }, error => { });
+        this.restCargo.ObtenerUnTipoCargo(this.cargoEmpleado[0].cargo).subscribe(datos => {
+          this.nombreCargo = datos[0].cargo;
+        });
+      });
     });
   }
 
@@ -428,11 +434,15 @@ export class VerEmpleadoComponent implements OnInit {
     fechaICargoForm: this.fechaICargo,
   });
   cargoSeleccionado: any = [];
+  nombreCargoSeleccionado: string;
   obtenerCargoSeleccionadoEmpleado(form) {
     this.cargoSeleccionado = [];
     this.restCargo.getUnCargoRest(form.fechaICargoForm).subscribe(datos => {
       this.cargoSeleccionado = datos;
-    }, error => { });
+      this.restCargo.ObtenerUnTipoCargo(this.cargoSeleccionado[0].cargo).subscribe(datos => {
+        this.nombreCargoSeleccionado = datos[0].cargo;
+      });
+    });
   }
 
 
@@ -455,8 +465,8 @@ export class VerEmpleadoComponent implements OnInit {
       console.log("idPerVaca ", this.idPerVacacion[0].id);
       this.restVacaciones.ObtenerVacacionesPorIdPeriodo(this.idPerVacacion[0].id).subscribe(res => {
         this.vacaciones = res;
-      }, error => { console.log("") });
-    }, error => { });
+      });
+    });
   }
 
   /** Método para imprimir datos de la planificación de horarios */
@@ -521,8 +531,8 @@ export class VerEmpleadoComponent implements OnInit {
   obtenerPlanComidasEmpleado(id_empleado: number) {
     this.planComidas = [];
     this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
-      this.planComidas = res
-    }, error => { console.log("") });
+      this.planComidas = res;
+    });
   }
 
   /* Método para imprimir datos del periodo de vacaciones */
@@ -1055,7 +1065,10 @@ export class VerEmpleadoComponent implements OnInit {
   /* Ventana para ingresar planificación de comidas */
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, { width: '600px', data: this.idEmpleado })
+    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, {
+      width: '600px',
+      data: { idEmpleado: this.idEmpleado, modo: 'individual' }
+    })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
       });
@@ -1207,8 +1220,11 @@ export class VerEmpleadoComponent implements OnInit {
     });
   }
 
-  EditarPermiso(dataPermiso) {
-    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, { width: '1200px', data: dataPermiso }).afterClosed().subscribe(items => {
+  EditarPermiso(permisos) {
+    this.vistaRegistrarDatos.open(EditarPermisoEmpleadoComponent, {
+      width: '1200px',
+      data: { dataPermiso: permisos, id_empleado: parseInt(this.idEmpleado) }
+    }).afterClosed().subscribe(items => {
       if (items === true) {
         this.obtenerPermisos(parseInt(this.idEmpleado));
       }
@@ -1484,8 +1500,8 @@ export class VerEmpleadoComponent implements OnInit {
       this.toastr.info('El empleado no tiene registrado un Cargo', 'Primero Registrar Cargo', {
         timeOut: 6000,
       })
-       this.archivoHorarioForm.reset();
-                this.nameFileHorario = '';
+      this.archivoHorarioForm.reset();
+      this.nameFileHorario = '';
     });
   }
 
@@ -1526,10 +1542,10 @@ export class VerEmpleadoComponent implements OnInit {
                   timeOut: 6000,
                 });
                 this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
-              //this.actualizar = false;
-              //window.location.reload(this.actualizar);
-              this.archivoHorarioForm.reset();
-              this.nameFileHorario = '';
+                //this.actualizar = false;
+                //window.location.reload(this.actualizar);
+                this.archivoHorarioForm.reset();
+                this.nameFileHorario = '';
               });
               /*this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
               //this.actualizar = false;
@@ -1540,8 +1556,6 @@ export class VerEmpleadoComponent implements OnInit {
           }
         });
       }
-    }, error  => {
-      console.log('entra', error)
     });
   }
 
@@ -1624,10 +1638,33 @@ export class VerEmpleadoComponent implements OnInit {
     }
   }
 
-  /* Ventana para ingresar planificación de comidas */
+  /* Ventana para modificar contraseña */
   CambiarContrasena(): void {
     console.log(this.idEmpleado);
     this.vistaRegistrarDatos.open(CambiarContrasenaComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  /* Ingresar Frase */
+  IngresarFrase(): void {
+    console.log(this.idEmpleado);
+    this.vistaRegistrarDatos.open(FraseSeguridadComponent, { width: '350px', data: this.idEmpleado }).disableClose = true;
+  }
+
+  /* Ver botón frase de acuerdo a la  configuración de seguridad*/
+  empresa: any = [];
+  frase: boolean = false;
+  VerEmpresa() {
+    this.empresa = [];
+    this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(data => {
+      this.empresa = data;
+      if (this.empresa[0].seg_frase === true) {
+        this.restU.BuscarDatosUser(this.idEmpleadoLogueado).subscribe(data => {
+          if (data[0].frase === null || data[0].frase === '') {
+            this.frase = true;
+          }
+        });
+      }
+    });
   }
 
   usuario: any = [];

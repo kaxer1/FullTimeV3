@@ -21,6 +21,7 @@ export class EditarRegimenComponent implements OnInit {
   diaMesVacacionF = new FormControl('', [Validators.required]);
   maxDiasAcumulacionF = new FormControl('', [Validators.required]);
   diaLibreAnioVacacionF = new FormControl('');
+  mesesF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public RegimenForm = new FormGroup({
@@ -31,6 +32,7 @@ export class EditarRegimenComponent implements OnInit {
     anioAntiguedadForm: this.anioAntiguedadF,
     maxDiasAcumulacionForm: this.maxDiasAcumulacionF,
     diaLibreAnioVacacionForm: this.diaLibreAnioVacacionF,
+    mesesForm: this.mesesF
   });
 
   constructor(
@@ -54,6 +56,7 @@ export class EditarRegimenComponent implements OnInit {
       anioAntiguedadForm: this.data.datosRegimen.anio_antiguedad,
       maxDiasAcumulacionForm: this.data.datosRegimen.max_dia_acumulacion,
       diaLibreAnioVacacionForm: this.data.datosRegimen.dia_libr_anio_vacacion,
+      mesesForm: this.data.datosRegimen.meses_periodo
     });
     (<HTMLInputElement>document.getElementById('activo')).checked = true;
   }
@@ -68,7 +71,8 @@ export class EditarRegimenComponent implements OnInit {
       anio_antiguedad: form.anioAntiguedadForm,
       dia_mes_vacacion: form.diaMesVacacionForm,
       max_dia_acumulacion: form.maxDiasAcumulacionForm,
-      dia_libr_anio_vacacion: form.diaLibreAnioVacacionForm
+      dia_libr_anio_vacacion: form.diaLibreAnioVacacionForm,
+      meses_periodo: form.mesesForm
     };
     if (escribirRegimen === '') {
       this.toastr.info('Ingresar nombre del Régimen Laboral', 'Campo Obligatorio', {
@@ -93,6 +97,7 @@ export class EditarRegimenComponent implements OnInit {
     var diasLibres = datos.dia_libr_anio_vacacion;
     var diasIncremento = datos.dia_incr_antiguedad;
     var diasAcumulados = datos.max_dia_acumulacion;
+    var meses = datos.meses_periodo;
     if (parseInt(diasAnio) > parseInt(diasAcumulados)) {
       this.toastr.info('Días máximos acumulados deben ser mayores a los días de vacación por año','', {
         timeOut: 6000,
@@ -108,8 +113,13 @@ export class EditarRegimenComponent implements OnInit {
         timeOut: 6000,
       })
     }
-    else {
+    else if (parseInt(meses) > 0 && parseInt(meses) <= 12) {
       this.FuncionInsertarDatos(datos);
+    }
+    else {
+      this.toastr.info('Meses de duración del período debe ser mayor a 0 y menor o igual a 12 meses.', '', {
+        timeOut: 6000,
+      })
     }
   }
 
@@ -219,6 +229,12 @@ export class EditarRegimenComponent implements OnInit {
 
   ObtenerMensajeErrorIncreAntiguedadRequerido() {
     if (this.diaIncrAntiguedadF.hasError('required')) {
+      return 'Campo obligatorio ingrese un valor';
+    }
+  }
+
+  ObtenerMensajeErrorMeses() {
+    if (this.mesesF.hasError('required')) {
       return 'Campo obligatorio ingrese un valor';
     }
   }

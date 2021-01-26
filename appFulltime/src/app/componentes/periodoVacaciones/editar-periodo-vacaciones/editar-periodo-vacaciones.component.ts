@@ -110,7 +110,7 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
         this.ActualizarPerVacacion(form);
       }
       else {
-        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período','', {
+        this.toastr.info('La fecha de finalización de período debe ser mayor a la fecha de inicio de período', '', {
           timeOut: 6000,
         })
       }
@@ -188,22 +188,12 @@ export class EditarPeriodoVacacionesComponent implements OnInit {
     var ingreso = String(moment(fecha, "YYYY/MM/DD").format("YYYY-MM-DD"));
     this.rest.BuscarDatosContrato(this.data.datosPeriodo.id_empl_contrato).subscribe(data => {
       if (Date.parse(data[0].fec_ingreso.split('T')[0]) <= Date.parse(ingreso)) {
-        if (data[0].descripcion === 'CODIGO DE TRABAJO') {
-          fecha.setMonth(fecha.getMonth() + 12);
-          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-        }
-        else if (data[0].descripcion === 'LOSEP') {
-          fecha.setMonth(fecha.getMonth() + 11);
-          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-        }
-        else if (data[0].descripcion === 'LOES') {
-          fecha.setMonth(fecha.getMonth() + 11);
-          this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
-        }
+        fecha.setMonth(fecha.getMonth() + parseInt(data[0].meses_periodo));
+        this.PerVacacionesForm.patchValue({ fechaFinForm: fecha });
       }
       else {
         this.PerVacacionesForm.patchValue({ fechaInicioForm: '' });
-        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.','', {
+        this.toastr.info('La fecha de inicio de periodo no puede ser anterior a la fecha de ingreso de contrato.', '', {
           timeOut: 6000,
         });
       }

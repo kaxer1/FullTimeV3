@@ -388,6 +388,21 @@ class PermisosControlador {
             res.jsonp({ message: 'Permiso Editado' });
         }
     }
+
+    public async ObtenerFechasPermiso(req: Request, res: Response) {
+        const codigo = req.params.codigo;
+        const { fec_inicio, fec_final } = req.body;
+        const PERMISOS = await pool.query('SELECT pg.fec_hora_horario::date AS fecha, pg.fec_hora_horario::time AS hora, ' +
+            'pg.tipo_entr_salida FROM plan_general AS pg WHERE(pg.tipo_entr_salida = \'E\' OR pg.tipo_entr_salida = \'S\') ' +
+            'AND pg.codigo = $3 AND(pg.fec_hora_horario:: date = $1 OR pg.fec_hora_horario:: date = $2)',
+            [fec_inicio, fec_final, codigo]);
+        if (PERMISOS.rowCount > 0) {
+            return res.jsonp(PERMISOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
 }
 
 export const PERMISOS_CONTROLADOR = new PermisosControlador();

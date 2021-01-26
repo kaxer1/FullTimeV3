@@ -3,7 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
+import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
 @Component({
   selector: 'app-crear-timbre',
@@ -25,14 +27,14 @@ export class CrearTimbreComponent implements OnInit {
   teclaFuncionF = new FormControl('',);
 
   accion: any = [
-    {value: 'EoS', name: 'Entrada'},
-    {value: 'EoS', name: 'Salida'},
-    {value: 'AES', name: 'Almuerso Entrada'},
-    {value: 'AES', name: 'Almuerso Salida'},
-    {value: 'PES', name: 'Permiso Entrada'},
-    {value: 'PES', name: 'Permiso Salida'}
+    { value: 'E', name: 'Entrada' },
+    { value: 'S', name: 'Salida' },
+    { value: 'E/A', name: 'Almuerzo Entrada' },
+    { value: 'S/A', name: 'Almuerzo Salida' },
+    { value: 'E/P', name: 'Permiso Entrada' },
+    { value: 'S/P', name: 'Permiso Salida' }
   ]
-  
+
   public TimbreForm = new FormGroup({
     fechaForm: this.FechaF,
     horaForm: this.HoraF,
@@ -41,45 +43,81 @@ export class CrearTimbreComponent implements OnInit {
   });
 
   nombre: string;
-  
+
   constructor(
     private toastr: ToastrService,
+    private restTimbres: TimbresService,
     public dialogRef: MatDialogRef<CrearTimbreComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    this.nombre = this.data.empleado;
+    if (this.data.length === undefined) {
+      this.nombre = this.data.empleado;
+    }
+
     console.log(this.data);
-    
+
   }
 
   TeclaFuncion(opcion: string) {
     console.log(opcion);
-    if (opcion == 'EoS') {
+    if (opcion == 'E') {
       return 0;
-    } else if (opcion == 'AES') {
+    } else if (opcion == 'S') {
       return 1
-    } else {
+    } else if (opcion == 'S/A') {
       return 2
+    } else if (opcion == 'E/A') {
+      return 3
+    } else if (opcion == 'S/P') {
+      return 4
+    } else if (opcion == 'E/P') {
+      return 5
     }
   }
 
+  contador: number = 0;
   insertarTimbre(form1) {
     console.log(form1.fechaForm.toJSON());
-    
-    let dataTimbre = {
-      fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
-      accion: form1.accionForm,
-      tecl_funcion: this.TeclaFuncion(form1.accionForm),
-      observacion: 'Timbre creado por administrador '+ ' ' + localStorage.getItem('usuario'),
-      latitud: null,
-      longitud: null,
-      id_empleado: this.data.id,
-      id_reloj: null,
+    if (this.data.length === undefined) {
+      let dataTimbre = {
+        fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
+        accion: form1.accionForm,
+        tecl_funcion: this.TeclaFuncion(form1.accionForm),
+        observacion: 'Timbre creado por un Administrador',
+        latitud: null,
+        longitud: null,
+        id_empleado: this.data.id,
+        id_reloj: null,
+      }
+      this.dialogRef.close(dataTimbre)
     }
-    this.dialogRef.close(dataTimbre)
-
+    else {
+      console.log('entra')
+      this.contador = 0;
+      this.data.map(obj => {
+        let dataTimbre = {
+          fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
+          accion: form1.accionForm,
+          tecl_funcion: this.TeclaFuncion(form1.accionForm),
+          observacion: 'Timbre creado por un Administrador',
+          latitud: null,
+          longitud: null,
+          id_empleado: obj.id,
+          id_reloj: null,
+        }
+        this.restTimbres.PostTimbreWebAdmin(dataTimbre).subscribe(res => {
+          this.contador = this.contador + 1;
+          if (this.contador === this.data.length) {
+            console.log(res, this.contador);
+            this.dialogRef.close();
+            window.location.reload();
+            this.toastr.success(res.message);
+          }
+        })
+      })
+    }
   }
 
   IngresarSoloNumeros(evt) {
@@ -100,5 +138,7 @@ export class CrearTimbreComponent implements OnInit {
       return false;
     }
   }
+
+
 
 }

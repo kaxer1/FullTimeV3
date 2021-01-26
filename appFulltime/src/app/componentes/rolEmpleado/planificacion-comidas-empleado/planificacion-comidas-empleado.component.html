@@ -28,8 +28,8 @@
                     <label id="datosF">Precio Plato:</label>
                     <label>$ {{pc.valor}}</label>
                 </div>
-                <div class="caja1 d-flex justify-content-start" style="width: 300px;">
-                    <label id="datosF">Fecha Planificación:</label>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Fecha Planificada:</label>
                     <label>{{pc.fec_solicita.split("T")[0]}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
@@ -39,6 +39,21 @@
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Observación:</label>
                     <label>{{pc.observacion}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Descripción:</label>
+                    <label>{{pc.descripcion}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Servicio:</label>
+                    <label>{{pc.tipo_servicio}}</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
+                    <label id="datosF">Porción:</label>
+                    <label *ngIf="pc.extra === false">Normal</label>
+                    <label *ngIf="pc.extra === true">Extra</label>
+                </div>
+                <div class="caja1 d-flex justify-content-start">
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                 </div>

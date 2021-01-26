@@ -22,6 +22,8 @@ import { AyudaComponent } from '../ayuda/ayuda.component';
 import { MenuNode } from '../../model/menu.model'
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
 
 @Component({
   selector: 'app-main-nav',
@@ -73,6 +75,7 @@ export class MainNavComponent implements OnInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
+    public restUsuario: UsuarioService,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
     public restEmpresa: EmpresaService,
@@ -85,7 +88,7 @@ export class MainNavComponent implements OnInit {
     private rest: EmpresaService,
     private route: ActivatedRoute
   ) {
-   
+
     this.socket.on('enviar_notification', (data) => {
       if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
         console.log(data);
@@ -135,7 +138,7 @@ export class MainNavComponent implements OnInit {
 
   ngOnInit() {
     this.idEmpresa = parseInt(localStorage.getItem('empresa'))
-    this.LlamarDatos(); 
+    this.LlamarDatos();
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),
@@ -166,6 +169,7 @@ export class MainNavComponent implements OnInit {
 
     this.SeleccionMenu();
     this.BarraBusquedaEmpleados();
+    this.ConfigurarSeguridad();
   }
 
   BarraBusquedaEmpleados() {
@@ -186,7 +190,7 @@ export class MainNavComponent implements OnInit {
           this.options.push(obj.empleado)
         });
         this.buscar_empl = res
-      }) 
+      })
     }
   };
 
@@ -194,10 +198,10 @@ export class MainNavComponent implements OnInit {
     this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
       this.datosEmpresa = datos;
       if (this.datosEmpresa[0].logo === null || this.datosEmpresa[0].color_p === null || this.datosEmpresa[0].color_s === null) {
-        this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs','Error configuración', {timeOut: 10000})
-        .onTap.subscribe(obj => {
-          this.IrInfoEmpresa()
-        })
+        this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs', 'Error configuración', { timeOut: 10000 })
+          .onTap.subscribe(obj => {
+            this.IrInfoEmpresa()
+          })
         this.mensaje = true;
       } else {
         this.habilitarReportes = 'visible';
@@ -206,7 +210,30 @@ export class MainNavComponent implements OnInit {
   }
 
   IrInfoEmpresa() {
-    this.router.navigate(['/vistaEmpresa', this.idEmpresa], {relativeTo: this.route, skipLocationChange: false})
+    this.router.navigate(['/vistaEmpresa', this.idEmpresa], { relativeTo: this.route, skipLocationChange: false })
+  }
+
+  ConfigurarSeguridad() {
+
+    this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
+      this.datosEmpresa = datos;
+      if (this.datosEmpresa[0].seg_frase === true) {
+        this.restUsuario.BuscarDatosUser(this.id_empleado_logueado).subscribe(data => {
+          if (data[0].id_rol === 1) {
+            if (data[0].frase === null || data[0].frase === '') {
+              this.toaster.info('Debe registrar su frase de seguridad.', 'Configuración doble seguridad', { timeOut: 10000 })
+                .onTap.subscribe(obj => {
+                  this.RegistrarFrase()
+                })
+            }
+          }
+        });
+      }
+    });
+  }
+
+  RegistrarFrase() {
+    this.vistaFlotante.open(FraseSeguridadComponent, { width: '350px', data: this.id_empleado_logueado }).disableClose = true;
   }
 
   confRes: any = [];
@@ -355,11 +382,11 @@ export class MainNavComponent implements OnInit {
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: {id_empleado} });
+    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: { id_empleado } });
   }
 
   AbrirVentanaAyuda() {
-    this.vistaFlotante.open(AyudaComponent, {width: '500px'})
+    this.vistaFlotante.open(AyudaComponent, { width: '500px' })
   }
 
   irHome() {
@@ -437,6 +464,7 @@ export class MainNavComponent implements OnInit {
         icono: 'local_dining',
         children: [
           { name: 'Almuerzos', url: '/listarTipoComidas' },
+          { name: 'Planificación', url: '/alimentacion' },
         ]
       },
       {
@@ -497,7 +525,7 @@ export class MainNavComponent implements OnInit {
         icono: 'fingerprint',
         children: [
           { name: 'Administrar Timbres', url: '/timbres-admin' },
-         { name: 'Timbres personales', url: '/timbres-personal' },
+          { name: 'Timbres personales', url: '/timbres-personal' },
         ]
       },
       {

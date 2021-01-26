@@ -29,6 +29,9 @@ export class EditarPlanComidasComponent implements OnInit {
   fechaPlanificacionF = new FormControl('', Validators.required);
   horaInicioF = new FormControl('', Validators.required);
   horaFinF = new FormControl('', Validators.required);
+  tipoF = new FormControl('');
+  servicioF = new FormControl('', [Validators.minLength(3)]);
+  extraF = new FormControl('', [Validators.required]);
 
   // asignar los campos en un formulario en grupo
   public PlanificacionComidasForm = new FormGroup({
@@ -38,13 +41,21 @@ export class EditarPlanComidasComponent implements OnInit {
     observacionForm: this.observacionF,
     fechaPlanificacionForm: this.fechaPlanificacionF,
     horaInicioForm: this.horaInicioF,
-    horaFinForm: this.horaFinF
+    horaFinForm: this.horaFinF,
+    servicioForm: this.servicioF,
+    tipoForm: this.tipoF,
+    extraForm: this.extraF
   });
 
   tipoComidas: any = [];
   empleados: any = [];
 
   FechaActual: any;
+
+  idEmpleadoLogueado: any;
+
+  selec1: boolean = false;
+  selec2: boolean = false;
 
   constructor(
     private toastr: ToastrService,
@@ -53,20 +64,15 @@ export class EditarPlanComidasComponent implements OnInit {
     public restPlan: PlanComidasService,
     public dialogRef: MatDialogRef<EditarPlanComidasComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+  ) {
+    this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
-    /*  var f = new Date();
-      if (f.getMonth() < 10 && f.getDate() < 10) {
-        this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-0" + f.getDate();
-      } else if (f.getMonth() >= 10 && f.getDate() >= 10) {
-        this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-" + f.getDate();
-      } else if (f.getMonth() < 10 && f.getDate() >= 10) {
-        this.FechaActual = f.getFullYear() + "-0" + [f.getMonth() + 1] + "-" + f.getDate();
-      } else if (f.getMonth() >= 10 && f.getDate() < 10) {
-        this.FechaActual = f.getFullYear() + "-" + [f.getMonth() + 1] + "-0" + f.getDate();
-      }*/
+    console.log('datos', this.data)
     this.ObtenerPlatosComidas();
+    this.ObtenerServicios();
+    this.servicios[this.servicios.length] = { nombre: "OTRO" };
     this.ObtenerEmpleados(this.data.id_empleado);
     this.CargarDatos();
   }
@@ -122,15 +128,21 @@ export class EditarPlanComidasComponent implements OnInit {
       fec_solicita: form.fechaPlanificacionForm,
       hora_inicio: form.horaInicioForm,
       hora_fin: form.horaFinForm,
+      tipo_comida: form.tipoForm,
+      extra: form.extraForm,
       id: this.data.id
     };
-    this.restPlan.ActualizarDatos(datosPlanComida).subscribe(response => {
-      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado', {
-        timeOut: 6000,
-      })
-      this.CerrarRegistroPlanificacion();
-    }, error => {
-    });
+    if (form.tipoForm === undefined) {
+      this.RegistrarServicio(form, datosPlanComida);
+    }
+    else {
+      this.restPlan.ActualizarDatos(datosPlanComida).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado', {
+          timeOut: 6000,
+        })
+        this.CerrarRegistroPlanificacion();
+      });
+    }
   }
 
   ObtenerMensajeErrorObservacion() {
@@ -149,6 +161,8 @@ export class EditarPlanComidasComponent implements OnInit {
   LimpiarCampos() {
     this.PlanificacionComidasForm.reset();
     this.ObtenerPlatosComidas();
+    this.ObtenerServicios();
+    this.servicios[this.servicios.length] = { nombre: "OTRO" };
   }
 
   CargarDatos() {
@@ -157,8 +171,79 @@ export class EditarPlanComidasComponent implements OnInit {
       observacionForm: this.data.observacion,
       fechaPlanificacionForm: this.data.fec_solicita,
       horaInicioForm: this.data.hora_inicio,
-      horaFinForm: this.data.hora_fin
+      horaFinForm: this.data.hora_fin,
+      tipoForm: this.data.id_servicio
     })
+    if (this.data.extra === true) {
+      this.PlanificacionComidasForm.patchValue({
+        extraForm: 'true'
+      })
+    }
+    else {
+      this.PlanificacionComidasForm.patchValue({
+        extraForm: 'false'
+      })
+    }
+  }
+
+  estilo: any;
+  habilitarServicio: boolean = false;
+  IngresarServicio(form) {
+    if (form.tipoForm === undefined) {
+      this.PlanificacionComidasForm.patchValue({
+        servicioForm: '',
+      });
+      this.estilo = { 'visibility': 'visible' }; this.habilitarServicio = true;
+      this.toastr.info('Ingresar nombre del nuevo tipo de servicio.', 'Etiqueta Ingresar Servicio activa', {
+        timeOut: 6000,
+      })
+      this.habilitarSeleccion = false;
+    }
+  }
+
+  habilitarSeleccion: boolean = true;
+  VerTiposServicios() {
+    this.PlanificacionComidasForm.patchValue({
+      servicioForm: '',
+    });
+    this.estilo = { 'visibility': 'hidden' }; this.habilitarServicio = false;
+    this.habilitarSeleccion = true;
+  }
+
+  servicios: any = [];
+  ObtenerServicios() {
+    this.servicios = [];
+    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
+      this.servicios = datos;
+      this.servicios[this.servicios.length] = { nombre: "OTRO" };
+    })
+  }
+
+  contador: number = 0;
+  RegistrarServicio(form, datos: any) {
+    if (form.servicioForm != '') {
+      let tipo_servicio = {
+        nombre: form.servicioForm
+      }
+      this.restPlan.CrearTipoComidas(tipo_servicio).subscribe(res => {
+        // Buscar id de último cargo ingresado
+        this.restPlan.ObtenerUltimoTipoComidas().subscribe(data => {
+          // Buscar id de último cargo ingresado
+          datos.tipo_comida = data[0].max;
+          this.restPlan.ActualizarDatos(datos).subscribe(res => {
+            this.toastr.success('Operación Exitosa', 'Planificación de Alimentación Registrada', {
+              timeOut: 6000,
+            })
+            this.CerrarRegistroPlanificacion();
+          });
+        });
+      });
+    }
+    else {
+      this.toastr.info('Ingresar el tipo de servicio', 'Verificar datos', {
+        timeOut: 6000,
+      });
+    }
   }
 
 }

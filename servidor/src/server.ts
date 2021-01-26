@@ -60,6 +60,7 @@ import TIMBRES_RUTAS from './rutas/timbres/timbresRutas';
 import PLAN_GENERAL_RUTAS from './rutas/planGeneral/planGeneralRutas';
 import REPORTE_HORA_EXTRA_RUTAS from './rutas/reportes/reporteHoraExtraRutas';
 import GRAFICAS_RUTAS from './rutas/graficas/graficasRutas';
+import ALIMENTACION_RUTAS from './rutas/reportes/alimentacionRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -170,6 +171,9 @@ class Servidor {
         this.app.use('/reportes/hora-extra', REPORTE_HORA_EXTRA_RUTAS);
         this.app.use('/reporte', REPORTES_RUTAS);
 
+        // Modulo Alimentación
+        this.app.use('/alimentacion', ALIMENTACION_RUTAS);
+
         // HORAS EXTRAS
         this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS);
 
@@ -178,7 +182,7 @@ class Servidor {
 
         // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
         this.app.use('/generalidades', DATOS_GENERALES_RUTAS);
-        
+
         // GRAFICAS PARA MOSTRAR EN EL HOME
         this.app.use('/metricas', GRAFICAS_RUTAS);
 

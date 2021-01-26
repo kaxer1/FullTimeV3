@@ -25,6 +25,7 @@ class DepartamentoRutas {
         this.router.get('/download/:nameXML', catDepartamentoControlador_1.default.downloadXML);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, catDepartamentoControlador_1.default.EliminarRegistros);
         this.router.get('/buscar/datosDepartamento/:id_sucursal', verificarToken_1.TokenValidation, catDepartamentoControlador_1.default.ListarDepartamentosSucursal);
+        this.router.get('/buscar/regimen-departamento/:id', verificarToken_1.TokenValidation, catDepartamentoControlador_1.default.ListarDepartamentosRegimen);
     }
 }
 const DEPARTAMENTO_RUTAS = new DepartamentoRutas();

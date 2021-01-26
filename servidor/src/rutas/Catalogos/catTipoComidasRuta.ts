@@ -23,12 +23,11 @@ class TipoComidasRuta {
         this.router.delete('/eliminar/:id', TokenValidation, TIPO_COMIDAS_CONTROLADOR.EliminarRegistros);
         this.router.post('/xmlDownload/', TokenValidation, TIPO_COMIDAS_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', TIPO_COMIDAS_CONTROLADOR.downloadXML);
-        // Validaciones de datos antes da registra los datos de la plantilla indicada
+        // Validaciones de datos antes de registrar los datos de la plantilla indicada
         this.router.post('/verificar_datos/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.RevisarDatos);
         this.router.post('/verificar_plantilla/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.RevisarDatos_Duplicados);
         this.router.post('/upload', TokenValidation, multipartMiddleware, TIPO_COMIDAS_CONTROLADOR.CrearTipoComidasPlantilla);
         
-   
     }
 }
 

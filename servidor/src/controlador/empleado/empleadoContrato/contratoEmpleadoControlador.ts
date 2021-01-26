@@ -61,7 +61,9 @@ class ContratoEmpleadoControlador {
 
     public async EncontrarDatosUltimoContrato(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
-        const CONTRATO = await pool.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, cr.descripcion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id = $1 AND ec.id_regimen = cr.id', [id]);
+        const CONTRATO = await pool.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ' +
+            'ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, cr.descripcion, cr.meses_periodo ' +
+            'FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id = $1 AND ec.id_regimen = cr.id', [id]);
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
@@ -73,7 +75,9 @@ class ContratoEmpleadoControlador {
 
     public async EncontrarContratoEmpleadoRegimen(req: Request, res: Response): Promise<any> {
         const { id_empleado } = req.params;
-        const CONTRATO_EMPLEADO_REGIMEN = await pool.query('SELECT ec.id, ec.fec_ingreso, fec_salida, cr.descripcion, dia_anio_vacacion FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id_empleado = $1 and ec.id_regimen = cr.id ORDER BY ec.id ASC', [id_empleado]);
+        const CONTRATO_EMPLEADO_REGIMEN = await pool.query('SELECT ec.id, ec.fec_ingreso, fec_salida, ' +
+            'cr.descripcion, cr.meses_periodo, dia_anio_vacacion FROM empl_contratos AS ec, cg_regimenes AS cr ' +
+            'WHERE ec.id_empleado = $1 and ec.id_regimen = cr.id ORDER BY ec.id ASC', [id_empleado]);
         if (CONTRATO_EMPLEADO_REGIMEN.rowCount > 0) {
             return res.jsonp(CONTRATO_EMPLEADO_REGIMEN.rows)
         }

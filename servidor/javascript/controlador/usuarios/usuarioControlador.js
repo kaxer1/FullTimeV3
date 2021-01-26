@@ -100,6 +100,13 @@ class UsuarioControlador {
             }
         });
     }
+    ActualizarFrase(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { frase, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE usuarios SET frase = $1 WHERE id_empleado = $2', [frase, id_empleado]);
+            res.jsonp({ message: 'Frase exitosa' });
+        });
+    }
     //ACCESOS AL SISTEMA
     AuditarAcceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

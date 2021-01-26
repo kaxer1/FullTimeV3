@@ -76,7 +76,8 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Fecha de Salida</mat-label>
-                        <input matInput [matDatepicker]="picker2" (dateInput)="validarFechaSalida($event, PermisoForm.value)" readonly
+                        <input matInput [matDatepicker]="picker2"
+                            (dateInput)="validarFechaSalida($event, PermisoForm.value)" readonly
                             placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
@@ -99,13 +100,13 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Salida</mat-label>
-                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaSalidaF">
+                        <input matInput type="time" (keypress)="IngresarSoloNumeros($event)" [formControl]="horaSalidaF"
+                            required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Ingreso</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaIngresoF">
+                            [formControl]="horaIngresoF" required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
@@ -161,7 +162,7 @@
         </mat-card-content>
     </form>
     <div style="text-align: center;">
-        <button type="submit" class="btn btn-sm" (click)="InsertarPermiso(PermisoForm.value)"
+        <button type="submit" class="btn btn-sm" (click)="ValidarHora_Salida_Entrada(PermisoForm.value)"
             [disabled]="!PermisoForm.valid"> Guardar </button>
         <button type="submit" class="btn btn-sm" (click)="CerrarVentanaPermiso()"> Salir </button>
     </div>

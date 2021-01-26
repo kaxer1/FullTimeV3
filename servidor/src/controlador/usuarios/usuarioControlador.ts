@@ -13,7 +13,6 @@ class UsuarioControlador {
     }
   }
 
-
   public async getIdByUsuario(req: Request, res: Response): Promise<any> {
     const { usuario } = req.params;
     const unUsuario = await pool.query('SELECT id FROM usuarios WHERE usuario = $1', [usuario]);
@@ -84,6 +83,11 @@ class UsuarioControlador {
     }
   }
 
+  public async ActualizarFrase(req: Request, res: Response): Promise<void> {
+    const { frase, id_empleado } = req.body;
+    await pool.query('UPDATE usuarios SET frase = $1 WHERE id_empleado = $2', [frase, id_empleado]);
+    res.jsonp({ message: 'Frase exitosa' });
+  }
 
   //ACCESOS AL SISTEMA
   public async AuditarAcceso(req: Request, res: Response) {

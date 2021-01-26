@@ -96,8 +96,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   legalizarF = new FormControl('', [Validators.required]);
   nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
-  horaSalidaF = new FormControl('');
-  horaIngresoF = new FormControl('');
+  horaSalidaF = new FormControl('', Validators.required);
+  horaIngresoF = new FormControl('', Validators.required);
 
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
@@ -260,17 +260,45 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   }
 
   dIngreso: any;
+  fechas_horario: any = [];
+  readonly: boolean = false;
   validarFechaIngreso(event, form) {
+    this.readonly = false;
+    this.fechas_horario = [];
     if (form.fechaInicioForm != '' && form.idPermisoForm != '') {
       this.horasTrabajo = [];
       let datosFechas = {
         id_emple: this.datoEmpleado.idEmpleado,
         fecha: form.fechaInicioForm
       }
+      console.log('datos', datosFechas)
       this.dIngreso = event.value;
       this.restH.BuscarNumeroHoras(datosFechas).subscribe(datos => {
         this.horasTrabajo = datos;
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
+        if (form.solicitarForm === 'Días') {
+          let datos = {
+            fec_inicio: form.fechaInicioForm,
+            fec_final: form.fechaFinalForm
+          }
+          this.restP.BuscarFechasPermiso(datos, parseInt(this.empleado[0].codigo)).subscribe(response => {
+            console.log('fechas_permiso', response);
+            this.fechas_horario = response;
+            this.fechas_horario.map(obj => {
+              if (obj.fecha.split('T')[0] === moment(this.dSalida).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horaSalidaForm: obj.hora
+                })
+              }
+              if (obj.fecha.split('T')[0] === moment(this.dIngreso).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horasIngresoForm: obj.hora
+                })
+              }
+            })
+            this.readonly = true;
+          })
+        }
       }, error => {
         this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR', {
           timeOut: 6000,
@@ -290,6 +318,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.LimpiarCamposFecha();
     this.selec1 = false;
     this.selec2 = false;
+    this.readonly = false;
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
@@ -478,6 +507,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
 
   RevisarIngresoDias(form) {
     if (parseInt(form.diasForm) <= this.Tdias) {
+      console.log('revisar', this.dIngreso, this.dSalida)
       const resta = this.dIngreso.diff(this.dSalida, 'days');
       console.log('datos', resta, ' ');
       if (resta != form.diasForm) {
@@ -761,6 +791,8 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
     this.PermisoForm.patchValue({
       fechaFinalForm: '',
       diaLibreForm: '',
+      horaSalidaForm: '',
+      horasIngresoForm: ''
     });
   }
 
@@ -821,6 +853,42 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
   ObtenerMensajeFecha() {
     if (this.fechaFinalF.hasError('required')) {
       return 'Campo Obligatorio';
+    }
+  }
+
+  /** Validar Ingreso de Hora de Salida y Hora de Retorno */
+  ValidarHora_Salida_Entrada(form) {
+    if (form.solicitarForm === 'Horas') {
+      var total = form.horasForm;
+      var hora1 = (String(form.horaSalidaForm) + ':00').split(":"),
+        hora2 = (String(form.horasIngresoForm) + ':00').split(":"),
+        t1 = new Date(),
+        t2 = new Date();
+      t1.setHours(parseInt(hora1[0]), parseInt(hora1[1]), parseInt(hora1[2]));
+      t2.setHours(parseInt(hora2[0]), parseInt(hora2[1]), parseInt(hora2[2]));
+      //Aquí hago la resta
+      t1.setHours(t2.getHours() - t1.getHours(), t2.getMinutes() - t1.getMinutes(), t2.getSeconds() - t1.getSeconds());
+      if (t1.getHours() < 10 && t1.getMinutes() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + '0' + t1.getMinutes();
+      }
+      else if (t1.getHours() < 10) {
+        var tiempoTotal: string = '0' + t1.getHours() + ':' + t1.getMinutes();
+      }
+      else if (t1.getMinutes() < 10) {
+        var tiempoTotal: string = t1.getHours() + ':' + '0' + t1.getMinutes();
+      }
+      console.log('horas', tiempoTotal, total)
+      if (tiempoTotal === total) {
+        this.InsertarPermiso(form);
+      }
+      else {
+        this.toastr.error('El total de horas solicitadas no corresponda con el total de horas de salida e ingreso.', 'Verificar la horas de salida e ingreso de permiso.', {
+          timeOut: 6000,
+        });
+      }
+    }
+    else {
+      this.InsertarPermiso(form);
     }
   }
 }

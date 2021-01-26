@@ -15,6 +15,7 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service'
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import { CorreoEmpresaComponent } from '../correo-empresa/correo-empresa.component';
+import { TipoSeguridadComponent } from '../tipo-seguridad/tipo-seguridad.component';
 
 @Component({
   selector: 'app-ver-empresa',
@@ -158,14 +159,17 @@ export class VerEmpresaComponent implements OnInit {
         if (res.actualizar === true) {
           this.ObtenerLogotipo();
         }
+        else {
+          this.ObtenerLogotipo();
+        }
       })
   }
 
   ConfigurarCorreoElectronico(info_empresa) {
-    this.vistaRegistrarDatos.open(CorreoEmpresaComponent, { width: '400px', data: info_empresa}).afterClosed()
+    this.vistaRegistrarDatos.open(CorreoEmpresaComponent, { width: '400px', data: info_empresa }).afterClosed()
       .subscribe(res => {
         console.log(res);
-        
+
       })
 
   }
@@ -190,6 +194,15 @@ export class VerEmpresaComponent implements OnInit {
         } else {
           this.router.navigate(['/vistaEmpresa/', this.idEmpresa]);
         }
+      });
+  }
+
+  AbrirVentanaSeguridad(datosSeleccionados) {
+    this.vistaRegistrarDatos.open(TipoSeguridadComponent, { width: '300', data: datosSeleccionados })
+      .afterClosed().subscribe((items: any) => {
+        this.ObtenerSucursal();
+        this.ObtenerLogotipo();
+        this.CargarDatosEmpresa();
       });
   }
 

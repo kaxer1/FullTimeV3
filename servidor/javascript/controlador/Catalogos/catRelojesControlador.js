@@ -99,7 +99,7 @@ class RelojesControlador {
                 const id_sucursal = yield database_1.default.query('SELECT id FROM sucursales WHERE UPPER(nombre) = $1', [sucursal.toUpperCase()]);
                 const id_departamento = yield database_1.default.query('SELECT id FROM cg_departamentos WHERE UPPER(nombre) = $1 AND ' +
                     'id_sucursal = $2', [departamento.toUpperCase(), id_sucursal.rows[0]['id']]);
-                // Verificar que se haya ingresado némero de acciones si el dispositivo las tiene
+                // Verificar que se haya ingresado número de acciones si el dispositivo las tiene
                 if (tiene_funciones === true) {
                     var accion = numero_accion;
                 }

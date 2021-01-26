@@ -147,6 +147,13 @@ class EmpresaControlador {
             res.jsonp({ message: 'Colores de Empresa actualizados exitosamente' });
         });
     }
+    ActualizarSeguridad(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { seg_contrasena, seg_frase, seg_ninguna, id } = req.body;
+            yield database_1.default.query('UPDATE cg_empresa SET seg_contrasena = $1, seg_frase = $2, seg_ninguna = $3 WHERE id = $4', [seg_contrasena, seg_frase, seg_ninguna, id]);
+            res.jsonp({ message: 'Seguridad exitosamente' });
+        });
+    }
     EditarPassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_empresa;

@@ -42,8 +42,11 @@ class RegimenControlador {
     CrearRegimen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion } = req.body;
-                yield database_1.default.query('INSERT INTO cg_regimenes (descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion) VALUES ($1, $2, $3, $4, $5, $6, $7)', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion]);
+                const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo } = req.body;
+                yield database_1.default.query('INSERT INTO cg_regimenes (descripcion, dia_anio_vacacion, dia_incr_antiguedad, ' +
+                    'anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo) ' +
+                    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion,
+                    max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo]);
                 res.jsonp({ message: 'Regimen guardado' });
             }
             catch (error) {
@@ -53,8 +56,11 @@ class RegimenControlador {
     }
     ActualizarRegimen(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, id } = req.body;
-            yield database_1.default.query('UPDATE cg_regimenes  SET descripcion = $1, dia_anio_vacacion = $2, dia_incr_antiguedad = $3, anio_antiguedad = $4, dia_mes_vacacion = $5, max_dia_acumulacion = $6, dia_libr_anio_vacacion = $7 WHERE id = $8', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, id]);
+            const { descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion, max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo, id } = req.body;
+            yield database_1.default.query('UPDATE cg_regimenes SET descripcion = $1, dia_anio_vacacion = $2, ' +
+                'dia_incr_antiguedad = $3, anio_antiguedad = $4, dia_mes_vacacion = $5, max_dia_acumulacion = $6, ' +
+                'dia_libr_anio_vacacion = $7, meses_periodo = $8 WHERE id = $9', [descripcion, dia_anio_vacacion, dia_incr_antiguedad, anio_antiguedad, dia_mes_vacacion,
+                max_dia_acumulacion, dia_libr_anio_vacacion, meses_periodo, id]);
             res.jsonp({ message: 'Regimen guardado' });
         });
     }
@@ -84,6 +90,20 @@ class RegimenControlador {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM cg_regimenes WHERE id = $1', [id]);
             res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    ListarRegimenSucursal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const REGIMEN = yield database_1.default.query(' SELECT r.id, r.descripcion FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+                'empl_contratos AS c WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ec.id_sucursal = $1 ' +
+                'GROUP BY r.id, r.descripcion', [id]);
+            if (REGIMEN.rowCount > 0) {
+                return res.jsonp(REGIMEN.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
         });
     }
 }

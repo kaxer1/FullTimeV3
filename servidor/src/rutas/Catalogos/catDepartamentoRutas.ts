@@ -23,6 +23,8 @@ class DepartamentoRutas {
         this.router.get('/download/:nameXML', DEPARTAMENTO_CONTROLADOR.downloadXML);
         this.router.delete('/eliminar/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.EliminarRegistros);
         this.router.get('/buscar/datosDepartamento/:id_sucursal', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarDepartamentosSucursal);
+        this.router.get('/buscar/regimen-departamento/:id', TokenValidation, DEPARTAMENTO_CONTROLADOR.ListarDepartamentosRegimen);
+
     }
 }
 

@@ -21,6 +21,12 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { PlanHoraExtraComponent } from 'src/app/componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
+// Servicios Filtros de búsqueda
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+
 export interface PlanificacionHorasExtrasElemento {
   apellido: string;
   cargo: string;
@@ -112,7 +118,26 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
 
   habilitado: any;
 
+  /**FILTROS DE BÚSQUEDA */
+  sucursalF = new FormControl('');
+  depaF = new FormControl('');
+  cargosF = new FormControl('');
+  laboralF = new FormControl('');
+  // Formulario de Búsquedas
+  public busquedasForm = new FormGroup({
+    sucursalForm: this.sucursalF,
+    depaForm: this.depaF,
+    cargosForm: this.cargosF,
+    laboralForm: this.laboralF,
+  });
+
   constructor(
+    /** FILTROS DE BÚSQUEDA */
+    public restSucur: SucursalService,
+    public restDepa: DepartamentosService,
+    public restCargo: EmplCargosService,
+    public restRegimen: RegimenService,
+
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restD: DatosGeneralesService,
@@ -128,6 +153,12 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     this.ObtenerNacionalidades();
     this.ObtenerEmpleadoLogueado(this.idEmpleado);
     this.VerDatosEmpleado();
+
+    //FILTROS DE BÚSQUEDA
+    this.ListarSucursales();
+    this.ListarDepartamentos();
+    this.ListarCargos();
+    this.ListarRegimen();
   }
 
   // Método para ver la información del empleado 
@@ -355,5 +386,361 @@ export class ListaEmplePlanHoraEComponent implements OnInit {
     const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "EmpleadosCSV" + new Date().getTime() + '.csv');
   }
+
+  /*FILTROS DE BÚSQUEDA*/
+  sucursales: any = [];
+  ListarSucursales() {
+    this.sucursales = [];
+    this.restSucur.getSucursalesRest().subscribe(res => {
+      this.sucursales = res;
+    });
+  }
+
+  departamentos: any = [];
+  ListarDepartamentos() {
+    this.departamentos = [];
+    this.restDepa.ConsultarDepartamentos().subscribe(res => {
+      this.departamentos = res;
+    });
+  }
+
+  cargos: any = [];
+  ListarCargos() {
+    this.cargos = [];
+    this.restCargo.ObtenerTipoCargos().subscribe(res => {
+      this.cargos = res;
+    });
+  }
+
+  regimen: any = [];
+  ListarRegimen() {
+    this.regimen = [];
+    this.restRegimen.ConsultarRegimen().subscribe(res => {
+      this.regimen = res;
+    });
+  }
+
+  LimpiarBusquedas() {
+    this.busquedasForm.patchValue(
+      {
+        laboralForm: '',
+        depaForm: '',
+        cargosForm: '',
+        sucursalForm: ''
+      })
+    this.VerDatosEmpleado();
+    this.ListarSucursales();
+    this.ListarDepartamentos();
+    this.ListarCargos();
+    this.ListarRegimen();
+  }
+
+  LimpiarCampos1() {
+    this.busquedasForm.patchValue(
+      {
+        laboralForm: '',
+        depaForm: '',
+        cargosForm: ''
+      })
+  }
+
+  LimpiarCampos2() {
+    this.busquedasForm.patchValue(
+      {
+        depaForm: '',
+        cargosForm: ''
+      })
+  }
+
+  LimpiarCampos3() {
+    this.busquedasForm.patchValue(
+      { cargosForm: '' })
+  }
+
+
+  FiltrarSucursal(form) {
+    this.departamentos = [];
+    this.restDepa.BuscarDepartamentoSucursal(form.sucursalForm).subscribe(res => {
+      this.departamentos = res;
+    });
+    this.cargos = [];
+    this.restCargo.ObtenerCargoSucursal(form.sucursalForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('La sucursal seleccionada no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.regimen = [];
+    this.restRegimen.ConsultarRegimenSucursal(form.sucursalForm).subscribe(res => {
+      this.regimen = res;
+    });
+    this.LimpiarCampos1();
+  }
+
+  FiltrarRegimen(form) {
+    this.cargos = [];
+    this.restCargo.ObtenerCargoRegimen(form.laboralForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('El regimen seleccionado no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.departamentos = [];
+    this.restDepa.BuscarDepartamentoRegimen(form.laboralForm).subscribe(res => {
+      this.departamentos = res;
+    });
+    this.LimpiarCampos2();
+  }
+
+  FiltrarDepartamento(form) {
+    this.cargos = [];
+    this.restCargo.ObtenerCargoDepartamento(form.depaForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('El departamento seleccionado no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.LimpiarCampos3();
+  }
+
+  VerInformacionSucursal(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucursal(form.sucursalForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepa(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuDepa(form.sucursalForm, form.depaForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaRegimen(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuDepaRegimen(form.sucursalForm, form.depaForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuCargo(form.sucursalForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuRegimen(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuRegimen(form.sucursalForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuRegimenCargo(form.sucursalForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuDepaCargo(form.sucursalForm, form.depaForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaCargoRegimen(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosSucuRegimenDepartamentoCargo(form.sucursalForm, form.depaForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepartamento(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosDepartamento(form.depaForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosDepaCargo(form.depaForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaRegimen(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosDepaRegimen(form.depaForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosDepaRegimenCargo(form.depaForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionRegimen(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosRegimen(form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosRegimenCargo(form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionCargo(form) {
+    this.datosEmpleado = [];
+    this.restD.VerDatosCargo(form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerificarBusquedas(form) {
+    console.log('form', form.depaForm, form.sucursalForm, form.cargosForm, form.laboralForm)
+    if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.toastr.info('Ingresar un criterio de búsqueda.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionSucursal(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionSucuDepa(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionSucuDepaRegimen(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionSucuDepaCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionSucuCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionSucuRegimen(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionSucuRegimenCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionSucuDepaCargoRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionDepartamento(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionDepaCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionDepaRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionDepaRegimenCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionRegimenCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionCargo(form);
+    }
+  }
+
+
 
 }

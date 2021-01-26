@@ -169,6 +169,20 @@ class DepartamentoControlador {
             }
         });
     }
+    ListarDepartamentosRegimen(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const DEPARTAMENTOS = yield database_1.default.query('SELECT d.id, d.nombre FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+                'empl_contratos AS c, cg_departamentos AS d WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ' +
+                'ec.id_departamento = d.id AND r.id = $1 GROUP BY d.id, d.nombre', [id]);
+            if (DEPARTAMENTOS.rowCount > 0) {
+                res.jsonp(DEPARTAMENTOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();
 exports.default = exports.DEPARTAMENTO_CONTROLADOR;

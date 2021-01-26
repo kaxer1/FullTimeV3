@@ -38,4 +38,8 @@ export class RegimenService {
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/regimenLaboral/eliminar/${id}`);
   }
+
+  ConsultarRegimenSucursal(id: number) {
+    return this.http.get(`${this.API_URL}/regimenLaboral/sucursal-regimen/${id}`);
+  }
 }

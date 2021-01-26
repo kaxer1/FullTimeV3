@@ -144,6 +144,20 @@ class DepartamentoControlador {
       return res.status(404).jsonp({ text: 'No se encuentran registros' });
     }
   }
+
+  public async ListarDepartamentosRegimen(req: Request, res: Response) {
+    const id = req.params.id;
+    const DEPARTAMENTOS = await pool.query('SELECT d.id, d.nombre FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+      'empl_contratos AS c, cg_departamentos AS d WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ' +
+      'ec.id_departamento = d.id AND r.id = $1 GROUP BY d.id, d.nombre', [id]);
+    if (DEPARTAMENTOS.rowCount > 0) {
+      res.jsonp(DEPARTAMENTOS.rows);
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
 }
 
 export const DEPARTAMENTO_CONTROLADOR = new DepartamentoControlador();
