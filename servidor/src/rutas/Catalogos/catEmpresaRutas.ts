@@ -28,6 +28,8 @@ class DepartamentoRutas {
         this.router.put('/logo/:id_empresa/uploadImage', [TokenValidation, multipartMiddleware], EMPRESA_CONTROLADOR.ActualizarLogoEmpresa);
         this.router.put('/colores', [TokenValidation], EMPRESA_CONTROLADOR.ActualizarColores);
         this.router.put('/credenciales/:id_empresa', TokenValidation, EMPRESA_CONTROLADOR.EditarPassword);
+        this.router.put('/doble/seguridad', TokenValidation, EMPRESA_CONTROLADOR.ActualizarSeguridad);
+
     }
 }
 

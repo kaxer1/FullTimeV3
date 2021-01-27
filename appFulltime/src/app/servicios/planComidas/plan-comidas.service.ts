@@ -30,4 +30,18 @@ export class PlanComidasService {
     return this.http.put(`${this.API_URL}/planComidas`, datos);
   }
 
+  /** Servicio para obtener datos de la tabla tipo_comida */
+
+  CrearTipoComidas(datos: any) {
+    return this.http.post(`${this.API_URL}/planComidas/tipo_comida`, datos);
+  }
+
+  ObtenerTipoComidas() {
+    return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida`)
+  }
+
+  ObtenerUltimoTipoComidas() {
+    return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida/ultimo`)
+  }
+
 }

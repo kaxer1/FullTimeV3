@@ -51,28 +51,28 @@ export class RegistrarTimbreComponent implements OnInit {
     console.log(opcion);
     switch (opcion) {
       case 1:
-        this.accionF.setValue('EoS')
+        this.accionF.setValue('E')
         this.teclaFuncionF.setValue(0)
         break;
       case 2:
-        this.accionF.setValue('EoS')
-        this.teclaFuncionF.setValue(0)
+        this.accionF.setValue('S')
+        this.teclaFuncionF.setValue(1)
       break;
       case 3:
-        this.accionF.setValue('AES')
-        this.teclaFuncionF.setValue(1)
+        this.accionF.setValue('S/A')
+        this.teclaFuncionF.setValue(2)
       break;
       case 4:
-        this.accionF.setValue('AES')
-        this.teclaFuncionF.setValue(1)
+        this.accionF.setValue('E/A')
+        this.teclaFuncionF.setValue(3)
       break;
       case 5:
-        this.accionF.setValue('PES')
-        this.teclaFuncionF.setValue(2)
+        this.accionF.setValue('S/P')
+        this.teclaFuncionF.setValue(4)
       break;
       case 6:
-        this.accionF.setValue('PES')
-        this.teclaFuncionF.setValue(2)
+        this.accionF.setValue('E/P')
+        this.teclaFuncionF.setValue(5)
         break;
       default:
         this.accionF.setValue('code 99')

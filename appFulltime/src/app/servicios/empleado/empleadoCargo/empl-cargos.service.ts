@@ -63,4 +63,16 @@ export class EmplCargosService {
     return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/ultimoTipo/nombreCargo/${id}`);
   }
 
+  ObtenerCargoDepartamento(id: number) {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/cargo-departamento/${id}`);
+  }
+
+  ObtenerCargoSucursal(id: number) {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/cargo-sucursal/${id}`);
+  }
+
+  ObtenerCargoRegimen(id: number) {
+    return this.http.get(`${this.URL_EMPLEADO_CARGOS}/empleadoCargos/buscar/cargo-regimen/${id}`);
+  }
+
 }

@@ -51,4 +51,8 @@ export class UsuarioService {
     return this.http.post(`${this.API_URL}/usuarios/acceso`, data);
   }
 
+  ActualizarFrase(data: any) {
+    return this.http.put(`${this.API_URL}/usuarios/frase`, data);
+  }
+
 }

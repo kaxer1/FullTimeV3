@@ -67,4 +67,8 @@ export class DepartamentosService {
     return this.http.get(`${this.API_URL}/departamento/buscar/datosDepartamento/${id_sucursal}`);
   }
 
+  BuscarDepartamentoRegimen(id: number) {
+    return this.http.get(`${this.API_URL}/departamento/buscar/regimen-departamento/${id}`);
+  }
+
 }

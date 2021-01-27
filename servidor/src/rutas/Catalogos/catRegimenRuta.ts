@@ -17,6 +17,7 @@ class RegimenRuta {
         this.router.delete('/eliminar/:id', TokenValidation, REGIMEN_CONTROLADOR.EliminarRegistros);
         this.router.post('/xmlDownload/', TokenValidation, REGIMEN_CONTROLADOR.FileXML);
         this.router.get('/download/:nameXML', REGIMEN_CONTROLADOR.downloadXML);
+        this.router.get('/sucursal-regimen/:id', TokenValidation, REGIMEN_CONTROLADOR.ListarRegimenSucursal);
     }
 }
 

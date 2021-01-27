@@ -9,64 +9,261 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const MetodosGraficas_1 = require("../../libs/MetodosGraficas");
 class GraficasControlador {
-    ObtenerInasistencia(req, res) {
+    AdminHorasExtrasMicro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // const { id_reloj, id_enrolado } = req.body;
-            res.status(200).jsonp({
-                title: {
-                    text: 'Inasistencia 2020'
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'line',
-                        label: {
-                            backgroundColor: '#6a7985'
-                        }
-                    }
-                },
-                legend: {
-                    // align: 'rigth',
-                    data: [{
-                            name: 'inasistencias'
-                        }]
-                },
-                grid: {
-                    left: '4%',
-                    right: '4%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                        name: 'inasistencias',
-                        data: [3, 10, 5, 6, 7, 9, 15, 1, 2, 4, 10, 20],
-                        type: 'line',
-                        lineStyle: {
-                            color: 'rgb(20, 112, 233)'
-                        },
-                        itemStyle: {
-                            color: 'rgb(20, 112, 233)'
-                        }
-                    }],
-                dataZoom: [
-                    {
-                        id: 'dataZoomX',
-                        type: 'slider',
-                        xAxisIndex: [0],
-                        filterMode: 'filter',
-                        backgroundColor: 'rgb(20, 112, 233)',
-                        startValue: 'Enero',
-                        endValue: 'Junio'
-                    },
-                ]
-            });
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaHorasExtras(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminHorasExtrasMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaHorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminRetrasosMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaRetrasos(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminRetrasosMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaRetrasos(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminAsistenciaMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaAsistencia(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminAsistenciaMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaAsistencia(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminJornadaHorasExtrasMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminJornadaHorasExtrasMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminTiempoJornadaHorasExtrasMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaTiempoJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminTiempoJornadaHorasExtrasMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaTiempoJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminInasistenciaMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaInasistencia(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminInasistenciaMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaInasistencia(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminMarcacionesEmpleadoMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaMarcaciones(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminMarcacionesEmpleadoMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaMarcaciones(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
+    /**
+     *
+     * METODOS DE GRAFICAS PARA LOS EMPLEADOS
+     *
+     */
+    EmpleadoHorasExtrasMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.MetricaHorasExtraEmpleado(id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoVacacionesMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.MetricaVacacionesEmpleado(id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoPermisosMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.MetricaPermisosEmpleado(id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoAtrasosMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
         });
     }
 }

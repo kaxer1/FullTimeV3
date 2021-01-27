@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div style="text-align: center;" *ngIf='contrasena'>
     <img src="../../../../../assets/imagenes/logo/logoAdmin.png"> <br><br>
     <span>Confirmar su contraseña</span>
     <form [formGroup]="seguridadForm">
@@ -22,6 +22,35 @@
         <div style="text-align: center;">
             <button type="submit" class="btn" (click)="CompararContrasenia(seguridadForm.value)"
                 [disabled]="!seguridadForm.valid">Confirmar Contraseña</button>
+        </div>
+        <br>
+        <div style="text-align: center;">
+            <button type="submit" class="btn" (click)="CerrarRegistro()">Salir</button>
+        </div>
+    </form>
+</div>
+<div style="text-align: center;" *ngIf='frase'>
+    <img src="../../../../../assets/imagenes/logo/logoAdmin.png"> <br><br>
+    <span>Confirmar su frase</span>
+    <form [formGroup]="fraseForm">
+        <div class="nota">
+            <span>NOTA: Por favor llenar los campos obligatorios (*) del formulario para activar el botón
+                Confirmar Frase.</span>
+        </div>
+        <mat-form-field>
+            <mat-label>Ingresar Frase</mat-label>
+            <textarea matInput #message maxlength="100" placeholder="Ingrese su frase de seguridad"
+                formControlName="aFrase" required></textarea>
+            <mat-icon id="birthday" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                matTooltip="Para asegurar que es usted dueño de esta cuenta ingrese su frase de seguridad">
+                help_outline</mat-icon>
+            <mat-hint align="start"><strong>Ingresar hasta 100 caracteres</strong></mat-hint>
+            <mat-hint align="end">{{message.value.length}} / 100</mat-hint>
+        </mat-form-field>
+        <br><br>
+        <div style="text-align: center;">
+            <button type="submit" class="btn" (click)="CompararFrase(fraseForm.value)"
+                [disabled]="!fraseForm.valid">Confirmar Frase</button>
         </div>
         <br>
         <div style="text-align: center;">

@@ -310,6 +310,21 @@ import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crea
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
 import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { InasistenciaMacroComponent } from './componentes/graficas-macro/inasistencia-macro/inasistencia-macro.component';
+import { AsistenciaMacroComponent } from './componentes/graficas-macro/asistencia-macro/asistencia-macro.component';
+import { HoraExtraMacroComponent } from './componentes/graficas-macro/hora-extra-macro/hora-extra-macro.component';
+import { JornadaVsHoraExtraMacroComponent } from './componentes/graficas-macro/jornada-vs-hora-extra-macro/jornada-vs-hora-extra-macro.component';
+import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marcaciones-emp-macro/marcaciones-emp-macro.component';
+import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
+import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
+import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
+import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
+import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
+import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
+import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
+import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
+import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+
 
 
 const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} };
@@ -545,6 +560,20 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     TimbreEmpleadoPipe,
     ReporteHorasExtrasComponent,
     SeguridadComponent,
+    InasistenciaMacroComponent,
+    AsistenciaMacroComponent,
+    HoraExtraMacroComponent,
+    JornadaVsHoraExtraMacroComponent,
+    MarcacionesEmpMacroComponent,
+    RetrasosMacroComponent,
+    TiempoJornadaVsHoraExtMacroComponent,
+    SeguridadComponent,
+    TipoSeguridadComponent,
+    FraseSeguridadComponent,
+    PlanComidasComponent,
+    TicketsComponent,
+    AlimentosGeneralComponent,
+    DetallePlanificadosComponent,
   ],
 
   imports: [

@@ -1,5 +1,5 @@
 import { Component, OnInit, } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay, startWith } from 'rxjs/operators';
 import { Location } from '@angular/common';
@@ -20,6 +20,10 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { AyudaComponent } from '../ayuda/ayuda.component';
 import { MenuNode } from '../../model/menu.model'
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
 
 @Component({
   selector: 'app-main-nav',
@@ -37,7 +41,7 @@ export class MainNavComponent implements OnInit {
   mostrarIniciales: boolean = false;
   HabilitarAccion: boolean;
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe('(max-width: 800px)')
     .pipe(
       map(result => result.matches),
       shareReplay()
@@ -71,6 +75,7 @@ export class MainNavComponent implements OnInit {
   constructor(
     private breakpointObserver: BreakpointObserver,
     public location: Location,
+    public restUsuario: UsuarioService,
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
     public restEmpresa: EmpresaService,
@@ -83,7 +88,7 @@ export class MainNavComponent implements OnInit {
     private rest: EmpresaService,
     private route: ActivatedRoute
   ) {
-   
+
     this.socket.on('enviar_notification', (data) => {
       if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
         console.log(data);
@@ -110,6 +115,15 @@ export class MainNavComponent implements OnInit {
   barraUno = false;
   barraDos = false;
 
+  recargar = false;
+  /**
+   * Variables progress spinner
+   */
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+  value = 10;
+  habilitarprogress: boolean = false;
+
   mouseenter() {
     if (!this.isExpanded) {
       this.isShowing = true;
@@ -124,23 +138,40 @@ export class MainNavComponent implements OnInit {
 
   ngOnInit() {
     this.idEmpresa = parseInt(localStorage.getItem('empresa'))
-    this.LlamarDatos(); 
+    this.LlamarDatos();
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+        startWith(''),
+        map(value => this._filter(value))
+      );
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
     this.LlamarNotificaciones(this.id_empleado_logueado);
     this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
-    this.breakpointObserver.observe('(max-width: 663px)').subscribe(result => {
+      
+    this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
+      
       this.barraInicial = result.matches;
       this.barraUno = result.matches;
       this.barraDos = result.matches;
+      console.log('Result breakpoints: ',result.matches);
+      
+      this.recargar = result.matches;
+      if (result.matches === true) {
+        let cont = 0;
+        do {
+          cont = cont + 1;
+        } while (cont === 3);
+        console.log('Recarga antes: ', this.recargar);
+        this.recargar = false;
+        console.log('Recarga despues: ', this.recargar);
+      }
     });
+
     this.SeleccionMenu();
     this.BarraBusquedaEmpleados();
+    this.ConfigurarSeguridad();
   }
+
   BarraBusquedaEmpleados() {
     if (!!sessionStorage.getItem('lista-empleados')) {
       // console.log('ya hay lista en la sesion iniciada');
@@ -159,7 +190,7 @@ export class MainNavComponent implements OnInit {
           this.options.push(obj.empleado)
         });
         this.buscar_empl = res
-      }) 
+      })
     }
   };
 
@@ -167,10 +198,10 @@ export class MainNavComponent implements OnInit {
     this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
       this.datosEmpresa = datos;
       if (this.datosEmpresa[0].logo === null || this.datosEmpresa[0].color_p === null || this.datosEmpresa[0].color_s === null) {
-        this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs','Error configuración', {timeOut: 10000})
-        .onTap.subscribe(obj => {
-          this.IrInfoEmpresa()
-        })
+        this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs', 'Error configuración', { timeOut: 10000 })
+          .onTap.subscribe(obj => {
+            this.IrInfoEmpresa()
+          })
         this.mensaje = true;
       } else {
         this.habilitarReportes = 'visible';
@@ -179,7 +210,30 @@ export class MainNavComponent implements OnInit {
   }
 
   IrInfoEmpresa() {
-    this.router.navigate(['/vistaEmpresa', this.idEmpresa], {relativeTo: this.route, skipLocationChange: false})
+    this.router.navigate(['/vistaEmpresa', this.idEmpresa], { relativeTo: this.route, skipLocationChange: false })
+  }
+
+  ConfigurarSeguridad() {
+
+    this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
+      this.datosEmpresa = datos;
+      if (this.datosEmpresa[0].seg_frase === true) {
+        this.restUsuario.BuscarDatosUser(this.id_empleado_logueado).subscribe(data => {
+          if (data[0].id_rol === 1) {
+            if (data[0].frase === null || data[0].frase === '') {
+              this.toaster.info('Debe registrar su frase de seguridad.', 'Configuración doble seguridad', { timeOut: 10000 })
+                .onTap.subscribe(obj => {
+                  this.RegistrarFrase()
+                })
+            }
+          }
+        });
+      }
+    });
+  }
+
+  RegistrarFrase() {
+    this.vistaFlotante.open(FraseSeguridadComponent, { width: '350px', data: this.id_empleado_logueado }).disableClose = true;
   }
 
   confRes: any = [];
@@ -234,9 +288,7 @@ export class MainNavComponent implements OnInit {
   abrirInfoEmpleado(nombre: string) {
     this.buscar_empl.forEach(element => {
       if (element.empleado === nombre) {
-        this.router.navigate(['/verEmpleado/', element.id]).then(result => {
-          window.location.reload();
-        })
+        this.router.navigate(['/verEmpleado/', element.id], {relativeTo: this.route, skipLocationChange: false});
       }
     });
   }
@@ -283,30 +335,62 @@ export class MainNavComponent implements OnInit {
   infoUser() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     if (id_empleado.toString() === 'NaN') return id_empleado;
+    
+    let fullname = localStorage.getItem('fullname');
+    let correo = localStorage.getItem('correo');
+    let iniciales = localStorage.getItem('iniciales');
+    let view_imagen = localStorage.getItem('view_imagen');
+    console.log(fullname, correo, iniciales, view_imagen);
+    
+    if (fullname === null && correo === null && iniciales === null && view_imagen === null) {
+      this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
+      
+        localStorage.setItem('fullname', res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0])
+        localStorage.setItem('fullname_print', res[0].nombre + " " + res[0].apellido)
+        localStorage.setItem('correo', res[0].correo)
+        
+        this.UserEmail = localStorage.getItem('correo');
+        this.UserName = localStorage.getItem('fullname');
+        if (res[0]['imagen'] != null) {
+          localStorage.setItem('view_imagen', 'http://192.168.0.192:3001/empleado/img/' + res[0]['imagen'])
+          this.urlImagen = localStorage.getItem('view_imagen');
+          this.mostrarImagen = true;
+          this.mostrarIniciales = false;
+        } else {
+          localStorage.setItem('iniciales', res[0].nombre.split(" ")[0].slice(0, 1) + res[0].apellido.split(" ")[0].slice(0, 1))
+          this.iniciales = localStorage.getItem('iniciales');
+          this.mostrarIniciales = true
+          this.mostrarImagen = false;
+        }
 
-    this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
-
-      this.UserEmail = res[0].correo;
-      this.UserName = res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0];
-      if (res[0]['imagen'] != null) {
-        this.urlImagen = 'http://192.168.0.192:3001/empleado/img/' + res[0]['imagen'];
+      });
+    } else {
+      this.UserEmail = correo;
+      this.UserName = fullname;
+      if (iniciales === null) {
+        this.urlImagen = view_imagen;
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
       } else {
-        this.iniciales = res[0].nombre.split(" ")[0].slice(0, 1) + res[0].apellido.split(" ")[0].slice(0, 1);
-        this.mostrarIniciales = true
+        this.iniciales = iniciales;
         this.mostrarImagen = false;
+        this.mostrarIniciales = true;
       }
-    });
+    }
+    
   }
 
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
-    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: {id_empleado} });
+    this.vistaFlotante.open(SettingsComponent, { width: '350px', data: { id_empleado } });
   }
 
   AbrirVentanaAyuda() {
-    this.vistaFlotante.open(AyudaComponent, {width: '500px'})
+    this.vistaFlotante.open(AyudaComponent, { width: '500px' })
+  }
+
+  irHome() {
+    this.router.navigate(['/home'], {relativeTo: this.route, skipLocationChange: false});
   }
 
   VerAccionPersonal() {
@@ -326,7 +410,7 @@ export class MainNavComponent implements OnInit {
 
   nombreSelect: string = '';
   manejarEstadoActivo(name) {
-    this.nombreSelect = name;
+    this.nombreSelect = name;  
   }
 
   SeleccionMenu() {
@@ -380,6 +464,7 @@ export class MainNavComponent implements OnInit {
         icono: 'local_dining',
         children: [
           { name: 'Almuerzos', url: '/listarTipoComidas' },
+          { name: 'Planificación', url: '/alimentacion' },
         ]
       },
       {
@@ -440,7 +525,7 @@ export class MainNavComponent implements OnInit {
         icono: 'fingerprint',
         children: [
           { name: 'Administrar Timbres', url: '/timbres-admin' },
-         { name: 'Timbres personales', url: '/timbres-personal' },
+          { name: 'Timbres personales', url: '/timbres-personal' },
         ]
       },
       {

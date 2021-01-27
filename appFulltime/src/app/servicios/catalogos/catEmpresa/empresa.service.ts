@@ -47,19 +47,23 @@ export class EmpresaService {
     return this.http.put<any>(`${this.API_URL}/empresas/colores`, formData);
   }
 
+  ActualizarSeguridad(formData) {
+    return this.http.put<any>(`${this.API_URL}/empresas/doble/seguridad`, formData);
+  }
+
   /**
    * Método para llamar al logotipo de la empresa, este llega codificado en base64
    * @param id_empresa ID de la empresa
    */
-  
-   LogoEmpresaImagenBase64(id_empresa: string) {
+
+  LogoEmpresaImagenBase64(id_empresa: string) {
     return this.http.get<any>(`${this.API_URL}/empresas/logo/codificado/${parseInt(id_empresa)}`);
   }
 
   EditarLogoEmpresa(id_empresa: number, formData) {
     return this.http.put<any>(`${this.API_URL}/empresas/logo/${id_empresa}/uploadImage`, formData);
   }
-  
+
   EditarCredenciales(id_empresa: number, data: any) {
     return this.http.put<any>(`${this.API_URL}/empresas/credenciales/${id_empresa}`, data);
   }

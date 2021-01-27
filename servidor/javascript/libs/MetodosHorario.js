@@ -79,7 +79,7 @@ function tipoHorario(inicio, final) {
  */
 function DiasByEstado(horario, rango) {
     var fec_aux = new Date(rango.inicio);
-    console.log(FECHA_FERIADOS);
+    // console.log('FECHA_FERIADOS', FECHA_FERIADOS);
     let respuesta = [];
     for (let i = fec_aux.getDate(); i <= rango.final.getDate(); i++) {
         let horario_res = fechaIterada(fec_aux, horario);
@@ -145,3 +145,27 @@ exports.EstadoHorarioPeriVacacion = function (id_empleado) {
         return 0;
     });
 };
+exports.HorariosParaInasistencias = function (horario) {
+    let fechasRango = {
+        inicio: horario.fec_inicio,
+        final: horario.fec_final
+    };
+    let objeto = DiasConEstado(horario, fechasRango);
+    // console.log('Fechas rango: ', fechasRango);
+    // console.log('Objeto JSON: ', objeto);
+    return objeto.filter(obj => { return (obj.estado === false); }).map(obj => { return { fecha: obj.fecha }; });
+};
+function DiasConEstado(horario, rango) {
+    var fec_aux = new Date(rango.inicio);
+    // console.log('FECHA_FERIADOS', FECHA_FERIADOS);
+    var fecha1 = moment_1.default(rango.inicio.toJSON().split("T")[0]);
+    var fecha2 = moment_1.default(rango.final.toJSON().split("T")[0]);
+    var diasHorario = fecha2.diff(fecha1, 'days');
+    let respuesta = [];
+    for (let i = 0; i <= diasHorario; i++) {
+        let horario_res = fechaIterada(fec_aux, horario);
+        respuesta.push(horario_res);
+        fec_aux.setDate(fec_aux.getDate() + 1);
+    }
+    return respuesta;
+}

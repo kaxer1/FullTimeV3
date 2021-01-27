@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   title = 'login';
   hide1 = true;
   url: string;
+  intentos: number = 0;
 
   // Almacenamiento datos usuario ingresado
   datosUsuarioIngresado: any = [];
@@ -56,13 +57,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.url = this.router.url;
-    console.log(this.url); 
-    // this.Geolocalizar();
+    console.log(this.url);
+    this.Geolocalizar();
   }
 
   Geolocalizar() {
-    if (navigator.geolocation)
-    {
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (objPosition) => {
           
@@ -70,26 +70,24 @@ export class LoginComponent implements OnInit {
           this.longitud = objPosition.coords.longitude;
 
           console.log(this.longitud, this.latitud);
-          
+
         }, (objPositionError) => {
-          switch (objPositionError.code)
-          {
+          switch (objPositionError.code) {
             case objPositionError.PERMISSION_DENIED:
               console.log('No se ha permitido el acceso a la posición del usuario.');
-            break;
+              break;
             case objPositionError.POSITION_UNAVAILABLE:
               console.log('No se ha podido acceder a la información de su posición.');
-            break;
+              break;
             case objPositionError.TIMEOUT:
               console.log('El servicio ha tardado demasiado tiempo en responder.');
-            break;
+              break;
             default:
               console.log('Error desconocido.');
           }
         }, this.options);
     }
-    else
-    {
+    else {
       console.log('Su navegador no soporta la API de geolocalización.');
     }
   }
@@ -107,6 +105,35 @@ export class LoginComponent implements OnInit {
   }
 
   ValidarUsuario(form) {
+    var local: boolean;
+    this.intentos = this.intentos + 1;
+    var f = moment();
+    if (localStorage.getItem('time_wait') != undefined) {
+      console.log('estorage', localStorage.getItem('time_wait'));
+      var hora = localStorage.getItem('time_wait');
+      if (f.format('HH:mm:ss') > hora) {
+        localStorage.removeItem('time_wait');
+        this.intentos = 0;
+        local = false;
+      }
+      else {
+        local = true;
+      }
+    }
+    else {
+      local = false;
+    }
+    if (local === false) {
+      this.IniciarSesion(form);
+    }
+    else {
+      this.toastr.error('Intente más tarde', 'Ha excedido el número de intentos', {
+        timeOut: 3000,
+      });
+    }
+  }
+
+  IniciarSesion(form) {
     //Cifrado de contraseña
     const md5 = new Md5();
     let clave = md5.appendStr(form.passwordF).end();
@@ -127,11 +154,23 @@ export class LoginComponent implements OnInit {
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
       console.log('ingreso', datos)
+
       if (datos.message === 'error') {
+        var f = moment();
+        var espera = '00:01:00';
+        if (this.intentos === 3) {
+          var verificar = f.add(moment.duration(espera)).format('HH:mm:ss');
+          localStorage.setItem('time_wait', verificar);
+          this.toastr.error('Intente más tarde', 'Ha exedido el número de intentos', {
+            timeOut: 3000,
+          });
+        }
+        else {
+          this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
+            timeOut: 6000,
+          })
+        }
         this.IngresoSistema(form.usuarioF, 'Fallido', datos.text);
-        this.toastr.error('Usuario o contraseña no son correctos', 'Oops!', {
-          timeOut: 6000,
-        })
       }
       else {
         localStorage.setItem('token', datos.token);
@@ -163,9 +202,9 @@ export class LoginComponent implements OnInit {
         this.IngresoSistema(form.usuarioF, 'Exitoso', datos.ip_adress);
       }
     }, error => {
-
     })
   }
+
 
   IngresoSistema(user, acceso: string, dir_ip) {
     var h = new Date();

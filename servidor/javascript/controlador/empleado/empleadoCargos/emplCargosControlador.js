@@ -160,6 +160,46 @@ class EmpleadoCargosControlador {
             }
         });
     }
+    BuscarTipoDepartamento(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const Cargos = yield database_1.default.query('SELECT tc.id, tc.cargo FROM tipo_cargo AS tc, empl_cargos AS ec ' +
+                'WHERE tc.id = ec.cargo AND id_departamento = $1 GROUP BY tc.cargo, tc.id', [id]);
+            if (Cargos.rowCount > 0) {
+                return res.jsonp(Cargos.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    BuscarTipoSucursal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const Cargos = yield database_1.default.query('SELECT tc.id, tc.cargo FROM tipo_cargo AS tc, empl_cargos AS ec ' +
+                'WHERE tc.id = ec.cargo AND id_sucursal = $1 GROUP BY tc.cargo, tc.id', [id]);
+            if (Cargos.rowCount > 0) {
+                return res.jsonp(Cargos.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
+    BuscarTipoRegimen(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const Cargos = yield database_1.default.query('SELECT tc.id, tc.cargo FROM cg_regimenes AS r, empl_cargos AS ec, ' +
+                'empl_contratos AS c, tipo_cargo AS tc WHERE c.id_regimen = r.id AND c.id = ec.id_empl_contrato AND ' +
+                'ec.cargo = tc.id AND r.id = $1 GROUP BY tc.id, tc.cargo', [id]);
+            if (Cargos.rowCount > 0) {
+                return res.jsonp(Cargos.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registro no encontrado' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_CARGO_CONTROLADOR = new EmpleadoCargosControlador();
 exports.default = exports.EMPLEADO_CARGO_CONTROLADOR;
