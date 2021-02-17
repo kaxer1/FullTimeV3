@@ -323,6 +323,9 @@ import { PlanComidasComponent } from './componentes/planificacionComidas/plan-co
 import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
 import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
+import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
+import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -570,6 +573,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     TicketsComponent,
     AlimentosGeneralComponent,
     DetallePlanificadosComponent,
+    DetalleMenuComponent,
+    VistaMenuComponent,
+    EditarDetalleMenuComponent,
   ],
 
   imports: [

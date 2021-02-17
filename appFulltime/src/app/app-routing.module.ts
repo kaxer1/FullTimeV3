@@ -109,6 +109,9 @@ import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marca
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
+import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
+import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -121,6 +124,7 @@ const routes: Routes = [
   { path: 'titulos', component: ListarTitulosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'regimenLaboral', component: RegimenComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'tipoComidas', component: TipoComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'verMenu/:id', component: VistaMenuComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'relojes', component: RelojesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'proceso', component: PrincipalProcesoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'registrarProceso', component: RegistroProcesoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
@@ -176,7 +180,10 @@ const routes: Routes = [
   { path: 'listadoPlanificaciones', component: ListaPlanificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'timbres-admin', component: TimbreAdminComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'alimentacion', component: PlanComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  
+
+  // Módulo de alimentación
+  { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+
   // Graficas
   { path: 'macro/inasistencia', component: InasistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/asistencia', component: AsistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
@@ -200,6 +207,7 @@ const routes: Routes = [
 
   // Reportes Alimentacion
   { path: 'alimentosGeneral', component: AlimentosGeneralComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'alimentosDetallado', component: DetallePlanificadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Rol mixto para las autorizaciones
   { path: 'lista-notificaciones', component: RealtimeNotificacionComponent, canActivate: [AuthGuard], data: { rolMix: 0 } },

@@ -141,20 +141,20 @@ export class MainNavComponent implements OnInit {
     this.LlamarDatos();
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+      startWith(''),
+      map(value => this._filter(value))
+    );
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
     this.LlamarNotificaciones(this.id_empleado_logueado);
     this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
-      
+
     this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
-      
+
       this.barraInicial = result.matches;
       this.barraUno = result.matches;
       this.barraDos = result.matches;
-      console.log('Result breakpoints: ',result.matches);
-      
+      console.log('Result breakpoints: ', result.matches);
+
       this.recargar = result.matches;
       if (result.matches === true) {
         let cont = 0;
@@ -288,7 +288,7 @@ export class MainNavComponent implements OnInit {
   abrirInfoEmpleado(nombre: string) {
     this.buscar_empl.forEach(element => {
       if (element.empleado === nombre) {
-        this.router.navigate(['/verEmpleado/', element.id], {relativeTo: this.route, skipLocationChange: false});
+        this.router.navigate(['/verEmpleado/', element.id], { relativeTo: this.route, skipLocationChange: false });
       }
     });
   }
@@ -335,20 +335,20 @@ export class MainNavComponent implements OnInit {
   infoUser() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     if (id_empleado.toString() === 'NaN') return id_empleado;
-    
+
     let fullname = localStorage.getItem('fullname');
     let correo = localStorage.getItem('correo');
     let iniciales = localStorage.getItem('iniciales');
     let view_imagen = localStorage.getItem('view_imagen');
     console.log(fullname, correo, iniciales, view_imagen);
-    
+
     if (fullname === null && correo === null && iniciales === null && view_imagen === null) {
       this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
-      
+
         localStorage.setItem('fullname', res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0])
         localStorage.setItem('fullname_print', res[0].nombre + " " + res[0].apellido)
         localStorage.setItem('correo', res[0].correo)
-        
+
         this.UserEmail = localStorage.getItem('correo');
         this.UserName = localStorage.getItem('fullname');
         if (res[0]['imagen'] != null) {
@@ -377,7 +377,7 @@ export class MainNavComponent implements OnInit {
         this.mostrarIniciales = true;
       }
     }
-    
+
   }
 
   AbrirSettings() {
@@ -390,7 +390,7 @@ export class MainNavComponent implements OnInit {
   }
 
   irHome() {
-    this.router.navigate(['/home'], {relativeTo: this.route, skipLocationChange: false});
+    this.router.navigate(['/home'], { relativeTo: this.route, skipLocationChange: false });
   }
 
   VerAccionPersonal() {
@@ -410,7 +410,7 @@ export class MainNavComponent implements OnInit {
 
   nombreSelect: string = '';
   manejarEstadoActivo(name) {
-    this.nombreSelect = name;  
+    this.nombreSelect = name;
   }
 
   SeleccionMenu() {
@@ -465,6 +465,7 @@ export class MainNavComponent implements OnInit {
         children: [
           { name: 'Almuerzos', url: '/listarTipoComidas' },
           { name: 'Planificación', url: '/alimentacion' },
+          { name: 'Tickets', url: '/tickets' },
         ]
       },
       {

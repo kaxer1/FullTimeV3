@@ -1,39 +1,45 @@
 <div class="d-flex bd-highlight tituloComidaR">
     <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
-    <h5 class="w-100 bd-highlight align-self-center">Alimentación</h5>
+    <h5 class="w-100 bd-highlight align-self-center" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">
+        Alimentación</h5>
 </div>
 <!-- Formulario Completo -->
 <form [formGroup]="TipoComidaForm">
     <div class="container" style="text-align: center">
         <div class="nota">
-            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                Guardar.</span>
         </div>
         <div class="d-flex flex-wrap justify-content-center">
+            <mat-form-field *ngIf="habilitarSeleccion">
+                <mat-label>Tipo de Servicio*</mat-label>
+                <mat-icon id="planComida" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                    matTooltip="Seleccione el tipo de servicio que va a registrar">
+                    help_outline
+                </mat-icon>
+                <mat-select [formControl]="tipoF">
+                    <mat-option *ngFor="let s of servicios" [value]="s.id"
+                        (click)="IngresarServicio(TipoComidaForm.value)">
+                        {{s.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="habilitarServicio">
+                <mat-label>Ingresar Servicio*</mat-label>
+                <input matInput placeholder="Ej: Merienda" [formControl]="servicioF" [ngStyle]="estilo">
+                <mat-icon id="planComida" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
+                    matTooltip="Regresar a la lista de tipo de servicios existentes" (click)="VerTiposServicios()">
+                    help_outline</mat-icon>
+                <mat-error *ngIf="servicioF.invalid">Ingresar un servicio válido</mat-error>
+            </mat-form-field>
             <mat-form-field>
-                <mat-label>Almuerzo</mat-label>
+                <mat-label>Nombre del Menú</mat-label>
                 <input matInput placeholder="Nombre del plato" [formControl]="nombreF" required>
                 <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
-                    matTooltip="Modificar nombre del platillo de comida">
+                    matTooltip="Modificar nombre del nuevo menú">
                     help_outline</mat-icon>
                 <mat-error *ngIf="nombreF.invalid">{{ObtenerMensajeErrorNombreRequerido()}}</mat-error>
                 <mat-error *ngIf="nombreF.invalid">Ingresar un nombre válido</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Valor</mat-label>
-                <input matInput placeholder="Ingresar valor del almuerzo" [formControl]="valorF"
-                    (keypress)="IngresarNumeroDecimal($event)" required>
-                <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
-                    matTooltip="Modificar el costo de este almuerzo">
-                    help_outline</mat-icon>
-                <mat-error *ngIf="valorF.invalid">{{ObtenerMensajeErrorCamposNumericosRequeridos()}}</mat-error>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Observación</mat-label>
-                <input matInput placeholder="Ingresar una observación" [formControl]="observacionF">
-                <mat-icon id="iComidasR" matSuffix matTooltipClass="comidasR-tooltip" matTooltipPosition="right"
-                    matTooltip="Modificar la observación de este almuerzo">
-                    help_outline</mat-icon>
-                <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
             </mat-form-field>
         </div>
     </div>

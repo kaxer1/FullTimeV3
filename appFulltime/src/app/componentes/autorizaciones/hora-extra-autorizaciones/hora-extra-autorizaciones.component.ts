@@ -241,7 +241,7 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
     if (this.data.carga === 'multiple') {
       console.log('arreglo', this.data.datosHora.length);
       if (this.contador === this.data.datosHora.length) {
-        this.toastr.success('Operación Exitosa', 'Autorizacion guardada', {
+        this.toastr.success('Operación Exitosa', 'Se autorizo un total de ' + this.data.datosHora.length + ' solicitudes de horas extras.', {
           timeOut: 6000,
         });
         console.log('idpermiso', 'entra');

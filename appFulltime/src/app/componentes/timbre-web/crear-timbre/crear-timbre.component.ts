@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { faWindowRestore } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
@@ -113,7 +112,9 @@ export class CrearTimbreComponent implements OnInit {
             console.log(res, this.contador);
             this.dialogRef.close();
             window.location.reload();
-            this.toastr.success(res.message);
+            this.toastr.success('Operación Exitosa', 'Se creo un total de ' + this.data.length + ' timbres exitosamente.', {
+              timeOut: 6000,
+            })
           }
         })
       })
