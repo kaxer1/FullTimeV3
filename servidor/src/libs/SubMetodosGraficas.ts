@@ -354,3 +354,149 @@ export const ModelarSalidasAnticipadas = async function (fec_inicio: string, fec
     nuevo = [];
     return array
 }
+
+export const Empleado_HoraExtra_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    let horas_extras = await EmpleadoHorasExtrasGrafica(codigo, fec_desde, fec_hasta)
+    console.log('Lista de horas extras ===', horas_extras);
+    let array = horas_extras.map((obj:any) => {
+        (obj.tiempo_autorizado === 0) ? obj.tiempo_autorizado = obj.num_hora : obj.tiempo_autorizado = obj.tiempo_autorizado; 
+        return obj
+    });
+    // console.log('Lista de array ===', array);
+    let nuevo: any = [];
+
+    array.forEach(obj => {
+        let respuesta = DiasIterados(obj.fec_inicio, obj.fec_final, obj.tiempo_autorizado, obj.id_empl_cargo, obj.codigo)
+        respuesta.forEach(ele => {
+            nuevo.push(ele);
+        })
+    });
+    // console.log('Lista de Nuevo ===', nuevo);    
+
+    return nuevo
+}
+
+async function EmpleadoHorasExtrasGrafica(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    let arrayUno = await EmpleadoHorasExtrasSolicitadasGrafica(codigo, fec_desde, fec_hasta)
+    let arrayDos = await EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo, fec_desde, fec_hasta)
+    // let arrayUnido  = [...new Set(arrayUno.concat(arrayDos))];  
+    let arrayUnido = arrayUno.concat(arrayDos)
+    let set = new Set( arrayUnido.map(obj => { return JSON.stringify(obj)} ) )
+    arrayUnido = Array.from( set ).map(obj => { return JSON.parse(obj)} );
+
+    for (let j = 0; j < arrayUnido.length; j++) {
+        let numMin;
+        let i = numMin = j;
+        for (++i; i < arrayUnido.length; i++) {
+            (arrayUnido[i].fec_inicio < arrayUnido[numMin].fec_inicio) && (numMin = i);
+        }
+        [arrayUnido[j], arrayUnido[numMin]] = [arrayUnido[numMin], arrayUnido[j]]
+    }
+
+    return arrayUnido
+}
+
+async function EmpleadoHorasExtrasSolicitadasGrafica(codigo: string | number,fec_desde: Date, fec_hasta: Date) {
+    return await pool.query('SELECT h.fec_inicio, h.fec_final, h.descripcion, h.num_hora, h.tiempo_autorizado, h.codigo, h.id_empl_cargo ' + 
+    'FROM hora_extr_pedidos AS h WHERE h.fec_inicio between $1 and $2 AND h.estado = 3 ' +  // estado = 3 significa q las horas extras fueron autorizadas
+    'AND h.fec_final between $1 and $2 AND h.codigo = $3 ORDER BY h.fec_inicio',[fec_desde, fec_hasta, codigo])
+    .then(result => { 
+        return Promise.all(result.rows.map(async(obj) => {
+            var f1 = new Date(obj.fec_inicio)
+            var f2 = new Date(obj.fec_final)
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+            return {
+                id_empl_cargo: obj.id_empl_cargo,
+                hora_inicio: hora_inicio,
+                hora_final: hora_final,
+                fec_inicio: new Date(f1.toJSON().split('.')[0]),
+                fec_final: new Date(f2.toJSON().split('.')[0]),
+                descripcion: obj.descripcion,
+                num_hora: HHMMtoHorasDecimal(obj.num_hora),
+                tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                codigo: obj.codigo
+            }
+        }))
+    });
+}
+
+async function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    return await pool.query('SELECT h.fecha_desde, h.hora_inicio, h.fecha_hasta, h.hora_fin, h.descripcion, h.horas_totales, ph.tiempo_autorizado, ph.codigo, ph.id_empl_cargo ' +
+    'FROM plan_hora_extra_empleado AS ph, plan_hora_extra AS h WHERE ph.id_plan_hora = h.id AND ph.estado = 3 ' + //estado = 3 para horas extras autorizadas
+    'AND h.fecha_desde between $1 and $2 AND h.fecha_hasta between $1 and $2 AND ph.codigo = $3 ORDER BY h.fecha_desde',[ fec_desde, fec_hasta, codigo])
+    .then(result => {
+        return Promise.all(result.rows.map(async(obj) => {
+            var f1 = new Date(obj.fecha_desde.toJSON().split('T')[0] + 'T' + obj.hora_inicio);
+            var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
+            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            f1.setUTCHours(f1.getUTCHours() - 5);
+            f2.setUTCHours(f2.getUTCHours() - 5);
+        return {
+            id_empl_cargo: obj.id_empl_cargo,
+            hora_inicio: hora_inicio,
+            hora_final: hora_final,
+            fec_inicio: new Date(f1.toJSON().split('.')[0]),
+            fec_final: new Date(f2.toJSON().split('.')[0]),
+            descripcion: obj.descripcion,
+            num_hora: HHMMtoHorasDecimal(obj.horas_totales),
+            tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+            codigo: obj.codigo
+        }
+    }))
+    })
+}
+
+export const Empleado_Vacaciones_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    let vacaciones = await pool.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR) FROM vacaciones WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ',[codigo, fec_desde, fec_hasta]).then(result => { return result.rows })
+    // console.log('Lista de vacaciones ===', vacaciones);
+    let aux_array: any = [];
+    vacaciones.forEach(obj => {
+        var fec_aux = new Date(obj.fec_inicio)
+        var fecha1 = moment(obj.fec_inicio.split(" ")[0]);
+        var fecha2 = moment(obj.fec_final.split(" ")[0]);
+
+        var diasHorario = fecha2.diff(fecha1, 'days') + 1;
+        for (let i = 0; i < diasHorario; i++) {
+            let horario_res = {
+                fecha: fec_aux.toJSON().split('T')[0],
+                n_dia: 1
+            };            
+            aux_array.push(horario_res)
+            fec_aux.setDate(fec_aux.getDate() + 1)
+        }
+    })
+    // console.log('Lista array fechas: ',aux_array);    
+    return aux_array
+}
+
+export const Empleado_Permisos_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    let permisos = await pool.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR), hora_numero, dia FROM permisos WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ',[codigo, fec_desde, fec_hasta]).then(result => { return result.rows })
+    console.log('Lista de permisos ===', permisos);
+    let aux_array: any = [];
+    permisos.forEach(obj => {
+        var fec_aux = new Date(obj.fec_inicio)
+        var fecha1 = moment(obj.fec_inicio.split(" ")[0]);
+        var fecha2 = moment(obj.fec_final.split(" ")[0]);
+
+        var diasHorario = fecha2.diff(fecha1, 'days') + 1;
+        for (let i = 0; i < diasHorario; i++) {
+            let horario_res = {
+                fecha: fec_aux.toJSON().split('T')[0],
+                tiempo: HHMMtoHorasDecimal(obj.hora_numero) / diasHorario,
+                dia: obj.dia
+            };            
+            aux_array.push(horario_res)
+            fec_aux.setDate(fec_aux.getDate() + 1)
+        }
+    })
+    console.log('Lista array fechas: ',aux_array);    
+    return aux_array
+}

@@ -19,7 +19,7 @@ class DepartamentoRutas {
         this.router.post('/tipo_comida', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearTipoComidas);
         this.router.get('/tipo_comida', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ListarTipoComidas);
         this.router.get('/tipo_comida/ultimo', TokenValidation, PLAN_COMIDAS_CONTROLADOR.VerUltimoTipoComidas);
-
+        this.router.post('/send/planifica/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EnviarCorreoPlanComida);
     }
 }
 

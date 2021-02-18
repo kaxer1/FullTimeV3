@@ -21,6 +21,14 @@ export class TipoComidasService {
     return this.http.get(`${this.API_URL}/tipoComidas`);
   }
 
+  ConsultarMenu(id: number) {
+    return this.http.get(`${this.API_URL}/tipoComidas/${id}`);
+  }
+
+  ConsultarUnMenu(id: number) {
+    return this.http.get(`${this.API_URL}/tipoComidas/buscar/menu/${id}`);
+  }
+
   ActualizarUnAlmuerzo(datos: any) {
     return this.http.put(`${this.API_URL}/tipoComidas`, datos);
   }
@@ -31,6 +39,27 @@ export class TipoComidasService {
 
   EliminarRegistro(id: number) {
     return this.http.delete(`${this.API_URL}/tipoComidas/eliminar/${id}`);
+  }
+
+  ObtenerUltimoId() {
+    return this.http.get(`${this.API_URL}/tipoComidas/registro/ultimo`);
+  }
+
+  // Servicio para consultar datos de tabla detalle_menu
+  ConsultarUnDetalleMenu(id: number) {
+    return this.http.get(`${this.API_URL}/tipoComidas/detalle/menu/${id}`);
+  }
+
+  CrearDetalleMenu(datos: any) {
+    return this.http.post(`${this.API_URL}/tipoComidas/detalle/menu`, datos);
+  }
+
+  ActualizarDetalleMenu(datos: any) {
+    return this.http.put(`${this.API_URL}/tipoComidas/detalle/menu`, datos);
+  }
+
+  EliminarDetalleMenu(id: number) {
+    return this.http.delete(`${this.API_URL}/tipoComidas/detalle/menu/eliminar/${id}`);
   }
 
   // Servicios para verificar y subir datos

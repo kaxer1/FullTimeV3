@@ -15,7 +15,6 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
   selector: 'app-planificacion-comidas',
   templateUrl: './planificacion-comidas.component.html',
   styleUrls: ['./planificacion-comidas.component.css'],
-  //encapsulation: ViewEncapsulation.None
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -33,8 +32,8 @@ export class PlanificacionComidasComponent implements OnInit {
   fechaPlanificacionF = new FormControl('', Validators.required);
   horaInicioF = new FormControl('', Validators.required);
   horaFinF = new FormControl('', Validators.required);
-  tipoF = new FormControl('');
-  servicioF = new FormControl('', [Validators.minLength(3)]);
+  tipoF = new FormControl('', Validators.required);;
+  platosF = new FormControl('', Validators.required);;
   extraF = new FormControl('', [Validators.required]);
 
   // asignar los campos en un formulario en grupo
@@ -46,16 +45,14 @@ export class PlanificacionComidasComponent implements OnInit {
     fechaPlanificacionForm: this.fechaPlanificacionF,
     horaInicioForm: this.horaInicioF,
     horaFinForm: this.horaFinF,
-    servicioForm: this.servicioF,
     tipoForm: this.tipoF,
+    platosForm: this.platosF,
     extraForm: this.extraF
   });
 
   tipoComidas: any = [];
   empleados: any = [];
-
   FechaActual: any;
-
   idEmpleadoLogueado: any;
 
   constructor(
@@ -74,14 +71,15 @@ export class PlanificacionComidasComponent implements OnInit {
     console.log('datos', this.data, this.data.servicios)
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
-    this.ObtenerPlatosComidas();
     this.MostrarDatos();
     this.ObtenerServicios();
-    this.servicios[this.servicios.length] = { nombre: "OTRO" };
   }
 
   verNombre: boolean = false;
   descripcion: string;
+  empleado_recibe: number;
+  empleado_envia: number;
+  tipo: string;
   MostrarDatos() {
     if (this.data.modo === 'individual') {
       this.verNombre = true;
@@ -97,20 +95,150 @@ export class PlanificacionComidasComponent implements OnInit {
         if (this.data.modo === 'individual') {
           if (parseInt(this.idEmpleadoLogueado) === parseInt(this.data.idEmpleado)) {
             this.descripcion = 'Solicitud';
+            this.empleado_envia = this.data.idEmpleado;
+            this.empleado_recibe = this.idEmpleadoLogueado;
+            this.tipo = 'Solicitada';
           }
           else {
             this.descripcion = 'Planificacion';
+            this.empleado_envia = this.idEmpleadoLogueado;
+            this.empleado_recibe = this.data.idEmpleado;
+            this.tipo = 'Planificada';
           }
         }
         else {
           this.descripcion = 'Planificacion';
+          this.empleado_envia = this.idEmpleadoLogueado;
+          this.tipo = 'Planificada';
         }
       }
       else {
         this.descripcion = 'Solicitud';
+        this.empleado_envia = this.data.idEmpleado;
+        this.empleado_recibe = this.idEmpleadoLogueado;
+        this.tipo = 'Solicitada';
       }
     });
   }
+
+  servicios: any = [];
+  ObtenerServicios() {
+    this.servicios = [];
+    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
+      this.servicios = datos;
+    })
+  }
+
+  // Al seleccionar un tipo de servicio se muestra la lista de menús registrados
+  ObtenerPlatosComidas(form) {
+    this.idComidaF.reset();
+    this.platosF.reset();
+    this.tipoComidas = [];
+    this.rest.ConsultarMenu(form.tipoForm).subscribe(datos => {
+      this.tipoComidas = datos;
+    }, error => {
+      this.toastr.info('Verificar la información.', 'No existen registrados Menús para esta tipo de servicio.', {
+        timeOut: 6000,
+      })
+    })
+  }
+
+  detalle: any = [];
+  ObtenerDetalleMenu(form) {
+    this.platosF.reset();
+    this.detalle = [];
+    this.rest.ConsultarUnDetalleMenu(form.idComidaForm).subscribe(datos => {
+      this.detalle = datos;
+    }, error => {
+      this.toastr.info('Verificar la información.', 'No existen registros de Alimentación para este Menú.', {
+        timeOut: 6000,
+      })
+    })
+  }
+
+  // metodo para ver la informacion del empleado 
+  ObtenerEmpleados(idemploy: any) {
+    this.empleados = [];
+    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleados = data;
+      console.log(this.empleados)
+      this.PlanificacionComidasForm.patchValue({
+        idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
+        fechaForm: this.FechaActual
+      })
+    })
+  }
+
+  contador: number = 0;
+  InsertarPlanificacion(form) {
+    let datosPlanComida = {
+      id_empleado: this.data.idEmpleado,
+      fecha: form.fechaForm,
+      id_comida: form.platosForm,
+      observacion: form.observacionForm,
+      fec_solicita: form.fechaPlanificacionForm,
+      hora_inicio: form.horaInicioForm,
+      hora_fin: form.horaFinForm,
+      descripcion: this.descripcion,
+      extra: form.extraForm
+    };
+    if (this.data.modo === "multiple") {
+      this.contador = 0;
+      this.data.servicios.map(obj => {
+        datosPlanComida.id_empleado = obj.id;
+        this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(res => {
+          this.NotificarPlanificacion(this.empleado_envia, obj.id, this.tipo, form.fechaPlanificacionForm);
+          this.contador = this.contador + 1;
+          if (this.contador === this.data.servicios.length) {
+            this.dialogRef.close();
+            window.location.reload();
+            this.toastr.success('Operación Exitosa', 'Se registra un total de  ' + this.data.servicios.length + ' Servicios de Alimetación Planificados.', {
+              timeOut: 6000,
+            })
+          }
+        });
+      })
+    }
+    else {
+      this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(response => {
+        this.NotificarPlanificacion(this.empleado_envia, this.empleado_recibe, this.tipo, form.fechaPlanificacionForm);
+        this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
+          timeOut: 6000,
+        })
+        this.CerrarRegistroPlanificacion();
+      });
+    }
+  }
+
+  ObtenerMensajeErrorObservacion() {
+    if (this.observacionF.hasError('pattern')) {
+      return 'Ingrese información válida';
+    }
+    return this.observacionF.hasError('required') ? 'Campo Obligatorio' : '';
+  }
+
+  CerrarRegistroPlanificacion() {
+    this.LimpiarCampos();
+    this.dialogRef.close();
+  }
+
+  LimpiarCampos() {
+    this.PlanificacionComidasForm.reset();
+    this.ObtenerServicios();
+  }
+
+  NotificarPlanificacion(empleado_envia: any, empleado_recive: any, tipo: any, fecha) {
+    let mensaje = {
+      id_empl_envia: empleado_envia,
+      id_empl_recive: empleado_recive,
+      mensaje: 'Alimentación ' + tipo + ' para ' + moment(fecha).format('YYYY-MM-DD')
+    }
+    console.log(mensaje);
+    this.restPlan.EnviarMensajePlanComida(mensaje).subscribe(res => {
+      console.log(res.message);
+    })
+  }
+
 
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
@@ -131,168 +259,6 @@ export class PlanificacionComidasComponent implements OnInit {
         timeOut: 6000,
       })
       return false;
-    }
-  }
-
-  ObtenerPlatosComidas() {
-    this.tipoComidas = [];
-    this.rest.ConsultarTipoComida().subscribe(datos => {
-      this.tipoComidas = datos;
-    })
-  }
-
-  // metodo para ver la informacion del empleado 
-  ObtenerEmpleados(idemploy: any) {
-    this.empleados = [];
-    this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
-      this.empleados = data;
-      console.log(this.empleados)
-      this.PlanificacionComidasForm.patchValue({
-        idEmpleadoForm: this.empleados[0].nombre + ' ' + this.empleados[0].apellido,
-        fechaForm: this.FechaActual
-      })
-    })
-  }
-
-  InsertarPlanificacion(form) {
-    let datosPlanComida = {
-      id_empleado: this.data.idEmpleado,
-      fecha: form.fechaForm,
-      id_comida: form.idComidaForm,
-      observacion: form.observacionForm,
-      fec_solicita: form.fechaPlanificacionForm,
-      hora_inicio: form.horaInicioForm,
-      hora_fin: form.horaFinForm,
-      descripcion: this.descripcion,
-      tipo_comida: form.tipoForm,
-      extra: form.extraForm
-    };
-    if (form.tipoForm === undefined) {
-      this.RegistrarServicio(form, datosPlanComida);
-    }
-    else {
-      if (this.data.modo === "multiple") {
-        this.contador = 0;
-        this.data.servicios.map(obj => {
-          datosPlanComida.id_empleado = obj.id;
-          this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(res => {
-            this.contador = this.contador + 1;
-            if (this.contador === this.data.servicios.length) {
-              this.dialogRef.close();
-              window.location.reload();
-              this.toastr.success('Operación Exitosa', 'Planificación de Alimentación Registrada', {
-                timeOut: 6000,
-              })
-            }
-          });
-        })
-      }
-      else {
-        this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(response => {
-          this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Registrado', {
-            timeOut: 6000,
-          })
-          this.CerrarRegistroPlanificacion();
-        });
-      }
-    }
-  }
-
-  ObtenerMensajeErrorObservacion() {
-    if (this.observacionF.hasError('pattern')) {
-      return 'Ingrese información válida';
-    }
-    return this.observacionF.hasError('required') ? 'Campo Obligatorio' : '';
-  }
-
-  CerrarRegistroPlanificacion() {
-    this.LimpiarCampos();
-    this.dialogRef.close();
-    //window.location.reload();
-  }
-
-  LimpiarCampos() {
-    this.PlanificacionComidasForm.reset();
-    this.ObtenerPlatosComidas();
-    this.ObtenerServicios();
-  }
-
-  estilo: any;
-  habilitarServicio: boolean = false;
-  IngresarServicio(form) {
-    if (form.tipoForm === undefined) {
-      this.PlanificacionComidasForm.patchValue({
-        servicioForm: '',
-      });
-      this.estilo = { 'visibility': 'visible' }; this.habilitarServicio = true;
-      this.toastr.info('Ingresar nombre del nuevo tipo de servicio.', 'Etiqueta Ingresar Servicio activa', {
-        timeOut: 6000,
-      })
-      this.habilitarSeleccion = false;
-    }
-  }
-
-  habilitarSeleccion: boolean = true;
-  VerTiposServicios() {
-    this.PlanificacionComidasForm.patchValue({
-      servicioForm: '',
-    });
-    this.estilo = { 'visibility': 'hidden' }; this.habilitarServicio = false;
-    this.habilitarSeleccion = true;
-  }
-
-  servicios: any = [];
-  ObtenerServicios() {
-    this.servicios = [];
-    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
-      this.servicios = datos;
-      this.servicios[this.servicios.length] = { nombre: "OTRO" };
-    })
-  }
-
-  contador: number = 0;
-  RegistrarServicio(form, datos: any) {
-    if (form.servicioForm != '') {
-      let tipo_servicio = {
-        nombre: form.servicioForm
-      }
-      this.restPlan.CrearTipoComidas(tipo_servicio).subscribe(res => {
-        // Buscar id de último cargo ingresado
-        this.restPlan.ObtenerUltimoTipoComidas().subscribe(data => {
-          // Buscar id de último cargo ingresado
-          datos.tipo_comida = data[0].max;
-          if (this.data.modo === 'multiple') {
-            this.contador = 0;
-            this.data.servicios.map(obj => {
-              datos.id_empleado = obj.id;
-              this.restPlan.CrearPlanComidas(datos).subscribe(res => {
-                this.contador = this.contador + 1;
-                if (this.contador === this.data.servicios.length) {
-                  this.dialogRef.close();
-                  window.location.reload();
-                  this.toastr.success('Operación Exitosa', 'Planificación de Alimentación Registrada', {
-                    timeOut: 6000,
-                  })
-                }
-              });
-            })
-          }
-          else {
-            this.restPlan.CrearPlanComidas(datos).subscribe(res => {
-              this.toastr.success('Operación Exitosa', 'Planificación de Alimentación Registrada', {
-                timeOut: 6000,
-              })
-              this.CerrarRegistroPlanificacion();
-            });
-          }
-
-        });
-      });
-    }
-    else {
-      this.toastr.info('Ingresar el tipo de servicio', 'Verificar datos', {
-        timeOut: 6000,
-      });
     }
   }
 

@@ -19,6 +19,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { DetalleMenuComponent } from '../detalle-menu/detalle-menu.component';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -117,6 +118,13 @@ export class ListarTipoComidasComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarTipoComidasComponent, { width: '350px', data: datosSeleccionados }).afterClosed().subscribe(items => {
       this.ObtenerTipoComidas();
     });
+  }
+
+  AbrirVentanaDetalles(datosSeleccionados): void {
+    this.vistaRegistrarDatos.open(DetalleMenuComponent,
+      { width: '350px', data: { menu: datosSeleccionados, vista: 'lista' } })
+      .afterClosed().subscribe(item => {
+      });
   }
 
   LimpiarCampos() {
@@ -222,20 +230,18 @@ export class ListarTipoComidasComponent implements OnInit {
         {
           width: 'auto',
           table: {
-            widths: [30, 'auto', 'auto', 60],
+            widths: [30, 'auto', 'auto'],
             body: [
               [
                 { text: 'Id', style: 'tableHeader' },
-                { text: 'Nombre', style: 'tableHeader' },
-                { text: 'Observación', style: 'tableHeader' },
-                { text: 'Valor', style: 'tableHeader' }
+                { text: 'Tipo de Servicio', style: 'tableHeader' },
+                { text: 'Menú', style: 'tableHeader' },
               ],
               ...this.tipoComidas.map(obj => {
                 return [
                   { text: obj.id, style: 'itemsTableD' },
+                  { text: obj.tipo, style: 'itemsTable' },
                   { text: obj.nombre, style: 'itemsTable' },
-                  { text: obj.observacion, style: 'itemsTable' },
-                  { text: '$ ' + obj.valor, style: 'itemsTableD' }
                 ];
               })
             ]
@@ -280,9 +286,8 @@ export class ListarTipoComidasComponent implements OnInit {
       objeto = {
         "tipo_comida": {
           '@id': obj.id,
-          "nombre": obj.nombre,
-          "observacion": obj.observacion,
-          "valor": obj.valor,
+          "tipo_servicio": obj.tipo,
+          "menu": obj.nombre,
         }
       }
       arregloComidas.push(objeto)

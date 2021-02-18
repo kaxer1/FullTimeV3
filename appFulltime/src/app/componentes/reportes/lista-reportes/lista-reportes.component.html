@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="lista">
-                <span id="negrita_dep">LISTA DE REPORTES</span>
+                <span id="negrita_dep">REPORTES GENERALES</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <ul [ngStyle]="{'visibility': habilitarReportes}">
@@ -37,11 +37,6 @@
                     <li type="circle">
                         <a mat-list-item [routerLink]="['/horas/extras']" class="texcol">
                             <span matLine>Reporte Horas Extras</span>
-                        </a>
-                    </li>
-                    <li type="circle">
-                        <a mat-list-item [routerLink]="['/alimentosGeneral']" class="texcol">
-                            <span matLine>Reporte Tickets Consumidos</span>
                         </a>
                     </li>
                 </ul>
@@ -104,6 +99,34 @@
                         </a>
                     </li>
                 </ul>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="lista">
+                <span id="negrita_dep">REPORTES MÓDULO ALIMENTACIÓN</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <ul [ngStyle]="{'visibility': habilitarReportes}">
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/alimentosGeneral']" class="texcol">
+                            <span matLine>Reporte Tickets Consumidos</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/alimentosDetallado']" class="texcol">
+                            <span matLine>Reporte Detallado Tickets Consumidos</span>
+                        </a>
+                    </li>
+                </ul>
+            </mat-card>
+        </div>
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="lista">
+                <span id="negrita_dep">Reportes Estadísticos</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
             </mat-card>
         </div>
     </div>

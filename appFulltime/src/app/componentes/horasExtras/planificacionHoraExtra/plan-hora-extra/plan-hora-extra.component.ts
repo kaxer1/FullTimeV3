@@ -137,10 +137,18 @@ export class PlanHoraExtraComponent implements OnInit {
         })
       }
     })
+    if (this.datosSeleccionados.length != undefined) {
+      this.toastr.success('Operación Exitosa', 'Se registra un total de ' + this.datosSeleccionados.length + ' planificaciones de horas extras.', {
+        timeOut: 6000,
+      });
+    }
+    else {
+      this.toastr.success('Operación Exitosa', 'Horas Extras planificadas', {
+        timeOut: 10000,
+      });
+    }
     this.dialogRef.close();
-    this.toastr.success('Operación Exitosa', 'Horas Extras planificadas', {
-      timeOut: 10000,
-    });
+    
   }
 
   IngresarSoloLetras(e) {

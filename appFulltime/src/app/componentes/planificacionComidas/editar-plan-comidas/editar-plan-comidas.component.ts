@@ -29,8 +29,8 @@ export class EditarPlanComidasComponent implements OnInit {
   fechaPlanificacionF = new FormControl('', Validators.required);
   horaInicioF = new FormControl('', Validators.required);
   horaFinF = new FormControl('', Validators.required);
-  tipoF = new FormControl('');
-  servicioF = new FormControl('', [Validators.minLength(3)]);
+  tipoF = new FormControl('', Validators.required);;
+  platosF = new FormControl('', Validators.required);;
   extraF = new FormControl('', [Validators.required]);
 
   // asignar los campos en un formulario en grupo
@@ -42,16 +42,14 @@ export class EditarPlanComidasComponent implements OnInit {
     fechaPlanificacionForm: this.fechaPlanificacionF,
     horaInicioForm: this.horaInicioF,
     horaFinForm: this.horaFinF,
-    servicioForm: this.servicioF,
     tipoForm: this.tipoF,
+    platosForm: this.platosF,
     extraForm: this.extraF
   });
 
   tipoComidas: any = [];
   empleados: any = [];
-
   FechaActual: any;
-
   idEmpleadoLogueado: any;
 
   selec1: boolean = false;
@@ -70,39 +68,43 @@ export class EditarPlanComidasComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('datos', this.data)
-    this.ObtenerPlatosComidas();
     this.ObtenerServicios();
-    this.servicios[this.servicios.length] = { nombre: "OTRO" };
     this.ObtenerEmpleados(this.data.id_empleado);
     this.CargarDatos();
   }
 
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+  servicios: any = [];
+  ObtenerServicios() {
+    this.servicios = [];
+    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
+      this.servicios = datos;
+    })
   }
 
-  ObtenerPlatosComidas() {
+  // Al seleccionar un tipo de servicio se muestra la lista de menús registrados
+  ObtenerPlatosComidas(form) {
+    this.idComidaF.reset();
+    this.platosF.reset();
     this.tipoComidas = [];
-    this.rest.ConsultarTipoComida().subscribe(datos => {
+    this.rest.ConsultarMenu(form.tipoForm).subscribe(datos => {
       this.tipoComidas = datos;
+    }, error => {
+      this.toastr.info('Verificar la información.', 'No existen registrados Menús para esta tipo de servicio.', {
+        timeOut: 6000,
+      })
+    })
+  }
+
+  detalle: any = [];
+  ObtenerDetalleMenu(form) {
+    this.platosF.reset();
+    this.detalle = [];
+    this.rest.ConsultarUnDetalleMenu(form.idComidaForm).subscribe(datos => {
+      this.detalle = datos;
+    }, error => {
+      this.toastr.info('Verificar la información.', 'No existen registros de Alimentación para este Menú.', {
+        timeOut: 6000,
+      })
     })
   }
 
@@ -123,26 +125,20 @@ export class EditarPlanComidasComponent implements OnInit {
     let datosPlanComida = {
       id_empleado: this.data.id_empleado,
       fecha: form.fechaForm,
-      id_comida: form.idComidaForm,
+      id_comida: form.platosForm,
       observacion: form.observacionForm,
       fec_solicita: form.fechaPlanificacionForm,
       hora_inicio: form.horaInicioForm,
       hora_fin: form.horaFinForm,
-      tipo_comida: form.tipoForm,
       extra: form.extraForm,
       id: this.data.id
     };
-    if (form.tipoForm === undefined) {
-      this.RegistrarServicio(form, datosPlanComida);
-    }
-    else {
-      this.restPlan.ActualizarDatos(datosPlanComida).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado', {
-          timeOut: 6000,
-        })
-        this.CerrarRegistroPlanificacion();
-      });
-    }
+    this.restPlan.ActualizarDatos(datosPlanComida).subscribe(response => {
+      this.toastr.success('Operación Exitosa', 'Planificación de Almuerzo Actualizado', {
+        timeOut: 6000,
+      })
+      this.CerrarRegistroPlanificacion();
+    });
   }
 
   ObtenerMensajeErrorObservacion() {
@@ -155,14 +151,11 @@ export class EditarPlanComidasComponent implements OnInit {
   CerrarRegistroPlanificacion() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
   LimpiarCampos() {
     this.PlanificacionComidasForm.reset();
-    this.ObtenerPlatosComidas();
     this.ObtenerServicios();
-    this.servicios[this.servicios.length] = { nombre: "OTRO" };
   }
 
   CargarDatos() {
@@ -186,64 +179,25 @@ export class EditarPlanComidasComponent implements OnInit {
     }
   }
 
-  estilo: any;
-  habilitarServicio: boolean = false;
-  IngresarServicio(form) {
-    if (form.tipoForm === undefined) {
-      this.PlanificacionComidasForm.patchValue({
-        servicioForm: '',
-      });
-      this.estilo = { 'visibility': 'visible' }; this.habilitarServicio = true;
-      this.toastr.info('Ingresar nombre del nuevo tipo de servicio.', 'Etiqueta Ingresar Servicio activa', {
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
         timeOut: 6000,
       })
-      this.habilitarSeleccion = false;
+      return false;
     }
   }
-
-  habilitarSeleccion: boolean = true;
-  VerTiposServicios() {
-    this.PlanificacionComidasForm.patchValue({
-      servicioForm: '',
-    });
-    this.estilo = { 'visibility': 'hidden' }; this.habilitarServicio = false;
-    this.habilitarSeleccion = true;
-  }
-
-  servicios: any = [];
-  ObtenerServicios() {
-    this.servicios = [];
-    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
-      this.servicios = datos;
-      this.servicios[this.servicios.length] = { nombre: "OTRO" };
-    })
-  }
-
-  contador: number = 0;
-  RegistrarServicio(form, datos: any) {
-    if (form.servicioForm != '') {
-      let tipo_servicio = {
-        nombre: form.servicioForm
-      }
-      this.restPlan.CrearTipoComidas(tipo_servicio).subscribe(res => {
-        // Buscar id de último cargo ingresado
-        this.restPlan.ObtenerUltimoTipoComidas().subscribe(data => {
-          // Buscar id de último cargo ingresado
-          datos.tipo_comida = data[0].max;
-          this.restPlan.ActualizarDatos(datos).subscribe(res => {
-            this.toastr.success('Operación Exitosa', 'Planificación de Alimentación Registrada', {
-              timeOut: 6000,
-            })
-            this.CerrarRegistroPlanificacion();
-          });
-        });
-      });
-    }
-    else {
-      this.toastr.info('Ingresar el tipo de servicio', 'Verificar datos', {
-        timeOut: 6000,
-      });
-    }
-  }
-
 }

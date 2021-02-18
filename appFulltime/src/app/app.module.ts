@@ -334,6 +334,9 @@ import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/re
 import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
 import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
 import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
+import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
+import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
+import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -592,6 +595,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ReporteHorasTrabajadasComponent,
     ReportePuntualidadComponent,
     ReporteTimbresMultiplesComponent,
+    DetalleMenuComponent,
+    VistaMenuComponent,
+    EditarDetalleMenuComponent,
   ],
 
   imports: [
