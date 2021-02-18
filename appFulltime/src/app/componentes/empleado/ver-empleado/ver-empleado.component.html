@@ -947,7 +947,7 @@
     </mat-tab>
 
     <!-- PLANIFICACION DE ALMUERZO -->
-    <mat-tab>
+    <mat-tab *ngIf="HabilitarAlimentacion">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">local_dining</mat-icon>
             Alimentación
@@ -1036,7 +1036,7 @@
     </mat-tab>
 
     <!-- PERMISOS -->
-    <mat-tab>
+    <mat-tab *ngIf="HabilitarPermisos">
         <ng-template mat-tab-label>
             <mat-icon class="example-tab-icon">transfer_within_a_station</mat-icon>
             Permisos
