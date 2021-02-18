@@ -61,6 +61,7 @@ import PLAN_GENERAL_RUTAS from './rutas/planGeneral/planGeneralRutas';
 import REPORTE_HORA_EXTRA_RUTAS from './rutas/reportes/reporteHoraExtraRutas';
 import GRAFICAS_RUTAS from './rutas/graficas/graficasRutas';
 import ALIMENTACION_RUTAS from './rutas/reportes/alimentacionRutas';
+import REPORTES_A_RUTAS from './rutas/reportes/reportesAsistenciaRutas';
 import FUNCIONES_RUTAS from './rutas/funciones/funcionRutas';
 
 import { createServer, Server } from 'http';
@@ -171,6 +172,7 @@ class Servidor {
         this.app.use('/reportes/vacacion', KARDEX_VACACION_RUTAS);
         this.app.use('/reportes/hora-extra', REPORTE_HORA_EXTRA_RUTAS);
         this.app.use('/reporte', REPORTES_RUTAS);
+        this.app.use('/reportes-asistencias/', REPORTES_A_RUTAS);
 
         // Modulo Alimentación
         this.app.use('/alimentacion', ALIMENTACION_RUTAS);

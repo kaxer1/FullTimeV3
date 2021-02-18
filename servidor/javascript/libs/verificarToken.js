@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TokenValidation = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 exports.TokenValidation = (req, res, next) => {
     // verifica si en la peticion existe la cabecera autorizacion 
@@ -25,5 +26,6 @@ exports.TokenValidation = (req, res, next) => {
     req.id_empresa = payload._empresa,
         req.userRol = payload.rol;
     req.userIdCargo = payload.cargo;
+    req.userCodigo = payload.codigo;
     next();
 };

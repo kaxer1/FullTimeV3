@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import pool from '../../database';
 import { ContarHorasByCargo } from '../../libs/ContarHoras'
 import { Consultar } from '../../libs/ListaEmpleados'
 class AsistenciaControlador {

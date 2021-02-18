@@ -44,7 +44,7 @@
         </div>
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="lista">
-                <span id="negrita_dep">LISTA DE KARDEX</span>
+                <span id="negrita_dep">REPORTES MULTIPLES</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <ul [ngStyle]="{'visibility': habilitarReportes}">
@@ -66,6 +66,36 @@
                     <li type="circle">
                         <a mat-list-item [routerLink]="['/reporteHorasExtras']">
                             <span matLine>Reporte Horas Extras</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-atrasos-multiples']">
+                            <span matLine>Reporte Atrasos Multiples</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-emp-inactivos']">
+                            <span matLine>Reporte Empleados Inactivos</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-faltas']">
+                            <span matLine>Reporte Faltas</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-horas-trabaja']">
+                            <span matLine>Reporte Horas Trabaja</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-puntualidad']">
+                            <span matLine>Reporte Puntualidad</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/reporte-timbres-multiples']">
+                            <span matLine>Reporte Timbres Multiples</span>
                         </a>
                     </li>
                 </ul>
@@ -94,9 +124,51 @@
         </div>
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="lista">
-                <span id="negrita_dep">Reportes Estadísticos</span>
+                <span id="negrita_dep">REPORTES ESTADÍSTICOS</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
+                <ul [ngStyle]="{'visibility': habilitarReportes}">
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/salidas-antes']" class="texcol">
+                            <span matLine>Métrica Salida Antes</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/tiempo-jornada-vs-hora-ext']" class="texcol">
+                            <span matLine>Métrica Tiempo Jornada VS Hora extra</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/retrasos']" class="texcol">
+                            <span matLine>Métrica Atrasos </span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/marcaciones']" class="texcol">
+                            <span matLine>Métrica Marcaciones</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/jornada-vs-hora-extra']" class="texcol">
+                            <span matLine>Métrica Jornada VS Hora Extra</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/hora-extra']" class="texcol">
+                            <span matLine>Métrica Hora Extra</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/asistencia']" class="texcol">
+                            <span matLine>Métrica Asistencia</span>
+                        </a>
+                    </li>
+                    <li type="circle">
+                        <a mat-list-item [routerLink]="['/macro/inasistencia']" class="texcol">
+                            <span matLine>Métrica Inasistencia</span>
+                        </a>
+                    </li>
+                </ul>
             </mat-card>
         </div>
     </div>

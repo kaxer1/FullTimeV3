@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit{
   marcaciones: any;
   retrasos: any;
   tiempo_jornada: any;
+  salidas_antes: any;
 
   constructor(
     private restGraficas: GraficasService,
@@ -40,6 +41,7 @@ export class HomeComponent implements OnInit{
     this.GraficaCinco();
     this.GraficaSeis();
     this.GraficaSiete();
+    this.GraficaOcho();
   }
 
   GraficaUno() {
@@ -142,6 +144,19 @@ export class HomeComponent implements OnInit{
     }
   }
 
+  GraficaOcho() {
+    let local = sessionStorage.getItem('salida_antes');
+    if (local === null) {
+      this.restGraficas.MetricaSalidasAntesMicro().subscribe(res => {
+        // console.log('************* Salida Antes Micro **************');
+        sessionStorage.setItem('salida_antes', JSON.stringify(res))
+        this.salidas_antes = res
+      });
+    } else {
+      this.salidas_antes = JSON.parse(local);
+    }
+  }
+
   RefrescarGraficas() {
     sessionStorage.removeItem('JornadaHoraExtra');
     sessionStorage.removeItem('retrasos');
@@ -150,6 +165,7 @@ export class HomeComponent implements OnInit{
     sessionStorage.removeItem('HoraExtra');
     sessionStorage.removeItem('marcaciones');
     sessionStorage.removeItem('tiempo_jornada');
+    sessionStorage.removeItem('salida_antes');
     this.ModeloGraficas();
   }
 

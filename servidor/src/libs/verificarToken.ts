@@ -10,6 +10,7 @@ interface IPayload {
     _empresa: number,
     cargo: number,
     estado: boolean,
+    codigo: number | string
 }
 
 export const TokenValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -35,6 +36,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
     req.id_empresa = payload._empresa,
     req.userRol = payload.rol;
     req.userIdCargo = payload.cargo;
+    req.userCodigo = payload.codigo;
 
     next();
 }

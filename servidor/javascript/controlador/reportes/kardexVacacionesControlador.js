@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.KARDEX_VACACION_CONTROLADOR = void 0;
 const CalcularVacaciones_1 = require("../../libs/CalcularVacaciones");
 const CalcularHorasExtras_1 = require("../../libs/CalcularHorasExtras");
 class KardexVacacion {

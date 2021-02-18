@@ -5,5 +5,6 @@ declare namespace Express {
         id_empresa: number,
         userRol: number,
         userIdCargo: number
+        userCodigo: number | string
     }
 }

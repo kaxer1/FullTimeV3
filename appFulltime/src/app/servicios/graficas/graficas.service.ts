@@ -45,6 +45,10 @@ export class GraficasService {
   MetricaMarcacionesMacro(desde: string, hasta: string) {
     return this.http.get<any>(`${this.API_URL}/metricas/admin/marcaciones-emp/macro/${desde}/${hasta}`);
   }
+  
+  MetricaSalidasAntesMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/admin/salidas-anticipadas/macro/${desde}/${hasta}`);
+  }
 
   /**
    * METODOS MICRO PARA LAS GRAFICAS DEL HOME
@@ -76,6 +80,10 @@ export class GraficasService {
   MetricaMarcacionesMicro() {
     return this.http.get<any>(`${this.API_URL}/metricas/admin/marcaciones-emp/micro`);
   }
+  
+  MetricaSalidasAntesMicro() {
+    return this.http.get<any>(`${this.API_URL}/metricas/admin/salidas-anticipadas/micro`);
+  }
 
 
   /**
@@ -95,5 +103,25 @@ export class GraficasService {
   
   EmpleadoAtrasos() {
     return this.http.get<any>(`${this.API_URL}/metricas/user/atrasos/micro`);  
+  }
+  
+  /**
+   *  METODOS PARA GRAFICAS DE EMPLEADOS MACRO
+   */
+
+  EmpleadoHoraExtraMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/user/hora-extra/macro/${desde}/${hasta}`);  
+  }
+  
+  EmpleadoPermisosMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/user/permisos/macro/${desde}/${hasta}`);  
+  }
+  
+  EmpleadoVacacionesMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/user/vacaciones/macro/${desde}/${hasta}`);  
+  }
+  
+  EmpleadoAtrasosMacro(desde: string, hasta: string) {
+    return this.http.get<any>(`${this.API_URL}/metricas/user/atrasos/macro/${desde}/${hasta}`);  
   }
 }

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GRAFICAS_CONTROLADOR = void 0;
 const MetodosGraficas_1 = require("../../libs/MetodosGraficas");
 class GraficasControlador {
     AdminHorasExtrasMicro(req, res) {
@@ -37,7 +38,7 @@ class GraficasControlador {
             res.status(200).jsonp(resultado);
         });
     }
-    AdminRetrasosMicro(req, res) {
+    AdminAtrasosMicro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id_empresa = req.id_empresa;
             const fec_final = new Date();
@@ -50,16 +51,16 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.GraficaRetrasos(id_empresa, fec_inicio, fec_final);
+            let resultado = yield MetodosGraficas_1.GraficaAtrasos(id_empresa, fec_inicio, fec_final);
             res.status(200).jsonp(resultado);
         });
     }
-    AdminRetrasosMacro(req, res) {
+    AdminAtrasosMacro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const fec_inicio = req.params.desde;
             const fec_final = req.params.hasta;
             const id_empresa = req.id_empresa;
-            let resultado = yield MetodosGraficas_1.GraficaRetrasos(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            let resultado = yield MetodosGraficas_1.GraficaAtrasos(id_empresa, new Date(fec_inicio), new Date(fec_final));
             res.status(200).jsonp(resultado);
         });
     }
@@ -193,6 +194,32 @@ class GraficasControlador {
             res.status(200).jsonp(resultado);
         });
     }
+    AdminSalidasAnticipadasMicro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empresa = req.id_empresa;
+            const fec_final = new Date();
+            var fec_inicio = new Date();
+            fec_inicio.setUTCDate(1);
+            fec_inicio.setUTCMonth(0);
+            fec_inicio.setUTCHours(0);
+            fec_inicio.setUTCMinutes(0);
+            fec_inicio.setUTCSeconds(0);
+            fec_final.setUTCHours(0);
+            fec_final.setUTCMinutes(0);
+            fec_final.setUTCSeconds(0);
+            let resultado = yield MetodosGraficas_1.GraficaSalidasAnticipadas(id_empresa, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    AdminSalidasAnticipadasMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const id_empresa = req.id_empresa;
+            let resultado = yield MetodosGraficas_1.GraficaSalidasAnticipadas(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            res.status(200).jsonp(resultado);
+        });
+    }
     /**
      *
      * METODOS DE GRAFICAS PARA LOS EMPLEADOS
@@ -201,6 +228,7 @@ class GraficasControlador {
     EmpleadoHorasExtrasMicro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const id_empleado = req.userIdEmpleado;
+            const codigo = req.userCodigo;
             const fec_final = new Date();
             var fec_inicio = new Date();
             fec_inicio.setUTCDate(1);
@@ -211,7 +239,17 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.MetricaHorasExtraEmpleado(id_empleado, fec_inicio, fec_final);
+            let resultado = yield MetodosGraficas_1.MetricaHorasExtraEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoHorasExtrasMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const codigo = req.userCodigo;
+            let resultado = yield MetodosGraficas_1.MetricaHorasExtraEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
             res.status(200).jsonp(resultado);
         });
     }
@@ -220,6 +258,7 @@ class GraficasControlador {
             const id_empleado = req.userIdEmpleado;
             const fec_final = new Date();
             var fec_inicio = new Date();
+            const codigo = req.userCodigo;
             fec_inicio.setUTCDate(1);
             fec_inicio.setUTCMonth(0);
             fec_inicio.setUTCHours(0);
@@ -228,12 +267,23 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.MetricaVacacionesEmpleado(id_empleado, fec_inicio, fec_final);
+            let resultado = yield MetodosGraficas_1.MetricaVacacionesEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoVacacionesMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const codigo = req.userCodigo;
+            let resultado = yield MetodosGraficas_1.MetricaVacacionesEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
             res.status(200).jsonp(resultado);
         });
     }
     EmpleadoPermisosMicro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.userCodigo;
             const id_empleado = req.userIdEmpleado;
             const fec_final = new Date();
             var fec_inicio = new Date();
@@ -245,12 +295,23 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.MetricaPermisosEmpleado(id_empleado, fec_inicio, fec_final);
+            let resultado = yield MetodosGraficas_1.MetricaPermisosEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoPermisosMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.userCodigo;
+            const id_empleado = req.userIdEmpleado;
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            let resultado = yield MetodosGraficas_1.MetricaPermisosEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
             res.status(200).jsonp(resultado);
         });
     }
     EmpleadoAtrasosMicro(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.userCodigo;
             const id_empleado = req.userIdEmpleado;
             const fec_final = new Date();
             var fec_inicio = new Date();
@@ -262,7 +323,17 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(id_empleado, fec_inicio, fec_final);
+            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            res.status(200).jsonp(resultado);
+        });
+    }
+    EmpleadoAtrasosMacro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id_empleado = req.userIdEmpleado;
+            const fec_inicio = req.params.desde;
+            const fec_final = req.params.hasta;
+            const codigo = req.userCodigo;
+            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
             res.status(200).jsonp(resultado);
         });
     }
