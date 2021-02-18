@@ -355,6 +355,10 @@ export const ModelarSalidasAnticipadas = async function (fec_inicio: string, fec
     return array
 }
 
+/**
+ * SUBMETODOS PARA LAS GRAFICAS DE EMPLEADOS INDIVIDUALEMTNE
+ */
+
 export const Empleado_HoraExtra_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
     let horas_extras = await EmpleadoHorasExtrasGrafica(codigo, fec_desde, fec_hasta)
     console.log('Lista de horas extras ===', horas_extras);
@@ -479,7 +483,7 @@ export const Empleado_Vacaciones_ModelarDatos = async function(codigo: string | 
 
 export const Empleado_Permisos_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
     let permisos = await pool.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR), hora_numero, dia FROM permisos WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ',[codigo, fec_desde, fec_hasta]).then(result => { return result.rows })
-    console.log('Lista de permisos ===', permisos);
+    // console.log('Lista de permisos ===', permisos);
     let aux_array: any = [];
     permisos.forEach(obj => {
         var fec_aux = new Date(obj.fec_inicio)
@@ -490,13 +494,25 @@ export const Empleado_Permisos_ModelarDatos = async function(codigo: string | nu
         for (let i = 0; i < diasHorario; i++) {
             let horario_res = {
                 fecha: fec_aux.toJSON().split('T')[0],
-                tiempo: HHMMtoHorasDecimal(obj.hora_numero) / diasHorario,
-                dia: obj.dia
+                tiempo: (obj.dia + HHMMtoHorasDecimal(obj.hora_numero)) / diasHorario,
             };            
             aux_array.push(horario_res)
             fec_aux.setDate(fec_aux.getDate() + 1)
         }
     })
-    console.log('Lista array fechas: ',aux_array);    
+    // console.log('Lista array fechas: ',aux_array);    
     return aux_array
+}
+
+export const Empleado_Atrasos_ModelarDatos = async function(codigo: string | number, fec_desde: Date, fec_hasta: Date) {
+    let timbres = await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion = $3 AND id_empleado = $4 ORDER BY fec_hora_timbre ASC ',[ fec_desde, fec_hasta, 'EoS', codigo])
+        .then(res => {
+            return res.rows;
+        })
+    // console.log('Lista de timbres ===', timbres);
+    let array = await Promise.all(timbres.map(async(obj) => {
+        return await ModelarAtrasos(obj, fec_desde.toJSON().split('T')[0], fec_hasta.toJSON().split('T')[0])
+    }))
+    // console.log('ARRAY ===', array);
+    return array
 }

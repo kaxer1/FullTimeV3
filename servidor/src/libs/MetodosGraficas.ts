@@ -1,7 +1,7 @@
 import { IHorarioCodigo, IModelarAnio, IModelarPie } from '../class/Model_graficas';
 import pool from '../database';
 import { BuscarTimbresByFecha, BuscarHorariosActivos, BuscarTimbresByCodigo_Fecha, 
-    HoraExtra_ModelarDatos, SumarValoresArray, BuscarTimbresEoS, ModelarAtrasos, 
+    HoraExtra_ModelarDatos, SumarValoresArray, BuscarTimbresEoS, ModelarAtrasos, Empleado_Atrasos_ModelarDatos,
     BuscarTimbresEoSModelado, HHMMtoHorasDecimal, ModelarSalidasAnticipadas, Empleado_HoraExtra_ModelarDatos,
     Empleado_Permisos_ModelarDatos, Empleado_Vacaciones_ModelarDatos} from './SubMetodosGraficas';
 
@@ -1207,7 +1207,6 @@ export const MetricaVacacionesEmpleado = async function (codigo: number | string
     
     let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
-    
 
     return {
         baseOption: {     
@@ -1329,7 +1328,6 @@ export const MetricaPermisosEmpleado = async function (codigo: number | string, 
     let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
     
-
     return {
         baseOption: {     
             tooltip: {
@@ -1383,7 +1381,76 @@ export const MetricaPermisosEmpleado = async function (codigo: number | string, 
 export const MetricaAtrasosEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empleado, fec_inicio, fec_final);
     
+    console.log(codigo, id_empleado, fec_inicio, fec_final);
+    let atrasos = await Empleado_Atrasos_ModelarDatos(codigo, fec_inicio, fec_final)
     // let ids = await IdsEmpleados(id_empresa);
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    atrasos.forEach((ele: any) => {
+        let fecha = parseInt(ele.fecha.split('-')[1])
+        if (ele.retraso === true) {
+            switch (fecha) {
+                case 1:
+                    modelarAnio.enero.push(ele.fecha); break;
+                case 2:
+                    modelarAnio.febrero.push(ele.fecha); break;
+                case 3:
+                    modelarAnio.marzo.push(ele.fecha); break;
+                case 4:
+                    modelarAnio.abril.push(ele.fecha); break;
+                case 5:
+                    modelarAnio.mayo.push(ele.fecha); break;
+                case 6:
+                    modelarAnio.junio.push(ele.fecha); break;
+                case 7:
+                    modelarAnio.julio.push(ele.fecha); break;
+                case 8:
+                    modelarAnio.agosto.push(ele.fecha); break;
+                case 9:
+                    modelarAnio.septiembre.push(ele.fecha); break;
+                case 10:
+                    modelarAnio.octubre.push(ele.fecha); break;
+                case 11:
+                    modelarAnio.noviembre.push(ele.fecha); break;
+                case 12:
+                    modelarAnio.diciembre.push(ele.fecha); break;
+                default: break;
+            }
+        }
+    });
+
+    atrasos = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: modelarAnio.enero.length },
+        {id: 1, mes: 'Febrero', valor: modelarAnio.febrero.length },
+        {id: 2, mes: 'Marzo', valor: modelarAnio.marzo.length },
+        {id: 3, mes: 'Abril', valor: modelarAnio.abril.length },
+        {id: 4, mes: 'Mayo', valor: modelarAnio.mayo.length },
+        {id: 5, mes: 'Junio', valor: modelarAnio.junio.length },
+        {id: 6, mes: 'Julio', valor: modelarAnio.julio.length },
+        {id: 7, mes: 'Agosto', valor: modelarAnio.agosto.length },
+        {id: 8, mes: 'Septiembre', valor: modelarAnio.septiembre.length},
+        {id: 9, mes: 'Octubre', valor: modelarAnio.octubre.length },
+        {id: 10, mes: 'Noviembre', valor: modelarAnio.noviembre.length },
+        {id: 11, mes: 'Diciembre', valor: modelarAnio.diciembre.length }
+    ]
+
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
 
     return {
         baseOption: {     
@@ -1397,7 +1464,7 @@ export const MetricaAtrasosEmpleado = async function (codigo: number | string, i
             legend: {
                 align: 'left',
                 data: [{
-                    name: 'hora extra'
+                    name: 'Atrasos'
                 }]
             },
             grid: {
@@ -1405,22 +1472,15 @@ export const MetricaAtrasosEmpleado = async function (codigo: number | string, i
                 right: '4%',
                 containLabel: true
             },
-            xAxis: {
-                type: 'category',
-                // data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                data: ['Enero', 'Febrero']
-            },
-            yAxis: {
-                type: 'value'
-            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Días' },
             series: [{
-                name: 'hora extra',
-                // data: [30, 40, 35, 46, 27, 49, 15, 21, 32, 44, 10, 20],
-                data: [33, 10],
+                name: 'Dias',
+                data: valor_mensual,
                 type: 'line',
                 lineStyle: { color: 'rgb(20, 112, 233)' },
                 itemStyle: { color: 'rgb(20, 112, 233)' }
-            }],
+            }]
         },
         media: [ // each rule of media query is defined here
             {

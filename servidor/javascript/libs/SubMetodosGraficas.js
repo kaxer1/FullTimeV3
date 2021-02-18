@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Empleado_Permisos_ModelarDatos = exports.Empleado_Vacaciones_ModelarDatos = exports.Empleado_HoraExtra_ModelarDatos = exports.ModelarSalidasAnticipadas = exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEoS = exports.SumarValoresArray = exports.HHMMtoHorasDecimal = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
+exports.Empleado_Atrasos_ModelarDatos = exports.Empleado_Permisos_ModelarDatos = exports.Empleado_Vacaciones_ModelarDatos = exports.Empleado_HoraExtra_ModelarDatos = exports.ModelarSalidasAnticipadas = exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEoS = exports.SumarValoresArray = exports.HHMMtoHorasDecimal = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const MetodosHorario_1 = require("./MetodosHorario");
@@ -350,6 +350,9 @@ exports.ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
         return array;
     });
 };
+/**
+ * SUBMETODOS PARA LAS GRAFICAS DE EMPLEADOS INDIVIDUALEMTNE
+ */
 exports.Empleado_HoraExtra_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let horas_extras = yield EmpleadoHorasExtrasGrafica(codigo, fec_desde, fec_hasta);
@@ -475,7 +478,7 @@ exports.Empleado_Vacaciones_ModelarDatos = function (codigo, fec_desde, fec_hast
 exports.Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let permisos = yield database_1.default.query('SELECT CAST(fec_inicio AS VARCHAR), CAST(fec_final AS VARCHAR), hora_numero, dia FROM permisos WHERE codigo = $1 AND fec_inicio between $2 and $3 AND estado = 3 ', [codigo, fec_desde, fec_hasta]).then(result => { return result.rows; });
-        console.log('Lista de permisos ===', permisos);
+        // console.log('Lista de permisos ===', permisos);
         let aux_array = [];
         permisos.forEach(obj => {
             var fec_aux = new Date(obj.fec_inicio);
@@ -485,14 +488,27 @@ exports.Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta)
             for (let i = 0; i < diasHorario; i++) {
                 let horario_res = {
                     fecha: fec_aux.toJSON().split('T')[0],
-                    tiempo: exports.HHMMtoHorasDecimal(obj.hora_numero) / diasHorario,
-                    dia: obj.dia
+                    tiempo: (obj.dia + exports.HHMMtoHorasDecimal(obj.hora_numero)) / diasHorario,
                 };
                 aux_array.push(horario_res);
                 fec_aux.setDate(fec_aux.getDate() + 1);
             }
         });
-        console.log('Lista array fechas: ', aux_array);
+        // console.log('Lista array fechas: ',aux_array);    
         return aux_array;
+    });
+};
+exports.Empleado_Atrasos_ModelarDatos = function (codigo, fec_desde, fec_hasta) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let timbres = yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion = $3 AND id_empleado = $4 ORDER BY fec_hora_timbre ASC ', [fec_desde, fec_hasta, 'EoS', codigo])
+            .then(res => {
+            return res.rows;
+        });
+        // console.log('Lista de timbres ===', timbres);
+        let array = yield Promise.all(timbres.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            return yield exports.ModelarAtrasos(obj, fec_desde.toJSON().split('T')[0], fec_hasta.toJSON().split('T')[0]);
+        })));
+        // console.log('ARRAY ===', array);
+        return array;
     });
 };
