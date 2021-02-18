@@ -337,6 +337,7 @@ import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
+import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -598,6 +599,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
+    FuncionesComponent,
   ],
 
   imports: [

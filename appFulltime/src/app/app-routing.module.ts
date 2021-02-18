@@ -123,6 +123,7 @@ import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-em
 import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -261,6 +262,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard], data: { log: false } },
   { path: 'olvidar-contrasenia', component: OlvidarContraseniaComponent, canActivate: [AuthGuard], data: { log: false } },
   { path: 'confirmar-contrasenia/:token', component: ConfirmarContraseniaComponent, canActivate: [AuthGuard], data: { log: false } },
+
+  // Funcionalidades
+  { path: 'funcionalidades', component: FuncionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+
 ];
 
 @NgModule({

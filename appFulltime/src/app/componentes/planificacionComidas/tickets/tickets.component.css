@@ -4,7 +4,7 @@
     }
 }
 
-mat-form-field { width: 230px; }
+
 
 img { width: 100%};
 
@@ -15,9 +15,10 @@ img { width: 100%};
 mat-card { width: 300px; border-style: groove; border-radius: 25px; text-align: center; margin: auto; padding-bottom: 25px; padding-top: 25px; }
 
 #home-section {
-    background: url('../../../../assets/imagenes/entrepreneur.jpg') no-repeat;
+    background: url('../../../../assets/imagenes/alimentacion.jpg') no-repeat;
     min-height: 100vh;
     background-size: cover;
+    display: flex;
     background-attachment: fixed; 
 }
 

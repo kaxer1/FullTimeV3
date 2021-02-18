@@ -62,6 +62,7 @@ import REPORTE_HORA_EXTRA_RUTAS from './rutas/reportes/reporteHoraExtraRutas';
 import GRAFICAS_RUTAS from './rutas/graficas/graficasRutas';
 import ALIMENTACION_RUTAS from './rutas/reportes/alimentacionRutas';
 import REPORTES_A_RUTAS from './rutas/reportes/reportesAsistenciaRutas';
+import FUNCIONES_RUTAS from './rutas/funciones/funcionRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -187,6 +188,9 @@ class Servidor {
 
         // GRAFICAS PARA MOSTRAR EN EL HOME
         this.app.use('/metricas', GRAFICAS_RUTAS);
+
+        // FUNCIONES
+        this.app.use('/administracion', FUNCIONES_RUTAS);
 
     }
 

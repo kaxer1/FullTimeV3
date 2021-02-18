@@ -66,6 +66,7 @@ const reporteHoraExtraRutas_1 = __importDefault(require("./rutas/reportes/report
 const graficasRutas_1 = __importDefault(require("./rutas/graficas/graficasRutas"));
 const alimentacionRutas_1 = __importDefault(require("./rutas/reportes/alimentacionRutas"));
 const reportesAsistenciaRutas_1 = __importDefault(require("./rutas/reportes/reportesAsistenciaRutas"));
+const funcionRutas_1 = __importDefault(require("./rutas/funciones/funcionRutas"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -163,6 +164,8 @@ class Servidor {
         this.app.use('/generalidades', datosGeneralesRutas_1.default);
         // GRAFICAS PARA MOSTRAR EN EL HOME
         this.app.use('/metricas', graficasRutas_1.default);
+        // FUNCIONES
+        this.app.use('/administracion', funcionRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

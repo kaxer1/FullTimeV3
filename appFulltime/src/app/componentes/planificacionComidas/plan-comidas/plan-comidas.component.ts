@@ -180,7 +180,7 @@ export class PlanComidasComponent implements OnInit {
         this.LimpiarCampos();
         this.LimpiarBusquedas();
       });
-    }
+    }                                         
   }
 
   IngresarSoloLetras(e) {
