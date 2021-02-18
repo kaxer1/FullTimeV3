@@ -119,8 +119,8 @@ export class VerEmpleadoComponent implements OnInit {
   empleadoLogueado: any = [];
   idEmpleadoLogueado: number;
 
-  HabilitarAccion: boolean;
-  HabilitarHorasE: boolean;
+  HabilitarAccion: boolean = true;
+  HabilitarHorasE: boolean = true;
 
   constructor(
     public restU: UsuarioService,
@@ -1632,23 +1632,15 @@ export class VerEmpleadoComponent implements OnInit {
     })
   }
 
-  VerHorasExtras() {
-    if (this.idEmpleadoLogueado === parseInt(this.idEmpleado)) {
-      this.HabilitarHorasE = false;
-    }
-    else {
-      this.HabilitarHorasE = true;
-    }
-  }
-
-  HabilitarHoraExtra: boolean;
   HabilitarAlimentacion: boolean;
   HabilitarPermisos: boolean;
   VerFuncionalidades() {
     this.restF.ListarFunciones().subscribe(datos => {
       console.log('datos', datos)
       if (datos[0].hora_extra === true) {
-        this.VerHorasExtras();
+        if (this.idEmpleadoLogueado === parseInt(this.idEmpleado)) {
+          this.HabilitarHorasE = false;
+        }
       }
       if (datos[0].accion_personal === true) {
         this.VerAccionPersonal();
@@ -1661,7 +1653,7 @@ export class VerEmpleadoComponent implements OnInit {
       }
 
     }, error => {
-      this.HabilitarHoraExtra = false;
+      this.HabilitarHorasE = true;
       this.HabilitarAlimentacion = false;
       this.HabilitarPermisos = false;
     })
