@@ -109,6 +109,17 @@ import { MarcacionesEmpMacroComponent } from './componentes/graficas-macro/marca
 import { RetrasosMacroComponent } from './componentes/graficas-macro/retrasos-macro/retrasos-macro.component';
 import { TiempoJornadaVsHoraExtMacroComponent } from './componentes/graficas-macro/tiempo-jornada-vs-hora-ext-macro/tiempo-jornada-vs-hora-ext-macro.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
+import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
+import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
+import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
+import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
+import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
+import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
+import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
+import { MetricaAtrasosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-atrasos/metrica-atrasos.component';
+import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
+import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-permisos/metrica-permisos.component';
+import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -177,7 +188,7 @@ const routes: Routes = [
   { path: 'timbres-admin', component: TimbreAdminComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'alimentacion', component: PlanComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   
-  // Graficas
+  // Graficas administrador
   { path: 'macro/inasistencia', component: InasistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/asistencia', component: AsistenciaMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/hora-extra', component: HoraExtraMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
@@ -185,6 +196,13 @@ const routes: Routes = [
   { path: 'macro/marcaciones', component: MarcacionesEmpMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/retrasos', component: RetrasosMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/tiempo-jornada-vs-hora-ext', component: TiempoJornadaVsHoraExtMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'macro/salidas-antes', component: SalidasAntesMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  
+  // Graficas Empleado
+  { path: 'macro/user/atrasos', component: MetricaAtrasosComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'macro/user/horas-extras', component: MetricaHorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'macro/user/permisos', component: MetricaPermisosComponent, canActivate: [AuthGuard], data: { roles: 2 } },
+  { path: 'macro/user/vacaciones', component: MetricaVacacionesComponent, canActivate: [AuthGuard], data: { roles: 2 } },
 
   // Reportes
   { path: 'reporteAsistenciaConsolidado', component: AsistenciaConsolidadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
@@ -197,6 +215,12 @@ const routes: Routes = [
   { path: 'reporteHorasExtras', component: ReporteHorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaReportes', component: ListaReportesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'horas/extras', component: ReporteHorasPedidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-atrasos-multiples', component: ReporteAtrasosMultiplesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-emp-inactivos', component: ReporteEmpleadosInactivosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-faltas', component: ReporteFaltasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-horas-trabaja', component: ReporteHorasTrabajadasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-puntualidad', component: ReportePuntualidadComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'reporte-timbres-multiples', component: ReporteTimbresMultiplesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
   // Reportes Alimentacion
   { path: 'alimentosGeneral', component: AlimentosGeneralComponent, canActivate: [AuthGuard], data: { roles: 1 } },

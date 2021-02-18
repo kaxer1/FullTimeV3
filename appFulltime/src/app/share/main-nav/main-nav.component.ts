@@ -424,7 +424,8 @@ export class MainNavComponent implements OnInit {
 
       // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
       if (this.loginService.getRolMenu() === true) {
-        this.dataSource.data = this.MenuAdministracion(res[0].nombre) as MenuNode[];
+        localStorage.setItem('name_empresa',res[0].nombre)
+        this.dataSource.data = this.MenuAdministracion(localStorage.getItem('name_empresa')) as MenuNode[];
       } else {
         this.dataSource.data = this.MenuEmpleado() as MenuNode[];
       }

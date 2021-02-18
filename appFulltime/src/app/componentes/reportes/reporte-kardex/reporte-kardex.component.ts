@@ -138,9 +138,13 @@ export class ReporteKardexComponent implements OnInit {
   KardexEmpleado(id_empleado: number, palabra: string) {
     if (this.f_inicio_reqK != '' && this.f_final_reqK != '') {
       this.restKardex.ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado, this.f_inicio_reqK, this.f_final_reqK).subscribe(res => {
-        this.kardex = res;
-        // console.log(this.kardex);
-        this.generarPdf(palabra, 3)
+        console.log(this.kardex);
+        if (!res.message) {
+          this.kardex = res;
+          this.generarPdf(palabra, 3)
+        } else {
+          this.toastr.error(res.message, 'Error Calculos');
+        }
       })
     } else {
       this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas', {

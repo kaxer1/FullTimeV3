@@ -323,6 +323,17 @@ import { PlanComidasComponent } from './componentes/planificacionComidas/plan-co
 import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
 import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
+import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
+import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
+import { MetricaAtrasosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-atrasos/metrica-atrasos.component';
+import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-permisos/metrica-permisos.component';
+import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
+import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
+import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
+import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
+import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
+import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -570,6 +581,17 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     TicketsComponent,
     AlimentosGeneralComponent,
     DetallePlanificadosComponent,
+    SalidasAntesMacroComponent,
+    MetricaVacacionesComponent,
+    MetricaHorasExtrasComponent,
+    MetricaAtrasosComponent,
+    MetricaPermisosComponent,
+    ReporteAtrasosMultiplesComponent,
+    ReporteEmpleadosInactivosComponent,
+    ReporteFaltasComponent,
+    ReporteHorasTrabajadasComponent,
+    ReportePuntualidadComponent,
+    ReporteTimbresMultiplesComponent,
   ],
 
   imports: [

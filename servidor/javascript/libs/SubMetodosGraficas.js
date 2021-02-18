@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEoS = exports.SumarValoresArray = exports.HHMMtoHorasDecimal = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
+exports.ModelarSalidasAnticipadas = exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEoS = exports.SumarValoresArray = exports.HHMMtoHorasDecimal = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const MetodosHorario_1 = require("./MetodosHorario");
@@ -310,5 +310,43 @@ exports.ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
                 retraso: retraso
             };
         })[0];
+    });
+};
+exports.ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // console.log(obj);
+        let timbres = yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\') ORDER BY fec_hora_timbre ASC', [fec_inicio, fec_final])
+            .then(res => {
+            return res.rows;
+        });
+        let nuevo = yield Promise.all(timbres.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            var f = new Date(obj.fec_hora_timbre);
+            return {
+                fecha: obj.fec_hora_timbre.split(' ')[0],
+                hora_timbre: obj.fec_hora_timbre.split(' ')[1],
+                codigo: obj.id_empleado,
+                diferencia_tiempo: 0,
+                hora_salida: yield database_1.default.query('SELECT dt.hora FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dt ' +
+                    'WHERE eh.fec_inicio < $1 AND eh.fec_final > $1 AND eh.codigo = $2 AND h.id = eh.id_horarios ' +
+                    'AND dt.id_horario = h.id AND dt.orden = 4', [f, obj.id_empleado])
+                    .then(res => {
+                    return res.rows;
+                })
+            };
+        })));
+        timbres = [];
+        let array = nuevo.filter(obj => {
+            return obj.hora_salida.length != 0;
+        }).map((obj) => {
+            obj.hora_timbre = exports.HHMMtoHorasDecimal(obj.hora_timbre);
+            obj.hora_salida = exports.HHMMtoHorasDecimal(obj.hora_salida[0].hora);
+            return obj;
+        }).filter(obj => {
+            var rango_inicio = obj.hora_salida - 3;
+            obj.diferencia_tiempo = obj.hora_salida - obj.hora_timbre;
+            return rango_inicio <= obj.hora_timbre && obj.hora_salida > obj.hora_timbre;
+        });
+        nuevo = [];
+        return array;
     });
 };

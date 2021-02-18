@@ -131,5 +131,16 @@
         <div echarts [options]="jornada_hora_extra"></div>
       </mat-card>
     </div>
+    <div class="col-md-6">
+      <mat-card class="example-card mat-elevation-z8">
+        <div class="d-flex bd-highlight">
+          <h4 class="p-2 w-100 bd-highlight"><b>Salidas Antes</b></h4>
+          <a mat-button [routerLink]="['/macro/salidas-antes']" class="p-2 flex-shrink-1 bd-highlight">
+            <mat-icon matTooltipPosition="right" matTooltip="Ver más opciones de la gráfica"> open_in_full </mat-icon>
+          </a>
+        </div>
+        <div echarts [options]="salidas_antes"></div>
+      </mat-card>
+    </div>
   </div>
 </div>

@@ -148,7 +148,7 @@ export class RetrasosMacroComponent implements OnInit {
   generarPdf(action) {
     const documentDefinition = this.getDocumentDefinicion();
     var f = new Date()
-    let doc_name = "metrica_inasistencia_" + f.toLocaleString() + ".pdf";
+    let doc_name = "metrica_retrasos" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
