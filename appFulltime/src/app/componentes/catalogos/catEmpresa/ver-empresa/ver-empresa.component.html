@@ -57,6 +57,13 @@
                             <label id="datosF">Establecimientos:</label>
                             <label>{{e.establecimiento}}</label>
                         </div>
+                        <div style="text-align: right;">
+                            <i id="editarF" (click)="EditarDatosEmpresa(e)" matSuffix matTooltipClass="color-tooltip"
+                                matTooltipPosition="right" matTooltip="Modificar datos de este registro"
+                                class="fas fa-edit">
+                                <p>Editar</p>
+                            </i>
+                        </div>
                     </div>
                 </div>
                 <br>
@@ -119,12 +126,6 @@
                                 Empresa</button>
                         </div>
                     </div>
-                </div>
-                <div style="text-align: right;">
-                    <i id="editarF" (click)="EditarDatosEmpresa(e)" matSuffix matTooltipClass="color-tooltip"
-                        matTooltipPosition="right" matTooltip="Modificar datos de este registro" class="fas fa-edit">
-                        <p>Editar</p>
-                    </i>
                 </div>
             </div>
             <hr>

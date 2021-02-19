@@ -26,4 +26,16 @@ export class AlimentacionService {
     return this.http.post(`${this.API_URL}/alimentacion/extras`, data)
   }
 
+  ObtenerDetallesPlanificadosConsumidos(datos: any) {
+    return this.http.post(`${this.API_URL}/alimentacion/planificados/detalle`, datos);
+  }
+
+  ObtenerDetallesSolicitadosConsumidos(datos: any) {
+    return this.http.post(`${this.API_URL}/alimentacion/solicitados/detalle`, datos);
+  }
+
+  ObtenerDetallesExtrasConsumidos(data: any) {
+    return this.http.post(`${this.API_URL}/alimentacion/extras/detalle`, data)
+  }
+
 }

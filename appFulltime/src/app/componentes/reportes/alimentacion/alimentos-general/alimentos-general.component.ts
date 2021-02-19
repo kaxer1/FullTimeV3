@@ -210,6 +210,15 @@ export class AlimentosGeneralComponent implements OnInit {
               this.exportToExcelTimbres(form);
               this.LimpiarFechas();
             }
+          }, error => {
+            this.toastr.info('No existen registros en el periodo indicado.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
+              timeOut: 10000,
+            }).onTap.subscribe(obj => {
+              if (archivo === 'pdf') {
+                this.generarPdf('open');
+                this.LimpiarFechas();
+              }
+            });
           });
         });
       });
@@ -282,16 +291,26 @@ export class AlimentosGeneralComponent implements OnInit {
    * ****************************************************************************************************/
 
   generarPdf(action = 'open') {
-    const documentDefinition = this.getDocumentDefinicion();
+    if (this.planificados.length != 0 && this.solicitados.length != 0 && this.extras.length != 0) {
+      const documentDefinition = this.getDocumentDefinicion();
+      switch (action) {
+        case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+        case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+        case 'download': pdfMake.createPdf(documentDefinition).download(); break;
 
-    switch (action) {
-      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
-      default: pdfMake.createPdf(documentDefinition).open(); break;
+        default: pdfMake.createPdf(documentDefinition).open(); break;
+      }
     }
+    else {
+      const documentDefinition_ = this.GenerarSinRegstros();
+      switch (action) {
+        case 'open': pdfMake.createPdf(documentDefinition_).open(); break;
+        case 'print': pdfMake.createPdf(documentDefinition_).print(); break;
+        case 'download': pdfMake.createPdf(documentDefinition_).download(); break;
 
+        default: pdfMake.createPdf(documentDefinition_).open(); break;
+      }
+    }
   }
 
   getDocumentDefinicion() {
@@ -336,9 +355,8 @@ export class AlimentosGeneralComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-
         { text: this.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
-        { text: 'REPORTE TICKETS CONSUMIDOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
+        { text: 'REPORTE ALIMENTOS CONSUMIDOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
         this.presentarEncabezado('TOTAL DE ALIMENTOS PLANIFICADOS CONSUMIDOS'),
         this.presentarAlimentacion(this.planificados),
         this.presentarTotales(this.planificados),
@@ -350,16 +368,15 @@ export class AlimentosGeneralComponent implements OnInit {
         this.presentarEncabezado('TOTAL DE ALIMENTOS EXTRAS CONSUMIDOS'),
         this.presentarAlimentacion(this.extras),
         this.presentarTotales(this.extras),
-        this.presentarEspacio(),
-        this.presentarSumatoriaTotal(this.planificados, this.solicitados, this.extras)
+        this.presentarEspacio_(),
+        this.presentarSumatoriaTotal(this.planificados, this.solicitados, this.extras),
       ],
       styles: {
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTableD: { fontSize: 9, alignment: 'center' },
         itemsTableI: { fontSize: 9, alignment: 'center' },
         itemsTableT: { fontSize: 10, alignment: 'center', bold: true },
-        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
-        centrado: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 10, 0, 10] },
+        centrado: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 5, 0, 5] },
         ver: { fontSize: 10, bold: true, alignment: 'center', border: false }
       }
     };
@@ -385,8 +402,8 @@ export class AlimentosGeneralComponent implements OnInit {
         },
         paddingLeft: function (i, node) { return 40; },
         paddingRight: function (i, node) { return 40; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
+        paddingTop: function (i, node) { return 6; },
+        paddingBottom: function (i, node) { return 6; }
       }
     }
   }
@@ -404,6 +421,19 @@ export class AlimentosGeneralComponent implements OnInit {
     }
   }
 
+  presentarEspacio_() {
+    return {
+      table: {
+        widths: ['*'],
+        body: [
+          [{ text: '', style: 'ver', margin: [0, 5, 0, 5] },],
+        ]
+      },
+      layout:
+        'noBorders'
+    }
+  }
+
   presentarTotales(arreglo: any) {
     var t_cantida = 0, t_costo = 0, t_total = 0;
     arreglo.forEach(obj => {
@@ -413,14 +443,14 @@ export class AlimentosGeneralComponent implements OnInit {
     })
     return {
       table: {
-        widths: ['*', '*', '*', '*', '*'],
+        widths: ['*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { colSpan: 2, text: 'TOTAL: ', style: 'itemsTableT' },
-            '',
-            { text: t_cantida, style: 'itemsTableT' },
-            { text: '$ ' + t_costo.toFixed(2), style: 'itemsTableT' },
-            { text: '$ ' + t_total.toFixed(2), style: 'itemsTableT' },
+            { colSpan: 4, text: 'TOTAL: ', style: 'itemsTableT', fillColor: this.s_color },
+            '', '', '',
+            { text: t_cantida, style: 'itemsTableT', fillColor: this.s_color },
+            { text: '$ ' + t_costo.toFixed(2), style: 'itemsTableT', fillColor: this.s_color },
+            { text: '$ ' + t_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color },
           ]
         ]
       },
@@ -433,8 +463,8 @@ export class AlimentosGeneralComponent implements OnInit {
         },
         paddingLeft: function (i, node) { return 20; },
         paddingRight: function (i, node) { return 20; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
+        paddingTop: function (i, node) { return 6; },
+        paddingBottom: function (i, node) { return 6; }
       }
     }
   }
@@ -453,17 +483,16 @@ export class AlimentosGeneralComponent implements OnInit {
     arreglo3.forEach(obj3 => {
       t_total3 = t_total3 + parseFloat(obj3.total)
     })
-
     suma_total = t_total1 + t_total2 + t_total3;
     console.log('totales', t_total1, ' ', t_total2, ' ', t_total3, ' ', suma_total)
     return {
       table: {
-        widths: ['*', '*', '*', '*', '*'],
+        widths: ['*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { colSpan: 4, text: 'SUMATORIA TOTAL DE TICKETS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
-            '', '', '',
-            { text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
+            { colSpan: 6, text: 'SUMATORIA TOTAL DE ALIMENTOS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
+            '', '', '', '', '',
+            { text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 }
           ]
         ]
       },
@@ -476,8 +505,8 @@ export class AlimentosGeneralComponent implements OnInit {
         },
         paddingLeft: function (i, node) { return 20; },
         paddingRight: function (i, node) { return 20; },
-        paddingTop: function (i, node) { return 10; },
-        paddingBottom: function (i, node) { return 10; }
+        paddingTop: function (i, node) { return 6; },
+        paddingBottom: function (i, node) { return 6; }
       }
     }
   }
@@ -487,19 +516,23 @@ export class AlimentosGeneralComponent implements OnInit {
   presentarAlimentacion(arreglo: any) {
     return {
       table: {
-        widths: ['*', '*', '*', '*', '*'],
+        widths: ['*', '*', '*', 'auto', '*', '*', '*'],
         body: [
           [
             { text: 'TIPO COMIDA', style: 'centrado' },
             { text: 'MENÚ', style: 'centrado' },
+            { text: 'PLATO', style: 'centrado' },
+            { text: 'DESCRIPCIÓN', style: 'centrado' },
             { text: 'CANTIDAD', style: 'centrado' },
             { text: 'COSTO', style: 'centrado' },
             { text: 'COSTO TOTAL', style: 'centrado' },
           ],
           ...arreglo.map(obj => {
             return [
-              { text: obj.tipo, style: 'itemsTableD' },
-              { text: obj.nombre, style: 'itemsTableD' },
+              { text: obj.comida_tipo, style: 'itemsTableD' },
+              { text: obj.menu, style: 'itemsTableD' },
+              { text: obj.plato, style: 'itemsTableD' },
+              { text: obj.observacion, style: 'itemsTableD' },
               { text: obj.cantidad, style: 'itemsTableD' },
               { text: '$ ' + obj.valor, style: 'itemsTableD' },
               { text: '$ ' + obj.total.toFixed(2), style: 'itemsTableD' },
@@ -513,6 +546,62 @@ export class AlimentosGeneralComponent implements OnInit {
           return (i % 2 === 0) ? '#CCD1D1' : null;
         }
       }
+    };
+  }
+
+  /** GENERACIÓN DE PDF AL NO CONTAR CON REGISTROS */
+  GenerarSinRegstros() {
+
+    sessionStorage.setItem('Administrador', this.empleadoLogueado);
+
+    return {
+
+      // Encabezado de la página
+      //pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
+
+      // Pie de la página
+      footer: function (currentPage, pageCount, fecha) {
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
+        // Formato de hora actual
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
+        }
+        else {
+          var time = h.getHours() + ':' + h.getMinutes();
+        }
+        return {
+          margin: 10,
+          columns: [
+            {
+              text: [{
+                text: 'Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', opacity: 0.3
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
+              }],
+            }
+          ], fontSize: 10
+        }
+      },
+      content: [
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        { text: this.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+        { text: 'REPORTE ALIMENTOS CONSUMIDOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
+        this.presentarEspacio(),
+        {
+          text: [{ text: 'FECHA INICIO: ' + this.inicio, alignment: 'center', margin: [0, 0, 0, 5] },
+          { text: '   -   FECHA FIN: ' + this.fin, alignment: 'center', margin: [0, 0, 0, 5] }]
+        },
+        this.presentarEspacio(),
+        { text: 'NO EXISTEN REGISTROS DE SERVICIOS DE ALIMENTACIÓN', fontSize: 15, alignment: 'center', margin: [0, 0, 0, 10] },
+      ],
     };
   }
 

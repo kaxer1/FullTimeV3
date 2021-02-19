@@ -3,14 +3,14 @@
     <div class="row">
         <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
             <div class="tituloTipoCoL">
-                <span>ALMUERZOS</span>
+                <span>ALIMENTACIÓN</span>
             </div>
             <mat-card class="example-card mat-elevation-z9">
                 <h5 style="text-align: center">Críterios de Búsqueda</h5>
                 <form [formGroup]="BuscarTipoComidaForm">
                     <div class="d-flex flex-wrap justify-content-center">
                         <mat-form-field>
-                            <mat-label>Nombre del plato</mat-label>
+                            <mat-label>Nombre del menú</mat-label>
                             <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
                                 [formControl]="nombreF" [(ngModel)]="filtroNombre">
                             <mat-icon id="iComidasL" matSuffix matTooltipClass="comidasL-tooltip"
@@ -23,11 +23,12 @@
                 </form>
                 <div class="d-flex flex-wrap justify-content-center">
                     <input type="submit" class="btn btn-sm button" (click)="AbrirVentanaRegistrarTipoComidas()"
-                        value="Crear nuevo Almuerzo">
+                        value="Crear nuevo Menú">
                     <input type="submit" class="btn btn-sm button" (click)="LimpiarCampos()" value="Cancelar">
                 </div>
             </mat-card>
         </div>
+        <!--
         <div class="col-md">
             <div class="tituloTipoCoL">
                 <span>REGISTRO MULTIPLE DE ALIMENTACIÓN</span>
@@ -47,6 +48,7 @@
                 </a>
             </mat-card>
         </div>
+        -->
     </div>
 </div>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
@@ -56,18 +58,27 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Valor</th>
-                        <th scope="col">Observación</th>
+                        <th scope="col">Tipo de Servicio</th>
+                        <th scope="col">Menú</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr                         *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                    <tr
+                        *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                        <td id="centrar">{{comida.tipo}}</td>
                         <td id="centrar">{{comida.nombre}}</td>
-                        <td id="fila">$ {{comida.valor}}</td>
-                        <td id="centrar">{{comida.observacion}}</td>
                         <td class="d-flex justify-content-center align-self-center">
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Agregar Detalles de Menú" class="far fa-list-alt" id="detalleH"
+                                (click)="AbrirVentanaDetalles(comida)">
+                                <p>Detalle</p>
+                            </i>
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este menú" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verMenu/', comida.id]">
+                                <p>Ver</p>
+                            </i>
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
                                 matTooltipClass="comidasL-tooltip" matTooltipPosition="right"
                                 matTooltip="Editar los datos generales de este registro">

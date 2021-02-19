@@ -27,35 +27,38 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker></mat-datepicker>
             </mat-form-field>
-            <mat-form-field *ngIf="habilitarSeleccion">
-                <mat-label id="selEmpre">Tipo de Servicio*</mat-label>
-                <mat-icon id="planComida" matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
-                    matTooltip="Seleccione el tipo de servicio que va a planificar o solicitar">
-                    help_outline
-                </mat-icon>
-                <mat-select [formControl]="tipoF">
+            <mat-form-field>
+                <mat-label id="selecAlmuerzo">Tipo de Servicio</mat-label>
+                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                    matTooltip="Lista de tipos de servicios registrados">
+                    help_outline</mat-icon>
+                <mat-select formControlName="tipoForm" required>
                     <mat-option *ngFor="let s of servicios" [value]="s.id"
-                        (click)="IngresarServicio(PlanificacionComidasForm.value)">
+                        (click)="ObtenerPlatosComidas(PlanificacionComidasForm.value)">
                         {{s.nombre}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="habilitarServicio">
-                <mat-label id="selEmpre">Ingresar Servicio*</mat-label>
-                <input matInput placeholder="Ej: Secretaria" [formControl]="servicioF" [ngStyle]="estilo">
-                <mat-icon id="planComida" matSuffix matTooltipClass="cargoE-tooltip" matTooltipPosition="right"
-                    matTooltip="Regresar a la lista de tipo de servicios existentes" (click)="VerTiposServicios()">
+            <mat-form-field>
+                <mat-label id="selecAlmuerzo">Menú</mat-label>
+                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                    matTooltip="Lista de menús de acuerdo al tipo de servicio">
                     help_outline</mat-icon>
-                <mat-error *ngIf="servicioF.invalid">Ingresar un servicio válido</mat-error>
+                <mat-select formControlName="idComidaForm" required>
+                    <mat-option *ngFor="let m of tipoComidas" [value]="m.id"
+                        (click)="ObtenerDetalleMenu(PlanificacionComidasForm.value)">
+                        {{m.nombre}}
+                    </mat-option>
+                </mat-select>
             </mat-form-field>
             <mat-form-field>
                 <mat-label id="selecAlmuerzo">Alimentación</mat-label>
                 <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
                     matTooltip="Lista de platos de comida existentes">
                     help_outline</mat-icon>
-                <mat-select formControlName="idComidaForm" required>
-                    <mat-option *ngFor="let comidas of tipoComidas" [value]="comidas.id">
-                        {{comidas.nombre}}
+                <mat-select formControlName="platosForm" required>
+                    <mat-option *ngFor="let d of detalle" [value]="d.id">
+                        {{d.nombre}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -98,8 +101,8 @@
                     matTooltip="Indicar si es un servicio extra">
                     help_outline</mat-icon>
                 <mat-select formControlName="extraForm" required>
-                    <mat-option value=true>Si</mat-option>
                     <mat-option value=false>No</mat-option>
+                    <mat-option value=true>Si</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

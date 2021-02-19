@@ -44,4 +44,9 @@ export class PlanComidasService {
     return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida/ultimo`)
   }
 
+  /** Alertas Notificación y envio de correo electrónico */
+  EnviarMensajePlanComida(data: any) {
+    return this.http.post<any>(`${this.API_URL}/planComidas/send/planifica/`, data);
+  }
+
 }

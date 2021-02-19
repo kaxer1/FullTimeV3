@@ -225,6 +225,7 @@ class PlanHoraExtraControlador {
 
     res.jsonp({ message: 'Se envio notificacion y correo electrónico.' })
   }
+
 }
 
 export const PLAN_HORA_EXTRA_CONTROLADOR = new PlanHoraExtraControlador();

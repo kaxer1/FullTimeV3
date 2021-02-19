@@ -60,6 +60,7 @@ import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
+import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -141,6 +142,7 @@ export class VerEmpleadoComponent implements OnInit {
     private restHE: PedHoraExtraService,
     private restDetallesP: DetallePlanHorarioService,
     private restPlanGeneral: PlanGeneralService,
+    private restF: FuncionesService,
     public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
@@ -173,12 +175,13 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerPlanHorarios(parseInt(this.idEmpleado));
     this.ObtenerlistaHorasExtrasEmpleado();
     this.obtenerContratosEmpleado();
-    this.VerAccionPersonal();
-    this.VerHorasExtras();
+    //this.VerAccionPersonal();
+    //this.VerHorasExtras();
     this.ObtenerLogo();
     this.ObtnerColores();
     this.VerAccionContrasena(this.idEmpleado);
     this.VerEmpresa();
+    this.VerFuncionalidades();
   }
 
   // Método para ver la información del empleado 
@@ -1452,7 +1455,7 @@ export class VerEmpleadoComponent implements OnInit {
       this.verEmpleado(this.idEmpleado)
       this.archivoForm.reset();
       this.nameFile = '';
-      this.ResetDataMain(); 
+      this.ResetDataMain();
     });
   }
 
@@ -1636,6 +1639,32 @@ export class VerEmpleadoComponent implements OnInit {
     else {
       this.HabilitarHorasE = true;
     }
+  }
+
+  HabilitarHoraExtra: boolean;
+  HabilitarAlimentacion: boolean;
+  HabilitarPermisos: boolean;
+  VerFuncionalidades() {
+    this.restF.ListarFunciones().subscribe(datos => {
+      console.log('datos', datos)
+      if (datos[0].hora_extra === true) {
+        this.VerHorasExtras();
+      }
+      if (datos[0].accion_personal === true) {
+        this.VerAccionPersonal();
+      }
+      if (datos[0].alimentacion === true) {
+        this.HabilitarAlimentacion = true;
+      }
+      if (datos[0].permisos === true) {
+        this.HabilitarPermisos = true;
+      }
+
+    }, error => {
+      this.HabilitarHoraExtra = false;
+      this.HabilitarAlimentacion = false;
+      this.HabilitarPermisos = false;
+    })
   }
 
   /* Ventana para modificar contraseña */

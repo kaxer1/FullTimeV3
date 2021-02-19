@@ -8,7 +8,21 @@ import pool from '../../database';
 class TipoComidasControlador {
 
     public async ListarTipoComidas(req: Request, res: Response) {
-        const TIPO_COMIDAS = await pool.query('SELECT * FROM cg_tipo_comidas ORDER BY nombre, observacion ASC');
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+            'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC');
+        if (TIPO_COMIDAS.rowCount > 0) {
+            return res.jsonp(TIPO_COMIDAS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async VerUnMenu(req: Request, res: Response): Promise<any> {
+        const { id } = req.params;
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc WHERE ctc.tipo_comida = tc.id AND ctc.id = $1', [id]);
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
         }
@@ -19,7 +33,9 @@ class TipoComidasControlador {
 
     public async ListarUnTipoComida(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
-        const TIPO_COMIDAS = await pool.query('SELECT * FROM cg_tipo_comidas WHERE id = $1', [id]);
+        const TIPO_COMIDAS = await pool.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+            'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+            ' WHERE ctc.tipo_comida = tc.id AND tc.id = $1 ORDER BY tc.nombre ASC', [id]);
         if (TIPO_COMIDAS.rowCount > 0) {
             return res.jsonp(TIPO_COMIDAS.rows)
         }
@@ -29,15 +45,17 @@ class TipoComidasControlador {
     }
 
     public async CrearTipoComidas(req: Request, res: Response): Promise<void> {
-        const { nombre, valor, observacion } = req.body;
-        await pool.query('INSERT INTO cg_tipo_comidas (nombre, valor, observacion) VALUES ($1, $2, $3)', [nombre, valor, observacion]);
+        const { nombre, tipo_comida } = req.body;
+        await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)',
+            [nombre, tipo_comida]);
         res.jsonp({ message: 'Tipo de comida registrada' });
     }
 
     public async ActualizarComida(req: Request, res: Response): Promise<void> {
-        const { nombre, valor, observacion, id } = req.body;
-        await pool.query('UPDATE cg_tipo_comidas SET nombre = $1, valor = $2, observacion = $3 WHERE id = $4', [nombre, valor, observacion, id]);
-        res.jsonp({ message: 'Feriado actualizado exitosamente' });
+        const { nombre, tipo_comida, id } = req.body;
+        await pool.query('UPDATE cg_tipo_comidas SET nombre = $1, tipo_comida = $2 WHERE id = $3',
+            [nombre, tipo_comida, id]);
+        res.jsonp({ message: 'Registro actualizado exitosamente' });
     }
 
     public async FileXML(req: Request, res: Response): Promise<any> {
@@ -70,9 +88,10 @@ class TipoComidasControlador {
         const plantilla = excel.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
 
         plantilla.forEach(async (data: any) => {
-            const { nombre, valor, observacion } = data;
+            const { nombre, tipo_comida } = data;
             if (nombre != undefined) {
-                await pool.query('INSERT INTO cg_tipo_comidas (nombre, valor, observacion) VALUES ($1, $2, $3)', [nombre, valor, observacion]);
+                await pool.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)',
+                    [nombre, tipo_comida]);
             } else {
                 res.jsonp({ error: 'plantilla equivocada' });
             }
@@ -96,20 +115,14 @@ class TipoComidasControlador {
         var contador = 1;
 
         plantilla.forEach(async (data: any) => {
-            const { nombre, valor, observacion } = data;
-            if (nombre != undefined && valor != undefined && observacion != undefined) {
+            const { nombre, tipo_comida } = data;
+            if (nombre != undefined && tipo_comida != undefined) {
                 contarLlenos = contarLlenos + 1;
             }
 
-            if (observacion != undefined) {
-                var datos_observacion = observacion.toUpperCase();
-            }
-            else {
-                datos_observacion = observacion
-            }
             const VERIFICAR_DATOS = await pool.query('SELECT * FROM cg_tipo_comidas WHERE UPPER(nombre) = $1 AND ' +
-                'valor = $2 AND UPPER(observacion) = $3',
-                [nombre.toUpperCase(), valor, datos_observacion]);
+                'tipo_comida = $2',
+                [nombre.toUpperCase(), tipo_comida]);
             if (VERIFICAR_DATOS.rowCount === 0) {
                 contarDatos = contarDatos + 1;
             }
@@ -176,6 +189,51 @@ class TipoComidasControlador {
     public async EliminarRegistros(req: Request, res: Response): Promise<void> {
         const id = req.params.id;
         await pool.query('DELETE FROM cg_tipo_comidas WHERE id = $1', [id]);
+        res.jsonp({ message: 'Registro eliminado' });
+    }
+
+    public async VerUltimoRegistro(req: Request, res: Response) {
+        const TIPO_COMIDAS = await pool.query('SELECT MAX (id) FROM cg_tipo_comidas');
+        if (TIPO_COMIDAS.rowCount > 0) {
+            return res.jsonp(TIPO_COMIDAS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+
+    // Registro de detalle de menú - desglose de platos
+    public async CrearDetalleMenu(req: Request, res: Response): Promise<void> {
+        const { nombre, valor, observacion, id_menu } = req.body;
+        await pool.query('INSERT INTO detalle_menu (nombre, valor, observacion, id_menu) ' +
+            'VALUES ($1, $2, $3, $4)',
+            [nombre, valor, observacion, id_menu]);
+        res.jsonp({ message: 'Detalle de menú registrada' });
+    }
+
+    public async VerUnDetalleMenu(req: Request, res: Response): Promise<any> {
+        const { id } = req.params;
+        const TIPO_COMIDAS = await pool.query('SELECT * FROM detalle_menu WHERE id_menu = $1', [id]);
+        if (TIPO_COMIDAS.rowCount > 0) {
+            return res.jsonp(TIPO_COMIDAS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async ActualizarDetalleMenu(req: Request, res: Response): Promise<void> {
+        const { nombre, valor, observacion, id } = req.body;
+        await pool.query('UPDATE detalle_menu SET nombre = $1, valor = $2, observacion = $3 ' +
+            'WHERE id = $4',
+            [nombre, valor, observacion, id]);
+        res.jsonp({ message: 'Detalle de menú actualizado' });
+    }
+
+    public async EliminarDetalle(req: Request, res: Response): Promise<void> {
+        const id = req.params.id;
+        await pool.query('DELETE FROM detalle_menu WHERE id = $1', [id]);
         res.jsonp({ message: 'Registro eliminado' });
     }
 

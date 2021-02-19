@@ -19,7 +19,22 @@ const database_1 = __importDefault(require("../../database"));
 class TipoComidasControlador {
     ListarTipoComidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas ORDER BY nombre, observacion ASC');
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+                'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+                'WHERE ctc.tipo_comida = tc.id ORDER BY tc.nombre ASC');
+            if (TIPO_COMIDAS.rowCount > 0) {
+                return res.jsonp(TIPO_COMIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    VerUnMenu(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+                'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc WHERE ctc.tipo_comida = tc.id AND ctc.id = $1', [id]);
             if (TIPO_COMIDAS.rowCount > 0) {
                 return res.jsonp(TIPO_COMIDAS.rows);
             }
@@ -31,7 +46,9 @@ class TipoComidasControlador {
     ListarUnTipoComida(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas WHERE id = $1', [id]);
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT ctc.id, ctc.nombre, ctc.tipo_comida, tc.nombre AS tipo ' +
+                'FROM cg_tipo_comidas AS ctc, tipo_comida AS tc ' +
+                ' WHERE ctc.tipo_comida = tc.id AND tc.id = $1 ORDER BY tc.nombre ASC', [id]);
             if (TIPO_COMIDAS.rowCount > 0) {
                 return res.jsonp(TIPO_COMIDAS.rows);
             }
@@ -42,16 +59,16 @@ class TipoComidasControlador {
     }
     CrearTipoComidas(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, valor, observacion } = req.body;
-            yield database_1.default.query('INSERT INTO cg_tipo_comidas (nombre, valor, observacion) VALUES ($1, $2, $3)', [nombre, valor, observacion]);
+            const { nombre, tipo_comida } = req.body;
+            yield database_1.default.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)', [nombre, tipo_comida]);
             res.jsonp({ message: 'Tipo de comida registrada' });
         });
     }
     ActualizarComida(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, valor, observacion, id } = req.body;
-            yield database_1.default.query('UPDATE cg_tipo_comidas SET nombre = $1, valor = $2, observacion = $3 WHERE id = $4', [nombre, valor, observacion, id]);
-            res.jsonp({ message: 'Feriado actualizado exitosamente' });
+            const { nombre, tipo_comida, id } = req.body;
+            yield database_1.default.query('UPDATE cg_tipo_comidas SET nombre = $1, tipo_comida = $2 WHERE id = $3', [nombre, tipo_comida, id]);
+            res.jsonp({ message: 'Registro actualizado exitosamente' });
         });
     }
     FileXML(req, res) {
@@ -85,9 +102,9 @@ class TipoComidasControlador {
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { nombre, valor, observacion } = data;
+                const { nombre, tipo_comida } = data;
                 if (nombre != undefined) {
-                    yield database_1.default.query('INSERT INTO cg_tipo_comidas (nombre, valor, observacion) VALUES ($1, $2, $3)', [nombre, valor, observacion]);
+                    yield database_1.default.query('INSERT INTO cg_tipo_comidas (nombre, tipo_comida) VALUES ($1, $2)', [nombre, tipo_comida]);
                 }
                 else {
                     res.jsonp({ error: 'plantilla equivocada' });
@@ -110,18 +127,12 @@ class TipoComidasControlador {
             var contarLlenos = 0;
             var contador = 1;
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
-                const { nombre, valor, observacion } = data;
-                if (nombre != undefined && valor != undefined && observacion != undefined) {
+                const { nombre, tipo_comida } = data;
+                if (nombre != undefined && tipo_comida != undefined) {
                     contarLlenos = contarLlenos + 1;
                 }
-                if (observacion != undefined) {
-                    var datos_observacion = observacion.toUpperCase();
-                }
-                else {
-                    datos_observacion = observacion;
-                }
                 const VERIFICAR_DATOS = yield database_1.default.query('SELECT * FROM cg_tipo_comidas WHERE UPPER(nombre) = $1 AND ' +
-                    'valor = $2 AND UPPER(observacion) = $3', [nombre.toUpperCase(), valor, datos_observacion]);
+                    'tipo_comida = $2', [nombre.toUpperCase(), tipo_comida]);
                 if (VERIFICAR_DATOS.rowCount === 0) {
                     contarDatos = contarDatos + 1;
                 }
@@ -189,6 +200,53 @@ class TipoComidasControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM cg_tipo_comidas WHERE id = $1', [id]);
+            res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    VerUltimoRegistro(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT MAX (id) FROM cg_tipo_comidas');
+            if (TIPO_COMIDAS.rowCount > 0) {
+                return res.jsonp(TIPO_COMIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    // Registro de detalle de menú - desglose de platos
+    CrearDetalleMenu(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, valor, observacion, id_menu } = req.body;
+            yield database_1.default.query('INSERT INTO detalle_menu (nombre, valor, observacion, id_menu) ' +
+                'VALUES ($1, $2, $3, $4)', [nombre, valor, observacion, id_menu]);
+            res.jsonp({ message: 'Detalle de menú registrada' });
+        });
+    }
+    VerUnDetalleMenu(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const TIPO_COMIDAS = yield database_1.default.query('SELECT * FROM detalle_menu WHERE id_menu = $1', [id]);
+            if (TIPO_COMIDAS.rowCount > 0) {
+                return res.jsonp(TIPO_COMIDAS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ActualizarDetalleMenu(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { nombre, valor, observacion, id } = req.body;
+            yield database_1.default.query('UPDATE detalle_menu SET nombre = $1, valor = $2, observacion = $3 ' +
+                'WHERE id = $4', [nombre, valor, observacion, id]);
+            res.jsonp({ message: 'Detalle de menú actualizado' });
+        });
+    }
+    EliminarDetalle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            yield database_1.default.query('DELETE FROM detalle_menu WHERE id = $1', [id]);
             res.jsonp({ message: 'Registro eliminado' });
         });
     }

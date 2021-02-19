@@ -24,6 +24,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
+import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 
 @Component({
   selector: 'app-main-nav',
@@ -79,6 +80,7 @@ export class MainNavComponent implements OnInit {
     public loginService: LoginService,
     private empleadoService: EmpleadoService,
     public restEmpresa: EmpresaService,
+    public restF: FuncionesService,
     public vistaFlotante: MatDialog,
     private router: Router,
     private toaster: ToastrService,
@@ -141,20 +143,20 @@ export class MainNavComponent implements OnInit {
     this.LlamarDatos();
     this.infoUser();
     this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+      startWith(''),
+      map(value => this._filter(value))
+    );
     this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
     this.LlamarNotificaciones(this.id_empleado_logueado);
     this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
-      
+
     this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
-      
+
       this.barraInicial = result.matches;
       this.barraUno = result.matches;
       this.barraDos = result.matches;
-      console.log('Result breakpoints: ',result.matches);
-      
+      console.log('Result breakpoints: ', result.matches);
+
       this.recargar = result.matches;
       if (result.matches === true) {
         let cont = 0;
@@ -288,7 +290,7 @@ export class MainNavComponent implements OnInit {
   abrirInfoEmpleado(nombre: string) {
     this.buscar_empl.forEach(element => {
       if (element.empleado === nombre) {
-        this.router.navigate(['/verEmpleado/', element.id], {relativeTo: this.route, skipLocationChange: false});
+        this.router.navigate(['/verEmpleado/', element.id], { relativeTo: this.route, skipLocationChange: false });
       }
     });
   }
@@ -335,20 +337,20 @@ export class MainNavComponent implements OnInit {
   infoUser() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     if (id_empleado.toString() === 'NaN') return id_empleado;
-    
+
     let fullname = localStorage.getItem('fullname');
     let correo = localStorage.getItem('correo');
     let iniciales = localStorage.getItem('iniciales');
     let view_imagen = localStorage.getItem('view_imagen');
     console.log(fullname, correo, iniciales, view_imagen);
-    
+
     if (fullname === null && correo === null && iniciales === null && view_imagen === null) {
       this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
-      
+
         localStorage.setItem('fullname', res[0].nombre.split(" ")[0] + " " + res[0].apellido.split(" ")[0])
         localStorage.setItem('fullname_print', res[0].nombre + " " + res[0].apellido)
         localStorage.setItem('correo', res[0].correo)
-        
+
         this.UserEmail = localStorage.getItem('correo');
         this.UserName = localStorage.getItem('fullname');
         if (res[0]['imagen'] != null) {
@@ -377,7 +379,7 @@ export class MainNavComponent implements OnInit {
         this.mostrarIniciales = true;
       }
     }
-    
+
   }
 
   AbrirSettings() {
@@ -390,19 +392,24 @@ export class MainNavComponent implements OnInit {
   }
 
   irHome() {
-    this.router.navigate(['/home'], {relativeTo: this.route, skipLocationChange: false});
+    this.router.navigate(['/home'], { relativeTo: this.route, skipLocationChange: false });
   }
 
   VerAccionPersonal() {
     this.restEmpresa.ConsultarEmpresas().subscribe(res => {
       if (res[0].tipo_empresa === 'Pública') {
-        this.HabilitarAccion = false;
+        this.HabilitarAccion = true;
       }
       else {
-        this.HabilitarAccion = true;
+        this.HabilitarAccion = false;
       }
     })
   }
+
+  HabilitarHoraExtra: boolean;
+  HabilitarAlimentacion: boolean;
+  HabilitarPermisos: boolean;
+
 
   /**
    * MENU PRINCIPAL
@@ -410,24 +417,46 @@ export class MainNavComponent implements OnInit {
 
   nombreSelect: string = '';
   manejarEstadoActivo(name) {
-    this.nombreSelect = name;  
+    this.nombreSelect = name;
   }
 
   SeleccionMenu() {
-    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
-      if (res[0].tipo_empresa === 'Pública') {
-        this.HabilitarAccion = true;
-      }
-      else {
-        this.HabilitarAccion = false;
-      }
 
-      // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
-      if (this.loginService.getRolMenu() === true) {
-        this.dataSource.data = this.MenuAdministracion(res[0].nombre) as MenuNode[];
-      } else {
-        this.dataSource.data = this.MenuEmpleado() as MenuNode[];
-      }
+    this.restEmpresa.ConsultarEmpresas().subscribe(res => {
+
+      this.restF.ListarFunciones().subscribe(datos => {
+        console.log('datos', datos)
+        if (datos[0].hora_extra === true) {
+          this.HabilitarHoraExtra = true;
+        }
+        if (datos[0].accion_personal === true) {
+          if (res[0].tipo_empresa === 'Pública') {
+            this.HabilitarAccion = true;
+          }
+          else {
+            this.HabilitarAccion = false;
+          }
+        }
+        if (datos[0].alimentacion === true) {
+          this.HabilitarAlimentacion = true;
+        }
+        if (datos[0].permisos === true) {
+          this.HabilitarPermisos = true;
+        }
+
+        // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
+        if (this.loginService.getRolMenu() === true) {
+          this.dataSource.data = this.MenuAdministracion(res[0].nombre) as MenuNode[];
+        } else {
+          this.dataSource.data = this.MenuEmpleado() as MenuNode[];
+        }
+
+
+      }, error => {
+        this.HabilitarHoraExtra = false;
+        this.HabilitarAlimentacion = false;
+        this.HabilitarPermisos = false;
+      })
     })
   }
 
@@ -445,6 +474,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Crear Régimen Laboral', url: '/listarRegimen' },
           { name: 'Crear Título Profesional', url: '/titulos' },
           { name: 'Crear Nivel de Educación', url: '/nivelTitulos' },
+          { name: 'Funciones Sistema', url: '/funcionalidades' },
         ]
       },
       {
@@ -459,12 +489,13 @@ export class MainNavComponent implements OnInit {
       },
       {
         name: 'Alimentación',
-        accion: true,
+        accion: this.HabilitarAlimentacion,
         estado: true,
         icono: 'local_dining',
         children: [
           { name: 'Almuerzos', url: '/listarTipoComidas' },
           { name: 'Planificación', url: '/alimentacion' },
+          { name: 'Tickets', url: '/tickets' },
         ]
       },
       {
@@ -482,7 +513,7 @@ export class MainNavComponent implements OnInit {
       },
       {
         name: 'Solicitudes',
-        accion: true,
+        accion: this.HabilitarPermisos,
         estado: true,
         icono: 'email',
         children: [
@@ -490,8 +521,20 @@ export class MainNavComponent implements OnInit {
           { name: 'Configurar Permisos', url: '/verTipoPermiso' },
           { name: 'Permisos Solicitados', url: '/permisos-solicitados' },
           { name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados' },
+        ]
+      },
+      {
+        name: 'Horas Extras',
+        accion: this.HabilitarHoraExtra,
+        estado: true,
+        icono: 'email',
+        children: [
+          { name: 'Configurar Horas Extras', url: '/listaHorasExtras' },
           { name: 'Horas Extras Solicitadas', url: '/horas-extras-solicitadas' },
           { name: 'Horas Extras Planificadas', url: '/planificacionesHorasExtras' },
+          { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
+          { name: 'Planificaciones', url: '/listadoPlanificaciones' },
+          { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -511,11 +554,7 @@ export class MainNavComponent implements OnInit {
         icono: 'assignment',
         children: [
           { name: 'Registrar Horario', url: '/horario' },
-          { name: 'Configurar Horas Extras', url: '/listaHorasExtras' },
           { name: 'Planificación Múltiple', url: '/planificacion' },
-          { name: 'Planificar Hora Extra', url: '/planificaHoraExtra' },
-          { name: 'Planificaciones', url: '/listadoPlanificaciones' },
-          { name: 'Calcular Hora Extra', url: '/horaExtraReal' },
         ]
       },
       {
@@ -591,7 +630,7 @@ export class MainNavComponent implements OnInit {
       },
       {
         name: 'Horas Extras',
-        accion: true,
+        accion: this.HabilitarHoraExtra,
         estado: true,
         icono: 'hourglass_full',
         children: [
@@ -609,7 +648,7 @@ export class MainNavComponent implements OnInit {
       },
       {
         name: 'Permisos',
-        accion: true,
+        accion: this.HabilitarPermisos,
         estado: true,
         icono: 'transfer_within_a_station',
         children: [
@@ -618,7 +657,7 @@ export class MainNavComponent implements OnInit {
       },
       {
         name: 'Alimentación',
-        accion: true,
+        accion: this.HabilitarAlimentacion,
         estado: true,
         icono: 'restaurant',
         children: [
