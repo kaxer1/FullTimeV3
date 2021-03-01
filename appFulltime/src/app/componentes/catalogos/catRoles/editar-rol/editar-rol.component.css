@@ -1,0 +1,28 @@
+.btn { background-color: rgb(80,87,97); color: white; }
+
+#movilidad { 
+    cursor: grab;
+    color: blue;
+    margin-left: 10px;
+}
+
+/*.rolR-tooltip { background: #ad4bc5; }*/
+
+#iRolR { cursor: pointer; }
+
+.tituloRolR { 
+    text-align: center; 
+    background: rgb(52,65,84); 
+    color: white; 
+    height: 50px;
+}
+
+.nota {
+    font-size: 12px; 
+    font-weight: bold; 
+    text-align: justify;
+    padding: 13px 5px 10px 5px; 
+    color: rgb(52,65,84);
+}
+
+mat-form-field {width: 100%;}

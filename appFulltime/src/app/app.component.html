@@ -1,6 +1,5 @@
-<!-- <div class="container p-4">
-</div> -->
-<!-- <app-login></app-login> -->
-<app-main-nav></app-main-nav>
-
-<!-- <router-outlet></router-outlet> -->
+<app-login *ngIf="!removerLogin()"></app-login>
+<app-main-nav *ngIf="!removerMain()"></app-main-nav>
+<app-confirmar-contrasenia *ngIf="!removerConfirmet()"></app-confirmar-contrasenia>
+<app-olvidar-contrasenia *ngIf="!removerForget()"></app-olvidar-contrasenia>
+<!-- <app-main-nav *ngIf="loginServices.loggedIn()"></app-main-nav> -->

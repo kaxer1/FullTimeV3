@@ -1,21 +1,22 @@
 import { Router } from 'express';
-
-import loginControlador from '../../controlador/login/loginControlador';
+import LOGIN_CONTROLADOR from '../../controlador/login/loginControlador';
+import { TokenValidation } from '../../libs/verificarToken'
 
 class LoginRuta {
     public router: Router = Router();
 
     constructor() {
-
         this.configuracion();
     }
 
     configuracion(): void {
-
-        this.router.post('/', loginControlador.validar);
+        this.router.post('/', LOGIN_CONTROLADOR.ValidarCredenciales);
+        this.router.post('/recuperar-contrasenia/', LOGIN_CONTROLADOR.RestablecerContrasenia);
+        this.router.post('/cambiar-contrasenia/', TokenValidation, LOGIN_CONTROLADOR.CambiarContrasenia);
     }
+
 }
 
-const loginRuta = new LoginRuta();
+const LOGIN_RUTA = new LoginRuta();
 
-export default loginRuta.router;
+export default LOGIN_RUTA.router;

@@ -13,6 +13,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "chart.js",
+              "xlsx",
+              "file-saver",
+              "echarts",
+              "socket.io-client",
+              "chartjs-plugin-datalabels",
+              "chartjs-plugin-annotation"
+            ],
             "outputPath": "dist/appFulltime",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -26,7 +36,8 @@
             "styles": [
               "src/custom-theme.scss",
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -132,5 +143,8 @@
       }
     }
   },
-  "defaultProject": "appFulltime"
+  "defaultProject": "appFulltime",
+  "cli": {
+    "analytics": "5dd88edc-8f7c-49e8-bf0c-3440daff0a58"
+  }
 }

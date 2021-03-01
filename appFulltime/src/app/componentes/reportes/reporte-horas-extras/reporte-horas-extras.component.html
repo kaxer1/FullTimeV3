@@ -1,0 +1,31 @@
+<div class="container" style="margin: 25px 0px 25px 0px; text-align: center;">
+    <button class="btn btn-primary" (click)='AbrirSettings()'>configuración Firmas</button>
+    <mat-form-field style="width: 90%;">
+        <mat-label>Escribe para Filtrar</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
+    </mat-form-field>
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="TituloResultado">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Empleado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of Lista_empleados | timbreEmpleado: filtroEmpleados | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{e.empleado}}</td>
+                        <td class="d-flex justify-content-center">    
+                            <mat-icon (click)="ObtenerReporte(e.id, 'open')" matSuffix matTooltipPosition="right" matTooltip="Puede Obtener Reporte de horas extras"> description </mat-icon>                    
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="Lista_empleados.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="d-flex bd-highlight tituloRolR">
+    <mat-icon class="flex-shrink-1 bd-highlight align-self-center" id="movilidad">open_with</mat-icon>
+    <h5 class="w-100 bd-highlight align-self-center" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Registrar Rol</h5>
+</div>
+<form [formGroup]="nuevoRolForm">
+    <div class="container" style="text-align: center;">
+        <div class="nota">
+            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+        </div>
+        <mat-form-field>
+            <mat-label>Descripción</mat-label>
+            <input matInput placeholder="Ej: Administrador" [formControl]="descripcion"
+                (keypress)="IngresarSoloLetras($event)" required>
+            <mat-icon id="iRolR" matSuffix matTooltipClass="rolR-tooltip" matTooltipPosition="right"
+                matTooltip="Ingresar nombre de identificación del nuevo rol">
+                help_outline</mat-icon>
+            <mat-error *ngIf="descripcion.invalid">{{obtenerMensajeErrorDescripcion()}}</mat-error>
+        </mat-form-field>
+    </div>
+</form>
+<div class="d-flex justify-content-around">
+    <input type="submit" class="btn btn-sm" (click)="insertarRol(nuevoRolForm.value)" [disabled]="!nuevoRolForm.valid"
+        value="Guardar">
+    <input type="submit" class="btn btn-sm" (click)="CerrarVentanaRegistroRol()" value="Salir">
+</div>

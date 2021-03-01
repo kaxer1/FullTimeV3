@@ -1,0 +1,78 @@
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="TituloListaProvincia">
+                <span>PROVINCIAS - DEPARTAMENTOS - ESTADOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z8">
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
+                <form [formGroup]="BuscarProvinciasForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Ingresar País</mat-label>
+                            <mat-icon id="prov" matSuffix matTooltipClass="provincia-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de la provincia, departamento o estado por el nombre del país">
+                                help_outline</mat-icon>
+                            <input matInput name="filtroPais" placeholder="Ej: Ecuador"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="paisF"
+                                [(ngModel)]="filtroPais">
+                            <mat-error *ngIf="paisF.invalid">{{ObtenerMensajePaisLetras()}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label id="departamento">Provincia-Departamento-Estado</mat-label>
+                            <mat-icon id="prov" matSuffix matTooltipClass="provincia-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda de la provincia, departamento o estado por su nombre">
+                                help_outline</mat-icon>
+                            <input matInput name="filtroProvincia" placeholder="Ej: Pichincha"
+                                (keypress)="IngresarSoloLetras($event)" [formControl]="provinciaF"
+                                [(ngModel)]="filtroProvincia">
+                            <mat-error *ngIf="provinciaF.invalid">{{ObtenerMensajeProvinciaLetras()}}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <button type="button" class="btn btn-sm" (click)="AbrirVentanaRegistrarProvincia()">Crear nueva
+                        Provincia
+                    </button>
+                    <button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar</button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resulProvincia">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">País</th>
+                        <th scope="col">Provincia-Departamento-Estado</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let prov of provincias | provincia: filtroProvincia | bPaises: filtroPais | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{prov.pais}}</td>
+                        <td>{{prov.nombre}}</td>
+                        <td class="d-flex justify-content-center">
+                            <i (click)="ConfirmarDelete(prov)" class="far fa-trash-alt" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="provincias.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

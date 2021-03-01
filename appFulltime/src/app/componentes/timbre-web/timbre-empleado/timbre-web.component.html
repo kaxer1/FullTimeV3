@@ -1,0 +1,72 @@
+<div class="container" style="margin: 25px 0px 25px 0px;">
+    <div class="row">
+        <div class="col-sm-4">
+            <button class="btn" (click)="AbrirRegistrarTimbre()">Timbre virtual</button>
+        </div>
+        <div class="col-sm-4" *ngFor="let c of cuenta">
+            <mat-card>
+                <mat-card-header>
+                    <h4>Timbres</h4>
+                </mat-card-header>
+                <mat-card-content>
+                    <b>N° timbres Entrada y Salida: </b> <span>{{c.timbres_EoS}} </span> <br>
+                    <b>N° timbres almuerzos: </b> <span>{{c.timbres_AES}} </span> <br>
+                    <b>N° timbres permisos: </b> <span>{{c.timbres_PES}} </span> <br>
+                    <b>Cantidad de timbres: </b> <span>{{c.total_timbres}} </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="col-sm-4" *ngFor="let i of info">
+            <mat-card>
+                <mat-card-header>
+                    <h4>Información personal</h4>
+                </mat-card-header>
+                <mat-card-content>
+                    <b>Cargo: </b> <span>{{i.cargo}} </span> <br>
+                    <b>Sueldo: </b> <span>{{i.sueldo}} </span> <br>
+                    <b>Horas trabaja: </b> <span>{{i.hora_trabaja}} </span>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<mat-form-field>
+    <mat-label>Filtro general de campos</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="2020...." #input>
+</mat-form-field>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <!-- <div id="TituloResultado">Resultado de búsqueda</div> -->
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Timbre</th>
+                        <th scope="col">Acción</th>
+                        <th scope="col">Tecla funcion</th>
+                        <th scope="col">Observacion</th>
+                        <th scope="col">Latitud</th>
+                        <th scope="col">Longitud</th>
+                        <th scope="col">Codigo Empleado</th>
+                        <th scope="col">Reloj</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of timbres | fecTimbre: filtroFechaTimbre | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{t.fec_hora_timbre}}</td>
+                        <td>{{t.accion}}</td>
+                        <td>{{t.tecl_funcion}}</td>
+                        <td>{{t.observacion}}</td>
+                        <td>{{t.latitud}}</td>
+                        <td>{{t.longitud}}</td>
+                        <td>{{t.id_empleado}}</td>
+                        <td>{{t.id_reloj}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="timbres.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

@@ -1,0 +1,187 @@
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="barraTituloReloj">
+                <span>DISPOSITIVOS</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
+                <form [formGroup]="BuscarRelojesForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Nombre</mat-label>
+                            <input matInput name="filtroNombreReloj" placeholder="Nombre reloj" [formControl]="nombreF"
+                                [(ngModel)]="filtroNombreReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del dipositivo por el nombre">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="nombreF.invalid">Indispensable ingresar más de dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Empresa</mat-label>
+                            <input matInput name="filtroEmpresaReloj" placeholder="Nombre de Empresa"
+                                [formControl]="empresaF" [(ngModel)]="filtroEmpresaReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre de la Empresa en la que se encunetra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="empresaF.invalid">Indispensable ingresar más de
+                                dos letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Establecimiento</mat-label>
+                            <input matInput name="filtroSucursalReloj" placeholder="Nombre de Sucursal"
+                                [formControl]="sucursalF" [(ngModel)]="filtroSucursalReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre de la Sucursal en la que se encuentra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="sucursalF.invalid">Indispensable ingresar más de
+                                dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>IP</mat-label>
+                            <input matInput placeholder="Ingresar IP" [formControl]="ipF" name="filtroIpReloj"
+                                [(ngModel)]="filtroIpReloj" (keypress)="IngresarIp($event)">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por la dirección IP">
+                                help_outline</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Modelo</mat-label>
+                            <input matInput placeholder="Ingresar modelo" [formControl]="modeloF"
+                                name="filtroModeloReloj" [(ngModel)]="filtroModeloReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right" matTooltip="Búsqueda del dispositivo por el modelo">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="modeloF.invalid">Indispensable ingresar más de dos
+                                letras
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Departamento</mat-label>
+                            <input matInput name="filtroDepartamentoReloj" placeholder="Nombre del Departamento"
+                                [formControl]="departamentoF" [(ngModel)]="filtroDepartamentoReloj">
+                            <mat-icon id="dispositivo" matSuffix matTooltipClass="reloj-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Búsqueda del dipositivo por el nombre del departamento en el que se encuentra">
+                                help_outline</mat-icon>
+                            <mat-error id="nombre" *ngIf="departamentoF.invalid">Indispensable ingresar más
+                                de dos letras
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <input type="submit" class="btn btn-sm" (click)="AbrirVentanaRegistrarReloj()"
+                        value="Crear nuevo Dispositivo">
+                    <input type="submit" class="btn btn-sm" (click)="LimpiarCampos()" value="Cancelar">
+                </div>
+            </mat-card>
+        </div>
+        <div class="col-md">
+            <div class="barraTituloReloj">
+                <span>REGISTRO MULTIPLE DE DISPOSITIVOS</span>
+            </div>
+            <mat-card class="mat-elevation-z9 d-flex flex-wrap justify-content-center" id="carta1">
+                <form method="post" enctype="multipart/form-data">
+                    <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file"
+                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <label for="file" class="btn-2" matSuffix matTooltipClass="listaF-tooltip"
+                        matTooltipPosition="right"
+                        matTooltip="Presionar para seleccionar Plantilla con nombre Dispositivos">Subir
+                        Dispositivos</label>
+                </form>
+                <a mat-button type="submit" id="descargar" class="btn btn-sm" matSuffix matTooltipPosition="right"
+                    matTooltip="Dar click para ver o descargar el documento"
+                    href="http://localhost:3000/plantillaD/documento/Dispositivos.xlsx">
+                    <span class="material-icons">cloud_download</span> Descargar Plantilla Dispositivos
+                </a>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resultadosRelojes">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Código</th>
+                        <th scope="col">Establecimiento</th>
+                        <th scope="col">Ciudad</th>
+                        <th scope="col">Departamento</th>
+                        <th scope="col">Dispositivo</th>
+                        <th scope="col">IP</th>
+                        <th scope="col">Puerto</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">Tiene Acciones</th>
+                        <th scope="col">N° Acciones</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let reloj of relojes | filtrosNombres: filtroNombreReloj  | filtroSucursalR: filtroSucursalReloj | filtroModelo: filtroModeloReloj | filtroIp: filtroIpReloj | filtroDepartamentoR: filtroDepartamentoReloj | filtroEmpresaR: filtroEmpresaReloj | paginate:tamanio_pagina:numero_pagina">
+                        <th style="padding-top: 10px; text-align: center;" scope="row">{{reloj.id}}</th>
+                        <td>{{reloj.nomsucursal}}</td>
+                        <td>{{reloj.nomciudad}}</td>
+                        <td>{{reloj.nomdepar}}</td>
+                        <td>{{reloj.nombre}}</td>
+                        <td>{{reloj.ip}}</td>
+                        <td>{{reloj.puerto}}</td>
+                        <td>{{reloj.modelo}}</td>
+                        <td *ngIf="reloj.tien_funciones == true">Sí</td>
+                        <td *ngIf="reloj.tien_funciones == false">No</td>
+                        <td>{{reloj.numero_accion}}</td>
+                        <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verDispositivos/',reloj.id]">
+                                <p>Ver</p>
+                            </i>
+                            <i class="fas fa-edit" (click)="AbrirVentanaEditar(reloj)" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i matSuffix matTooltipPosition="right" matTooltip="Eliminar registro"
+                                class="far fa-trash-alt" (click)="ConfirmarDelete(reloj)"
+                                style="color:red; margin-left: 15px;">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="relojes.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Dispositivos en formato XML">
+                <p>XML</p>
+            </i>
+        </div>
+    </div>
+</div>

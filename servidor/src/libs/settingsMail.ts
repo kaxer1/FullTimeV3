@@ -1,0 +1,45 @@
+import nodemailer from 'nodemailer'
+import pool from '../database';
+
+export let email: string = process.env.EMAIL || '';
+let pass: string = process.env.PASSWORD || '';
+// export let email: string;
+// let pass: string;
+
+export const Credenciales = async function(id_empresa: number): Promise<void> {
+  try {
+    let credenciales = await pool.query('SELECT correo, password_correo FROM cg_empresa WHERE id = $1',[id_empresa]).then(result => {
+      return result.rows[0]
+    });
+    console.log('Credenciales === ',credenciales);
+    email = credenciales.correo;
+    pass = credenciales.password_correo;
+    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const enviarMail = function(data : any) {  
+  console.log(email,'>>>>>>', pass);
+  
+    const smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: email,
+          pass: pass
+        }
+    });
+
+    smtpTransport.sendMail(data, async (error: any, info: any) => {
+      console.log('****************************************************');
+      console.log(data);
+      console.log('****************************************************');
+      
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+    });
+} 
