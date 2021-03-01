@@ -14,6 +14,21 @@
       </button>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-sm"style="text-align: center;">
+      <span class="text-titulo">Último Timbre: </span>
+    </div>
+    <div class="col-sm" style="margin-top: 3px; text-align: center;">
+      <span class="text-titulo-fecha">{{ultimoTimbre.timbre}}</span>
+    </div>
+    <div class="col-sm"style="text-align: center;">
+      <span class="text-titulo">Acción: </span>
+    </div>
+    <div class="col-sm" style="margin-top: 3px; text-align: center;">
+      <span class="text-titulo-fecha">{{ultimoTimbre.accion}}</span>
+    </div>
+  </div>
   <br>
   <div class="row">  
     <div class="d-flex justify-content-center flex-wrap">
@@ -33,6 +48,10 @@
         <mat-icon class="icon-menu align-self-center">pending_actions</mat-icon>
         <span class="align-self-center">Atrasos</span>
       </button>
+      <button class="btn btn-lg d-flex justify-content-center boton-uno" (click)="MenuRapido(5)">
+        <mat-icon class="icon-menu align-self-center">fingerprint</mat-icon>
+        <span class="align-self-center">Timbres</span>
+      </button>
     </div>
   </div>
   
@@ -45,7 +64,9 @@
             <mat-icon matTooltipPosition="right" matTooltip="Ver más opciones de la gráfica"> open_in_full </mat-icon>
           </a>
         </div>
-        <div echarts [options]="horas_extras"></div>
+        <mat-card-content class="scroll-box">
+          <div id="charts_horas_extras" style="width: 100%; height: 350px;"></div>
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-6">
@@ -56,7 +77,9 @@
             <mat-icon matTooltipPosition="right" matTooltip="Ver más opciones de la gráfica"> open_in_full </mat-icon>
           </a>
         </div>
-        <div echarts [options]="vacaciones"></div>
+        <mat-card-content class="scroll-box">
+          <div id="charts_vacaciones" style="width: 100%; height: 350px;"></div>
+        </mat-card-content>
       </mat-card>
     </div>
   </div>
@@ -70,7 +93,9 @@
             <mat-icon matTooltipPosition="right" matTooltip="Ver más opciones de la gráfica"> open_in_full </mat-icon>
           </a>
         </div>
-        <div echarts [options]="permisos"></div>
+        <mat-card-content class="scroll-box">
+          <div id="charts_permisos" style="width: 100%; height: 350px;"></div>
+        </mat-card-content>
       </mat-card>
     </div>
     <div class="col-md-6">
@@ -81,7 +106,9 @@
             <mat-icon matTooltipPosition="right" matTooltip="Ver más opciones de la gráfica"> open_in_full </mat-icon>
           </a>
         </div>
-        <div echarts [options]="atrasos"></div>
+        <mat-card-content class="scroll-box">
+          <div id="charts_atraso" style="width: 100%; height: 350px;"></div>
+        </mat-card-content>
       </mat-card>
     </div>
   </div>

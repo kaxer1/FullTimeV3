@@ -99,21 +99,25 @@ exports.GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'line', label: { backgroundColor: '#6a7985' } }
-            },
-            legend: { align: 'left', data: [{ name: 'inasistencias' }] },
-            grid: { left: '4%', containLabel: true },
-            xAxis: { type: 'category', name: 'Meses', data: meses },
-            yAxis: { type: 'value', name: 'N° Inasistencias' },
-            series: [{
-                    name: 'faltas',
-                    data: valor_mensual,
-                    type: 'line',
-                    lineStyle: { color: 'rgb(20, 112, 233)' },
-                    itemStyle: { color: 'rgb(20, 112, 233)' }
-                }],
+            datos: data,
+            datos_grafica: {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['faltas'] },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    name: 'Mes',
+                    data: meses
+                },
+                yAxis: { type: 'value', name: 'N° Faltas' },
+                series: [
+                    {
+                        name: 'faltas',
+                        type: 'line',
+                        data: valor_mensual
+                    }
+                ]
+            }
         };
     });
 };
@@ -201,36 +205,31 @@ exports.GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            color: ['#3398DB'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            legend: {
-                align: 'left',
-                data: [{ name: 'faltas' }]
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
+            datos: data,
+            datos_grafica: {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                legend: {
+                    align: 'left',
+                    data: [{ name: 'faltas' }]
+                },
+                xAxis: {
                     name: 'Meses',
                     type: 'category',
                     data: meses,
                     axisTick: { alignWithLabel: true }
-                }
-            ],
-            yAxis: [{ type: 'value', name: 'N° Atrasos' }],
-            series: [{
-                    name: 'retrasos',
-                    type: 'bar',
-                    barWidth: '60%',
-                    data: valor_mensual
-                }]
+                },
+                yAxis: [{ type: 'value', name: 'N° Atrasos' }],
+                series: [{
+                        name: 'retrasos',
+                        type: 'bar',
+                        barWidth: '60%',
+                        data: valor_mensual
+                    }]
+            }
         };
     });
 };
@@ -261,60 +260,30 @@ exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
         horarios = [];
         array = [];
         return {
-            tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b}: {c} ({d}%)'
-            },
-            legend: {
-                data: ['Ausencia justificada', 'Ausencia no justificada', 'Presente']
-            },
-            series: [
-                {
+            datos_grafica: {
+                tooltip: { trigger: 'item' },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                },
+                series: {
                     name: 'Asistencia',
                     type: 'pie',
-                    radius: ['15%', '30%'],
-                    labelLine: {
-                        length: 30,
-                    },
-                    label: {
-                        formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
-                        backgroundColor: '#F6F8FC',
-                        borderColor: '#8C8D8E',
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        rich: {
-                            a: {
-                                color: '#6E7079',
-                                lineHeight: 22,
-                                align: 'center'
-                            },
-                            hr: {
-                                borderColor: '#8C8D8E',
-                                width: '100%',
-                                borderWidth: 1,
-                                height: 0
-                            },
-                            b: {
-                                color: '#4C5058',
-                                fontSize: 14,
-                                fontWeight: 'bold',
-                                lineHeight: 33
-                            },
-                            per: {
-                                color: '#fff',
-                                backgroundColor: '#4C5058',
-                                padding: [3, 4],
-                                borderRadius: 4
-                            }
-                        }
-                    },
+                    radius: '50%',
                     data: [
                         { value: modelarPie.a_justifi.length, name: 'Ausencia justificada' },
                         { value: modelarPie.a_no_justi.length, name: 'Ausencia no justificada' },
                         { value: modelarPie.presente.length, name: 'Presente', selected: true }
-                    ]
+                    ],
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
                 }
-            ]
+            }
         };
     });
 };
@@ -399,21 +368,24 @@ exports.GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            color: ['#3398DB'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            xAxis: { type: 'category', name: 'Meses', data: meses },
-            yAxis: { type: 'value', name: 'N° Horas' },
-            series: [{
-                    data: valor_mensual,
-                    type: 'bar',
-                    showBackground: true,
-                    backgroundStyle: {
-                        color: 'rgba(220, 220, 220, 0.8)'
-                    }
-                }]
+            datos: data,
+            datos_grafica: {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                xAxis: { type: 'category', name: 'Meses', data: meses },
+                yAxis: { type: 'value', name: 'N° Horas' },
+                series: [{
+                        data: valor_mensual,
+                        type: 'bar',
+                        showBackground: true,
+                        backgroundStyle: {
+                            color: 'rgba(220, 220, 220, 0.8)'
+                        }
+                    }]
+            }
         };
     });
 };
@@ -506,7 +478,7 @@ exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_fi
             return obj.horario.length != 0;
         }).map(obj => {
             obj.horario.forEach(ele => {
-                ele.hora = SubMetodosGraficas_1.HHMMtoHorasDecimal(ele.hora);
+                ele.hora = SubMetodosGraficas_1.HHMMtoSegundos(ele.hora) / 3600;
             });
             return obj;
         });
@@ -597,21 +569,21 @@ exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_fi
         ];
         let valor_mensual_tiempo = data_tiempo_jornada.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b} : {c} ({d}%)'
-            },
-            legend: {
-                name: 'tiempo',
-                type: 'scroll',
-                orient: 'vertical',
-                right: 10,
-                top: 20,
-                bottom: 20,
-                data: ['Horas extra', 'Jornada']
-            },
-            series: [
-                {
+            datos_grafica: {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {c} ({d}%)'
+                },
+                legend: {
+                    name: 'tiempo',
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: ['Horas extra', 'Jornada']
+                },
+                series: {
                     type: 'pie',
                     radius: '55%',
                     center: ['40%', '50%'],
@@ -627,7 +599,7 @@ exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_fi
                         }
                     }
                 }
-            ]
+            }
         };
     });
 };
@@ -720,7 +692,7 @@ exports.GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, 
             return obj.horario.length != 0;
         }).map(obj => {
             obj.horario.forEach(ele => {
-                ele.hora = SubMetodosGraficas_1.HHMMtoHorasDecimal(ele.hora);
+                ele.hora = SubMetodosGraficas_1.HHMMtoSegundos(ele.hora) / 3600;
             });
             return obj;
         });
@@ -811,35 +783,35 @@ exports.GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, 
             { id: 11, mes: 'Diciembre', valor: SubMetodosGraficas_1.SumarValoresArray(modelarAnioTiempoJornada.diciembre) }
         ];
         let valor_mensual_tiempo = data_tiempo_jornada.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
+        let newArray = [];
+        for (let i = 0; i < meses.length; i++) {
+            let obj = {
+                mes: meses[i],
+                tiempo_j: valor_mensual_tiempo[i],
+                hora_extra: valor_mensual_hora_extra[i]
+            };
+            newArray.push(obj);
+        }
         return {
-            color: ['#003366', '#006699', '#4cabce', '#e5323e'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            legend: { data: ['Tiempo Jornada', 'Horas Extras'] },
-            xAxis: [
-                {
-                    name: 'Meses',
-                    type: 'category',
-                    axisTick: { show: false },
-                    data: meses
-                }
-            ],
-            yAxis: [{ type: 'value', name: 'N° horas' }],
-            series: [
-                {
-                    name: 'Tiempo Jornada',
-                    type: 'bar',
-                    barGap: 0,
-                    data: valor_mensual_tiempo
+            datos: 0,
+            datos_grafica: {
+                legend: {},
+                tooltip: {},
+                dataset: {
+                    dimensions: ['mouth', 'Tiempo Jornada', 'Horas Extras'],
+                    source: newArray.map(obj => {
+                        return {
+                            mouth: obj.mes, 'Tiempo Jornada': obj.tiempo_j, 'Horas Extras': obj.hora_extra
+                        };
+                    })
                 },
-                {
-                    name: 'Horas Extras',
-                    type: 'bar',
-                    data: valor_mensual_hora_extra
-                }
-            ]
+                xAxis: { type: 'category' },
+                yAxis: {},
+                series: [
+                    { type: 'bar' },
+                    { type: 'bar' }
+                ]
+            }
         };
     });
 };
@@ -926,13 +898,13 @@ exports.GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            baseOption: {
+            datos: data,
+            datos_grafica: {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: { type: 'line', label: { backgroundColor: '#6a7985' } }
                 },
                 legend: { align: 'left', data: [{ name: 'marcaciones' }] },
-                grid: { left: '4%', containLabel: true },
                 xAxis: { type: 'category', name: 'Meses', data: meses },
                 yAxis: { type: 'value', name: 'N° Timbres' },
                 series: [{
@@ -942,23 +914,7 @@ exports.GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
                         lineStyle: { color: 'rgb(20, 112, 233)' },
                         itemStyle: { color: 'rgb(20, 112, 233)' }
                     }],
-            },
-            media: [
-                {
-                    query: {
-                        minWidth: 200,
-                        maxHeight: 300,
-                        minAspectRatio: 1.3 // when length-to-width ratio is less than 1
-                    },
-                    option: {
-                        legend: {
-                            right: 'center',
-                            bottom: 0,
-                            orient: 'horizontal' // horizontal layout of legend
-                        },
-                    }
-                }
-            ]
+            }
         };
     });
 };
@@ -1042,21 +998,24 @@ exports.GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final)
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            color: ['#3398DB'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            xAxis: { type: 'category', name: 'Meses', data: meses },
-            yAxis: { type: 'value', name: 'N° Horas' },
-            series: [{
-                    data: valor_mensual,
-                    type: 'bar',
-                    showBackground: true,
-                    backgroundStyle: {
-                        color: 'rgba(220, 220, 220, 0.8)'
-                    }
-                }]
+            datos: data,
+            datos_grafica: {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                xAxis: { type: 'category', name: 'Meses', data: meses },
+                yAxis: { type: 'value', name: 'N° Horas' },
+                series: [{
+                        data: valor_mensual,
+                        type: 'bar',
+                        showBackground: true,
+                        backgroundStyle: {
+                            color: 'rgba(220, 220, 220, 0.8)'
+                        }
+                    }]
+            }
         };
     });
 };
@@ -1146,51 +1105,28 @@ exports.MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, f
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            baseOption: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'line',
-                        label: { backgroundColor: '#6a7985' }
-                    }
-                },
-                legend: {
-                    align: 'left',
-                    data: [{
-                            name: 'hora extra'
-                        }]
-                },
-                grid: {
-                    left: '4%',
-                    right: '4%',
-                    containLabel: true
-                },
-                xAxis: { type: 'category', name: 'Meses', data: meses },
-                yAxis: { type: 'value', name: 'N° Horas' },
-                series: [{
-                        name: 'hora extra',
-                        data: valor_mensual,
-                        type: 'line',
-                        lineStyle: { color: 'rgb(20, 112, 233)' },
-                        itemStyle: { color: 'rgb(20, 112, 233)' }
-                    }],
-            },
-            media: [
-                {
-                    query: {
-                        minWidth: 200,
-                        maxHeight: 300,
-                        minAspectRatio: 1.3 // when length-to-width ratio is less than 1
-                    },
-                    option: {
-                        legend: {
-                            right: 'center',
-                            bottom: 0,
-                            orient: 'horizontal' // horizontal layout of legend
-                        },
-                    }
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    label: { backgroundColor: '#6a7985' }
                 }
-            ]
+            },
+            legend: {
+                align: 'left',
+                data: [{
+                        name: 'hora extra'
+                    }]
+            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Horas' },
+            series: {
+                name: 'hora extra',
+                data: valor_mensual,
+                type: 'line',
+                lineStyle: { color: 'rgb(20, 112, 233)' },
+                itemStyle: { color: 'rgb(20, 112, 233)' }
+            }
         };
     });
 };
@@ -1276,49 +1212,26 @@ exports.MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, f
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            baseOption: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'line',
-                        label: { backgroundColor: '#6a7985' }
-                    }
-                },
-                legend: {
-                    align: 'left',
-                    data: [{ name: 'vacaciones' }]
-                },
-                grid: {
-                    left: '4%',
-                    right: '4%',
-                    containLabel: true
-                },
-                xAxis: { type: 'category', name: 'Meses', data: meses },
-                yAxis: { type: 'value', name: 'N° Días' },
-                series: [{
-                        name: 'Dias',
-                        data: valor_mensual,
-                        type: 'line',
-                        lineStyle: { color: 'rgb(20, 112, 233)' },
-                        itemStyle: { color: 'rgb(20, 112, 233)' }
-                    }]
-            },
-            media: [
-                {
-                    query: {
-                        minWidth: 200,
-                        maxHeight: 300,
-                        minAspectRatio: 1.3 // when length-to-width ratio is less than 1
-                    },
-                    option: {
-                        legend: {
-                            right: 'center',
-                            bottom: 0,
-                            orient: 'horizontal' // horizontal layout of legend
-                        },
-                    }
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    label: { backgroundColor: '#6a7985' }
                 }
-            ]
+            },
+            legend: {
+                align: 'left',
+                data: [{ name: 'vacaciones' }]
+            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Días' },
+            series: {
+                name: 'Dias',
+                data: valor_mensual,
+                type: 'line',
+                lineStyle: { color: 'rgb(20, 112, 233)' },
+                itemStyle: { color: 'rgb(20, 112, 233)' }
+            }
         };
     });
 };
@@ -1402,51 +1315,28 @@ exports.MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            baseOption: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'line',
-                        label: { backgroundColor: '#6a7985' }
-                    }
-                },
-                legend: {
-                    align: 'left',
-                    data: [{
-                            name: 'Permisos'
-                        }]
-                },
-                grid: {
-                    left: '4%',
-                    right: '4%',
-                    containLabel: true
-                },
-                xAxis: { type: 'category', name: 'Meses', data: meses },
-                yAxis: { type: 'value', name: 'N° tiempo' },
-                series: [{
-                        name: 'Dias',
-                        data: valor_mensual,
-                        type: 'line',
-                        lineStyle: { color: 'rgb(20, 112, 233)' },
-                        itemStyle: { color: 'rgb(20, 112, 233)' }
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    label: { backgroundColor: '#6a7985' }
+                }
+            },
+            legend: {
+                align: 'left',
+                data: [{
+                        name: 'Permisos'
                     }]
             },
-            media: [
-                {
-                    query: {
-                        minWidth: 200,
-                        maxHeight: 300,
-                        minAspectRatio: 1.3 // when length-to-width ratio is less than 1
-                    },
-                    option: {
-                        legend: {
-                            right: 'center',
-                            bottom: 0,
-                            orient: 'horizontal' // horizontal layout of legend
-                        },
-                    }
-                }
-            ]
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° tiempo' },
+            series: {
+                name: 'Dias',
+                data: valor_mensual,
+                type: 'line',
+                lineStyle: { color: 'rgb(20, 112, 233)' },
+                itemStyle: { color: 'rgb(20, 112, 233)' }
+            }
         };
     });
 };
@@ -1532,51 +1422,28 @@ exports.MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_
         let meses = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.mes; });
         let valor_mensual = data.filter(obj => { return (obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth()); }).map(obj => { return obj.valor; });
         return {
-            baseOption: {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'line',
-                        label: { backgroundColor: '#6a7985' }
-                    }
-                },
-                legend: {
-                    align: 'left',
-                    data: [{
-                            name: 'Atrasos'
-                        }]
-                },
-                grid: {
-                    left: '4%',
-                    right: '4%',
-                    containLabel: true
-                },
-                xAxis: { type: 'category', name: 'Meses', data: meses },
-                yAxis: { type: 'value', name: 'N° Días' },
-                series: [{
-                        name: 'Dias',
-                        data: valor_mensual,
-                        type: 'line',
-                        lineStyle: { color: 'rgb(20, 112, 233)' },
-                        itemStyle: { color: 'rgb(20, 112, 233)' }
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'line',
+                    label: { backgroundColor: '#6a7985' }
+                }
+            },
+            legend: {
+                align: 'left',
+                data: [{
+                        name: 'Atrasos'
                     }]
             },
-            media: [
-                {
-                    query: {
-                        minWidth: 200,
-                        maxHeight: 300,
-                        minAspectRatio: 1.3 // when length-to-width ratio is less than 1
-                    },
-                    option: {
-                        legend: {
-                            right: 'center',
-                            bottom: 0,
-                            orient: 'horizontal' // horizontal layout of legend
-                        },
-                    }
-                }
-            ]
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Días' },
+            series: {
+                name: 'Dias',
+                data: valor_mensual,
+                type: 'line',
+                lineStyle: { color: 'rgb(20, 112, 233)' },
+                itemStyle: { color: 'rgb(20, 112, 233)' }
+            }
         };
     });
 };

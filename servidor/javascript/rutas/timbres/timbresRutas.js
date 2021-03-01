@@ -22,6 +22,7 @@ class TimbresRutas {
         this.router.post('/', verificarToken_1.TokenValidation, timbresControlador_1.default.CrearTimbreWeb);
         this.router.post('/admin/', verificarToken_1.TokenValidation, timbresControlador_1.default.CrearTimbreWebAdmin);
         this.router.get('/', verificarToken_1.TokenValidation, timbresControlador_1.default.ObtenerTimbres);
+        this.router.get('/ultimo-timbre', verificarToken_1.TokenValidation, timbresControlador_1.default.ObtenerUltimoTimbreEmpleado);
     }
 }
 const TIMBRES_RUTAS = new TimbresRutas();

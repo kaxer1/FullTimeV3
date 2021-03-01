@@ -96,11 +96,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
   filtroNombreInc: '';
 
   check: any[] = [
-    {opcion: 1, valor: 'Suc'},
-    {opcion: 2, valor: 'Dep'},
-    {opcion: 3, valor: 'Emp'},
-    {opcion: 4, valor: 'Tab'},
-    {opcion: 5, valor: 'Inc'}
+    {opcion: 1, valor: 'Sucursal'},
+    {opcion: 2, valor: 'Departamento'},
+    {opcion: 3, valor: 'Empleado'},
+    {opcion: 4, valor: 'Tabulado'},
+    {opcion: 5, valor: 'Incluido'}
   ];
   
   constructor(

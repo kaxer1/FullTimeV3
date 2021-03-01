@@ -45,4 +45,8 @@ export class TimbresService {
     return this.http.get<any>(`${this.API_URL}/timbres/`);
   }
 
+  UltimoTimbreEmpleado() {
+    return this.http.get<any>(`${this.API_URL}/timbres/ultimo-timbre`);
+  }
+
 }

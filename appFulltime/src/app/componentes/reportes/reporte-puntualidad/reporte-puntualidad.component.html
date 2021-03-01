@@ -10,12 +10,12 @@
                         Rango Fechas Consulta
                         </mat-panel-title>
                         <mat-icon class="flex-shrink-1 bd-highlight i-barra" matTooltipPosition="right"
-                        matTooltip="Ingresa el rango de fechas para la consulta de Puntualidad.">date_range</mat-icon>
+                        matTooltip="Ingresa el rango de fechas para la consulta de Puntualidad. Se recomienda que los rangos sean mensualmente">date_range</mat-icon>
                     </mat-expansion-panel-header>
             
                     <div class="d-flex flex-wrap justify-content-center">
                         <form [formGroup]="fechasForm" class="d-flex flex-wrap justify-content-center">
-                            <mat-form-field>
+                            <mat-form-field class="rango_fecha">
                                 <mat-label>Desde</mat-label>
                                 <input matInput [matDatepicker]="pickerInicial" placeholder="dd/mm/aaaa" [disabled]="habilitar"
                                     [formControl]="fec_inicio_mes" required>
@@ -23,7 +23,7 @@
                                     matTooltip="Ingresa la fecha inicial del mes que deseas consultar el reporte. Ejm: 01/08/2020"></mat-datepicker-toggle>
                                 <mat-datepicker touchUi #pickerInicial></mat-datepicker>
                             </mat-form-field>
-                            <mat-form-field>
+                            <mat-form-field class="rango_fecha">
                                 <mat-label>Hasta</mat-label>
                                 <input matInput [matDatepicker]="pickerFinal" placeholder="dd/mm/aaaa" [disabled]="habilitar" 
                                     [formControl]="fec_final_mes" required>
@@ -45,15 +45,19 @@
                         </mat-panel-title>
                         <mat-icon class="flex-shrink-1 bd-highlight i-barra" matTooltipPosition="right"
                         matTooltip="
-                        Limite Rojo: días que se considera que el empleado es poco puntual, de acuerdo al rango de fecha.
-                        Limite Verde: días que se considera que el empleado es muy puntual, de acuerdo al rango de fecha.
+                        Mínimo Puntualidades: n días que se considera al empleado poco puntual. Significa que el empleado tienen más atrasos que llegadas puntuales.
+                        Máximo Puntualidades: n días que se considera al empleado muy puntual y puede o no tener atrasos, en caso de tenerlos serán muy pocos.
                         ">help_outline</mat-icon>
                     </mat-expansion-panel-header>
                     <br>
+                    <h6 style="text-align: justify;">
+                        <b>Mínimo Puntualidades: </b> n días que se considera al empleado poco puntual. Significa que el empleado tienen <b>más atrasos</b> que llegadas puntuales. <br>
+                        <b>Máximo Puntualidades:</b> n días que se considera al empleado muy puntual y puede o no tener atrasos, en caso de tenerlos serán muy pocos.   
+                    </h6>
                     <form [formGroup]="ParametrosForm" (ngSubmit)="onSubmitParametros()">
                         <div class="d-flex flex-wrap justify-content-around">
                             <mat-form-field class="parametros_styles">
-                                <mat-label>Limite rojo </mat-label>
+                                <mat-label style="font-size: 7;">Mínimo puntualidades </mat-label>
                                 <input matInput #menor maxlength="2" placeholder="Menor a: ... " formControlName="menor" value="3">
                                 <mat-hint align="end">{{menor.value.length}} / 2</mat-hint>
                             </mat-form-field>
@@ -64,9 +68,9 @@
                                 <mat-hint align="end">{{menor.value.length}} / 7</mat-hint>
                             </mat-form-field> -->
                             <mat-form-field class="parametros_styles">
-                                <mat-label> Limite verde </mat-label>
-                                <input matInput #mayor maxlength="7" placeholder="Mayora a: ..." formControlName="mayor" value="11">
-                                <mat-hint align="end">{{menor.value.length}} / 7</mat-hint>
+                                <mat-label style="font-size: 7;"> Máximo puntualidades </mat-label>
+                                <input matInput #mayor maxlength="2" placeholder="Mayora a: ..." formControlName="mayor" value="11">
+                                <mat-hint align="end">{{menor.value.length}} / 2</mat-hint>
                             </mat-form-field>
                         </div>
                         <div class="d-flex justify-content-around">

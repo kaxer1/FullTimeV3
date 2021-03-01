@@ -27,20 +27,20 @@ exports.CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
             codigo = parseInt(code[0].codigo);
             // console.log('Codigo: ',codigo);
             let ids = yield CargoContratoByFecha(id_empleado, fec_desde, fec_hasta);
-            console.log('Contrato y cargo', ids);
+            // console.log('Contrato y cargo', ids);
             if (ids[0].message) {
                 return ids[0];
             }
             let cg_horas_extras = yield CatalogoHorasExtras();
-            console.log('Catalgo Horas Extras', cg_horas_extras);
+            // console.log('Catalgo Horas Extras', cg_horas_extras);
             let horas_extras = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 return yield ListaHorasExtras(cg_horas_extras, codigo, obj.id_cargo, fec_desde, fec_hasta, parseInt(obj.sueldo), obj.hora_trabaja);
             })));
             let feriados = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 return yield FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta);
             })));
-            // console.log('Lista de horas extras ===', horas_extras[0]);
-            console.log('Lista de feriados ===', feriados[0]);
+            console.log('Lista de horas extras ===', horas_extras[0]);
+            // console.log('Lista de feriados ===', feriados[0]);
             let ArrayDatos = {
                 info: ids,
                 detalle: horas_extras[0].map(obj => {
@@ -79,6 +79,7 @@ function FeriadosPorIdCargo(id_cargo, fec_desde, fec_hasta) {
 function SumaValorPagoEmpleado(horas_extras) {
     let sumador = 0;
     horas_extras.forEach(obj => {
+        console.log('Valor pago', obj.calculos[0].valor_pago);
         sumador = sumador + obj.calculos[0].valor_pago;
     });
     return sumador;
@@ -120,15 +121,15 @@ function ListaHorasExtras(cg_horas_extras, codigo, id_cargo, fec_desde, fec_hast
         arrayUnido.forEach(obj => {
             obj.calculos = obj.valores_calculos.map((res) => {
                 if (res.tipo_funcion === 1) {
-                    console.log('funcion 1');
+                    // console.log('funcion 1');
                     return 0;
                 }
                 else if (res.tipo_funcion === 2) {
-                    console.log('funcion 2');
+                    // console.log('funcion 2');
                     return HorasSuplementarias(valor_dia, valor_hora, obj.tiempo_autorizado || obj.num_hora, res.reca_porcentaje);
                 }
                 else if (res.tipo_funcion === 3) {
-                    console.log('funcion 3');
+                    // console.log('funcion 3');
                     return 0;
                 }
             }) || 0;
@@ -139,6 +140,7 @@ function ListaHorasExtras(cg_horas_extras, codigo, id_cargo, fec_desde, fec_hast
 function HorasSuplementarias(valor_dia, valor_hora, num_hora, porcentaje) {
     const vr = porcentaje * valor_hora;
     const vht = valor_hora + vr;
+    console.log(num_hora);
     const vp = vht * num_hora;
     console.log(vr, vht, vp);
     return {
@@ -173,7 +175,7 @@ function HorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, fec_hasta) {
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
                     num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                    tiempo_autorizado: obj.tiempo_autorizado,
+                    tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
                     valores_calculos: new Array,
                     calculos: new Array,
                     nocturno: false,
@@ -219,7 +221,7 @@ function PlanificacionHorasExtrasSolicitadas(id_empleado, id_cargo, fec_desde, f
 }
 function ObtenerTimbres(id_empleado, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('$$$$$$$$$$$$', fec_desde, fec_hasta);
+        // console.log('$$$$$$$$$$$$', fec_desde, fec_hasta);
         var accion = 'EoS';
         return yield database_1.default.query('SELECT fec_hora_timbre, accion FROM timbres WHERE id_empleado = $1 AND accion = $4 AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre', [id_empleado, fec_desde, fec_hasta, accion])
             .then(result => {

@@ -374,7 +374,7 @@ export class ReporteFaltasComponent implements OnInit {
       documentDefinition = this.getDocumentDefinicionPortrait();
     }
     var f = new Date()
-    let doc_name = "Reporte atrasos" + f.toLocaleString() + ".pdf";
+    let doc_name = "Reporte faltas" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -388,7 +388,7 @@ export class ReporteFaltasComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 40, 40, 40, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -416,9 +416,9 @@ export class ReporteFaltasComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte de Faltas', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -35, 0, 10] },
+        { text: 'Reporte de Faltas', bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 7] },
+        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center' },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -441,7 +441,7 @@ export class ReporteFaltasComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'landscape',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 40, 40, 40, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -469,9 +469,9 @@ export class ReporteFaltasComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte Tabulado de Faltas', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -35, 0, 10] },
+        { text: 'Reporte Tabulado de Faltas', bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 7] },
+        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center'  },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -624,57 +624,45 @@ export class ReporteFaltasComponent implements OnInit {
             n.push({
               style: 'tableMarginEmp',
               table: {
-                widths: ['auto','*'],
+                widths: [20, '*', 30],
                 body: [
                   [
                     { text: 'N°', style: 'tableHeader' },
-                    { text: 'INASISTENCIA', style: 'tableHeader' },
+                    { colSpan: 2, text: 'INASISTENCIA', style: 'tableHeader' },
+                    { text: '', style: 'tableHeader'}
                   ], 
                   ...e.faltas.map(obj3 => {
                     c = c + 1
                     return [
                       { style: 'itemsTableCentrado', text: c },
-                      { style: 'itemsTableCentrado', text: obj3.fecha },
+                      { style: 'itemsTableCentrado', colSpan:2, text: obj3.fecha },
+                      { style: 'itemsTableCentrado', text: '' },
                     ]
                   }),
-                ]
+                  [
+                    { colSpan: 2, text: 'Total Faltas Empleado ' , fillColor: this.s_color, alignment: 'right', margin: [0,3,15,3], fontSize: 10},
+                    { text: '', fillColor: this.s_color},
+                    { text: e.faltas.length, bold: true, fontSize: 13, alignment: 'center', margin: [0, 3, 0, 3] }
+                  ]
+                ],
+                layout: {
+                  fillColor: function (rowIndex) {
+                    return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                  }
+                }
               }
             }); 
-
             arr_dep_subtotal.push(e.faltas.length);
-            n.push({ text: 'Subtotal faltas empleado: ' + e.faltas.length, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})
-
           })
-
-
         })
-        n.push({ text: 'Total Faltas Sucursal: ' + this.SumarRegistros(arr_dep_subtotal), bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})
+
+        if (this.bool_suc === true) {
+          n.push({ text: 'Total Faltas Sucursal: ' + this.SumarRegistros(arr_dep_subtotal), bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})
+        }
 
       }
 
       if (this.bool_dep === true) {
-
-        n.push({
-          style: 'tableMarginSuc',
-          table: {
-            widths: ['*', '*'],
-            body: [
-              [
-                {
-                  border: [true, true, false, true],
-                  bold: true,
-                  text: 'CIUDAD: ' + obj.ciudad,
-                  style: 'itemsTableInfo'
-                },
-                {
-                  border: [false, true, true, true],
-                  text: 'SUCURSAL: ' + obj.name_suc,
-                  style: 'itemsTableInfo'
-                }
-              ]
-            ]
-          }
-        })
         
         obj.departamentos.forEach(obj1 => {
           arr_dep_subtotal = [];
@@ -689,12 +677,12 @@ export class ReporteFaltasComponent implements OnInit {
                   {
                     border: [true, true, false, true],
                     text: 'DEPARTAMENTO: ' + obj1.name_dep,
-                    style: 'tableHeader'
+                    style: 'itemsTableInfo'
                   },
                   {
                     border: [true, true, true, true],
                     text: 'N° EMPLEADOS DEPARTAMENTO: ' + reg,
-                    style: 'tableHeader'
+                    style: 'itemsTableInfo'
                   }
                 ]
               ]
@@ -732,24 +720,35 @@ export class ReporteFaltasComponent implements OnInit {
             n.push({
               style: 'tableMarginEmp',
               table: {
-                widths: ['auto', '*'],
+                widths: [20, '*', 30],
                 body: [
                   [
                     { text: 'N°', style: 'tableHeader' },
-                    { text: 'INASISTENCIA', style: 'tableHeader' },
+                    { colSpan: 2, text: 'INASISTENCIA', style: 'tableHeader' },
+                    { text: '', style: 'tableHeader'}
                   ], 
                   ...obj2.faltas.map(obj3 => {
                     c = c + 1
                     return [
                       { style: 'itemsTableCentrado', text: c },
-                      { style: 'itemsTableCentrado', text: obj3.fecha },
+                      { style: 'itemsTableCentrado', colSpan:2, text: obj3.fecha },
+                      { style: 'itemsTableCentrado', text: '' },
                     ]
                   }),
-                ]
+                  [
+                    { colSpan: 2, text: 'Total Faltas Empleado ' , fillColor: this.s_color, alignment: 'right', margin: [0,3,15,3], fontSize: 10},
+                    { text: '', fillColor: this.s_color},
+                    { text: obj2.faltas.length, bold: true, fontSize: 13, alignment: 'center', margin: [0, 3, 0, 3] }
+                  ]
+                ],
+                layout: {
+                  fillColor: function (rowIndex) {
+                    return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                  }
+                }
               }
-            });
+            }); 
             arr_dep_subtotal.push(obj2.faltas.length);
-            n.push({ text: 'Subtotal faltas empleado: ' + obj2.faltas.length, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})
           });
 
           n.push({ text: 'Total Faltas Departamento: ' + this.SumarRegistros(arr_dep_subtotal), bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})

@@ -9,6 +9,7 @@ class ReporteHoraExtraControlador {
         var {id_empleado, desde, hasta} = req.params
         
         let resultado = await CalcularHoraExtra(parseInt(id_empleado), new Date(desde), new Date(hasta));
+        // console.log(resultado);
         
         if (resultado.message) {
             return res.status(400).jsonp(resultado)

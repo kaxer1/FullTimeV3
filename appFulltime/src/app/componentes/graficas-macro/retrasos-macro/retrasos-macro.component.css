@@ -34,3 +34,13 @@ mat-icon {
   width: 550px;
   height: 100% 
 }
+
+#charts_atrasos_macro { width: 1050px; height: 450px;}
+
+.scroll-box {
+  overflow-y: scroll;
+  height: 100%;
+  overflow-x: scroll;
+  width: 100%;
+  padding: 1rem;
+}

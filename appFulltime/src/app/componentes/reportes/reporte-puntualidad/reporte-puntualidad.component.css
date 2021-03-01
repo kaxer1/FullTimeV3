@@ -1,8 +1,7 @@
 mat-form-field { padding: 10px 15px 0px 15px;}
 
-.parametros_styles {
-    width: 100%;
-}
+.parametros_styles { width: 150px;}
+.rango_fecha { width: 175px;}
 
 .tituloEmpleados { 
     font-size: 20px; 

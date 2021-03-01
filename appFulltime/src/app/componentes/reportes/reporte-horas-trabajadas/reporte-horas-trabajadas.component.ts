@@ -310,7 +310,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
   generarPdf(action) {
     const documentDefinition = this.getDocumentDefinicion();
     var f = new Date()
-    let doc_name = "Reporte atrasos" + f.toLocaleString() + ".pdf";
+    let doc_name = "Reporte horas trabajadas" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -353,8 +353,9 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Horas Trabaja', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+        { text: 'Horas Registradas Según Timbres', bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 10]  },
+        { text: 'Nota: El siguiente reporte muestra el horario de los empleados y sus timbres realizados. Estos timbres no refieren a horas suplementarias ni horas extras autorizadas.' , bold: true, fontSize: 7 },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -461,23 +462,27 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
           });
 
           obj2.timbres.forEach((obj3) => {
+            let item_color_total = (obj3.total_diferencia.includes('-')) ? 'red':'black';
+
             n.push({
               style: 'tableMargin',
               table: {
-                widths: ['auto', '*', '*', '*', '*'],
+                widths: ['auto', '*', '*', '*', '*', '*'],
                 body: [
                   [
-                    { colSpan: 5, text: 'FECHA: ' + obj3.fecha },
-                    '', '', '', ''
+                    { colSpan: 6, text: 'FECHA: ' + obj3.fecha },
+                    '', '', '', '',''
                   ],                  
                   [
                     { text: 'N°', style: 'tableHeader' },
-                    { text: 'Observacion', style: 'tableHeader' },
+                    { text: 'Observación', style: 'tableHeader' },
                     { text: 'E/S', style: 'tableHeader' },
-                    { text: 'Horario', style: 'tableHeader' },
+                    { text: 'Horario Trabajo', style: 'tableHeader' },
                     { text: 'Timbre', style: 'tableHeader' },
+                    { text: 'Diferencia', style: 'tableHeader' },
                   ],                  
                   ...obj3.horarios.map(obj4 => {
+                    let item_color = (obj4.hora_diferencia.includes('-')) ? 'red':'black';
                     c = c + 1
                     return [
                       { style: 'itemsTableCentrado', text: c },
@@ -485,6 +490,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
                       { style: 'itemsTableCentrado', text: obj4.accion },
                       { style: 'itemsTableCentrado', text: obj4.hora_horario },
                       { style: 'itemsTableCentrado', text: obj4.hora_timbre },
+                      { style: 'itemsTableCentrado', text: obj4.hora_diferencia, color: item_color},
                     ]
                   }),
                   [
@@ -492,6 +498,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
                     '', '',
                     { text: obj3.total_horario, bold: true, alignment: 'center' },
                     { text: obj3.total_timbres, bold: true, alignment: 'center' },
+                    { text: obj3.total_diferencia, bold: true, alignment: 'center', color: item_color_total},
                   ]
                 ]
               },

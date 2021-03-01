@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SettingsComponent implements OnInit {
 
-  isChecked = true;
   btnActualizar: boolean = false;
   btnCrear: boolean = false;
 

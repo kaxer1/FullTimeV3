@@ -6,8 +6,9 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { KardexService } from 'src/app/servicios/reportes/kardex.service';
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as moment from 'moment';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfigReportFirmasHorasExtrasComponent } from '../../reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 
 @Component({
   selector: 'app-reporte-horas-extras',
@@ -41,12 +42,28 @@ export class ReporteHorasExtrasComponent implements OnInit {
     private restReporte: KardexService,
     private toastr: ToastrService,
     private restEmpre: EmpresaService,
+    public vistaFlotante: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
+    this.ObtnerColores();
     this.ObtenerEmpleados();
     this.ObtenerEmpleadoSolicitaKardex(this.idEmpleado);
+  }
+
+  firma_jefe: boolean = true;
+  firma_resp: boolean = false;
+  firma_empl: boolean = false;
+  AbrirSettings() {
+    this.vistaFlotante.open(ConfigReportFirmasHorasExtrasComponent, { width: '350px' }).afterClosed().subscribe(res => { 
+      this.toastr.success('Configuración de Firmas guardada')
+      let data = JSON.parse(sessionStorage.getItem('Firmas_hora_extra'));
+      console.log(data);
+      this.firma_jefe = data.firma_jefe;
+      this.firma_resp = data.firma_resp;
+      this.firma_empl = data.firma_empl;
+    });
   }
 
   ManejarPagina(e: PageEvent) {
@@ -84,6 +101,8 @@ export class ReporteHorasExtrasComponent implements OnInit {
   s_color: any;
   ObtnerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      console.log(res);
+      
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
     });
@@ -113,11 +132,11 @@ export class ReporteHorasExtrasComponent implements OnInit {
    if (pdf === 2) {
     documentDefinition = this.getDocumentHorasExtras();
   }
-
+    let name_document = 'reporte horas extras'
    switch (action) {
      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-     case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+     case 'download': pdfMake.createPdf(documentDefinition).download(name_document); break;
 
      default: pdfMake.createPdf(documentDefinition).open(); break;
    }
@@ -127,13 +146,13 @@ export class ReporteHorasExtrasComponent implements OnInit {
    *  METODOS PARA IMPRIMIR REPORTE DE HORAS EXTRAS
    **********************************************/
   getDocumentHorasExtras() {
-    // sessionStorage.setItem('Empleado', this.empleados);
     var f = new Date();
     f.setUTCHours(f.getHours())
     this.fechaHoy = f.toJSON();
-    // console.log(this.fechaHoy);
     return {
-      pageOrientation: 'landscape',
+      pageSize: 'A4',
+      pageOrientation: 'portrait',
+      pageMargins: [ 25, 60, 25, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido, margin: 10, fontSize: 9, opacity: 0.3 },
 
@@ -162,15 +181,16 @@ export class ReporteHorasExtrasComponent implements OnInit {
           columns: [
             {
               image: this.urlImagen,
-              width: 90,
-              height: 40,
+              width: 100,
+              margin: [0, -25, 0, 0]
             },
             {
               width: '*',
               text: this.nombreEmpresa,
               bold: true,
               fontSize: 20,
-              margin: [230, 10, 0, 0],
+              alignment: 'center',
+              margin: [-100, -15, 0, 0],
             }
           ]
         },
@@ -181,16 +201,18 @@ export class ReporteHorasExtrasComponent implements OnInit {
         this.ImpresionInformacion(this.horas_extras.info[0]),
         this.ImpresionDetalle(this.horas_extras.detalle),
         this.ImprimirTotal(this.horas_extras.total),
+        this.ImprimirFirmas(this.horas_extras.info[0])
       ],
       styles: {
-        tableHeaderDetalle: { bold: true, alignment: 'center', fillColor: this.p_color, fontSize: 12, margin: [0, 5, 0, 5] },
-        itemsTableDetalle: { fontSize: 10, margin: [0, 5, 0, 5] },
+        tableHeaderDetalle: { bold: true, alignment: 'center', fillColor: this.p_color, fontSize: 9, margin: [0, 3, 0, 3] },
+        itemsTableDetalle: { fontSize: 8, margin: [0, 3, 0, 3] },
         subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
-        tableTotal: { fontSize: 18, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 5, 0, 10] },
+        tableTotal: { fontSize: 15, bold: true, alignment: 'center', fillColor: this.p_color, margin: [0, 5, 0, 8] },
         tableHeader: { fontSize: 9, bold: true, alignment: 'center', fillColor: this.p_color },
-        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3],  },
+        itemsTable: { fontSize: 8, margin: [0, 3, 0, 3] },
         itemsTableInfo: { fontSize: 10, margin: [0, 5, 0, 5] },
         tableMargin: { margin: [0, 20, 0, 0] },
+        MarginTable: { margin: [0, 10, 0, 10] },
         CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color},
         quote: { margin: [5, -2, 0, -2], italics: true },
         small: { fontSize: 8, color: 'blue', opacity: 0.5 }
@@ -267,6 +289,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
   ImpresionDetalle(datosRest: any[] ) {
     let contador = 0;
     return {
+      style: 'MarginTable',
       table: {
         headerRows: 1,
         widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto'],
@@ -321,6 +344,85 @@ export class ReporteHorasExtrasComponent implements OnInit {
     ]
     
     return arrayTitulos
+  }
+
+  ImprimirFirmas(e: any) {
+    let n: any = [
+      {
+        columns: []
+      }
+    ];
+    let nombreJefe = this.empleadoD[0].nombre + ' ' + this.empleadoD[0].apellido
+    if (this.firma_jefe === true) {
+      n[0].columns.push(
+        {
+          columns: [
+            { width: '*', text: '' },
+            {
+              width: 'auto',
+              layout: 'lightHorizontalLines',
+              table: {
+                widths: ['auto'],
+                body: [
+                  [{ text: 'AUTORIZADO', style: 'tableHeaderA' }],
+                  [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                  [{ text: nombreJefe + '\n' + 'GERENTE', style: 'itemsTable' }]
+                ]
+              }
+            },
+            { width: '*', text: '' },
+          ]
+        }
+      )
+    }
+
+    if (this.firma_resp === true) {
+      n[0].columns.push(
+        {
+          columns: [
+            { width: '*', text: '' },
+            {
+              width: 'auto',
+              layout: 'lightHorizontalLines',
+              table: {
+                widths: ['auto'],
+                body: [
+                  [{ text: 'RESPONSABLE', style: 'tableHeaderA' }],
+                  [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                  [{ text: 'Alejandra Cortez' + '\n' + 'RRHH', style: 'itemsTable' }]
+                ]
+              }
+            },
+            { width: '*', text: '' },
+          ]
+        }
+      )
+    }
+
+    if(this.firma_empl === true) {
+      n[0].columns.push(
+        {
+          columns: [
+            { width: '*', text: '' },
+            {
+              width: 'auto',
+              layout: 'lightHorizontalLines',
+              table: {
+                widths: ['auto'],
+                body: [
+                  [{ text: 'EMPLEADO', style: 'tableHeaderA' },],
+                  [{ text: ' ', style: 'itemsTable', margin: [0, 20, 0, 20] }],
+                  [{ text: e.nombre + '\n' + 'Asistente', style: 'itemsTable' }]
+                ]
+              }
+            },
+            { width: '*', text: '' },
+          ]
+        }
+      )
+    }
+
+    return n
   }
 
 }

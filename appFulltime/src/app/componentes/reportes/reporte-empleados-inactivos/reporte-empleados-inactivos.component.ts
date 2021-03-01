@@ -271,7 +271,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 40, 60, 40, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -299,8 +299,8 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte - Empleados Inactivos', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
+        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -35, 0, 10] },
+        { text: 'Reporte - Empleados Inactivos', bold: true, fontSize: 13, alignment: 'center' },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -366,13 +366,14 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
         n.push({
           style: 'tableMarginEmp',
           table: {
-            widths: ['auto', '*', 'auto','auto'],
+            widths: ['auto', '*', 'auto','auto', 'auto'],
             body: [
               [
                 { text: 'N°', style: 'tableHeader' },
                 { text: 'EMPLEADO', style: 'tableHeader' },
                 { text: 'CÉDULA', style: 'tableHeader' },
-                { text: 'CÓDIGO', style: 'tableHeader' }
+                { text: 'CÓDIGO', style: 'tableHeader' },
+                { text: 'FECHA SALIDA', style: 'tableHeader' }
               ], 
               ...arr_emp.map(obj3 => {
                 c = c + 1
@@ -381,9 +382,15 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
                   { style: 'itemsTable', text: obj3.name_empleado },
                   { style: 'itemsTable', text: obj3.cedula },
                   { style: 'itemsTable', text: obj3.codigo },
+                  { style: 'itemsTable', text: obj3.fec_final.split('T')[0] },
                 ]
               }),
             ]
+          },
+          layout: {
+            fillColor: function (rowIndex) {
+              return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+            }
           }
         }); 
       }
@@ -439,24 +446,31 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
           n.push({
             style: 'tableMarginEmp',
             table: {
-              widths: ['auto', '*', 'auto','auto'],
+              widths: ['auto', '*', 'auto','auto', 'auto'],
               body: [
                 [
                   { text: 'N°', style: 'tableHeader' },
                   { text: 'EMPLEADO', style: 'tableHeader' },
                   { text: 'CÉDULA', style: 'tableHeader' },
-                  { text: 'CÓDIGO', style: 'tableHeader' }
+                  { text: 'CÓDIGO', style: 'tableHeader' },
+                  { text: 'FECHA SALIDA', style: 'tableHeader' }
                 ], 
-                ...obj1.empleado.map(obj3 => {
+                ...arr_emp.map(obj3 => {
                   c = c + 1
                   return [
                     { style: 'itemsTableCentrado', text: c },
                     { style: 'itemsTable', text: obj3.name_empleado },
                     { style: 'itemsTable', text: obj3.cedula },
                     { style: 'itemsTable', text: obj3.codigo },
+                    { style: 'itemsTable', text: obj3.fec_final.split('T')[0] },
                   ]
                 }),
               ]
+            },
+            layout: {
+              fillColor: function (rowIndex) {
+                return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+              }
             }
           });
   
@@ -480,13 +494,14 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
       n.push({
         style: 'tableMarginEmp',
         table: {
-          widths: ['auto', '*', 'auto','auto'],
+          widths: ['auto', '*', 'auto','auto', 'auto'],
           body: [
             [
               { text: 'N°', style: 'tableHeader' },
               { text: 'EMPLEADO', style: 'tableHeader' },
               { text: 'CÉDULA', style: 'tableHeader' },
-              { text: 'CÓDIGO', style: 'tableHeader' }
+              { text: 'CÓDIGO', style: 'tableHeader' },
+              { text: 'FECHA SALIDA', style: 'tableHeader' }
             ], 
             ...arr_emp.map(obj3 => {
               c = c + 1
@@ -495,9 +510,15 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
                 { style: 'itemsTable', text: obj3.name_empleado },
                 { style: 'itemsTable', text: obj3.cedula },
                 { style: 'itemsTable', text: obj3.codigo },
+                { style: 'itemsTable', text: obj3.fec_final.split('T')[0] },
               ]
             }),
           ]
+        },
+        layout: {
+          fillColor: function (rowIndex) {
+            return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+          }
         }
       });
     }
