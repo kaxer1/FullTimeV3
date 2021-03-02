@@ -140,7 +140,11 @@
                 <div class="d-flex justify-content-around">
                     <button mat-button type="button" class="btn btn-sm" [disabled]=" !fechasForm.valid"
                         (click)="VerFechas(fechasForm.value, 'pdf')">
-                        Obtener Reporte
+                        Obtener Reporte PDF
+                    </button>
+                    <button mat-button type="button" class="btn btn-sm" [disabled]=" !fechasForm.valid"
+                        (click)="VerFechas(fechasForm.value, 'excel')">
+                        Obtener Reporte EXCEL
                     </button>
                     <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
                     </button>

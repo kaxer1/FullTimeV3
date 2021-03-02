@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetricaAtrasosEmpleado = exports.MetricaPermisosEmpleado = exports.MetricaVacacionesEmpleado = exports.MetricaHorasExtraEmpleado = exports.GraficaSalidasAnticipadas = exports.GraficaMarcaciones = exports.GraficaTiempoJornada_VS_HorasExtras = exports.GraficaJornada_VS_HorasExtras = exports.GraficaHorasExtras = exports.GraficaAsistencia = exports.GraficaAtrasos = exports.GraficaInasistencia = void 0;
 const SubMetodosGraficas_1 = require("./SubMetodosGraficas");
 exports.GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GRAFICAS_CONTROLADOR = void 0;
 const MetodosGraficas_1 = require("../../libs/MetodosGraficas");
 class GraficasControlador {
     AdminHorasExtrasMicro(req, res) {

@@ -178,7 +178,7 @@ export class AlimentosGeneralComponent implements OnInit {
               this.LimpiarFechas();
             }
             else if (archivo === 'excel') {
-              this.exportToExcelTimbres(form);
+              this.exportToExcelAlimentacion(form);
               this.LimpiarFechas();
             }
           });
@@ -194,7 +194,7 @@ export class AlimentosGeneralComponent implements OnInit {
               this.LimpiarFechas();
             }
             else if (archivo === 'excel') {
-              this.exportToExcelTimbres(form);
+              this.exportToExcelAlimentacion(form);
               this.LimpiarFechas();
             }
           });
@@ -207,17 +207,17 @@ export class AlimentosGeneralComponent implements OnInit {
               this.LimpiarFechas();
             }
             else if (archivo === 'excel') {
-              this.exportToExcelTimbres(form);
+              this.exportToExcelAlimentacion(form);
               this.LimpiarFechas();
             }
           }, error => {
             this.toastr.info('No existen registros en el periodo indicado.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
               timeOut: 10000,
             }).onTap.subscribe(obj => {
-              if (archivo === 'pdf') {
-                this.generarPdf('open');
-                this.LimpiarFechas();
-              }
+
+              this.generarPdf('open');
+              this.LimpiarFechas();
+
             });
           });
         });
@@ -608,72 +608,72 @@ export class AlimentosGeneralComponent implements OnInit {
   /****************************************************************************************************** 
     *                                       MÉTODO PARA EXPORTAR A EXCEL
     ******************************************************************************************************/
-  exportToExcelTimbres(form) {
+  exportToExcelAlimentacion(form) {
     var j = 0;
-
-    const wst: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.timbres.map(obj => {
-      if (obj.accion === 'E' || obj.accion === '1') {
-        this.accionT = 'Entrada';
-      }
-      else if (obj.accion === 'S' || obj.accion === '2') {
-        this.accionT = 'Salida';
-      }
-      else if (obj.accion === 'EA' || obj.accion === '3') {
-        this.accionT = 'Entrada Almuerzo';
-      }
-      else if (obj.accion === 'SA' || obj.accion === '4') {
-        this.accionT = 'Salida Almuerzo';
-      }
-      else if (obj.accion === 'EP' || obj.accion === '5') {
-        this.accionT = 'Entrada Permiso';
-      }
-      else if (obj.accion === 'SP' || obj.accion === '6') {
-        this.accionT = 'Salida Permiso';
-      }
-      var day = moment(obj.fec_hora_timbre).day()
+    const wsp: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.planificados.map(obj => {
       return {
         N_REGISTROS: j = j + 1,
-        DIA_TIMBRE: moment.weekdays(day).charAt(0).toUpperCase() + moment.weekdays(day).slice(1),
-        FECHA_TIMBRE: moment(obj.fec_hora_timbre).format('DD/MM/YYYY'),
-        HORA_TIMBRE: moment(obj.fec_hora_timbre).format('HH:mm:ss'),
-        ID_RELOJ: obj.id_reloj,
-        ACCION: this.accionT,
-        OBSERVACION: obj.observacion,
+        TIPO_COMIDA: obj.comida_tipo,
+        MENU: obj.menu,
+        PLATO: obj.plato,
+        DESCRIPCION: obj.observacion,
+        CANTIDAD: parseInt(obj.cantidad),
+        COSTO: obj.valor,
+        COSTO_TOTAL: obj.total,
       }
     }));
-
-    const header = Object.keys(this.timbres[0]); // columns name
-
+    const header = Object.keys(this.planificados[0]); // columns name
     var wscols = [];
     for (var i = 0; i < header.length; i++) {  // columns length added
       wscols.push({ wpx: 110 })
     }
-    wst["!cols"] = wscols;
+    wsp["!cols"] = wscols;
 
-    /* wse["!A1"] = {
-       fill: {
-         patternType: "none", // none / solid
-         fgColor: { rgb: "FFFFAA00" },
-         bgColor: { rgb: "FFFFFFFF" }
-       },
-       font: {
-         name: 'Times New Roman',
-         sz: 16,
-         color: { rgb: "#FF000000" },
-         bold: true,
-         italic: false,
-         underline: false
-       },
-       border: {
-         top: { style: "thin", color: { auto: 1 } },
-         right: { style: "thin", color: { auto: 1 } },
-         bottom: { style: "thin", color: { auto: 1 } },
-         left: { style: "thin", color: { auto: 1 } }
-       }
-     };*/
+    var i = 0;
+    const wss: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.solicitados.map(obj => {
+      return {
+        N_REGISTROS: i = i + 1,
+        TIPO_COMIDA: obj.comida_tipo,
+        MENU: obj.menu,
+        PLATO: obj.plato,
+        DESCRIPCION: obj.observacion,
+        CANTIDAD: parseInt(obj.cantidad),
+        COSTO: obj.valor,
+        COSTO_TOTAL: obj.total,
+      }
+    }));
+    const header2 = Object.keys(this.solicitados[0]); // columns name
+    var wscols2 = [];
+    for (var i = 0; i < header2.length; i++) {  // columns length added
+      wscols2.push({ wpx: 110 })
+    }
+    wss["!cols"] = wscols2;
+   
+    var k = 0;
+    const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.extras.map(obj => {
+      return {
+        N_REGISTROS: k = k + 1,
+        TIPO_COMIDA: obj.comida_tipo,
+        MENU: obj.menu,
+        PLATO: obj.plato,
+        DESCRIPCION: obj.observacion,
+        CANTIDAD: parseInt(obj.cantidad),
+        COSTO: obj.valor,
+        COSTO_TOTAL: obj.total,
+      }
+    }));
+    const header3 = Object.keys(this.extras[0]); // columns name
+    var wscols3 = [];
+    for (var i = 0; i < header3.length; i++) {  // columns length added
+      wscols3.push({ wpx: 110 })
+    }
+    wse["!cols"] = wscols3;
+    
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wst, 'Timbres');
-    xlsx.writeFile(wb, "Timbres - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
+    xlsx.utils.book_append_sheet(wb, wsp, 'Alimentos Planificados');
+    xlsx.utils.book_append_sheet(wb, wss, 'Alimentos Solicitados');
+    xlsx.utils.book_append_sheet(wb, wse, 'Alimentos Extras');
+    xlsx.writeFile(wb, "Alimentacion - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
 
 }
