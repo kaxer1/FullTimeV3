@@ -36,6 +36,23 @@
 .boton-cin { background: linear-gradient(to right, rgb(255, 67, 224), rgb(185, 45, 162));}
 .boton-sei { background: linear-gradient(to right, rgb(0, 119, 255), rgb(0, 84, 180));}
 
+#charts_inasistencia { width: 100%; height: 350px;}
+#charts_hora_extra { width: 100%; height: 350px;}
+#charts_asistencia { width: 100%; height: 350px;}
+#charts_retrasos { width: 100%; height: 350px;}
+#charts_marcaciones { width: 100%; height: 350px;}
+#charts_tiempo_jornada { width: 100%; height: 350px;}
+#charts_jornada_hora_extra { width: 100%; height: 350px;}
+#charts_salidas_antes { width: 100%; height: 350px;}
+
+.scroll-box {
+    overflow-y: scroll;
+    height: 100%;
+    overflow-x: scroll;
+    width: 100%;
+    padding: 1rem;
+}
+
 @media only screen and (max-width: 800px) {
     
     .btn-lg {

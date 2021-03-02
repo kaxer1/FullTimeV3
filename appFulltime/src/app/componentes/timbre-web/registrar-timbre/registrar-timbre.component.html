@@ -1,35 +1,36 @@
-<div class="barraTitulo">
-    <span>Timbres</span>
-</div>
-<div>
-    <span><b>Fecha:</b> {{timbre}} <b>Hora:</b> {{Hora}}</span>
-</div>
-<form [formGroup]="TimbreForm">
-    <div class="container">
-        <br>
-        <div class="nota">
-            <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Enviar
-                timbre.</span>
-        </div>
-        <div class="d-flex flex-wrap justify-content-between">
-            <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(1)">Inicio Jornada Laboral</button>
-            <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(2)">Fin Jornada Laboral</button>
-            <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(3)">Inicio Almuerzo</button>
-            <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(4)">Fin Almuerzo</button>
-            <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(5)">Inicio Permiso</button>
-            <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(6)">Fin Permiso</button>
-            <mat-form-field>
-                <mat-label>Observación</mat-label>
-                <input matInput [formControl]="observacionF">
-                <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
-                    matTooltip="Ingresar una nota que indique el motivo del timbre">
-                    help_outline</mat-icon>
-            </mat-form-field>
-        </div>
+<div class="scrollbar scrollbar-primary">
+    <div class="barraTitulo">
+        <span>Timbres</span>
     </div>
-</form>
-<div class="d-flex flex-wrap justify-content-around">
-    <button mat-button class="btn" [disabled]="!TimbreForm.valid" (click)="insertarTimbre(TimbreForm.value)">Enviar
-        Timbre</button>
-    <button mat-button class="btn" (click)="dialogRef.close({close: true})">Salir</button>
+    <div>
+        <span><b>Fecha:</b> {{timbre}} <b>Hora:</b> {{Hora}}</span>
+    </div>
+    <form [formGroup]="TimbreForm">
+        <div class="container">
+            <br>
+            <div class="nota">
+                <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón enviar timbre.</span>
+            </div>
+            <div class="d-flex flex-wrap justify-content-between">
+                <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(1)">Inicio Jornada Laboral</button>
+                <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(2)">Fin Jornada Laboral</button>
+                <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(3)">Inicio Almuerzo</button>
+                <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(4)">Fin Almuerzo</button>
+                <button mat-button id="botonTimbreInicio" (click)="AlmacenarDatos(5)">Inicio Permiso</button>
+                <button mat-button id="botonTimbreFin" (click)="AlmacenarDatos(6)">Fin Permiso</button>
+                <mat-form-field>
+                    <mat-label>Observación</mat-label>
+                    <input matInput [formControl]="observacionF">
+                    <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                        matTooltip="Ingresar una nota que indique el motivo del timbre">
+                        help_outline</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+    <div class="d-flex flex-wrap justify-content-around">
+        <button mat-button class="btn" [disabled]="!TimbreForm.valid" (click)="insertarTimbre(TimbreForm.value)">Enviar
+            Timbre</button>
+        <button mat-button class="btn" (click)="dialogRef.close({close: true})">Salir</button>
+    </div>
 </div>

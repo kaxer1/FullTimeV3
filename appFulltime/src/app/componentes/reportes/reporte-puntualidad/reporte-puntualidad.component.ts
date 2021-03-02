@@ -324,7 +324,7 @@ export class ReportePuntualidadComponent implements OnInit {
   generarPdf(action) {
     const documentDefinition = this.getDocumentDefinicion();
     var f = new Date()
-    let doc_name = "Reporte atrasos" + f.toLocaleString() + ".pdf";
+    let doc_name = "Reporte puntualidad" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -338,7 +338,7 @@ export class ReportePuntualidadComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'landscape',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 40, 60, 40, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -364,11 +364,12 @@ export class ReportePuntualidadComponent implements OnInit {
           fontSize: 10
         }
       },
+      //  | 
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
-        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte de Empleados Puntuales', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+        { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -40, 0, 10] },
+        { text: 'Reporte de Empleados Puntuales', bold: true, fontSize: 13, alignment: 'center', margin: [0, 0, 0, 10] },
+        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -436,7 +437,7 @@ export class ReportePuntualidadComponent implements OnInit {
             { text: 'Cargo', style: 'tableHeader'},
             { text: 'Contrato', style: 'tableHeader'},
             { text: 'Color', style: 'tableHeader'},
-            { text: 'Dias Puntuales', style: 'tableHeader'}
+            { text: 'Días Puntuales', style: 'tableHeader'}
           ],
           ...arr_aux.map(obj => {
             c = c + 1
@@ -457,33 +458,52 @@ export class ReportePuntualidadComponent implements OnInit {
       }
     });
 
-    n.push({
-      style: 'tableMarginDep',
-      table: {
-        widths: ['*', '*', '*'],
-        body: [
-          [
-            { text: 'Color', style: 'tableHeader'},
-            { text: 'Parametro', style: 'tableHeader'},
-            { text: 'Numero Empleado', style: 'tableHeader'}
-          ],
-          [ // parametro verde
-            { text: '', fillColor: '#06F313'},
-            { text: '>= ' + this.parametrizacion.mayor},
-            { text: cont_color_verde}
-          ],
-          [ // parametro naranja
-            { text: '', fillColor: '#F38306'},
-            { text: 'Entre ' + this.parametrizacion.mayor + ' días y ' + this.parametrizacion.menor + ' días.'},
-            { text: cont_color_naranja}
-          ],
-          [ // parametro rojo
-            { text: '', fillColor: '#EC2E05'},
-            { text: '<= ' + this.parametrizacion.menor},
-            { text: cont_color_rojo}
-          ]
-        ]
-      }
+    n.push({ 
+      bold: true, fontSize: 8, margin: [0, 5, 0, 5],
+      text: 'Color Verde: Mayor o igual a ' + this.parametrizacion.mayor +' días significa que el o los empleados con esta cantidad de días son muy putuales.' 
+    })
+    n.push({ 
+      bold: true, fontSize: 8, margin: [0, 0, 0, 5],
+      text: 'Color Naranja: Días entre ' + this.parametrizacion.mayor + ' y ' +  this.parametrizacion.menor +' son empleados que tienen un margen de puntualidad aceptable' 
+    })
+    n.push({ 
+      bold: true, fontSize: 8,
+      text: 'Color Rojo: Menor o igual a ' + this.parametrizacion.menor + ' días significa que el o los empleados con esta cantidad de días tienen más atrasos laborales que días puntuales.'
+    })
+
+    n.push({ 
+      columns: [
+				{ width: 250, text: '' },
+        {
+          style: 'tableMarginDep',
+          table: {
+            widths: [30, 'auto', 'auto'],
+            body: [
+              [
+                { text: 'Color', style: 'tableHeader'},
+                { text: 'Parámetro', style: 'tableHeader'},
+                { text: 'Cantidad Colaboradores', style: 'tableHeader'}
+              ],
+              [ // parametro verde
+                { text: '', fillColor: '#06F313'},
+                { text: '>= ' + this.parametrizacion.mayor, style: 'itemsTableCentrado'},
+                { text: cont_color_verde, style: 'itemsTableCentrado'}
+              ],
+              [ // parametro naranja
+                { text: '', fillColor: '#F38306'},
+                { text: 'Entre ' + this.parametrizacion.mayor + ' días y ' + this.parametrizacion.menor + ' días.', style: 'itemsTableCentrado'},
+                { text: cont_color_naranja, style: 'itemsTableCentrado'}
+              ],
+              [ // parametro rojo
+                { text: '', fillColor: '#EC2E05'},
+                { text: '<= ' + this.parametrizacion.menor, style: 'itemsTableCentrado'},
+                { text: cont_color_rojo, style: 'itemsTableCentrado'}
+              ]
+            ]
+          }
+        },
+				{ width: 250, text: '' }
+			]
     });
    
     return n

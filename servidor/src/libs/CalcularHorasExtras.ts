@@ -13,13 +13,13 @@ export const CalcularHoraExtra = async function(id_empleado: number, fec_desde: 
         // console.log('Codigo: ',codigo);
 
         let ids = await CargoContratoByFecha(id_empleado, fec_desde, fec_hasta);
-        console.log('Contrato y cargo', ids);
+        // console.log('Contrato y cargo', ids);
         if (ids[0].message) {
             return ids[0]
         }
         
         let cg_horas_extras = await CatalogoHorasExtras();
-        console.log('Catalgo Horas Extras', cg_horas_extras);
+        // console.log('Catalgo Horas Extras', cg_horas_extras);
         
         let horas_extras = await Promise.all(ids.map(async(obj) => {
             return await ListaHorasExtras(cg_horas_extras, codigo, obj.id_cargo, fec_desde, fec_hasta, parseInt(obj.sueldo), obj.hora_trabaja)
@@ -29,8 +29,8 @@ export const CalcularHoraExtra = async function(id_empleado: number, fec_desde: 
             return await FeriadosPorIdCargo(obj.id_cargo, fec_desde, fec_hasta)
         }))
 
-        // console.log('Lista de horas extras ===', horas_extras[0]);
-        console.log('Lista de feriados ===', feriados[0]);
+        console.log('Lista de horas extras ===', horas_extras[0]);
+        // console.log('Lista de feriados ===', feriados[0]);
 
         let ArrayDatos = {
             info: ids,
@@ -69,6 +69,8 @@ async function FeriadosPorIdCargo(id_cargo: number, fec_desde: Date, fec_hasta: 
 function SumaValorPagoEmpleado(horas_extras: any[]) {
     let sumador: number = 0;
     horas_extras.forEach(obj => {
+        console.log('Valor pago',obj.calculos[0].valor_pago);
+        
         sumador = sumador + obj.calculos[0].valor_pago
     });
 
@@ -116,14 +118,14 @@ async function ListaHorasExtras(cg_horas_extras: any,codigo: number, id_cargo: n
     arrayUnido.forEach(obj => {
         obj.calculos = obj.valores_calculos.map((res:any) => {  
             if (res.tipo_funcion === 1) {
-                console.log('funcion 1');
+                // console.log('funcion 1');
                 
                 return 0
             } else if (res.tipo_funcion === 2) {
-                console.log('funcion 2');
+                // console.log('funcion 2');
                 return HorasSuplementarias(valor_dia, valor_hora, obj.tiempo_autorizado || obj.num_hora, res.reca_porcentaje)
             } else if (res.tipo_funcion === 3) {
-                console.log('funcion 3');
+                // console.log('funcion 3');
                 return 0
             }
         }) || 0;
@@ -134,6 +136,7 @@ async function ListaHorasExtras(cg_horas_extras: any,codigo: number, id_cargo: n
 function HorasSuplementarias(valor_dia: number, valor_hora: number, num_hora: number, porcentaje: any ) {
     const vr =  porcentaje * valor_hora
     const vht = valor_hora + vr;
+    console.log(num_hora);
     const vp = vht * num_hora;
     console.log(vr, vht, vp);
     return {
@@ -168,7 +171,7 @@ async function HorasExtrasSolicitadas(id_empleado: number, id_cargo: number, fec
                 fec_final: new Date(f2.toJSON().split('.')[0]),
                 descripcion: obj.descripcion,
                 num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                tiempo_autorizado: obj.tiempo_autorizado,
+                tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
                 valores_calculos: new Array,
                 calculos: new Array,
                 nocturno: false,
@@ -212,7 +215,7 @@ async function PlanificacionHorasExtrasSolicitadas(id_empleado: number, id_cargo
 }
 
 async function ObtenerTimbres(id_empleado: number, fec_desde: string, fec_hasta: string) {
-    console.log('$$$$$$$$$$$$', fec_desde, fec_hasta);
+    // console.log('$$$$$$$$$$$$', fec_desde, fec_hasta);
     var accion = 'EoS'
     return await pool.query('SELECT fec_hora_timbre, accion FROM timbres WHERE id_empleado = $1 AND accion = $4 AND fec_hora_timbre BETWEEN $2 AND $3 ORDER BY fec_hora_timbre',[id_empleado, fec_desde, fec_hasta, accion])
     .then(result => { 

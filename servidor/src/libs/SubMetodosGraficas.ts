@@ -124,8 +124,8 @@ async function HorasExtrasSolicitadasGrafica(fec_desde: Date, fec_hasta: Date) {
             var f2 = new Date(obj.fec_final)
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
             return {
@@ -135,8 +135,8 @@ async function HorasExtrasSolicitadasGrafica(fec_desde: Date, fec_hasta: Date) {
                 fec_inicio: new Date(f1.toJSON().split('.')[0]),
                 fec_final: new Date(f2.toJSON().split('.')[0]),
                 descripcion: obj.descripcion,
-                num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                num_hora: HHMMtoSegundos(obj.num_hora) / 3600,
+                tiempo_autorizado: HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                 codigo: obj.codigo
             }
         }))
@@ -153,8 +153,8 @@ async function PlanificacionHorasExtrasSolicitadasGrafica( fec_desde: Date, fec_
             var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
         return {
@@ -164,22 +164,22 @@ async function PlanificacionHorasExtrasSolicitadasGrafica( fec_desde: Date, fec_
             fec_inicio: new Date(f1.toJSON().split('.')[0]),
             fec_final: new Date(f2.toJSON().split('.')[0]),
             descripcion: obj.descripcion,
-            num_hora: HHMMtoHorasDecimal(obj.horas_totales),
-            tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+            num_hora: HHMMtoSegundos(obj.horas_totales) / 3600,
+            tiempo_autorizado: HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
             codigo: obj.codigo
         }
     }))
     })
 }
 
-export const HHMMtoHorasDecimal = function (dato: any) {
+export const HHMMtoSegundos = function (dato: any) { // Tiempo saldra en segundos
     if (dato === '') return 0
     if (dato === null) return 0
     // if (dato === 0) return 0
     // console.log(dato);
-    var h = parseInt(dato.split(':')[0]);
-    var m = parseInt(dato.split(':')[1])/60;
-    var s = parseInt(dato.split(':')[2])/3600;
+    var h = parseInt(dato.split(':')[0])*3600;
+    var m = parseInt(dato.split(':')[1])*60;
+    var s = parseInt(dato.split(':')[2]);
     // console.log(h, '>>>>>', m);
     return h + m + s
 }
@@ -245,7 +245,7 @@ export const BuscarTimbresEoSModelado = async function (fec_inicio: string, fec_
             return (ele.registros != 0)
         }).map((ele: any) => {
             ele.registros.forEach((obj1: any) => {
-                obj1.fec_hora_timbre = HHMMtoHorasDecimal(obj1.fec_hora_timbre.split(' ')[1])
+                obj1.fec_hora_timbre = HHMMtoSegundos(obj1.fec_hora_timbre.split(' ')[1]) / 3600
             });
             return ele
         });
@@ -275,8 +275,8 @@ export const ModelarAtrasos = async function (obj: any, fec_inicio: string, fec_
     }
     return array.map(ele => {
         let retraso: boolean = false;
-        var timbre = HHMMtoHorasDecimal(obj.fec_hora_timbre.split(' ')[1]) 
-        var hora = HHMMtoHorasDecimal(ele.hora) + ele.minu_espera/60;
+        var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) 
+        var hora = HHMMtoSegundos(ele.hora) + ele.minu_espera*60;
 
         (timbre > hora ) ? retraso = true : retraso = false;
 
@@ -304,8 +304,8 @@ export const ModelarTiempoJornada = async function (obj: any, fec_inicio: string
     }
     return array.map(ele => {
         let retraso: boolean = false;
-        var timbre = HHMMtoHorasDecimal(obj.fec_hora_timbre.split(' ')[1]) 
-        var hora = HHMMtoHorasDecimal(ele.hora) + ele.minu_espera/60;
+        var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) 
+        var hora = HHMMtoSegundos(ele.hora) + ele.minu_espera/60;
 
         (timbre > hora ) ? retraso = true : retraso = false;
 
@@ -343,8 +343,8 @@ export const ModelarSalidasAnticipadas = async function (fec_inicio: string, fec
     let array = nuevo.filter(obj => {
         return obj.hora_salida.length != 0
     }).map((obj: any) => {
-        obj.hora_timbre = HHMMtoHorasDecimal(obj.hora_timbre)
-        obj.hora_salida = HHMMtoHorasDecimal(obj.hora_salida[0].hora)
+        obj.hora_timbre = HHMMtoSegundos(obj.hora_timbre) / 3600
+        obj.hora_salida = HHMMtoSegundos(obj.hora_salida[0].hora) / 3600
         return obj
     }).filter(obj => {
         var rango_inicio = obj.hora_salida - 3;
@@ -410,8 +410,8 @@ async function EmpleadoHorasExtrasSolicitadasGrafica(codigo: string | number,fec
             var f2 = new Date(obj.fec_final)
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
             return {
@@ -421,8 +421,8 @@ async function EmpleadoHorasExtrasSolicitadasGrafica(codigo: string | number,fec
                 fec_inicio: new Date(f1.toJSON().split('.')[0]),
                 fec_final: new Date(f2.toJSON().split('.')[0]),
                 descripcion: obj.descripcion,
-                num_hora: HHMMtoHorasDecimal(obj.num_hora),
-                tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                num_hora: HHMMtoSegundos(obj.num_hora) / 3600,
+                tiempo_autorizado: HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                 codigo: obj.codigo
             }
         }))
@@ -439,8 +439,8 @@ async function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo: string
             var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
-            const hora_inicio = HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-            const hora_final = HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+            const hora_inicio = HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+            const hora_final = HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
             f1.setUTCHours(f1.getUTCHours() - 5);
             f2.setUTCHours(f2.getUTCHours() - 5);
         return {
@@ -450,8 +450,8 @@ async function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo: string
             fec_inicio: new Date(f1.toJSON().split('.')[0]),
             fec_final: new Date(f2.toJSON().split('.')[0]),
             descripcion: obj.descripcion,
-            num_hora: HHMMtoHorasDecimal(obj.horas_totales),
-            tiempo_autorizado: HHMMtoHorasDecimal(obj.tiempo_autorizado),
+            num_hora: HHMMtoSegundos(obj.horas_totales) / 3600,
+            tiempo_autorizado: HHMMtoSegundos(obj.tiempo_autorizado) /3600,
             codigo: obj.codigo
         }
     }))
@@ -494,7 +494,7 @@ export const Empleado_Permisos_ModelarDatos = async function(codigo: string | nu
         for (let i = 0; i < diasHorario; i++) {
             let horario_res = {
                 fecha: fec_aux.toJSON().split('T')[0],
-                tiempo: (obj.dia + HHMMtoHorasDecimal(obj.hora_numero)) / diasHorario,
+                tiempo: (obj.dia + (HHMMtoSegundos(obj.hora_numero) /3600)) / diasHorario,
             };            
             aux_array.push(horario_res)
             fec_aux.setDate(fec_aux.getDate() + 1)

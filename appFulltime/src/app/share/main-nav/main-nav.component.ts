@@ -392,7 +392,11 @@ export class MainNavComponent implements OnInit {
   }
 
   irHome() {
-    this.router.navigate(['/home'], { relativeTo: this.route, skipLocationChange: false });
+    if (this.loginService.getRol() === 1) {
+      this.router.navigate(['/home'], { relativeTo: this.route, skipLocationChange: false });
+    } else {
+      this.router.navigate(['/estadisticas'], { relativeTo: this.route, skipLocationChange: false });
+    }
   }
 
   VerAccionPersonal() {

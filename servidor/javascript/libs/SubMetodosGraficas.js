@@ -129,8 +129,8 @@ function HorasExtrasSolicitadasGrafica(fec_desde, fec_hasta) {
                 var f2 = new Date(obj.fec_final);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = exports.HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = exports.HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = exports.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+                const hora_final = exports.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
                 return {
@@ -140,8 +140,8 @@ function HorasExtrasSolicitadasGrafica(fec_desde, fec_hasta) {
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: exports.HHMMtoHorasDecimal(obj.num_hora),
-                    tiempo_autorizado: exports.HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                    num_hora: exports.HHMMtoSegundos(obj.num_hora) / 3600,
+                    tiempo_autorizado: exports.HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                     codigo: obj.codigo
                 };
             })));
@@ -159,8 +159,8 @@ function PlanificacionHorasExtrasSolicitadasGrafica(fec_desde, fec_hasta) {
                 var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = exports.HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = exports.HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = exports.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+                const hora_final = exports.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
                 return {
@@ -170,24 +170,24 @@ function PlanificacionHorasExtrasSolicitadasGrafica(fec_desde, fec_hasta) {
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: exports.HHMMtoHorasDecimal(obj.horas_totales),
-                    tiempo_autorizado: exports.HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                    num_hora: exports.HHMMtoSegundos(obj.horas_totales) / 3600,
+                    tiempo_autorizado: exports.HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                     codigo: obj.codigo
                 };
             })));
         });
     });
 }
-exports.HHMMtoHorasDecimal = function (dato) {
+exports.HHMMtoSegundos = function (dato) {
     if (dato === '')
         return 0;
     if (dato === null)
         return 0;
     // if (dato === 0) return 0
     // console.log(dato);
-    var h = parseInt(dato.split(':')[0]);
-    var m = parseInt(dato.split(':')[1]) / 60;
-    var s = parseInt(dato.split(':')[2]) / 3600;
+    var h = parseInt(dato.split(':')[0]) * 3600;
+    var m = parseInt(dato.split(':')[1]) * 60;
+    var s = parseInt(dato.split(':')[2]);
     // console.log(h, '>>>>>', m);
     return h + m + s;
 };
@@ -248,7 +248,7 @@ exports.BuscarTimbresEoSModelado = function (fec_inicio, fec_final) {
                 return (ele.registros != 0);
             }).map((ele) => {
                 ele.registros.forEach((obj1) => {
-                    obj1.fec_hora_timbre = exports.HHMMtoHorasDecimal(obj1.fec_hora_timbre.split(' ')[1]);
+                    obj1.fec_hora_timbre = exports.HHMMtoSegundos(obj1.fec_hora_timbre.split(' ')[1]) / 3600;
                 });
                 return ele;
             });
@@ -275,8 +275,8 @@ exports.ModelarAtrasos = function (obj, fec_inicio, fec_final) {
         }
         return array.map(ele => {
             let retraso = false;
-            var timbre = exports.HHMMtoHorasDecimal(obj.fec_hora_timbre.split(' ')[1]);
-            var hora = exports.HHMMtoHorasDecimal(ele.hora) + ele.minu_espera / 60;
+            var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
+            var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
             (timbre > hora) ? retraso = true : retraso = false;
             return {
                 fecha: obj.fec_hora_timbre,
@@ -301,8 +301,8 @@ exports.ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
         }
         return array.map(ele => {
             let retraso = false;
-            var timbre = exports.HHMMtoHorasDecimal(obj.fec_hora_timbre.split(' ')[1]);
-            var hora = exports.HHMMtoHorasDecimal(ele.hora) + ele.minu_espera / 60;
+            var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
+            var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera / 60;
             (timbre > hora) ? retraso = true : retraso = false;
             return {
                 fecha: obj.fec_hora_timbre,
@@ -337,8 +337,8 @@ exports.ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
         let array = nuevo.filter(obj => {
             return obj.hora_salida.length != 0;
         }).map((obj) => {
-            obj.hora_timbre = exports.HHMMtoHorasDecimal(obj.hora_timbre);
-            obj.hora_salida = exports.HHMMtoHorasDecimal(obj.hora_salida[0].hora);
+            obj.hora_timbre = exports.HHMMtoSegundos(obj.hora_timbre) / 3600;
+            obj.hora_salida = exports.HHMMtoSegundos(obj.hora_salida[0].hora) / 3600;
             return obj;
         }).filter(obj => {
             var rango_inicio = obj.hora_salida - 3;
@@ -402,8 +402,8 @@ function EmpleadoHorasExtrasSolicitadasGrafica(codigo, fec_desde, fec_hasta) {
                 var f2 = new Date(obj.fec_final);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = exports.HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = exports.HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = exports.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+                const hora_final = exports.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
                 return {
@@ -413,8 +413,8 @@ function EmpleadoHorasExtrasSolicitadasGrafica(codigo, fec_desde, fec_hasta) {
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: exports.HHMMtoHorasDecimal(obj.num_hora),
-                    tiempo_autorizado: exports.HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                    num_hora: exports.HHMMtoSegundos(obj.num_hora) / 3600,
+                    tiempo_autorizado: exports.HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                     codigo: obj.codigo
                 };
             })));
@@ -432,8 +432,8 @@ function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo, fec_desde, f
                 var f2 = new Date(obj.fecha_hasta.toJSON().split('T')[0] + 'T' + obj.hora_fin);
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
-                const hora_inicio = exports.HHMMtoHorasDecimal(f1.toJSON().split('T')[1].split('.')[0]);
-                const hora_final = exports.HHMMtoHorasDecimal(f2.toJSON().split('T')[1].split('.')[0]);
+                const hora_inicio = exports.HHMMtoSegundos(f1.toJSON().split('T')[1].split('.')[0]) / 3600;
+                const hora_final = exports.HHMMtoSegundos(f2.toJSON().split('T')[1].split('.')[0]) / 3600;
                 f1.setUTCHours(f1.getUTCHours() - 5);
                 f2.setUTCHours(f2.getUTCHours() - 5);
                 return {
@@ -443,8 +443,8 @@ function EmpleadoPlanificacionHorasExtrasSolicitadasGrafica(codigo, fec_desde, f
                     fec_inicio: new Date(f1.toJSON().split('.')[0]),
                     fec_final: new Date(f2.toJSON().split('.')[0]),
                     descripcion: obj.descripcion,
-                    num_hora: exports.HHMMtoHorasDecimal(obj.horas_totales),
-                    tiempo_autorizado: exports.HHMMtoHorasDecimal(obj.tiempo_autorizado),
+                    num_hora: exports.HHMMtoSegundos(obj.horas_totales) / 3600,
+                    tiempo_autorizado: exports.HHMMtoSegundos(obj.tiempo_autorizado) / 3600,
                     codigo: obj.codigo
                 };
             })));
@@ -487,7 +487,7 @@ exports.Empleado_Permisos_ModelarDatos = function (codigo, fec_desde, fec_hasta)
             for (let i = 0; i < diasHorario; i++) {
                 let horario_res = {
                     fecha: fec_aux.toJSON().split('T')[0],
-                    tiempo: (obj.dia + exports.HHMMtoHorasDecimal(obj.hora_numero)) / diasHorario,
+                    tiempo: (obj.dia + (exports.HHMMtoSegundos(obj.hora_numero) / 3600)) / diasHorario,
                 };
                 aux_array.push(horario_res);
                 fec_aux.setDate(fec_aux.getDate() + 1);

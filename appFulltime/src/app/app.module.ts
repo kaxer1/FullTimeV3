@@ -2,13 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ChartsModule } from 'ng2-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { ScrollingModule } from '@angular/cdk/scrolling'
 import { JwPaginationModule } from 'jw-angular-pagination';
 
@@ -338,6 +336,8 @@ import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/det
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
+import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -600,6 +600,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     VistaMenuComponent,
     EditarDetalleMenuComponent,
     FuncionesComponent,
+    ConfigReportFirmasHorasExtrasComponent,
+    FecTimbrePipe,
   ],
 
   imports: [
@@ -618,7 +620,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatListModule,
     ImageUploadModule.forRoot(),
     FontAwesomeModule,
-    ChartsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -642,7 +643,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatTableModule,
     MatPaginatorModule,
     MatTabsModule,
-    NgxEchartsModule,
     MatDatepickerModule, 
     MatNativeDateModule,
     MatTabsModule,

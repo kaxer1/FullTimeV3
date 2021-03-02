@@ -326,7 +326,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 30, 60, 30, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -337,40 +337,58 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
         
-        return {
-          margin: 10,
-          columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', opacity: 0.3
-                }
-              ],
+        return [
+          {
+            table: {
+              widths: ['auto','auto'],
+              body: [
+                [
+                  { text: 'Tiem Dec: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Tiempo del atraso en hora decimal.', border: [false, false, false, false], style: ['quote', 'small'] },
+                ],
+                [
+                  { text: 'HH:MM:SS ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Horas, minutos y segundos.', border: [false, false, false, false], style: ['quote', 'small'] },
+                ]
+              ]
             }
-          ],
-          fontSize: 10
-        }
+          },
+          {
+            margin: [10,2,0,-2],
+            columns: [
+              { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+              { text: [
+                  {
+                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                    alignment: 'right', opacity: 0.3
+                  }
+                ],
+              }
+            ],
+            fontSize: 10
+          }
+        ]
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte - Atrasos Justificados y No Justificados', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+        { text: 'Reporte - Atrasos Justificados y No Justificados', bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5] },
+        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5]  },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
       ],
       styles: {
-        tableTotal: { fontSize: 20, bold: true, alignment: 'center', fillColor: this.p_color },
-        tableTotalSucursal: { fontSize: 20, bold: true, alignment: 'center', fillColor: this.s_color},
+        tableTotal: { fontSize: 13, bold: true, alignment: 'rigth', fillColor: this.p_color },
+        tableTotalSucursal: { fontSize: 13, bold: true, alignment: 'center', fillColor: this.s_color},
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
+        tableHeaderTotalSuc: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.s_color },
         itemsTable: { fontSize: 8 },
         itemsTableInfo: { fontSize: 10, margin: [0, 3, 0, 3], fillColor: this.s_color },
         itemsTableInfoBlanco: { fontSize: 10, margin: [0, 3, 0, 3]},
         itemsTableCentrado: { fontSize: 10, alignment: 'center' },
         subtitulos: { fontSize: 16, alignment: 'center', margin: [0, 5, 0, 10] },
-        tableMargin: { margin: [0, 0, 0, 20] },
+        tableMargin: { margin: [0, 0, 0, 10] },
         tableMarginCabecera: { margin: [0, 10, 0, 0] },
         CabeceraTabla: { fontSize: 12, alignment: 'center', margin: [0, 8, 0, 8], fillColor: this.p_color },
         quote: { margin: [5, -2, 0, -2], italics: true },
@@ -400,31 +418,33 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     let arr_total_suc = []
 
     n.push(
-      { text: 'N° REGISTROS TOTALES: ' + num_registros, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
+      { text: 'N° Registros totales: ' + num_registros, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5]  },
     )
 
     data.forEach((obj: IReporteAtrasos) => {
       arr_total_suc = []
-      n.push({
-        table: {
-          widths: ['*', '*'],
-          body: [
-            [
-              {
-                border: [true, true, false, true],
-                bold: true,
-                text: 'CIUDAD: ' + obj.ciudad,
-                style: 'itemsTableInfo'
-              },
-              {
-                border: [false, true, true, true],
-                text: 'SUCURSAL: ' + obj.name_suc,
-                style: 'itemsTableInfo'
-              }
+      if (this.bool_suc === true || this.bool_dep === true) {
+        n.push({
+          table: {
+            widths: ['*', '*'],
+            body: [
+              [
+                {
+                  border: [true, true, false, true],
+                  bold: true,
+                  text: 'CIUDAD: ' + obj.ciudad,
+                  style: 'itemsTableInfo'
+                },
+                {
+                  border: [false, true, true, true],
+                  text: 'SUCURSAL: ' + obj.name_suc,
+                  style: 'itemsTableInfo'
+                }
+              ]
             ]
-          ]
-        }
-      })
+          }
+        })
+      }
 
       obj.departamentos.forEach(obj1 => {
         arr_total_dep = [];
@@ -491,24 +511,33 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
           n.push({
             style: 'tableMargin',
             table: {
-              widths: ['auto', 'auto', 'auto', 100, '*', '*', 'auto', 'auto', 30, 40],
+              widths: ['auto','auto', 'auto', 'auto', '*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
               body: [
                 [
-                  { text: 'N°', style: 'tableHeader' },
-                  { text: 'Horario', style: 'tableHeader' },
-                  { text: 'Timbre', style: 'tableHeader' },
-                  { text: 'Tipo permiso', style: 'tableHeader' },
-                  { text: 'Desde', style: 'tableHeader' },
-                  { text: 'Hasta', style: 'tableHeader' },
+                  { rowSpan: 2, text: 'N°', style: 'tableHeader', margin: [0,7,0,0]},
+                  { rowSpan: 2, text: 'Fecha', style: 'tableHeader', margin: [0,7,0,0] },
+                  { rowSpan: 2, text: 'Horario', style: 'tableHeader', margin: [0,7,0,0] },
+                  { rowSpan: 2, text: 'Timbre', style: 'tableHeader', margin: [0,7,0,0] },
+                  { rowSpan: 2, text: 'Tipo permiso', style: 'tableHeader', margin: [0,7,0,0] },
+                  { rowSpan: 2, text: 'Desde', style: 'tableHeader', margin: [0,7,0,0] },
+                  { rowSpan: 2, text: 'Hasta', style: 'tableHeader', margin: [0,7,0,0] },
                   { colSpan: 2, text: 'Permiso', style: 'tableHeader' },
                   '',
                   { colSpan: 2, text: 'Atraso', style: 'tableHeader' },
                   ''
                 ],                  
+                [
+                  '', '', '', '', '', '', '', 
+                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
+                ],                  
                 ...obj2.timbres.map(obj3 => {
                   c = c + 1
                   return [
                     { style: 'itemsTableCentrado', text: c },
+                    { style: 'itemsTable', text: obj3.fecha },
                     { style: 'itemsTable', text: obj3.horario },
                     { style: 'itemsTable', text: obj3.timbre },
                     { style: 'itemsTable', text: '' },
@@ -521,15 +550,15 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
                   ]
                 }),
                 [
-                  { rowSpan: 2, colSpan: 6, text: 'TOTAL EMPLEADO', style: 'tableTotal' },
-                  '','','','','',
-                  { colSpan: 2, text: 'Permiso', style: 'tableHeader' },
-                  '',
-                  { colSpan: 2, text: 'Atraso', style: 'tableHeader' },
-                  ''
-                ],
-                [
+                  { rowSpan: 2, colSpan: 7, text: 'TOTAL EMPLEADO', style: 'tableTotal', margin:[0,5,15,0], alignment: 'right'},
                   '','','','','','',
+                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
+                ], 
+                [
+                  '','','','','','','',
                   { text: ' ', style: 'itemsTable'},
                   { text: ' ', style: 'itemsTable'},
                   { text: suma_dec, style: 'itemsTable'},
@@ -550,21 +579,26 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
           let suma_dep = this.SumarValoresArray(arr_total_dep)
           let suma_dep_HHMM = this.HorasDecimalToHHMM(parseFloat(suma_dep))
           n.push({
-            layout: 'headerLineOnly',
-            style: 'tableMargin',
             table: {
-              widths: ['auto', 'auto', 'auto', 100, '*', '*', 'auto', 'auto', 30, 40],
+              widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
               body: [
                 [
-                  { rowSpan: 2, colSpan: 6, text: 'TOTAL DEL DEPARTAMENTO', style: 'tableTotal' },
-                  '','','','','',
-                  { colSpan: 2, text: 'Permiso', style: 'tableHeader' },
+                  { rowSpan: 3, colSpan: 7, text: 'TOTAL DEPARTAMENTO: ' + obj1.name_dep, style: 'tableTotalSucursal', margin:[15,10,15,0], alignment: 'right'},
+                  '','','','','','',
+                  { colSpan: 2, text: 'Permiso', style: 'tableHeaderTotalSuc' },
                   '',
-                  { colSpan: 2, text: 'Atraso', style: 'tableHeader' },
+                  { colSpan: 2, text: 'Atraso', style: 'tableHeaderTotalSuc' },
                   ''
                 ],
                 [
-                  '','','','','','',
+                  '','','','','','','', 
+                  { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                  { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                  { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                ], 
+                [
+                  '','','','','','','',
                   { text: ' ', style: 'itemsTable'},
                   { text: ' ', style: 'itemsTable'},
                   { text: suma_dep, style: 'itemsTable'},
@@ -582,14 +616,26 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         let suma_suc = this.SumarValoresArray(arr_total_suc)
         let suma_suc_HHMM = this.HorasDecimalToHHMM(parseFloat(suma_suc))
         n.push({
-          layout: 'headerLineOnly',
-          style: 'tableMargin',
           table: {
-            widths: ['auto', 'auto', 'auto', 100, '*', '*', 'auto', 'auto', 30, 40],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
-                { colSpan: 6, text: 'TOTAL DE SUCURSAL', style: 'tableTotalSucursal' },
-                '','','','','',
+                { rowSpan: 3, colSpan: 7, text: 'TOTAL SUCURSAL: ' +  obj.name_suc, style: 'tableTotalSucursal', margin:[15,10,15,0], alignment: 'right'},
+                '','','','','','',
+                { colSpan: 2, text: 'Permiso', style: 'tableHeaderTotalSuc' },
+                '',
+                { colSpan: 2, text: 'Atraso', style: 'tableHeaderTotalSuc' },
+                ''
+              ],
+              [
+                '','','','','','','', 
+                { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
+              ], 
+              [
+                '','','','','','','',
                 { text: ' ', style: 'itemsTable'},
                 { text: ' ', style: 'itemsTable'},
                 { text: suma_suc, style: 'itemsTable'},

@@ -471,17 +471,18 @@
             <p class="bd-highlight" style="font-size: 13px; margin-top: -10px;">{{UserEmail}}</p>
           </div>
         </div>
+        <span class="example-spacer"></span>
+        <!-- Botón Home -->
+        <button mat-mini-fab style="margin-left: 10px" (click)="irHome()">
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix
+          matTooltipPosition="right" matTooltip="Ir inicio">home</mat-icon>
+        </button>
 
         <div>
           <button mat-icon-button [matMenuTriggerFor]="colapsado">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #colapsado="matMenu">
-            <!-- Botón Home -->
-            <button mat-menu-item (click)="irHome()">
-              <mat-icon>home</mat-icon>
-              <span>Inicio</span>
-            </button>
             <!-- Botón Configuraciones -->
             <button mat-menu-item (click)="AbrirSettings()">
               <mat-icon>settings</mat-icon>
@@ -834,8 +835,6 @@
           </mat-form-field>
         </form>
       </mat-toolbar-row>
-
-
 
     </mat-toolbar>
 

@@ -9,8 +9,8 @@
                     <h4>Timbres</h4>
                 </mat-card-header>
                 <mat-card-content>
-                    <b>N° timbres E y S: </b> <span>{{c.timbres_EoS}} </span> <br>
-                    <b>N° timbres almuerzo: </b> <span>{{c.timbres_AES}} </span> <br>
+                    <b>N° timbres Entrada y Salida: </b> <span>{{c.timbres_EoS}} </span> <br>
+                    <b>N° timbres almuerzos: </b> <span>{{c.timbres_AES}} </span> <br>
                     <b>N° timbres permisos: </b> <span>{{c.timbres_PES}} </span> <br>
                     <b>Cantidad de timbres: </b> <span>{{c.total_timbres}} </span>
                 </mat-card-content>
@@ -25,13 +25,15 @@
                     <b>Cargo: </b> <span>{{i.cargo}} </span> <br>
                     <b>Sueldo: </b> <span>{{i.sueldo}} </span> <br>
                     <b>Horas trabaja: </b> <span>{{i.hora_trabaja}} </span>
-                    <!-- <b></b> <span>{{i.fec_final.split('T')[0]}} </span>
-                    <b></b> <span>{{i.fec_inicio.split('T')[0]}} </span> -->
                 </mat-card-content>
             </mat-card>
         </div>
     </div>
 </div>
+<mat-form-field>
+    <mat-label>Filtro general de campos</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="2020...." #input>
+</mat-form-field>
 <div class="container" style="padding-bottom: 50px; text-align: center;">
     <div class="mat-elevation-z8" style="background: white;">
         <!-- <div id="TituloResultado">Resultado de búsqueda</div> -->
@@ -50,8 +52,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let t of timbres | paginate:tamanio_pagina:numero_pagina">
-                        <td>{{t.fec_hora_timbre.split('T')[0]}} {{t.fec_hora_timbre.split('T')[1].split('.')[0]}}</td>
+                    <tr *ngFor="let t of timbres | fecTimbre: filtroFechaTimbre | paginate:tamanio_pagina:numero_pagina">
+                        <td>{{t.fec_hora_timbre}}</td>
                         <td>{{t.accion}}</td>
                         <td>{{t.tecl_funcion}}</td>
                         <td>{{t.observacion}}</td>

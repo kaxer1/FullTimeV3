@@ -117,6 +117,7 @@ interface faltas {
 }
 
 export interface tim {
+    fecha: string,
     horario: string,
     timbre: string,
     atraso_dec: number,
@@ -156,9 +157,11 @@ export interface hora_trab {
     horarios: Array<horarios>,
     total_horario: string,
     total_timbres: string,
+    total_diferencia: string,
 }
 
 export interface horarios {
+    hora_diferencia: string,
     hora_horario: string,
     hora_timbre: string,
     accion: string,
