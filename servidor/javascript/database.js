@@ -9,7 +9,7 @@ const pool = new pg_pool_1.default({
     user: 'fulltime',
     host: '192.168.0.156',
     port: 5432,
-    database: 'fulltime_v_3',
+    database: 'fulltime_v3',
     //database: 'fullTimeV3',
     password: 'fulltime'
 });

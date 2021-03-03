@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.url = this.router.url;
     console.log(this.url);
-    this.Geolocalizar();
+    //this.Geolocalizar();
   }
 
   Geolocalizar() {
