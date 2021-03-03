@@ -1,8 +1,8 @@
 import { IHorarioCodigo, IModelarAnio, IModelarPie } from '../class/Model_graficas';
-import pool from '../database';
 import { BuscarTimbresByFecha, BuscarHorariosActivos, BuscarTimbresByCodigo_Fecha, 
-    HoraExtra_ModelarDatos, SumarValoresArray, BuscarTimbresEoS, ModelarAtrasos, 
-    BuscarTimbresEoSModelado, HHMMtoHorasDecimal} from './SubMetodosGraficas';
+    HoraExtra_ModelarDatos, SumarValoresArray, BuscarTimbresEoS, ModelarAtrasos, Empleado_Atrasos_ModelarDatos,
+    BuscarTimbresEoSModelado, HHMMtoSegundos, ModelarSalidasAnticipadas, Empleado_HoraExtra_ModelarDatos,
+    Empleado_Permisos_ModelarDatos, Empleado_Vacaciones_ModelarDatos} from './SubMetodosGraficas';
 
 export const GraficaInasistencia = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empresa, fec_inicio, fec_final);
@@ -88,25 +88,29 @@ export const GraficaInasistencia = async function (id_empresa: number, fec_inici
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
     
     return {
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'line', label: { backgroundColor: '#6a7985' } }
-        },
-        legend: { align: 'left', data: [{ name: 'inasistencias' }] },
-        grid: { left: '4%', containLabel: true },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
-        yAxis: { type: 'value', name: 'N° Inasistencias' },
-        series: [{
-            name: 'faltas',
-            data: valor_mensual,
-            type: 'line',
-            lineStyle: { color: 'rgb(20, 112, 233)' },
-            itemStyle: { color: 'rgb(20, 112, 233)' }
-        }],
+        datos: data,
+        datos_grafica: {
+            tooltip: { trigger: 'axis' },
+            legend: { data: ['faltas'] },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                name: 'Mes', 
+                data: meses 
+            },
+            yAxis: { type: 'value', name: 'N° Faltas'},
+            series: [
+                {
+                    name: 'faltas',
+                    type: 'line',
+                    data: valor_mensual
+                }
+            ]
+        }
     }
 }
 
-export const GraficaRetrasos = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
+export const GraficaAtrasos = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empresa, fec_inicio, fec_final);
     let timbres = await BuscarTimbresEoS(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0])
     // console.log(timbres);
@@ -183,37 +187,32 @@ export const GraficaRetrasos = async function (id_empresa: number, fec_inicio: D
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
     
     return {
-        color: ['#3398DB'],
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow' }
-        },
-        legend: {
-            align: 'left',
-            data: [{ name: 'faltas' }]
-        },
-        grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },
-        xAxis: [
-            {
+        datos: data,
+        datos_grafica: {
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            legend: {
+                align: 'left',
+                data: [{ name: 'faltas' }]
+            },
+            xAxis: {
                 name: 'Meses',
                 type: 'category',
                 data: meses,
                 axisTick: { alignWithLabel: true }
-            }
-        ],
-        yAxis: [{ type: 'value', name: 'N° Atrasos' }],
-        series: [{
-            name: 'retrasos',
-            type: 'bar',
-            barWidth: '60%',
-            data: valor_mensual
-        }]
-    }
+            },
+            yAxis: [{ type: 'value', name: 'N° Atrasos' }],
+            series: [{
+                name: 'retrasos',
+                type: 'bar',
+                barWidth: '60%',
+                data: valor_mensual
+            }]
+        }
+    } 
 }
 
 export const GraficaAsistencia = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
@@ -250,62 +249,32 @@ export const GraficaAsistencia = async function (id_empresa: number, fec_inicio:
     array = [];
 
     return {
-        tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b}: {c} ({d}%)'
-        },
-        legend: {
-            data: ['Ausencia justificada', 'Ausencia no justificada', 'Presente']
-        },
-        series: [
-            {
+        datos_grafica: {
+            tooltip: { trigger: 'item' },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+            },
+            series: {
                 name: 'Asistencia',
                 type: 'pie',
-                radius: ['15%', '30%'],
-                labelLine: {
-                    length: 30,
-                },
-                label: {
-                    formatter: '{a|{a}}{abg|}\n{hr|}\n  {b|{b}：}{c}  {per|{d}%}  ',
-                    backgroundColor: '#F6F8FC',
-                    borderColor: '#8C8D8E',
-                    borderWidth: 1,
-                    borderRadius: 4,
-                    
-                    rich: {
-                        a: {
-                            color: '#6E7079',
-                            lineHeight: 22,
-                            align: 'center'
-                        },
-                        hr: {
-                            borderColor: '#8C8D8E',
-                            width: '100%',
-                            borderWidth: 1,
-                            height: 0
-                        },
-                        b: {
-                            color: '#4C5058',
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            lineHeight: 33
-                        },
-                        per: {
-                            color: '#fff',
-                            backgroundColor: '#4C5058',
-                            padding: [3, 4],
-                            borderRadius: 4
-                        }
-                    }
-                },
+                radius: '50%',
                 data: [
                     { value: modelarPie.a_justifi.length, name: 'Ausencia justificada' },
                     { value: modelarPie.a_no_justi.length, name: 'Ausencia no justificada' },
                     { value: modelarPie.presente.length, name: 'Presente', selected: true}
-                ]
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
             }
-        ]
-    }    
+        }
+    }
+       
 }
 
 export const GraficaHorasExtras = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
@@ -381,22 +350,25 @@ export const GraficaHorasExtras = async function (id_empresa: number, fec_inicio
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
     
     return {
-        color: ['#3398DB'], 
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow'}
-        },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
-        yAxis: { type: 'value', name: 'N° Horas' },
-        series: [{
-            data: valor_mensual,
-            type: 'bar',
-            showBackground: true,
-            backgroundStyle: {
-                color: 'rgba(220, 220, 220, 0.8)'
-            }
-        }]       
-    }
+        datos: data,
+        datos_grafica: {
+            color: ['#3398DB'], 
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow'}
+            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Horas' },
+            series: [{
+                data: valor_mensual,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(220, 220, 220, 0.8)'
+                }
+            }]       
+        }
+    } 
 }
 
 export const GraficaJornada_VS_HorasExtras = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
@@ -482,7 +454,7 @@ export const GraficaJornada_VS_HorasExtras = async function (id_empresa: number,
         return obj.horario.length != 0
     }).map(obj => {
         obj.horario.forEach(ele => {
-            ele.hora = HHMMtoHorasDecimal(ele.hora)
+            ele.hora = HHMMtoSegundos(ele.hora) / 3600
         })
         return obj
     })
@@ -569,21 +541,21 @@ export const GraficaJornada_VS_HorasExtras = async function (id_empresa: number,
     let valor_mensual_tiempo = data_tiempo_jornada.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
 
     return {
-        tooltip: {
-            trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        legend: {
-            name: 'tiempo',
-            type: 'scroll',
-            orient: 'vertical',
-            right: 10,
-            top: 20,
-            bottom: 20,
-            data: ['Horas extra', 'Jornada']
-        },
-        series: [
-            {
+        datos_grafica: {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+                name: 'tiempo',
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: ['Horas extra', 'Jornada']
+            },
+            series: {
                 type: 'pie',
                 radius: '55%',
                 center: ['40%', '50%'],
@@ -599,8 +571,8 @@ export const GraficaJornada_VS_HorasExtras = async function (id_empresa: number,
                     }
                 }
             }
-        ]
-    }
+        }
+    } 
 }
 
 export const GraficaTiempoJornada_VS_HorasExtras = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
@@ -686,7 +658,7 @@ export const GraficaTiempoJornada_VS_HorasExtras = async function (id_empresa: n
         return obj.horario.length != 0
     }).map(obj => {
         obj.horario.forEach(ele => {
-            ele.hora = HHMMtoHorasDecimal(ele.hora)
+            ele.hora = HHMMtoSegundos(ele.hora) / 3600
         })
         return obj
     })
@@ -773,37 +745,37 @@ export const GraficaTiempoJornada_VS_HorasExtras = async function (id_empresa: n
 
     let valor_mensual_tiempo = data_tiempo_jornada.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
 
-
-    return {        
-        color: ['#003366', '#006699', '#4cabce', '#e5323e'],
-        tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow' }
-        },
-        legend: { data: ['Tiempo Jornada', 'Horas Extras'] },
-        xAxis: [
-            {
-                name: 'Meses',
-                type: 'category',
-                axisTick: {show: false},
-                data: meses
-            }
-        ],
-        yAxis: [ { type: 'value', name: 'N° horas' }],
-        series: [
-            {
-                name: 'Tiempo Jornada',
-                type: 'bar',
-                barGap: 0,
-                data: valor_mensual_tiempo
-            },
-            {
-                name: 'Horas Extras',
-                type: 'bar',
-                data: valor_mensual_hora_extra
-            }
-        ]      
+    let newArray = [];
+    for (let i = 0; i < meses.length; i++) {
+        let obj = {
+            mes: meses[i],
+            tiempo_j : valor_mensual_tiempo[i],
+            hora_extra : valor_mensual_hora_extra[i]
+        }
+        newArray.push(obj)
     }
+
+    return {
+        datos: 0,
+        datos_grafica: {
+            legend: {},
+            tooltip: {},
+            dataset: {
+                dimensions: ['mouth', 'Tiempo Jornada', 'Horas Extras'],
+                source: newArray.map(obj => {
+                    return {
+                        mouth: obj.mes, 'Tiempo Jornada': obj.tiempo_j, 'Horas Extras': obj.hora_extra
+                    }
+                })
+            },
+            xAxis: {type: 'category'},
+            yAxis: {},
+            series: [
+                {type: 'bar'},
+                {type: 'bar'}
+            ]
+        }
+    } 
 }
 
 export const GraficaMarcaciones = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
@@ -880,13 +852,13 @@ export const GraficaMarcaciones = async function (id_empresa: number, fec_inicio
     let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
     
     return {
-        baseOption: {     
+        datos: data,
+        datos_grafica: {     
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'line', label: { backgroundColor: '#6a7985' } }
             },
             legend: { align: 'left', data: [{ name: 'marcaciones'}] },
-            grid: { left: '4%', containLabel: true },
             xAxis: { type: 'category', name: 'Meses', data: meses},
             yAxis: { type: 'value', name: 'N° Timbres' },
             series: [{
@@ -896,35 +868,102 @@ export const GraficaMarcaciones = async function (id_empresa: number, fec_inicio
                 lineStyle: { color: 'rgb(20, 112, 233)' },
                 itemStyle: { color: 'rgb(20, 112, 233)' }
             }],
-        },
-        media: [ // each rule of media query is defined here
-            {
-                query: {
-                    minWidth: 200,
-                    maxHeight: 300,
-                    minAspectRatio: 1.3           // when length-to-width ratio is less than 1
-                },
-                option: {
-                    legend: {                   // legend is placed in middle-bottom
-                        right: 'center',
-                        bottom: 0,
-                        orient: 'horizontal'    // horizontal layout of legend
-                    },
+        }  
+    } 
+}
+
+export const GraficaSalidasAnticipadas = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
+    console.log(id_empresa, fec_inicio, fec_final);
+    let timbres = await ModelarSalidasAnticipadas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0])
+    console.log(timbres);
+    
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    timbres.forEach(obj => {
+        let fecha = new Date(obj.fecha);
+        // console.log(fecha.getMonth());
+        switch (fecha.getMonth()) {
+            case 0:
+                modelarAnio.enero.push(obj.diferencia_tiempo); break;
+            case 1:
+                modelarAnio.febrero.push(obj.diferencia_tiempo); break;
+            case 2:
+                modelarAnio.marzo.push(obj.diferencia_tiempo); break;
+            case 3:
+                modelarAnio.abril.push(obj.diferencia_tiempo); break;
+            case 4:
+                modelarAnio.mayo.push(obj.diferencia_tiempo); break;
+            case 5:
+                modelarAnio.junio.push(obj.diferencia_tiempo); break;
+            case 6:
+                modelarAnio.julio.push(obj.diferencia_tiempo); break;
+            case 7:
+                modelarAnio.agosto.push(obj.diferencia_tiempo); break;
+            case 8:
+                modelarAnio.septiembre.push(obj.diferencia_tiempo); break;
+            case 9:
+                modelarAnio.octubre.push(obj.diferencia_tiempo); break;
+            case 10:
+                modelarAnio.noviembre.push(obj.diferencia_tiempo); break;
+            case 11:
+                modelarAnio.diciembre.push(obj.diferencia_tiempo); break;
+            default: break;
+        }
+    });
+    
+    timbres = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: SumarValoresArray(modelarAnio.diciembre) }
+    ]
+
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
+    return {
+        datos: data,
+        datos_grafica: {
+            color: ['#3398DB'], 
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow'}
+            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Horas' },
+            series: [{
+                data: valor_mensual,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(220, 220, 220, 0.8)'
                 }
-            }
-        ]
-        
-    }   
+            }]
+        }   
+    }  
 }
-
-async function IdsEmpleados(id_empresa: number) {
-    return await pool.query('SELECT distinct co.id_empleado FROM sucursales AS s, cg_departamentos AS d, empl_cargos AS ca, empl_contratos AS co, empleados AS e WHERE s.id_empresa = $1 AND s.id = d.id_sucursal AND ca.id_sucursal = s.id AND d.id = ca.id_departamento AND co.id = ca.id_empl_contrato AND e.id = co.id_empleado AND e.estado = 1 ORDER BY e.apellido ASC',[id_empresa])
-        .then(result => {
-            return result.rows
-        })
-}
-
-
 
 /**
  * 
@@ -932,250 +971,394 @@ async function IdsEmpleados(id_empresa: number) {
  * 
  */
 
-export const MetricaHorasExtraEmpleado = async function (id_empleado: number, fec_inicio: Date, fec_final: Date) {
-    console.log(id_empleado, fec_inicio, fec_final);
+export const MetricaHorasExtraEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
+    console.log(codigo, id_empleado, fec_inicio, fec_final);
+    let horas_extras = await Empleado_HoraExtra_ModelarDatos(codigo, fec_inicio, fec_final)
     
-    // let ids = await IdsEmpleados(id_empresa);
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
 
+    horas_extras.forEach((obj: any) => {
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        // console.log(fecha.getMonth());
+        switch (fecha) {
+            case 1:
+                modelarAnio.enero.push(obj.tiempo); break;
+            case 2:
+                modelarAnio.febrero.push(obj.tiempo); break;
+            case 3:
+                modelarAnio.marzo.push(obj.tiempo); break;
+            case 4:
+                modelarAnio.abril.push(obj.tiempo); break;
+            case 5:
+                modelarAnio.mayo.push(obj.tiempo); break;
+            case 6:
+                modelarAnio.junio.push(obj.tiempo); break;
+            case 7:
+                modelarAnio.julio.push(obj.tiempo); break;
+            case 8:
+                modelarAnio.agosto.push(obj.tiempo); break;
+            case 9:
+                modelarAnio.septiembre.push(obj.tiempo); break;
+            case 10:
+                modelarAnio.octubre.push(obj.tiempo); break;
+            case 11:
+                modelarAnio.noviembre.push(obj.tiempo); break;
+            case 12:
+                modelarAnio.diciembre.push(obj.tiempo); break;
+            default: break;
+        }
+    });
+    // console.log(modelarAnio);
+    
+    horas_extras = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: SumarValoresArray(modelarAnio.diciembre) }
+    ]
+    // console.log(data);
+    
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
     return {
-        baseOption: {     
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    label: { backgroundColor: '#6a7985' }
-                }
-            },
-            legend: {
-                align: 'left',
-                data: [{
-                    name: 'hora extra'
-                }]
-            },
-            grid: {
-                left: '4%',
-                right: '4%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                // data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                data: ['Enero']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                name: 'hora extra',
-                // data: [30, 40, 35, 46, 27, 49, 15, 21, 32, 44, 10, 20],
-                data: [1],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
                 type: 'line',
-                lineStyle: { color: 'rgb(20, 112, 233)' },
-                itemStyle: { color: 'rgb(20, 112, 233)' }
-            }],
-        },
-        media: [ // each rule of media query is defined here
-            {
-                query: {
-                    minWidth: 200,
-                    maxHeight: 300,
-                    minAspectRatio: 1.3           // when length-to-width ratio is less than 1
-                },
-                option: {
-                    legend: {                   // legend is placed in middle-bottom
-                        right: 'center',
-                        bottom: 0,
-                        orient: 'horizontal'    // horizontal layout of legend
-                    },
-                }
+                label: { backgroundColor: '#6a7985' }
             }
-        ]
-        
+        },
+        legend: {
+            align: 'left',
+            data: [{
+                name: 'hora extra'
+            }]
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses },
+        yAxis: { type: 'value', name: 'N° Horas' },
+        series: {
+            name: 'hora extra',
+            data: valor_mensual,
+            type: 'line',
+            lineStyle: { color: 'rgb(20, 112, 233)' },
+            itemStyle: { color: 'rgb(20, 112, 233)' }
+        }
     }   
 }
 
-export const MetricaVacacionesEmpleado = async function (id_empleado: number, fec_inicio: Date, fec_final: Date) {
-    console.log(id_empleado, fec_inicio, fec_final);
-    
+export const MetricaVacacionesEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
+    console.log(codigo, id_empleado, fec_inicio, fec_final);
+    let vacaciones = await Empleado_Vacaciones_ModelarDatos(codigo, fec_inicio, fec_final)
     // let ids = await IdsEmpleados(id_empresa);
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    vacaciones.forEach((obj: any) => {
+        // console.log('VACACIONES',obj);
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        switch (fecha) {
+            case 1:
+                modelarAnio.enero.push(obj.n_dia); break;
+            case 2:
+                modelarAnio.febrero.push(obj.n_dia); break;
+            case 3:
+                modelarAnio.marzo.push(obj.n_dia); break;
+            case 4:
+                modelarAnio.abril.push(obj.n_dia); break;
+            case 5:
+                modelarAnio.mayo.push(obj.n_dia); break;
+            case 6:
+                modelarAnio.junio.push(obj.n_dia); break;
+            case 7:
+                modelarAnio.julio.push(obj.n_dia); break;
+            case 8:
+                modelarAnio.agosto.push(obj.n_dia); break;
+            case 9:
+                modelarAnio.septiembre.push(obj.n_dia); break;
+            case 10:
+                modelarAnio.octubre.push(obj.n_dia); break;
+            case 11:
+                modelarAnio.noviembre.push(obj.n_dia); break;
+            case 12:
+                modelarAnio.diciembre.push(obj.n_dia); break;
+            default: break;
+        }
+    });
+    // console.log(modelarAnio);
+    
+    vacaciones = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: SumarValoresArray(modelarAnio.diciembre) }
+    ]
+    // console.log(data);
+    
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
 
     return {
-        baseOption: {     
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    label: { backgroundColor: '#6a7985' }
-                }
-            },
-            legend: {
-                align: 'left',
-                data: [{
-                    name: 'vacaciones'
-                }]
-            },
-            grid: {
-                left: '4%',
-                right: '4%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                // data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                data: ['Enero']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                name: 'vacaciones',
-                // data: [30, 40, 35, 46, 27, 49, 15, 21, 32, 44, 10, 20],
-                data: [3],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
                 type: 'line',
-                lineStyle: { color: 'rgb(20, 112, 233)' },
-                itemStyle: { color: 'rgb(20, 112, 233)' }
-            }],
-        },
-        media: [ // each rule of media query is defined here
-            {
-                query: {
-                    minWidth: 200,
-                    maxHeight: 300,
-                    minAspectRatio: 1.3           // when length-to-width ratio is less than 1
-                },
-                option: {
-                    legend: {                   // legend is placed in middle-bottom
-                        right: 'center',
-                        bottom: 0,
-                        orient: 'horizontal'    // horizontal layout of legend
-                    },
-                }
+                label: { backgroundColor: '#6a7985' }
             }
-        ]
-        
+        },
+        legend: {
+            align: 'left',
+            data: [{ name: 'vacaciones'}]
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses },
+        yAxis: { type: 'value', name: 'N° Días' },
+        series: {
+            name: 'Dias',
+            data: valor_mensual,
+            type: 'line',
+            lineStyle: { color: 'rgb(20, 112, 233)' },
+            itemStyle: { color: 'rgb(20, 112, 233)' }
+        }     
     }   
 }
 
-export const MetricaPermisosEmpleado = async function (id_empleado: number, fec_inicio: Date, fec_final: Date) {
-    console.log(id_empleado, fec_inicio, fec_final);
-    
-    // let ids = await IdsEmpleados(id_empresa);
+export const MetricaPermisosEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
+    console.log(codigo, id_empleado, fec_inicio, fec_final);
 
+    let permisos = await Empleado_Permisos_ModelarDatos(codigo, fec_inicio, fec_final)
+
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    permisos.forEach((obj: any) => {
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        switch (fecha) {
+            case 1:
+                modelarAnio.enero.push(obj.tiempo); break;
+            case 2:
+                modelarAnio.febrero.push(obj.tiempo); break;
+            case 3:
+                modelarAnio.marzo.push(obj.tiempo); break;
+            case 4:
+                modelarAnio.abril.push(obj.tiempo); break;
+            case 5:
+                modelarAnio.mayo.push(obj.tiempo); break;
+            case 6:
+                modelarAnio.junio.push(obj.tiempo); break;
+            case 7:
+                modelarAnio.julio.push(obj.tiempo); break;
+            case 8:
+                modelarAnio.agosto.push(obj.tiempo); break;
+            case 9:
+                modelarAnio.septiembre.push(obj.tiempo); break;
+            case 10:
+                modelarAnio.octubre.push(obj.tiempo); break;
+            case 11:
+                modelarAnio.noviembre.push(obj.tiempo); break;
+            case 12:
+                modelarAnio.diciembre.push(obj.tiempo); break;
+            default: break;
+        }
+    });
+    // // console.log(modelarAnio);
+    
+    permisos = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: SumarValoresArray(modelarAnio.diciembre) }
+    ]
+    // // console.log(data);
+    
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
     return {
-        baseOption: {     
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    label: { backgroundColor: '#6a7985' }
-                }
-            },
-            legend: {
-                align: 'left',
-                data: [{
-                    name: 'hora extra'
-                }]
-            },
-            grid: {
-                left: '4%',
-                right: '4%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                // data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                data: ['Enero', 'Febrero']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                name: 'hora extra',
-                // data: [30, 40, 35, 46, 27, 49, 15, 21, 32, 44, 10, 20],
-                data: [33, 10],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
                 type: 'line',
-                lineStyle: { color: 'rgb(20, 112, 233)' },
-                itemStyle: { color: 'rgb(20, 112, 233)' }
-            }],
-        },
-        media: [ // each rule of media query is defined here
-            {
-                query: {
-                    minWidth: 200,
-                    maxHeight: 300,
-                    minAspectRatio: 1.3           // when length-to-width ratio is less than 1
-                },
-                option: {
-                    legend: {                   // legend is placed in middle-bottom
-                        right: 'center',
-                        bottom: 0,
-                        orient: 'horizontal'    // horizontal layout of legend
-                    },
-                }
+                label: { backgroundColor: '#6a7985' }
             }
-        ]
-        
+        },
+        legend: {
+            align: 'left',
+            data: [{
+                name: 'Permisos'
+            }]
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses },
+        yAxis: { type: 'value', name: 'N° tiempo' },
+        series: {
+            name: 'Dias',
+            data: valor_mensual,
+            type: 'line',
+            lineStyle: { color: 'rgb(20, 112, 233)' },
+            itemStyle: { color: 'rgb(20, 112, 233)' }
+        }     
     }   
 }
 
-export const MetricaAtrasosEmpleado = async function (id_empleado: number, fec_inicio: Date, fec_final: Date) {
+export const MetricaAtrasosEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empleado, fec_inicio, fec_final);
     
+    console.log(codigo, id_empleado, fec_inicio, fec_final);
+    let atrasos = await Empleado_Atrasos_ModelarDatos(codigo, fec_inicio, fec_final)
     // let ids = await IdsEmpleados(id_empresa);
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    atrasos.forEach((ele: any) => {
+        let fecha = parseInt(ele.fecha.split('-')[1])
+        if (ele.retraso === true) {
+            switch (fecha) {
+                case 1:
+                    modelarAnio.enero.push(ele.fecha); break;
+                case 2:
+                    modelarAnio.febrero.push(ele.fecha); break;
+                case 3:
+                    modelarAnio.marzo.push(ele.fecha); break;
+                case 4:
+                    modelarAnio.abril.push(ele.fecha); break;
+                case 5:
+                    modelarAnio.mayo.push(ele.fecha); break;
+                case 6:
+                    modelarAnio.junio.push(ele.fecha); break;
+                case 7:
+                    modelarAnio.julio.push(ele.fecha); break;
+                case 8:
+                    modelarAnio.agosto.push(ele.fecha); break;
+                case 9:
+                    modelarAnio.septiembre.push(ele.fecha); break;
+                case 10:
+                    modelarAnio.octubre.push(ele.fecha); break;
+                case 11:
+                    modelarAnio.noviembre.push(ele.fecha); break;
+                case 12:
+                    modelarAnio.diciembre.push(ele.fecha); break;
+                default: break;
+            }
+        }
+    });
+
+    atrasos = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: modelarAnio.enero.length },
+        {id: 1, mes: 'Febrero', valor: modelarAnio.febrero.length },
+        {id: 2, mes: 'Marzo', valor: modelarAnio.marzo.length },
+        {id: 3, mes: 'Abril', valor: modelarAnio.abril.length },
+        {id: 4, mes: 'Mayo', valor: modelarAnio.mayo.length },
+        {id: 5, mes: 'Junio', valor: modelarAnio.junio.length },
+        {id: 6, mes: 'Julio', valor: modelarAnio.julio.length },
+        {id: 7, mes: 'Agosto', valor: modelarAnio.agosto.length },
+        {id: 8, mes: 'Septiembre', valor: modelarAnio.septiembre.length},
+        {id: 9, mes: 'Octubre', valor: modelarAnio.octubre.length },
+        {id: 10, mes: 'Noviembre', valor: modelarAnio.noviembre.length },
+        {id: 11, mes: 'Diciembre', valor: modelarAnio.diciembre.length }
+    ]
+
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
 
     return {
-        baseOption: {     
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'line',
-                    label: { backgroundColor: '#6a7985' }
-                }
-            },
-            legend: {
-                align: 'left',
-                data: [{
-                    name: 'hora extra'
-                }]
-            },
-            grid: {
-                left: '4%',
-                right: '4%',
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                // data: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
-                data: ['Enero', 'Febrero']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [{
-                name: 'hora extra',
-                // data: [30, 40, 35, 46, 27, 49, 15, 21, 32, 44, 10, 20],
-                data: [33, 10],
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
                 type: 'line',
-                lineStyle: { color: 'rgb(20, 112, 233)' },
-                itemStyle: { color: 'rgb(20, 112, 233)' }
-            }],
-        },
-        media: [ // each rule of media query is defined here
-            {
-                query: {
-                    minWidth: 200,
-                    maxHeight: 300,
-                    minAspectRatio: 1.3           // when length-to-width ratio is less than 1
-                },
-                option: {
-                    legend: {                   // legend is placed in middle-bottom
-                        right: 'center',
-                        bottom: 0,
-                        orient: 'horizontal'    // horizontal layout of legend
-                    },
-                }
+                label: { backgroundColor: '#6a7985' }
             }
-        ]
-        
+        },
+        legend: {
+            align: 'left',
+            data: [{
+                name: 'Atrasos'
+            }]
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses },
+        yAxis: { type: 'value', name: 'N° Días' },
+        series: {
+            name: 'Dias',
+            data: valor_mensual,
+            type: 'line',
+            lineStyle: { color: 'rgb(20, 112, 233)' },
+            itemStyle: { color: 'rgb(20, 112, 233)' }
+        }       
     }   
 }

@@ -30,7 +30,12 @@ mat-icon {
 
 .i-help { color: rgb(100, 100, 100); font-size: 30px; }
 
-.charts {
-  width: 550px;
-  height: 100% 
+#charts_inasistencia_macro { width: 1050px; height: 450px;}
+
+.scroll-box {
+  overflow-y: scroll;
+  height: 100%;
+  overflow-x: scroll;
+  width: 100%;
+  padding: 1rem;
 }

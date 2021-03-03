@@ -146,7 +146,6 @@ export const EstadoHorarioPeriVacacion = async function(id_empleado: number) {
     return 0
 }
 
-
 export const HorariosParaInasistencias = function(horario: any) {
     
     let fechasRango =  {

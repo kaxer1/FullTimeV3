@@ -199,11 +199,10 @@ function ObtenerDiasAdicionales(aniosLaborados: number) {
  * @param pre Fecha del año presente solo el año Ejm: 2016
  */
 async function PeriodoVacacionContrato(id_empl: number, ant: string, pre: string) {
-    let data = await pool.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
+    return await pool.query('SELECT e.id as id_contrato, pv.id as id_peri_vac, e.id_regimen, pv.fec_inicio, pv.fec_final, pv.dia_vacacion, pv.horas_vacaciones, pv.min_vacaciones, pv.dia_antiguedad FROM empl_contratos e, peri_vacaciones pv WHERE e.id_empleado = $1 AND pv.estado = 1 AND e.id = pv.id_empl_contrato AND CAST(pv.fec_inicio as VARCHAR) like $2 || \'%\' AND CAST(pv.fec_final as VARCHAR) like $3 || \'%\' ORDER BY e.fec_ingreso DESC', [id_empl, ant, pre])
                 .then(result => {
                     return result.rows[0];
                 });
-    return data
 }
 
 /**
@@ -213,11 +212,10 @@ async function PeriodoVacacionContrato(id_empl: number, ant: string, pre: string
  * @param fec_final Fecha finaliza el periodo
  */
 async function Vacaciones (id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
-    let data = await pool.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.dia_libre, v.dia_laborable FROM vacaciones v WHERE v.id_peri_vacacion = $1 AND v.estado like \'Aceptado\' AND CAST(v.fec_inicio as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY v.fec_inicio ASC', [id_peri_vac, fec_inicio, fec_final])
+    return await pool.query('SELECT v.fec_inicio, v.fec_final, v.fec_ingreso, v.dia_libre, v.dia_laborable FROM vacaciones v WHERE v.id_peri_vacacion = $1 AND v.estado = 3 AND CAST(v.fec_inicio as VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY v.fec_inicio ASC', [id_peri_vac, fec_inicio, fec_final])
                 .then(result => {
                     return result.rows;
-                });
-    return data
+                })
 }
 
 /**
@@ -227,11 +225,10 @@ async function Vacaciones (id_peri_vac: number, fec_inicio: Date, fec_final: Dat
  * @param fec_final Fecha de finalizacion del periodo
  */
 async function Permisos(id_peri_vac: number, fec_inicio: Date, fec_final: Date) {
-    let data = await pool.query('SELECT p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.dia_libre, p.hora_numero FROM permisos p WHERE p.id_peri_vacacion = $1  AND p.estado like \'Aceptado\' AND CAST(p.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\'', [id_peri_vac, fec_inicio, fec_final])
+    return await pool.query('SELECT p.descripcion, p.fec_inicio, p.fec_final, p.dia, p.dia_libre, p.hora_numero FROM permisos p WHERE p.id_peri_vacacion = $1  AND p.estado = 3 AND CAST(p.fec_final as VARCHAR) between $2 || \'%\' AND $3 || \'%\'', [id_peri_vac, fec_inicio, fec_final])
         .then(result => {
             return result.rows;
         });
-    return data
 }
 
 /**
@@ -239,11 +236,10 @@ async function Permisos(id_peri_vac: number, fec_inicio: Date, fec_final: Date) 
  * @param id_empleado Id del empleado que solicita
  */
 async function SueldoHorasTrabaja(id_empleado: number) {
-    let data = await pool.query('SELECT ca.sueldo, ca.hora_trabaja FROM empl_contratos co, empl_cargos ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1', [id_empleado])
+    return await pool.query('SELECT ca.sueldo, ca.hora_trabaja FROM empl_contratos co, empl_cargos ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1', [id_empleado])
         .then(result => {
             return result.rows;
         });
-    return data
 }
 
 /**
@@ -267,25 +263,30 @@ export const vacacionesByIdUser = async function(id_empleado: number, desde: str
     f_presente.setUTCHours(f_presente.getHours());
     
     const dataPeri = await PeriodoVacacionContrato(id_empleado, desde.split("-")[0], hasta.split("-")[0]); //LISTO
-    // console.log(dataPeri);
+    console.log(dataPeri);
+    if (dataPeri === undefined) return { message: 'No tiene periodos de vacaciones'}
     
     const diasObliga = await diasObligaByRegimen(dataPeri.id_regimen); //LISTO
-    // console.log('REGIMEN ======>',diasObliga);
+    if (diasObliga === undefined) return { message: 'No tiene dias obligatorios'}
+    console.log('REGIMEN ======>',diasObliga);
     
     const vacaciones = await Vacaciones(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final); //LISTO
-    // console.log('VACACIONES ##################',vacaciones);
+    if (vacaciones === undefined) return { message: 'No tiene vacaciones pedidas'}
+    console.log('VACACIONES ##################',vacaciones);
     
     const permisos = await Permisos(dataPeri.id_peri_vac, dataPeri.fec_inicio, dataPeri.fec_final); //LISTO
-    // console.log('PERMISOS ##################', permisos);
+    if (vacaciones === undefined) return { message: 'No tiene permisos pedidas'}
+    console.log('PERMISOS ##################', permisos);
 
     const sueldoHora = await SueldoHorasTrabaja(id_empleado); //LISTO
-    // console.log(sueldoHora)
+    if (sueldoHora.length === 0) return { message: 'No tiene asignado horas de trabajo o sueldo'}
+    console.log(sueldoHora)
 
     let hora_trabaja = sueldoHora[0].hora_trabaja;
-    // console.log(dataPeri.fec_final.toJSON().split('T')[0]);
+    console.log(dataPeri.fec_final.toJSON().split('T')[0]);
     
     const acumulado = await ObtenerPeriodosEmpleado(id_empleado, diasObliga, dataPeri.fec_final.toJSON().split('T')[0], hora_trabaja); //LISTO
-    // console.log(acumulado);
+    console.log(acumulado);
 
     /* VALORES DE PRUEBA */
     // acumulado.acumulado = 40.91;

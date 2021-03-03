@@ -21,6 +21,12 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 
+// Servicios Filtros de búsqueda
+import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
+import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+
 @Component({
   selector: 'app-reporte-permisos',
   templateUrl: './reporte-permisos.component.html',
@@ -79,7 +85,26 @@ export class ReportePermisosComponent implements OnInit {
   empleadoLogueado: any = [];
   idEmpleado: number;
 
+  /**FILTROS DE BÚSQUEDA */
+  sucursalF = new FormControl('');
+  depaF = new FormControl('');
+  cargosF = new FormControl('');
+  laboralF = new FormControl('');
+  // Formulario de Búsquedas
+  public busquedasForm = new FormGroup({
+    sucursalForm: this.sucursalF,
+    depaForm: this.depaF,
+    cargosForm: this.cargosF,
+    laboralForm: this.laboralF,
+  });
+
   constructor(
+    /** FILTROS DE BÚSQUEDA */
+    public restSucur: SucursalService,
+    public restGeneralepa: DepartamentosService,
+    public restCargo: EmplCargosService,
+    public restRegimen: RegimenService,
+
     public rest: EmpleadoService,
     public restH: HorasExtrasRealesService,
     public restR: ReportesService,
@@ -177,9 +202,14 @@ export class ReportePermisosComponent implements OnInit {
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
       else {
-        this.toastr.info('El empleado no tiene registros de PERMISOS.','', {
-          timeOut: 6000,
-        })
+        this.toastr.info('En el periodo indicado el empleado no tiene registros de Permisos.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
+          timeOut: 10000,
+        }).onTap.subscribe(obj => {
+          if (archivo === 'pdf') {
+            this.PDF_Vacio('open', id_seleccionado, form);
+            this.LimpiarFechas();
+          }
+        });
       }
     })
   }
@@ -294,9 +324,14 @@ export class ReportePermisosComponent implements OnInit {
         this.VerDatosAutorizacion(id_seleccionado, archivo, form);
       }
       else {
-        this.toastr.info('El empleado no tiene registros de PERMISOS.','', {
-          timeOut: 6000,
-        })
+        this.toastr.info('En el periodo indicado el empleado no tiene registros de Permisos.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
+          timeOut: 10000,
+        }).onTap.subscribe(obj => {
+          if (archivo === 'pdf') {
+            this.PDF_Vacio('open', id_seleccionado, form);
+            this.LimpiarFechas();
+          }
+        });
       }
     })
   }
@@ -746,6 +781,148 @@ export class ReportePermisosComponent implements OnInit {
     };
   }
 
+  /** GENERACIÓN DE PDF AL NO CONTAR CON REGISTROS */
+
+  PDF_Vacio(action = 'open', id_seleccionado, form) {
+    const documentDefinition = this.GenerarSinRegstros(id_seleccionado, form);
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  GenerarSinRegstros(id_seleccionado: any, form) {
+
+    sessionStorage.setItem('Administrador', this.empleadoLogueado);
+
+    return {
+
+      // Encabezado de la página
+      //pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
+
+      // Pie de la página
+      footer: function (currentPage, pageCount, fecha) {
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
+        // Formato de hora actual
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
+        }
+        else {
+          var time = h.getHours() + ':' + h.getMinutes();
+        }
+        return {
+          margin: 10,
+          columns: [
+            {
+              text: [{
+                text: 'Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', opacity: 0.3
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
+              }],
+            }
+          ], fontSize: 10
+        }
+      },
+      content: [
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        ...this.datosEmpleado.map(obj => {
+          if (obj.id === id_seleccionado) {
+            return [
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE GENERAL DE PERMISOS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
+            ];
+          }
+        }),
+        this.presentarDatosEmpleado(id_seleccionado, form)
+      ],
+      // Estilos del archivo PDF
+      styles: {
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
+      }
+    };
+  }
+
+  // Datos generales del PDF y sumatoria total de calculos realizados
+  presentarDatosEmpleado(id_seleccionado, form) {
+    // Inicialización de varibles
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, regimen;
+    // Búsqueda de los datos del empleado del cual se obtiene el reporte
+    this.datosEmpleado.forEach(obj => {
+      if (obj.id === id_seleccionado) {
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
+      }
+    });
+
+    // Estructura de la tabla de lista de registros
+    return {
+      table: {
+        widths: ['*'],
+        body: [
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm).format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm).format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{ text: 'NO EXISTEN REGISTROS DE PERMISOS', style: 'tableHeader' },],
+        ]
+      },
+      layout: {
+        hLineColor: function (i, node) {
+          return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+        },
+        paddingLeft: function (i, node) { return 40; },
+        paddingRight: function (i, node) { return 40; },
+        paddingTop: function (i, node) { return 10; },
+        paddingBottom: function (i, node) { return 10; }
+      }
+    }
+  }
+
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
    * ****************************************************************************************************/
@@ -926,6 +1103,360 @@ export class ReportePermisosComponent implements OnInit {
     }
     else {
       xlsx.writeFile(wb, "Permisos - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
+    }
+  }
+
+  /*FILTROS DE BÚSQUEDA*/
+  sucursales: any = [];
+  ListarSucursales() {
+    this.sucursales = [];
+    this.restSucur.getSucursalesRest().subscribe(res => {
+      this.sucursales = res;
+    });
+  }
+
+  departamentos: any = [];
+  ListarDepartamentos() {
+    this.departamentos = [];
+    this.restGeneralepa.ConsultarDepartamentos().subscribe(res => {
+      this.departamentos = res;
+    });
+  }
+
+  cargos: any = [];
+  ListarCargos() {
+    this.cargos = [];
+    this.restCargo.ObtenerTipoCargos().subscribe(res => {
+      this.cargos = res;
+    });
+  }
+
+  regimen: any = [];
+  ListarRegimen() {
+    this.regimen = [];
+    this.restRegimen.ConsultarRegimen().subscribe(res => {
+      this.regimen = res;
+    });
+  }
+
+  LimpiarBusquedas() {
+    this.busquedasForm.patchValue(
+      {
+        laboralForm: '',
+        depaForm: '',
+        cargosForm: '',
+        sucursalForm: ''
+      })
+    this.VerDatosEmpleado();
+    this.ListarSucursales();
+    this.ListarDepartamentos();
+    this.ListarCargos();
+    this.ListarRegimen();
+  }
+
+  LimpiarCampos1() {
+    this.busquedasForm.patchValue(
+      {
+        laboralForm: '',
+        depaForm: '',
+        cargosForm: ''
+      })
+  }
+
+  LimpiarCampos2() {
+    this.busquedasForm.patchValue(
+      {
+        depaForm: '',
+        cargosForm: ''
+      })
+  }
+
+  LimpiarCampos3() {
+    this.busquedasForm.patchValue(
+      { cargosForm: '' })
+  }
+
+
+  FiltrarSucursal(form) {
+    this.departamentos = [];
+    this.restGeneralepa.BuscarDepartamentoSucursal(form.sucursalForm).subscribe(res => {
+      this.departamentos = res;
+    });
+    this.cargos = [];
+    this.restCargo.ObtenerCargoSucursal(form.sucursalForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('La sucursal seleccionada no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.regimen = [];
+    this.restRegimen.ConsultarRegimenSucursal(form.sucursalForm).subscribe(res => {
+      this.regimen = res;
+    });
+    this.LimpiarCampos1();
+  }
+
+  FiltrarRegimen(form) {
+    this.cargos = [];
+    this.restCargo.ObtenerCargoRegimen(form.laboralForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('El regimen seleccionado no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.departamentos = [];
+    this.restGeneralepa.BuscarDepartamentoRegimen(form.laboralForm).subscribe(res => {
+      this.departamentos = res;
+    });
+    this.LimpiarCampos2();
+  }
+
+  FiltrarDepartamento(form) {
+    this.cargos = [];
+    this.restCargo.ObtenerCargoDepartamento(form.depaForm).subscribe(res => {
+      this.cargos = res;
+    }, error => {
+      this.toastr.info('El departamento seleccionado no cuenta con cargos registrados.', 'Verificar la Información', {
+        timeOut: 3000,
+      })
+    });
+    this.LimpiarCampos3();
+  }
+
+  VerInformacionSucursal(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucursal(form.sucursalForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepa(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuDepa(form.sucursalForm, form.depaForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaRegimen(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuDepaRegimen(form.sucursalForm, form.depaForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuCargo(form.sucursalForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuRegimen(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuRegimen(form.sucursalForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuRegimenCargo(form.sucursalForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuDepaCargo(form.sucursalForm, form.depaForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionSucuDepaCargoRegimen(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosSucuRegimenDepartamentoCargo(form.sucursalForm, form.depaForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepartamento(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosDepartamento(form.depaForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosDepaCargo(form.depaForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaRegimen(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosDepaRegimen(form.depaForm, form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionDepaRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosDepaRegimenCargo(form.depaForm, form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionRegimen(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosRegimen(form.laboralForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionRegimenCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosRegimenCargo(form.laboralForm, form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerInformacionCargo(form) {
+    this.datosEmpleado = [];
+    this.restGeneral.VerDatosCargo(form.cargosForm).subscribe(res => {
+      this.datosEmpleado = res;
+    }, error => {
+      this.toastr.error('Ningún dato coincide con los criterios de búsqueda indicados.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    });
+  }
+
+  VerificarBusquedas(form) {
+    console.log('form', form.depaForm, form.sucursalForm, form.cargosForm, form.laboralForm)
+    if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.toastr.info('Ingresar un criterio de búsqueda.', 'Verficar Información', {
+        timeOut: 6000,
+      })
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionSucursal(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionSucuDepa(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionSucuDepaRegimen(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionSucuDepaCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionSucuCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionSucuRegimen(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionSucuRegimenCargo(form);
+    }
+    else if (form.sucursalForm != '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionSucuDepaCargoRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm === '') {
+      this.VerInformacionDepartamento(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionDepaCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionDepaRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm != '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionDepaRegimenCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm === '') {
+      this.VerInformacionRegimen(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm != '' && form.cargosForm != '') {
+      this.VerInformacionRegimenCargo(form);
+    }
+    else if (form.sucursalForm === '' && form.depaForm === '' &&
+      form.laboralForm === '' && form.cargosForm != '') {
+      this.VerInformacionCargo(form);
     }
   }
 

@@ -20,7 +20,7 @@ export class KardexService {
   }
   
   ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado: number, desde: string, hasta: string) {
-    return this.http.get(`${this.API_URL}/reportes/vacacion/${id_empleado}/${desde}/${hasta}`);
+    return this.http.get<any>(`${this.API_URL}/reportes/vacacion/${id_empleado}/${desde}/${hasta}`);
   }
   
   /**

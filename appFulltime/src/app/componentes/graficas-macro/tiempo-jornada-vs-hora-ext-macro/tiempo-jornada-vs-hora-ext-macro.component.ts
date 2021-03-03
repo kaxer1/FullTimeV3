@@ -10,7 +10,10 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
-import * as echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
+import { TooltipComponent, LegendComponent, DatasetComponent, GridComponent } from 'echarts/components';
+import { BarChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
 
 @Component({
   selector: 'app-tiempo-jornada-vs-hora-ext-macro',
@@ -38,7 +41,7 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
   f_final_req: string = '';
   
   tiempo_jornada: any;
-
+  datos_tiempo: any = [];
   constructor(
     private restGraficas: GraficasService,
     private toastr: ToastrService,
@@ -49,21 +52,34 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    echarts.use(
+      [TooltipComponent, DatasetComponent, GridComponent, LegendComponent, BarChart, CanvasRenderer]
+    );
     this.llamarGraficaOriginal();
   }
 
+  thisChart: any;
+  chartDom: any;
   llamarGraficaOriginal() {
     let local = sessionStorage.getItem('tiempo_jornada');
-    // console.log('LOCAL HORA EXTRA: ',local);
+    // 
+    this.chartDom = document.getElementById('charts_tiempo_jor_macro') as HTMLCanvasElement;
+    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+
     if (local === null) {
       this.restGraficas.MetricaTiempoJornadaHoraExtraMicro().subscribe(res => {
         // console.log('************* Tiempo jornada Micro **************');
         // console.log(res);
         sessionStorage.setItem('tiempo_jornada', JSON.stringify(res))
-        this.tiempo_jornada = res
+        this.tiempo_jornada = res.datos_grafica;
+        this.datos_tiempo = res.datos;
+        this.thisChart.setOption(res.datos_grafica);
       });
     } else {
-      this.tiempo_jornada = JSON.parse(local);
+      let data_JSON = JSON.parse(local);
+      this.tiempo_jornada = data_JSON.datos_grafica;
+      this.datos_tiempo = data_JSON.datos;
+      this.thisChart.setOption(data_JSON.datos_grafica);
     }
     this.llenarFecha();
   }
@@ -95,7 +111,9 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
         this.restGraficas.MetricaTiempoJornadaHoraExtraMacro(this.f_inicio_req, this.f_final_req).subscribe(res => {
           console.log('#################### Tiempo Jornada hora extra Macro #######################');
           console.log(res);
-          this.tiempo_jornada = res;
+          this.tiempo_jornada = res.datos_grafica;
+          this.datos_tiempo = res.datos;
+          this.thisChart.setOption(res.datos_grafica);
         });
       } else {
         this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
@@ -136,18 +154,14 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
 
   graficaBase64: any;
   metodosPDF(accion){  
-    var canvas = document.getElementById('charts') as HTMLCanvasElement;
-
-    var thisChart = echarts.init(canvas, 'dark',{ devicePixelRatio: 5, renderer: 'svg' , width: 400, height: 'auto' });
-    this.graficaBase64 = thisChart.getDataURL({pixelRatio: 1});
-
+    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
     this.generarPdf(accion) 
   }
 
   generarPdf(action) {
     const documentDefinition = this.getDocumentDefinicion();
     var f = new Date()
-    let doc_name = "metrica_inasistencia_" + f.toLocaleString() + ".pdf";
+    let doc_name = "metrica_TiempoJ_VS_HoraE" + f.toLocaleString() + ".pdf";
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
@@ -159,8 +173,9 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
 
   getDocumentDefinicion() {
     return {
-
+      pageSize: 'A4',
       pageOrientation: 'portrait',
+      pageMargins: [ 30, 60, 30, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -171,27 +186,47 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
         
-        return {
-          margin: 10,
-          columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', opacity: 0.3
-                }
-              ],
+        return [
+          {
+            table: {
+              widths: ['auto','auto'],
+              body: [
+                [
+                  { text: 'HE: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Hora extra en tiempo decimal.', border: [false, false, false, false], style: ['quote', 'small'] },
+                ],
+                [
+                  { text: 'TJ ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Tiempo de jornada.', border: [false, false, false, false], style: ['quote', 'small'] },
+                ]
+              ]
             }
-          ],
-          fontSize: 10
-        }
+          },
+          {
+            margin: 10,
+            columns: [
+              { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+              { text: [
+                  {
+                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                    alignment: 'right', opacity: 0.3
+                  }
+                ],
+              }
+            ],
+            fontSize: 10
+          }
+        ]
       },
       content: [
-        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Métrica Tiempo Jornada VS Horas Extras', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 15, alignment: 'left' },
-        { image: this.graficaBase64, width: 550, height: 325, margin: [-30, 10, 10, 10] },
-        { text: this.texto_grafica, margin: [10, 10, 10, 10] },
+        { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
+        { text: 'Métrica Tiempo Jornada VS Horas Extras', bold: true, fontSize: 15, alignment: 'center', margin: [0, -40, 0, 10] },
+        { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
+        { image: this.graficaBase64, width: 550, margin: [0, 10, 0, 10] },
+        ...this.ImprimirDatos().map(obj => {
+          return obj
+        }),
+        { text: this.texto_grafica, margin: [10, 10, 10, 10], alignment: 'justify' },
       ],
       styles: {
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
@@ -199,6 +234,46 @@ export class TiempoJornadaVsHoraExtMacroComponent implements OnInit {
         itemsTableD: { fontSize: 8, alignment: 'center' }
       }
     };
+  }
+
+  ImprimirDatos() {
+    let datos = this.tiempo_jornada.dataset.source;
+    let n: any = [];
+    let colums = { alignment: 'justify', columns: [] };
+    let colums1 = { alignment: 'justify', columns: [] };
+    let colums2 = { alignment: 'justify', columns: [] };
+    let colums3 = { alignment: 'justify', columns: [] };
+
+    for (let i = 0; i < datos.length; i++) {
+
+      if (i >= 0 && i <= 2) {
+        colums.columns.push({
+          text: datos[i].mouth + ': \n TJ = ' + datos[i]['Tiempo Jornada'] + ', HE = ' + datos[i]['Horas Extras'], margin: [11,0,0,5]
+        });
+      };
+      if (i >= 3 && i <= 5) {
+        colums1.columns.push({
+          text: datos[i].mouth + ': \n TJ = ' + datos[i]['Tiempo Jornada'] + ', HE = ' + datos[i]['Horas Extras'], margin: [11,0,0,5]
+        });
+      };
+      if (i >= 6 && i <= 8) {
+        colums2.columns.push({
+          text: datos[i].mouth + ': \n TJ = ' + datos[i]['Tiempo Jornada'] + ', HE = ' + datos[i]['Horas Extras'], margin: [11,0,0,5]
+        });
+      }; 
+      if (i >= 9 && i <= 11) {
+        colums3.columns.push({
+          text: datos[i].mouth + ': \n TJ = ' + datos[i]['Tiempo Jornada'] + ', HE = ' + datos[i]['Horas Extras'], margin: [11,0,0,5]
+        });
+      }
+    }
+    
+    if (colums.columns.length > 0) { n.push(colums); }
+    if (colums1.columns.length > 0) { n.push(colums1); }
+    if (colums2.columns.length > 0) { n.push(colums2); }
+    if (colums3.columns.length > 0) { n.push(colums3); }    
+
+    return n
   }
 
   limpiarCamposRango() {

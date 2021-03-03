@@ -10,7 +10,10 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
-import * as echarts from 'echarts/lib/echarts';
+import * as echarts from 'echarts/core';
+import { TooltipComponent, LegendComponent } from 'echarts/components';
+import { PieChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
 
 @Component({
   selector: 'app-asistencia-macro',
@@ -38,7 +41,6 @@ export class AsistenciaMacroComponent implements OnInit {
   f_final_req: string = '';
 
   asistencia: any;
-
   constructor(
     private restGraficas: GraficasService,
     private toastr: ToastrService,
@@ -49,21 +51,30 @@ export class AsistenciaMacroComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    echarts.use(
+      [TooltipComponent, LegendComponent, PieChart, CanvasRenderer]
+    );
     this.llamarGraficaOriginal();
   }
 
+  thisChart: any;
+  chartDom: any;
   llamarGraficaOriginal() {
     let local = sessionStorage.getItem('asistencia');
-    // console.log('LOCAL ASISTENCIA: ',local_asistencia);
+    this.chartDom = document.getElementById('charts_asistencia_macro') as HTMLCanvasElement;
+    this.thisChart = echarts.init(this.chartDom, 'light', {width: 1050, renderer: 'svg',devicePixelRatio: 5 });
+
     if (local === null) {
       this.restGraficas.MetricaAsistenciaMicro().subscribe(res => {
         // console.log('************* Asistencia Micro **************');
         sessionStorage.setItem('asistencia', JSON.stringify(res))
-        // console.log(res);
-        this.asistencia = res
+        this.asistencia = res.datos_grafica;
+        this.thisChart.setOption(res.datos_grafica);
       });
     } else {
-      this.asistencia = JSON.parse(local);
+      let data_JSON = JSON.parse(local);
+      this.asistencia = data_JSON.datos_grafica;
+      this.thisChart.setOption(data_JSON.datos_grafica);
     }
     this.llenarFecha();
   }
@@ -95,7 +106,8 @@ export class AsistenciaMacroComponent implements OnInit {
         this.restGraficas.MetricaAsistenciaMacro(this.f_inicio_req, this.f_final_req).subscribe(res => {
           console.log('#################### Asistencia Macro Retorna #######################');
           console.log(res);
-          this.asistencia = res
+          this.asistencia = res.datos_grafica;
+          this.thisChart.setOption(res.datos_grafica);
         });
       } else {
         this.toastr.error('Años de consulta diferente','Solo puede consultar datos de un año en concreto', {
@@ -136,11 +148,7 @@ export class AsistenciaMacroComponent implements OnInit {
 
   graficaBase64: any;
   metodosPDF(accion){  
-    var canvas = document.getElementById('charts') as HTMLCanvasElement;
-
-    var thisChart = echarts.init(canvas, 'dark',{ devicePixelRatio: 5, renderer: 'svg' , width: 400, height: 'auto' });
-    this.graficaBase64 = thisChart.getDataURL({pixelRatio: 1});
-
+    this.graficaBase64 = this.thisChart.getDataURL({type: 'jpg' , pixelRatio: 5 });
     this.generarPdf(accion) 
   }
 
@@ -159,8 +167,9 @@ export class AsistenciaMacroComponent implements OnInit {
 
   getDocumentDefinicion() {
     return {
-
+      pageSize: 'A4',
       pageOrientation: 'portrait',
+      pageMargins: [ 30, 60, 30, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -187,11 +196,14 @@ export class AsistenciaMacroComponent implements OnInit {
         }
       },
       content: [
-        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Métrica Asistencia', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 15, alignment: 'left' },
-        { image: this.graficaBase64, width: 550, margin: [-30, 10, 10, 10] },
-        { text: this.texto_grafica, margin: [10, 10, 10, 10] },
+        { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
+        { text: 'Métrica Asistencia', bold: true, fontSize: 20, alignment: 'center', margin: [0, -40, 0, 10] },
+        { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
+        { image: this.graficaBase64, width: 525, margin: [0, 10, 0, 10] },
+        ...this.ImprimirDatos().map(obj => {
+          return obj
+        }),
+        { text: this.texto_grafica, margin: [10, 10, 10, 10], alignment: 'justify' },
       ],
       styles: {
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
@@ -199,6 +211,25 @@ export class AsistenciaMacroComponent implements OnInit {
         itemsTableD: { fontSize: 8, alignment: 'center' }
       }
     };
+  }
+
+  ImprimirDatos() {
+    let datos = this.asistencia.series.data;
+    let n: any = [];
+    let colums = { alignment: 'justify', columns: [] };
+
+    for (let i = 0; i < datos.length; i++) {
+
+      if (i >= 0 && i <= 2) {
+        colums.columns.push({
+          text: datos[i].name + ': ' + datos[i].value, margin: [11,0,0,5]
+        });
+      };
+    }
+    
+    if (colums.columns.length > 0) { n.push(colums); }  
+
+    return n
   }
 
   limpiarCamposRango() {

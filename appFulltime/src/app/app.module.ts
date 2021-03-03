@@ -2,13 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ChartsModule } from 'ng2-charts';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
-import { NgxEchartsModule } from 'ngx-echarts';
 import { ScrollingModule } from '@angular/cdk/scrolling'
 import { JwPaginationModule } from 'jw-angular-pagination';
 
@@ -324,10 +322,23 @@ import { PlanComidasComponent } from './componentes/planificacionComidas/plan-co
 import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
 import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
+import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
+import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
+import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
+import { MetricaAtrasosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-atrasos/metrica-atrasos.component';
+import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-permisos/metrica-permisos.component';
+import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
+import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
+import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
+import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
+import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
+import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
+import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
 
 
 
@@ -578,10 +589,23 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     TicketsComponent,
     AlimentosGeneralComponent,
     DetallePlanificadosComponent,
+    SalidasAntesMacroComponent,
+    MetricaVacacionesComponent,
+    MetricaHorasExtrasComponent,
+    MetricaAtrasosComponent,
+    MetricaPermisosComponent,
+    ReporteAtrasosMultiplesComponent,
+    ReporteEmpleadosInactivosComponent,
+    ReporteFaltasComponent,
+    ReporteHorasTrabajadasComponent,
+    ReportePuntualidadComponent,
+    ReporteTimbresMultiplesComponent,
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
     FuncionesComponent,
+    ConfigReportFirmasHorasExtrasComponent,
+    FecTimbrePipe,
   ],
 
   imports: [
@@ -600,7 +624,6 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     MatListModule,
     ImageUploadModule.forRoot(),
     FontAwesomeModule,
-    ChartsModule,
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
@@ -624,7 +647,6 @@ const config: SocketIoConfig = { url: 'http://192.168.0.192:3001', options: {} }
     MatTableModule,
     MatPaginatorModule,
     MatTabsModule,
-    NgxEchartsModule,
     MatDatepickerModule, 
     MatNativeDateModule,
     MatTabsModule,

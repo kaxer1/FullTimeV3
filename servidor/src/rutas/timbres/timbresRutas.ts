@@ -20,6 +20,7 @@ class TimbresRutas {
         this.router.post('/', TokenValidation, TIMBRES_CONTROLADOR.CrearTimbreWeb);
         this.router.post('/admin/', TokenValidation, TIMBRES_CONTROLADOR.CrearTimbreWebAdmin);
         this.router.get('/', TokenValidation, TIMBRES_CONTROLADOR.ObtenerTimbres);
+        this.router.get('/ultimo-timbre', TokenValidation, TIMBRES_CONTROLADOR.ObtenerUltimoTimbreEmpleado);
     }
 }
 

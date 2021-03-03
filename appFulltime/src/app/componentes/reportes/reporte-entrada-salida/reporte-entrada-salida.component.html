@@ -1,16 +1,23 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="tituloEmpleados">
+        <span>REPORTE DE ENTRADAS Y SALIDAS</span>
+    </div>
+    <br>
     <div class="row">
         <div class="col-md">
-            <div class="tituloEmpleados">
-                <span>REPORTE DE ENTRADAS Y SALIDAS EMPLEADO</span>
-            </div>
-            <mat-card class="example-card mat-elevation-z8">
-                <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <!-- Formulario Completo -->
-                <mat-card-content>
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                            Críterios de Búsqueda Inmediata
+                        </mat-panel-title>
+                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
+                            search</mat-icon>
+                    </mat-expansion-panel-header>
                     <form [formGroup]="">
-                        <div class="d-flex flex-wrap justify-content-center">
+                        <div class="d-flex flex-wrap justify-content-around">
                             <mat-form-field>
                                 <mat-label>Ingresar Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
@@ -19,7 +26,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar CI o pasaporte</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
@@ -32,7 +38,6 @@
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Nombres</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
@@ -43,7 +48,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Apellidos</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
@@ -54,63 +58,29 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Departamento</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroDepartamento"
-                                    [formControl]="departamentoF" type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="departamentoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el departamento">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Regimen</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroRegimen" [formControl]="regimenF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="regimenF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el Régimen Laboral">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Cargo</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCargo" [formControl]="cargoF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="cargoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el cargo que ocupa">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
                         </div>
                     </form>
-                </mat-card-content>
-                <div class="d-flex justify-content-around">
-                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
-                    </button>
-                </div>
-            </mat-card>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
+                        </button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
-</div>
-<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <br>
     <div class="row">
         <div class="col-md">
-            <div class="tituloEmpleados">
-                <span>PERIODO</span>
-            </div>
-            <mat-card class="example-card mat-elevation-z8">
-                <h5 style="text-align: center">Período de Búsqueda</h5>
-                <!-- Formulario Completo -->
-                <mat-card-content>
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                            Período de Búsqueda
+                        </mat-panel-title>
+                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
+                            search</mat-icon>
+                    </mat-expansion-panel-header>
                     <form [formGroup]="fechasForm">
                         <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
@@ -134,15 +104,12 @@
                             </mat-form-field>
                         </div>
                     </form>
-                </mat-card-content>
-                <div class="d-flex justify-content-around">
-                    <!-- <button mat-button type="button" class="btn btn-sm">
-                        Calcular
-                    </button>-->
-                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
-                    </button>
-                </div>
-            </mat-card>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+                        </button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
 </div>

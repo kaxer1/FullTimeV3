@@ -10,11 +10,12 @@ class GraficasRutas {
     }
 
     configuracion(): void {
+        // ADMINISTRADOR
         this.router.get('/admin/hora-extra/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminHorasExtrasMicro);
         this.router.get('/admin/hora-extra/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminHorasExtrasMacro);
         
-        this.router.get('/admin/retrasos/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminRetrasosMicro);
-        this.router.get('/admin/retrasos/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminRetrasosMacro);
+        this.router.get('/admin/retrasos/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminAtrasosMicro);
+        this.router.get('/admin/retrasos/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminAtrasosMacro);
         
         this.router.get('/admin/asistencia/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminAsistenciaMicro);
         this.router.get('/admin/asistencia/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminAsistenciaMacro);
@@ -31,11 +32,21 @@ class GraficasRutas {
         this.router.get('/admin/marcaciones-emp/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminMarcacionesEmpleadoMicro);
         this.router.get('/admin/marcaciones-emp/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminMarcacionesEmpleadoMacro);
         
-        //empleado
+        this.router.get('/admin/salidas-anticipadas/micro', TokenValidation, GRAFICAS_CONTROLADOR.AdminSalidasAnticipadasMicro);
+        this.router.get('/admin/salidas-anticipadas/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.AdminSalidasAnticipadasMacro);
+        
+        // EMPLEADOS
         this.router.get('/user/hora-extra/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoHorasExtrasMicro);
+        this.router.get('/user/hora-extra/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoHorasExtrasMacro);
+        
         this.router.get('/user/vacaciones/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoVacacionesMicro);
+        this.router.get('/user/vacaciones/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoVacacionesMacro);
+        
         this.router.get('/user/permisos/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoPermisosMicro);
+        this.router.get('/user/permisos/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoPermisosMacro);
+        
         this.router.get('/user/atrasos/micro', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoAtrasosMicro);
+        this.router.get('/user/atrasos/macro/:desde/:hasta', TokenValidation, GRAFICAS_CONTROLADOR.EmpleadoAtrasosMacro);
         
     }
 }

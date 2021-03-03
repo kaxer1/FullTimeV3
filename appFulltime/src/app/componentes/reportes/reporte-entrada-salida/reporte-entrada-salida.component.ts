@@ -148,7 +148,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   }
 
   // Obtener lista de empleados con contrato y cargo
-    VerDatosEmpleado() {
+  VerDatosEmpleado() {
     this.datosEmpleado = [];
     this.restD.ListarInformacionActual().subscribe(data => {
       this.datosEmpleado = data;
@@ -275,9 +275,14 @@ export class ReporteEntradaSalidaComponent implements OnInit {
         this.LimpiarCampos();
       }
       else {
-        this.toastr.info('El empleado no tiene registros de Timbres.','', {
-          timeOut: 6000,
-        })
+        this.toastr.info('En el periodo indicado el empleado no tiene registros de Timbres.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
+          timeOut: 10000,
+        }).onTap.subscribe(obj => {
+          if (archivo === 'pdf') {
+            this.PDF_Vacio('open', id_seleccionado, form);
+            this.LimpiarFechas();
+          }
+        });
       }
     })
   }
@@ -819,6 +824,149 @@ export class ReporteEntradaSalidaComponent implements OnInit {
       },
     };
   }
+
+  /** GENERACIÓN DE PDF AL NO CONTAR CON REGISTROS */
+
+  PDF_Vacio(action = 'open', id_seleccionado, form) {
+    const documentDefinition = this.GenerarSinRegstros(id_seleccionado, form);
+
+    switch (action) {
+      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+      default: pdfMake.createPdf(documentDefinition).open(); break;
+    }
+
+  }
+
+  GenerarSinRegstros(id_seleccionado: any, form) {
+
+    sessionStorage.setItem('Administrador', this.empleadoLogueado);
+
+    return {
+
+      // Encabezado de la página
+      //pageOrientation: 'landscape',
+      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      header: { text: 'Impreso por:  ' + this.empleadoLogueado[0].nombre + ' ' + this.empleadoLogueado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
+
+      // Pie de la página
+      footer: function (currentPage, pageCount, fecha) {
+        var h = new Date();
+        var f = moment();
+        fecha = f.format('YYYY-MM-DD');
+        // Formato de hora actual
+        if (h.getMinutes() < 10) {
+          var time = h.getHours() + ':0' + h.getMinutes();
+        }
+        else {
+          var time = h.getHours() + ':' + h.getMinutes();
+        }
+        return {
+          margin: 10,
+          columns: [
+            {
+              text: [{
+                text: 'Fecha: ' + fecha + ' Hora: ' + time,
+                alignment: 'left', opacity: 0.3
+              }]
+            },
+            {
+              text: [{
+                text: '© Pag ' + currentPage.toString() + ' of ' + pageCount, alignment: 'right', opacity: 0.3
+              }],
+            }
+          ], fontSize: 10
+        }
+      },
+      content: [
+        { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
+        ...this.datosEmpleado.map(obj => {
+          if (obj.codigo === id_seleccionado) {
+            return [
+              { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
+              { text: 'REPORTE ENTRADAS - SALIDAS', fontSize: 17, alignment: 'center', margin: [0, 0, 0, 5] },
+            ];
+          }
+        }),
+        this.presentarDatosEmpleado(id_seleccionado, form)
+      ],
+      // Estilos del archivo PDF
+      styles: {
+        tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
+        itemsTableI: { fontSize: 9, alignment: 'left', margin: [50, 5, 5, 5] },
+        itemsTableP: { fontSize: 9, alignment: 'left', bold: true, margin: [50, 5, 5, 5] },
+      }
+    };
+  }
+
+  // Datos generales del PDF y sumatoria total de calculos realizados
+  presentarDatosEmpleado(id_seleccionado, form) {
+    // Inicialización de varibles
+    var ciudad, nombre, apellido, cedula, codigo, sucursal, departamento, cargo, regimen;
+    // Búsqueda de los datos del empleado del cual se obtiene el reporte
+    this.datosEmpleado.forEach(obj => {
+      if (obj.codigo === id_seleccionado) {
+        nombre = obj.nombre;
+        apellido = obj.apellido;
+        cedula = obj.cedula;
+        codigo = obj.codigo;
+        sucursal = obj.sucursal;
+        departamento = obj.departamento;
+        ciudad = obj.ciudad;
+        cargo = obj.cargo;
+        regimen = obj.regimen;
+      }
+    });
+
+    // Estructura de la tabla de lista de registros
+    return {
+      table: {
+        widths: ['*'],
+        body: [
+          [{ text: 'INFORMACIÓN GENERAL EMPLEADO', style: 'tableHeader' },],
+          [{
+            columns: [
+              { text: [{ text: 'PERIODO DEL: ' + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' AL ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")), style: 'itemsTableP' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'APELLIDOS: ' + apellido, style: 'itemsTableI' }] },
+              { text: [{ text: 'NOMBRES: ' + nombre, style: 'itemsTableI' }] },
+              { text: [{ text: 'CÉDULA: ' + cedula, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CÓDIGO: ' + codigo, style: 'itemsTableI' }] },
+              { text: [{ text: 'CARGO: ' + cargo, style: 'itemsTableI' }] },
+              { text: [{ text: 'REGIMEN LABORAL: ' + regimen, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{
+            columns: [
+              { text: [{ text: 'CIUDAD: ' + ciudad, style: 'itemsTableI' }] },
+              { text: [{ text: 'SUCURSAL: ' + sucursal, style: 'itemsTableI' }] },
+              { text: [{ text: 'DEPARTAMENTO: ' + departamento, style: 'itemsTableI' }] },
+            ]
+          }],
+          [{ text: 'NO EXISTEN REGISTROS DE ENTRADAS - SALIDAS', style: 'tableHeader' },],
+        ]
+      },
+      layout: {
+        hLineColor: function (i, node) {
+          return (i === 0 || i === node.table.body.length) ? 'rgb(80,87,97)' : 'rgb(80,87,97)';
+        },
+        paddingLeft: function (i, node) { return 40; },
+        paddingRight: function (i, node) { return 40; },
+        paddingTop: function (i, node) { return 10; },
+        paddingBottom: function (i, node) { return 10; }
+      }
+    }
+  }
+
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL

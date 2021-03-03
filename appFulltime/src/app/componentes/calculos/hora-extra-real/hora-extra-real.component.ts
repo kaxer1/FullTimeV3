@@ -296,7 +296,7 @@ export class HoraExtraRealComponent implements OnInit {
   }
 
 
-  limpiarCampos() {
+  LimpiarCampos() {
     this.codigo.reset();
     this.cedula.reset();
     this.nombre.reset();

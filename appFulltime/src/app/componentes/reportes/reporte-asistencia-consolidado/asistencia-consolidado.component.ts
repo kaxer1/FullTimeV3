@@ -216,7 +216,7 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
         if(res.message) {
-          this.toastr.error(res.message,'', {
+          this.toastr.error(res.message,'hduhfuwy', {
             timeOut: 6000,
           });
         } else {
