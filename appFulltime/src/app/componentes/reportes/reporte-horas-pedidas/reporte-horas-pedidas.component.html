@@ -51,7 +51,7 @@
 </div>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
     <div class="row">
-        <div class="col-lg-7" style="margin-bottom: 15px;">
+        <div class="col-md">
             <mat-accordion>
                 <mat-expansion-panel hideToggle>
                     <mat-expansion-panel-header class="d-flex bd-highlight">
@@ -61,9 +61,8 @@
                         <mat-icon id="lupa" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
                             matTooltip="Se puede filtra deacuerdo al campo que escriba">search</mat-icon>
                     </mat-expansion-panel-header>
-
                     <form [formGroup]="">
-                        <div class="d-flex flex-wrap justify-content-start">
+                        <div class="d-flex flex-wrap justify-content-around">
                             <mat-form-field>
                                 <mat-label>Ingresar Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
@@ -72,7 +71,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar CI o pasaporte</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
@@ -85,7 +83,6 @@
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Nombres</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
@@ -96,7 +93,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Apellidos</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
@@ -105,42 +101,6 @@
                                 </mat-error>
                                 <mat-icon id="iemple" matSuffix matTooltipPosition="right"
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Departamento</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroDepartamento"
-                                    [formControl]="departamentoF" type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="departamentoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el departamento">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Regimen</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroRegimen" [formControl]="regimenF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="regimenF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el Régimen Laboral">
-                                    help_outline</mat-icon>
-                            </mat-form-field>
-                            <br>
-                            <mat-form-field>
-                                <mat-label>Ingresar Cargo</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCargo" [formControl]="cargoF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="cargoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el cargo que ocupa">
                                     help_outline</mat-icon>
                             </mat-form-field>
                         </div>
@@ -185,13 +145,13 @@
                         <td>{{d.cargo}}</td>
                         <td>{{d.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
-                            <i id="pdf" (click)="VerPDFSolicitudesEmpleado('download', d.id)"  class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                            <i id="pdf" (click)="VerPDFSolicitudesEmpleado('download', d.id)" class="fas fa-file-pdf"
+                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Ver Reporte de Solicitudes de Horas Extras en formato PDF">
                                 <p>PDF</p>
                             </i>
-                            <i id="excel" (click)="VerExcelSolicitudesEmpleado(d.id)" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
-                                matTooltipClass="departamento-tooltip"
+                            <i id="excel" (click)="VerExcelSolicitudesEmpleado(d.id)" class="fas fa-file-excel"
+                                matSuffix matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Ver Reporte de Solicitudes de Horas Extras en formato EXCEL">
                                 <p>XLSL</p>
                             </i>

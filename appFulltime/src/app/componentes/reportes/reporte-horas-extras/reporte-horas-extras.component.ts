@@ -272,7 +272,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
             },
             {
               border: [false, true, false, true],
-              text: 'HORAS TRABAJA DIA: ' + e.hora_trabaja,
+              text: 'HORAS TRABAJADAS EN EL DÍA: ' + e.hora_trabaja,
               style: 'itemsTableInfo'
             },
             {
@@ -292,7 +292,7 @@ export class ReporteHorasExtrasComponent implements OnInit {
       style: 'MarginTable',
       table: {
         headerRows: 1,
-        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto'],
+        widths: ['auto','auto','auto','auto','auto','auto','auto','auto','auto','auto','auto'],
         body: [
           this.FuncionTituloColumna(),
           ...datosRest.map((obj) => {
@@ -300,8 +300,10 @@ export class ReporteHorasExtrasComponent implements OnInit {
             var array = [
               { style: 'itemsTableDetalle', text: contador },
               { style: 'itemsTableDetalle', text: obj.descripcion },
-              { style: 'itemsTableDetalle', text: obj.fec_inicio.split('T')[0] + ' ' + obj.fec_inicio.split('T')[1].split('.')[0]},
-              { style: 'itemsTableDetalle', text: obj.fec_final.split('T')[0] + ' ' + obj.fec_final.split('T')[1].split('.')[0]},
+              { style: 'itemsTableDetalle', text: obj.fec_inicio.split('T')[0] },
+              { style: 'itemsTableDetalle', text: obj.fec_inicio.split('T')[1].split('.')[0] },
+              { style: 'itemsTableDetalle', text: obj.fec_final.split('T')[0] },
+              { style: 'itemsTableDetalle', text: obj.fec_final.split('T')[1].split('.')[0] },
               { style: 'itemsTableDetalle', text: obj.total_horas},
               { style: 'itemsTableDetalle', text: obj.porcentaje},
               { style: 'itemsTableDetalle', text: obj.valor_recargo.toString().slice(0,6) },
@@ -325,12 +327,14 @@ export class ReporteHorasExtrasComponent implements OnInit {
       { text: 'N°', style: 'tableHeaderDetalle' },
       { text: 'Descripcion', style: 'tableHeaderDetalle' },
       { text: 'Fecha Inicio', style: 'tableHeaderDetalle' },
+      { text: 'Hora Inicio', style: 'tableHeaderDetalle' },
       { text: 'Fecha Final', style: 'tableHeaderDetalle' },
+      { text: 'Hora Final', style: 'tableHeaderDetalle' },
       { text: 'Horas', style: 'tableHeaderDetalle' },
       { text: 'Porcentaje', style: 'tableHeaderDetalle' },
       { text: 'Valor recargo', style: 'tableHeaderDetalle' },
       { text: 'Valor hora', style: 'tableHeaderDetalle' },
-      { text: 'Valor pago', style: 'tableHeaderDetalle' }
+      { text: 'Valor a pagar', style: 'tableHeaderDetalle' }
     ]
 
     return arrayTitulos

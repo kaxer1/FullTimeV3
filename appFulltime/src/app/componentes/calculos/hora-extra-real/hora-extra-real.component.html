@@ -1,16 +1,23 @@
 <br>
 <div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="tituloEmpleados">
+        <span>HORAS EXTRAS REALES</span>
+    </div>
+    <br>
     <div class="row">
         <div class="col-md">
-            <div class="tituloEmpleados">
-                <span>EMPLEADOS</span>
-            </div>
-            <mat-card class="example-card mat-elevation-z8">
-                <h5 style="text-align: center">Críterios de Búsqueda</h5>
-                <!-- Formulario Completo -->
-                <mat-card-content>
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                            Críterios de Búsqueda Inmediata
+                        </mat-panel-title>
+                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
+                            search</mat-icon>
+                    </mat-expansion-panel-header>
                     <form [formGroup]="">
-                        <div class="d-flex flex-wrap justify-content-center">
+                        <div class="d-flex flex-wrap justify-content-around">
                             <mat-form-field>
                                 <mat-label>Ingresar Código</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCodigo" [formControl]="codigo"
@@ -19,7 +26,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el código">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar CI o pasaporte</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroCedula" maxlength="10"
@@ -32,7 +38,6 @@
                                     matTooltip="Búsqueda de empleado por la cédula de identificación o pasaporte">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Nombres</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroNombre" [formControl]="nombre"
@@ -43,7 +48,6 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el nombre">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
                                 <mat-label>Ingresar Apellidos</mat-label>
                                 <input matInput placeholder="Ej: " [(ngModel)]="filtroApellido" [formControl]="apellido"
@@ -54,68 +58,101 @@
                                     matTooltipClass="emple-tooltip" matTooltip="Búsqueda de empleado por el apellido">
                                     help_outline</mat-icon>
                             </mat-form-field>
-                            <br>
+                        </div>
+                    </form>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" id="boton"
+                            (click)="LimpiarCampos()">Cancelar</button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+    <!--
+    <br>
+    <div class="row">
+        <div class="col-md">
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                            Críterios de Búsqueda
+                        </mat-panel-title>
+                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda.">
+                            search</mat-icon>
+                    </mat-expansion-panel-header>
+                    <form [formGroup]="busquedasForm">
+                        <div class="d-flex flex-wrap justify-content-around">
                             <mat-form-field>
-                                <mat-label>Ingresar Departamento</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroDepartamento"
-                                    [formControl]="departamentoF" type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="departamentoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el departamento">
+                                <mat-label id="selec">1.Establecimientos</mat-label>
+                                <mat-icon id="cargoE" matSuffix matTooltipPosition="right"
+                                    matTooltip="Muestra todos los empleados que pertenecen al establecimiento.">
                                     help_outline</mat-icon>
+                                <mat-select [formControl]="sucursalF">
+                                    <mat-option *ngFor="let s of sucursales" [value]="s.id"
+                                        (click)="FiltrarSucursal(busquedasForm.value)">{{s.nombre}}
+                                    </mat-option>
+                                </mat-select>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
-                                <mat-label>Ingresar Regimen</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroRegimen" [formControl]="regimenF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="regimenF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el Régimen Laboral">
+                                <mat-label id="selec">2.Regimen Laboral</mat-label>
+                                <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
                                     help_outline</mat-icon>
+                                <mat-select [formControl]="laboralF">
+                                    <mat-option *ngFor="let r of regimen" [value]="r.id"
+                                        (click)="FiltrarRegimen(busquedasForm.value)">{{r.descripcion}}</mat-option>
+                                </mat-select>
                             </mat-form-field>
-                            <br>
                             <mat-form-field>
-                                <mat-label>Ingresar Cargo</mat-label>
-                                <input matInput placeholder="Ej: " [(ngModel)]="filtroCargo" [formControl]="cargoF"
-                                    type="text" (keypress)="IngresarSoloLetras($event)">
-                                <mat-error *ngIf="cargoF.invalid">Indispensable ingresar dos letras
-                                </mat-error>
-                                <mat-icon id="iemple" matSuffix matTooltipPosition="right"
-                                    matTooltipClass="emple-tooltip"
-                                    matTooltip="Búsqueda de empleado por el cargo que ocupa">
+                                <mat-label id="selec">3.Departamentos</mat-label>
+                                <mat-icon id="cargoE" matSuffix matTooltipPosition="right"
+                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
                                     help_outline</mat-icon>
+                                <mat-select [formControl]="depaF">
+                                    <mat-option *ngFor="let d of departamentos" [value]="d.id"
+                                        (click)="FiltrarDepartamento(busquedasForm.value)">{{d.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label id="selec">4.Cargos</mat-label>
+                                <mat-icon id="cargoE" matSuffix matTooltipClass="cargoE-tooltip"
+                                    matTooltipPosition="right"
+                                    matTooltip="Indicar cuál es la cucursal en la que se encuntra el dispositivo">
+                                    help_outline</mat-icon>
+                                <mat-select [formControl]="cargosF">
+                                    <mat-option *ngFor="let c of cargos" [value]="c.id">{{c.cargo}}</mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </div>
                     </form>
-                </mat-card-content>
-                <div class="d-flex justify-content-around">
-                    <button mat-button type="button" class="btn btn-sm" [routerLink]="['/registrarEmpleado']">Crear
-                        nuevo Empleado
-                    </button>
-                    <button mat-button type="submit" class="btn btn-sm" (click)="limpiarCampos()">Cancelar
-                    </button>
-                </div>
-            </mat-card>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="submit" class="btn btn-sm" id="boton"
+                            (click)="VerificarBusquedas(busquedasForm.value)">Buscar</button>
+                        <button mat-button type="submit" class="btn btn-sm" id="boton"
+                            (click)="LimpiarBusquedas()">Cancelar</button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
-</div>
-
-
-<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    -->
+    <br>
     <div class="row">
         <div class="col-md">
-            <div class="tituloEmpleados">
-                <span>PERIODO</span>
-            </div>
-            <mat-card class="example-card mat-elevation-z8">
-                <h5 style="text-align: center">Período de Búsqueda</h5>
-                <!-- Formulario Completo -->
-                <mat-card-content>
+            <mat-accordion>
+                <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel-header class="d-flex bd-highlight">
+                        <mat-panel-title class="w-100 bd-highlight">
+                            Período de Búsqueda
+                        </mat-panel-title>
+                        <mat-icon id="icono" class="flex-shrink-1 bd-highlight" matTooltipPosition="right"
+                            matTooltip="Dar clic para desplegar y contraer todos los campos de búsqueda. La búsqueda es inmediata para un dato en específico.">
+                            search</mat-icon>
+                    </mat-expansion-panel-header>
                     <form [formGroup]="fechasForm">
                         <div class="d-flex flex-wrap justify-content-center">
                             <mat-form-field>
@@ -139,25 +176,18 @@
                             </mat-form-field>
                         </div>
                     </form>
-                </mat-card-content>
-                <div class="d-flex justify-content-around">
-                    <button mat-button type="button" class="btn btn-sm" (click)="CalcularTodos(fechasForm.value)"> Calcular
-                    </button>
-                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
-                    </button>
-                </div>
-            </mat-card>
+                    <div class="d-flex justify-content-around">
+                        <button mat-button type="button" class="btn btn-sm" (click)="CalcularTodos(fechasForm.value)">
+                            Calcular
+                        </button>
+                        <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarFechas()">Cancelar
+                        </button>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
 
 
 <div class="container" style="padding-bottom: 50px; text-align: center;">
@@ -201,7 +231,7 @@
         <mat-paginator [length]="datosTotales.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
             id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
         </mat-paginator>
-     <!--   <div class="d-flex justify-content-end" style="margin-right: 5%;">
+        <!--   <div class="d-flex justify-content-end" style="margin-right: 5%;">
             <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
                 matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Empleados en formato PDF">
                 <p>PDF</p>

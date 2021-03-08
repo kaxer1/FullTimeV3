@@ -21,7 +21,7 @@ p { font-size: x-small; }
 mat-form-field { padding: 10px 15px 0px 15px;}
 
 .tituloEmpleados { 
-    font-size: 20px; 
+    font-size: 15px; 
     text-align: center; 
     background: rgb(52,65,84); 
     color: white; 
@@ -123,3 +123,18 @@ td { padding-top: 10px; text-align: center; }
 [type="file"] + label.btn-2:hover::before {
     right: 80%
 }
+
+mat-expansion-panel-header { text-align: center; background: rgb(52,65,84); }
+
+mat-panel-title { color: white; }
+
+#icono { color: white; }
+
+.mat-expansion-panel-header.mat-expanded {
+    background: rgb(52,65,84);
+}
+
+.mat-expansion-panel-header.mat-expanded:hover {
+    background: rgb(52,65,84);
+}
+

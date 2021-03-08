@@ -7,6 +7,7 @@ const pool = new Pool({
   host: 'localhost',
   port: 5432,
   // database: 'prueba_auditar',
+  // password: 'admin'
   database: 'nueva2411',
   password: 'fulltime'
 

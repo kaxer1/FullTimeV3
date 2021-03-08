@@ -324,7 +324,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
     return {
       pageSize: 'A4',
       pageOrientation: 'portrait',
-      pageMargins: [ 40, 60, 40, 60 ],
+      pageMargins: [ 40, 60, 40, 40 ],
       watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + localStorage.getItem('fullname_print'), margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
 
@@ -335,20 +335,37 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
         h.setUTCHours(h.getHours());
         var time = h.toJSON().split("T")[1].split(".")[0];
         
-        return {
-          margin: 10,
-          columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
-            { text: [
-                {
-                  text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
-                  alignment: 'right', opacity: 0.3
-                }
-              ],
+        return [
+          {
+            table: {
+              widths: ['auto','auto','auto','auto','auto','auto'],
+              body: [
+                [
+                  { text: 'EoS: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Entrada o Salida.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'AES: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Entrada o Salida de almuerzo.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'PES: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Entrada o Salida de permisos.', border: [false, false, false, false], style: ['quote', 'small'] }
+                ]
+              ]
             }
-          ],
-          fontSize: 10
-        }
+          },
+          {
+            margin: 10,
+            columns: [
+              { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+              { text: [
+                  {
+                    text: '© Pag ' + currentPage.toString() + ' of ' + pageCount,
+                    alignment: 'right', opacity: 0.3
+                  }
+                ],
+              }
+            ],
+            fontSize: 10
+          }
+        ]
       },
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
@@ -476,7 +493,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
                   [
                     { text: 'N°', style: 'tableHeader' },
                     { text: 'Observación', style: 'tableHeader' },
-                    { text: 'E/S', style: 'tableHeader' },
+                    { text: 'Acción', style: 'tableHeader' },
                     { text: 'Horario Trabajo', style: 'tableHeader' },
                     { text: 'Timbre', style: 'tableHeader' },
                     { text: 'Diferencia', style: 'tableHeader' },
