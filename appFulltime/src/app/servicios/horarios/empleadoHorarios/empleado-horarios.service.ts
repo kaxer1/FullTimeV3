@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class EmpleadoHorariosService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -16,57 +15,57 @@ export class EmpleadoHorariosService {
   //Horarios Empleado
 
   ConsultarEmpleadoHorarios() {
-    return this.http.get(`${this.API_URL}/empleadoHorario`);
+    return this.http.get(`${environment.url}/empleadoHorario`);
   }
 
   IngresarEmpleadoHorarios(datos: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario`, datos);
+    return this.http.post(`${environment.url}/empleadoHorario`, datos);
   }
 
   BuscarHorarioCargo(id: any) {
-    return this.http.get(`${this.API_URL}/empleadoHorario/horarioCargo/${id}`);
+    return this.http.get(`${environment.url}/empleadoHorario/horarioCargo/${id}`);
   }
 
   CargaMultiple(formData) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/cargaMultiple`, formData)
+    return this.http.post(`${environment.url}/empleadoHorario/cargaMultiple`, formData)
   }
 
   BuscarNumeroHoras(datos: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/horas`, datos);
+    return this.http.post(`${environment.url}/empleadoHorario/horas`, datos);
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/empleadoHorario`, datos);
+    return this.http.put(`${environment.url}/empleadoHorario`, datos);
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.API_URL}/empleadoHorario/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/empleadoHorario/eliminar/${id}`);
   }
 
   ObtenerHorariosFechasEmpleado(id_empleado: number, data: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/fechas_horario/${id_empleado}`, data)
+    return this.http.post(`${environment.url}/empleadoHorario/fechas_horario/${id_empleado}`, data)
   }
 
   VerificarDuplicidadHorarios(id_empl: number, datos: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/validarFechas/${id_empl}`, datos);
+    return this.http.post(`${environment.url}/empleadoHorario/validarFechas/${id_empl}`, datos);
   }
 
   VerificarDuplicidadHorariosEdicion(id: number, codigo: number, datos: any) {
-    return this.http.post(`${this.API_URL}/empleadoHorario/validarFechas/horarioEmpleado/${id}/empleado/${codigo}`, datos);
+    return this.http.post(`${environment.url}/empleadoHorario/validarFechas/horarioEmpleado/${id}/empleado/${codigo}`, datos);
   }
 
   // Verificar datos de la plantilla de horario fijo
   VerificarDatos_EmpleadoHorario(formData: any, id: number) {
     console.log('entra')
-    return this.http.post<any>(`${this.API_URL}/empleadoHorario/revisarData/${id}`, formData)
+    return this.http.post<any>(`${environment.url}/empleadoHorario/revisarData/${id}`, formData)
   }
   VerificarPlantilla_EmpleadoHorario(formData: any) {
-    return this.http.post<any>(`${this.API_URL}/empleadoHorario/verificarPlantilla/upload`, formData)
+    return this.http.post<any>(`${environment.url}/empleadoHorario/verificarPlantilla/upload`, formData)
   }
   CreaPlanificacion(formData: any, id: number, codigo: number) {
-    return this.http.post<any>(`${this.API_URL}/empleadoHorario/plan_general/upload/${id}/${codigo}`, formData)
+    return this.http.post<any>(`${environment.url}/empleadoHorario/plan_general/upload/${id}/${codigo}`, formData)
   }
   SubirArchivoExcel(formData: any, id: number, codigo: number) {
-    return this.http.post<any>(`${this.API_URL}/empleadoHorario/upload/${id}/${codigo}`, formData)
+    return this.http.post<any>(`${environment.url}/empleadoHorario/upload/${id}/${codigo}`, formData)
   }
 }

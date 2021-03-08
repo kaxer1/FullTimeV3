@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProvinciaService {
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -14,43 +14,43 @@ export class ProvinciaService {
   // Catálogo de Provincias
 
   getProvinciasRest(){
-    return this.http.get(`${this.API_URL}/provincia`);
+    return this.http.get(`${environment.url}/provincia`);
   }
 
   BuscarUnaProvincia(id_pais: number){
-    return this.http.get(`${this.API_URL}/provincia/${id_pais}`);
+    return this.http.get(`${environment.url}/provincia/${id_pais}`);
   }
 
   BuscarUnaProvinciaId(id: number){
-    return this.http.get(`${this.API_URL}/provincia/buscar/${id}`);
+    return this.http.get(`${environment.url}/provincia/buscar/${id}`);
   }
 
   BuscarPaisId(id: number){
-    return this.http.get(`${this.API_URL}/provincia/buscar/pais/${id}`);
+    return this.http.get(`${environment.url}/provincia/buscar/pais/${id}`);
   }
   
   postProvinciaRest(data: any){
-    return this.http.post(`${this.API_URL}/provincia`, data);
+    return this.http.post(`${environment.url}/provincia`, data);
   }
 
   getIdProvinciaRest(nombre: string){
-    return this.http.get(`${this.API_URL}/provincia/nombreProvincia/${nombre}`);
+    return this.http.get(`${environment.url}/provincia/nombreProvincia/${nombre}`);
   }
 
   BuscarContinente(){
-    return this.http.get(`${this.API_URL}/provincia/continentes`);
+    return this.http.get(`${environment.url}/provincia/continentes`);
   }
 
   BuscarPais(continente: string){
-    return this.http.get(`${this.API_URL}/provincia/pais/${continente}`);
+    return this.http.get(`${environment.url}/provincia/pais/${continente}`);
   }
 
   BuscarTodosPaises(){
-    return this.http.get(`${this.API_URL}/provincia/paises`);
+    return this.http.get(`${environment.url}/provincia/paises`);
   }
 
   EliminarProvincia(id: number){
-    return this.http.delete(`${this.API_URL}/provincia/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/provincia/eliminar/${id}`);
   }
 
 }

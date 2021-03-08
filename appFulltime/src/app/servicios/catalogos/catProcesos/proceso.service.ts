@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProcesoService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -15,32 +14,31 @@ export class ProcesoService {
   // catalogo de Procesos
 
   getProcesosRest() {
-    return this.http.get(`${this.API_URL}/proceso`);
+    return this.http.get(`${environment.url}/proceso`);
   }
 
   getOneProcesoRest(id: number) {
-    return this.http.get(`${this.API_URL}/proceso/${id}`);
+    return this.http.get(`${environment.url}/proceso/${id}`);
   }
 
   postProcesoRest(data: any) {
-    return this.http.post(`${this.API_URL}/proceso`, data);
+    return this.http.post(`${environment.url}/proceso`, data);
   }
 
   deleteProcesoRest(id: number){
-    return this.http.delete(`${this.API_URL}/proceso/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/proceso/eliminar/${id}`);
   }
 
   getIdProcesoPadre(procesoPadre: string) {
-    return this.http.get(`${this.API_URL}/proceso/busqueda/${procesoPadre}`);
+    return this.http.get(`${environment.url}/proceso/busqueda/${procesoPadre}`);
   }
 
   ActualizarUnProceso(datos: any) {
-    return this.http.put(`${this.API_URL}/proceso`, datos);
+    return this.http.put(`${environment.url}/proceso`, datos);
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.API_URL}/proceso/xmlDownload`, data);
+    return this.http.post(`${environment.url}/proceso/xmlDownload`, data);
   }
-
 
 }

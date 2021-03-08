@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class PeriodoVacacionesService {
-  API_URL = 'http://localhost:3000';
-
+  
   constructor(
     private http: HttpClient,
   ) { }
@@ -15,35 +15,35 @@ export class PeriodoVacacionesService {
   // Período de Vacaciones
 
   ConsultarPerVacaciones() {
-    return this.http.get(`${this.API_URL}/perVacacion`);
+    return this.http.get(`${environment.url}/perVacacion`);
   }
 
   CrearPerVacaciones(datos: any) {
-    return this.http.post(`${this.API_URL}/perVacacion`, datos);
+    return this.http.post(`${environment.url}/perVacacion`, datos);
   }
 
   BuscarIDPerVacaciones(id: number) {
-    return this.http.get(`${this.API_URL}/perVacacion/buscar/${id}`);
+    return this.http.get(`${environment.url}/perVacacion/buscar/${id}`);
   }
 
   getInfoPeriodoVacacionesPorIdContrato(id_empl_contrato: number) {
-    return this.http.get<any>(`${this.API_URL}/perVacacion/infoPeriodo/${id_empl_contrato}`);
+    return this.http.get<any>(`${environment.url}/perVacacion/infoPeriodo/${id_empl_contrato}`);
   }
 
   ActualizarPeriodoV(datos: any) {
-    return this.http.put(`${this.API_URL}/perVacacion`, datos);
+    return this.http.put(`${environment.url}/perVacacion`, datos);
   }
 
   // Verificar datos de la plantilla de periodo de vacaciones y luego cargar al sistema
   CargarPeriodosMultiples(formData) {
-    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/upload`, formData);
+    return this.http.post<any>(`${environment.url}/perVacacion/cargarPeriodo/upload`, formData);
   }
 
   VerificarDatos(formData) {
-    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/verificarDatos/upload`, formData);
+    return this.http.post<any>(`${environment.url}/perVacacion/cargarPeriodo/verificarDatos/upload`, formData);
   }
 
   VerificarPlantilla(formData) {
-    return this.http.post<any>(`${this.API_URL}/perVacacion/cargarPeriodo/verificarPlantilla/upload`, formData);
+    return this.http.post<any>(`${environment.url}/perVacacion/cargarPeriodo/verificarPlantilla/upload`, formData);
   }
 }

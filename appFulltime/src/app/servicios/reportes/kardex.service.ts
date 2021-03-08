@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class KardexService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient
@@ -16,11 +15,11 @@ export class KardexService {
    * METODOS QUE OBTIENEN LA INFORMACION DEL KARDEX DE VACACIONES DIAS CALENDARIO.
    */
   ObtenerKardexVacacionDiasCalendarioByIdToken() {
-    return this.http.get(`${this.API_URL}/reportes/vacacion`);
+    return this.http.get(`${environment.url}/reportes/vacacion`);
   }
   
   ObtenerKardexVacacionDiasCalendarioByIdEmpleado(id_empleado: number, desde: string, hasta: string) {
-    return this.http.get<any>(`${this.API_URL}/reportes/vacacion/${id_empleado}/${desde}/${hasta}`);
+    return this.http.get<any>(`${environment.url}/reportes/vacacion/${id_empleado}/${desde}/${hasta}`);
   }
   
   /**
@@ -28,11 +27,11 @@ export class KardexService {
    * @param id_empresa ID de la empresa
    */
   LogoEmpresaImagenBase64(id_empresa: string) {
-    return this.http.get<any>(`${this.API_URL}/empresas/logo/codificado/${parseInt(id_empresa)}`);
+    return this.http.get<any>(`${environment.url}/empresas/logo/codificado/${parseInt(id_empresa)}`);
   }
   
   EditarLogoEmpresa(id_empresa: number, formData) {
-    return this.http.put<any>(`${this.API_URL}/empresas/logo/${id_empresa}/uploadImage`, formData);
+    return this.http.put<any>(`${environment.url}/empresas/logo/${id_empresa}/uploadImage`, formData);
   }
 
   /**
@@ -42,7 +41,7 @@ export class KardexService {
    * @param hasta fecha finaliza el mes
    */
   ReporteAsistenciaDetalleConsolidado (id_empleado: number, desde: string, hasta: string) {
-    return this.http.get<any>(`${this.API_URL}/asistencia/${id_empleado}/${desde}/${hasta}`)
+    return this.http.get<any>(`${environment.url}/asistencia/${id_empleado}/${desde}/${hasta}`)
   }
 
   /**
@@ -50,11 +49,11 @@ export class KardexService {
    * @param id_empresa Id de la empresa que pertenecen los empleados
    */
   ListadoEmpleadosConDepartamentoRegimen(id_empresa: number) {
-    return this.http.get<any>(`${this.API_URL}/asistencia/lista-empleados/${id_empresa}`)
+    return this.http.get<any>(`${environment.url}/asistencia/lista-empleados/${id_empresa}`)
   }
 
   ReporteHorasExtras(id_empleado: number, desde: string, hasta: string) {
-    return this.http.get<any>(`${this.API_URL}/reportes/hora-extra/${id_empleado}/${desde}/${hasta}`)
+    return this.http.get<any>(`${environment.url}/reportes/hora-extra/${id_empleado}/${desde}/${hasta}`)
     // http://localhost:3000/reportes/hora-extra/2/2020-12-01/2020-12-31
   }
 

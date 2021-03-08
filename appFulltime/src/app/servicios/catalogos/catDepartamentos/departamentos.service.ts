@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class DepartamentosService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -16,59 +15,59 @@ export class DepartamentosService {
   // catalogo de departamentos
 
   ConsultarDepartamentos() {
-    return this.http.get(`${this.API_URL}/departamento`);
+    return this.http.get(`${environment.url}/departamento`);
   }
 
   ConsultarDepartamentoPorContrato(id_cargo: number) {
-    return this.http.get(`${this.API_URL}/departamento/busqueda-cargo/${id_cargo}`);
+    return this.http.get(`${environment.url}/departamento/busqueda-cargo/${id_cargo}`);
   }
 
   ConsultarNombreDepartamentos() {
-    return this.http.get(`${this.API_URL}/departamento/nombreDepartamento`);
+    return this.http.get(`${environment.url}/departamento/nombreDepartamento`);
   }
 
   ConsultarIdNombreDepartamentos(nombreDepartamento: string) {
-    return this.http.get(`${this.API_URL}/departamento/idDepartamento/${nombreDepartamento}`);
+    return this.http.get(`${environment.url}/departamento/idDepartamento/${nombreDepartamento}`);
   }
 
   postDepartamentoRest(data: any) {
-    return this.http.post(`${this.API_URL}/departamento`, data).pipe(
+    return this.http.post(`${environment.url}/departamento`, data).pipe(
       catchError(data)
     );
   }
 
   getIdDepartamentoPadre(departamentoPadre: string) {
-    return this.http.get(`${this.API_URL}/departamento/busqueda/${departamentoPadre}`);
+    return this.http.get(`${environment.url}/departamento/busqueda/${departamentoPadre}`);
   }
 
   updateDepartamento(idDepartamento: number, data: any) {
-    return this.http.put(`${this.API_URL}/departamento/${idDepartamento}`, data).pipe(
+    return this.http.put(`${environment.url}/departamento/${idDepartamento}`, data).pipe(
       catchError(data)
     );
   }
 
   EncontrarUnDepartamento(id: number) {
-    return this.http.get(`${this.API_URL}/departamento/${id}`);
+    return this.http.get(`${environment.url}/departamento/${id}`);
   }
 
   BuscarDepartamentoSucursal(id: number) {
-    return this.http.get(`${this.API_URL}/departamento/buscarDepa/${id}`);
+    return this.http.get(`${environment.url}/departamento/buscarDepa/${id}`);
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.API_URL}/departamento/xmlDownload`, data);
+    return this.http.post(`${environment.url}/departamento/xmlDownload`, data);
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.API_URL}/departamento/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/departamento/eliminar/${id}`);
   }
 
   BuscarDepaSucursal(id_sucursal: number) {
-    return this.http.get(`${this.API_URL}/departamento/buscar/datosDepartamento/${id_sucursal}`);
+    return this.http.get(`${environment.url}/departamento/buscar/datosDepartamento/${id_sucursal}`);
   }
 
   BuscarDepartamentoRegimen(id: number) {
-    return this.http.get(`${this.API_URL}/departamento/buscar/regimen-departamento/${id}`);
+    return this.http.get(`${environment.url}/departamento/buscar/regimen-departamento/${id}`);
   }
 
 }

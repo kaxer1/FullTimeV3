@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
 
-  API_URI = 'http://localhost:3000';
-
   constructor(
     private http: HttpClient,
     public router: Router) { }
 
   postCredenciales(data: any) {
-    return this.http.post<any>(`${this.API_URI}/login`, data);
+    return this.http.post<any>(`${environment.url}/login`, data);
   }
 
   loggedIn() {
@@ -57,10 +55,10 @@ export class LoginService {
   }
 
   forgetPassword(data: any) {
-    return this.http.post(`${this.API_URI}/login/recuperar-contrasenia/`, data)
+    return this.http.post(`${environment.url}/login/recuperar-contrasenia/`, data)
   }
 
   changePassword(data: any) {
-    return this.http.post(`${this.API_URI}/login/cambiar-contrasenia`, data)
+    return this.http.post(`${environment.url}/login/cambiar-contrasenia`, data)
   }
 }
