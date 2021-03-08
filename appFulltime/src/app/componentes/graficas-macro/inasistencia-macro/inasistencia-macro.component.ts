@@ -206,9 +206,7 @@ export class InasistenciaMacroComponent implements OnInit {
         { text: 'Métrica Inasistencia', bold: true, fontSize: 20, alignment: 'center', margin: [0, -40, 0, 10] },
         { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
         { image: this.graficaBase64, width: 525, margin: [0, 10, 0, 10] },
-        ...this.ImprimirDatos().map(obj => {
-          return obj
-        }),
+        this.ImprimirDatos(),
         { text: this.texto_grafica, margin: [10, 10, 10, 10], alignment: 'justify' },
       ],
       styles: {
@@ -223,42 +221,63 @@ export class InasistenciaMacroComponent implements OnInit {
     let datos = this.datos_inasis.filter(obj => {
       return this.inasistencia.xAxis.data.includes(obj.mes)
     })
-    let n: any = [];
-    let colums = { alignment: 'justify', columns: [] };
-    let colums1 = { alignment: 'justify', columns: [] };
-    let colums2 = { alignment: 'justify', columns: [] };
-    let colums3 = { alignment: 'justify', columns: [] };
+    
+    let colums = [], colums1 = [], colums2 = [], colums3 = [];
 
     for (let i = 0; i < datos.length; i++) {
 
       if (i >= 0 && i <= 2) {
-        colums.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
+        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
       };
       if (i >= 3 && i <= 5) {
-        colums1.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
+        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
       };
       if (i >= 6 && i <= 8) {
-        colums2.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
+        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
       }; 
       if (i >= 9 && i <= 11) {
-        colums3.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5] 
-        });
+        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
+        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
       }
     }
-    
-    if (colums.columns.length > 0) { n.push(colums); }
-    if (colums1.columns.length > 0) { n.push(colums1); }
-    if (colums2.columns.length > 0) { n.push(colums2); }
-    if (colums3.columns.length > 0) { n.push(colums3); }    
 
-    return n
+    var other = [];
+
+    switch (colums.length) {
+      case 2: other = ['auto',40]; break;
+      case 4: other = ['auto',40,'auto',40]; break;
+      case 6: other = ['auto',40,'auto',40,'auto',40]; break;
+      default: other = []; break;
+    }
+
+    let tabla = {
+			table: {
+        widths: other,
+				body: []
+			}
+		}
+
+    let texto = {text: ''};
+    
+    if (colums.length > 0) { tabla.table.body.push(colums); }
+    if (colums1.length > 0) { tabla.table.body.push(colums1); }
+    if (colums2.length > 0) { tabla.table.body.push(colums2); }
+    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
+    console.log(tabla);
+
+    let columnas = {
+      alignment: 'justify',
+			columns: [
+				{ width: 95, text: '' },
+				tabla,
+				{ width: 95, text: '' }
+			]
+		}
+
+    return columnas
   }
 
   limpiarCamposRango() {

@@ -540,7 +540,7 @@ export class ReporteFaltasComponent implements OnInit {
                   ]
                 }),
                 [
-                  { colSpan: 9, text: 'Nro faltas: ', style: 'itemsTableInfo', alignment: 'right'},
+                  { colSpan: 9, text: 'Total Faltas Registradas: ', style: 'itemsTableInfo', alignment: 'right'},
                   '', '', '', '', '', '', '', '',
                   { text: obj2.faltas.length, bold: true, fontSize: 15, alignment: 'center', margin: [0, 5, 0, 5]}
                 ]
