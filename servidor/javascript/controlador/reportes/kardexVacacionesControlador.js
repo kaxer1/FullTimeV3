@@ -14,12 +14,7 @@ const CalcularHorasExtras_1 = require("../../libs/CalcularHorasExtras");
 class KardexVacacion {
     CarcularVacacionByIdToken(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log(req.userIdEmpleado);
-            // console.log(req.id_empresa)
-            console.log(req.params.desde);
-            console.log(req.params.hasta);
-            // let fec_desde = new Date(req.params.desde)
-            // let fec_hasta = new Date(req.params.hasta)
+            // console.log(req.params.desde, req.params.hasta);
             let fec_desde = req.params.desde;
             let fec_hasta = req.params.hasta;
             let jsonData = yield CalcularVacaciones_1.vacacionesByIdUser(req.userIdEmpleado, fec_desde, fec_hasta);
@@ -29,11 +24,6 @@ class KardexVacacion {
     CarcularVacacionByIdEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let id_empleado = parseInt(req.params.id_empleado);
-            // console.log(req.params.desde);
-            // console.log(req.params.hasta);
-            // console.log(id_empleado)
-            // let fec_desde = new Date(req.params.desde)
-            // let fec_hasta = new Date(req.params.hasta)
             let fec_desde = req.params.desde;
             let fec_hasta = req.params.hasta;
             let jsonData = yield CalcularVacaciones_1.vacacionesByIdUser(id_empleado, fec_desde, fec_hasta);
@@ -43,11 +33,6 @@ class KardexVacacion {
     CarcularHorasExtras(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let id_empleado = parseInt(req.params.id_empleado);
-            // console.log(req.params.desde);
-            // console.log(req.params.hasta);
-            // console.log(id_empleado)
-            // let fec_desde = new Date(req.params.desde)
-            // let fec_hasta = new Date(req.params.hasta)
             let fec_desde = req.params.desde;
             let fec_hasta = req.params.hasta;
             let jsonData = yield CalcularHorasExtras_1.CalcularHoraExtra(id_empleado, new Date(fec_desde), new Date(fec_hasta));
@@ -57,7 +42,6 @@ class KardexVacacion {
     ReportePeriodosVacaciones(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let id_empleado = parseInt(req.params.id_empleado);
-            // console.log('llego a periodo de vacación');
             let jsonData = yield CalcularVacaciones_1.ReportePeriVacaciones(id_empleado);
             res.jsonp(jsonData);
         });

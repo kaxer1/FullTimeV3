@@ -347,7 +347,7 @@ const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
 exports.default = REPORTE_A_CONTROLADOR;
 const BuscarTimbresEoSReporte = function (fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion = $3 AND id_empleado = $4 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, 'EoS', codigo])
+        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
             .then(res => {
             return res.rows;
         });
@@ -402,7 +402,7 @@ function DiaSemana(dia) {
 }
 const BuscarTimbresReporte = function (fecha, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\') ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
+        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\',\'S\',\'E\',\'E/A\',\'S/A\') ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
             .then(res => {
             return res.rows;
         });
@@ -410,155 +410,191 @@ const BuscarTimbresReporte = function (fecha, codigo) {
 };
 const ModelarHorasTrabajaReporte = function (codigo, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        let array = yield database_1.default.query('SELECT DISTINCT dh.hora, dh.orden FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+        console.log(codigo, fec_inicio, fec_final);
+        let array = yield database_1.default.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
             'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
-            'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ', [codigo, fec_inicio, fec_final])
+            'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio', [codigo, fec_inicio, fec_final])
             .then(res => { return res.rows; });
         if (array.length === 0)
             return [];
-        // console.log('horarios: ',array);
-        var fec_aux = new Date(fec_inicio);
-        var fecha1 = moment_1.default(fec_inicio);
-        var fecha2 = moment_1.default(fec_final);
-        var diasDiferencia = fecha2.diff(fecha1, 'days');
-        let respuesta = [];
-        for (let i = 0; i <= diasDiferencia; i++) {
-            let horario_res = {
-                fecha: fec_aux.toJSON().split('T')[0],
-                timbres: yield BuscarTimbresReporte(fec_aux.toJSON().split('T')[0], codigo),
-                horario: array
-            };
-            if (horario_res.timbres.length > 0) {
-                respuesta.push(horario_res);
-            }
-            fec_aux.setDate(fec_aux.getDate() + 1);
-        }
-        let arr_respuesta = [];
-        respuesta.forEach((o) => {
-            let obj = {
-                fecha: o.fecha,
-                horarios: [],
-                total_timbres: '',
-                total_horario: '',
-                total_diferencia: '',
-            };
-            let arr_EoS = [];
-            let arr_AES = [];
-            let arr_horario_EoS = [];
-            let arr_horario_AES = [];
-            o.horario.forEach((h) => {
-                let obj2 = {
-                    hora_horario: h.hora,
-                    hora_diferencia: '',
-                    hora_timbre: '',
-                    accion: '',
-                    observacion: ''
-                };
-                let diferencia = 0;
-                let dif = 0;
-                switch (h.orden) {
-                    case 1:
-                        var arr3 = o.timbres.filter((t) => { return t.accion === 'EoS'; });
-                        if (arr3.length === 0) {
-                            obj2.accion = 'EoS';
-                            obj2.hora_timbre = h.hora;
-                            obj2.observacion = 'Entrada';
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
-                        }
-                        else {
-                            obj2.accion = arr3[0].accion;
-                            obj2.observacion = arr3[0].observacion;
-                            obj2.hora_timbre = arr3[0].fec_hora_timbre.split(' ')[1];
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
-                        }
-                        diferencia = (dif < 0) ? dif * (-1) : dif;
-                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-                        arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
-                        arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
-                        break;
-                    case 2:
-                        var arr4 = o.timbres.filter((t) => { return t.accion === 'AES'; });
-                        if (arr4.length === 0) {
-                            obj2.accion = 'AES';
-                            obj2.hora_timbre = h.hora;
-                            obj2.observacion = 'Salida Almuerzo';
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
-                        }
-                        else {
-                            obj2.accion = arr4[0].accion;
-                            obj2.observacion = arr4[0].observacion;
-                            obj2.hora_timbre = arr4[0].fec_hora_timbre.split(' ')[1];
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
-                        }
-                        diferencia = (dif < 0) ? dif * (-1) : dif;
-                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-                        arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
-                        arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
-                        break;
-                    case 3:
-                        var arr1 = o.timbres.filter((t) => { return t.accion === 'AES'; });
-                        if (arr1.length === 0) {
-                            obj2.accion = 'AES';
-                            obj2.hora_timbre = h.hora;
-                            obj2.observacion = 'Entrada Almuerzo';
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
-                        }
-                        else {
-                            obj2.accion = arr1[arr1.length - 1].accion;
-                            obj2.observacion = arr1[arr1.length - 1].observacion;
-                            obj2.hora_timbre = arr1[arr1.length - 1].fec_hora_timbre.split(' ')[1];
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
-                        }
-                        diferencia = (dif < 0) ? dif * (-1) : dif;
-                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-                        arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
-                        arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
-                        break;
-                    case 4:
-                        var arr2 = o.timbres.filter((t) => { return t.accion === 'EoS'; });
-                        if (arr2.length === 0) {
-                            obj2.accion = 'EoS';
-                            obj2.hora_timbre = h.hora;
-                            obj2.observacion = 'Salida';
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
-                        }
-                        else {
-                            obj2.accion = arr2[arr2.length - 1].accion;
-                            obj2.observacion = arr2[arr2.length - 1].observacion;
-                            obj2.hora_timbre = arr2[arr2.length - 1].fec_hora_timbre.split(' ')[1];
-                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
-                        }
-                        diferencia = (dif < 0) ? dif * (-1) : dif;
-                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-                        arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
-                        arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
-                        break;
-                    default:
-                        break;
-                }
-                obj.horarios.push(obj2);
+        console.log(array);
+        var nuevoArray = [];
+        var arrayTemporal = [];
+        for (var i = 0; i < array.length; i++) {
+            arrayTemporal = nuevoArray.filter((res) => {
+                return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"];
             });
-            var resta_hor_EoS = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0]);
-            var resta_hor_AES = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0]);
-            let resta_hor = resta_hor_EoS - resta_hor_AES;
-            obj.total_horario = SegundosToHHMM(resta_hor);
-            let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0]);
-            let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0]);
-            let resta_tim = resta_tim_EoS - resta_tim_AES;
-            obj.total_timbres = SegundosToHHMM(resta_tim);
-            let dif_total = resta_tim - resta_hor;
-            let diferencia_Total = 0;
-            diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
-            obj.total_diferencia = (dif_total < 0) ? '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
-            arr_respuesta.push(obj);
+            if (arrayTemporal.length > 0) {
+                nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i]);
+            }
+            else {
+                nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"], "Horario": [array[i]] });
+            }
+        }
+        function compareFechas(a, b) {
+            var uno = new Date(a.Fecha);
+            var dos = new Date(b.Fecha);
+            if (uno < dos)
+                return -1;
+            if (uno > dos)
+                return 1;
+            return 0;
+        }
+        function compareOrden(a, b) {
+            if (a.orden < b.orden)
+                return -1;
+            if (a.orden > b.orden)
+                return 1;
+            return 0;
+        }
+        nuevoArray.sort(compareFechas);
+        let res_timbre = yield Promise.all(nuevoArray.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            var fec_aux = new Date(obj.Fecha.split(' ')[0]);
+            var fecha1 = moment_1.default(obj.Fecha.split(' ')[0]);
+            var fecha2 = moment_1.default(obj.Fecha.split(' ')[1]);
+            var diasDiferencia = fecha2.diff(fecha1, 'days');
+            let res = [];
+            for (let i = 0; i <= diasDiferencia; i++) {
+                let horario_res = {
+                    fecha: fec_aux.toJSON().split('T')[0],
+                    timbres: yield BuscarTimbresReporte(fec_aux.toJSON().split('T')[0], codigo),
+                    horario: obj.Horario.sort(compareOrden)
+                };
+                if (horario_res.timbres.length > 0) {
+                    res.push(horario_res);
+                }
+                fec_aux.setDate(fec_aux.getDate() + 1);
+            }
+            return res;
+        })));
+        let respuesta = res_timbre.filter((obj) => {
+            return obj.length > 0;
         });
+        let arr_respuesta = [];
+        respuesta.forEach((arr) => {
+            arr.forEach((o) => {
+                let obj = {
+                    fecha: o.fecha,
+                    horarios: [],
+                    total_timbres: '',
+                    total_horario: '',
+                    total_diferencia: '',
+                };
+                let arr_EoS = [];
+                let arr_AES = [];
+                let arr_horario_EoS = [];
+                let arr_horario_AES = [];
+                o.horario.forEach((h) => {
+                    let obj2 = {
+                        hora_horario: h.hora,
+                        hora_diferencia: '',
+                        hora_timbre: '',
+                        accion: '',
+                        observacion: ''
+                    };
+                    let diferencia = 0;
+                    let dif = 0;
+                    switch (h.orden) {
+                        case 1:
+                            var arr3 = o.timbres.filter((t) => { return t.accion === 'EoS' || t.accion === 'E'; });
+                            if (arr3.length === 0) {
+                                obj2.accion = 'EoS';
+                                obj2.hora_timbre = h.hora;
+                                obj2.observacion = 'Entrada';
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            }
+                            else {
+                                obj2.accion = arr3[0].accion;
+                                obj2.observacion = arr3[0].observacion;
+                                obj2.hora_timbre = arr3[0].fec_hora_timbre.split(' ')[1];
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            }
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 2:
+                            var arr4 = o.timbres.filter((t) => { return t.accion === 'AES' || t.accion === 'S/A'; });
+                            if (arr4.length === 0) {
+                                obj2.accion = 'AES';
+                                obj2.hora_timbre = h.hora;
+                                obj2.observacion = 'Salida Almuerzo';
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            }
+                            else {
+                                obj2.accion = arr4[0].accion;
+                                obj2.observacion = arr4[0].observacion;
+                                obj2.hora_timbre = arr4[0].fec_hora_timbre.split(' ')[1];
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            }
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 3:
+                            var arr1 = o.timbres.filter((t) => { return t.accion === 'AES' || t.accion === 'E/A'; });
+                            if (arr1.length === 0) {
+                                obj2.accion = 'AES';
+                                obj2.hora_timbre = h.hora;
+                                obj2.observacion = 'Entrada Almuerzo';
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            }
+                            else {
+                                obj2.accion = arr1[arr1.length - 1].accion;
+                                obj2.observacion = arr1[arr1.length - 1].observacion;
+                                obj2.hora_timbre = arr1[arr1.length - 1].fec_hora_timbre.split(' ')[1];
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            }
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 4:
+                            var arr2 = o.timbres.filter((t) => { return t.accion === 'EoS' || t.accion === 'S'; });
+                            if (arr2.length === 0) {
+                                obj2.accion = 'EoS';
+                                obj2.hora_timbre = h.hora;
+                                obj2.observacion = 'Salida';
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            }
+                            else {
+                                obj2.accion = arr2[arr2.length - 1].accion;
+                                obj2.observacion = arr2[arr2.length - 1].observacion;
+                                obj2.hora_timbre = arr2[arr2.length - 1].fec_hora_timbre.split(' ')[1];
+                                dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            }
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        default:
+                            break;
+                    }
+                    obj.horarios.push(obj2);
+                });
+                var resta_hor_EoS = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0]);
+                var resta_hor_AES = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0]);
+                let resta_hor = resta_hor_EoS - resta_hor_AES;
+                obj.total_horario = SegundosToHHMM(resta_hor);
+                let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0]);
+                let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0]);
+                let resta_tim = resta_tim_EoS - resta_tim_AES;
+                obj.total_timbres = SegundosToHHMM(resta_tim);
+                let dif_total = resta_tim - resta_hor;
+                let diferencia_Total = 0;
+                diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
+                obj.total_diferencia = (dif_total < 0) ? '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
+                arr_respuesta.push(obj);
+            });
+        });
+        nuevoArray = [];
+        res_timbre = [];
         respuesta = [];
         array = [];
-        arr_respuesta.forEach((o) => {
-            console.log('***************************');
-            console.log(o);
-            console.log('***************************');
-        });
         return arr_respuesta;
     });
 };
@@ -655,16 +691,29 @@ const TimbresTabulados = function (fec_inicio, fec_final, codigo) {
         nuevoArray.sort(compare);
         let arrayModelado = [];
         nuevoArray.forEach((obj) => {
-            let e = {
-                fecha: obj.Fecha,
-                entrada: obj.Timbres.filter((ele) => { return ele.accion === 'EoS'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
-                salida: obj.Timbres.filter((ele) => { return ele.accion === 'EoS'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[1],
-                sal_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
-                ent_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[1],
-                desconocido: obj.Timbres.filter((ele) => { return ele.accion != 'EoS' && ele.accion != 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0]
-            };
-            // console.log(e); 
-            arrayModelado.push(e);
+            console.log('NUEVO ARRAY TABULADO: ', obj);
+            if (obj.Timbres[0].accion === 'EoS' || obj.Timbres[0].accion === 'AES' || obj.Timbres[0].accion === 'PES') {
+                let e = {
+                    fecha: obj.Fecha,
+                    entrada: obj.Timbres.filter((ele) => { return ele.accion === 'EoS'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    salida: obj.Timbres.filter((ele) => { return ele.accion === 'EoS'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[1],
+                    sal_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    ent_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[1],
+                    desconocido: obj.Timbres.filter((ele) => { return ele.accion != 'EoS' && ele.accion != 'AES'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0]
+                };
+                arrayModelado.push(e);
+            }
+            else {
+                let e = {
+                    fecha: obj.Fecha,
+                    entrada: obj.Timbres.filter((ele) => { return ele.accion === 'E'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    salida: obj.Timbres.filter((ele) => { return ele.accion === 'S'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    sal_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'S/A'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    ent_Alm: obj.Timbres.filter((ele) => { return ele.accion === 'E/A'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0],
+                    desconocido: obj.Timbres.filter((ele) => { return ele.accion != 'E' && ele.accion != 'S' && ele.accion != 'S/A' && ele.accion != 'E/A'; }).map((ele) => { return ele.fec_hora_timbre.split(' ')[1]; })[0]
+                };
+                arrayModelado.push(e);
+            }
         });
         return arrayModelado;
     });
@@ -692,7 +741,7 @@ const TimbresIncompletos = function (fec_inicio, fec_final, codigo) {
             obj.dias_laborados = yield Promise.all(obj.dias_laborados.map((obj1) => __awaiter(this, void 0, void 0, function* () {
                 return {
                     fecha: obj1.fecha,
-                    timbres_hora: yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\')', [obj.codigo, obj1.fecha]).then(result => { return result.rows; })
+                    timbres_hora: yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')', [obj.codigo, obj1.fecha]).then(result => { return result.rows; })
                 };
             })));
             obj.dias_laborados = obj.dias_laborados.map((o) => {

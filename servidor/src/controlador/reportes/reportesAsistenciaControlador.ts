@@ -202,7 +202,7 @@ class ReportesAsistenciaControlador {
         console.log(datos);
         let n = await Promise.all(datos.map(async(obj:IReporteAtrasos) => {
             obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
-                ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
+                ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {                        
                         o.timbres = await ModelarHorasTrabajaReporte(o.codigo, desde, hasta);
                         return o})
                     )
@@ -378,7 +378,7 @@ const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
 export default REPORTE_A_CONTROLADOR  
 
 const BuscarTimbresEoSReporte = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion = $3 AND id_empleado = $4 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, 'EoS', codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
         .then(res => {
             return res.rows;
         })
@@ -432,184 +432,219 @@ function DiaSemana(dia: Date) {
 }
 
 const BuscarTimbresReporte = async function (fecha: string, codigo: number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\') ORDER BY fec_hora_timbre ASC ',[ fecha, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\',\'S\',\'E\',\'E/A\',\'S/A\') ORDER BY fec_hora_timbre ASC ',[ fecha, codigo])
         .then(res => {
             return res.rows;
         })
 }
 
 const ModelarHorasTrabajaReporte = async function (codigo: number, fec_inicio: string, fec_final: string): Promise<any[]> {
+    console.log(codigo, fec_inicio ,fec_final);
     
-    let array = await pool.query('SELECT DISTINCT dh.hora, dh.orden FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
+    let array = await pool.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
     'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
-    'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ',[codigo, fec_inicio, fec_final])
+    'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio',[codigo, fec_inicio, fec_final])
     .then(res => { return res.rows})
 
     if (array.length === 0) return []
-    // console.log('horarios: ',array);
+    console.log(array);
+    
+    var nuevoArray: any = []
+	var arrayTemporal: any = []
+	for(var i = 0; i < array.length; i++){
+	    arrayTemporal = nuevoArray.filter((res:any) => {
+            return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"]
+        });
+	    if(arrayTemporal.length>0){
+	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
+	    }else{
+	        nuevoArray.push({"Fecha" : array[i]["fec_inicio"]  + ' ' + array[i]["fec_final"] , "Horario" : [ array[i] ]})
+	    }
+	}
 
-    var fec_aux = new Date(fec_inicio)
-    var fecha1 = moment(fec_inicio);
-    var fecha2 = moment(fec_final);
-
-    var diasDiferencia = fecha2.diff(fecha1, 'days');
-    let respuesta: Array<any> = [];
-    for (let i = 0; i <= diasDiferencia; i++) {
-        let horario_res = {
-            fecha: fec_aux.toJSON().split('T')[0],
-            timbres: await BuscarTimbresReporte(fec_aux.toJSON().split('T')[0], codigo),
-            horario: array
-        }
-        if (horario_res.timbres.length > 0) {
-            respuesta.push(horario_res)
-        }
-        fec_aux.setDate(fec_aux.getDate() + 1)
+    function compareFechas(a: any, b: any) {
+        var uno = new Date(a.Fecha);
+        var dos = new Date(b.Fecha);
+        if (uno < dos) return -1;
+        if (uno > dos) return 1;
+        return 0;
     }
+    function compareOrden(a: any, b: any) {
+        if (a.orden < b.orden) return -1;
+        if (a.orden > b.orden) return 1;
+        return 0;
+    }
+
+    nuevoArray.sort(compareFechas);
+
+    let res_timbre: any = await Promise.all(nuevoArray.map(async(obj:any) => {
+        var fec_aux = new Date(obj.Fecha.split(' ')[0])
+        var fecha1 = moment(obj.Fecha.split(' ')[0]);
+        var fecha2 = moment(obj.Fecha.split(' ')[1]);
+        var diasDiferencia = fecha2.diff(fecha1, 'days');
+
+        let res: Array<any> = [];
+        for (let i = 0; i <= diasDiferencia; i++) {
+            let horario_res = {
+                fecha: fec_aux.toJSON().split('T')[0],
+                timbres: await BuscarTimbresReporte(fec_aux.toJSON().split('T')[0], codigo),
+                horario: obj.Horario.sort(compareOrden)
+            }
+            if (horario_res.timbres.length > 0) {
+                res.push(horario_res)
+            }
+            fec_aux.setDate(fec_aux.getDate() + 1)
+        }
+        
+        return res
+    }))
+
+    let respuesta = res_timbre.filter((obj:any) => {
+        return obj.length > 0
+    })
 
     let arr_respuesta: Array<any> = [];
 
-    respuesta.forEach((o: any) => {
-        let obj = {
-            fecha: o.fecha,
-            horarios: [],
-            total_timbres: '',
-            total_horario: '',
-            total_diferencia: '',
-        } as IHorarioTrabajo;
-
-        let arr_EoS: Array<any> = [];
-        let arr_AES: Array<any> = [];
-        let arr_horario_EoS: Array<any> = [];
-        let arr_horario_AES: Array<any> = [];
-
-        o.horario.forEach((h: any) => {
-            let obj2 = {
-                hora_horario: h.hora,
-                hora_diferencia: '',
-                hora_timbre: '',
-                accion: '',
-                observacion: ''
-            }
-            let diferencia = 0;
-            let dif = 0;
-            switch (h.orden) {
-                case 1:
-                    var arr3 = o.timbres.filter((t: any) => { return t.accion === 'EoS'})
-                    if (arr3.length === 0) {
-                        obj2.accion = 'EoS';
-                        obj2.hora_timbre = h.hora;
-                        obj2.observacion = 'Entrada';
-                        dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-                    } else {
-                        obj2.accion = arr3[0].accion;
-                        obj2.observacion = arr3[0].observacion;
-                        obj2.hora_timbre = arr3[0].fec_hora_timbre.split(' ')[1];
-                        dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-                    }
-
-                    diferencia = (dif < 0) ? dif * (-1) : dif;
-                    obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-
-                    arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario) )
-                    arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre) );
-                    break;
-                case 2:
-                    var arr4 = o.timbres.filter((t: any) => { return t.accion === 'AES'})
-                    if (arr4.length === 0) {
-                        obj2.accion = 'AES';
-                        obj2.hora_timbre = h.hora;
-                        obj2.observacion = 'Salida Almuerzo';
-                        dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-                    } else {
-                        obj2.accion = arr4[0].accion;
-                        obj2.observacion = arr4[0].observacion;
-                        obj2.hora_timbre = arr4[0].fec_hora_timbre.split(' ')[1];
-                        dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-                    }
-
-                    diferencia = (dif < 0) ? dif * (-1) : dif;
-                    obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-
-                    arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
-                    arr_AES.push(HHMMtoSegundos(obj2.hora_timbre) );
-                    break;
-                case 3:
-                    var arr1 = o.timbres.filter((t: any) => { return t.accion === 'AES'})
-                    if (arr1.length === 0) {
-                        obj2.accion = 'AES';
-                        obj2.hora_timbre = h.hora;
-                        obj2.observacion = 'Entrada Almuerzo';
-                        dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-                    } else {
-                        obj2.accion = arr1[arr1.length - 1].accion;
-                        obj2.observacion = arr1[arr1.length - 1].observacion;
-                        obj2.hora_timbre = arr1[arr1.length - 1].fec_hora_timbre.split(' ')[1];
-                        dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
-                    }
-                    
-                    diferencia = (dif < 0) ? dif * (-1) : dif;
-                    obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-
-                    arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
-                    arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
-                    break;
-                case 4:
-                    var arr2 = o.timbres.filter((t: any) => { return t.accion === 'EoS'})
-                    if (arr2.length === 0) {
-                        obj2.accion = 'EoS';
-                        obj2.hora_timbre = h.hora;
-                        obj2.observacion = 'Salida';
-                        dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-                    } else {
-                        obj2.accion = arr2[arr2.length - 1].accion;
-                        obj2.observacion = arr2[arr2.length - 1].observacion;
-                        obj2.hora_timbre = arr2[arr2.length - 1].fec_hora_timbre.split(' ')[1];
-                        dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
-                    }
-
-                    diferencia = (dif < 0) ? dif * (-1) : dif;
-                    obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
-
-                    arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
-                    arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
-                    break;
-                default:
-                    break;
-            }
-
-            obj.horarios.push(obj2)
+    respuesta.forEach((arr: any) => {
+        arr.forEach((o:any) => {
+            let obj = {
+                fecha: o.fecha,
+                horarios: [],
+                total_timbres: '',
+                total_horario: '',
+                total_diferencia: '',
+            } as IHorarioTrabajo;
+    
+            let arr_EoS: Array<any> = [];
+            let arr_AES: Array<any> = [];
+            let arr_horario_EoS: Array<any> = [];
+            let arr_horario_AES: Array<any> = [];
+            
+            o.horario.forEach((h: any) => {
+                
+                let obj2 = {
+                    hora_horario: h.hora,
+                    hora_diferencia: '',
+                    hora_timbre: '',
+                    accion: '',
+                    observacion: ''
+                }
+                let diferencia = 0;
+                let dif = 0;
+                switch (h.orden) {
+                    case 1:
+                        var arr3 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'E'})
+                        if (arr3.length === 0) {
+                            obj2.accion = 'EoS';
+                            obj2.hora_timbre = h.hora;
+                            obj2.observacion = 'Entrada';
+                            dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+                        } else {
+                            obj2.accion = arr3[0].accion;
+                            obj2.observacion = arr3[0].observacion;
+                            obj2.hora_timbre = arr3[0].fec_hora_timbre.split(' ')[1];
+                            dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+                        }
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+    
+                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario) )
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        break;
+                    case 2:
+                        var arr4 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'S/A'})
+                        if (arr4.length === 0) {
+                            obj2.accion = 'AES';
+                            obj2.hora_timbre = h.hora;
+                            obj2.observacion = 'Salida Almuerzo';
+                            dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+                        } else {
+                            obj2.accion = arr4[0].accion;
+                            obj2.observacion = arr4[0].observacion;
+                            obj2.hora_timbre = arr4[0].fec_hora_timbre.split(' ')[1];
+                            dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+                        }
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+    
+                        arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        break;
+                    case 3:
+                        var arr1 = o.timbres.filter((t: any) => { return t.accion === 'AES' || t.accion === 'E/A'})
+                        if (arr1.length === 0) {
+                            obj2.accion = 'AES';
+                            obj2.hora_timbre = h.hora;
+                            obj2.observacion = 'Entrada Almuerzo';
+                            dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+                        } else {
+                            obj2.accion = arr1[arr1.length - 1].accion;
+                            obj2.observacion = arr1[arr1.length - 1].observacion;
+                            obj2.hora_timbre = arr1[arr1.length - 1].fec_hora_timbre.split(' ')[1];
+                            dif = HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+                        }
+                        
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+    
+                        arr_horario_AES.push(HHMMtoSegundos(obj2.hora_horario))
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
+                        break;
+                    case 4:
+                        var arr2 = o.timbres.filter((t: any) => { return t.accion === 'EoS' || t.accion === 'S'})
+                        if (arr2.length === 0) {
+                            obj2.accion = 'EoS';
+                            obj2.hora_timbre = h.hora;
+                            obj2.observacion = 'Salida';
+                            dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+                        } else {
+                            obj2.accion = arr2[arr2.length - 1].accion;
+                            obj2.observacion = arr2[arr2.length - 1].observacion;
+                            obj2.hora_timbre = arr2[arr2.length - 1].fec_hora_timbre.split(' ')[1];
+                            dif = HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+                        }
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+                        obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+    
+                        arr_horario_EoS.push(HHMMtoSegundos(obj2.hora_horario))
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
+                        break;
+                    default:
+                        break;
+                }
+    
+                obj.horarios.push(obj2)
+            });
+    
+            var resta_hor_EoS  = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
+            var resta_hor_AES  = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
+            let resta_hor = resta_hor_EoS - resta_hor_AES;
+            obj.total_horario = SegundosToHHMM(resta_hor);
+    
+            let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0])
+            let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0])
+            let resta_tim = resta_tim_EoS - resta_tim_AES;
+            obj.total_timbres = SegundosToHHMM(resta_tim);
+    
+            let dif_total = resta_tim - resta_hor;
+            let diferencia_Total = 0;
+    
+            diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
+            obj.total_diferencia = (dif_total < 0) ?  '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
+            
+            arr_respuesta.push(obj)
         });
-
-        var resta_hor_EoS  = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0])
-        var resta_hor_AES  = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0])
-        let resta_hor = resta_hor_EoS - resta_hor_AES;
-        obj.total_horario = SegundosToHHMM(resta_hor);
-
-        let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0])
-        let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0])
-        let resta_tim = resta_tim_EoS - resta_tim_AES;
-        obj.total_timbres = SegundosToHHMM(resta_tim);
-
-        let dif_total = resta_tim - resta_hor;
-        let diferencia_Total = 0;
-
-        diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
-        obj.total_diferencia = (dif_total < 0) ?  '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
-        
-        arr_respuesta.push(obj)
     })
 
+    nuevoArray = [];
+    res_timbre = [];
     respuesta = [];
     array = [];
-
-    arr_respuesta.forEach((o: any) => {
-        console.log('***************************');
-        console.log(o);
-        console.log('***************************');
-    })
     
     return arr_respuesta
-
 }
 
 function SegundosToHHMM(dato: number) {
@@ -708,17 +743,31 @@ const TimbresTabulados = async function (fec_inicio: string, fec_final: string, 
 
     nuevoArray.sort(compare);
     let arrayModelado: any = [];
-    nuevoArray.forEach((obj:any) => { 
-        let e = {
-            fecha: obj.Fecha,
-            entrada: obj.Timbres.filter((ele: any) => { return ele.accion === 'EoS' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
-            salida: obj.Timbres.filter((ele: any) => { return ele.accion === 'EoS' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[1],
-            sal_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
-            ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[1],
-            desconocido: obj.Timbres.filter((ele: any) => { return ele.accion != 'EoS' && ele.accion != 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0]
-        } as tim_tabulado;
-        // console.log(e); 
-        arrayModelado.push(e)
+
+    nuevoArray.forEach((obj:any) => {
+        console.log('NUEVO ARRAY TABULADO: ', obj);
+        
+        if (obj.Timbres[0].accion === 'EoS' || obj.Timbres[0].accion === 'AES' || obj.Timbres[0].accion === 'PES') {
+            let e = {
+                fecha: obj.Fecha,
+                entrada: obj.Timbres.filter((ele: any) => { return ele.accion === 'EoS' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                salida: obj.Timbres.filter((ele: any) => { return ele.accion === 'EoS' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[1],
+                sal_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[1],
+                desconocido: obj.Timbres.filter((ele: any) => { return ele.accion != 'EoS' && ele.accion != 'AES' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0]
+            } as tim_tabulado;
+            arrayModelado.push(e)
+        } else {
+            let e = {
+                fecha: obj.Fecha,
+                entrada: obj.Timbres.filter((ele: any) => { return ele.accion === 'E' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                salida: obj.Timbres.filter((ele: any) => { return ele.accion === 'S' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                sal_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'S/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                ent_Alm: obj.Timbres.filter((ele: any) => { return ele.accion === 'E/A'}).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0],
+                desconocido: obj.Timbres.filter((ele: any) => { return ele.accion != 'E' && ele.accion != 'S' && ele.accion != 'S/A' && ele.accion != 'E/A' }).map((ele: any) => { return ele.fec_hora_timbre.split(' ')[1] })[0]
+            } as tim_tabulado;
+            arrayModelado.push(e)
+        }
     });
 
     return arrayModelado
@@ -751,7 +800,7 @@ const TimbresIncompletos = async function (fec_inicio: Date, fec_final: Date, co
         obj.dias_laborados = await Promise.all(obj.dias_laborados.map(async(obj1: any) => {
             return {
                 fecha: obj1.fecha,
-                timbres_hora: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\')',[obj.codigo, obj1.fecha]).then(result => { return result.rows})
+                timbres_hora: await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) AS timbre, accion FROM timbres WHERE id_empleado = $1 AND CAST(fec_hora_timbre AS VARCHAR) like $2 || \'%\' AND accion in (\'EoS\',\'AES\', \'S\',\'E\',\'E/A\',\'S/A\')',[obj.codigo, obj1.fecha]).then(result => { return result.rows})
             }
         }))
         obj.dias_laborados = obj.dias_laborados.map((o: any) => {

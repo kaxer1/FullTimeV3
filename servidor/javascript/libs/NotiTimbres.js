@@ -44,24 +44,12 @@ function CalcularHoras(fecha, hora) {
     return __awaiter(this, void 0, void 0, function* () {
         let datoConsulta = fecha + ' ' + hora;
         console.log('FECHA ====>', datoConsulta);
-        let timbres = yield database_1.default.query('SELECT fec_hora_timbre, accion, id_empleado, id FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) LIKE $1 || \'%\'', [datoConsulta])
-            .then(result => {
-            let res = result.rows.map(obj => {
-                var f = new Date();
-                obj.fec_hora_timbre.setUTCHours(f.getHours());
-                // obj.fec_hora_timbre.setUTCHours(9); // =====> solo para probar
-                obj.fec_hora_timbre.setUTCDate(f.getDate());
-                // obj.fec_hora_timbre.setUTCDate(15);
-                obj.fec_hora_timbre.setUTCMonth(f.getMonth());
-                obj.fec_hora_timbre.setUTCFullYear(f.getFullYear());
-                return obj;
-            });
-            return res;
-        });
+        let timbres = yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, id_empleado, id FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) LIKE $1 || \'%\'', [datoConsulta])
+            .then(result => { return result.rows; });
         if (timbres.length > 0) {
             timbres.forEach((obj) => __awaiter(this, void 0, void 0, function* () {
                 console.log(obj);
-                var time = obj.fec_hora_timbre.toJSON().split('T')[1];
+                var time = obj.fec_hora_timbre.split(' ')[1];
                 let h = Transformar(time.split('.')[0]);
                 // console.log(time);
                 // console.log(h);
@@ -84,8 +72,17 @@ function CalcularHoras(fecha, hora) {
                         tiempo_horario = yield HorarioEmpleado(obj.id_empleado, 4);
                         estado = SalidasAntes(tiempo_horario.tiempo, h);
                         break;
+                    // case 'EoS':
+                    //     tiempo_horario = await HorarioEmpleado(obj.id_empleado, 4);
+                    //     estado = SalidasAntes(tiempo_horario.tiempo, h)
+                    // break;
+                    // case 'AES':
+                    //     tiempo_horario = await HorarioEmpleado(obj.id_empleado, 4);
+                    //     estado = SalidasAntes(tiempo_horario.tiempo, h)
+                    // break;
                     default:
                         let text = "El timbre es permiso";
+                        break;
                 }
                 console.log('Tiempo Horario =======>>>>>>>>>>>>>>', tiempo_horario);
                 console.log('Estado =======>>>>>>>>>>>>>>', estado);
@@ -101,27 +98,22 @@ function CalcularHoras(fecha, hora) {
         return 0;
     });
 }
-function HorarioEmpleado(id_empleado, orden) {
+function HorarioEmpleado(codigo, orden) {
     return __awaiter(this, void 0, void 0, function* () {
-        let IdUltimoContrato = yield database_1.default.query('SELECT id FROM empl_contratos WHERE id_empleado = $1 ORDER BY fec_ingreso DESC LIMIT 1', [id_empleado])
-            .then(result => {
-            return result.rows[0].id;
-        });
-        // console.log('id contrato ===>',IdUltimoContrato);
-        let UltimoCargo = yield database_1.default.query('SELECT id, id_departamento, id_sucursal FROM empl_cargos WHERE id_empl_contrato = $1 ORDER BY fec_inicio DESC LIMIT 1', [IdUltimoContrato])
+        let IdCgHorario = yield database_1.default.query('SELECT id_horarios, id_empl_cargo FROM empl_horarios WHERE codigo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [codigo])
             .then(result => { return result.rows[0]; });
-        console.log('id cargo ===>', UltimoCargo);
-        let IdCgHorario = yield database_1.default.query('SELECT id_horarios FROM empl_horarios WHERE id_empl_cargo = $1 AND estado = 1 ORDER BY fec_inicio DESC LIMIT 1', [UltimoCargo.id])
-            .then(result => { return result.rows[0].id_horarios; });
         // console.log('id Catalogo Horario ===>',IdCgHorario);
-        let hora_detalle = yield database_1.default.query('SELECT hora, minu_espera FROM deta_horarios WHERE id_horario = $1 AND orden = $2', [IdCgHorario, orden])
+        let hora_detalle = yield database_1.default.query('SELECT hora, minu_espera FROM deta_horarios WHERE id_horario = $1 AND orden = $2', [IdCgHorario.id_horarios, orden])
             .then(result => {
             return result.rows.map(obj => {
                 return HoraTotal(obj.hora, obj.minu_espera);
             });
         });
         // console.log('Hora detalle ===>',hora_detalle);
-        const JefesDepartamentos = yield database_1.default.query('SELECT da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, e.id AS empleado FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e WHERE da.estado = true AND da.id_departamento = $1 AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ', [UltimoCargo.id_departamento])
+        const JefesDepartamentos = yield database_1.default.query('SELECT da.estado, cg.id AS id_dep, cg.depa_padre, cg.nivel, s.id AS id_suc, e.id AS empleado ' +
+            'FROM depa_autorizaciones AS da, empl_cargos AS ecr, cg_departamentos AS cg, sucursales AS s, empl_contratos AS ecn, empleados AS e ' +
+            'WHERE da.estado = true AND ecr.id = $1 AND cg.id = ecr.id_departamento AND da.id_empl_cargo = ecr.id AND da.id_departamento = cg.id ' +
+            'AND cg.id_sucursal = s.id AND ecr.id_empl_contrato = ecn.id AND ecn.id_empleado = e.id ', [IdCgHorario.id_empl_cargo])
             .then(result => { return result.rows; });
         let depa_padre = JefesDepartamentos[0].depa_padre;
         let JefeDepaPadre;

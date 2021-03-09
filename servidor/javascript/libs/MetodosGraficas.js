@@ -921,7 +921,7 @@ exports.GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final)
     return __awaiter(this, void 0, void 0, function* () {
         console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield SubMetodosGraficas_1.ModelarSalidasAnticipadas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
-        console.log(timbres);
+        // console.log(timbres);    
         let modelarAnio = {
             enero: [],
             febrero: [],

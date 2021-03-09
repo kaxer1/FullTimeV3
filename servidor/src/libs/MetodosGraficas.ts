@@ -875,8 +875,7 @@ export const GraficaMarcaciones = async function (id_empresa: number, fec_inicio
 export const GraficaSalidasAnticipadas = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empresa, fec_inicio, fec_final);
     let timbres = await ModelarSalidasAnticipadas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0])
-    console.log(timbres);
-    
+    // console.log(timbres);    
     let modelarAnio = {
         enero: [],
         febrero: [],

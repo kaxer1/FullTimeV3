@@ -26,7 +26,7 @@ function restaDias(fecha, dias) {
     return fecha;
 }
 function CalcularEntradaAlmuerzo(hora, tiempo_almuerzo) {
-    // console.log(hora,'=======>', tiempo_almuerzo);
+    console.log('LLEGO A CALCULO DE ENTRADA ALMUERZO', hora, '=======>', tiempo_almuerzo);
     let hora_string;
     var x = tiempo_almuerzo / 60; //min a hora
     let h = hora.split(':'); //hora
@@ -44,25 +44,25 @@ function CalcularEntradaAlmuerzo(hora, tiempo_almuerzo) {
 /**
  * Metodo obtine un rango de fechas inicial y final de la semana en que se encuentre presente.
  */
-function ObtenerRangoSemanal(fHoy) {
-    fHoy.setUTCHours(0);
-    fHoy.setUTCMinutes(0);
-    var fechaInicio = new Date(fHoy);
-    var fechaFinal = new Date(fHoy);
-    let dia_suma = sumaDias(fechaFinal, 6 - fHoy.getDay());
-    let dia_resta = restaDias(fechaInicio, fHoy.getDay());
-    return {
-        inicio: dia_resta,
-        final: dia_suma
-    };
-}
-function ObtenerDiaIniciaSemana(fHoy) {
-    fHoy.setUTCHours(0);
-    fHoy.setUTCMinutes(0);
-    var fechaInicio = new Date(fHoy);
-    let dia_resta = restaDias(fechaInicio, fHoy.getDay());
-    return dia_resta;
-}
+// function ObtenerRangoSemanal(fHoy: Date) {
+//     fHoy.setUTCHours(0);
+//     fHoy.setUTCMinutes(0);
+//     var fechaInicio = new Date(fHoy); 
+//     var fechaFinal = new Date(fHoy); 
+//     let dia_suma = sumaDias(fechaFinal, 6 - fHoy.getDay())
+//     let dia_resta = restaDias(fechaInicio, fHoy.getDay())
+//     return {
+//         inicio: dia_resta,
+//         final: dia_suma
+//     }             
+// }
+// function ObtenerDiaIniciaSemana(fHoy: Date) {
+//     fHoy.setUTCHours(0);
+//     fHoy.setUTCMinutes(0);
+//     var fechaInicio = new Date(fHoy); 
+//     let dia_resta = restaDias(fechaInicio, fHoy.getDay())
+//     return dia_resta
+// }
 function ListaTimbresDiarioToEmpleado(hoy) {
     return __awaiter(this, void 0, void 0, function* () {
         // aqui falta definir si es entrada, salida, entrada de almuerzo y salida de almuerzo === o crear mas funciones para cada uno
@@ -104,7 +104,7 @@ function GenerarHorarioEmpleado(id_cargo, inicio, final) {
         });
         // console.log(horarioMensual);
         if (horarioMensual.length === 0)
-            return { message: 'No tiene asignado horario para ese mes' };
+            return { message: 'No tiene asignado horario' };
         if (horarioMensual.length === 1) { //referencia a un horario mensual
             var fecha1 = moment_1.default(horarioMensual[0].fec_inicio.toJSON().split("T")[0]);
             var fecha2 = moment_1.default(horarioMensual[0].fec_final.toJSON().split("T")[0]);
@@ -243,7 +243,7 @@ function ListaTimbresDiario(hoy, id_empleado, bool, id_horarios, IhorarioLaboral
                 };
             });
         });
-        console.log(timbres);
+        // console.log(timbres);
         return timbres;
     });
 }
@@ -252,7 +252,7 @@ function DiaEspaniol(dia) {
     return nom_dia[dia];
 }
 function CalcularCamposFaltantes(obj, labora) {
-    var x = new Date(obj.fecha);
+    // var x = new Date(obj.fecha);
     // console.log(obj.fecha, '===========' , x.getDay(), '=========', labora);
     if (obj.E.hora_timbre === '' && labora === false) { //false => son dias normales
         obj.E.descripcion = 'FT';
@@ -294,39 +294,26 @@ function CalculoHoraSalida(t: ITiempoLaboral) {
     return hora_string
 }
 */
-function HHMMtoHorasDecimal(dato) {
+function HHMMtoSegundos(dato) {
     if (dato === '')
+        return 0;
+    if (dato === null)
         return 0;
     // if (dato === 0) return 0
     // console.log(dato);
-    var h = parseInt(dato.split(':')[0]);
-    var m = parseInt(dato.split(':')[1]) / 60;
-    // console.log(h, '>>>>>', m);
+    var h = parseInt(dato.split(':')[0]) * 3600;
+    var m = parseInt(dato.split(':')[1]) * 60;
     return h + m;
 }
-function HorasDecimalToHHMM(dato) {
+function SegundosToHHMM(dato) {
     // console.log('Hora decimal a HHMM ======>',dato);
-    var h = parseInt(dato.toString());
-    var x = (dato - h) * 60;
-    var m = parseInt(x.toString());
-    let hora;
-    let min;
-    if (h < 10 && m < 10) {
-        hora = '0' + h;
-        min = '0' + m;
+    var h = Math.floor(dato / 3600);
+    var m = Math.floor((dato % 3600) / 60);
+    if (h <= -1) {
+        return '00:00';
     }
-    else if (h < 10 && m >= 10) {
-        hora = '0' + h;
-        min = m;
-    }
-    else if (h >= 10 && m < 10) {
-        hora = h;
-        min = '0' + m;
-    }
-    else if (h >= 10 && m >= 10) {
-        hora = h;
-        min = m;
-    }
+    let hora = (h >= 10) ? h : '0' + h;
+    let min = (m >= 10) ? m : '0' + m;
     return hora + ':' + min;
 }
 function CalcularSalidasAntes(S_almuerzo, S_labor) {
@@ -336,44 +323,29 @@ function CalcularSalidasAntes(S_almuerzo, S_labor) {
     let al_tim;
     let la_def;
     let la_tim;
-    al_def = HHMMtoHorasDecimal(S_almuerzo.hora_default);
-    al_tim = HHMMtoHorasDecimal(S_almuerzo.hora_timbre);
-    la_def = HHMMtoHorasDecimal(S_labor.hora_default);
-    la_tim = HHMMtoHorasDecimal(S_labor.hora_timbre);
+    al_def = HHMMtoSegundos(S_almuerzo.hora_default);
+    al_tim = HHMMtoSegundos(S_almuerzo.hora_timbre);
+    la_def = HHMMtoSegundos(S_labor.hora_default);
+    la_tim = HHMMtoSegundos(S_labor.hora_timbre);
     if (S_almuerzo.hora_timbre === '') {
         al_def = 0;
     }
     if (S_labor.hora_timbre === '') {
         la_def = 0;
     }
-    let sum1;
-    if (la_def > la_tim) {
-        sum1 = la_def - la_tim;
-    }
-    else {
-        sum1 = 0;
-    }
-    let sum2;
-    if (al_def > al_tim) {
-        sum2 = al_def - al_tim;
-    }
-    else {
-        sum2 = 0;
-    }
-    var t = HorasDecimalToHHMM(sum1 + sum2);
+    let sum1 = (la_def > la_tim) ? la_def - la_tim : 0;
+    let sum2 = (al_def > al_tim) ? al_def - al_tim : 0;
+    var t = SegundosToHHMM(sum1 + sum2);
     return t;
 }
 function CalcularAlmuerzo(S_almuerzo, E_almuerzo) {
-    var _s = HHMMtoHorasDecimal(S_almuerzo.hora_default);
-    var _e = HHMMtoHorasDecimal(E_almuerzo.hora_default);
-    var _res = HorasDecimalToHHMM(_e - _s);
+    var _s = HHMMtoSegundos(S_almuerzo.hora_default);
+    var _e = HHMMtoSegundos(E_almuerzo.hora_default);
     if (S_almuerzo.hora_timbre === '' || E_almuerzo.hora_timbre === '')
-        return _res;
-    let s_tim;
-    let e_tim;
-    s_tim = HHMMtoHorasDecimal(S_almuerzo.hora_timbre);
-    e_tim = HHMMtoHorasDecimal(E_almuerzo.hora_timbre);
-    return HorasDecimalToHHMM(e_tim - s_tim);
+        return SegundosToHHMM(_e - _s);
+    let s_tim = HHMMtoSegundos(S_almuerzo.hora_timbre);
+    let e_tim = HHMMtoSegundos(E_almuerzo.hora_timbre);
+    return SegundosToHHMM(e_tim - s_tim);
 }
 function CalcularAtraso(h_default, h_timbre, minu_espera) {
     if (h_default === '')
@@ -420,28 +392,28 @@ function CalcularHorasTrabaja(entrada, salida, atraso, salida_antes, almuerzo) {
     if (entrada.descripcion === 'L' && salida.descripcion === 'L')
         return '00:00';
     if (entrada.hora_timbre === '' && salida.hora_timbre === '') {
-        var _e = HHMMtoHorasDecimal(entrada.hora_default);
-        let _s = HHMMtoHorasDecimal(salida.hora_default);
-        var _a = HHMMtoHorasDecimal(almuerzo);
+        var _e = HHMMtoSegundos(entrada.hora_default);
+        let _s = HHMMtoSegundos(salida.hora_default);
+        var _a = HHMMtoSegundos(almuerzo);
         // console.log(_s -_e - _a);
         if (_s > _e) {
-            return HorasDecimalToHHMM(_s - _e - _a);
+            return SegundosToHHMM(_s - _e - _a);
         }
         else if (_e > _s) {
             _e = 24 - _e;
-            return HorasDecimalToHHMM((_s + _e) - _a);
+            return SegundosToHHMM((_s + _e) - _a);
         }
     }
-    var _e = HHMMtoHorasDecimal(entrada.hora_timbre);
-    var _s = HHMMtoHorasDecimal(salida.hora_timbre);
-    var _a = HHMMtoHorasDecimal(almuerzo);
+    var _e = HHMMtoSegundos(entrada.hora_timbre);
+    var _s = HHMMtoSegundos(salida.hora_timbre);
+    var _a = HHMMtoSegundos(almuerzo);
     let _res;
     if (_s > _e) {
-        _res = HorasDecimalToHHMM(_s - _e - _a);
+        _res = SegundosToHHMM(_s - _e - _a);
     }
     else if (_e > _s) {
         _e = 24 - _e;
-        _res = HorasDecimalToHHMM((_s + _e) - _a);
+        _res = SegundosToHHMM((_s + _e) - _a);
     }
     return _res;
 }
@@ -490,41 +462,42 @@ function AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo) {
                 let salida_almuerzo_default = ele_map.datos[1].hora.split(':')[0] + ':' + ele_map.datos[1].hora.split(':')[1];
                 let entrada_almuerzo_default = ele_map.datos[2].hora.split(':')[0] + ':' + ele_map.datos[2].hora.split(':')[1];
                 let salida_default = ele_map.datos[3].hora.split(':')[0] + ':' + ele_map.datos[3].hora.split(':')[1];
-                if (obj.orden === 1) {
-                    detalleAsistencia.E.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                switch (obj.orden) {
+                    case 1:
+                        detalleAsistencia.E.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                        break;
+                    case 2:
+                        detalleAsistencia.S_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                        break;
+                    case 3:
+                        detalleAsistencia.E_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                        break;
+                    case 4:
+                        detalleAsistencia.S.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
+                        // Fecha
+                        detalleAsistencia.fecha = obj.fec_hora_timbre.toJSON();
+                        detalleAsistencia.fecha_mostrar = DiaEspaniol(obj.fec_hora_timbre.getDay()) + ' ' + obj.fec_hora_timbre.toJSON().split('T')[0];
+                        break;
+                    default:
+                        break;
                 }
-                else if (obj.orden === 2) {
-                    detalleAsistencia.S_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-                }
-                else if (obj.orden === 3) {
-                    detalleAsistencia.E_A.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-                }
-                else if (obj.orden === 4) {
-                    detalleAsistencia.S.hora_timbre = obj.fec_hora_timbre.toJSON().split('T')[1].slice(0, 5);
-                    // Fecha
-                    detalleAsistencia.fecha = obj.fec_hora_timbre.toJSON();
-                    detalleAsistencia.fecha_mostrar = DiaEspaniol(obj.fec_hora_timbre.getDay()) + ' ' + obj.fec_hora_timbre.toJSON().split('T')[0];
-                }
-                else if (obj.accion === 'L') {
+                if (obj.accion === 'L') {
                     var f = new Date(obj.fec_hora_timbre);
                     detalleAsistencia.fecha = f.toJSON();
                     detalleAsistencia.fecha_mostrar = DiaEspaniol(f.getUTCDay()) + ' ' + f.toJSON().split('T')[0];
-                    detalleAsistencia.E.hora_default = entrada_default || '08:30';
-                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default || '12:45';
-                    detalleAsistencia.E_A.hora_default = entrada_almuerzo_default || '14:00';
-                    detalleAsistencia.S.hora_default = salida_default || '17:00';
+                    detalleAsistencia.E.hora_default = entrada_default;
+                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default;
+                    detalleAsistencia.E_A.hora_default = entrada_almuerzo_default;
+                    detalleAsistencia.S.hora_default = salida_default;
                     // detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo('13:00', tlaboral.min_almuerzo)
                     // detalleAsistencia.S.hora_default = salidaGeneral
                 }
                 contador = contador + 1;
                 if (result.length === contador && obj.accion != 'L') {
-                    detalleAsistencia.E.hora_default = entrada_default || '08:30';
-                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default || '12:45';
-                    detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_timbre, ele_map.min_almuerzo) || entrada_almuerzo_default;
-                    if (detalleAsistencia.S_A.hora_timbre === '') {
-                        detalleAsistencia.E_A.hora_default = CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_default, ele_map.min_almuerzo) || entrada_almuerzo_default;
-                    }
-                    detalleAsistencia.S.hora_default = salida_default || '17:00';
+                    detalleAsistencia.E.hora_default = entrada_default;
+                    detalleAsistencia.S_A.hora_default = salida_almuerzo_default;
+                    detalleAsistencia.E_A.hora_default = (detalleAsistencia.S_A.hora_timbre === '') ? CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_default, ele_map.min_almuerzo) : CalcularEntradaAlmuerzo(detalleAsistencia.S_A.hora_timbre, ele_map.min_almuerzo);
+                    detalleAsistencia.S.hora_default = salida_default;
                     // detalleAsistencia.S.hora_default = salidaGeneral
                 }
                 if (result.length === contador) {
@@ -551,21 +524,24 @@ function AsistenciaDetalleConsolidado(arr, IhorarioLaboral, id_cargo) {
         });
     });
     console.log(AsistenciaArray.length);
-    // console.log(AsistenciaArray);
+    AsistenciaArray.forEach((ele) => {
+        console.log(ele);
+    });
     return AsistenciaArray;
 }
 function MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, IhorarioLaboral, id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
         let horarios = yield GenerarHorarioEmpleado(id_cargo, desde, hasta);
-        console.log('horarios===', horarios);
+        // console.log('horarios===',horarios);
+        if (horarios.message)
+            return horarios;
         let arr = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
             let aux = yield ListaTimbresDiario(obj.fec_iterada, id_empleado, obj.boolena_fecha, obj.id_horarios, IhorarioLaboral);
             if (aux.length != 0) {
                 return aux;
             }
             else {
-                let nuevo = ListaSinTimbres_DiaLibre(obj.fec_iterada, obj.boolena_fecha, obj.id_horarios);
-                return nuevo;
+                return ListaSinTimbres_DiaLibre(obj.fec_iterada, obj.boolena_fecha, obj.id_horarios);
             }
         })));
         // console.log('########################################################');
@@ -583,7 +559,7 @@ function DetalleHorario(id_horarios) {
                 .then(result => {
                 return result.rows[0].min_almuerzo;
             }),
-            datos: yield database_1.default.query('SELECT orden, hora, tipo_accion, minu_espera, nocturno FROM deta_horarios WHERE id_horario = $1 ORDER BY orden ASC', [id_horarios])
+            datos: yield database_1.default.query('SELECT orden, hora, tipo_accion, minu_espera FROM deta_horarios WHERE id_horario = $1 ORDER BY orden ASC', [id_horarios])
                 .then(result => {
                 return result.rows;
             })
@@ -597,18 +573,20 @@ exports.ContarHorasByCargo = function (id_empleado, desde, hasta) {
         if (ids.message)
             return ids;
         let horaIngresoEmpl = yield Promise.all(ids.map((obj) => __awaiter(this, void 0, void 0, function* () {
-            console.log(obj);
+            // console.log(obj);
             return yield DetalleHorario(obj.id_horarios).then(result => {
                 return result;
             });
         })));
-        console.log('IhorarioLaboral===');
-        horaIngresoEmpl.forEach(obj => {
-            console.log(obj);
-        });
+        // console.log('IhorarioLaboral===');
+        // horaIngresoEmpl.forEach(obj => {
+        //     console.log(obj);
+        // })
         const empleado = yield ObtenerInformacionEmpleado(id_empleado);
         const DetalleConsolidado = yield MetodoModelarDetalleAsistencia(id_empleado, desde, hasta, horaIngresoEmpl, ids[0].id_cargo);
-        // console.log(DetalleConsolidado);
+        // console.log('Mensaje de Detalle Horario',DetalleConsolidado);
+        if (DetalleConsolidado.message)
+            return DetalleConsolidado; // Retorna en caso de tener el mensaje de error en los horarios no encontrados;
         const total = yield CalcularTotal(DetalleConsolidado);
         // console.log(total);
         let ReporteConsolidadoJsop = {
@@ -617,7 +595,6 @@ exports.ContarHorasByCargo = function (id_empleado, desde, hasta) {
             operaciones: total
         };
         return ReporteConsolidadoJsop;
-        // return 0
     });
 };
 function CalcularTotal(arr) {
@@ -632,27 +609,35 @@ function CalcularTotal(arr) {
             hora_ex_S_D: null || 0
         };
         arr.forEach((obj) => {
-            dataDecimal.atraso = HHMMtoHorasDecimal(obj.atraso) + dataDecimal.atraso;
-            dataDecimal.sal_antes = HHMMtoHorasDecimal(obj.sal_antes) + dataDecimal.sal_antes;
-            dataDecimal.almuerzo = HHMMtoHorasDecimal(obj.almuerzo) + dataDecimal.almuerzo;
-            dataDecimal.hora_trab = HHMMtoHorasDecimal(obj.hora_trab) + dataDecimal.hora_trab;
-            dataDecimal.hora_supl = HHMMtoHorasDecimal(obj.hora_supl) + dataDecimal.hora_supl;
-            dataDecimal.hora_ex_L_V = HHMMtoHorasDecimal(obj.hora_ex_L_V) + dataDecimal.hora_ex_L_V;
-            dataDecimal.hora_ex_S_D = HHMMtoHorasDecimal(obj.hora_ex_S_D) + dataDecimal.hora_ex_S_D;
+            dataDecimal.atraso = HHMMtoSegundos(obj.atraso) + dataDecimal.atraso;
+            dataDecimal.sal_antes = HHMMtoSegundos(obj.sal_antes) + dataDecimal.sal_antes;
+            dataDecimal.almuerzo = HHMMtoSegundos(obj.almuerzo) + dataDecimal.almuerzo;
+            dataDecimal.hora_trab = HHMMtoSegundos(obj.hora_trab) + dataDecimal.hora_trab;
+            dataDecimal.hora_supl = HHMMtoSegundos(obj.hora_supl) + dataDecimal.hora_supl;
+            dataDecimal.hora_ex_L_V = HHMMtoSegundos(obj.hora_ex_L_V) + dataDecimal.hora_ex_L_V;
+            dataDecimal.hora_ex_S_D = HHMMtoSegundos(obj.hora_ex_S_D) + dataDecimal.hora_ex_S_D;
         });
         let dataHHMM = {
-            atraso: HorasDecimalToHHMM(dataDecimal.atraso),
-            sal_antes: HorasDecimalToHHMM(dataDecimal.sal_antes),
-            almuerzo: HorasDecimalToHHMM(dataDecimal.almuerzo),
-            hora_trab: HorasDecimalToHHMM(dataDecimal.hora_trab),
-            hora_supl: HorasDecimalToHHMM(dataDecimal.hora_supl),
-            hora_ex_L_V: HorasDecimalToHHMM(dataDecimal.hora_ex_L_V),
-            hora_ex_S_D: HorasDecimalToHHMM(dataDecimal.hora_ex_S_D)
+            atraso: SegundosToHHMM(dataDecimal.atraso),
+            sal_antes: SegundosToHHMM(dataDecimal.sal_antes),
+            almuerzo: SegundosToHHMM(dataDecimal.almuerzo),
+            hora_trab: SegundosToHHMM(dataDecimal.hora_trab),
+            hora_supl: SegundosToHHMM(dataDecimal.hora_supl),
+            hora_ex_L_V: SegundosToHHMM(dataDecimal.hora_ex_L_V),
+            hora_ex_S_D: SegundosToHHMM(dataDecimal.hora_ex_S_D)
         };
         // console.log(dataDecimal);
         // console.log(dataHHMM);
         return [{
-                decimal: dataDecimal,
+                decimal: {
+                    atraso: dataDecimal.atraso / 3600,
+                    sal_antes: dataDecimal.sal_antes / 3600,
+                    almuerzo: dataDecimal.almuerzo / 3600,
+                    hora_trab: dataDecimal.hora_trab / 3600,
+                    hora_supl: dataDecimal.hora_supl / 3600,
+                    hora_ex_L_V: dataDecimal.hora_ex_L_V / 3600,
+                    hora_ex_S_D: dataDecimal.hora_ex_S_D / 3600
+                },
                 HHMM: dataHHMM
             }];
     });
@@ -676,21 +661,19 @@ function ObtenerInformacionEmpleado(id_empleado) {
         return ObjetoEmpleado;
     });
 }
-function tipoHorario(inicio, final) {
-    var fecha1 = moment_1.default(inicio.toJSON().split("T")[0]);
-    var fecha2 = moment_1.default(final.toJSON().split("T")[0]);
-    var diasHorario = fecha2.diff(fecha1, 'days');
-    if (diasHorario >= 1 && diasHorario <= 7)
-        return 'semanal';
-    if (diasHorario >= 25 && diasHorario <= 35)
-        return 'mensual';
-    return 'anual';
-    /**
-     * semana = 6 (mayor a 1 menor a 7),
-     * mensual (mayor a 25 y menor a 35)
-     * anual = 365 (Hacer que sea mayor 40 y menor a 370)
-     */
-}
+// function tipoHorario(inicio: Date, final: Date) {
+//     var fecha1 = moment(inicio.toJSON().split("T")[0]);
+//     var fecha2 = moment(final.toJSON().split("T")[0]);
+//     var diasHorario = fecha2.diff(fecha1, 'days');
+//     if (diasHorario >= 1 && diasHorario <= 7) return 'semanal'
+//     if (diasHorario >= 25 && diasHorario <= 35) return 'mensual'
+//     return 'anual'
+// }
+/**
+ * semana = 6 (mayor a 1 menor a 7),
+ * mensual (mayor a 25 y menor a 35)
+ * anual = 365 (Hacer que sea mayor 40 y menor a 370)
+ */
 /**********************************************
  *
  *      METODO PARA REGISTRAR ASISTENCIA.

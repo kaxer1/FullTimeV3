@@ -16,7 +16,9 @@ class AsistenciaControlador {
         return __awaiter(this, void 0, void 0, function* () {
             var { id_empleado, desde, hasta } = req.params;
             let resultado = yield ContarHoras_1.ContarHorasByCargo(parseInt(id_empleado), new Date(desde), new Date(hasta));
-            res.jsonp(resultado);
+            if (resultado.message)
+                return res.status(404).jsonp(resultado);
+            res.status(200).jsonp(resultado);
         });
     }
     ObtenerListaEmpresa(req, res) {

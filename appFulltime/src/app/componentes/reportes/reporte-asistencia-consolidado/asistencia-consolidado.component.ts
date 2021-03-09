@@ -215,14 +215,12 @@ export class AsistenciaConsolidadoComponent implements OnInit {
     this.asistencia = [];
     if (this.f_inicio_req != '' && this.f_final_req != '') {
       this.restKardex.ReporteAsistenciaDetalleConsolidado(id_empleado, this.f_inicio_req, this.f_final_req).subscribe(res => {
-        if(res.message) {
-          this.toastr.error(res.message,'hduhfuwy', {
-            timeOut: 6000,
-          });
-        } else {
-          this.asistencia = res;
-          this.generarPdf(palabra, 1)
-        }
+        this.asistencia = res;
+        this.generarPdf(palabra, 1);
+      }, err => {
+        this.toastr.error(err.error.message, 'Algo salio mal', {
+          timeOut: 6000,
+        });
       })
     } else {
       this.toastr.error('Una de las fechas no a sido asignada', 'Error al ingresar Fechas', {

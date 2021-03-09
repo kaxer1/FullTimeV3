@@ -10,7 +10,9 @@ class AsistenciaControlador {
         
         let resultado = await ContarHorasByCargo(parseInt(id_empleado), new Date(desde), new Date(hasta));
         
-        res.jsonp(resultado)
+        if (resultado.message) return res.status(404).jsonp(resultado)
+        
+        res.status(200).jsonp(resultado)
     }
 
     public async ObtenerListaEmpresa(req:Request, res: Response) {
