@@ -338,6 +338,7 @@ import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComid
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
+import { AccionesTimbresComponent } from './componentes/settings/acciones-timbres/acciones-timbres.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -602,6 +603,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     FuncionesComponent,
     ConfigReportFirmasHorasExtrasComponent,
     FecTimbrePipe,
+    AccionesTimbresComponent,
   ],
 
   imports: [

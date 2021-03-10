@@ -29,6 +29,7 @@ class DepartamentoRutas {
         this.router.put('/colores', [TokenValidation], EMPRESA_CONTROLADOR.ActualizarColores);
         this.router.put('/credenciales/:id_empresa', TokenValidation, EMPRESA_CONTROLADOR.EditarPassword);
         this.router.put('/doble/seguridad', TokenValidation, EMPRESA_CONTROLADOR.ActualizarSeguridad);
+        this.router.put('/acciones-timbre', TokenValidation, EMPRESA_CONTROLADOR.ActualizarAccionesTimbres);
 
     }
 }

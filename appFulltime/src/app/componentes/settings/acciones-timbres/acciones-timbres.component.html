@@ -1,0 +1,22 @@
+<div class="d-flex bd-highlight config">
+    <mat-icon class="flex-shrink-1 bd-highlight" id="movilidad">open_with</mat-icon>
+    <h5 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Acciones de Timbres</h5>
+</div>
+<br>
+<span>Permite si usas relojes con acciones, esto ayudara a identificar mejor a los timbres en caso de generar reportes</span>
+<form class="example-form" [formGroup]="formGroup" ngNativeValidate>
+    <div class="d-flex flex-wrap">
+        <div class="caja">
+            <p>Consultas timbres con Acciones</p>
+            <div class="d-flex flex-wrap justify-content-start">
+                <mat-slide-toggle formControlName="acciones_timbres">Permitir </mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+</form>
+<br>
+<span>Para guardar los cambios es necesario ingresar nuevamente al sistema.</span>
+<div class="d-flex justify-content-around" style="padding-top: 10px;">
+    <button class="btn btn-primary" type="submit" (click)="GuardarAccion(formGroup.value)">Guardar</button>
+    <button class="btn" type="submit" (click)="this.dialogRef.close()">Cancelar</button>
+</div>

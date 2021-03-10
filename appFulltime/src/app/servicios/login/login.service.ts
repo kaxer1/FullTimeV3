@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment'
 
 @Injectable({
@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment'
 export class LoginService {
 
   constructor(
+    private route: ActivatedRoute,
     private http: HttpClient,
     public router: Router) { }
 
@@ -51,7 +52,7 @@ export class LoginService {
   logout() {
     localStorage.clear();
     sessionStorage.clear();
-    this.router.navigate(['/']);
+    this.router.navigate(['/'], { relativeTo: this.route, skipLocationChange: false });
   }
 
   forgetPassword(data: any) {

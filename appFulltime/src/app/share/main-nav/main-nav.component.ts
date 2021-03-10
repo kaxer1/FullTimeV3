@@ -25,6 +25,7 @@ import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
 import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
+import { AccionesTimbresComponent } from 'src/app/componentes/settings/acciones-timbres/acciones-timbres.component';
 
 @Component({
   selector: 'app-main-nav',
@@ -91,22 +92,29 @@ export class MainNavComponent implements OnInit {
     private route: ActivatedRoute
   ) {
 
-    this.socket.on('enviar_notification', (data) => {
-      if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
-        console.log(data);
-        this.realTime.ObtenerUnaNotificaciones(data.id).subscribe(res => {
-          console.log(res);
-          this.estadoNotificacion = false;
-          if (this.noti_real_time.length < 5) {
-            this.noti_real_time.unshift(res[0]);
-          } else if (this.noti_real_time.length >= 5) {
-            this.noti_real_time.unshift(res[0]);
-            this.noti_real_time.pop();
-          }
-          this.num_noti_false = this.num_noti_false + 1;
-        })
-      }
-    });
+    if (this.loginService.loggedIn()) {
+
+      this.socket.on('enviar_notification', (data) => {
+        if (parseInt(data.id_receives_empl) === this.id_empleado_logueado) {
+          // console.log(data);
+          this.realTime.ObtenerUnaNotificaciones(data.id).subscribe(res => {
+            // console.log(res);
+            this.estadoNotificacion = false;
+            if (this.noti_real_time.length < 5) {
+              this.noti_real_time.unshift(res[0]);
+            } else if (this.noti_real_time.length >= 5) {
+              this.noti_real_time.unshift(res[0]);
+              this.noti_real_time.pop();
+            }
+            this.num_noti_false = this.num_noti_false + 1;
+          }, err => {
+            console.log(err);
+          })
+        }
+      });
+
+    }
+
   }
 
   hasChild = (_: number, node: MenuNode) => !!node.children && node.children.length > 0;
@@ -139,39 +147,45 @@ export class MainNavComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.idEmpresa = parseInt(localStorage.getItem('empresa'))
-    this.LlamarDatos();
-    this.infoUser();
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-    this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
-    this.LlamarNotificaciones(this.id_empleado_logueado);
-    this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
 
-    this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
+    if (this.loginService.loggedIn()) {
 
-      this.barraInicial = result.matches;
-      this.barraUno = result.matches;
-      this.barraDos = result.matches;
-      console.log('Result breakpoints: ', result.matches);
+      this.idEmpresa = parseInt(localStorage.getItem('empresa'))
+      this.LlamarDatos();
+      this.infoUser();
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+      this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
+      this.LlamarNotificaciones(this.id_empleado_logueado);
+      this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
 
-      this.recargar = result.matches;
-      if (result.matches === true) {
-        let cont = 0;
-        do {
-          cont = cont + 1;
-        } while (cont === 3);
-        console.log('Recarga antes: ', this.recargar);
-        this.recargar = false;
-        console.log('Recarga despues: ', this.recargar);
-      }
-    });
+      this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
 
-    this.SeleccionMenu();
-    this.BarraBusquedaEmpleados();
-    this.ConfigurarSeguridad();
+        this.barraInicial = result.matches;
+        this.barraUno = result.matches;
+        this.barraDos = result.matches;
+        // console.log('Result breakpoints: ', result.matches);
+
+        this.recargar = result.matches;
+        if (result.matches === true) {
+          let cont = 0;
+          do {
+            cont = cont + 1;
+          } while (cont === 3);
+          // console.log('Recarga antes: ', this.recargar);
+          this.recargar = false;
+          // console.log('Recarga despues: ', this.recargar);
+        }
+      });
+
+      this.SeleccionMenu();
+      this.BarraBusquedaEmpleados();
+      this.ConfigurarSeguridad();
+      
+    } 
+    
   }
 
   BarraBusquedaEmpleados() {
@@ -242,7 +256,7 @@ export class MainNavComponent implements OnInit {
   LlamarNotificaciones(id: number) {
     this.realTime.ObtenerNotificacionesReceives(id).subscribe(res => {
       this.noti_real_time = res;
-      console.log(this.noti_real_time);
+      // console.log(this.noti_real_time);
       if (!this.noti_real_time.text) {
         if (this.noti_real_time.length > 0) {
           this.noti_real_time.forEach(obj => {
@@ -253,9 +267,11 @@ export class MainNavComponent implements OnInit {
           });
         }
       }
+    }, err => {
+      console.log(err);
     });
     this.realTime.ObtenerConfigNotiEmpleado(id).subscribe(res => {
-      console.log(res);
+      // console.log(res);
       this.confRes = res;
       if (!this.confRes.text) {
         if (res[0].vaca_noti === false || res[0].permiso_noti === false || res[0].hora_extra_noti === false) {
@@ -278,7 +294,9 @@ export class MainNavComponent implements OnInit {
 
   CambiarVistaNotificacion(id_realtime: number) {
     this.realTime.PutVistaNotificacion(id_realtime).subscribe(res => {
-      console.log(res);
+      // console.log(res);
+    }, err => {
+      console.log(err);
     });
   }
 
@@ -306,7 +324,7 @@ export class MainNavComponent implements OnInit {
   LlamarNotificacionesTimbres(id: number) {
     this.timbresNoti.NotiTimbresRealTime(id).subscribe(res => {
       this.timbres_noti = res;
-      console.log(this.timbres_noti);
+      // console.log(this.timbres_noti);
       if (!this.timbres_noti.message) {
         if (this.timbres_noti.length > 0) {
           this.timbres_noti.forEach(obj => {
@@ -317,12 +335,16 @@ export class MainNavComponent implements OnInit {
           });
         }
       }
+    }, err => {
+      console.log(err);
     });
   }
 
   CambiarVistaTimbres(id_realtime: number) {
     this.timbresNoti.PutVistaTimbre(id_realtime).subscribe(res => {
       console.log(res);
+    }, err => {
+      console.log(err);
     });
   }
 
@@ -342,7 +364,7 @@ export class MainNavComponent implements OnInit {
     let correo = localStorage.getItem('correo');
     let iniciales = localStorage.getItem('iniciales');
     let view_imagen = localStorage.getItem('view_imagen');
-    console.log(fullname, correo, iniciales, view_imagen);
+    // console.log(fullname, correo, iniciales, view_imagen);
 
     if (fullname === null && correo === null && iniciales === null && view_imagen === null) {
       this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {
@@ -385,6 +407,11 @@ export class MainNavComponent implements OnInit {
   AbrirSettings() {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     this.vistaFlotante.open(SettingsComponent, { width: '350px', data: { id_empleado } });
+  }
+  
+  AbrirAccionesTimbres() {
+    const id_empresa = parseInt(localStorage.getItem('empresa'));
+    this.vistaFlotante.open(AccionesTimbresComponent, { width: '350px', data: { id_empresa } });
   }
 
   AbrirVentanaAyuda() {
@@ -430,7 +457,7 @@ export class MainNavComponent implements OnInit {
 
       // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
       if (this.loginService.getRolMenu() === true) {
-        localStorage.setItem('name_empresa',res[0].nombre)
+        // localStorage.setItem('name_empresa',res[0].nombre)
         this.dataSource.data = this.MenuAdministracion(localStorage.getItem('name_empresa')) as MenuNode[];
       } else {
         this.dataSource.data = this.MenuEmpleado() as MenuNode[];

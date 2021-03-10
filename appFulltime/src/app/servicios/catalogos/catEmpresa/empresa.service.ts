@@ -49,6 +49,10 @@ export class EmpresaService {
   ActualizarSeguridad(formData) {
     return this.http.put<any>(`${environment.url}/empresas/doble/seguridad`, formData);
   }
+  
+  ActualizarAccionesTimbres(formData) {
+    return this.http.put<any>(`${environment.url}/empresas/acciones-timbre`, formData);
+  }
 
   /**
    * Método para llamar al logotipo de la empresa, este llega codificado en base64

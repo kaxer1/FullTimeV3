@@ -143,6 +143,16 @@ class EmpresaControlador {
         res.status(200).jsonp({ message: 'Guardada la configuracion de credenciales' })
     }
 
+    public async ActualizarAccionesTimbres(req: Request, res: Response): Promise<void> {
+        try {
+            const { id, bool_acciones } = req.body;
+            await pool.query('UPDATE cg_empresa SET acciones_timbres = $1 WHERE id = $2', [ bool_acciones, id]);
+            res.status(200).jsonp({ message: 'Empresa actualizada exitosamente', title: 'Ingrese nuevamente al sistema' });
+        } catch (error) {
+            res.status(404).jsonp(error)
+        }
+    }
+
 }
 
 export const EMPRESA_CONTROLADOR = new EmpresaControlador();

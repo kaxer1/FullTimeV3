@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Md5 } from 'ts-md5/dist/md5';
 import * as moment from 'moment';
@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
     public rest: LoginService,
     public restU: UsuarioService,
     private router: Router,
+    private route: ActivatedRoute,
     private toastr: ToastrService) {
     this.validarCredencialesF.setValue({
       usuarioF: '',
@@ -57,7 +58,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.url = this.router.url;
-    console.log(this.url);
+    // console.log(this.url);
     this.Geolocalizar();
   }
 
@@ -69,7 +70,7 @@ export class LoginComponent implements OnInit {
           this.latitud = objPosition.coords.latitude;
           this.longitud = objPosition.coords.longitude;
 
-          console.log(this.longitud, this.latitud);
+          // console.log(this.longitud, this.latitud);
 
         }, (objPositionError) => {
           switch (objPositionError.code) {
@@ -144,7 +145,7 @@ export class LoginComponent implements OnInit {
       latitud: this.latitud,
       longitud: this.longitud
     };
-    console.log(dataUsuario);
+    // console.log(dataUsuario);
 
     if (this.latitud === undefined) {
       this.Geolocalizar();
@@ -153,7 +154,7 @@ export class LoginComponent implements OnInit {
 
     // validacion del login
     this.rest.postCredenciales(dataUsuario).subscribe(datos => {
-      console.log('ingreso', datos)
+      // console.log('ingreso', datos)
 
       if (datos.message === 'error') {
         var f = moment();
@@ -182,6 +183,7 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('departamento', datos.departamento);
         localStorage.setItem('ultimoCargo', datos.cargo);
         localStorage.setItem('autoriza', datos.estado);
+        localStorage.setItem('bool_timbres', datos.acciones_timbres);
         localStorage.setItem('ip', datos.ip_adress);
         this.toastr.success('Ingreso Existoso! ' + datos.usuario + ' ' + datos.ip_adress, 'Usuario y contraseña válidos', {
           timeOut: 6000,
@@ -189,8 +191,8 @@ export class LoginComponent implements OnInit {
 
         if (datos.rol === 1) { // Admin
           if (!!localStorage.getItem("redireccionar")) {
-            let id_permiso = parseInt(localStorage.getItem("redireccionar"));
-            this.router.navigate(['/ver-permiso/', id_permiso]);
+            let redi = localStorage.getItem("redireccionar");
+            this.router.navigate([redi],  { relativeTo: this.route, skipLocationChange: false });
             localStorage.removeItem("redireccionar");
           } else {
             this.router.navigate(['/home'])

@@ -26,5 +26,7 @@ exports.TokenValidation = (req, res, next) => {
         req.userRol = payload.rol;
     req.userIdCargo = payload.cargo;
     req.userCodigo = payload.codigo;
+    req.acciones_timbres = payload._acc_tim;
+    // console.log(payload);
     next();
 };
