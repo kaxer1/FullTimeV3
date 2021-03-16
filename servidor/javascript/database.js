@@ -11,7 +11,8 @@ const pool = new pg_pool_1.default({
     port: 5432,
     // database: 'prueba_auditar',
     // password: 'admin'
-    database: 'fulltimeV3',
+    // database: 'fulltimeV3',
+    database: 'SinAcciones',
     password: 'admin'
 });
 pool.query('SELECT NOW()', (err, res) => {
