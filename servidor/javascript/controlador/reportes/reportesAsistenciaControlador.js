@@ -17,6 +17,10 @@ const SubMetodosGraficas_1 = require("../../libs/SubMetodosGraficas");
 const MetodosHorario_1 = require("../../libs/MetodosHorario");
 const moment_1 = __importDefault(require("moment"));
 class ReportesAsistenciaControlador {
+    /**
+     * Realiza un array de sucursales con departamentos y empleados dependiendo del estado del empleado si busca empleados activos o inactivos.
+     * @returns Retorna Array de [Sucursales[Departamentos[empleados[]]]]
+     */
     Departamentos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let estado = req.params.estado;
@@ -68,29 +72,51 @@ class ReportesAsistenciaControlador {
             });
             if (respuesta.length === 0)
                 return res.status(404).jsonp({ message: 'No tiene departamentos con empleados' });
-            res.status(200).jsonp(respuesta);
+            return res.status(200).jsonp(respuesta);
         });
     }
+    /**
+     * Función que calcula el tiempo de atraso según el timbre realizado por el o los empleados.
+     * @returns Retorna un JSON con la informacion de los empleados atrasados en dias laborables.
+     */
     ReporteAtrasosMultiple(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let { desde, hasta } = req.params;
             // console.log(desde, hasta);
             let datos = req.body;
-            // console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        let timbres = yield BuscarTimbresEoSReporte(desde, hasta, o.codigo);
-                        o.timbres = yield Promise.all(timbres.map((e) => __awaiter(this, void 0, void 0, function* () {
-                            return yield ModelarAtrasosReporte(e);
+            let n = [];
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            let timbres = yield BuscarTimbresEoSReporte(desde, hasta, o.codigo);
+                            o.timbres = yield Promise.all(timbres.map((e) => __awaiter(this, void 0, void 0, function* () {
+                                return yield ModelarAtrasosReporte(e);
+                            })));
+                            console.log(o);
+                            return o;
                         })));
-                        console.log(o);
-                        return o;
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
+            }
+            else {
+                // Resultados de timbres sin acciones
+                n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.timbres = yield AtrasosTimbresSinAccion(desde, hasta, o.codigo);
+                            // console.log(o);
+                            return o;
+                        })));
+                        return ele;
+                    })));
+                    return obj;
+                })));
+            }
             let nuevo = n.map((obj) => {
                 obj.departamentos = obj.departamentos.map((e) => {
                     e.empleado = e.empleado.map((t) => {
@@ -107,13 +133,18 @@ class ReportesAsistenciaControlador {
             return res.status(200).jsonp(nuevo);
         });
     }
+    /**
+     * Función que devuelve los dias que el empleado falto a laborar según su horario.
+     * @returns Retorna un JSON con la informacion de los empleados que an faltado a laborar.
+     */
     ReporteFaltasMultiple(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let { desde, hasta } = req.params;
-            console.log(desde, hasta);
+            // console.log(desde, hasta);
             let datos = req.body;
-            console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            let n = [];
+            //El reporte funciona para relojs de 6, 3 y sin acciones.        
+            n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
                     ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
                         let faltas = yield BuscarHorarioEmpleado(desde, hasta, o.codigo);
@@ -146,6 +177,7 @@ class ReportesAsistenciaControlador {
             // console.log(desde, hasta);
             let datos = req.body;
             // console.log(datos);
+            //El reporte funciona para relojs de 6, 3 y sin acciones.
             let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
                 obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
                     ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
@@ -178,19 +210,38 @@ class ReportesAsistenciaControlador {
     ReporteHorasTrabajaMultiple(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let { desde, hasta } = req.params;
-            console.log(desde, hasta);
+            // console.log(desde, hasta);
             let datos = req.body;
-            console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.timbres = yield ModelarHorasTrabajaReporte(o.codigo, desde, hasta);
-                        return o;
+            // console.log(datos);
+            let n = [];
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.timbres = yield ModelarHorasTrabajaReporte(o.codigo, desde, hasta);
+                            return o;
+                        })));
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
+            }
+            else {
+                // Resultados de timbres sin acciones
+                console.log('LLEGO A TIMBRES SIN ACCIONES');
+                n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.timbres = yield ModelarHorasTrabajaTimbresSinAcciones(o.codigo, desde, hasta);
+                            return o;
+                        })));
+                        return ele;
+                    })));
+                    return obj;
+                })));
+            }
             let nuevo = n.map((obj) => {
                 obj.departamentos = obj.departamentos.map((e) => {
                     e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
@@ -199,7 +250,7 @@ class ReportesAsistenciaControlador {
                 return obj;
             }).filter(obj => { return obj.departamentos.length > 0; });
             if (nuevo.length === 0)
-                return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
+                return res.status(400).jsonp({ message: 'No hay timbres de empleados en ese periodo' });
             return res.status(200).jsonp(datos);
         });
     }
@@ -209,46 +260,54 @@ class ReportesAsistenciaControlador {
             // console.log(desde, hasta);
             let datos = req.body;
             let params_query = req.query;
-            // console.log(params_query);        
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
-                        o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
-                        let timbres = yield BuscarTimbresEoSReporte(desde, hasta, o.codigo);
-                        // console.log('Return del timbre: ',timbres);
-                        if (timbres.length === 0) {
-                            o.puntualidad = 0;
-                        }
-                        else {
-                            let aux = yield Promise.all(timbres.map((e) => __awaiter(this, void 0, void 0, function* () {
-                                return yield ModelarPuntualidad(e);
-                            })));
-                            var array = [];
-                            aux.forEach(u => {
-                                if (u[0] > 0) {
-                                    array.push(u[0]);
-                                }
-                            });
-                            o.puntualidad = parseInt(SubMetodosGraficas_1.SumarValoresArray(array));
-                            // console.log(o);
-                        }
-                        if (o.puntualidad >= parseInt(params_query.mayor)) {
-                            o.color = '#06F313'; // verde
-                        }
-                        else if (o.puntualidad <= parseInt(params_query.menor)) {
-                            o.color = '#EC2E05'; // rojo
-                        }
-                        else {
-                            o.color = '#F38306'; // naranja
-                        }
-                        return o;
+            // console.log(params_query);  
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
+                            o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
+                            let timbres = yield BuscarTimbresEoSReporte(desde, hasta, o.codigo);
+                            // console.log('Return del timbre: ',timbres);
+                            if (timbres.length === 0) {
+                                o.puntualidad = 0;
+                            }
+                            else {
+                                let aux = yield Promise.all(timbres.map((e) => __awaiter(this, void 0, void 0, function* () {
+                                    return yield ModelarPuntualidad(e);
+                                })));
+                                var array = [];
+                                aux.forEach(u => {
+                                    if (u[0] > 0) {
+                                        array.push(u[0]);
+                                    }
+                                });
+                                o.puntualidad = parseInt(SubMetodosGraficas_1.SumarValoresArray(array));
+                                // console.log(o);
+                            }
+                            if (o.puntualidad >= parseInt(params_query.mayor)) {
+                                o.color = '#06F313'; // verde
+                            }
+                            else if (o.puntualidad <= parseInt(params_query.menor)) {
+                                o.color = '#EC2E05'; // rojo
+                            }
+                            else {
+                                o.color = '#F38306'; // naranja
+                            }
+                            return o;
+                        })));
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
-            return res.status(200).jsonp(n);
+                return res.status(200).jsonp(n);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                return res.status(400).jsonp({ message: 'Resultado de timbres sin acciones' });
+            }
         });
     }
     ReporteTimbresIncompletos(req, res) {
@@ -257,29 +316,37 @@ class ReportesAsistenciaControlador {
             console.log(desde, hasta);
             let datos = req.body;
             console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
-                        o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
-                        o.timbres = yield TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo);
-                        // console.log(o);
-                        return o;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
+                            o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
+                            o.timbres = yield TimbresIncompletos(new Date(desde), new Date(hasta), o.codigo);
+                            // console.log(o);
+                            return o;
+                        })));
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
-            let nuevo = n.map((obj) => {
-                obj.departamentos = obj.departamentos.map((e) => {
-                    e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
-                    return e;
-                }).filter((e) => { return e.empleado.length > 0; });
-                return obj;
-            }).filter(obj => { return obj.departamentos.length > 0; });
-            if (nuevo.length === 0)
-                return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
-            return res.status(200).jsonp(nuevo);
+                let nuevo = n.map((obj) => {
+                    obj.departamentos = obj.departamentos.map((e) => {
+                        e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
+                        return e;
+                    }).filter((e) => { return e.empleado.length > 0; });
+                    return obj;
+                }).filter(obj => { return obj.departamentos.length > 0; });
+                if (nuevo.length === 0)
+                    return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
+                return res.status(200).jsonp(nuevo);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                return res.status(400).jsonp({ message: 'Resultado de timbres sin acciones' });
+            }
         });
     }
     ReporteTimbresTabulado(req, res) {
@@ -288,28 +355,36 @@ class ReportesAsistenciaControlador {
             // console.log(desde, hasta);
             let datos = req.body;
             // console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
-                        o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
-                        o.timbres = yield TimbresTabulados(desde, hasta, o.codigo);
-                        return o;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.contrato = yield database_1.default.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato; });
+                            o.cargo = yield database_1.default.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo; });
+                            o.timbres = yield TimbresTabulados(desde, hasta, o.codigo);
+                            return o;
+                        })));
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
-            let nuevo = n.map((obj) => {
-                obj.departamentos = obj.departamentos.map((e) => {
-                    e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
-                    return e;
-                }).filter((e) => { return e.empleado.length > 0; });
-                return obj;
-            }).filter(obj => { return obj.departamentos.length > 0; });
-            if (nuevo.length === 0)
-                return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
-            return res.status(200).jsonp(nuevo);
+                let nuevo = n.map((obj) => {
+                    obj.departamentos = obj.departamentos.map((e) => {
+                        e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
+                        return e;
+                    }).filter((e) => { return e.empleado.length > 0; });
+                    return obj;
+                }).filter(obj => { return obj.departamentos.length > 0; });
+                if (nuevo.length === 0)
+                    return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
+                return res.status(200).jsonp(nuevo);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                return res.status(400).jsonp({ message: 'Resultado de timbres sin acciones' });
+            }
         });
     }
     ReporteTimbresMultiple(req, res) {
@@ -318,33 +393,99 @@ class ReportesAsistenciaControlador {
             // console.log(desde, hasta);
             let datos = req.body;
             console.log(datos);
-            let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
-                obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
-                    ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
-                        o.timbres = yield BuscarTimbres(desde, hasta, o.codigo);
-                        console.log(o);
-                        return o;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones
+                let n = yield Promise.all(datos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+                    obj.departamentos = yield Promise.all(obj.departamentos.map((ele) => __awaiter(this, void 0, void 0, function* () {
+                        ele.empleado = yield Promise.all(ele.empleado.map((o) => __awaiter(this, void 0, void 0, function* () {
+                            o.timbres = yield BuscarTimbres(desde, hasta, o.codigo);
+                            console.log(o);
+                            return o;
+                        })));
+                        return ele;
                     })));
-                    return ele;
+                    return obj;
                 })));
-                return obj;
-            })));
-            let nuevo = n.map((obj) => {
-                obj.departamentos = obj.departamentos.map((e) => {
-                    e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
-                    // console.log('Empleados: ',e);
-                    return e;
-                }).filter((e) => { return e.empleado.length > 0; });
-                return obj;
-            }).filter(obj => { return obj.departamentos.length > 0; });
-            if (nuevo.length === 0)
-                return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
-            return res.status(200).jsonp(nuevo);
+                let nuevo = n.map((obj) => {
+                    obj.departamentos = obj.departamentos.map((e) => {
+                        e.empleado = e.empleado.filter((t) => { return t.timbres.length > 0; });
+                        // console.log('Empleados: ',e);
+                        return e;
+                    }).filter((e) => { return e.empleado.length > 0; });
+                    return obj;
+                }).filter(obj => { return obj.departamentos.length > 0; });
+                if (nuevo.length === 0)
+                    return res.status(400).jsonp({ message: 'No hay atrasos de empleados en ese periodo' });
+                return res.status(200).jsonp(nuevo);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                return res.status(400).jsonp({ message: 'Resultado de timbres sin acciones' });
+            }
         });
     }
 }
 const REPORTE_A_CONTROLADOR = new ReportesAsistenciaControlador();
 exports.default = REPORTE_A_CONTROLADOR;
+const AtrasosTimbresSinAccion = function (fec_inicio, fec_final, codigo) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const orden = 1;
+        // console.log('ATRASOS - TIMBRES SIN ACCION: ', fec_inicio, fec_final, codigo );
+        let horarioEntrada = yield database_1.default.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+            'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+            'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+            'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 AND eh.codigo = $4 ' +
+            'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario', [orden, new Date(fec_inicio), new Date(fec_final), codigo])
+            .then(result => { return result.rows; });
+        if (horarioEntrada.length === 0)
+            return [0];
+        let nuevo = [];
+        let aux = yield Promise.all(horarioEntrada.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
+            let timbres = yield Promise.all(fechas.map((o) => __awaiter(this, void 0, void 0, function* () {
+                var hora_seg = SubMetodosGraficas_1.HHMMtoSegundos(obj.hora) + (obj.minu_espera * 60);
+                var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg);
+                var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg + SubMetodosGraficas_1.HHMMtoSegundos('02:00:00'));
+                // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
+                const query = 'select CAST(fec_hora_timbre AS VARCHAR), id_empleado from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
+                // console.log(query);
+                return yield database_1.default.query(query)
+                    .then(res => {
+                    if (res.rowCount === 0) {
+                        return 0;
+                    }
+                    else {
+                        const f_timbre = res.rows[0].fec_hora_timbre.split(' ')[0];
+                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                        const t_tim = SubMetodosGraficas_1.HHMMtoSegundos(h_timbre);
+                        let diferencia = (t_tim - hora_seg) / 3600;
+                        return {
+                            fecha: DiaSemana(new Date(f_timbre)) + ' ' + f_timbre,
+                            horario: obj.hora,
+                            timbre: h_timbre,
+                            atraso_dec: diferencia.toFixed(2),
+                            atraso_HHMM: SegundosToHHMM(t_tim - hora_seg),
+                        };
+                    }
+                });
+            })));
+            return timbres;
+        })));
+        aux.forEach(obj => {
+            if (obj.length > 0) {
+                obj.forEach(o => {
+                    if (o !== 0) {
+                        nuevo.push(o);
+                    }
+                });
+            }
+        });
+        // console.log('Este es el resul: ',nuevo);
+        return nuevo;
+    });
+};
 const BuscarTimbresEoSReporte = function (fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ', [fec_inicio, fec_final, codigo])
@@ -367,10 +508,6 @@ const ModelarAtrasosReporte = function (obj) {
             'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND eh.fec_inicio <= $2 ' +
             'AND eh.fec_final >= $2 AND dh.orden = 1', [obj.id_empleado, new Date(obj.fec_hora_timbre.split(' ')[0])])
             .then(res => { return res.rows; });
-        // let array = await pool.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
-        // 'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
-        // 'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1',[obj.id_empleado, fec_inicio, fec_final])
-        // .then(res => { return res.rows})
         if (array.length === 0)
             return 0;
         console.log('Hora entrada y minuto Atrasos', array);
@@ -379,7 +516,7 @@ const ModelarAtrasosReporte = function (obj) {
             var timbre = SubMetodosGraficas_1.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
             var hora_seg = SubMetodosGraficas_1.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
             console.log('Timbre: ', timbre, hora_seg);
-            (timbre > hora_seg) ? retraso = true : retraso = false;
+            retraso = (timbre > hora_seg) ? true : false;
             if (retraso === false)
                 return 0;
             let diferencia = (timbre - hora_seg) / 3600;
@@ -397,12 +534,19 @@ const ModelarAtrasosReporte = function (obj) {
 };
 function DiaSemana(dia) {
     let dias = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
-    // console.log('Dia seleccionado:', dias[dia.getUTCDay()], dia.getUTCDay());
     return dias[dia.getUTCDay()];
 }
 const BuscarTimbresReporte = function (fecha, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), accion, observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 AND accion in (\'EoS\',\'AES\',\'S\',\'E\',\'E/A\',\'S/A\') ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
+            .then(res => {
+            return res.rows;
+        });
+    });
+};
+const BuscarTimbresSinAccionesReporte = function (fecha, codigo) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield database_1.default.query('SELECT CAST(fec_hora_timbre AS VARCHAR), observacion FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC ', [fecha, codigo])
             .then(res => {
             return res.rows;
         });
@@ -417,7 +561,7 @@ const ModelarHorasTrabajaReporte = function (codigo, fec_inicio, fec_final) {
             .then(res => { return res.rows; });
         if (array.length === 0)
             return [];
-        console.log(array);
+        console.log('ARRAY MODELAR HORAS TRABAJADAS: ', array);
         var nuevoArray = [];
         var arrayTemporal = [];
         for (var i = 0; i < array.length; i++) {
@@ -430,22 +574,6 @@ const ModelarHorasTrabajaReporte = function (codigo, fec_inicio, fec_final) {
             else {
                 nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"], "Horario": [array[i]] });
             }
-        }
-        function compareFechas(a, b) {
-            var uno = new Date(a.Fecha);
-            var dos = new Date(b.Fecha);
-            if (uno < dos)
-                return -1;
-            if (uno > dos)
-                return 1;
-            return 0;
-        }
-        function compareOrden(a, b) {
-            if (a.orden < b.orden)
-                return -1;
-            if (a.orden > b.orden)
-                return 1;
-            return 0;
         }
         nuevoArray.sort(compareFechas);
         let res_timbre = yield Promise.all(nuevoArray.map((obj) => __awaiter(this, void 0, void 0, function* () {
@@ -598,6 +726,171 @@ const ModelarHorasTrabajaReporte = function (codigo, fec_inicio, fec_final) {
         return arr_respuesta;
     });
 };
+const ModelarHorasTrabajaTimbresSinAcciones = function (codigo, fec_inicio, fec_final) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let array = yield database_1.default.query('SELECT dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+            'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+            'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio', [codigo, fec_inicio, fec_final])
+            .then(res => { return res.rows; });
+        if (array.length === 0)
+            return [];
+        // console.log('ARRAY MODELAR HORAS TRABAJADAS: ',array);
+        var nuevoArray = [];
+        var arrayTemporal = [];
+        for (var i = 0; i < array.length; i++) {
+            arrayTemporal = nuevoArray.filter((res) => {
+                return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"];
+            });
+            if (arrayTemporal.length > 0) {
+                nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i]);
+            }
+            else {
+                nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"], "Horario": [array[i]] });
+            }
+        }
+        nuevoArray.sort(compareFechas);
+        let res_timbre = yield Promise.all(nuevoArray.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            var fec_aux = new Date(obj.Fecha.split(' ')[0]);
+            var fecha1 = moment_1.default(obj.Fecha.split(' ')[0]);
+            var fecha2 = moment_1.default(obj.Fecha.split(' ')[1]);
+            var diasDiferencia = fecha2.diff(fecha1, 'days');
+            let res = [];
+            for (let i = 0; i <= diasDiferencia; i++) {
+                let horario_res = {
+                    fecha: fec_aux.toJSON().split('T')[0],
+                    timbres: yield BuscarTimbresSinAccionesReporte(fec_aux.toJSON().split('T')[0], codigo),
+                    horario: obj.Horario.sort(compareOrden)
+                };
+                if (horario_res.timbres.length > 0) {
+                    res.push(horario_res);
+                }
+                fec_aux.setDate(fec_aux.getDate() + 1);
+            }
+            return res;
+        })));
+        let respuesta = res_timbre.filter((obj) => {
+            return obj.length > 0;
+        });
+        // console.log('Respuesta timbres sin acciones:',respuesta);
+        let arr_respuesta = [];
+        respuesta.forEach((arr) => {
+            arr.forEach((o) => {
+                let obj = {
+                    fecha: o.fecha,
+                    horarios: [],
+                    total_timbres: '',
+                    total_horario: '',
+                    total_diferencia: '',
+                };
+                let arr_EoS = [];
+                let arr_AES = [];
+                let arr_horario_EoS = [];
+                let arr_horario_AES = [];
+                o.timbres.forEach((element) => {
+                    console.log(element);
+                });
+                o.horario.forEach((h) => {
+                    let obj2 = {
+                        hora_horario: h.hora,
+                        hora_diferencia: '',
+                        hora_timbre: '',
+                        accion: '',
+                        observacion: ''
+                    };
+                    let diferencia = 0;
+                    let dif = 0;
+                    switch (h.orden) {
+                        case 1:
+                            var arr3 = o.timbres.filter((t) => {
+                                const hora_timbre = SubMetodosGraficas_1.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos('01:30:00');
+                                const h_final = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) + SubMetodosGraficas_1.HHMMtoSegundos('01:59:00');
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            obj2.hora_timbre = (arr3.length === 0) ? h.hora : arr3[0].fec_hora_timbre.split(' ')[1];
+                            obj2.observacion = (arr3.length === 0) ? 'Entrada' : arr3[0].observacion;
+                            obj2.accion = 'EoS';
+                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 2:
+                            var arr4 = o.timbres.filter((t) => {
+                                const hora_timbre = SubMetodosGraficas_1.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos('00:59:00');
+                                const h_final = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) + SubMetodosGraficas_1.HHMMtoSegundos('00:59:00');
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            obj2.hora_timbre = (arr4.length === 0) ? h.hora : arr4[0].fec_hora_timbre.split(' ')[1];
+                            obj2.observacion = (arr4.length === 0) ? 'Salida Almuerzo' : arr4[0].observacion;
+                            obj2.accion = 'AES';
+                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 3:
+                            var arr1 = o.timbres.filter((t) => {
+                                const hora_timbre = SubMetodosGraficas_1.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos('00:59:00');
+                                const h_final = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) + SubMetodosGraficas_1.HHMMtoSegundos('00:59:00');
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            obj2.hora_timbre = (arr1.length === 0) ? h.hora : arr1[0].fec_hora_timbre.split(' ')[1];
+                            obj2.observacion = (arr1.length === 0) ? 'Entrada Almuerzo' : arr1[0].observacion;
+                            obj2.accion = 'AES';
+                            dif = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre);
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_AES.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        case 4:
+                            var arr2 = o.timbres.filter((t) => {
+                                const hora_timbre = SubMetodosGraficas_1.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) - SubMetodosGraficas_1.HHMMtoSegundos('01:59:00');
+                                const h_final = SubMetodosGraficas_1.HHMMtoSegundos(h.hora) + SubMetodosGraficas_1.HHMMtoSegundos('01:30:00');
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            obj2.hora_timbre = (arr2.length === 0) ? h.hora : arr2[0].fec_hora_timbre.split(' ')[1];
+                            obj2.observacion = (arr2.length === 0) ? 'Salida' : arr2[0].observacion;
+                            obj2.accion = 'EoS';
+                            dif = SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre) - SubMetodosGraficas_1.HHMMtoSegundos(h.hora);
+                            diferencia = (dif < 0) ? dif * (-1) : dif;
+                            obj2.hora_diferencia = (dif < 0) ? '-' + SegundosToHHMM(diferencia) : SegundosToHHMM(diferencia);
+                            arr_horario_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_horario));
+                            arr_EoS.push(SubMetodosGraficas_1.HHMMtoSegundos(obj2.hora_timbre));
+                            break;
+                        default:
+                            break;
+                    }
+                    obj.horarios.push(obj2);
+                });
+                var resta_hor_EoS = parseFloat(arr_horario_EoS[1]) - parseFloat(arr_horario_EoS[0]);
+                var resta_hor_AES = parseFloat(arr_horario_AES[1]) - parseFloat(arr_horario_AES[0]);
+                let resta_hor = resta_hor_EoS - resta_hor_AES;
+                obj.total_horario = SegundosToHHMM(resta_hor);
+                let resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0]);
+                let resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arr_AES[0]);
+                let resta_tim = resta_tim_EoS - resta_tim_AES;
+                obj.total_timbres = SegundosToHHMM(resta_tim);
+                let dif_total = resta_tim - resta_hor;
+                let diferencia_Total = 0;
+                diferencia_Total = (dif_total < 0) ? dif_total * (-1) : dif_total;
+                obj.total_diferencia = (dif_total < 0) ? '-' + SegundosToHHMM(diferencia_Total) : SegundosToHHMM(diferencia_Total);
+                arr_respuesta.push(obj);
+            });
+        });
+        nuevoArray = [];
+        res_timbre = [];
+        respuesta = [];
+        array = [];
+        return arr_respuesta;
+    });
+};
 function SegundosToHHMM(dato) {
     // console.log('Hora decimal a HHMM ======>',dato);
     var h = Math.floor(dato / 3600);
@@ -613,7 +906,7 @@ function SegundosToHHMM(dato) {
 }
 function BuscarHorarioEmpleado(fec_inicio, fec_final, codigo) {
     return __awaiter(this, void 0, void 0, function* () {
-        let res = yield database_1.default.query('SELECT * FROM empl_horarios WHERE CAST(fec_inicio as VARCHAR) between $1 and $2 AND CAST(fec_final as VARCHAR) between $1 and $2 ' +
+        let res = yield database_1.default.query('SELECT * FROM empl_horarios WHERE fec_inicio between $1::timestamp and $2::timestamp AND fec_final between $1::timestamp and $2::timestamp ' +
             'AND codigo = $3 ORDER BY fec_inicio', [fec_inicio, fec_final, codigo]).then(result => { return result.rows; });
         if (res.length === 0)
             return res;
@@ -627,7 +920,7 @@ function BuscarHorarioEmpleado(fec_inicio, fec_final, codigo) {
             o.registros = yield database_1.default.query('SELECT count(*) FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' ', [o.fecha])
                 .then(result => {
                 if (result.rowCount === 0)
-                    return parseInt('0');
+                    return 0;
                 return parseInt(result.rows[0].count);
             });
             return o;
@@ -798,6 +1091,12 @@ function ModelarFechas(desde, hasta, horario) {
     // console.log('Objeto JSON: ', objeto);
     return objeto.filter(obj => { return (obj.estado === false); }).map(obj => { return { fecha: obj.fecha }; });
 }
+/**
+ * Mezcla el horario y las fechas para obtener los dias con su estado: TRUE=dia libre || FALSE=dia laborable
+ * @param horario Es el horario del empleado
+ * @param rango Rango de fecha de inicio y final
+ * @returns Un Array de objetos.
+ */
 function DiasConEstado(horario, rango) {
     var fec_aux = new Date(rango.inicio);
     var fecha1 = moment_1.default(rango.inicio);
@@ -811,31 +1110,56 @@ function DiasConEstado(horario, rango) {
     }
     return respuesta;
 }
+/**
+ * Funcion se utiliza en un Ciclo For de un rango de fechas.
+ * @param fechaIterada Dia de un ciclo for
+ * @param horario Es el horario del empleado
+ * @returns Retorna objeto de fecha con su estado true si el dia es libre y false si el dia trabaja.
+ */
 function fechaIterada(fechaIterada, horario) {
     let est;
-    if (fechaIterada.getDay() === 0) {
-        est = horario.domingo;
-    }
-    else if (fechaIterada.getDay() === 1) {
-        est = horario.lunes;
-    }
-    else if (fechaIterada.getDay() === 2) {
-        est = horario.martes;
-    }
-    else if (fechaIterada.getDay() === 3) {
-        est = horario.miercoles;
-    }
-    else if (fechaIterada.getDay() === 4) {
-        est = horario.jueves;
-    }
-    else if (fechaIterada.getDay() === 5) {
-        est = horario.viernes;
-    }
-    else if (fechaIterada.getDay() === 6) {
-        est = horario.sabado;
+    switch (fechaIterada.getDay()) {
+        case 0:
+            est = horario.domingo;
+            break;
+        case 1:
+            est = horario.lunes;
+            break;
+        case 2:
+            est = horario.martes;
+            break;
+        case 3:
+            est = horario.miercoles;
+            break;
+        case 4:
+            est = horario.jueves;
+            break;
+        case 5:
+            est = horario.viernes;
+            break;
+        case 6:
+            est = horario.sabado;
+            break;
+        default: break;
     }
     return {
         fecha: fechaIterada.toJSON().split('T')[0],
         estado: est
     };
+}
+function compareFechas(a, b) {
+    var uno = new Date(a.Fecha);
+    var dos = new Date(b.Fecha);
+    if (uno < dos)
+        return -1;
+    if (uno > dos)
+        return 1;
+    return 0;
+}
+function compareOrden(a, b) {
+    if (a.orden < b.orden)
+        return -1;
+    if (a.orden > b.orden)
+        return 1;
+    return 0;
 }

@@ -8,8 +8,9 @@ const pool = new Pool({
   port: 5432,
   // database: 'prueba_auditar',
   // password: 'admin'
-  database: 'fulltimeV3',
-  password: 'admin'
+  // database: 'fulltimeV3',
+  database: 'SinAcciones',
+  password: 'fulltime'
 
 })
 pool.query('SELECT NOW()', (err, res) => {
