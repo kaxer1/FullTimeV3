@@ -378,7 +378,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
         })
       ],
       styles: {
-        tableTotal: { fontSize: 20, bold: true, alignment: 'center', fillColor: this.s_color},
+        tableTotal: { fontSize: 13, bold: true, alignment: 'center', fillColor: this.s_color},
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
         itemsTable: { fontSize: 10 },
         itemsTableInfo: { fontSize: 10, margin: [0, 3, 0, 3], fillColor: this.s_color },

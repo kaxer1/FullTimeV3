@@ -100,7 +100,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     {opcion: 2, valor: 'Departamento'},
     {opcion: 3, valor: 'Empleado'},
     {opcion: 4, valor: 'Tabulado'},
-    {opcion: 5, valor: 'Incluido'}
+    {opcion: 5, valor: 'Incompletos'}
   ];
   
   constructor(
@@ -714,9 +714,9 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
                 { rowSpan: obj2.timbres.length, style: 'itemsTable', text: obj2.contrato },
                 { style: 'itemsTable', text: obj3.fecha },
                 { style: 'itemsTable', text: obj3.entrada },
-                { style: 'itemsTable', text: obj3.salida },
-                { style: 'itemsTable', text: obj3.ent_Alm },
                 { style: 'itemsTable', text: obj3.sal_Alm },
+                { style: 'itemsTable', text: obj3.ent_Alm },
+                { style: 'itemsTable', text: obj3.salida },
                 { style: 'itemsTable', text: obj3.desconocido },
               ]
               arrayTab.push(ret)
@@ -733,7 +733,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
                 { style: 'itemsTable', text: '' },
                 { style: 'itemsTable', text: obj3.fecha },
                 { style: 'itemsTable', text: obj3.entrada },
-                { style: 'itemsTable', text: obj3.salida },
+                { style: 'itemsTable', text: obj3.sal_Alm },
                 { style: 'itemsTable', text: obj3.ent_Alm },
                 { style: 'itemsTable', text: obj3.salida },
                 { style: 'itemsTable', text: obj3.desconocido },
@@ -766,9 +766,9 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
             { text: 'Contrato', style: 'tableHeader' },
             { text: 'Fecha', style: 'tableHeader' },
             { text: 'Entrada', style: 'tableHeader' },
-            { text: 'Salida', style: 'tableHeader' },
-            { text: 'Ent.Alm', style: 'tableHeader' },
             { text: 'Sal.Alm', style: 'tableHeader' },
+            { text: 'Ent.Alm', style: 'tableHeader' },
+            { text: 'Salida', style: 'tableHeader' },
             { text: 'Desco.', style: 'tableHeader' }
           ],                  
           ...arrayTab.map(obj3 => {
@@ -842,7 +842,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       obj.departamentos.forEach(obj1 => {
         obj1.empleado.forEach(obj2 => {
           obj2.timbres.forEach(obj3 => {
-            console.log(obj3);
+            // console.log(obj3);
             obj3.timbres_hora.forEach((obj4:any) => {
               c = c + 1;
               let genero = '';

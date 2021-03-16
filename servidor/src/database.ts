@@ -11,6 +11,7 @@ const pool = new Pool({
   // database: 'fulltimeV3',
   database: 'SinAcciones',
   password: 'admin'
+  // password: 'fulltime'
 
 })
 pool.query('SELECT NOW()', (err, res) => {
