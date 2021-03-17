@@ -155,7 +155,7 @@ exports.HorariosParaInasistencias = function (horario) {
     };
     let objeto = DiasConEstado(horario, fechasRango);
     // console.log('Fechas rango: ', fechasRango);
-    console.log('Objeto JSON: ', objeto);
+    // console.log('Objeto JSON: ', objeto);
     return objeto.filter(obj => { return (obj.estado === false); }).map(obj => { return { fecha: obj.fecha }; });
 };
 function DiasConEstado(horario, rango) {

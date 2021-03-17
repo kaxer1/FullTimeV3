@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { GraficaAsistencia, GraficaHorasExtras, GraficaInasistencia, GraficaJornada_VS_HorasExtras, 
-    GraficaMarcaciones, GraficaTiempoJornada_VS_HorasExtras, MetricaHorasExtraEmpleado,
+import { GraficaAsistencia, GraficaHorasExtras, GraficaInasistencia, GraficaJornada_VS_HorasExtras, GraficaT_Jor_VS_HorExtTimbresSinAcciones,
+    GraficaMarcaciones, GraficaTiempoJornada_VS_HorasExtras, MetricaHorasExtraEmpleado, GraficaAtrasosSinAcciones,
     MetricaPermisosEmpleado, MetricaVacacionesEmpleado,MetricaAtrasosEmpleado,GraficaSalidasAnticipadas, GraficaAtrasos } from '../../libs/MetodosGraficas';
 
 class GraficasControlador {
@@ -32,7 +32,16 @@ class GraficasControlador {
         fec_inicio.setUTCDate(1); fec_inicio.setUTCMonth(0); fec_inicio.setUTCHours(0); fec_inicio.setUTCMinutes(0); fec_inicio.setUTCSeconds(0)
         fec_final.setUTCHours(0); fec_final.setUTCMinutes(0); fec_final.setUTCSeconds(0);
 
-        let resultado = await GraficaAtrasos(id_empresa, fec_inicio, fec_final)
+        let resultado: any;
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones 
+            resultado = await GraficaAtrasos(id_empresa, fec_inicio, fec_final)
+        } else {
+            // Resultados de timbres sin acciones
+            resultado = await GraficaAtrasosSinAcciones(id_empresa, fec_inicio, fec_final)
+        }
+
         res.status(200).jsonp(resultado);
     }
     
@@ -41,7 +50,16 @@ class GraficasControlador {
         const fec_final = req.params.hasta;
         const id_empresa = req.id_empresa;
 
-        let resultado = await GraficaAtrasos(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        let resultado: any;
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones 
+            resultado = await GraficaAtrasos(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        } else {
+            // Resultados de timbres sin acciones
+            resultado = await GraficaAtrasosSinAcciones(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        }
+
         res.status(200).jsonp(resultado);
     }
     
@@ -52,6 +70,7 @@ class GraficasControlador {
         fec_inicio.setUTCDate(1); fec_inicio.setUTCMonth(0); fec_inicio.setUTCHours(0); fec_inicio.setUTCMinutes(0); fec_inicio.setUTCSeconds(0)
         fec_final.setUTCHours(0); fec_final.setUTCMinutes(0); fec_final.setUTCSeconds(0);
 
+        //El metodo GraficaAsistencia funciona para timbres de 6 y 3 acciones, y timbres sin acciones.
         let resultado = await GraficaAsistencia(id_empresa, fec_inicio, fec_final)
         res.status(200).jsonp(resultado);
     }
@@ -61,6 +80,7 @@ class GraficasControlador {
         const fec_final = req.params.hasta;
         const id_empresa = req.id_empresa
 
+        //El metodo GraficaAsistencia funciona para timbres de 6 y 3 acciones, y timbres sin acciones.
         let resultado = await GraficaAsistencia(id_empresa, new Date(fec_inicio), new Date(fec_final))
         res.status(200).jsonp(resultado);
     }
@@ -92,7 +112,16 @@ class GraficasControlador {
         fec_inicio.setUTCDate(1); fec_inicio.setUTCMonth(0); fec_inicio.setUTCHours(0); fec_inicio.setUTCMinutes(0); fec_inicio.setUTCSeconds(0)
         fec_final.setUTCHours(0); fec_final.setUTCMinutes(0); fec_final.setUTCSeconds(0);
 
-        let resultado = await GraficaTiempoJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final)
+        let resultado: any;
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones 
+            resultado = await GraficaTiempoJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final)
+        } else {
+            // Resultados de timbres sin acciones
+            resultado = await GraficaT_Jor_VS_HorExtTimbresSinAcciones(id_empresa, fec_inicio, fec_final)
+        }
+        
         res.status(200).jsonp(resultado);
     }
     
@@ -101,7 +130,16 @@ class GraficasControlador {
         const fec_final = req.params.hasta;
         const id_empresa = req.id_empresa;
 
-        let resultado = await GraficaTiempoJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        let resultado: any;
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones 
+            resultado = await GraficaTiempoJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        } else {
+            // Resultados de timbres sin acciones
+            resultado = await GraficaT_Jor_VS_HorExtTimbresSinAcciones(id_empresa, new Date(fec_inicio), new Date(fec_final))
+        }
+
         res.status(200).jsonp(resultado);
     }
 
@@ -112,6 +150,7 @@ class GraficasControlador {
         fec_inicio.setUTCDate(1); fec_inicio.setUTCMonth(0); fec_inicio.setUTCHours(0); fec_inicio.setUTCMinutes(0); fec_inicio.setUTCSeconds(0)
         fec_final.setUTCHours(0); fec_final.setUTCMinutes(0); fec_final.setUTCSeconds(0);
 
+        //El metodo GraficaInasistencia funciona para timbres de 6 y 3 acciones, y timbres sin acciones.
         let resultado = await GraficaInasistencia(id_empresa, fec_inicio, fec_final)
         res.status(200).jsonp(resultado);
     }
@@ -121,6 +160,7 @@ class GraficasControlador {
         const fec_final = req.params.hasta;
         const id_empresa = req.id_empresa;
 
+        //El metodo GraficaInasistencia funciona para timbres de 6 y 3 acciones, y timbres sin acciones.
         let resultado = await GraficaInasistencia(id_empresa, new Date(fec_inicio), new Date(fec_final))
         res.status(200).jsonp(resultado);
     }

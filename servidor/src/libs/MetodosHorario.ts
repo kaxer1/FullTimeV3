@@ -151,7 +151,7 @@ export const HorariosParaInasistencias = function(horario: any) {
     
     let objeto = DiasConEstado(horario, fechasRango);
     // console.log('Fechas rango: ', fechasRango);
-    console.log('Objeto JSON: ', objeto);
+    // console.log('Objeto JSON: ', objeto);
     return objeto.filter(obj => { return (obj.estado === false)}).map(obj => { return {fecha: obj.fecha}})
 }
 

@@ -2,6 +2,7 @@ import pool from '../database';
 import moment from 'moment';
 import { IHorarioCodigo } from '../class/Model_graficas';
 import { HorariosParaInasistencias } from './MetodosHorario'
+import { IHorarioTrabajo } from '../class/Asistencia';
 
 export const BuscarTimbresByFecha = async function (fec_inicio: string, fec_final: string) {
 
@@ -31,16 +32,23 @@ export const BuscarHorariosActivos = async function (fec_inicio: string, fec_fin
 }
 
 export const BuscarTimbresByCodigo_Fecha = async function (codigo: number, horario: any[]) {
-
     return await Promise.all(horario.map(async(obj) => {
-        return await pool.query('SELECT fec_hora_timbre FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC',[ obj.fecha, codigo])
-        .then(res => {
-            return {
-                fecha: obj.fecha,
-                timbresTotal: res.rowCount
-            };
-        })
+        return {
+            fecha: obj.fecha,
+            timbresTotal: await pool.query('SELECT fec_hora_timbre FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC',[ obj.fecha, codigo])
+            .then(res => {
+                return res.rowCount
+            })
+        };
     }))
+}
+
+export const BuscarPermisosJustificados = async function (codigo: number, fecha: string ) {
+    return await pool.query('SELECT fec_inicio, descripcion FROM permisos WHERE codigo = $1 AND fec_inicio::TIMESTAMP::DATE <= $2 AND fec_final::TIMESTAMP::DATE >= $2 AND estado = 3 ',
+    [codigo, fecha + ''])
+    .then(result => {
+        return result.rowCount
+    })
 }
 
 export const BuscarHorasExtras = async function (fec_inicio: string, fec_final: string) {
@@ -179,11 +187,273 @@ export const SumarValoresArray = function(array: any []) {
     return valor.toFixed(2)
 }
 
-export const BuscarTimbresEoS = async function (fec_inicio: string, fec_final: string) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\', \'S\') ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final])
+export const BuscarTimbresEntradas = async function (fec_inicio: string, fec_final: string) {
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND accion in (\'EoS\', \'E\') ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final])
         .then(res => {
             return res.rows;
         })
+}
+
+export const BuscarTimbresEntradasSinAcciones = async function (fec_inicio: string, fec_final: string) {
+    
+    const orden = 1;
+    
+    const horarioEntrada = await pool.query('SELECT eh.codigo, dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), '+
+    'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+    'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt '+ 
+    'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 ' + 
+    'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario',[orden, new Date(fec_inicio), new Date(fec_final)])
+    .then(result => { return result.rows })
+
+    if (horarioEntrada.length === 0) return [0];
+    // console.log(horarioEntrada);
+
+    let nuevo: Array<any> = [];
+
+    let aux = await Promise.all(horarioEntrada.map(async(obj)=> {
+
+        let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
+        const hora_seg = HHMMtoSegundos(obj.hora) + (obj.minu_espera * 60);
+        
+        let timbres = await Promise.all(fechas.map(async(o) => {
+            var f_inicio = o.fecha + ' ' + SegundosToHHMM(hora_seg);
+            var f_final = o.fecha + ' ' + SegundosToHHMM( hora_seg + HHMMtoSegundos('02:00:00') );
+            // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
+            const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + obj.codigo +' order by fec_hora_timbre'
+            // console.log(query);
+            return await pool.query(query)
+            .then(res => { 
+                if (res.rowCount === 0) {
+                    return 0
+                } else {
+                    const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                    const t_tim = HHMMtoSegundos(h_timbre);
+                    // console.log(f_timbre);
+                    return {
+                        fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
+                        tiempo_atraso: (t_tim - hora_seg) / 3600
+                    }                    
+                }
+            })
+        }));
+
+        return timbres
+    }))    
+
+    aux.forEach(obj => {
+        if (obj.length > 0) {
+            obj.forEach((o: any) => {
+                if (o.tiempo_atraso > 0) {
+                    nuevo.push(o)
+                }
+            })
+        }
+    })
+
+    return nuevo
+}
+
+export const BuscarTimbresEntradaSinAccionModelado = async function (fec_inicio: string, fec_final: string) {
+    
+
+    let codigos = await pool.query('SELECT Distinct id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY id_empleado ASC ',[ fec_inicio, fec_final])
+        .then(res => {
+            return res.rows;
+        })
+        
+    let nuevo = await Promise.all(codigos.map(async(obj) => {
+        return pool.query('SELECT eh.codigo, dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' + 
+        'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' + 
+        'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ORDER BY eh.fec_inicio',[obj.id_empleado, fec_inicio, fec_final])
+        .then(res => { return res.rows})
+    })) 
+    
+    let array: Array<any> = [];
+
+    nuevo.filter(o => {
+        return o.length > 0
+    }).forEach(o => {
+        o.forEach(e => {
+            array.push(e)
+        })
+    })
+    // console.log('Array: ',array);    
+    if (array.length === 0) return []
+    // console.log('ARRAY MODELAR HORAS TRABAJADAS: ',array);
+    
+    var nuevoArray: any = []
+	var arrayTemporal: any = []
+	for(var i = 0; i < array.length; i++){
+	    arrayTemporal = nuevoArray.filter((res:any) => {
+            return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"] + ' ' + array[i]["codigo"]
+        });
+	    if(arrayTemporal.length>0){
+	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i])
+	    }else{
+	        nuevoArray.push({"Fecha" : array[i]["fec_inicio"]  + ' ' + array[i]["fec_final"] + ' ' + array[i]["codigo"] , "Horario" : [ array[i] ]})
+	    }
+	}
+
+    nuevoArray.sort(compareFechas);
+    
+    let res_timbre: any = await Promise.all(nuevoArray.map(async(obj:any) => {
+        var fec_aux = new Date(obj.Fecha.split(' ')[0])
+        var fecha1 = moment(obj.Fecha.split(' ')[0]);
+        var fecha2 = moment(obj.Fecha.split(' ')[1]);
+        const codigo = obj.Fecha.split(' ')[2];
+
+        var diasDiferencia = fecha2.diff(fecha1, 'days');
+        
+        let res: Array<any> = [];
+        for (let i = 0; i <= diasDiferencia; i++) {
+            let horario_res = {
+                fecha: fec_aux.toJSON().split('T')[0],
+                timbres: await BuscarTimbresSinAccionesReporte(fec_aux.toJSON().split('T')[0], codigo),
+                horario: obj.Horario.sort(compareOrden)
+            }
+            // console.log('Horarios Timbres Res:',horario_res.timbres);
+            if (horario_res.timbres.length > 0) {
+                res.push(horario_res)
+            }
+            fec_aux.setDate(fec_aux.getDate() + 1)
+        }
+        
+        return res
+    }))
+
+    let respuesta = res_timbre.filter((obj:any) => {        
+        return obj.length > 0
+    })
+    // console.log('Respuesta timbres sin acciones:',respuesta);
+    let arr_respuesta: Array<any> = [];
+
+    respuesta.forEach((arr: any) => {
+        
+        arr.forEach((o:any) => {
+            let obj = {
+                fecha: o.fecha,
+                total_timbres: '',
+            };
+    
+            let arr_EoS: Array<any> = [];
+            let arr_AES: Array<any> = [];
+
+            let arrayHorarioEoS: Array<any> = [];
+            let arrayHorarioAES: Array<any> = [];
+            
+            o.horario.forEach((h: any) => {
+                
+                let obj2 = {
+                    hora_timbre: '',
+                }
+                let diferencia = 0;
+                let dif = 0;
+                switch (h.orden) {
+                    case 1:
+                        var arr3 = o.timbres.filter((t: any) => { 
+                            const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                            const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('01:30:00');
+                            const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('01:59:00');
+                            return (h_inicio <= hora_timbre && h_final >= hora_timbre)
+                        })
+
+                        obj2.hora_timbre = (arr3.length === 0) ? '' : arr3[0].fec_hora_timbre.split(' ')[1];
+                        dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+
+                        arrayHorarioEoS.push(HHMMtoSegundos(h.hora));
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        break;
+                    case 2:
+                        var arr4 = o.timbres.filter((t: any) => { 
+                            const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                            const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('00:59:00');
+                            const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('00:59:00');
+                            return (h_inicio <= hora_timbre && h_final >= hora_timbre)
+                        })
+                        
+                        obj2.hora_timbre = (arr4.length === 0) ? '' : arr4[0].fec_hora_timbre.split(' ')[1];
+                        dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+    
+                        arrayHorarioAES.push(HHMMtoSegundos(h.hora));
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre) );
+                        break;
+                    case 3:
+                        var arr1 = o.timbres.filter((t: any) => { 
+                            const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                            const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('00:59:00');
+                            const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('00:59:00');
+                            return (h_inicio <= hora_timbre && h_final >= hora_timbre)
+                        })
+
+                        obj2.hora_timbre = (arr1.length === 0) ? '' : arr1[0].fec_hora_timbre.split(' ')[1];
+                        dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(h.hora) - HHMMtoSegundos(obj2.hora_timbre);
+                        
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+    
+                        arrayHorarioAES.push(HHMMtoSegundos(h.hora));
+                        arr_AES.push(HHMMtoSegundos(obj2.hora_timbre));
+                        break;
+                    case 4:
+                        var arr2 = o.timbres.filter((t: any) => { 
+                            const hora_timbre = HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                            const h_inicio = HHMMtoSegundos(h.hora) - HHMMtoSegundos('01:59:00');
+                            const h_final = HHMMtoSegundos(h.hora) + HHMMtoSegundos('01:30:00');
+                            return (h_inicio <= hora_timbre && h_final >= hora_timbre)
+                        })
+
+                        obj2.hora_timbre = (arr2.length === 0) ? '' : arr2[0].fec_hora_timbre.split(' ')[1];
+                        dif = (obj2.hora_timbre === '') ? 0 : HHMMtoSegundos(obj2.hora_timbre) - HHMMtoSegundos(h.hora);
+    
+                        diferencia = (dif < 0) ? dif * (-1) : dif;
+    
+                        arrayHorarioEoS.push(HHMMtoSegundos(h.hora));
+                        arr_EoS.push(HHMMtoSegundos(obj2.hora_timbre));
+                        break;
+                    default:
+                        break;
+                }
+    
+            });
+
+            // RESTA DE TIEMPO DE LOS TIMBRES ENTRADA Y SALIDA
+            let resta_tim_EoS = 0; 
+            if (parseFloat(arr_EoS[0]) === 0 && parseFloat(arr_EoS[1]) > 0 ) {
+                resta_tim_EoS = parseFloat(arr_EoS[1]) - parseFloat(arrayHorarioEoS[0]) // salida timbre - entrada horario
+            } else if (parseFloat(arr_EoS[0]) > 0 && parseFloat(arr_EoS[1]) === 0 ) {
+                resta_tim_EoS = parseFloat(arrayHorarioEoS[1]) - parseFloat(arr_EoS[0]) //salida horario - entrada timbre
+            } else if (parseFloat(arr_EoS[0]) > 0 && parseFloat(arr_EoS[1]) > 0 ) {
+                resta_tim_EoS =  parseFloat(arr_EoS[1]) - parseFloat(arr_EoS[0]) //salida timbres - entrada timbre
+            }
+
+            // RESTA DE TIEMPO DE LOS TIMBRES ENTRADA Y SALIDA ALMUERZO
+            let resta_tim_AES = 0; 
+            if (parseFloat(arr_AES[0]) === 0 && parseFloat(arr_AES[1]) > 0 ) {
+                resta_tim_AES = parseFloat(arr_AES[1]) - parseFloat(arrayHorarioAES[0]) // salida timbre A - entrada horario A
+            } else if (parseFloat(arr_AES[0]) > 0 && parseFloat(arr_AES[1]) === 0 ) {
+                resta_tim_AES = parseFloat(arrayHorarioAES[1]) - parseFloat(arr_AES[0]) //salida horario A - entrada timbre A
+            } else if (parseFloat(arr_AES[0]) > 0 && parseFloat(arr_AES[1]) > 0 ) {
+                resta_tim_AES =  parseFloat(arr_AES[1]) - parseFloat(arr_AES[0]) //salida timbres A - entrada timbre A
+            }
+            
+            let resta_tim = resta_tim_EoS - resta_tim_AES;
+
+            obj.total_timbres = SegundosToHHMM(resta_tim);
+            
+            arr_respuesta.push(obj)
+        });
+    })
+
+    nuevoArray = [];
+    res_timbre = [];
+    respuesta = [];
+    array = [];
+    
+    return arr_respuesta    
 }
 
 export const BuscarTimbresEoSModelado = async function (fec_inicio: string, fec_final: string) {
@@ -255,19 +525,16 @@ export const ModelarAtrasos = async function (obj: any, fec_inicio: string, fec_
     if (array.length === 0) {
         return {
             fecha: obj.fec_hora_timbre,
-            retraso: false
+            tiempo_atraso: 0,
         }
     }
     return array.map(ele => {
-        let retraso: boolean = false;
         var timbre = HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]) 
         var hora = HHMMtoSegundos(ele.hora) + ele.minu_espera*60;
 
-        (timbre > hora ) ? retraso = true : retraso = false;
-
         return {
             fecha: obj.fec_hora_timbre,
-            retraso: retraso
+            tiempo_atraso: (timbre - hora) / 3600
         }
     })[0]
 }
@@ -500,4 +767,98 @@ export const Empleado_Atrasos_ModelarDatos = async function(codigo: string | num
     }))
     // console.log('ARRAY ===', array);
     return array
+}
+
+export const SegundosToHHMM = function (dato: number) {
+    // console.log('Hora decimal a HHMM ======>',dato);
+    var h = Math.floor( dato / 3600 );  
+    var m = Math.floor( (dato % 3600) / 60 );
+    var s = dato % 60;
+    if (h <= -1) {
+        return '00:00:00'
+    }
+    let hora = (h >= 10) ?  h : '0' + h; 
+    let min = (m >= 10) ? m : '0' + m;
+    let seg = (s >= 10) ? s : '0' + s;
+
+    return hora + ':' + min + ':' + seg
+}
+
+export const ModelarFechas = function (desde: string, hasta: string, horario: any): Array<any> {
+    let fechasRango =  {
+        inicio: desde,
+        final: hasta
+    };
+    
+    let objeto = DiasConEstado(horario, fechasRango);
+    // console.log('Objeto JSON: ', objeto);
+    return objeto.filter(obj => { return (obj.estado === false)}).map(obj => { return {fecha: obj.fecha}})
+}
+
+/**
+ * Mezcla el horario y las fechas para obtener los dias con su estado: TRUE=dia libre || FALSE=dia laborable
+ * @param horario Es el horario del empleado
+ * @param rango Rango de fecha de inicio y final 
+ * @returns Un Array de objetos.
+ */
+function DiasConEstado(horario: any, rango: any) {
+    var fec_aux = new Date(rango.inicio)
+    var fecha1 = moment(rango.inicio);
+    var fecha2 = moment(rango.final);
+
+    var diasHorario = fecha2.diff(fecha1, 'days');
+    let respuesta = [];
+    for (let i = 0; i <= diasHorario; i++) {
+        let horario_res =  fechaIterada(fec_aux, horario);
+        respuesta.push(horario_res)
+        fec_aux.setDate(fec_aux.getDate() + 1)
+    }
+    return respuesta
+}
+
+/**
+ * Funcion se utiliza en un Ciclo For de un rango de fechas.
+ * @param fechaIterada Dia de un ciclo for
+ * @param horario Es el horario del empleado
+ * @returns Retorna objeto de fecha con su estado true si el dia es libre y false si el dia trabaja. 
+ */
+function fechaIterada(fechaIterada: Date, horario: any){
+    let est;
+
+    switch (fechaIterada.getDay()) {
+        case 0: est = horario.domingo; break;
+        case 1: est = horario.lunes; break;
+        case 2: est = horario.martes; break;
+        case 3: est = horario.miercoles; break;
+        case 4: est = horario.jueves; break;
+        case 5: est = horario.viernes; break;
+        case 6: est = horario.sabado; break;
+        default: break;
+    }
+
+    return {
+        fecha: fechaIterada.toJSON().split('T')[0],
+        estado: est
+    }
+}
+
+const BuscarTimbresSinAccionesReporte = async function (fecha: string, codigo: number) {
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) like $1 || \'%\' AND id_empleado = $2 ORDER BY fec_hora_timbre ASC ',[ fecha, codigo])
+        .then(res => {
+            return res.rows;
+        })
+}
+
+function compareFechas(a: any, b: any) {
+    var uno = new Date(a.fecha);
+    var dos = new Date(b.fecha);
+    if (uno < dos) return -1;
+    if (uno > dos) return 1;
+    return 0;
+}
+
+function compareOrden(a: any, b: any) {
+    if (a.orden < b.orden) return -1;
+    if (a.orden > b.orden) return 1;
+    return 0;
 }

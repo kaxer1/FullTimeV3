@@ -265,11 +265,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       return bool != undefined
     })
 
-    console.log('SUCURSAL', suc);
+    // console.log('SUCURSAL', suc);
     this.data_pdf = []
     this.R_asistencias.ReporteTimbresMultiple(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
-      console.log('DATA PDF', this.data_pdf);
+      // console.log('DATA PDF', this.data_pdf);
       this.generarPdf(accion)
     }, err => {
       this.toastr.error(err.error.message)
@@ -291,11 +291,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     let dep = respuesta.filter(obj => { 
       return obj.departamentos.length > 0
     });
-    console.log('DEPARTAMENTOS', dep);
+    // console.log('DEPARTAMENTOS', dep);
     this.data_pdf = []
     this.R_asistencias.ReporteTimbresMultiple(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
-      console.log('DATA PDF',this.data_pdf);
+      // console.log('DATA PDF',this.data_pdf);
       this.generarPdf(accion)
     }, err => {
       this.toastr.error(err.error.message)
@@ -326,11 +326,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       return obj.departamentos.length > 0
     });
     
-    console.log('EMPLEADOS', emp);
+    // console.log('EMPLEADOS', emp);
     this.data_pdf = []
     this.R_asistencias.ReporteTimbresMultiple(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
-      console.log('DATA PDF',this.data_pdf);
+      // console.log('DATA PDF',this.data_pdf);
       this.generarPdf(accion)
     }, err => {
       this.toastr.error(err.error.message)
@@ -361,11 +361,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       return obj.departamentos.length > 0
     });
     
-    console.log('TABULADO', tab);
+    // console.log('TABULADO', tab);
     this.data_pdf = []
     this.R_asistencias.ReporteTimbrestabulados(tab, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
-      console.log('TABULADO PDF',this.data_pdf);
+      // console.log('TABULADO PDF',this.data_pdf
       this.generarPdf(accion)
     }, err => {
       this.toastr.error(err.error.message)
@@ -396,11 +396,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       return obj.departamentos.length > 0
     });
     
-    console.log('TIMBRES INCOMPLETOS', inc);
+    // console.log('TIMBRES INCOMPLETOS', inc);
     this.data_pdf = []
     this.R_asistencias.ReporteTabuladoTimbresIncompletos(inc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
-      console.log('TIMBRES PDF',this.data_pdf);
+      // console.log('TIMBRES PDF',this.data_pdf);
       this.generarPdf(accion)
     }, err => {
       this.toastr.error(err.error.message)

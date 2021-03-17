@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { dep, emp, IHorarioTrabajo, IReporteAtrasos, IReportePuntualidad, IReporteTimbres, tim_tabulado } from '../../class/Asistencia';
 import pool from '../../database'
-import { HHMMtoSegundos, SumarValoresArray } from '../../libs/SubMetodosGraficas';
+import { HHMMtoSegundos, SumarValoresArray, SegundosToHHMM, ModelarFechas } from '../../libs/SubMetodosGraficas';
 import { HorariosParaInasistencias } from '../../libs/MetodosHorario'
 import moment from 'moment';
 
@@ -406,7 +406,7 @@ class ReportesAsistenciaControlador {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
                             o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
                             o.timbres = await TimbresSinAccionesIncompletos( new Date(desde), new Date(hasta), o.codigo)
-                            console.log(o);
+                            // console.log(o);
                             return o})
                         )
                     return ele})
@@ -1089,21 +1089,6 @@ const ModelarHorasTrabajaTimbresSinAcciones = async function (codigo: number, fe
     return arr_respuesta
 }
 
-function SegundosToHHMM(dato: number) {
-    // console.log('Hora decimal a HHMM ======>',dato);
-    var h = Math.floor( dato / 3600 );  
-    var m = Math.floor( (dato % 3600) / 60 );
-    var s = dato % 60;
-    if (h <= -1) {
-        return '00:00:00'
-    }
-    let hora = (h >= 10) ?  h : '0' + h; 
-    let min = (m >= 10) ? m : '0' + m;
-    let seg = (s >= 10) ? s : '0' + s;
-
-    return hora + ':' + min + ':' + seg
-}
-
 async function BuscarHorarioEmpleado(fec_inicio: string, fec_final: string, codigo: string | number) {
     let res = await pool.query('SELECT * FROM empl_horarios WHERE fec_inicio between $1::timestamp and $2::timestamp AND fec_final between $1::timestamp and $2::timestamp ' +
     'AND codigo = $3 ORDER BY fec_inicio',[fec_inicio, fec_final, codigo]).then(result => { return result.rows });
@@ -1406,7 +1391,7 @@ const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_fina
         let fechas = ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
         const hora_seg = HHMMtoSegundos(obj.hora);
         
-        let timbres = await Promise.all(fechas.map(async(o) => {
+        const timbres = await Promise.all(fechas.map(async(o) => {
             var f_inicio= o.fecha + ' ' + SegundosToHHMM(hora_seg - HHMMtoSegundos('00:59:00') );
             var f_final = o.fecha + ' ' + SegundosToHHMM(hora_seg + HHMMtoSegundos('00:59:00'));
             // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
@@ -1415,6 +1400,7 @@ const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_fina
             return await pool.query(query).then(res => { 
                 if (res.rowCount === 0) {
                     return  {
+                        fecha_timbre: o.fecha,
                         tipo: obj.tipo_accion,
                         hora: obj.hora
                     }
@@ -1425,93 +1411,40 @@ const TimbresSinAccionesIncompletos = async function (fec_inicio: Date, fec_fina
         }));
         
         return timbres.filter(o => {
-            console.log('Sin filtrar', o);
             return o !== 0
         }).map((e: any) => {
-            console.log('Fillll', e);
             return e
         })
     }))
 
-    let timbres: Array<any> = [];
-    aux
-    // .filter(o => {
-    //     return o.length >= 1
-    // })
-    .forEach((o: Array<any>) => {
-        console.log('Forrr: ', o);
-        
-        // o.forEach((e: Array<any>) => {
-        //     e.forEach(t => {
-        //         timbres.push(t)
-        //     })
-        // })
-    })
-    
-    return timbres
-}
+    let tim: Array<any> = [];
+    aux.forEach((o: Array<any>) => {
+        o.forEach((e: Array<any>) => {
+            tim.push(e)
+        });
+    });
 
-function ModelarFechas(desde: string, hasta: string, horario: any): Array<any> {
-    let fechasRango =  {
-        inicio: desde,
-        final: hasta
-    };
-    
-    let objeto = DiasConEstado(horario, fechasRango);
-    // console.log('Objeto JSON: ', objeto);
-    return objeto.filter(obj => { return (obj.estado === false)}).map(obj => { return {fecha: obj.fecha}})
-}
+    var nuevoArray: any = []
+	var arrayTemporal: any = []
+	for(var i = 0; i < tim.length; i++){
+	    arrayTemporal = nuevoArray.filter((res:any) => {
+            return res["fecha"] == tim[i]["fecha_timbre"]
+        });
+	    if(arrayTemporal.length>0){
+	        nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["timbres_hora"].push(tim[i])
+	    }else{
+	        nuevoArray.push({"fecha" : tim[i]["fecha_timbre"] , "timbres_hora" : [ tim[i] ]})
+	    }
+	}
 
-/**
- * Mezcla el horario y las fechas para obtener los dias con su estado: TRUE=dia libre || FALSE=dia laborable
- * @param horario Es el horario del empleado
- * @param rango Rango de fecha de inicio y final 
- * @returns Un Array de objetos.
- */
-function DiasConEstado(horario: any, rango: any) {
-    var fec_aux = new Date(rango.inicio)
-    var fecha1 = moment(rango.inicio);
-    var fecha2 = moment(rango.final);
+    nuevoArray.sort(compareFechas);
 
-    var diasHorario = fecha2.diff(fecha1, 'days');
-    let respuesta = [];
-    for (let i = 0; i <= diasHorario; i++) {
-        let horario_res =  fechaIterada(fec_aux, horario);
-        respuesta.push(horario_res)
-        fec_aux.setDate(fec_aux.getDate() + 1)
-    }
-    return respuesta
-}
-
-/**
- * Funcion se utiliza en un Ciclo For de un rango de fechas.
- * @param fechaIterada Dia de un ciclo for
- * @param horario Es el horario del empleado
- * @returns Retorna objeto de fecha con su estado true si el dia es libre y false si el dia trabaja. 
- */
-function fechaIterada(fechaIterada: Date, horario: any){
-    let est;
-
-    switch (fechaIterada.getDay()) {
-        case 0: est = horario.domingo; break;
-        case 1: est = horario.lunes; break;
-        case 2: est = horario.martes; break;
-        case 3: est = horario.miercoles; break;
-        case 4: est = horario.jueves; break;
-        case 5: est = horario.viernes; break;
-        case 6: est = horario.sabado; break;
-        default: break;
-    }
-
-    return {
-        fecha: fechaIterada.toJSON().split('T')[0],
-        estado: est
-    }
+    return nuevoArray
 }
 
 function compareFechas(a: any, b: any) {
-    var uno = new Date(a.Fecha);
-    var dos = new Date(b.Fecha);
+    var uno = new Date(a.fecha);
+    var dos = new Date(b.fecha);
     if (uno < dos) return -1;
     if (uno > dos) return 1;
     return 0;

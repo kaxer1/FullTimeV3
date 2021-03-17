@@ -289,7 +289,7 @@ interface tim_Imcompleto {
 }
 
 interface tipo_hora {
-    tipo: string ,
+    tipo: string,
     hora: string
 }
  

@@ -218,29 +218,29 @@ export class InasistenciaMacroComponent implements OnInit {
   }
 
   ImprimirDatos() {
-    let datos = this.datos_inasis.filter(obj => {
+    const datos = this.datos_inasis.filter(obj => {
       return this.inasistencia.xAxis.data.includes(obj.mes)
     })
     
     let colums = [], colums1 = [], colums2 = [], colums3 = [];
+    const border = [true, true, true, true]
+    for (let i = 0; i < datos.length; i++) { // Ciclo For para crear celdas de la tabla
 
-    for (let i = 0; i < datos.length; i++) {
-
-      if (i >= 0 && i <= 2) {
-        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+      if (i >= 0 && i <= 2) { // Rango para colocar las celdas de máximo 3 meses
+        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       };
-      if (i >= 3 && i <= 5) {
-        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+      if (i >= 3 && i <= 5) { // Rango para colocar las celdas de máximo 3 meses
+        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       };
-      if (i >= 6 && i <= 8) {
-        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+      if (i >= 6 && i <= 8) { // Rango para colocar las celdas de máximo 3 meses
+        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       }; 
-      if (i >= 9 && i <= 11) {
-        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color });
-        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center' });
+      if (i >= 9 && i <= 11) { // Rango para colocar las celdas de máximo 3 meses
+        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       }
     }
 
@@ -260,15 +260,33 @@ export class InasistenciaMacroComponent implements OnInit {
 			}
 		}
 
-    let texto = {text: ''};
+    const texto_push = {text: '', border: [false, false, false, false] };
+
+    switch (colums1.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums1.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums1.push(texto_push); } break;
+      default: break;
+    }
+
+    switch (colums2.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums2.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums2.push(texto_push); } break;
+      default: break;
+    }
+
+    switch (colums3.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums3.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums3.push(texto_push); } break;
+      default: break;
+    }
     
     if (colums.length > 0) { tabla.table.body.push(colums); }
     if (colums1.length > 0) { tabla.table.body.push(colums1); }
     if (colums2.length > 0) { tabla.table.body.push(colums2); }
     if (colums3.length > 0) { tabla.table.body.push(colums3); } 
-    console.log(tabla);
+    // console.log(tabla);
 
-    let columnas = {
+    const columnas = {
       alignment: 'justify',
 			columns: [
 				{ width: 95, text: '' },

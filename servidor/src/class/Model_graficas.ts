@@ -14,8 +14,8 @@ export interface IModelarAnio {
 }
 
 export interface IHorarioCodigo {
-    horario: any,
-    codigo: number
+    horario: Array<any>,
+    codigo: number,
 }
 
 export interface IModelarPie {
