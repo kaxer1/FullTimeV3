@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccionPersonalService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -14,23 +13,23 @@ export class AccionPersonalService {
 
   /** SERVICIOS PARA TABLA TIPO_ACCION_PERSONAL */
   ConsultarTipoAccionPersonal() {
-    return this.http.get(`${this.API_URL}/accionPersonal`);
+    return this.http.get(`${environment.url}/accionPersonal`);
   }
 
   IngresarTipoAccionPersonal(datos: any) {
-    return this.http.post(`${this.API_URL}/accionPersonal`, datos);
+    return this.http.post(`${environment.url}/accionPersonal`, datos);
   }
 
   BuscarTipoAccionPersonalId(id: any) {
-    return this.http.get(`${this.API_URL}/accionPersonal/tipo/accion/${id}`);
+    return this.http.get(`${environment.url}/accionPersonal/tipo/accion/${id}`);
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/accionPersonal`, datos);
+    return this.http.put(`${environment.url}/accionPersonal`, datos);
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.API_URL}/accionPersonal/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/accionPersonal/eliminar/${id}`);
   }
 
 }

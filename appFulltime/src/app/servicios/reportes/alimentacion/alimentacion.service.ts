@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -8,42 +8,40 @@ import { catchError } from 'rxjs/operators';
 
 export class AlimentacionService {
 
-  API_URL = 'http://localhost:3000';
-
   constructor(
     private http: HttpClient,
   ) { }
 
   ObtenerPlanificadosConsumidos(datos: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/planificados`, datos);
+    return this.http.post(`${environment.url}/alimentacion/planificados`, datos);
   }
 
   ObtenerSolicitadosConsumidos(datos: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/solicitados`, datos);
+    return this.http.post(`${environment.url}/alimentacion/solicitados`, datos);
   }
 
   ObtenerExtrasPlanConsumidos(data: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/extras/plan`, data)
+    return this.http.post(`${environment.url}/alimentacion/extras/plan`, data)
   }
 
   ObtenerExtrasSolConsumidos(data: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/extras/solicita`, data)
+    return this.http.post(`${environment.url}/alimentacion/extras/solicita`, data)
   }
 
   ObtenerDetallesPlanificadosConsumidos(datos: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/planificados/detalle`, datos);
+    return this.http.post(`${environment.url}/alimentacion/planificados/detalle`, datos);
   }
 
   ObtenerDetallesSolicitadosConsumidos(datos: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/solicitados/detalle`, datos);
+    return this.http.post(`${environment.url}/alimentacion/solicitados/detalle`, datos);
   }
 
   ObtenerDetallesExtrasPlanConsumidos(data: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/extras/detalle/plan`, data)
+    return this.http.post(`${environment.url}/alimentacion/extras/detalle/plan`, data)
   }
 
   ObtenerDetallesExtrasSolConsumidos(data: any) {
-    return this.http.post(`${this.API_URL}/alimentacion/extras/detalle/solicita`, data)
+    return this.http.post(`${environment.url}/alimentacion/extras/detalle/solicita`, data)
   }
 
 }

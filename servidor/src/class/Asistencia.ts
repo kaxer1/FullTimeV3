@@ -75,8 +75,8 @@ export interface IHorarioTrabajo {
     fecha: string,
     horarios: Array<any>,
     total_timbres: string,
-    total_horario: string,
-    total_diferencia: string,
+    total_horario?: string,
+    total_diferencia?: string,
     timbres?: Array<any>
 }
 

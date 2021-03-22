@@ -41,7 +41,7 @@ class AccionPersonalControlador {
 
     public async ActualizarTipoAccionPersonal(req: Request, res: Response): Promise<void> {
         const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
-        await pool.query('UPDATE tipo_accion_personla SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
+        await pool.query('UPDATE tipo_accion_personal SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
             'tipo_permiso = $4, tipo_vacacion = $5, tipo_situacion_propuesta = $6 WHERE id = $7',
             [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
         res.jsonp({ message: 'Registro exitoso' });

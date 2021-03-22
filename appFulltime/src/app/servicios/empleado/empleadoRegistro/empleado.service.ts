@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmpleadoService {
-
-  API_URI = 'http://localhost:3000';
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -19,195 +18,195 @@ export class EmpleadoService {
 
   // Empleados  
   getEmpleadosRest() {
-    return this.http.get(`${this.API_URI}/empleado`);
+    return this.http.get(`${environment.url}/empleado`);
   }
 
   getBuscadorEmpledosRest() {
-    return this.http.get<any>(`${this.API_URI}/empleado/buscador-empl`);
+    return this.http.get<any>(`${environment.url}/empleado/buscador-empl`);
   }
 
   getOneEmpleadoRest(id: number) {
-    return this.http.get<any>(`${this.API_URI}/empleado/${id}`);
+    return this.http.get<any>(`${environment.url}/empleado/${id}`);
   }
 
   postEmpleadoRest(data: any) {
-    return this.http.post(`${this.API_URI}/empleado`, data).pipe(
+    return this.http.post(`${environment.url}/empleado`, data).pipe(
       catchError(data));
   }
 
   putGeolocalizacion(id: number, data: any) {
-    return this.http.put<any>(`${this.API_URI}/empleado/geolocalizacion/${id}`, data)
+    return this.http.put<any>(`${environment.url}/empleado/geolocalizacion/${id}`, data)
   }
 
   putEmpleadoRest(data: any, id: number) {
-    return this.http.put(`${this.API_URI}/empleado/${id}/usuario`, data).pipe(
+    return this.http.put(`${environment.url}/empleado/${id}/usuario`, data).pipe(
       catchError(data));
   }
 
   /** Verificar datos de la plantilla de datos con código generado de forma automática */
   verificarArchivoExcel_Automatico(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/verificar/automatico/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/verificar/automatico/plantillaExcel/`, formData);
   }
 
   verificarArchivoExcel_DatosAutomatico(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/verificar/datos/automatico/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/verificar/datos/automatico/plantillaExcel/`, formData);
   }
 
   subirArchivoExcel_Automatico(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/cargar_automatico/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/cargar_automatico/plantillaExcel/`, formData);
   }
 
   /** Verifcar datos de la plantilla de datos con código generado de forma automática */
   verificarArchivoExcel_Manual(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/verificar/manual/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/verificar/manual/plantillaExcel/`, formData);
   }
 
   verificarArchivoExcel_DatosManual(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/verificar/datos/manual/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/verificar/datos/manual/plantillaExcel/`, formData);
   }
 
   subirArchivoExcel_Manual(formData) {
-    return this.http.post<any>(`${this.API_URI}/empleado/cargar_manual/plantillaExcel/`, formData);
+    return this.http.post<any>(`${environment.url}/empleado/cargar_manual/plantillaExcel/`, formData);
   }
 
   // Servicio para insertar el empleado con sus respectivos titulos
   postEmpleadoTitulos(data: any) {
-    return this.http.post(`${this.API_URI}/empleado/emplTitulos`, data);
+    return this.http.post(`${environment.url}/empleado/emplTitulos`, data);
   }
 
   getEmpleadoTituloRest(id: number) {
-    return this.http.get(`${this.API_URI}/empleado/emplTitulos/${id}`);
+    return this.http.get(`${environment.url}/empleado/emplTitulos/${id}`);
   }
 
   putEmpleadoTituloRest(id: number, data: any) {
-    return this.http.put(`${this.API_URI}/empleado/${id}/titulo`, data);
+    return this.http.put(`${environment.url}/empleado/${id}/titulo`, data);
   }
 
   deleteEmpleadoTituloRest(id: number) {
-    return this.http.delete(`${this.API_URI}/empleado/eliminar/titulo/${id}`);
+    return this.http.delete(`${environment.url}/empleado/eliminar/titulo/${id}`);
   }
 
   // Servicio para insertar contrato del empleado
   CrearContratoEmpleado(datos: any) {
-    return this.http.post(`${this.API_URI}/contratoEmpleado`, datos);
+    return this.http.post(`${environment.url}/contratoEmpleado`, datos);
   }
 
   ObtenerUnContrato(id: number) {
-    return this.http.get(`${this.API_URI}/contratoEmpleado/${id}/get`);
+    return this.http.get(`${environment.url}/contratoEmpleado/${id}/get`);
   }
 
   ActualizarContratoEmpleado(id: number, id_empleado: number, data: any) {
-    return this.http.put(`${this.API_URI}/contratoEmpleado/${id_empleado}/${id}/actualizar/`, data);
+    return this.http.put(`${environment.url}/contratoEmpleado/${id_empleado}/${id}/actualizar/`, data);
   }
 
   BuscarIDContrato(id: number) {
-    return this.http.get(`${this.API_URI}/contratoEmpleado/${id}`);
+    return this.http.get(`${environment.url}/contratoEmpleado/${id}`);
   }
 
   BuscarIDContratoActual(id: number) {
-    return this.http.get(`${this.API_URI}/contratoEmpleado/contratoActual/${id}`);
+    return this.http.get(`${environment.url}/contratoEmpleado/contratoActual/${id}`);
   }
 
   BuscarDatosContrato(id: number) {
-    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contrato/${id}`);
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/contrato/${id}`);
   }
 
   BuscarContratoEmpleadoRegimen(id: number) {
-    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/contratoRegimen/${id}`);
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/contratoRegimen/${id}`);
   }
 
   SubirContrato(formData, id: number) {
-    return this.http.put(`${this.API_URI}/contratoEmpleado/${id}/documento`, formData)
+    return this.http.put(`${environment.url}/contratoEmpleado/${id}/documento`, formData)
   }
 
   EditarDocumento(id: number, data: any) {
-    return this.http.put(`${this.API_URI}/contratoEmpleado/editar/editarDocumento/${id}`, data);
+    return this.http.put(`${environment.url}/contratoEmpleado/editar/editarDocumento/${id}`, data);
   }
 
   BuscarFechaContrato(datos: any) {
-    return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha`, datos);
+    return this.http.post(`${environment.url}/contratoEmpleado/buscarFecha`, datos);
   }
 
   BuscarFechaIdContrato(datos: any) {
-    return this.http.post(`${this.API_URI}/contratoEmpleado/buscarFecha/contrato`, datos);
+    return this.http.post(`${environment.url}/contratoEmpleado/buscarFecha/contrato`, datos);
   }
 
   ObtenerContratos() {
-    return this.http.get<any>(`${this.API_URI}/contratoEmpleado`);
+    return this.http.get<any>(`${environment.url}/contratoEmpleado`);
   }
 
   /** SERVICIOS PARA SER USADOS PARA REGISTRAR MODALIDAD DE TRABAJO O TIPO DE CONTRATOS */
   CrearTiposContrato(datos: any) {
-    return this.http.post(`${this.API_URI}/contratoEmpleado/modalidad/trabajo`, datos);
+    return this.http.post(`${environment.url}/contratoEmpleado/modalidad/trabajo`, datos);
   }
 
   BuscarTiposContratos() {
-    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/modalidad/trabajo`);
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/modalidad/trabajo`);
   }
 
   BuscarUltimoTiposContratos() {
-    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/modalidad/trabajo/ultimo`);
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/modalidad/trabajo/ultimo`);
   }
 
   // GUARDAR CÓDIGO
 
   CrearCodigo(datos: any) {
-    return this.http.post(`${this.API_URI}/empleado/crearCodigo`, datos);
+    return this.http.post(`${environment.url}/empleado/crearCodigo`, datos);
   }
 
   ObtenerCodigo() {
-    return this.http.get(`${this.API_URI}/empleado/encontrarDato/codigo`);
+    return this.http.get(`${environment.url}/empleado/encontrarDato/codigo`);
   }
 
   ActualizarCodigo(datos: any) {
-    return this.http.put(`${this.API_URI}/empleado/cambiarCodigo`, datos);
+    return this.http.put(`${environment.url}/empleado/cambiarCodigo`, datos);
   }
 
   ActualizarCodigoTotal(datos: any) {
-    return this.http.put(`${this.API_URI}/empleado/cambiarValores`, datos);
+    return this.http.put(`${environment.url}/empleado/cambiarValores`, datos);
   }
 
   ObtenerCodigoMAX() {
-    return this.http.get(`${this.API_URI}/empleado/encontrarDato/codigo/empleado`);
+    return this.http.get(`${environment.url}/empleado/encontrarDato/codigo/empleado`);
   }
 
 
   // Servicio para obtener la lista de las nacionalidades
   getListaNacionalidades() {
-    return this.http.get<any>(`${this.API_URI}/nacionalidades`)
+    return this.http.get<any>(`${environment.url}/nacionalidades`)
   }
 
   // Servicios para subir las imagenes
   subirImagen(formData, idEmpleado: number) {
-    return this.http.put(`${this.API_URI}/empleado/${idEmpleado}/uploadImage`, formData)
+    return this.http.put(`${environment.url}/empleado/${idEmpleado}/uploadImage`, formData)
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.API_URI}/empleado/xmlDownload`, data);
+    return this.http.post(`${environment.url}/empleado/xmlDownload`, data);
   }
   // verXML(name: string){
-  //   return this.http.get<any>(`${this.API_URI}/empleado/download/${name}`)
+  //   return this.http.get<any>(`${environment.url}/empleado/download/${name}`)
   // }
 
   BuscarDepartamentoEmpleado(datos: any) {
-    return this.http.post(`${this.API_URI}/empleado/buscarDepartamento`, datos);
+    return this.http.post(`${environment.url}/empleado/buscarDepartamento`, datos);
   }
 
   // Desactivar varios empleados seleccionados
   DesactivarVariosUsuarios(data: any[]) {
-    return this.http.put<any>(`${this.API_URI}/empleado/desactivar/masivo`, data)
+    return this.http.put<any>(`${environment.url}/empleado/desactivar/masivo`, data)
   }
 
   ActivarVariosUsuarios(data: any[]) {
-    return this.http.put<any>(`${this.API_URI}/empleado/activar/masivo`, data)
+    return this.http.put<any>(`${environment.url}/empleado/activar/masivo`, data)
   }
 
   ReActivarVariosUsuarios(data: any[]) {
-    return this.http.put<any>(`${this.API_URI}/empleado/re-activar/masivo`, data)
+    return this.http.put<any>(`${environment.url}/empleado/re-activar/masivo`, data)
   }
 
   ListaEmpleadosDesactivados() {
-    return this.http.get<any>(`${this.API_URI}/empleado/desactivados/empleados`);
+    return this.http.get<any>(`${environment.url}/empleado/desactivados/empleados`);
   }
 
 }

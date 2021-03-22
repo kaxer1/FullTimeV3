@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, ActivatedRoute } from '@angular/router';
 import { LoginService } from '../servicios/login/login.service';
 
 @Injectable({
@@ -8,10 +8,11 @@ import { LoginService } from '../servicios/login/login.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private active_route: ActivatedRoute
   ) { }
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean{
+  canActivate( route: ActivatedRouteSnapshot, state: RouterStateSnapshot ): boolean{
     if (this.loginService.loggedIn()) {
       
       if (this.loginService.getRol() >= route.data.rolMix && this.loginService.getEstado() === true) {
@@ -29,11 +30,11 @@ export class AuthGuard implements CanActivate {
       if (this.loginService.getRol() != route.data.roles) {
 
         if (this.loginService.getRol() === 1) {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home'], { relativeTo: this.active_route, skipLocationChange: false });
           return true;
         }
         if (this.loginService.getRol() === 2) {
-          this.router.navigate(['/datosEmpleado']);
+          this.router.navigate(['/estadisticas'], { relativeTo: this.active_route, skipLocationChange: false });
           return true;
         }
       }
@@ -45,9 +46,12 @@ export class AuthGuard implements CanActivate {
         return true;
       }
     }
-    let id_permiso_solicitado_sin_loggeo = state.url.split("/")[2]; 
-    localStorage.setItem("redireccionar",  id_permiso_solicitado_sin_loggeo)
-    this.router.navigate(['/login']);
+
+    // console.log(state.url);
+    localStorage.clear();
+    sessionStorage.clear();
+    localStorage.setItem("redireccionar", state.url)
+    this.router.navigate(['/login'], { relativeTo: this.active_route, skipLocationChange: false });
     return false;
   }
   

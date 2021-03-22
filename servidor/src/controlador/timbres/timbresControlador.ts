@@ -138,7 +138,23 @@ class TimbresControlador {
         try {
             const codigo = req.userCodigo            
             let timbre = await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR) as timbre, accion FROM timbres WHERE id_empleado = $1 ORDER BY fec_hora_timbre DESC LIMIT 1', [codigo])
-                .then(result => { return result.rows});
+                .then(result => { 
+                    return result.rows.map(obj => {
+                        switch (obj.accion) {
+                            case 'EoS': obj.accion = 'Entrada o Salida'; break;
+                            case 'AES': obj.accion = 'Entrada o Salida Almuerzo'; break;
+                            case 'PES': obj.accion = 'Entrada o Salida Permiso'; break;
+                            case 'E': obj.accion = 'Entrada o Salida'; break;
+                            case 'S': obj.accion = 'Entrada o Salida'; break;
+                            case 'E/A': obj.accion = 'Entrada o Salida Almuerzo'; break;
+                            case 'S/A': obj.accion = 'Entrada o Salida Almuerzo'; break;
+                            case 'E/P': obj.accion = 'Entrada o Salida Permiso'; break;
+                            case 'S/P': obj.accion = 'Entrada o Salida Permiso'; break;
+                            default: obj.accion = 'codigo 99'; break;
+                        }
+                        return obj
+                    })
+                });
             if (timbre.length === 0) return res.status(400).jsonp({mensaje: 'No ha timbrado.'});
             return res.status(200).jsonp(timbre[0]);
         } catch (error) {
@@ -181,8 +197,8 @@ class TimbresControlador {
             return res.status(200).jsonp({
                 timbres: timbres, 
                 cuenta: estado_cuenta, 
-                info: await pool.query('SELECT ca.cargo, ca.sueldo, ca.hora_trabaja, eh.fec_inicio, eh.fec_final FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS eh ' +
-                    'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id AND eh.id_empl_cargo = ca.id ORDER BY eh.fec_inicio DESC LIMIT 1',[id]).then(result => {
+                info: await pool.query('SELECT tc.cargo, ca.sueldo, ca.hora_trabaja, eh.fec_inicio, eh.fec_final FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS eh, tipo_cargo AS tc' +
+                    'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id AND eh.id_empl_cargo = ca.id AND tc.id = ca.cargo ORDER BY eh.fec_inicio DESC LIMIT 1',[id]).then(result => {
                         console.log(result.rows);        
                         return result.rows
                     }),

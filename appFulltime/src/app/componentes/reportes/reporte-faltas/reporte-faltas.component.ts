@@ -12,6 +12,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
@@ -235,7 +236,10 @@ export class ReporteFaltasComponent implements OnInit {
     this.R_asistencias.ReporteFaltasMultiples(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -261,7 +265,10 @@ export class ReporteFaltasComponent implements OnInit {
     this.R_asistencias.ReporteFaltasMultiples(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -296,7 +303,10 @@ export class ReporteFaltasComponent implements OnInit {
     this.R_asistencias.ReporteFaltasMultiples(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -331,7 +341,10 @@ export class ReporteFaltasComponent implements OnInit {
     this.R_asistencias.ReporteFaltasMultiplesTabulado(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('tabulado'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -540,7 +553,7 @@ export class ReporteFaltasComponent implements OnInit {
                   ]
                 }),
                 [
-                  { colSpan: 9, text: 'Nro faltas: ', style: 'itemsTableInfo', alignment: 'right'},
+                  { colSpan: 9, text: 'Total Faltas Registradas: ', style: 'itemsTableInfo', alignment: 'right'},
                   '', '', '', '', '', '', '', '',
                   { text: obj2.faltas.length, bold: true, fontSize: 15, alignment: 'center', margin: [0, 5, 0, 5]}
                 ]
@@ -801,6 +814,68 @@ export class ReporteFaltasComponent implements OnInit {
     }
 
     return hora + ':' + min + ':00'
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(tipo: string): void {
+    switch (tipo) {        
+      case 'tabulado':
+        const wsr_tab: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfTabulado(this.data_pdf));
+        const wb_tab: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb_tab, wsr_tab, 'Faltas');
+        xlsx.writeFile(wb_tab, "Faltas_Tabulado" + new Date().getTime() + '.xlsx');
+        break;
+      default:
+        const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+        const wb: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, wsr, 'Faltas');
+        xlsx.writeFile(wb, "Faltas_default" + new Date().getTime() + '.xlsx');
+        break;
+    }
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteFaltas) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.faltas.forEach((obj4) => {
+            let ele = {
+              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+              'Fecha': obj4.fecha.split(' ')[0],
+            }
+            nuevo.push(ele)
+          })
+        })
+      })
+    })
+    return nuevo
+  }
+  
+  MapingDataPdfTabulado(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteFaltas) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.faltas.forEach((obj4) => {
+            let ele = {
+              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+              'Contrado': obj3.contrato, 'Cargo': obj3.cargo,
+              'Fecha': obj4.fecha.split(' ')[0]
+            }
+            nuevo.push(ele)
+          })
+        })
+      })
+    })
+    return nuevo
   }
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */

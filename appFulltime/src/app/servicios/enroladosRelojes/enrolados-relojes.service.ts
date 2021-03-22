@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class EnroladosRelojesService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -15,23 +14,23 @@ export class EnroladosRelojesService {
   // Asignar Ciudad Feriado
 
   CrearEnroladoReloj(datos: any) {
-    return this.http.post(`${this.API_URL}/enroladosRelojes/insertar`, datos);
+    return this.http.post(`${environment.url}/enroladosRelojes/insertar`, datos);
   }
 
   BuscarIdReloj(datos: any) {
-    return this.http.post(`${this.API_URL}/enroladosRelojes/buscar`, datos);
+    return this.http.post(`${environment.url}/enroladosRelojes/buscar`, datos);
   }
 
   BuscarEnroladosReloj(id: number) {
-    return this.http.get(`${this.API_URL}/enroladosRelojes/nombresReloj/${id}`);
+    return this.http.get(`${environment.url}/enroladosRelojes/nombresReloj/${id}`);
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/enroladosRelojes`, datos);
+    return this.http.put(`${environment.url}/enroladosRelojes`, datos);
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.API_URL}/enroladosRelojes/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/enroladosRelojes/eliminar/${id}`);
   }
 
 }

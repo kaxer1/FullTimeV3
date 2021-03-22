@@ -53,7 +53,7 @@ class AccionPersonalControlador {
     ActualizarTipoAccionPersonal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
-            yield database_1.default.query('UPDATE tipo_accion_personla SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
+            yield database_1.default.query('UPDATE tipo_accion_personal SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
                 'tipo_permiso = $4, tipo_vacacion = $5, tipo_situacion_propuesta = $6 WHERE id = $7', [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
             res.jsonp({ message: 'Registro exitoso' });
         });

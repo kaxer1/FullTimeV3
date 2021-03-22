@@ -14,12 +14,17 @@ export interface IModelarAnio {
 }
 
 export interface IHorarioCodigo {
-    horario: any,
-    codigo: number
+    horario: Array<any>,
+    codigo: number,
 }
 
 export interface IModelarPie {
     presente: any,
     a_justifi: any,
     a_no_justi: any
+}
+
+export interface TimbreJornadaSA {
+    fecha: string,
+    total_timbres: string,
 }

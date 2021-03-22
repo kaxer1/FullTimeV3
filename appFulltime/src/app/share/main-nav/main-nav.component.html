@@ -432,11 +432,15 @@
         </button>
         <mat-menu #settings="matMenu">
           <div>
-            <h4 style="text-align: center;">Ajustes</h4>
+            <h4 style="text-align: center;">Ajustes sistema</h4>
           </div>
           <button mat-menu-item (click)="AbrirSettings()">
             <mat-icon>mark_email_unread</mat-icon>
             <span>Correo y notificaciones</span>
+          </button>
+          <button mat-menu-item (click)="AbrirAccionesTimbres()">
+            <mat-icon>access_time</mat-icon>
+            <span>Acciones de timbres</span>
           </button>
         </mat-menu>
         <!-- Botón Ayuda -->
@@ -487,6 +491,11 @@
             <button mat-menu-item (click)="AbrirSettings()">
               <mat-icon>settings</mat-icon>
               <span>Ajustes</span>
+            </button>
+            <!-- Botón Settings Acciones timbres -->
+            <button mat-menu-item (click)="AbrirAccionesTimbres()">
+              <mat-icon>access_time</mat-icon>
+              <span>Acciones de timbres</span>
             </button>
             <!-- Botón Logout  -->
             <button mat-menu-item (click)="loginService.logout()">

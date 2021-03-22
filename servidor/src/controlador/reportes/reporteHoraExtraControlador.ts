@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { CalcularHoraExtra } from '../../libs/CalcularHorasExtras';
-// import { ContarHorasByCargo } from '../../libs/ContarHoras'
-// import { Consultar } from '../../libs/ListaEmpleados'
+
 class ReporteHoraExtraControlador {
 
     public async ReporteHorasExtras(req: Request, res: Response) {

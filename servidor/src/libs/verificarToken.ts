@@ -10,7 +10,8 @@ interface IPayload {
     _empresa: number,
     cargo: number,
     estado: boolean,
-    codigo: number | string
+    codigo: number | string,
+    _acc_tim: boolean //false sin acciones || true con acciones
 }
 
 export const TokenValidation = (req: Request, res: Response, next: NextFunction) => {
@@ -37,6 +38,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
     req.userRol = payload.rol;
     req.userIdCargo = payload.cargo;
     req.userCodigo = payload.codigo;
-
+    req.acciones_timbres = payload._acc_tim;
+    // console.log(payload);
     next();
 }

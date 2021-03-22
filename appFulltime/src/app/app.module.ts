@@ -348,6 +348,8 @@ import { ListarPedidoAccionComponent } from './componentes/accionesPersonal/pedi
 import { CrearPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/crear-pedido-accion/crear-pedido-accion.component';
 import { EditarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/editar-pedido-accion/editar-pedido-accion.component';
 import { VerPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/ver-pedido-accion/ver-pedido-accion.component';
+import { AccionesTimbresComponent } from './componentes/settings/acciones-timbres/acciones-timbres.component';
+
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -622,6 +624,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     CrearPedidoAccionComponent,
     EditarPedidoAccionComponent,
     VerPedidoAccionComponent,
+    AccionesTimbresComponent,
   ],
 
   imports: [

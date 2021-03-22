@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class TipoPermisosService {
-
-  TIPO_PERMISOS_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient
@@ -16,31 +15,31 @@ export class TipoPermisosService {
   // catalogo de TIPO PERMISOS
 
   getTipoPermisoRest() {
-    return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos`);
+    return this.http.get(`${environment.url}/tipoPermisos`);
   }
 
   getListAccesoTipoPermisoRest(access: number) {
-    return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/acceso/${access}`);
+    return this.http.get(`${environment.url}/tipoPermisos/acceso/${access}`);
   }
 
   getOneTipoPermisoRest(id: number) {
-    return this.http.get(`${this.TIPO_PERMISOS_URL}/tipoPermisos/${id}`);
+    return this.http.get(`${environment.url}/tipoPermisos/${id}`);
   }
 
   postTipoPermisoRest(data: any) {
-    return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos`, data).pipe(
+    return this.http.post(`${environment.url}/tipoPermisos`, data).pipe(
       catchError(data));
   }
 
   putTipoPermisoRest(id: number, data: any) {
-    return this.http.put(`${this.TIPO_PERMISOS_URL}/tipoPermisos/editar/${id}`, data);
+    return this.http.put(`${environment.url}/tipoPermisos/editar/${id}`, data);
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.TIPO_PERMISOS_URL}/tipoPermisos/xmlDownload`, data);
+    return this.http.post(`${environment.url}/tipoPermisos/xmlDownload`, data);
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.TIPO_PERMISOS_URL}/tipoPermisos/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/tipoPermisos/eliminar/${id}`);
   }
 }

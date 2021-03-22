@@ -235,22 +235,22 @@ import { NotificacionTimbreAutomatica } from './libs/NotiTimbres'
 import { NotificacionSinTimbres } from './libs/SinTimbres'
 import { DesactivarFinContratoEmpleado } from './libs/DesactivarEmpleado'
 // llama al meodo de cumpleaños
-// cumpleanios();
+cumpleanios();
 // llama al metodo de avisos de vacaciones
-// beforeFiveDays();
-// beforeTwoDays();
+beforeFiveDays();
+beforeTwoDays();
 // llama al metodo de verificacion para crear un nuevo perido de vacaciones si se acaba el anterior
-// Peri_Vacacion_Automatico();
+Peri_Vacacion_Automatico();
 
-// RegistrarAsistenciaByTimbres();
+RegistrarAsistenciaByTimbres();
 
 // ----------// conteoPermisos();
 
-// NotificacionTimbreAutomatica();
+NotificacionTimbreAutomatica();
 
-// NotificacionSinTimbres();
+NotificacionSinTimbres();
 
-// DesactivarFinContratoEmpleado();
+DesactivarFinContratoEmpleado();
 
 
 import { generarTimbres, ModificarTimbresEntrada } from './script/scriptTimbres'

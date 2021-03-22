@@ -95,26 +95,29 @@ function DiasByEstado(horario, rango) {
  */
 function fechaIterada(fechaIterada, horario) {
     let est;
-    if (fechaIterada.getDay() === 0) {
-        est = horario.domingo;
-    }
-    else if (fechaIterada.getDay() === 1) {
-        est = horario.lunes;
-    }
-    else if (fechaIterada.getDay() === 2) {
-        est = horario.martes;
-    }
-    else if (fechaIterada.getDay() === 3) {
-        est = horario.miercoles;
-    }
-    else if (fechaIterada.getDay() === 4) {
-        est = horario.jueves;
-    }
-    else if (fechaIterada.getDay() === 5) {
-        est = horario.viernes;
-    }
-    else if (fechaIterada.getDay() === 6) {
-        est = horario.sabado;
+    switch (fechaIterada.getDay()) {
+        case 0:
+            est = horario.domingo;
+            break;
+        case 1:
+            est = horario.lunes;
+            break;
+        case 2:
+            est = horario.martes;
+            break;
+        case 3:
+            est = horario.miercoles;
+            break;
+        case 4:
+            est = horario.jueves;
+            break;
+        case 5:
+            est = horario.viernes;
+            break;
+        case 6:
+            est = horario.sabado;
+            break;
+        default: break;
     }
     return {
         fecha: fechaIterada.toJSON().split('T')[0],

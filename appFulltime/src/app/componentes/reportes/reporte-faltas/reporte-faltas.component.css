@@ -59,9 +59,3 @@ mat-icon { cursor: pointer; }
 .mat-radio-button ~ .mat-radio-button {
     margin-left: 16px;
 }
-
-.i-pdf { color: red; font-size: 30px; }
-
-.i-print { color: rgb(0, 0, 0); font-size: 30px; }
-
-.i-download { color: rgb(0, 102, 255); font-size: 30px; }

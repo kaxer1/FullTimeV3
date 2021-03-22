@@ -200,9 +200,7 @@ export class AsistenciaMacroComponent implements OnInit {
         { text: 'Métrica Asistencia', bold: true, fontSize: 20, alignment: 'center', margin: [0, -40, 0, 10] },
         { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
         { image: this.graficaBase64, width: 525, margin: [0, 10, 0, 10] },
-        ...this.ImprimirDatos().map(obj => {
-          return obj
-        }),
+        this.ImprimirDatos(),
         { text: this.texto_grafica, margin: [10, 10, 10, 10], alignment: 'justify' },
       ],
       styles: {
@@ -215,21 +213,34 @@ export class AsistenciaMacroComponent implements OnInit {
 
   ImprimirDatos() {
     let datos = this.asistencia.series.data;
-    let n: any = [];
-    let colums = { alignment: 'justify', columns: [] };
+    let tabla = {
+			table: {
+        // widths: ['auto',40,'auto',40,'auto',40],
+				body: []
+			}
+		}
+    let colums = [];
 
     for (let i = 0; i < datos.length; i++) {
 
       if (i >= 0 && i <= 2) {
-        colums.columns.push({
-          text: datos[i].name + ': ' + datos[i].value, margin: [11,0,0,5]
-        });
+        colums.push({ text: datos[i].name, margin: [0,3,0,3], fillColor: this.p_color });
+        colums.push({ text: datos[i].value, margin: [0,3,0,3], alignment: 'center' });
       };
     }
     
-    if (colums.columns.length > 0) { n.push(colums); }  
+    if (colums.length > 0) { tabla.table.body.push(colums); }
 
-    return n
+    let columnas = {
+      alignment: 'justify',
+			columns: [
+				{ width: 35, text: '' },
+				tabla,
+				{ width: 35, text: '' }
+			]
+		}
+
+    return columnas
   }
 
   limpiarCamposRango() {

@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class FeriadosService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient
@@ -15,50 +14,50 @@ export class FeriadosService {
 
   // Invocación del método post para crear nuevo feriado
   CrearNuevoFeriado(datos: any) {
-    return this.http.post(`${this.API_URL}/feriados`, datos)
+    return this.http.post(`${environment.url}/feriados`, datos)
       .pipe(
         catchError(datos)
       );
   }
 
   ConsultarFeriado() {
-    return this.http.get(`${this.API_URL}/feriados`);
+    return this.http.get(`${environment.url}/feriados`);
   }
 
   ConsultarFeriadoActualiza(id: number) {
-    return this.http.get(`${this.API_URL}/feriados/listar/${id}`);
+    return this.http.get(`${environment.url}/feriados/listar/${id}`);
   }
 
   ConsultarUnFeriado(id: number) {
-    return this.http.get(`${this.API_URL}/feriados/${id}`);
+    return this.http.get(`${environment.url}/feriados/${id}`);
   }
 
   ActualizarUnFeriado(datos: any) {
-    return this.http.put(`${this.API_URL}/feriados`, datos).pipe(
+    return this.http.put(`${environment.url}/feriados`, datos).pipe(
       catchError(datos));
   }
 
   ConsultarUltimoId() {
-    return this.http.get(`${this.API_URL}/feriados/ultimoId`);
+    return this.http.get(`${environment.url}/feriados/ultimoId`);
   }
 
   subirArchivoExcel(formData) {
-    return this.http.post<any>(this.API_URL + '/feriados/upload', formData);
+    return this.http.post<any>(environment.url + '/feriados/upload', formData);
   }
 
   RevisarArchivo(formData) {
-    return this.http.post<any>(this.API_URL + '/feriados/upload/revision', formData);
+    return this.http.post<any>(environment.url + '/feriados/upload/revision', formData);
   }
 
   RevisarArchivoDatos(formData) {
-    return this.http.post<any>(this.API_URL + '/feriados/upload/revision_data', formData);
+    return this.http.post<any>(environment.url + '/feriados/upload/revision_data', formData);
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.API_URL}/feriados/xmlDownload`, data);
+    return this.http.post(`${environment.url}/feriados/xmlDownload`, data);
   }
 
   EliminarFeriado(id: number) {
-    return this.http.delete(`${this.API_URL}/feriados/delete/${id}`);
+    return this.http.delete(`${environment.url}/feriados/delete/${id}`);
   }
 }

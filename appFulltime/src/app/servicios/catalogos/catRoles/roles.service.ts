@@ -1,43 +1,43 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class RolesService {
-  API_URI = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
   // Roles
 
   getRoles() {
-    return this.http.get<any>(`${this.API_URI}/rol`);
+    return this.http.get<any>(`${environment.url}/rol`);
   }
 
   getOneRol(id: number) {
-    return this.http.get<any>(`${this.API_URI}/rol/${id}`);
+    return this.http.get<any>(`${environment.url}/rol/${id}`);
   }
 
   ListarRolesActualiza(id: number) {
-    return this.http.get<any>(`${this.API_URI}/rol/actualiza/${id}`);
+    return this.http.get<any>(`${environment.url}/rol/actualiza/${id}`);
   }
 
   postRoles(data: any) {
     console.log(data);
-    return this.http.post(`${this.API_URI}/rol`, data);
+    return this.http.post(`${environment.url}/rol`, data);
   }
 
   ActualizarRol(data: any) {
-    return this.http.put(`${this.API_URI}/rol`, data);
+    return this.http.put(`${environment.url}/rol`, data);
   }
 
   DownloadXMLRest(data: any) {
-    return this.http.post(`${this.API_URI}/rol/xmlDownload`, data);
+    return this.http.post(`${environment.url}/rol/xmlDownload`, data);
   }
 
   EliminarRoles(id: number) {
-    return this.http.delete(`${this.API_URI}/rol/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/rol/eliminar/${id}`);
   }
 
 }

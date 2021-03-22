@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlanComidasService {
-
-  API_URL = 'http://localhost:3000';
 
   constructor(
     private http: HttpClient,
@@ -14,73 +13,73 @@ export class PlanComidasService {
 
   /** SOLICITUD DE COMIDAS */
   CrearSolicitudComida(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/solicitud`, datos);
+    return this.http.post(`${environment.url}/planComidas/solicitud`, datos);
   }
 
   ActualizarSolicitudComida(datos: any) {
-    return this.http.put(`${this.API_URL}/planComidas/solicitud`, datos);
+    return this.http.put(`${environment.url}/planComidas/solicitud`, datos);
   }
 
   ObtenerSolComidaPorIdEmpleado(id_empleado: number) {
-    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/${id_empleado}`)
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/${id_empleado}`)
   }
 
   /** BUSCAR JEFES */
   obtenerJefes(id_departamento: number) {
-    return this.http.get<any>(`${this.API_URL}/planComidas/enviar/notificacion/${id_departamento}`)
+    return this.http.get<any>(`${environment.url}/planComidas/enviar/notificacion/${id_departamento}`)
   }
 
   /** ENVIAR CORREO A CADA JEFE */
   EnviarCorreo(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/mail-noti`, datos);
+    return this.http.post(`${environment.url}/planComidas/mail-noti`, datos);
   }
 
   /** PLANIFICACIÓN DE COMIDAS */
   CrearPlanComidas(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/`, datos);
+    return this.http.post(`${environment.url}/planComidas/`, datos);
   }
 
   ObtenerUltimaPlanificacion() {
-    return this.http.get<any>(`${this.API_URL}/planComidas/fin_registro`)
+    return this.http.get<any>(`${environment.url}/planComidas/fin_registro`)
   }
 
   ObtenerPlanComidaPorIdEmpleado(id_empleado: number) {
-    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/plan/${id_empleado}`)
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/plan/${id_empleado}`)
   }
 
   EliminarRegistro(id: number) {
-    return this.http.delete(`${this.API_URL}/planComidas/eliminar/${id}`);
+    return this.http.delete(`${environment.url}/planComidas/eliminar/${id}`);
   }
 
   ActualizarDatos(datos: any) {
-    return this.http.put(`${this.API_URL}/planComidas`, datos);
+    return this.http.put(`${environment.url}/planComidas`, datos);
   }
 
   /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
   CrearPlanComidasEmpleado(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/empleado/plan`, datos);
+    return this.http.post(`${environment.url}/planComidas/empleado/plan`, datos);
   }
 
   EnviarCorreoPlan(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/mail-plan`, datos);
+    return this.http.post(`${environment.url}/planComidas/mail-plan`, datos);
   }
 
   /** Servicio para obtener datos de la tabla tipo_comida */
   CrearTipoComidas(datos: any) {
-    return this.http.post(`${this.API_URL}/planComidas/tipo_comida`, datos);
+    return this.http.post(`${environment.url}/planComidas/tipo_comida`, datos);
   }
 
   ObtenerTipoComidas() {
-    return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida`)
+    return this.http.get<any>(`${environment.url}/planComidas/tipo_comida`)
   }
 
   ObtenerUltimoTipoComidas() {
-    return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida/ultimo`)
+    return this.http.get<any>(`${environment.url}/planComidas/tipo_comida/ultimo`)
   }
 
   /** ALERTAS DE NOTIFICACIÓN DE SOLICITUD Y PLANIFICACIÓN DE SERVICIO DE ALIMENTACIÓN*/
   EnviarMensajePlanComida(data: any) {
-    return this.http.post<any>(`${this.API_URL}/planComidas/send/planifica/`, data);
+    return this.http.post<any>(`${environment.url}/planComidas/send/planifica/`, data);
   }
 
 }

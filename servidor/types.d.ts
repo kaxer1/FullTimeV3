@@ -4,7 +4,8 @@ declare namespace Express {
         userIdEmpleado: number,
         id_empresa: number,
         userRol: number,
-        userIdCargo: number
-        userCodigo: number | string
+        userIdCargo: number,
+        userCodigo: number | string,
+        acciones_timbres: boolean
     }
 }
