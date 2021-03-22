@@ -6,12 +6,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
-import { ITableEmpleados } from 'src/app/model/reportes.model';
+import { ITableEmpleados, tim } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteAtrasos } from 'src/app/model/reportes.model';
 
@@ -213,7 +214,10 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteAtrasosMultiples(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -239,7 +243,10 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteAtrasosMultiples(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -274,7 +281,10 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteAtrasosMultiples(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -343,8 +353,8 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
               widths: ['auto','auto'],
               body: [
                 [
-                  { text: 'Tiem Dec: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
-                  { text: 'Tiempo del atraso en hora decimal.', border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Cal Dec: ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
+                  { text: 'Calculo del tiempo de atraso en formato hora decimal.', border: [false, false, false, false], style: ['quote', 'small'] },
                 ],
                 [
                   { text: 'HH:MM:SS ', bold: true, border: [false, false, false, false], style: ['quote', 'small'] },
@@ -528,9 +538,9 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
                 ],                  
                 [
                   '', '', '', '', '', '', '', 
-                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Cal Dec', style: 'tableHeader', fontSize: 7 },
                   { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
-                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Cal Dec', style: 'tableHeader', fontSize: 7 },
                   { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
                 ],                  
                 ...obj2.timbres.map(obj3 => {
@@ -552,9 +562,9 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
                 [
                   { rowSpan: 2, colSpan: 7, text: 'TOTAL EMPLEADO', style: 'tableTotal', margin:[0,5,15,0], alignment: 'right'},
                   '','','','','','',
-                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Cal Dec', style: 'tableHeader', fontSize: 7 },
                   { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
-                  { text: 'Tiem Dec', style: 'tableHeader', fontSize: 7 },
+                  { text: 'Cal Dec', style: 'tableHeader', fontSize: 7 },
                   { text: 'HH:MM:SS', style: 'tableHeader', fontSize: 7 },
                 ], 
                 [
@@ -629,9 +639,9 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
               ],
               [
                 '','','','','','','', 
-                { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                { text: 'Cal Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
                 { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
-                { text: 'Tiem Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
+                { text: 'Cal Dec', style: 'tableHeaderTotalSuc', fontSize: 7 },
                 { text: 'HH:MM:SS', style: 'tableHeaderTotalSuc', fontSize: 7 },
               ], 
               [
@@ -690,6 +700,40 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     }
 
     return hora + ':' + min + ':00'
+  }
+
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(): void {
+
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Atrasos');
+    xlsx.writeFile(wb, "Atrasos_default" + new Date().getTime() + '.xlsx');
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteAtrasos) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.timbres.forEach((obj4:tim ) => {
+            let ele = {
+              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+              'Dia': obj4.fecha.split(' ')[0], 'Fecha': obj4.fecha.split(' ')[1], 'Horario': obj4.horario, 'Hora Timbre': obj4.timbre.split(' ')[0],
+              'HH:MM:SS': obj4.atraso_HHMM, 'Decimal': obj4.atraso_dec
+            }
+            nuevo.push(ele)
+          })
+        })
+      })
+    })
+    return nuevo
   }
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */

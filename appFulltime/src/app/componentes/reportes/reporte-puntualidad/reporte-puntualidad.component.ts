@@ -9,6 +9,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -224,7 +225,10 @@ export class ReportePuntualidadComponent implements OnInit {
     this.R_asistencias.ReportePuntualidadMultiple(suc, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -251,7 +255,10 @@ export class ReportePuntualidadComponent implements OnInit {
     this.R_asistencias.ReportePuntualidadMultiple(dep, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -286,7 +293,10 @@ export class ReportePuntualidadComponent implements OnInit {
     this.R_asistencias.ReportePuntualidadMultiple(emp, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -458,17 +468,41 @@ export class ReportePuntualidadComponent implements OnInit {
       }
     });
 
-    n.push({ 
-      bold: true, fontSize: 8, margin: [0, 5, 0, 5],
-      text: 'Color Verde: Mayor o igual a ' + this.parametrizacion.mayor +' días significa que el o los empleados con esta cantidad de días son muy putuales.' 
+    n.push({
+      columns: [
+				{ width: 'auto',
+          bold: true, fontSize: 8, margin: [0, 5, 2, 5],
+          text: 'Color Verde:', color: '#06F313'
+        },
+				{ 
+          bold: true, fontSize: 8, margin: [0, 5, 0, 5],
+          text: 'Mayor o igual a ' + this.parametrizacion.mayor +' días significa que el o los empleados con esta cantidad de días son muy putuales.' 
+        }
+			]
     })
     n.push({ 
-      bold: true, fontSize: 8, margin: [0, 0, 0, 5],
-      text: 'Color Naranja: Días entre ' + this.parametrizacion.mayor + ' y ' +  this.parametrizacion.menor +' son empleados que tienen un margen de puntualidad aceptable' 
+      columns: [
+				{ width: 'auto',
+          bold: true, fontSize: 8, margin: [0, 5, 2, 5],
+          text: 'Color Naranja:', color: '#F38306'
+        },
+				{ 
+          bold: true, fontSize: 8, margin: [0, 5, 0, 5],
+          text: ' Días entre ' + this.parametrizacion.mayor + ' y ' +  this.parametrizacion.menor +' son empleados que tienen un margen de puntualidad aceptable' 
+        }
+			]
     })
     n.push({ 
-      bold: true, fontSize: 8,
-      text: 'Color Rojo: Menor o igual a ' + this.parametrizacion.menor + ' días significa que el o los empleados con esta cantidad de días tienen más atrasos laborales que días puntuales.'
+      columns: [
+				{ width: 'auto',
+          bold: true, fontSize: 8, margin: [0, 5, 2, 5],
+          text: 'Color Rojo:', color: '#EC2E05'
+        },
+				{ 
+          bold: true, fontSize: 8, margin: [0, 5, 0, 5],
+          text: 'Menor o igual a ' + this.parametrizacion.menor + ' días significa que el o los empleados con esta cantidad de días tienen más atrasos laborales que días puntuales.'
+        }
+			]
     })
 
     n.push({ 
@@ -508,6 +542,37 @@ export class ReportePuntualidadComponent implements OnInit {
    
     return n
   }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(): void {
+
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Puntualidad');
+    xlsx.writeFile(wb, "Puntualidad " + new Date().getTime() + '.xlsx');
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReportePuntualidad) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          let ele = {
+            'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+            'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+            'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+            'Género': obj3.genero, 'Contrato': obj3.contrato, 'Cargo': obj3.cargo, 'Puntualidad': obj3.puntualidad
+          }
+          nuevo.push(ele)
+        })
+      })
+    })
+    return nuevo
+  }
+
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */
   isAllSelectedSuc() {

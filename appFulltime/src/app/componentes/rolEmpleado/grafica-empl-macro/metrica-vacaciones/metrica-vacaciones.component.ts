@@ -12,7 +12,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
 import * as echarts from 'echarts/core';
 import { TooltipComponent, LegendComponent, GridComponent } from 'echarts/components';
-import { LineChart } from 'echarts/charts';
+import { BarChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 @Component({
   selector: 'app-metrica-vacaciones',
@@ -52,7 +52,7 @@ export class MetricaVacacionesComponent implements OnInit {
 
   ngOnInit(): void {
     echarts.use(
-      [TooltipComponent, LegendComponent, LineChart, GridComponent, CanvasRenderer]
+      [TooltipComponent, LegendComponent, BarChart, GridComponent, CanvasRenderer]
     );
     this.llamarGraficaOriginal();
   }
@@ -201,9 +201,7 @@ export class MetricaVacacionesComponent implements OnInit {
         { text: 'Métrica Vacaciones', bold: true, fontSize: 20, alignment: 'center', margin: [0, -40, 0, 10] },
         { text: 'Desde: ' + this.f_inicio_req + " Hasta: " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
         { image: this.graficaBase64, width: 550, margin: [0, 10, 0, 10] },
-        ...this.ImprimirDatos().map(obj => {
-          return obj
-        }),
+        this.ImprimirDatos(),
         { text: this.texto_grafica, margin: [10, 10, 10, 10], alignment: 'justify'},
       ],
       styles: {
@@ -227,42 +225,80 @@ export class MetricaVacacionesComponent implements OnInit {
       datos.push(obj)
     }
     
-    let n: any = [];
-    let colums = { alignment: 'justify', columns: [] };
-    let colums1 = { alignment: 'justify', columns: [] };
-    let colums2 = { alignment: 'justify', columns: [] };
-    let colums3 = { alignment: 'justify', columns: [] };
+    let colums = [], colums1 = [], colums2 = [], colums3 = [];
+    const border = [true, true, true, true]
+    for (let i = 0; i < datos.length; i++) { // Ciclo For para crear celdas de la tabla
 
-    for (let i = 0; i < datos.length; i++) {
-
-      if (i >= 0 && i <= 2) {
-        colums.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+      if (i >= 0 && i <= 2) { // Rango para colocar las celdas de máximo 3 meses
+        colums.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       };
-      if (i >= 3 && i <= 5) {
-        colums1.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+      if (i >= 3 && i <= 5) { // Rango para colocar las celdas de máximo 3 meses
+        colums1.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums1.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       };
-      if (i >= 6 && i <= 8) {
-        colums2.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5]
-        });
+      if (i >= 6 && i <= 8) { // Rango para colocar las celdas de máximo 3 meses
+        colums2.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums2.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       }; 
-      if (i >= 9 && i <= 11) {
-        colums3.columns.push({
-          text: datos[i].mes + ': ' + datos[i].valor, margin: [11,0,0,5] 
-        });
+      if (i >= 9 && i <= 11) { // Rango para colocar las celdas de máximo 3 meses
+        colums3.push({ text: datos[i].mes, margin: [0,3,0,3], fillColor: this.p_color, border: border });
+        colums3.push({ text: datos[i].valor, margin: [0,3,0,3], alignment: 'center', border: border });
       }
     }
-    
-    if (colums.columns.length > 0) { n.push(colums); }
-    if (colums1.columns.length > 0) { n.push(colums1); }
-    if (colums2.columns.length > 0) { n.push(colums2); }
-    if (colums3.columns.length > 0) { n.push(colums3); }    
 
-    return n
+    var other = [];
+
+    switch (colums.length) {
+      case 2: other = ['auto',40]; break;
+      case 4: other = ['auto',40,'auto',40]; break;
+      case 6: other = ['auto',40,'auto',40,'auto',40]; break;
+      default: other = []; break;
+    }
+
+    let tabla = {
+			table: {
+        widths: other,
+				body: []
+			}
+		}
+
+    const texto_push = {text: '', border: [false, false, false, false] };
+
+    switch (colums1.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums1.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums1.push(texto_push); } break;
+      default: break;
+    }
+
+    switch (colums2.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums2.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums2.push(texto_push); } break;
+      default: break;
+    }
+
+    switch (colums3.length) { // Agrega celdas faltantes en blanco. para q no exista conflicto en la generación del PDF
+      case 2: for (let i = 0; i < 4; i++) { colums3.push(texto_push); } break;
+      case 4: for (let i = 0; i < 2; i++) { colums3.push(texto_push); } break;
+      default: break;
+    }
+    
+    if (colums.length > 0) { tabla.table.body.push(colums); }
+    if (colums1.length > 0) { tabla.table.body.push(colums1); }
+    if (colums2.length > 0) { tabla.table.body.push(colums2); }
+    if (colums3.length > 0) { tabla.table.body.push(colums3); } 
+    // console.log(tabla);
+
+    const columnas = {
+      alignment: 'justify',
+			columns: [
+				{ width: 95, text: '' },
+				tabla,
+				{ width: 95, text: '' }
+			]
+		}
+
+    return columnas
   }
 
   limpiarCamposRango() {

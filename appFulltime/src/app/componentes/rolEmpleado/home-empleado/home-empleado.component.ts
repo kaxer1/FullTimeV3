@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GraficasService } from 'src/app/servicios/graficas/graficas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TooltipComponent, LegendComponent, GridComponent } from 'echarts/components';
-import { LineChart } from 'echarts/charts';
+import { BarChart } from 'echarts/charts';
 import { CanvasRenderer } from 'echarts/renderers';
 import * as echarts_hora from 'echarts/core';
 import * as echarts_perm from 'echarts/core';
@@ -39,16 +39,16 @@ export class HomeEmpleadoComponent implements OnInit {
 
   ngOnInit(): void {
     echarts_hora.use(
-      [TooltipComponent, LegendComponent, LineChart, GridComponent, CanvasRenderer]
+      [TooltipComponent, LegendComponent, BarChart, GridComponent, CanvasRenderer]
     );
     echarts_perm.use(
-      [TooltipComponent, LegendComponent, LineChart, GridComponent, CanvasRenderer]
+      [TooltipComponent, LegendComponent, BarChart, GridComponent, CanvasRenderer]
     );
     echarts_vaca.use(
-      [TooltipComponent, LegendComponent, LineChart, GridComponent, CanvasRenderer]
+      [TooltipComponent, LegendComponent, BarChart, GridComponent, CanvasRenderer]
     );
     echarts_atra.use(
-      [TooltipComponent, LegendComponent, LineChart, GridComponent, CanvasRenderer]
+      [TooltipComponent, LegendComponent, BarChart, GridComponent, CanvasRenderer]
     );
 
     var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");

@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.GRAFICAS_CONTROLADOR = void 0;
 const MetodosGraficas_1 = require("../../libs/MetodosGraficas");
 class GraficasControlador {
     AdminHorasExtrasMicro(req, res) {
@@ -122,7 +123,16 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final);
+            let resultado;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones 
+                resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, fec_inicio, fec_final);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                resultado = yield MetodosGraficas_1.GraficaJ_VS_H_E_SinAcciones(id_empresa, fec_inicio, fec_final);
+            }
             res.status(200).jsonp(resultado);
         });
     }
@@ -131,7 +141,16 @@ class GraficasControlador {
             const fec_inicio = req.params.desde;
             const fec_final = req.params.hasta;
             const id_empresa = req.id_empresa;
-            let resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            let resultado;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones 
+                resultado = yield MetodosGraficas_1.GraficaJornada_VS_HorasExtras(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            }
+            else {
+                // Resultados de timbres sin acciones
+                resultado = yield MetodosGraficas_1.GraficaJ_VS_H_E_SinAcciones(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            }
             res.status(200).jsonp(resultado);
         });
     }
@@ -255,7 +274,16 @@ class GraficasControlador {
             const fec_inicio = req.params.desde;
             const fec_final = req.params.hasta;
             const id_empresa = req.id_empresa;
-            let resultado = yield MetodosGraficas_1.GraficaSalidasAnticipadas(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            let resultado;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones 
+                resultado = yield MetodosGraficas_1.GraficaSalidasAnticipadas(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            }
+            else {
+                // Resultados de timbres sin acciones
+                resultado = yield MetodosGraficas_1.GraficaSalidasAnticipadasSinAcciones(id_empresa, new Date(fec_inicio), new Date(fec_final));
+            }
             res.status(200).jsonp(resultado);
         });
     }
@@ -362,7 +390,16 @@ class GraficasControlador {
             fec_final.setUTCHours(0);
             fec_final.setUTCMinutes(0);
             fec_final.setUTCSeconds(0);
-            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            let resultado;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones 
+                resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, fec_inicio, fec_final);
+            }
+            else {
+                // Resultados de timbres sin acciones
+                resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleadoSinAcciones(codigo, id_empleado, fec_inicio, fec_final);
+            }
             res.status(200).jsonp(resultado);
         });
     }
@@ -372,7 +409,16 @@ class GraficasControlador {
             const fec_inicio = req.params.desde;
             const fec_final = req.params.hasta;
             const codigo = req.userCodigo;
-            let resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
+            let resultado;
+            //false sin acciones || true con acciones
+            if (req.acciones_timbres === true) {
+                // Resultados de timbres con 6 y 3 acciones 
+                resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleado(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
+            }
+            else {
+                // Resultados de timbres sin acciones
+                resultado = yield MetodosGraficas_1.MetricaAtrasosEmpleadoSinAcciones(codigo, id_empleado, new Date(fec_inicio), new Date(fec_final));
+            }
             res.status(200).jsonp(resultado);
         });
     }

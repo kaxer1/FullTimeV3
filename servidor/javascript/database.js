@@ -13,8 +13,8 @@ const pool = new pg_pool_1.default({
     // password: 'admin'
     // database: 'fulltimeV3',
     database: 'SinAcciones',
-    password: 'admin'
-    // password: 'fulltime'
+    // password: 'admin'
+    password: 'fulltime'
 });
 pool.query('SELECT NOW()', (err, res) => {
     if (err) {

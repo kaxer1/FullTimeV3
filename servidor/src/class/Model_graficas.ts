@@ -23,3 +23,8 @@ export interface IModelarPie {
     a_justifi: any,
     a_no_justi: any
 }
+
+export interface TimbreJornadaSA {
+    fecha: string,
+    total_timbres: string,
+}

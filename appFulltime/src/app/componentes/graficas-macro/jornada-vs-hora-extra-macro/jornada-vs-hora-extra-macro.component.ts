@@ -236,9 +236,9 @@ export class JornadaVsHoraExtraMacroComponent implements OnInit {
     let columnas = {
       alignment: 'justify',
 			columns: [
-				{ width: 35, text: '' },
+				{ width: 100, text: '' },
 				tabla,
-				{ width: 35, text: '' }
+				{ width: 100, text: '' }
 			]
 		}
 

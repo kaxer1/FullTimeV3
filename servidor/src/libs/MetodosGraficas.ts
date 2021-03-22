@@ -127,34 +127,38 @@ export const GraficaAtrasosSinAcciones = async function (id_empresa: number, fec
     } as IModelarAnio;
 
     array.forEach((ele: any) => {
-        let fecha = parseInt(ele.fecha.split('-')[1])
-        switch (fecha) {
-            case 1:
-                modelarAnio.enero.push(ele.tiempo_atraso); break;
-            case 2:
-                modelarAnio.febrero.push(ele.tiempo_atraso); break;
-            case 3:
-                modelarAnio.marzo.push(ele.tiempo_atraso); break;
-            case 4:
-                modelarAnio.abril.push(ele.tiempo_atraso); break;
-            case 5:
-                modelarAnio.mayo.push(ele.tiempo_atraso); break;
-            case 6:
-                modelarAnio.junio.push(ele.tiempo_atraso); break;
-            case 7:
-                modelarAnio.julio.push(ele.tiempo_atraso); break;
-            case 8:
-                modelarAnio.agosto.push(ele.tiempo_atraso); break;
-            case 9:
-                modelarAnio.septiembre.push(ele.tiempo_atraso); break;
-            case 10:
-                modelarAnio.octubre.push(ele.tiempo_atraso); break;
-            case 11:
-                modelarAnio.noviembre.push(ele.tiempo_atraso); break;
-            case 12:
-                modelarAnio.diciembre.push(ele.tiempo_atraso); break;
-            default: break;
+        console.log('ATRASOS: ', ele.fecha);
+        if (ele !== 0) {
+            let fecha = parseInt(ele.fecha.split('-')[1])
+            switch (fecha) {
+                case 1:
+                    modelarAnio.enero.push(ele.tiempo_atraso); break;
+                case 2:
+                    modelarAnio.febrero.push(ele.tiempo_atraso); break;
+                case 3:
+                    modelarAnio.marzo.push(ele.tiempo_atraso); break;
+                case 4:
+                    modelarAnio.abril.push(ele.tiempo_atraso); break;
+                case 5:
+                    modelarAnio.mayo.push(ele.tiempo_atraso); break;
+                case 6:
+                    modelarAnio.junio.push(ele.tiempo_atraso); break;
+                case 7:
+                    modelarAnio.julio.push(ele.tiempo_atraso); break;
+                case 8:
+                    modelarAnio.agosto.push(ele.tiempo_atraso); break;
+                case 9:
+                    modelarAnio.septiembre.push(ele.tiempo_atraso); break;
+                case 10:
+                    modelarAnio.octubre.push(ele.tiempo_atraso); break;
+                case 11:
+                    modelarAnio.noviembre.push(ele.tiempo_atraso); break;
+                case 12:
+                    modelarAnio.diciembre.push(ele.tiempo_atraso); break;
+                default: break;
+            }
         }
+        
     });
 
     let data = [
@@ -676,6 +680,184 @@ export const GraficaJornada_VS_HorasExtras = async function (id_empresa: number,
     } 
 }
 
+export const GraficaJ_VS_H_E_SinAcciones = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
+    console.log('ingreso a jornada ',id_empresa, fec_inicio, fec_final);
+    
+    /**
+     * Para Horas Extras
+     */
+    let horas_extras = await M_graficas.HoraExtra_ModelarDatos(fec_inicio, fec_final)
+    
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    horas_extras.forEach((obj: any) => {
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        // console.log(fecha.getMonth());
+        switch (fecha) {
+            case 1:
+                modelarAnio.enero.push(obj.tiempo); break;
+            case 2:
+                modelarAnio.febrero.push(obj.tiempo); break;
+            case 3:
+                modelarAnio.marzo.push(obj.tiempo); break;
+            case 4:
+                modelarAnio.abril.push(obj.tiempo); break;
+            case 5:
+                modelarAnio.mayo.push(obj.tiempo); break;
+            case 6:
+                modelarAnio.junio.push(obj.tiempo); break;
+            case 7:
+                modelarAnio.julio.push(obj.tiempo); break;
+            case 8:
+                modelarAnio.agosto.push(obj.tiempo); break;
+            case 9:
+                modelarAnio.septiembre.push(obj.tiempo); break;
+            case 10:
+                modelarAnio.octubre.push(obj.tiempo); break;
+            case 11:
+                modelarAnio.noviembre.push(obj.tiempo); break;
+            case 12:
+                modelarAnio.diciembre.push(obj.tiempo); break;
+            default: break;
+        }
+    });
+    
+    horas_extras = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: M_graficas.SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: M_graficas.SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: M_graficas.SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: M_graficas.SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: M_graficas.SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: M_graficas.SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: M_graficas.SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: M_graficas.SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: M_graficas.SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: M_graficas.SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: M_graficas.SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: M_graficas.SumarValoresArray(modelarAnio.diciembre) }
+    ]
+    
+    // let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual_hora_extra = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
+    /**
+     * Para Jornada
+     */
+    let timbres = await M_graficas.BuscarTimbresEntradaSinAccionModelado(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0])
+    
+    let modelarAnioTiempoJornada = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    timbres.forEach(obj => {
+        
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        switch (fecha) {
+            case 1:
+                modelarAnioTiempoJornada.enero.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 2:
+                modelarAnioTiempoJornada.febrero.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 3:
+                modelarAnioTiempoJornada.marzo.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 4:
+                modelarAnioTiempoJornada.abril.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 5:
+                modelarAnioTiempoJornada.mayo.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 6:
+                modelarAnioTiempoJornada.junio.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 7:
+                modelarAnioTiempoJornada.julio.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 8:
+                modelarAnioTiempoJornada.agosto.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 9:
+                modelarAnioTiempoJornada.septiembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 10:
+                modelarAnioTiempoJornada.octubre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 11:
+                modelarAnioTiempoJornada.noviembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 12:
+                modelarAnioTiempoJornada.diciembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            default: break;
+        }
+    }) 
+
+    let data_tiempo_jornada = [
+        {id: 0, mes: 'Enero', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.enero) },
+        {id: 1, mes: 'Febrero', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.febrero) },
+        {id: 2, mes: 'Marzo', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.marzo) },
+        {id: 3, mes: 'Abril', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.abril) },
+        {id: 4, mes: 'Mayo', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.mayo) },
+        {id: 5, mes: 'Junio', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.junio) },
+        {id: 6, mes: 'Julio', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.julio) },
+        {id: 7, mes: 'Agosto', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.agosto) },
+        {id: 8, mes: 'Septiembre', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.septiembre) },
+        {id: 9, mes: 'Octubre', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.octubre) },
+        {id: 10, mes: 'Noviembre', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: M_graficas.SumarValoresArray(modelarAnioTiempoJornada.diciembre) }
+    ]
+
+    let valor_mensual_tiempo = data_tiempo_jornada.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+
+    return {
+        datos_grafica: {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+                name: 'tiempo',
+                type: 'scroll',
+                orient: 'vertical',
+                right: 10,
+                top: 20,
+                bottom: 20,
+                data: ['Horas extra', 'Jornada']
+            },
+            series: {
+                type: 'pie',
+                radius: '55%',
+                center: ['40%', '50%'],
+                data: [
+                    {value: M_graficas.SumarValoresArray(valor_mensual_hora_extra), name: 'Horas extra'},
+                    {value: M_graficas.SumarValoresArray(valor_mensual_tiempo), name: 'Jornada'}
+                ],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        }
+    } 
+}
+
 export const GraficaT_Jor_VS_HorExtTimbresSinAcciones = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
     console.log(id_empresa, fec_inicio, fec_final);
 
@@ -780,7 +962,7 @@ export const GraficaT_Jor_VS_HorExtTimbresSinAcciones = async function (id_empre
 
     nuevo.forEach(obj => {
         let fecha = parseInt(obj.fecha.split('-')[1]);
-        console.log(nuevo);
+        console.log(obj);
         
             switch (fecha) {
                 case 1:
@@ -1250,6 +1432,101 @@ export const GraficaSalidasAnticipadas = async function (id_empresa: number, fec
     }  
 }
 
+export const GraficaSalidasAnticipadasSinAcciones = async function (id_empresa: number, fec_inicio: Date, fec_final: Date) {
+    console.log(id_empresa, fec_inicio, fec_final);
+    let timbres = await M_graficas.ModelarSalidasAnticipadasSinAcciones(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0])
+    // console.log(timbres);    
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    // timbres.forEach(obj => {
+    //     console.log('TIMBRE:',obj);
+    // })
+    
+    timbres.forEach(obj => {
+        let fecha = parseInt(obj.fecha.split('-')[1]);
+        switch (fecha) {
+            case 1:
+                modelarAnio.enero.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 2:
+                modelarAnio.febrero.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 3:
+                modelarAnio.marzo.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 4:
+                modelarAnio.abril.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 5:
+                modelarAnio.mayo.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 6:
+                modelarAnio.junio.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 7:
+                modelarAnio.julio.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 8:
+                modelarAnio.agosto.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 9:
+                modelarAnio.septiembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 10:
+                modelarAnio.octubre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 11:
+                modelarAnio.noviembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            case 12:
+                modelarAnio.diciembre.push( M_graficas.HHMMtoSegundos(obj.total_timbres) / 3600 ); break;
+            default: break;
+        }
+    });
+    
+    timbres = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: M_graficas.SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: M_graficas.SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: M_graficas.SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: M_graficas.SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: M_graficas.SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: M_graficas.SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: M_graficas.SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: M_graficas.SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: M_graficas.SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: M_graficas.SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: M_graficas.SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: M_graficas.SumarValoresArray(modelarAnio.diciembre) }
+    ]
+
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
+    return {
+        datos: data,
+        datos_grafica: {
+            color: ['#3398DB'], 
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow'}
+            },
+            xAxis: { type: 'category', name: 'Meses', data: meses },
+            yAxis: { type: 'value', name: 'N° Horas' },
+            series: [{
+                data: valor_mensual,
+                type: 'bar',
+                showBackground: true,
+                backgroundStyle: {
+                    color: 'rgba(220, 220, 220, 0.8)'
+                }
+            }]
+        }   
+    }  
+}
+
 /**
  * 
  * Graficas para los usuarios de rol empleado
@@ -1331,27 +1608,27 @@ export const MetricaHorasExtraEmpleado = async function (codigo: number | string
     return {
         tooltip: {
             trigger: 'axis',
-            axisPointer: {
-                type: 'line',
-                label: { backgroundColor: '#6a7985' }
-            }
+            axisPointer: { type: 'shadow' }
         },
-        legend: {
-            align: 'left',
-            data: [{
-                name: 'hora extra'
-            }]
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
+        xAxis: { type: 'category', name: 'Meses', data: meses, axisTick: { alignWithLabel: true } },
         yAxis: { type: 'value', name: 'N° Horas' },
         series: {
             name: 'hora extra',
-            data: valor_mensual,
-            type: 'line',
-            lineStyle: { color: 'rgb(20, 112, 233)' },
-            itemStyle: { color: 'rgb(20, 112, 233)' }
-        }
-    }   
+            type: 'bar',
+            barWidth: '60%',
+            data: valor_mensual
+        },
+        legend: {
+            align: 'left',
+            data: [{ name: 'hora extra' }]
+        }          
+    }  
 }
 
 export const MetricaVacacionesEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
@@ -1429,24 +1706,26 @@ export const MetricaVacacionesEmpleado = async function (codigo: number | string
     return {
         tooltip: {
             trigger: 'axis',
-            axisPointer: {
-                type: 'line',
-                label: { backgroundColor: '#6a7985' }
-            }
+            axisPointer: { type: 'shadow' }
         },
-        legend: {
-            align: 'left',
-            data: [{ name: 'vacaciones'}]
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
+        xAxis: { type: 'category', name: 'Meses', data: meses, axisTick: { alignWithLabel: true } },
         yAxis: { type: 'value', name: 'N° Días' },
         series: {
             name: 'Dias',
-            data: valor_mensual,
-            type: 'line',
-            lineStyle: { color: 'rgb(20, 112, 233)' },
-            itemStyle: { color: 'rgb(20, 112, 233)' }
-        }     
+            type: 'bar',
+            barWidth: '60%',
+            data: valor_mensual
+        },
+        legend: {
+            align: 'left',
+            data: [{ name: 'vacaciones' }]
+        }          
     }   
 }
 
@@ -1525,10 +1804,21 @@ export const MetricaPermisosEmpleado = async function (codigo: number | string, 
     return {
         tooltip: {
             trigger: 'axis',
-            axisPointer: {
-                type: 'line',
-                label: { backgroundColor: '#6a7985' }
-            }
+            axisPointer: { type: 'shadow' }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses, axisTick: { alignWithLabel: true } },
+        yAxis: { type: 'value', name: 'N° tiempo' },
+        series: {
+            name: 'Dias',
+            type: 'bar',
+            barWidth: '60%',
+            data: valor_mensual
         },
         legend: {
             align: 'left',
@@ -1536,16 +1826,7 @@ export const MetricaPermisosEmpleado = async function (codigo: number | string, 
                 name: 'Permisos'
             }]
         },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
-        yAxis: { type: 'value', name: 'N° tiempo' },
-        series: {
-            name: 'Dias',
-            data: valor_mensual,
-            type: 'line',
-            lineStyle: { color: 'rgb(20, 112, 233)' },
-            itemStyle: { color: 'rgb(20, 112, 233)' }
-        }     
-    }   
+    }
 }
 
 export const MetricaAtrasosEmpleado = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
@@ -1625,10 +1906,21 @@ export const MetricaAtrasosEmpleado = async function (codigo: number | string, i
     return {
         tooltip: {
             trigger: 'axis',
-            axisPointer: {
-                type: 'line',
-                label: { backgroundColor: '#6a7985' }
-            }
+            axisPointer: { type: 'shadow' }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses, axisTick: { alignWithLabel: true } },
+        yAxis: { type: 'value', name: 'N° horas' },
+        series: {
+            name: 'Dias',
+            type: 'bar',
+            barWidth: '60%',
+            data: valor_mensual
         },
         legend: {
             align: 'left',
@@ -1636,14 +1928,109 @@ export const MetricaAtrasosEmpleado = async function (codigo: number | string, i
                 name: 'Atrasos'
             }]
         },
-        xAxis: { type: 'category', name: 'Meses', data: meses },
-        yAxis: { type: 'value', name: 'N° Días' },
+    } 
+}
+
+export const MetricaAtrasosEmpleadoSinAcciones = async function (codigo: number | string, id_empleado: number, fec_inicio: Date, fec_final: Date) {
+    console.log(id_empleado, fec_inicio, fec_final);
+    
+    let atrasos = await M_graficas.Empleado_Atrasos_ModelarDatos_SinAcciones(codigo, fec_inicio, fec_final)
+    // let ids = await IdsEmpleados(id_empresa);
+    let modelarAnio = {
+        enero: [],
+        febrero: [],
+        marzo: [],
+        abril: [],
+        mayo: [],
+        junio: [],
+        julio: [],
+        agosto: [],
+        septiembre: [],
+        octubre: [],
+        noviembre: [],
+        diciembre: []
+    } as IModelarAnio;
+
+    atrasos.forEach((ele: any) => {
+        console.log(ele);
+        if (ele !== 0 ) {
+            let fecha = parseInt(ele.fecha.split('-')[1])
+        
+            switch (fecha) {
+                case 1:
+                    modelarAnio.enero.push(ele.tiempo_atraso); break;
+                case 2:
+                    modelarAnio.febrero.push(ele.tiempo_atraso); break;
+                case 3:
+                    modelarAnio.marzo.push(ele.tiempo_atraso); break;
+                case 4:
+                    modelarAnio.abril.push(ele.tiempo_atraso); break;
+                case 5:
+                    modelarAnio.mayo.push(ele.tiempo_atraso); break;
+                case 6:
+                    modelarAnio.junio.push(ele.ftiempo_atrasoecha); break;
+                case 7:
+                    modelarAnio.julio.push(ele.tiempo_atraso); break;
+                case 8:
+                    modelarAnio.agosto.push(ele.tiempo_atraso); break;
+                case 9:
+                    modelarAnio.septiembre.push(ele.tiempo_atraso); break;
+                case 10:
+                    modelarAnio.octubre.push(ele.tiempo_atraso); break;
+                case 11:
+                    modelarAnio.noviembre.push(ele.tiempo_atraso); break;
+                case 12:
+                    modelarAnio.diciembre.push(ele.tiempo_atraso); break;
+                default: break;
+            }
+        }
+        
+    });
+
+    atrasos = [];
+    let data = [
+        {id: 0, mes: 'Enero', valor: M_graficas.SumarValoresArray(modelarAnio.enero) },
+        {id: 1, mes: 'Febrero', valor: M_graficas.SumarValoresArray(modelarAnio.febrero) },
+        {id: 2, mes: 'Marzo', valor: M_graficas.SumarValoresArray(modelarAnio.marzo) },
+        {id: 3, mes: 'Abril', valor: M_graficas.SumarValoresArray(modelarAnio.abril) },
+        {id: 4, mes: 'Mayo', valor: M_graficas.SumarValoresArray(modelarAnio.mayo) },
+        {id: 5, mes: 'Junio', valor: M_graficas.SumarValoresArray(modelarAnio.junio) },
+        {id: 6, mes: 'Julio', valor: M_graficas.SumarValoresArray(modelarAnio.julio) },
+        {id: 7, mes: 'Agosto', valor: M_graficas.SumarValoresArray(modelarAnio.agosto) },
+        {id: 8, mes: 'Septiembre', valor: M_graficas.SumarValoresArray(modelarAnio.septiembre) },
+        {id: 9, mes: 'Octubre', valor: M_graficas.SumarValoresArray(modelarAnio.octubre) },
+        {id: 10, mes: 'Noviembre', valor: M_graficas.SumarValoresArray(modelarAnio.noviembre) },
+        {id: 11, mes: 'Diciembre', valor: M_graficas.SumarValoresArray(modelarAnio.diciembre) }
+    ]
+
+    let meses = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.mes});    
+    let valor_mensual = data.filter(obj => {return ( obj.id >= fec_inicio.getUTCMonth() && obj.id <= fec_final.getUTCMonth() )}).map(obj => {return obj.valor});
+    
+
+    return {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: { type: 'shadow' }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: { type: 'category', name: 'Meses', data: meses, axisTick: { alignWithLabel: true } },
+        yAxis: { type: 'value', name: 'N° horas' },
         series: {
             name: 'Dias',
-            data: valor_mensual,
-            type: 'line',
-            lineStyle: { color: 'rgb(20, 112, 233)' },
-            itemStyle: { color: 'rgb(20, 112, 233)' }
-        }       
+            type: 'bar',
+            barWidth: '60%',
+            data: valor_mensual
+        },
+        legend: {
+            align: 'left',
+            data: [{
+                name: 'Atrasos'
+            }]
+        },
     }   
 }

@@ -3,12 +3,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
-import { hora_trab, ITableEmpleados } from 'src/app/model/reportes.model';
+import { ITableEmpleados } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteHorasTrabaja } from 'src/app/model/reportes.model';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -211,7 +212,10 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
     this.R_asistencias.ReporteHorasTrabajadasMultiple(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -237,7 +241,10 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
     this.R_asistencias.ReporteHorasTrabajadasMultiple(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -272,7 +279,10 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
     this.R_asistencias.ReporteHorasTrabajadasMultiple(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel(); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -543,6 +553,41 @@ export class ReporteHorasTrabajadasComponent implements OnInit {
         valor = valor + array[i];
     }
     return valor
+  }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(): void {
+
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Horas Trabajadas');
+    xlsx.writeFile(wb, "Horas Trabajadas" + new Date().getTime() + '.xlsx');
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1:IReporteHorasTrabaja ) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.timbres.forEach((obj4) => {
+            obj4.horarios.forEach(obj5 => {
+              let ele = {
+                'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+                'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+                'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+                'Género': obj3.genero, 'Fecha': obj4.fecha, 'Hora Horario': obj5.hora_horario, 'Hora Timbre': obj5.hora_timbre, 
+                'Observación': obj5.observacion, 'Acción': obj5.accion, 'Diferencia': obj5.hora_diferencia,
+              }
+              nuevo.push(ele)
+            })
+          })
+        })
+      })
+    })
+    return nuevo
   }
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */

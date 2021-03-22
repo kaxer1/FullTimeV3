@@ -6,12 +6,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
 import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
-import { ITableEmpleados, IReporteTimbres, tim_tabulado, IReporteTimbresIncompletos} from 'src/app/model/reportes.model';
+import { ITableEmpleados, IReporteTimbres, tim_tabulado, IReporteTimbresIncompletos, timbre} from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
@@ -160,7 +161,6 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
 
   opcion: number;
   BuscarPorTipo(e: MatRadioChange) {
-    console.log(e.value);
     
     this.opcion = e.value;
     switch (this.opcion) {
@@ -270,7 +270,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteTimbresMultiple(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF', this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -296,7 +299,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteTimbresMultiple(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF',this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -331,7 +337,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteTimbresMultiple(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       // console.log('DATA PDF',this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('default'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -366,7 +375,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteTimbrestabulados(tab, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       // console.log('TABULADO PDF',this.data_pdf
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('tabulado'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -401,7 +413,10 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
     this.R_asistencias.ReporteTabuladoTimbresIncompletos(inc, this.f_inicio_req, this.f_final_req).subscribe(res => {
       this.data_pdf = res
       // console.log('TIMBRES PDF',this.data_pdf);
-      this.generarPdf(accion)
+      switch (accion) {
+        case 'excel': this.exportToExcel('incompleto'); break;
+        default: this.generarPdf(accion); break;
+      }
     }, err => {
       this.toastr.error(err.error.message)
     })
@@ -491,7 +506,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
       content: [
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
-        { text: 'Reporte - Timbres', bold: true, fontSize: 18, alignment: 'center', margin: [0, 10, 0, 10] },
+        { text: 'Reporte - Timbres', bold: true, fontSize: 18, alignment: 'center', margin: [0, -10, 0, 5] },
         { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]  },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
@@ -931,6 +946,111 @@ export class ReporteTimbresMultiplesComponent implements OnInit {
 
     return hora + ':' + min + ':00'
   }
+
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(tipo: string): void {
+    switch (tipo) {
+      case 'incompleto':
+        const wsr_inc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfTimbresIncompletos(this.data_pdf));
+        const wb_inc: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb_inc, wsr_inc, 'Timbres');
+        xlsx.writeFile(wb_inc, "Timbres_Incompletos" + new Date().getTime() + '.xlsx');
+        break;
+      case 'tabulado':
+        const wsr_tab: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfTabulado(this.data_pdf));
+        const wb_tab: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb_tab, wsr_tab, 'Timbres');
+        xlsx.writeFile(wb_tab, "Timbres_Tabulado" + new Date().getTime() + '.xlsx');
+        break;
+      default:
+        const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+        const wb: xlsx.WorkBook = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, wsr, 'Timbres');
+        xlsx.writeFile(wb, "Timbres_default" + new Date().getTime() + '.xlsx');
+        break;
+    }
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteTimbres) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.timbres.forEach((obj4: timbre) => {
+            let ele = {
+              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+              'Fecha Timbre': obj4.fec_hora_timbre.split(' ')[0], 'Hora Timbre': obj4.fec_hora_timbre.split(' ')[1],
+              'Acción': obj4.accion, 'Id Reloj': obj4.id_reloj, 
+              'Latitud': obj4.latitud, 'Longitud': obj4.longitud, 'Observación': obj4.observacion
+            }
+            nuevo.push(ele)
+          })
+        })
+      })
+    })
+    return nuevo
+  }
+  
+  MapingDataPdfTabulado(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteTimbres) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.timbres.forEach((obj4: tim_tabulado) => {
+            let ele = {
+              'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+              'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+              'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+              'Contrado': obj3.contrato, 'Cargo': obj3.cargo,
+              'Fecha Timbre': obj4.fecha.split(' ')[0], 'Hora Timbre': obj4.fecha.split(' ')[1], 'Género': obj3.genero,
+              'Entrada': obj4.entrada, 'Salida Almuerzo': obj4.sal_Alm, 'Entrada Almuerzo': obj4.ent_Alm, 'Salida': obj4.salida,
+              'Observación': obj4.desconocido
+            }
+            nuevo.push(ele)
+          })
+        })
+      })
+    })
+    return nuevo
+  }
+
+  MapingDataPdfTimbresIncompletos(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteTimbresIncompletos) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          obj3.timbres.forEach(obj4 => {
+            obj4.timbres_hora.forEach(obj5 => {
+              let ele = {
+                'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+                'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+                'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+                'Contrado': obj3.contrato, 'Cargo': obj3.cargo, 'Género': obj3.genero,
+                'Fecha Timbre': obj4.fecha.split(' ')[0], 'Hora Timbre': obj4.fecha.split(' ')[1],
+                'Hora': obj5.hora, 'Tipo': obj5.tipo, 
+              }
+              nuevo.push(ele)
+            })
+          })
+        })
+      })
+    })
+    return nuevo
+  }
+
+  /*****************************************************************************
+   * 
+   * 
+   * Varios Metodos Complementarios al funcionamiento. 
+   * 
+   * 
+   **************************************************************************/
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */
   isAllSelectedSuc() {

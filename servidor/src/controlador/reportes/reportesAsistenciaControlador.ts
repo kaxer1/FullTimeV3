@@ -198,7 +198,7 @@ class ReportesAsistenciaControlador {
             obj.departamentos = await Promise.all(obj.departamentos.map(async(ele:dep) => {
                 ele.empleado = await Promise.all( ele.empleado.map(async(o:emp) => {
                         o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                        o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                        o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
                         let faltas = await BuscarHorarioEmpleado(desde, hasta, o.codigo);
                         o.faltas = faltas.filter(o => {
                             return o.registros === 0
@@ -310,7 +310,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
                             let timbres = await BuscarTimbresEoSReporte(desde, hasta, o.codigo);
                             // console.log('Return del timbre: ',timbres);
                             if (timbres.length === 0) {
@@ -351,7 +351,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
                             let timbres = await BuscarTimbresSinAccionesDeEntrada(desde, hasta, o.codigo);
                             
                             o.puntualidad = (timbres.length === 0) ? 0 : parseInt(SumarValoresArray(timbres));
@@ -387,7 +387,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
                             o.timbres = await TimbresIncompletos( new Date(desde), new Date(hasta), o.codigo)
                             // console.log(o);
                             return o})
@@ -404,7 +404,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
                             o.timbres = await TimbresSinAccionesIncompletos( new Date(desde), new Date(hasta), o.codigo)
                             // console.log(o);
                             return o})
@@ -443,7 +443,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})                            
                             o.timbres = await TimbresTabulados(desde, hasta, o.codigo)
                             return o})
                         )
@@ -459,7 +459,7 @@ class ReportesAsistenciaControlador {
                 obj.departamentos = await Promise.all(obj.departamentos.map(async(ele) => {
                     ele.empleado = await Promise.all( ele.empleado.map(async(o) => {
                             o.contrato = await pool.query('SELECT r.descripcion AS contrato FROM cg_regimenes AS r, empl_contratos AS c WHERE c.id_regimen = r.id AND c.id_empleado = $1 ORDER BY c.fec_ingreso DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].contrato})
-                            o.cargo = await pool.query('SELECT ca.cargo FROM empl_contratos AS co, empl_cargos AS ca WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
+                            o.cargo = await pool.query('SELECT tc.cargo FROM empl_contratos AS co, empl_cargos AS ca, tipo_cargo AS tc WHERE co.id_empleado = $1 AND co.id = ca.id_empl_contrato AND tc.id = ca.cargo ORDER BY ca.fec_inicio DESC LIMIT 1 ', [o.id]).then(result => { return result.rows[0].cargo})
                             o.timbres = await TimbresSinAccionesTabulados(desde, hasta, o.codigo)
                             return o})
                         )

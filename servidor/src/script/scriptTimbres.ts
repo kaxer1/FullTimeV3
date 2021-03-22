@@ -1,6 +1,5 @@
 import pool from '../database';
 import moment from 'moment';
-import { Query } from 'pg';
 const FECHA_FERIADOS: any = [];
 
 export const generarTimbres = async function(id_empleado: number) {

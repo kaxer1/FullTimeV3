@@ -65,6 +65,8 @@ mat-icon { cursor: pointer; }
 .i-print { color: rgb(0, 0, 0); font-size: 30px; }
 
 .i-download { color: rgb(0, 102, 255); font-size: 30px; }
+
+.i-excel { color: rgb(19, 172, 19); font-size: 30px; }
   
 .example-radio-button {
     margin: 5px;

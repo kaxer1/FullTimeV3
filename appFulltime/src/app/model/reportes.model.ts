@@ -234,10 +234,10 @@ interface emp_tim {
     genero?: string | number,
     cargo?: string,
     contrato?: string,
-    timbres?: Array<timbre> | Array<tim_tabulado> 
+    timbres?: Array<timbre | tim_tabulado> 
 }
 
-interface timbre {
+export interface timbre {
     fec_hora_timbre: string, 
     id_reloj: number, 
     accion: string, 

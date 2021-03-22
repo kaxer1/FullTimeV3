@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModelarFechas = exports.SegundosToHHMM = exports.Empleado_Atrasos_ModelarDatos_SinAcciones = exports.Empleado_Atrasos_ModelarDatos = exports.Empleado_Permisos_ModelarDatos = exports.Empleado_Vacaciones_ModelarDatos = exports.Empleado_HoraExtra_ModelarDatos = exports.ModelarSalidasAnticipadasSinAcciones = exports.ModelarSalidasAnticipadas = exports.ModelarTiempoJornada = exports.ModelarAtrasos = exports.BuscarTimbresEoSModelado = exports.BuscarTimbresEntradaSinAccionModelado = exports.BuscarTimbresEntradasSinAcciones = exports.BuscarTimbresEntradas = exports.SumarValoresArray = exports.HHMMtoSegundos = exports.HoraExtra_ModelarDatos = exports.BuscarHorasExtras = exports.BuscarPermisosJustificados = exports.BuscarTimbresByCodigo_Fecha = exports.BuscarHorariosActivos = exports.BuscarTimbresByFecha = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const MetodosHorario_1 = require("./MetodosHorario");
@@ -313,12 +314,10 @@ exports.BuscarTimbresEntradaSinAccionModelado = function (fec_inicio, fec_final)
             }
             return res;
         })));
-        let respuesta = res_timbre.filter((obj) => {
-            return obj.length > 0;
-        });
-        // console.log('Respuesta timbres sin acciones:',respuesta);
         let arr_respuesta = [];
-        respuesta.forEach((arr) => {
+        res_timbre.filter((obj) => {
+            return obj.length > 0;
+        }).forEach((arr) => {
             arr.forEach((o) => {
                 let obj = {
                     fecha: o.fecha,
@@ -420,7 +419,6 @@ exports.BuscarTimbresEntradaSinAccionModelado = function (fec_inicio, fec_final)
         });
         nuevoArray = [];
         res_timbre = [];
-        respuesta = [];
         array = [];
         return arr_respuesta;
     });
@@ -563,6 +561,134 @@ exports.ModelarSalidasAnticipadas = function (fec_inicio, fec_final) {
         });
         nuevo = [];
         return array;
+    });
+};
+exports.ModelarSalidasAnticipadasSinAcciones = function (fec_inicio, fec_final) {
+    return __awaiter(this, void 0, void 0, function* () {
+        // console.log(obj);
+        let codigos = yield database_1.default.query('SELECT Distinct id_empleado FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' ORDER BY id_empleado ASC ', [fec_inicio, fec_final])
+            .then(res => {
+            return res.rows;
+        });
+        let nuevo = yield Promise.all(codigos.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            return database_1.default.query('SELECT eh.codigo, dh.hora, dh.orden, dh.id_horario, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR) FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+                'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+                'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND orden IN (2,4) ORDER BY eh.fec_inicio', [obj.id_empleado, fec_inicio, fec_final])
+                .then(res => { return res.rows; });
+        })));
+        let array = [];
+        nuevo.filter(o => {
+            return o.length > 0;
+        }).forEach(o => {
+            o.forEach(e => {
+                array.push(e);
+            });
+        });
+        if (array.length === 0)
+            return [];
+        // console.log('Array Sin Acciones Salidas Antes: ',array);    
+        var nuevoArray = [];
+        var arrayTemporal = [];
+        for (var i = 0; i < array.length; i++) {
+            arrayTemporal = nuevoArray.filter((res) => {
+                return res["Fecha"] == array[i]["fec_inicio"] + ' ' + array[i]["fec_final"] + ' ' + array[i]["codigo"];
+            });
+            if (arrayTemporal.length > 0) {
+                nuevoArray[nuevoArray.indexOf(arrayTemporal[0])]["Horario"].push(array[i]);
+            }
+            else {
+                nuevoArray.push({ "Fecha": array[i]["fec_inicio"] + ' ' + array[i]["fec_final"] + ' ' + array[i]["codigo"], "Horario": [array[i]] });
+            }
+        }
+        nuevoArray.sort(compareFechas);
+        let res_timbre = yield Promise.all(nuevoArray.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            var fec_aux = new Date(obj.Fecha.split(' ')[0]);
+            var fecha1 = moment_1.default(obj.Fecha.split(' ')[0]);
+            var fecha2 = moment_1.default(obj.Fecha.split(' ')[1]);
+            const codigo = obj.Fecha.split(' ')[2];
+            var diasDiferencia = fecha2.diff(fecha1, 'days');
+            let res = [];
+            for (let i = 0; i <= diasDiferencia; i++) {
+                let horario_res = {
+                    fecha: fec_aux.toJSON().split('T')[0],
+                    timbres: yield BuscarTimbresSinAccionesReporte(fec_aux.toJSON().split('T')[0], codigo),
+                    horario: obj.Horario.sort(compareOrden)
+                };
+                // console.log('Horarios Timbres Res:',horario_res.timbres);
+                if (horario_res.timbres.length > 0) {
+                    res.push(horario_res);
+                }
+                fec_aux.setDate(fec_aux.getDate() + 1);
+            }
+            return res;
+        })));
+        let arr_respuesta = [];
+        res_timbre.filter((obj) => {
+            return obj.length > 0;
+        }).forEach((arr) => {
+            arr.forEach((o) => {
+                let obj = {
+                    fecha: o.fecha,
+                    total_timbres: '',
+                };
+                let sal_antes_almuerzo = 0;
+                let sal_antes_laboral = 0;
+                o.horario.forEach((h) => {
+                    let obj2 = {
+                        hora_timbre: '',
+                    };
+                    let diferencia = 0;
+                    let dif = 0;
+                    switch (h.orden) {
+                        case 2:
+                            let arr2 = o.timbres.filter((t) => {
+                                console.log('timbre sin filtro: ', t.fec_hora_timbre, ' || ', h.hora);
+                                const hora = exports.HHMMtoSegundos(h.hora);
+                                const hora_timbre = exports.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = hora - exports.HHMMtoSegundos('00:59:00');
+                                const h_final = hora;
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            console.log('ARR 2', arr2, h.hora);
+                            obj2.hora_timbre = (arr2.length === 0) ? '' : arr2[0].fec_hora_timbre.split(' ')[1];
+                            dif = (obj2.hora_timbre === '') ? 0 : exports.HHMMtoSegundos(obj2.hora_timbre) - exports.HHMMtoSegundos(h.hora);
+                            if (dif < 0) {
+                                diferencia = dif * (-1);
+                                console.log(diferencia);
+                                sal_antes_almuerzo = diferencia;
+                            }
+                            break;
+                        case 4:
+                            let arr4 = o.timbres.filter((t) => {
+                                console.log('timbre sin filtro: ', t.fec_hora_timbre, ' || ', h.hora);
+                                const hora = exports.HHMMtoSegundos(h.hora);
+                                const hora_timbre = exports.HHMMtoSegundos(t.fec_hora_timbre.split(' ')[1]);
+                                const h_inicio = hora - exports.HHMMtoSegundos('00:59:00');
+                                const h_final = hora;
+                                return (h_inicio <= hora_timbre && h_final >= hora_timbre);
+                            });
+                            console.log('ARR 4', arr4, h.hora);
+                            obj2.hora_timbre = (arr4.length === 0) ? '' : arr4[0].fec_hora_timbre.split(' ')[1];
+                            dif = (obj2.hora_timbre === '') ? 0 : exports.HHMMtoSegundos(obj2.hora_timbre) - exports.HHMMtoSegundos(h.hora);
+                            if (dif < 0) {
+                                diferencia = dif * (-1);
+                                console.log(diferencia);
+                                sal_antes_laboral = diferencia;
+                            }
+                            break;
+                        default: break;
+                    }
+                });
+                const suma = sal_antes_almuerzo + sal_antes_laboral;
+                console.log('SUMA:', suma);
+                obj.total_timbres = exports.SegundosToHHMM(suma);
+                arr_respuesta.push(obj);
+            });
+        });
+        nuevoArray = [];
+        res_timbre = [];
+        array = [];
+        return arr_respuesta;
     });
 };
 /**
@@ -725,6 +851,58 @@ exports.Empleado_Atrasos_ModelarDatos = function (codigo, fec_desde, fec_hasta) 
         })));
         // console.log('ARRAY ===', array);
         return array;
+    });
+};
+exports.Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde, fec_hasta) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const orden = 1;
+        const horarioEntrada = yield database_1.default.query('SELECT dt.hora, dt.minu_espera, CAST(eh.fec_inicio AS VARCHAR), CAST(eh.fec_final AS VARCHAR), ' +
+            'eh.lunes, eh.martes, eh.miercoles, eh.jueves, eh.viernes, eh.sabado, eh.domingo ' +
+            'FROM empl_horarios AS eh, cg_horarios AS ch, deta_horarios AS dt ' +
+            'WHERE dt.orden = $1 AND eh.fec_inicio BETWEEN $2 AND $3 AND eh.fec_final BETWEEN $2 AND $3 ' +
+            'AND eh.id_horarios = ch.id AND ch.id = dt.id_horario AND eh.codigo = $4', [orden, fec_desde, fec_hasta, codigo])
+            .then(result => { return result.rows; });
+        if (horarioEntrada.length === 0)
+            return [0];
+        // console.log(horarioEntrada);
+        let nuevo = [];
+        let aux = yield Promise.all(horarioEntrada.map((obj) => __awaiter(this, void 0, void 0, function* () {
+            let fechas = exports.ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
+            const hora_seg = exports.HHMMtoSegundos(obj.hora) + (obj.minu_espera * 60);
+            let timbres = yield Promise.all(fechas.map((o) => __awaiter(this, void 0, void 0, function* () {
+                var f_inicio = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg);
+                var f_final = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg + exports.HHMMtoSegundos('02:00:00'));
+                // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
+                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
+                // console.log(query);
+                return yield database_1.default.query(query)
+                    .then(res => {
+                    if (res.rowCount === 0) {
+                        return 0;
+                    }
+                    else {
+                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                        const t_tim = exports.HHMMtoSegundos(h_timbre);
+                        return {
+                            fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
+                            tiempo_atraso: (t_tim - hora_seg) / 3600
+                        };
+                    }
+                });
+            })));
+            return timbres;
+        })));
+        aux.forEach(obj => {
+            if (obj.length > 0) {
+                obj.forEach((o) => {
+                    if (o.tiempo_atraso > 0) {
+                        nuevo.push(o);
+                    }
+                });
+            }
+        });
+        return nuevo;
     });
 };
 exports.SegundosToHHMM = function (dato) {

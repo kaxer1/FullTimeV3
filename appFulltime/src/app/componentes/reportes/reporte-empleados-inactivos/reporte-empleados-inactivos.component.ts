@@ -12,6 +12,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteAtrasos } from 'src/app/model/reportes.model';
 
@@ -170,7 +171,10 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     console.log('SUCURSAL', suc);
     this.data_pdf = [];
     this.data_pdf = suc;
-    this.generarPdf(accion)
+    switch (accion) {
+      case 'excel': this.exportToExcel(); break;
+      default: this.generarPdf(accion); break;
+    }
   }
 
   ModelarDepartamento(accion) {
@@ -191,7 +195,10 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     console.log('DEPARTAMENTOS', dep);
     this.data_pdf = [];
     this.data_pdf = dep;
-    this.generarPdf(accion)
+    switch (accion) {
+      case 'excel': this.exportToExcel(); break;
+      default: this.generarPdf(accion); break;
+    }
   }
 
   ModelarEmpleados(accion) {
@@ -221,10 +228,12 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     console.log('EMPLEADOS', emp);
     this.data_pdf = [];
     this.data_pdf = emp;
-    this.generarPdf(accion)
+    switch (accion) {
+      case 'excel': this.exportToExcel(); break;
+      default: this.generarPdf(accion); break;
+    }
     
   }
-
 
   /***************************
    * 
@@ -533,6 +542,39 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
     }
     return valor
   }
+
+  /****************************************************************************************************** 
+   *                                       MÉTODO PARA EXPORTAR A EXCEL
+   ******************************************************************************************************/
+   exportToExcel(): void {
+
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.MapingDataPdfDefault(this.data_pdf));
+    const wb: xlsx.WorkBook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(wb, wsr, 'Empleados Inactivos');
+    xlsx.writeFile(wb, "Empleados Inactivos " + new Date().getTime() + '.xlsx');
+    
+  }
+
+  MapingDataPdfDefault(array: Array<any>) {
+    let nuevo: Array<any> = [];
+    array.forEach((obj1: IReporteAtrasos) => {
+      obj1.departamentos.forEach(obj2 => {
+        obj2.empleado.forEach(obj3 => {
+          console.log(obj3);
+          
+          let ele = {
+            'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
+            'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
+            'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
+            'Género': obj3.genero, 'Contrato': obj3.contrato, 'Cargo': obj3.cargo, 
+          }
+          nuevo.push(ele)
+        })
+      })
+    })
+    return nuevo
+  }
+
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */
   isAllSelectedSuc() {
