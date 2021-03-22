@@ -57,6 +57,13 @@
                             <label id="datosF">Establecimientos:</label>
                             <label>{{e.establecimiento}}</label>
                         </div>
+                        <div *ngIf="e.num_partida != null && e.num_partida != ''"
+                            class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Num. Partida Presupuestaria:</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label>{{e.num_partida}}</label>
+                        </div>
                         <div style="text-align: right;">
                             <i id="editarF" (click)="EditarDatosEmpresa(e)" matSuffix matTooltipClass="color-tooltip"
                                 matTooltipPosition="right" matTooltip="Modificar datos de este registro"

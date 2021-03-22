@@ -12,14 +12,40 @@ export class PlanComidasService {
     private http: HttpClient,
   ) { }
 
-  // Planificación Comidas
+  /** SOLICITUD DE COMIDAS */
+  CrearSolicitudComida(datos: any) {
+    return this.http.post(`${this.API_URL}/planComidas/solicitud`, datos);
+  }
 
+  ActualizarSolicitudComida(datos: any) {
+    return this.http.put(`${this.API_URL}/planComidas/solicitud`, datos);
+  }
+
+  ObtenerSolComidaPorIdEmpleado(id_empleado: number) {
+    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/${id_empleado}`)
+  }
+
+  /** BUSCAR JEFES */
+  obtenerJefes(id_departamento: number) {
+    return this.http.get<any>(`${this.API_URL}/planComidas/enviar/notificacion/${id_departamento}`)
+  }
+
+  /** ENVIAR CORREO A CADA JEFE */
+  EnviarCorreo(datos: any) {
+    return this.http.post(`${this.API_URL}/planComidas/mail-noti`, datos);
+  }
+
+  /** PLANIFICACIÓN DE COMIDAS */
   CrearPlanComidas(datos: any) {
     return this.http.post(`${this.API_URL}/planComidas/`, datos);
   }
 
-  obtenerPlanComidaPorIdEmpleado(id_empleado: number) {
-    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/${id_empleado}`)
+  ObtenerUltimaPlanificacion() {
+    return this.http.get<any>(`${this.API_URL}/planComidas/fin_registro`)
+  }
+
+  ObtenerPlanComidaPorIdEmpleado(id_empleado: number) {
+    return this.http.get<any>(`${this.API_URL}/planComidas/infoComida/plan/${id_empleado}`)
   }
 
   EliminarRegistro(id: number) {
@@ -30,8 +56,16 @@ export class PlanComidasService {
     return this.http.put(`${this.API_URL}/planComidas`, datos);
   }
 
-  /** Servicio para obtener datos de la tabla tipo_comida */
+  /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
+  CrearPlanComidasEmpleado(datos: any) {
+    return this.http.post(`${this.API_URL}/planComidas/empleado/plan`, datos);
+  }
 
+  EnviarCorreoPlan(datos: any) {
+    return this.http.post(`${this.API_URL}/planComidas/mail-plan`, datos);
+  }
+
+  /** Servicio para obtener datos de la tabla tipo_comida */
   CrearTipoComidas(datos: any) {
     return this.http.post(`${this.API_URL}/planComidas/tipo_comida`, datos);
   }
@@ -44,7 +78,7 @@ export class PlanComidasService {
     return this.http.get<any>(`${this.API_URL}/planComidas/tipo_comida/ultimo`)
   }
 
-  /** Alertas Notificación y envio de correo electrónico */
+  /** ALERTAS DE NOTIFICACIÓN DE SOLICITUD Y PLANIFICACIÓN DE SERVICIO DE ALIMENTACIÓN*/
   EnviarMensajePlanComida(data: any) {
     return this.http.post<any>(`${this.API_URL}/planComidas/send/planifica/`, data);
   }

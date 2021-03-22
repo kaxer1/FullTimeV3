@@ -15,7 +15,6 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // Librería para generar reportes en formato EXCEL
 import * as xlsx from 'xlsx';
-import * as FileSaver from 'file-saver';
 
 // Importación de servicios
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';

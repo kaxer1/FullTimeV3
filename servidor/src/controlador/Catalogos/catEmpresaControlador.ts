@@ -8,7 +8,7 @@ import pool from '../../database';
 class EmpresaControlador {
 
     public async ListarEmpresa(req: Request, res: Response) {
-        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa ORDER BY nombre ASC');
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa ORDER BY nombre ASC');
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -19,7 +19,7 @@ class EmpresaControlador {
 
     public async ListarUnaEmpresa(req: Request, res: Response) {
         const { nombre } = req.params;
-        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE nombre = $1', [nombre]);
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa WHERE nombre = $1', [nombre]);
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -35,8 +35,13 @@ class EmpresaControlador {
     }
 
     public async ActualizarEmpresa(req: Request, res: Response): Promise<void> {
-        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id } = req.body;
-        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, cambios = $10 WHERE id = $11', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id]);
+        const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante,
+            establecimiento, dias_cambio, cambios, num_partida, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, ' +
+            'correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, ' +
+            'cambios = $10, num_partida = $11 WHERE id = $12',
+            [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento,
+                dias_cambio, cambios, num_partida, id]);
         res.jsonp({ message: 'Empresa actualizada exitosamente' });
     }
 

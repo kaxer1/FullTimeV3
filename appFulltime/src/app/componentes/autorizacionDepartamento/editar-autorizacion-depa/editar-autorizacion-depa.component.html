@@ -23,18 +23,6 @@
                         </mat-form-field>
                         <br>
                         <mat-form-field>
-                            <mat-label id="selEmpre">Seleccionar Empresa</mat-label>
-                            <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
-                                matTooltipPosition="right" matTooltip="Lista de Empresas">help_outline</mat-icon>
-                            <mat-select [formControl]="idEmpresaF" required>
-                                <mat-option *ngFor="let empre of empresas" [value]="empre.id"
-                                    (click)="FiltrarSucursales(autorizarDepaForm.value)">
-                                    {{empre.nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                        <br>
-                        <mat-form-field>
                             <mat-label id="selEmpre">Seleccionar Sucursal</mat-label>
                             <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
                                 matTooltipPosition="right"

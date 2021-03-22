@@ -13,7 +13,7 @@
         <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
             <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                 <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">Fecha de Solicitud:</label>
+                    <label id="datosF">Fecha Registro:</label>
                     <label>{{pc.fecha.split("T")[0]}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Nombre Plato:</label>
-                    <label>{{pc.nombre}}</label>
+                    <label>{{pc.nombre_plato}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Precio Plato:</label>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Fecha Planificada:</label>
-                    <label>{{pc.fec_solicita.split("T")[0]}}</label>
+                    <label>{{pc.fec_comida.split("T")[0]}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Hora Fin:</label>
@@ -41,15 +41,11 @@
                     <label>{{pc.observacion}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">Descripción:</label>
-                    <label>{{pc.descripcion}}</label>
-                </div>
-                <div class="caja1 d-flex justify-content-start">
                     <label id="datosF">Servicio:</label>
-                    <label>{{pc.tipo_servicio}}</label>
+                    <label>{{pc.nombre_servicio}}</label>
                 </div>
                 <div class="caja1 d-flex justify-content-start">
-                    <label id="datosF">Porción:</label>
+                    <label id="datosF">Tipo:</label>
                     <label *ngIf="pc.extra === false">Normal</label>
                     <label *ngIf="pc.extra === true">Extra</label>
                 </div>

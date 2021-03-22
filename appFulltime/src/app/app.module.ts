@@ -338,6 +338,16 @@ import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComid
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
+import { SolicitaComidaComponent } from './componentes/planificacionComidas/solicita-comida/solicita-comida.component';
+import { AdministraComidaComponent } from './componentes/administra-comida/administra-comida.component';
+import { CrearTipoaccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/crear-tipoaccion/crear-tipoaccion.component';
+import { EditarTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/editar-tipo-accion/editar-tipo-accion.component';
+import { ListarTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/listar-tipo-accion/listar-tipo-accion.component';
+import { VerTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/ver-tipo-accion/ver-tipo-accion.component';
+import { ListarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/listar-pedido-accion/listar-pedido-accion.component';
+import { CrearPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/crear-pedido-accion/crear-pedido-accion.component';
+import { EditarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/editar-pedido-accion/editar-pedido-accion.component';
+import { VerPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/ver-pedido-accion/ver-pedido-accion.component';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -602,6 +612,16 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     FuncionesComponent,
     ConfigReportFirmasHorasExtrasComponent,
     FecTimbrePipe,
+    SolicitaComidaComponent,
+    AdministraComidaComponent,
+    CrearTipoaccionComponent,
+    EditarTipoAccionComponent,
+    ListarTipoAccionComponent,
+    VerTipoAccionComponent,
+    ListarPedidoAccionComponent,
+    CrearPedidoAccionComponent,
+    EditarPedidoAccionComponent,
+    VerPedidoAccionComponent,
   ],
 
   imports: [

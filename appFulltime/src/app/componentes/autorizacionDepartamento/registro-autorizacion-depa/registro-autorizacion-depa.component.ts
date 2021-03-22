@@ -20,9 +20,9 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
   sucursales: any = [];
   empresas: any = [];
   empleados: any = [];
+  idEmpresa: number;
 
   nombreEmpleadoF = new FormControl('', [Validators.required]);
-  idEmpresaF = new FormControl('', Validators.required);
   idSucursal = new FormControl('', [Validators.required]);
   idDepartamento = new FormControl('', [Validators.required]);
   autorizarF = new FormControl('', [Validators.required]);
@@ -30,7 +30,6 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
   public autorizarDepaForm = new FormGroup({
     nombreEmpleadoForm: this.nombreEmpleadoF,
     idSucursalForm: this.idSucursal,
-    idEmpresaForm: this.idEmpresaF,
     idDeparForm: this.idDepartamento,
     autorizarForm: this.autorizarF,
   });
@@ -44,11 +43,13 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<RegistroAutorizacionDepaComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
-  ) { }
+  ) {
+    this.idEmpresa = parseInt(localStorage.getItem('empresa'));
+  }
 
   ngOnInit(): void {
-    this.BuscarEmpresas();
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
+    this.BuscarSucursales();
   }
 
   // Método para ver la información del empleado 
@@ -63,24 +64,13 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
     })
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
+  BuscarSucursales() {
+    this.sucursales = [];
+    this.restSucursales.BuscarSucEmpresa(this.idEmpresa).subscribe(datos => {
+      this.sucursales = datos;
+    });
   }
 
-  FiltrarSucursales(form) {
-    let idEmpre = form.idEmpresaForm
-    this.sucursales = [];
-    this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
-      this.sucursales = datos;
-    }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
-        timeOut: 6000,
-      })
-    })
-  }
 
   ObtenerDepartamentos(form) {
     this.departamento = [];
@@ -88,7 +78,7 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+      this.toastr.info('Sucursal seleccionada no tiene registro de departamentos.', '', {
         timeOut: 6000,
       })
     });
@@ -117,7 +107,6 @@ export class RegistroAutorizacionDepaComponent implements OnInit {
   CerrarVentanaAutorizar() {
     this.LimpiarCampos();
     this.dialogRef.close();
-    //window.location.reload();
   }
 
 }

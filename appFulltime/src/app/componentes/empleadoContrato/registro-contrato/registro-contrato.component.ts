@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -9,12 +9,10 @@ import * as moment from 'moment';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 
-
 @Component({
   selector: 'app-registro-contrato',
   templateUrl: './registro-contrato.component.html',
   styleUrls: ['./registro-contrato.component.css'],
-  //encapsulation: ViewEncapsulation.None
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -22,9 +20,12 @@ import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.s
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
+
 export class RegistroContratoComponent implements OnInit {
 
   isChecked: boolean = false;
+  habilitarSeleccion: boolean = true;
+  habilitarContrato: boolean = false;
 
   // Datos Régimen
   regimenLaboral: any = [];
@@ -40,6 +41,8 @@ export class RegistroContratoComponent implements OnInit {
   controlAsistenciaF = new FormControl('', [Validators.required]);
   nombreContratoF = new FormControl('');
   archivoForm = new FormControl('');
+  tipoF = new FormControl('');
+  contratoF = new FormControl('', [Validators.minLength(3)]);
 
   // Asignación de validaciones a inputs del formulario
   public ContratoForm = new FormGroup({
@@ -49,7 +52,9 @@ export class RegistroContratoComponent implements OnInit {
     fechaSalidaForm: this.fechaSalidaF,
     controlVacacionesForm: this.controlVacacionesF,
     controlAsistenciaForm: this.controlAsistenciaF,
-    nombreContratoForm: this.nombreContratoF
+    nombreContratoForm: this.nombreContratoF,
+    tipoForm: this.tipoF,
+    contratoForm: this.contratoF
   });
 
   constructor(
@@ -62,21 +67,32 @@ export class RegistroContratoComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.datoEmpleado);
-    
     this.regimenLaboral = this.ObtenerRegimen();
     this.ObtenerEmpleados(this.datoEmpleado);
+    this.ObtenerTipoContratos();
+    this.tipoContrato[this.tipoContrato.length] = { descripcion: "OTRO" };
   }
 
   ObtenerRegimen() {
     this.regimenLaboral = [];
     console.log('obtener regimen');
-    
+
     this.restR.ConsultarRegimen().subscribe(datos => {
       console.log(datos);
-      
+
       this.regimenLaboral = datos;
       this.regimenLaboral[this.regimenLaboral.length] = { nombre: "Seleccionar Régimen" };
       this.seleccionarRegimen = this.regimenLaboral[this.regimenLaboral.length - 1].nombre;
+    })
+  }
+
+  // Método para obtener tipos de contratos
+  tipoContrato: any = [];
+  ObtenerTipoContratos() {
+    this.tipoContrato = [];
+    this.rest.BuscarTiposContratos().subscribe(datos => {
+      this.tipoContrato = datos;
+      this.tipoContrato[this.tipoContrato.length] = { descripcion: "OTRO" };
     })
   }
 
@@ -101,7 +117,7 @@ export class RegistroContratoComponent implements OnInit {
         this.InsertarContrato(form);
       }
       else {
-        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso','', {
+        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso', '', {
           timeOut: 6000,
         })
       }
@@ -117,16 +133,39 @@ export class RegistroContratoComponent implements OnInit {
       vaca_controla: form.controlVacacionesForm,
       asis_controla: form.controlAsistenciaForm,
       id_regimen: form.idRegimenForm,
-      doc_nombre: form.nombreContratoForm
+      doc_nombre: form.nombreContratoForm,
+      id_tipo_contrato: form.tipoForm
     };
-    this.ValidarDuplicidad(datosContrato, form);
+    if (form.tipoForm === undefined) {
+      if (form.contratoForm != '') {
+        let tipo_contrato = {
+          descripcion: form.contratoForm
+        }
+        this.rest.CrearTiposContrato(tipo_contrato).subscribe(res => {
+          // Buscar id de último cargo ingresado
+          this.rest.BuscarUltimoTiposContratos().subscribe(data => {
+            // Buscar id de último cargo ingresado
+            datosContrato.id_tipo_contrato = data[0].id;
+            this.ValidarDuplicidad(datosContrato, form);
+          });
+        });
+      }
+      else {
+        this.toastr.info('Ingresar el nuevo cargo a desempeñar', 'Verificar datos', {
+          timeOut: 6000,
+        });
+      }
+    }
+    else {
+      this.ValidarDuplicidad(datosContrato, form);
+    }
   }
 
   ValidarDuplicidad(datos, form): any {
     this.revisarFecha = [];
     this.rest.BuscarContratoEmpleadoRegimen(this.datoEmpleado).subscribe(data => {
       console.log(data);
-      
+
       this.revisarFecha = data;
       var ingreso = String(moment(datos.fec_ingreso, "YYYY/MM/DD").format("YYYY-MM-DD"));
       console.log('fechas', ingreso, ' ', this.revisarFecha);
@@ -148,6 +187,20 @@ export class RegistroContratoComponent implements OnInit {
     }, error => {
       this.RegistrarContrato(form, datos);
     });
+  }
+
+  estilo: any;
+  IngresarOtro(form) {
+    if (form.tipoForm === undefined) {
+      this.ContratoForm.patchValue({
+        contratoForm: '',
+      });
+      this.estilo = { 'visibility': 'visible' }; this.habilitarContrato = true;
+      this.toastr.info('Ingresar nombre del nuevo tipo de contrato.', 'Etiqueta Tipo Contrato activa', {
+        timeOut: 6000,
+      })
+      this.habilitarSeleccion = false;
+    }
   }
 
   HabilitarBtn: boolean = false;
@@ -244,6 +297,15 @@ export class RegistroContratoComponent implements OnInit {
     this.LimpiarCampos();
     this.dialogRef.close();
     //window.location.reload();
+  }
+
+
+  VerTiposContratos() {
+    this.ContratoForm.patchValue({
+      contratoForm: '',
+    });
+    this.estilo = { 'visibility': 'hidden' }; this.habilitarContrato = false;
+    this.habilitarSeleccion = true;
   }
 
 }

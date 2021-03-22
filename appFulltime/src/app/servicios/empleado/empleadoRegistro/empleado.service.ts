@@ -136,6 +136,18 @@ export class EmpleadoService {
     return this.http.get<any>(`${this.API_URI}/contratoEmpleado`);
   }
 
+  /** SERVICIOS PARA SER USADOS PARA REGISTRAR MODALIDAD DE TRABAJO O TIPO DE CONTRATOS */
+  CrearTiposContrato(datos: any) {
+    return this.http.post(`${this.API_URI}/contratoEmpleado/modalidad/trabajo`, datos);
+  }
+
+  BuscarTiposContratos() {
+    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/modalidad/trabajo`);
+  }
+
+  BuscarUltimoTiposContratos() {
+    return this.http.get<any>(`${this.API_URI}/contratoEmpleado/modalidad/trabajo/ultimo`);
+  }
 
   // GUARDAR CÓDIGO
 

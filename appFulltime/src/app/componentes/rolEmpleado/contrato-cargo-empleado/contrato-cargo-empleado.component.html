@@ -31,6 +31,10 @@
                                 <label *ngIf="ce.fec_salida === null">Sin fecha</label>
                                 <label *ngIf="ce.fec_salida != null">{{ce.fec_salida.split("T")[0]}}</label>
                             </div>
+                            <div class="caja3 d-flex justify-content-start">
+                                <label id="datosF">Modalidad Trabajo:</label>
+                                <label>{{ce.nombre_contrato}}</label>
+                            </div>
                             <div class="caja1 d-flex justify-content-start">
                                 <label id="datosF">Control de Asistencia:</label>
                                 <label *ngIf="ce.asis_controla == true">Si</label>

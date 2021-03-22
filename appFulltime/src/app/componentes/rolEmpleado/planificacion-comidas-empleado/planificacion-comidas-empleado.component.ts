@@ -7,8 +7,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
-
+import { SolicitaComidaComponent } from '../../planificacionComidas/solicita-comida/solicita-comida.component';
 
 @Component({
   selector: 'app-planificacion-comidas-empleado',
@@ -42,13 +41,23 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  /** Método para mostrar datos de planificación de almuerzos */
+  /** Método para mostrar datos de planificación de servicio de alimentación */
   planComidas: any;
   obtenerPlanComidasEmpleado(id_empleado: number) {
     this.planComidas = [];
-    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
-      this.planComidas = res
-    }, error => { console.log("") });
+    this.restPlanComidas.ObtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+      this.planComidas = res;
+      console.log('comidas 1', this.planComidas);
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol => {
+        this.planComidas = this.planComidas.concat(sol);
+        console.log('comidas 2', this.planComidas);
+      });
+    }, error => {
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol2 => {
+        this.planComidas = sol2;
+        console.log('comidas 3', this.planComidas);
+      });
+    });
   }
 
   /* Ventana para editar planificación de comidas */
@@ -83,12 +92,12 @@ export class PlanificacionComidasEmpleadoComponent implements OnInit {
       });
   }
 
-  /* Ventana para ingresar planificación de comidas */
+  /* Ventana para ingresar solicitud de comidas */
   AbrirVentanaPlanificacion(): void {
     console.log(this.idEmpleado);
-    this.vistaRegistrarDatos.open(PlanificacionComidasComponent, {
+    this.vistaRegistrarDatos.open(SolicitaComidaComponent, {
       width: '1200px',
-      data: { idEmpleado: this.idEmpleado, modo: 'individual' }
+      data: { idEmpleado: this.idEmpleado, modo: 'solicitud' }
     })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));

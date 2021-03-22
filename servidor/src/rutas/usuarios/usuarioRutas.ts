@@ -19,6 +19,9 @@ class UsuarioRutas {
         this.router.put('/actualizarDatos', TokenValidation, USUARIO_CONTROLADOR.ActualizarUsuario);
         this.router.post('/acceso', USUARIO_CONTROLADOR.AuditarAcceso);
         this.router.put('/frase', TokenValidation, USUARIO_CONTROLADOR.ActualizarFrase);
+
+        // ADMINISTRACIÓN MÓDULO DE ALIMENTACIÓN
+        this.router.put('/admin/comida', TokenValidation, USUARIO_CONTROLADOR.RegistrarAdminComida);
     }
 }
 

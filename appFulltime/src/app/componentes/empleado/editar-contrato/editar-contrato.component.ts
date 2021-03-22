@@ -26,6 +26,9 @@ export class EditarContratoComponent implements OnInit {
 
   isChecked: boolean;
 
+  habilitarSeleccion: boolean = true;
+  habilitarContrato: boolean = false;
+
   // Control de campos y validaciones del formulario
   idRegimenF = new FormControl('', [Validators.required]);
   fechaIngresoF = new FormControl('', [Validators.required]);
@@ -34,6 +37,8 @@ export class EditarContratoComponent implements OnInit {
   controlAsistenciaF = new FormControl('', [Validators.required]);
   nombreContratoF = new FormControl('');
   archivoForm = new FormControl('');
+  tipoF = new FormControl('');
+  contratoF = new FormControl('', [Validators.minLength(3)]);
 
   // Asignación de validaciones a inputs del formulario
   public ContratoForm = new FormGroup({
@@ -42,7 +47,9 @@ export class EditarContratoComponent implements OnInit {
     fechaSalidaForm: this.fechaSalidaF,
     controlVacacionesForm: this.controlVacacionesF,
     controlAsistenciaForm: this.controlAsistenciaF,
-    nombreContratoForm: this.nombreContratoF
+    nombreContratoForm: this.nombreContratoF,
+    tipoForm: this.tipoF,
+    contratoForm: this.contratoF
   });
 
   constructor(
@@ -55,19 +62,22 @@ export class EditarContratoComponent implements OnInit {
   ngOnInit(): void {
     this.regimenLaboral = this.ObtenerRegimen();
     this.ObtenerContratoSeleccionado(this.idSelectContrato);
+    this.ObtenerTipoContratos();
+    this.tipoContrato[this.tipoContrato.length] = { descripcion: "OTRO" };
   }
 
   ObtenerContratoSeleccionado(id: number) {
     this.rest.ObtenerUnContrato(id).subscribe(res => {
       this.UnContrato = res;
 
-      this.ContratoForm.setValue({
+      this.ContratoForm.patchValue({
         idRegimenForm: this.UnContrato.id_regimen,
         fechaIngresoForm: this.UnContrato.fec_ingreso,
         fechaSalidaForm: this.UnContrato.fec_salida,
         controlVacacionesForm: this.UnContrato.vaca_controla,
         controlAsistenciaForm: this.UnContrato.asis_controla,
-        nombreContratoForm: this.UnContrato.doc_nombre
+        nombreContratoForm: this.UnContrato.doc_nombre,
+        tipoForm: this.UnContrato.id_tipo_contrato
       })
       if (this.UnContrato.doc_nombre != '' && this.UnContrato.doc_nombre != null) {
         this.HabilitarBtn = true;
@@ -98,7 +108,7 @@ export class EditarContratoComponent implements OnInit {
         this.ActualizarContrato(form);
       }
       else {
-        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso','', {
+        this.toastr.info('La fecha de salida debe ser mayor a la fecha de ingreso', '', {
           timeOut: 6000,
         })
       }
@@ -120,14 +130,47 @@ export class EditarContratoComponent implements OnInit {
       vaca_controla: form.controlVacacionesForm,
       asis_controla: form.controlAsistenciaForm,
       id_regimen: form.idRegimenForm,
-      doc_nombre: form.nombreContratoForm
+      doc_nombre: form.nombreContratoForm,
+      id_tipo_contrato: form.tipoForm
     };
-    if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
-      this.RegistrarContrato(datosContrato);
+    if (form.tipoForm === undefined) {
+      if (form.contratoForm != '') {
+        let tipo_contrato = {
+          descripcion: form.contratoForm
+        }
+        this.rest.CrearTiposContrato(tipo_contrato).subscribe(res => {
+          // Buscar id de último cargo ingresado
+          this.rest.BuscarUltimoTiposContratos().subscribe(data => {
+            // Buscar id de último cargo ingresado
+            datosContrato.id_tipo_contrato = data[0].id;
+            if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
+              this.RegistrarContrato(datosContrato);
+            }
+            else {
+              this.ValidarDuplicidad(datosContrato, form);
+            }
+          });
+        });
+      }
+      else {
+        this.toastr.info('Ingresar el nuevo cargo a desempeñar', 'Verificar datos', {
+          timeOut: 6000,
+        });
+      }
     }
     else {
-      this.ValidarDuplicidad(datosContrato, form);
+      if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
+        this.RegistrarContrato(datosContrato);
+      }
+      else {
+        this.ValidarDuplicidad(datosContrato, form);
+      }
     }
+
+
+
+
+
   }
 
   revisarFecha: any = [];
@@ -262,5 +305,37 @@ export class EditarContratoComponent implements OnInit {
   }
 
   cancelar() { this.verEmpleado.verContratoEdicion(true); }
+
+  VerTiposContratos() {
+    this.ContratoForm.patchValue({
+      contratoForm: '',
+    });
+    this.estilo = { 'visibility': 'hidden' }; this.habilitarContrato = false;
+    this.habilitarSeleccion = true;
+  }
+
+  estilo: any;
+  IngresarOtro(form) {
+    if (form.tipoForm === undefined) {
+      this.ContratoForm.patchValue({
+        contratoForm: '',
+      });
+      this.estilo = { 'visibility': 'visible' }; this.habilitarContrato = true;
+      this.toastr.info('Ingresar nombre del nuevo tipo de contrato.', 'Etiqueta Tipo Contrato activa', {
+        timeOut: 6000,
+      })
+      this.habilitarSeleccion = false;
+    }
+  }
+
+  // Método para obtener tipos de contratos
+  tipoContrato: any = [];
+  ObtenerTipoContratos() {
+    this.tipoContrato = [];
+    this.rest.BuscarTiposContratos().subscribe(datos => {
+      this.tipoContrato = datos;
+      this.tipoContrato[this.tipoContrato.length] = { descripcion: "OTRO" };
+    })
+  }
 
 }

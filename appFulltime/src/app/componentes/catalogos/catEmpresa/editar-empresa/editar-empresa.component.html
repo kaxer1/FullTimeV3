@@ -61,7 +61,7 @@
                     <br>
                     <mat-form-field>
                         <mat-label>Correo</mat-label>
-                        <input matInput placeholder="Ingresar serie" [formControl]="correoF" required>
+                        <input matInput placeholder="Ingresar mail" [formControl]="correoF" required>
                         <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
                             matTooltip="Modificar correo electrónico de la Empresa">
                             help_outline
@@ -134,6 +134,15 @@
                         </mat-icon>
                         <mat-error *ngIf="representanteF.invalid">{{ObtenerMensajeErrorRepre()}}
                         </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label>Num. Partida Presupuestaria</mat-label>
+                        <input matInput placeholder="Ingresar número" [formControl]="numeroF"
+                            (keypress)="IngresarSoloNumeros($event)">
+                        <mat-icon id="empre" matSuffix matTooltipClass="empre-tooltip" matTooltipPosition="right"
+                            matTooltip="Ingresar número de partida presupuestaria de la Empresa">
+                            help_outline
+                        </mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="col">
@@ -221,10 +230,6 @@
     </div>
 </div>
 <div class="pantalla-progress" *ngIf="habilitarprogress">
-    <mat-progress-spinner
-        class="progress"
-        [color]="color"
-        [mode]="mode"
-        [value]="value">
+    <mat-progress-spinner class="progress" [color]="color" [mode]="mode" [value]="value">
     </mat-progress-spinner>
 </div>

@@ -14,16 +14,14 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 // Librería para generar archivos EXCEL
 import * as xlsx from 'xlsx';
-
+// Llamada de servicios Generales
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
-import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
-import { AlimentacionService } from 'src/app/servicios/reportes/alimentacion/alimentacion.service';
-import { formatCurrency } from '@angular/common';
-
 // Servicios Módulo de Alimentación
+import { AlimentacionService } from 'src/app/servicios/reportes/alimentacion/alimentacion.service';
+import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
 @Component({
   selector: 'app-alimentos-general',
@@ -41,7 +39,6 @@ export class AlimentosGeneralComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -163,63 +160,31 @@ export class AlimentosGeneralComponent implements OnInit {
       this.inicio = moment(form.inicioForm).format('YYYY-MM-DD');
       this.fin = moment(form.finalForm).format('YYYY-MM-DD');
       console.log('fechas', moment(this.inicio).format('YYYY-MM-DD'), this.fin)
+      // Limpiar array de datos
       this.planificados = [];
       this.solicitados = [];
       this.extras = [];
+      // 1. Buscamos registros de servicios planificados
       this.restA.ObtenerPlanificadosConsumidos(fechas).subscribe(plan => {
         this.planificados = plan;
+        // 2. Buscamos registros de servicios solicitados
         this.restA.ObtenerSolicitadosConsumidos(fechas).subscribe(sol => {
           this.solicitados = sol;
-          this.restA.ObtenerExtrasConsumidos(fechas).subscribe(extra => {
-            this.extras = extra;
-            console.log('datos timbres', this.planificados, this.solicitados, this.extras);
-            if (archivo === 'pdf') {
-              this.generarPdf('open');
-              this.LimpiarFechas();
-            }
-            else if (archivo === 'excel') {
-              this.exportToExcelAlimentacion(form);
-              this.LimpiarFechas();
-            }
-          });
+          // 3. Método de búsqueda de registros de servicios extras 
+          this.ObtenerExtrasConsumidos(fechas, archivo, form);
+        }, error => {
+          // 4. Método de búsqueda de registros de servicios extras 
+          this.ObtenerExtrasConsumidos(fechas, archivo, form);
         });
       }, error => {
+        // 5. Buscamos registros de servicios solicitados
         this.restA.ObtenerSolicitadosConsumidos(fechas).subscribe(sol => {
           this.solicitados = sol;
-          this.restA.ObtenerExtrasConsumidos(fechas).subscribe(extra => {
-            this.extras = extra;
-            console.log('datos timbres', this.planificados, this.solicitados, this.extras);
-            if (archivo === 'pdf') {
-              this.generarPdf('open');
-              this.LimpiarFechas();
-            }
-            else if (archivo === 'excel') {
-              this.exportToExcelAlimentacion(form);
-              this.LimpiarFechas();
-            }
-          });
+          // 6. Método de búsqueda de registros de servicios extras 
+          this.ObtenerExtrasConsumidos(fechas, archivo, form);
         }, error => {
-          this.restA.ObtenerExtrasConsumidos(fechas).subscribe(extra => {
-            this.extras = extra;
-            console.log('datos timbres', this.planificados, this.solicitados, this.extras);
-            if (archivo === 'pdf') {
-              this.generarPdf('open');
-              this.LimpiarFechas();
-            }
-            else if (archivo === 'excel') {
-              this.exportToExcelAlimentacion(form);
-              this.LimpiarFechas();
-            }
-          }, error => {
-            this.toastr.info('No existen registros en el periodo indicado.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
-              timeOut: 10000,
-            }).onTap.subscribe(obj => {
-
-              this.generarPdf('open');
-              this.LimpiarFechas();
-
-            });
-          });
+          // 7. Método de búsqueda de registros de servicios extras 
+          this.ObtenerExtrasConsumidos(fechas, archivo, form);
         });
       });
     }
@@ -227,6 +192,60 @@ export class AlimentosGeneralComponent implements OnInit {
       this.toastr.info('La fecha de inicio de Periodo no puede ser posterior a la fecha de fin de Periodo.', 'VERIFICAR', {
         timeOut: 6000,
       });
+    }
+  }
+
+  // Método de búsqueda de registros de servicios extras
+  ObtenerExtrasConsumidos(fecha, archivo, form) {
+    // 1. Búsqueda de servicios extras planificados
+    this.restA.ObtenerExtrasPlanConsumidos(fecha).subscribe(plan => {
+      this.extras = plan;
+      console.log('comidas 1', this.extras);
+      // 2. Búsqueda de servicios extras solicitados
+      this.restA.ObtenerExtrasSolConsumidos(fecha).subscribe(sol => {
+        this.extras = this.extras.concat(sol);
+        console.log('comidas 2', this.extras);
+        // Llamado a método de impresión de archivos
+        this.ImprimirArchivo(archivo, form);
+      }, error => {
+        // Llamado a método de impresión de archivos
+        this.ImprimirArchivo(archivo, form);
+      });
+    }, error => {
+      // 3. Búsqueda de servicios extras solicitados
+      this.restA.ObtenerExtrasSolConsumidos(fecha).subscribe(sol2 => {
+        this.extras = sol2;
+        console.log('comidas 3', this.extras);
+        // Llamado a método de impresión de archivos
+        this.ImprimirArchivo(archivo, form);
+      }, error => {
+        // Revisamos si todos los datos son vacios
+        if (this.planificados.length === 0 && this.solicitados.length === 0 && this.extras.length === 0) {
+          // Mensaje indicando que no existen registros
+          this.toastr.info('No existen registros en el periodo indicado.', 'Dar click aquí, para obtener reporte, en el que se indica que no existen registros.', {
+            timeOut: 10000,
+          }).onTap.subscribe(obj => {
+            // Llamado a método de impresión de archivo sin registros
+            this.generarPdf('open');
+            this.LimpiarFechas();
+          });
+        }
+        else {
+          // Llamado a método de impresión de archivos
+          this.ImprimirArchivo(archivo, form);
+        }
+      });
+    });
+  }
+
+  ImprimirArchivo(archivo: string, form) {
+    if (archivo === 'pdf') {
+      this.generarPdf('open');
+      this.LimpiarFechas();
+    }
+    else if (archivo === 'excel') {
+      this.exportToExcelAlimentacion(form);
+      this.LimpiarFechas();
     }
   }
 
@@ -291,17 +310,7 @@ export class AlimentosGeneralComponent implements OnInit {
    * ****************************************************************************************************/
 
   generarPdf(action = 'open') {
-    if (this.planificados.length != 0 && this.solicitados.length != 0 && this.extras.length != 0) {
-      const documentDefinition = this.getDocumentDefinicion();
-      switch (action) {
-        case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-        case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-        case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
-        default: pdfMake.createPdf(documentDefinition).open(); break;
-      }
-    }
-    else {
+    if (this.planificados.length === 0 && this.solicitados.length === 0 && this.extras.length === 0) {
       const documentDefinition_ = this.GenerarSinRegstros();
       switch (action) {
         case 'open': pdfMake.createPdf(documentDefinition_).open(); break;
@@ -309,6 +318,16 @@ export class AlimentosGeneralComponent implements OnInit {
         case 'download': pdfMake.createPdf(documentDefinition_).download(); break;
 
         default: pdfMake.createPdf(documentDefinition_).open(); break;
+      }
+    }
+    else {
+      const documentDefinition = this.getDocumentDefinicion();
+      switch (action) {
+        case 'open': pdfMake.createPdf(documentDefinition).open(); break;
+        case 'print': pdfMake.createPdf(documentDefinition).print(); break;
+        case 'download': pdfMake.createPdf(documentDefinition).download(); break;
+
+        default: pdfMake.createPdf(documentDefinition).open(); break;
       }
     }
   }
@@ -622,12 +641,14 @@ export class AlimentosGeneralComponent implements OnInit {
         COSTO_TOTAL: obj.total,
       }
     }));
-    const header = Object.keys(this.planificados[0]); // columns name
-    var wscols = [];
-    for (var i = 0; i < header.length; i++) {  // columns length added
-      wscols.push({ wpx: 110 })
+    if (this.planificados.length != 0) {
+      const header = Object.keys(this.planificados[0]); // columns name
+      var wscols = [];
+      for (var i = 0; i < header.length; i++) {  // columns length added
+        wscols.push({ wpx: 110 })
+      }
+      wsp["!cols"] = wscols;
     }
-    wsp["!cols"] = wscols;
 
     var i = 0;
     const wss: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.solicitados.map(obj => {
@@ -642,13 +663,15 @@ export class AlimentosGeneralComponent implements OnInit {
         COSTO_TOTAL: obj.total,
       }
     }));
-    const header2 = Object.keys(this.solicitados[0]); // columns name
-    var wscols2 = [];
-    for (var i = 0; i < header2.length; i++) {  // columns length added
-      wscols2.push({ wpx: 110 })
+    if (this.solicitados.length != 0) {
+      const header2 = Object.keys(this.solicitados[0]); // columns name
+      var wscols2 = [];
+      for (var i = 0; i < header2.length; i++) {  // columns length added
+        wscols2.push({ wpx: 110 })
+      }
+      wss["!cols"] = wscols2;
     }
-    wss["!cols"] = wscols2;
-   
+
     var k = 0;
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.extras.map(obj => {
       return {
@@ -662,17 +685,25 @@ export class AlimentosGeneralComponent implements OnInit {
         COSTO_TOTAL: obj.total,
       }
     }));
-    const header3 = Object.keys(this.extras[0]); // columns name
-    var wscols3 = [];
-    for (var i = 0; i < header3.length; i++) {  // columns length added
-      wscols3.push({ wpx: 110 })
+    if (this.extras.length != 0) {
+      const header3 = Object.keys(this.extras[0]); // columns name
+      var wscols3 = [];
+      for (var i = 0; i < header3.length; i++) {  // columns length added
+        wscols3.push({ wpx: 110 })
+      }
+      wse["!cols"] = wscols3;
     }
-    wse["!cols"] = wscols3;
-    
+
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsp, 'Alimentos Planificados');
-    xlsx.utils.book_append_sheet(wb, wss, 'Alimentos Solicitados');
-    xlsx.utils.book_append_sheet(wb, wse, 'Alimentos Extras');
+    if (this.planificados.length != 0) {
+      xlsx.utils.book_append_sheet(wb, wsp, 'Alimentos Planificados');
+    }
+    if (this.solicitados.length != 0) {
+      xlsx.utils.book_append_sheet(wb, wss, 'Alimentos Solicitados');
+    }
+    if (this.extras.length != 0) {
+      xlsx.utils.book_append_sheet(wb, wse, 'Alimentos Extras');
+    }
     xlsx.writeFile(wb, "Alimentacion - " + String(moment(form.inicioForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + ' - ' + String(moment(form.finalForm, "YYYY/MM/DD").format("DD/MM/YYYY")) + '.xlsx');
   }
 

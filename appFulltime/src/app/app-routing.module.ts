@@ -65,6 +65,8 @@ import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planifica
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
 import { ListaPlanificacionesComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-planificaciones/lista-planificaciones.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
+import { ListarTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/listar-tipo-accion/listar-tipo-accion.component';
+import { VerTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/ver-tipo-accion/ver-tipo-accion.component';
 
 // Seguridad
 import { AuthGuard } from "./guards/auth.guard";
@@ -192,7 +194,7 @@ const routes: Routes = [
   { path: 'listadoPlanificaciones', component: ListaPlanificacionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'timbres-admin', component: TimbreAdminComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'alimentacion', component: PlanComidasComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  
+
   // Módulo de alimentación
   { path: 'tickets', component: TicketsComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
@@ -205,7 +207,7 @@ const routes: Routes = [
   { path: 'macro/retrasos', component: RetrasosMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/tiempo-jornada-vs-hora-ext', component: TiempoJornadaVsHoraExtMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'macro/salidas-antes', component: SalidasAntesMacroComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-  
+
   // Graficas Empleado
   { path: 'macro/user/atrasos', component: MetricaAtrasosComponent, canActivate: [AuthGuard], data: { roles: 2 } },
   { path: 'macro/user/horas-extras', component: MetricaHorasExtrasComponent, canActivate: [AuthGuard], data: { roles: 2 } },
@@ -265,6 +267,10 @@ const routes: Routes = [
 
   // Funcionalidades
   { path: 'funcionalidades', component: FuncionesComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+
+  // Acciones de Personal
+  { path: 'acciones-personal', component: ListarTipoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'vistaTipoAccion/:id', component: VerTipoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
 ];
 

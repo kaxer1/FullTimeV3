@@ -63,6 +63,7 @@ import GRAFICAS_RUTAS from './rutas/graficas/graficasRutas';
 import ALIMENTACION_RUTAS from './rutas/reportes/alimentacionRutas';
 import REPORTES_A_RUTAS from './rutas/reportes/reportesAsistenciaRutas';
 import FUNCIONES_RUTAS from './rutas/funciones/funcionRutas';
+import ACCION_PERSONAL_RUTAS from './rutas/accionPersonal/accionPersonalRutas';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -191,6 +192,9 @@ class Servidor {
 
         // FUNCIONES
         this.app.use('/administracion', FUNCIONES_RUTAS);
+
+        // ACCIONES DE PERSONAL
+        this.app.use('/accionPersonal', ACCION_PERSONAL_RUTAS);
 
     }
 

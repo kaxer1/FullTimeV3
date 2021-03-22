@@ -19,7 +19,7 @@ const database_1 = __importDefault(require("../../database"));
 class EmpresaControlador {
     ListarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa ORDER BY nombre ASC');
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa ORDER BY nombre ASC');
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -31,7 +31,7 @@ class EmpresaControlador {
     ListarUnaEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { nombre } = req.params;
-            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s FROM cg_empresa WHERE nombre = $1', [nombre]);
+            const EMPRESA = yield database_1.default.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa WHERE nombre = $1', [nombre]);
             if (EMPRESA.rowCount > 0) {
                 return res.jsonp(EMPRESA.rows);
             }
@@ -49,8 +49,11 @@ class EmpresaControlador {
     }
     ActualizarEmpresa(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id } = req.body;
-            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, cambios = $10 WHERE id = $11', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, id]);
+            const { nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento, dias_cambio, cambios, num_partida, id } = req.body;
+            yield database_1.default.query('UPDATE cg_empresa SET nombre = $1, ruc = $2, direccion = $3, telefono = $4, ' +
+                'correo = $5, tipo_empresa = $6, representante = $7, establecimiento = $8 , dias_cambio = $9, ' +
+                'cambios = $10, num_partida = $11 WHERE id = $12', [nombre, ruc, direccion, telefono, correo, tipo_empresa, representante, establecimiento,
+                dias_cambio, cambios, num_partida, id]);
             res.jsonp({ message: 'Empresa actualizada exitosamente' });
         });
     }

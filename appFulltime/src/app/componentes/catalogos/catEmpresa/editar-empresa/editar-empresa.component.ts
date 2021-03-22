@@ -39,6 +39,7 @@ export class EditarEmpresaComponent implements OnInit {
   otroE = new FormControl('', [Validators.minLength(3)]);
   dias_cambioF = new FormControl('');
   cambiosF = new FormControl('');
+  numeroF = new FormControl('');
 
   // Asignación de validaciones a inputs del formulario
   public RegistroEmpresaForm = new FormGroup({
@@ -53,7 +54,8 @@ export class EditarEmpresaComponent implements OnInit {
     establecimientoForm: this.establecimientoF,
     otroEForm: this.otroE,
     dias_cambioForm: this.dias_cambioF,
-    cambiosForm: this.cambiosF
+    cambiosForm: this.cambiosF,
+    numeroForm: this.numeroF
   });
 
   /**
@@ -183,7 +185,8 @@ export class EditarEmpresaComponent implements OnInit {
       tipoForm: this.data.tipo_empresa,
       representanteForm: this.data.representante,
       establecimientoForm: this.data.establecimiento,
-      cambiosForm: this.data.cambios
+      cambiosForm: this.data.cambios,
+      numeroForm: this.data.num_partida
     })
   }
 
@@ -223,7 +226,8 @@ export class EditarEmpresaComponent implements OnInit {
       representante: form.representanteForm,
       establecimiento: form.establecimientoForm,
       dias_cambio: form.dias_cambioForm,
-      cambios: form.cambiosForm
+      cambios: form.cambiosForm,
+      num_partida: form.numeroForm
     };
     this.VerificarCambios(form, datosEmpresa);
   }
@@ -374,13 +378,13 @@ export class EditarEmpresaComponent implements OnInit {
 
   CerrarVentanaRegistroEmpresa() {
     this.LimpiarCampos();
-    this.dialogRef.close({actualizar: true});
+    this.dialogRef.close({ actualizar: true });
     this.valor = '';
   }
 
   Salir() {
     this.LimpiarCampos();
-    this.dialogRef.close({actualizar: false});
+    this.dialogRef.close({ actualizar: false });
     this.valor = '';
   }
 

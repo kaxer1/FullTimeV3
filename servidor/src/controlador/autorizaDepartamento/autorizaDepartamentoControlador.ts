@@ -53,8 +53,6 @@ class AutorizaDepartamentoControlador {
         res.jsonp({ message: 'Registro eliminado' });
     }
 
-
-
 }
 
 export const AUTORIZA_DEPARTAMENTO_CONTROLADOR = new AutorizaDepartamentoControlador();

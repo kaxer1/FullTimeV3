@@ -343,6 +343,10 @@
                                         <label *ngIf="ce.fec_salida != null">{{ce.fec_salida.split("T")[0]}}</label>
                                     </div>
                                     <div class="caja3 d-flex justify-content-start">
+                                        <label id="datosF">Modalidad Trabajo:</label>
+                                        <label>{{ce.nombre_contrato}}</label>
+                                    </div>
+                                    <div class="caja3 d-flex justify-content-start">
                                         <label id="datosF">Control de Asistencia:</label>
                                         <label *ngIf="ce.asis_controla == true">Si</label>
                                         <label *ngIf="ce.asis_controla == false">No</label>
@@ -966,7 +970,7 @@
                 <div *ngFor="let pc of planComidas | paginate:tamanio_pagina:numero_pagina" style="padding-top: 15px;">
                     <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
                         <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Fecha de Solicitud:</label>
+                            <label id="datosF">Fecha Registro:</label>
                             <label>{{pc.fecha.split("T")[0]}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
@@ -983,7 +987,7 @@
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Fecha Planificación:</label>
-                            <label>{{pc.fec_solicita.split("T")[0]}}</label>
+                            <label>{{pc.fec_comida.split("T")[0]}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Hora Fin:</label>
@@ -994,10 +998,6 @@
                             <label>{{pc.observacion}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Descripción:</label>
-                            <label>{{pc.descripcion}}</label>
-                        </div>
-                        <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Servicio:</label>
                             <label>{{pc.nombre_servicio}}</label>
                         </div>
@@ -1006,10 +1006,7 @@
                             <label>{{pc.nombre_menu}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
-                            
-                        </div>
-                        <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Porción:</label>
+                            <label id="datosF">Tipo:</label>
                             <label *ngIf="pc.extra === false">Normal</label>
                             <label *ngIf="pc.extra === true">Extra</label>
                         </div>
@@ -1220,7 +1217,40 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col" style="text-align: center;">
-                                        <h5>Autoridad</h5>
+                                        <h5>Administrar Módulo Alimentación</h5>
+                                    </div>
+                                    <div class="col" style="text-align: right;">
+                                        <button type="submit" class="btn btn-outline-light btn-sm"
+                                            (click)="AbrirVentanaAdminComida()">Editar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-card-content>
+                            <div class="container" *ngFor="let ac of administra_comida" style="padding-top: 15px;">
+                                <div class="d-flex flex-wrap justify-content-between" style="margin-bottom: 10px;">
+                                    <div class="d-flex justify-content-start">
+                                        <label id="datosF">Administra Módulo de Alimentación:</label>
+                                        <label *ngIf="ac.admin_comida == true">Sí</label>
+                                        <label *ngIf="ac.admin_comida == false">No</label>
+                                        <label *ngIf="ac.admin_comida == null">No</label>
+                                    </div>
+                                </div>
+                                <mat-divider></mat-divider>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="barraTitulo">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col" style="text-align: center;">
+                                        <h5>Autorización Departamentos</h5>
                                     </div>
                                     <div class="col" style="text-align: right;">
                                         <button type="submit" class="btn btn-outline-light btn-sm"

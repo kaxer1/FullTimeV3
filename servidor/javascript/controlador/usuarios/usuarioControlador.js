@@ -106,6 +106,14 @@ class UsuarioControlador {
             res.jsonp({ message: 'Frase exitosa' });
         });
     }
+    // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
+    RegistrarAdminComida(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { admin_comida, id_empleado } = req.body;
+            yield database_1.default.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
+            res.jsonp({ message: 'Registro exitoso' });
+        });
+    }
     //ACCESOS AL SISTEMA
     AuditarAcceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

@@ -55,4 +55,9 @@ export class UsuarioService {
     return this.http.put(`${this.API_URL}/usuarios/frase`, data);
   }
 
+  /** ADMINISTRACIÓN MÓDULO DE ALIMENTACIÓN */
+  RegistrarAdminComida(data: any) {
+    return this.http.put(`${this.API_URL}/usuarios/admin/comida`, data);
+  }
+
 }

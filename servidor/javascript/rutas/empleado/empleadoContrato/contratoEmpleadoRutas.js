@@ -29,6 +29,10 @@ class DepartamentoRutas {
         this.router.put('/editar/editarDocumento/:id', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.EditarDocumento);
         this.router.post('/buscarFecha', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.EncontrarFechaContrato);
         this.router.post('/buscarFecha/contrato', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.EncontrarFechaContratoId);
+        /** MÉTODOS PARA SER USADOS EN LA TABLA MODAL_TRABAJO O TIPO DE CONTRATOS */
+        this.router.post('/modalidad/trabajo', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.CrearTipoContrato);
+        this.router.get('/modalidad/trabajo', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.ListarTiposContratos);
+        this.router.get('/modalidad/trabajo/ultimo', verificarToken_1.TokenValidation, contratoEmpleadoControlador_1.default.ListarUltimoTipoContrato);
     }
 }
 const CONTRATO_EMPLEADO_RUTAS = new DepartamentoRutas();
