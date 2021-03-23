@@ -146,7 +146,7 @@ export class SolicitaComidaComponent implements OnInit {
       fecha: form.fechaForm,
       id_comida: form.platosForm,
       observacion: form.observacionForm,
-      fec_solicita: form.fechaPlanificacionForm,
+      fec_comida: form.fechaPlanificacionForm,
       hora_inicio: form.horaInicioForm,
       hora_fin: form.horaFinForm,
       extra: form.extraForm
