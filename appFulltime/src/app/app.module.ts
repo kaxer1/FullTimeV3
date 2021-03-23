@@ -307,7 +307,6 @@ import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timb
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
 import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
 import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
-import { SeguridadComponent } from './componentes/seguridad/seguridad.component';
 import { InasistenciaMacroComponent } from './componentes/graficas-macro/inasistencia-macro/inasistencia-macro.component';
 import { AsistenciaMacroComponent } from './componentes/graficas-macro/asistencia-macro/asistencia-macro.component';
 import { HoraExtraMacroComponent } from './componentes/graficas-macro/hora-extra-macro/hora-extra-macro.component';
