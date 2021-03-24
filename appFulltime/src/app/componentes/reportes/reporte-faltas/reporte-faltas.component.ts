@@ -1,12 +1,9 @@
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
-import { IReporteFaltas, ITableEmpleados } from 'src/app/model/reportes.model';
+import { FormCriteriosBusqueda, IReporteFaltas, ITableEmpleados } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -14,37 +11,33 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
 @Component({
   selector: 'app-reporte-faltas',
   templateUrl: './reporte-faltas.component.html',
-  styleUrls: ['./reporte-faltas.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  styleUrls: ['./reporte-faltas.component.css']
 })
 export class ReporteFaltasComponent implements OnInit {
 
-  fec_inicio_mes = new FormControl('', Validators.required);
-  fec_final_mes = new FormControl('', Validators.required);
-  
-  public fechasForm = new FormGroup({
-    fec_inicio: this.fec_inicio_mes,
-    fec_final: this.fec_final_mes
-  })
+  get rangoFechas () {
+    return this.reporteService.rangoFechas;
+  }
+
+  get opcion () {
+    return this.reporteService.opcion;
+  }
+
+  get bool() {
+    return this.reporteService.criteriosBusqueda;
+  }
   
   respuesta: any [];
   sucursales: any = [];
   departamentos: any = [];
   empleados: any = [];
   tabular: any = [];
-  bool_suc: boolean = false;
-  bool_dep: boolean = false;
-  bool_emp: boolean = false;
-  bool_tab: boolean = false;
+  
   data_pdf: any = [];
 
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
@@ -57,12 +50,6 @@ export class ReporteFaltasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
-  codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre_emp = new FormControl('', [Validators.minLength(2)]);
-  nombre_dep = new FormControl('', [Validators.minLength(2)]);
-  nombre_suc = new FormControl('', [Validators.minLength(2)]);
-  nombre_tab = new FormControl('', [Validators.minLength(2)]);
 
   filtroCodigo: number;
   filtroCedula: '';
@@ -73,6 +60,7 @@ export class ReporteFaltasComponent implements OnInit {
   
   constructor(
     private toastr: ToastrService,
+    private reporteService: ReportesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -130,92 +118,75 @@ export class ReporteFaltasComponent implements OnInit {
     })
   }
 
-  opcion: number;
-  BuscarPorTipo(e: MatRadioChange) {
-    this.opcion = parseInt(e.value);
-    switch (e.value) {
-      case '1':
-        this.bool_suc = true; this.bool_dep = false; this.bool_emp = false; this.bool_tab = false;
-      break;
-      case '2':
-        this.bool_suc = false; this.bool_dep = true; this.bool_emp = false; this.bool_tab = false;
-      break;
-      case '3':
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = true; this.bool_tab = false;
-      break;
-      case '4':
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false; this.bool_tab = true;
-      break;
-      default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false; this.bool_tab = false;
-      break;
-    }
-  }
+  
 
-  /**
-   * Funciones para validar los campos y las fechas de rangos del reporte
-   */
+  // /**
+  //  * Funciones para validar los campos y las fechas de rangos del reporte
+  //  */
 
-  f_inicio_req: string = '';
-  f_final_req: string = '';
-  habilitar: boolean = false;
-  estilo: any = { 'visibility': 'hidden' };
-  ValidarRangofechas(form) {
-    var f_i = new Date(form.fec_inicio)
-    var f_f = new Date(form.fec_final)
+  // f_inicio_req: string = '';
+  // f_final_req: string = '';
+  // habilitar: boolean = false;
+  // estilo: any = { 'visibility': 'hidden' };
+  // ValidarRangofechas(form) {
+  //   var f_i = new Date(form.fec_inicio)
+  //   var f_f = new Date(form.fec_final)
 
-    if (f_i < f_f) {
-      this.toastr.success('Fechas validas','', {
-        timeOut: 6000,
-      });
-      this.f_inicio_req = f_i.toJSON().split('T')[0];
-      this.f_final_req = f_f.toJSON().split('T')[0];
-      this.habilitar = true;
-      this.estilo = { 'visibility': 'visible' };
-    } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    }
-  }
+  //   if (f_i < f_f) {
+  //     this.toastr.success('Fechas validas','', {
+  //       timeOut: 6000,
+  //     });
+  //     this.f_inicio_req = f_i.toJSON().split('T')[0];
+  //     this.f_final_req = f_f.toJSON().split('T')[0];
+  //     this.habilitar = true;
+  //     this.estilo = { 'visibility': 'visible' };
+  //   } else if (f_i > f_f) {
+  //     this.toastr.info('Fecha final es menor a la fecha inicial','', {
+  //       timeOut: 6000,
+  //     });
+  //     this.fechasForm.reset();
+  //   } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
+  //     this.toastr.info('Fecha inicial es igual a la fecha final','', {
+  //       timeOut: 6000,
+  //     });
+  //     this.fechasForm.reset();
+  //   }
+  // }
 
   /**
    * VALIDACIONES REPORT
    */
   validacionReporte(action) {
+    let formBoolean: FormCriteriosBusqueda = {
+      bool_suc: false, 
+      bool_dep: false, 
+      bool_emp: false, 
+      bool_tab: false, 
+      bool_inc: false
+    }
 
-    if (this.f_inicio_req === '' || this.f_final_req === '') return this.toastr.error('Primero valide fechas de busqueda') 
-    if (this.bool_suc === false && this.bool_dep === false && this.bool_emp === false && this.bool_tab === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
+    if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda') 
+    if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false && this.bool.bool_tab === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
 
     switch (this.opcion) {
       case 1:
         if (this.selectionSuc.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione sucursal')
-        this.bool_suc = true; this.bool_dep = false; this.bool_emp = false; this.bool_tab = false;
         this.ModelarSucursal(action);
       break;
       case 2:
         if (this.selectionDep.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione departamentos')
-        this.bool_suc = false; this.bool_dep = true; this.bool_emp = false; this.bool_tab = false;
         this.ModelarDepartamento(action);
       break;
       case 3:
         if (this.selectionEmp.selected.length === 0) return this.toastr.error('No a seleccionado ninguno', 'Seleccione empleados')
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = true; this.bool_tab = false;
         this.ModelarEmpleados(action);
       break;
       case 4:
         if (this.selectionTab.selected.length === 0) return this.toastr.error('Seleccione empleados a tabular', 'Seleccione empleados')
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false; this.bool_tab = true;
         this.ModelarTabulacion(action);
       break;
       default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false; this.bool_tab = false;
+        this.reporteService.GuardarFormCriteriosBusqueda(formBoolean)
         break;
     }
   }
@@ -233,7 +204,7 @@ export class ReporteFaltasComponent implements OnInit {
 
     console.log('SUCURSAL', suc);
     this.data_pdf = []
-    this.R_asistencias.ReporteFaltasMultiples(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteFaltasMultiples(suc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -262,7 +233,7 @@ export class ReporteFaltasComponent implements OnInit {
     });
     console.log('DEPARTAMENTOS', dep);
     this.data_pdf = []
-    this.R_asistencias.ReporteFaltasMultiples(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteFaltasMultiples(dep, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -300,7 +271,7 @@ export class ReporteFaltasComponent implements OnInit {
     
     console.log('EMPLEADOS', emp);
     this.data_pdf = []
-    this.R_asistencias.ReporteFaltasMultiples(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteFaltasMultiples(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -338,7 +309,7 @@ export class ReporteFaltasComponent implements OnInit {
     
     console.log('TABULACION', emp);
     this.data_pdf = []
-    this.R_asistencias.ReporteFaltasMultiplesTabulado(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteFaltasMultiplesTabulado(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -381,7 +352,7 @@ export class ReporteFaltasComponent implements OnInit {
 
   generarPdf(action) {
     let documentDefinition; 
-    if (this.bool_tab === true) {
+    if (this.bool.bool_tab === true) {
       documentDefinition = this.getDocumentDefinicionLandscape();
     } else {
       documentDefinition = this.getDocumentDefinicionPortrait();
@@ -431,7 +402,7 @@ export class ReporteFaltasComponent implements OnInit {
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -35, 0, 10] },
         { text: 'Reporte de Faltas', bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 7] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center' },
+        { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 12, alignment: 'center' },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -484,7 +455,7 @@ export class ReporteFaltasComponent implements OnInit {
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -35, 0, 10] },
         { text: 'Reporte Tabulado de Faltas', bold: true, fontSize: 12, alignment: 'center', margin: [0, 0, 0, 7] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center'  },
+        { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " + this.rangoFechas.fec_final, bold: true, fontSize: 12, alignment: 'center'  },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -504,7 +475,7 @@ export class ReporteFaltasComponent implements OnInit {
 
   impresionDatosPDF(data: any []): Array<any> {
 
-    if (this.bool_tab === true) {
+    if (this.bool.bool_tab === true) {
       return this.TabulacionPDF(data)
     } else {
       return this.EstandarPDFsinTabulacion(data)
@@ -574,7 +545,7 @@ export class ReporteFaltasComponent implements OnInit {
 
     data.forEach((obj: IReporteFaltas) => {
       
-      if (this.bool_suc === true || this.bool_emp === true) {
+      if (this.bool.bool_suc === true || this.bool.bool_emp === true) {
         let arr_suc = obj.departamentos.map(o => { return o.empleado.length});
         let suma_suc = this.SumarRegistros(arr_suc);
         
@@ -669,13 +640,13 @@ export class ReporteFaltasComponent implements OnInit {
           })
         })
 
-        if (this.bool_suc === true) {
+        if (this.bool.bool_suc === true) {
           n.push({ text: 'Total Faltas Sucursal: ' + this.SumarRegistros(arr_dep_subtotal), bold: true, fontSize: 15, alignment: 'center', margin: [0, 10, 0, 10]})
         }
 
       }
 
-      if (this.bool_dep === true) {
+      if (this.bool.bool_dep === true) {
         
         obj.departamentos.forEach(obj1 => {
           arr_dep_subtotal = [];
@@ -966,69 +937,5 @@ export class ReporteFaltasComponent implements OnInit {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
-
-  limpiarCamposRango() {
-    this.fechasForm.reset();
-    this.habilitar = false;
-    this.estilo = { 'visibility': 'hidden' };
-  }
-
-  /**
-   * METODOS PARA CONTROLAR INGRESO DE LETRAS
-   */
-
-  IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
-  }
-
-  IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
-  }
-
-  limpiarCampos() {
-    if (this.bool_emp) {
-      this.codigo.reset();
-      this.cedula.reset();
-      this.nombre_emp.reset();
-    }
-    if (this.bool_dep) {
-      this.nombre_dep.reset();
-    }
-    if (this.bool_suc) {
-      this.nombre_suc.reset();
-    }
-  }
+  
 }

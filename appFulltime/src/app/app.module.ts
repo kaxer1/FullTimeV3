@@ -328,10 +328,10 @@ import { MetricaAtrasosComponent } from './componentes/rolEmpleado/grafica-empl-
 import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-permisos/metrica-permisos.component';
 import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
 import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
-import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
+// import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
 import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
 import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
-import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
+// import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
@@ -339,6 +339,11 @@ import { FuncionesComponent } from './componentes/funciones/funciones/funciones.
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
 import { AccionesTimbresComponent } from './componentes/settings/acciones-timbres/acciones-timbres.component';
+
+
+
+
+import { ReportesModule } from './componentes/reportes/reportes.module';
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 
@@ -593,10 +598,8 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MetricaPermisosComponent,
     ReporteAtrasosMultiplesComponent,
     ReporteEmpleadosInactivosComponent,
-    ReporteFaltasComponent,
     ReporteHorasTrabajadasComponent,
     ReportePuntualidadComponent,
-    ReporteTimbresMultiplesComponent,
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
@@ -627,8 +630,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     MatSelectModule,
     MatCardModule,
     MatSliderModule,
-    MatCheckboxModule,
-    MatRadioModule,
     MatBadgeModule,
     MatSlideToggleModule,
     MatCheckboxModule,
@@ -652,7 +653,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ScrollingModule,
     JwPaginationModule,
     MatTreeModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    
+    ReportesModule
   ],
   providers: [
     AuthGuard,
