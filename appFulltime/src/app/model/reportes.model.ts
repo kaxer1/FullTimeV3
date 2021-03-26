@@ -294,3 +294,25 @@ interface tipo_hora {
     hora: string
 }
  
+
+/**
+ * INTERFACES DE AYUDA
+ */
+
+export interface rango {
+    fec_inico: string,
+    fec_final: string
+}
+  
+export interface checkOptions {
+    opcion: number, 
+    valor: string
+}
+
+export interface FormCriteriosBusqueda {
+    bool_suc: boolean;
+    bool_dep: boolean;
+    bool_emp: boolean;
+    bool_tab?: boolean;
+    bool_inc?: boolean;
+}
