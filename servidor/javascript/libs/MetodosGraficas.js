@@ -409,7 +409,7 @@ exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
                     data: [
                         { value: modelarPie.a_justifi.length, name: 'Ausencia justificada' },
                         { value: modelarPie.a_no_justi.length, name: 'Ausencia no justificada' },
-                        { value: modelarPie.presente.length, name: 'Presente', selected: true }
+                        { value: modelarPie.presente.length, name: 'Presencia', selected: true }
                     ],
                     emphasis: {
                         itemStyle: {
