@@ -86,7 +86,7 @@ export class ReportesService {
   ];
 
   checkOptions(num_items: number): checkOptions[] {
-    return [...this._check.splice(0,num_items)];
+    return [...this._check.slice(0,num_items)];
   }
 
   /**
@@ -121,7 +121,89 @@ export class ReportesService {
   get criteriosBusqueda() {
     return this._formCriteriosBusqueda
   }
+
+  DefaultFormCriterios() {
+    this._formCriteriosBusqueda.bool_suc = false;
+    this._formCriteriosBusqueda.bool_dep = false; 
+    this._formCriteriosBusqueda.bool_emp = false;
+    this._formCriteriosBusqueda.bool_tab = false;
+    this._formCriteriosBusqueda.bool_inc = false;
+  }
    
+  /********************************
+   * 
+   * Get y Set filtros de los formularios componentes de reportes multiples
+   * 
+   ********************************/
+  // Filtro formulario nombre de sucursal
+  private _filtroNombreSuc: string = '';
+
+  get filtroNombreSuc() { return this._filtroNombreSuc; }
+  setFiltroNombreSuc(arr) { this._filtroNombreSuc = arr }
+
+  // Filtro formulario nombre de departamento
+  private _filtroNombreDep: string = '';
+
+  get filtroNombreDep() { return this._filtroNombreDep; }
+  setFiltroNombreDep(arr) { this._filtroNombreDep = arr }
+
+  // Filtro formulario del empleado 
+  private _filtroCodigo: number = null;
+  private _filtroCedula: string = '';
+  private _filtroNombreEmp: string = '';
+
+  get filtroCodigo() { return this._filtroCodigo; }
+  setFiltroCodigo(arr) { this._filtroCodigo = arr; }
+
+  get filtroCedula() { return this._filtroCedula; }
+  setFiltroCedula(arr) { this._filtroCedula = arr; }
+
+  get filtroNombreEmp() { return this._filtroNombreEmp; }
+  setFiltroNombreEmp(arr) { this._filtroNombreEmp = arr; }
+
+  // Filtro formulario de tabulacion
+  private _filtroCodigo_tab: number = null;
+  private _filtroCedula_tab: string = '';
+  private _filtroNombreTab: string = ''; 
+
+  get filtroCodigo_tab() { return this._filtroCodigo_tab; }
+  setFiltroCodigo_tab(arr) { this._filtroCodigo_tab = arr; }
+
+  get filtroCedula_tab() { return this._filtroCedula_tab; }
+  setFiltroCedula_tab(arr) { this._filtroCedula_tab = arr; }
+
+  get filtroNombreTab() { return this._filtroNombreTab; }
+  setFiltroNombreTab(arr) { this._filtroNombreTab = arr; }
+
+  // Filtro formulario de incompletos
+  private _filtroCodigo_inc: number = null;
+  private _filtroCedula_inc: string = '';
+  private _filtroNombreInc: string = '';
+
+  get filtroCodigo_inc() { return this._filtroCodigo_inc; }
+  setFiltroCodigo_inc(arr) { this._filtroCodigo_inc = arr; }
+
+  get filtroCedula_inc() { return this._filtroCedula_inc; }
+  setFiltroCedula_inc(arr) { this._filtroCedula_inc = arr; }
+
+  get filtroNombreInc() { return this._filtroNombreInc; }
+  setFiltroNombreInc(arr) { this._filtroNombreInc = arr; }
+
+
+  DefaultValoresFiltros() {
+    this._filtroNombreSuc = '';
+    this._filtroNombreDep = '';
+    this._filtroNombreEmp = '';
+    this._filtroNombreTab = '';
+    this._filtroNombreInc = '';
+    this._filtroCedula = '';
+    this._filtroCedula_tab = '';
+    this._filtroCedula_inc = '';
+    this._filtroCodigo = null;
+    this._filtroCodigo_tab = null;
+    this._filtroCodigo_inc = null;
+  }
+ 
 
 
   /**

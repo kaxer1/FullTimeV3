@@ -60,7 +60,7 @@ export class EmpresaService {
    */
 
   LogoEmpresaImagenBase64(id_empresa: string) {
-    return this.http.get<any>(`${environment.url}/empresas/logo/codificado/${parseInt(id_empresa)}`);
+    return this.http.get<any>(`${environment.url}/empresas/logo/codificado/${parseInt(id_empresa)}`)
   }
 
   EditarLogoEmpresa(id_empresa: number, formData) {

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.conteoPermisos = void 0;
 const database_1 = __importDefault(require("../database"));
 function sumaDias(fecha, dias) {
     fecha.setDate(fecha.getDate() + dias);

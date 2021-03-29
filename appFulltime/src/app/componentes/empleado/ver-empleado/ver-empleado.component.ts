@@ -149,7 +149,7 @@ export class VerEmpleadoComponent implements OnInit {
     private scriptService: ScriptService
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
-    var cadena = this.router.url.split('#')[0];
+    var cadena = this.router.url.split('#')[0];    
     this.ruta = 'http://localhost:4200' + cadena + '#editar';
     this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
     this.rutaContrato = 'http://localhost:4200' + cadena + '#editarContrato';

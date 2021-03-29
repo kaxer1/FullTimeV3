@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
@@ -8,7 +8,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
   templateUrl: './rango-fechas.component.html',
   styleUrls: ['./rango-fechas.component.css']
 })
-export class RangoFechasComponent implements OnInit {
+export class RangoFechasComponent implements OnInit, OnDestroy {
 
   fec_inicio_mes = new FormControl('', Validators.required);
   fec_final_mes = new FormControl('', Validators.required);
@@ -24,6 +24,10 @@ export class RangoFechasComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.reporteService.guardarRangoFechas('','')
   }
 
    f_inicio_req: string = '';
@@ -57,6 +61,5 @@ export class RangoFechasComponent implements OnInit {
    limpiarCamposRango() {
     this.fechasForm.reset();
     this.habilitar = false;
-    // this.estilo = { 'visibility': 'hidden' };
   }
 }

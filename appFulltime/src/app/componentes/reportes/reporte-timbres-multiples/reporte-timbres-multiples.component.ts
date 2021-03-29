@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
-import { ITableEmpleados, IReporteTimbres, tim_tabulado, IReporteTimbresIncompletos, timbre, FormCriteriosBusqueda} from 'src/app/model/reportes.model';
+import { ITableEmpleados, IReporteTimbres, tim_tabulado, IReporteTimbresIncompletos, timbre} from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -12,14 +12,6 @@ import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 
-const FORM_BOOLEAN: FormCriteriosBusqueda = {
-  bool_suc: false, 
-  bool_dep: false, 
-  bool_emp: false, 
-  bool_tab: false, 
-  bool_inc: false
-}
-
 @Component({
   selector: 'app-reporte-timbres-multiples',
   templateUrl: './reporte-timbres-multiples.component.html',
@@ -27,17 +19,11 @@ const FORM_BOOLEAN: FormCriteriosBusqueda = {
 })
 export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
   
-  get rangoFechas () {
-    return this.reporteService.rangoFechas;
-  }
+  get rangoFechas () { return this.reporteService.rangoFechas };
 
-  get opcion () {
-    return this.reporteService.opcion;
-  }
+  get opcion () { return this.reporteService.opcion };
 
-  get bool() {
-    return this.reporteService.criteriosBusqueda;
-  }
+  get bool() { return this.reporteService.criteriosBusqueda };
 
   respuesta: any [];
   sucursales: any = [];
@@ -75,19 +61,21 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
   numero_pagina_inc: number = 1;
   pageSizeOptions_inc = [5, 10, 20, 50];
 
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombreEmp: '';
-  filtroNombreDep: '';
-  filtroNombreSuc: '';
+  get filtroNombreSuc() { return this.reporteService.filtroNombreSuc }
+  
+  get filtroNombreDep() { return this.reporteService.filtroNombreDep }
 
-  filtroCodigo_tab: number;
-  filtroCedula_tab: '';
-  filtroNombreTab: '';
+  get filtroCodigo() { return this.reporteService.filtroCodigo };
+  get filtroCedula() { return this.reporteService.filtroCedula };
+  get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
 
-  filtroCodigo_inc: number;
-  filtroCedula_inc: '';
-  filtroNombreInc: '';
+  get filtroCodigo_tab() { return this.reporteService.filtroCodigo_tab };
+  get filtroCedula_tab() { return this.reporteService.filtroCedula_tab };
+  get filtroNombreTab() { return this.reporteService.filtroNombreTab };
+  
+  get filtroCodigo_inc() { return this.reporteService.filtroCodigo_inc };
+  get filtroCedula_inc() { return this.reporteService.filtroCedula_inc };
+  get filtroNombreInc() { return this.reporteService.filtroNombreInc };
   
   constructor(
     private toastr: ToastrService,
@@ -145,13 +133,14 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       this.toastr.error(err.error.message)
     })
   }
-
-  
   
   ngOnDestroy() {
-    this.reporteService.GuardarCheckOpcion(0);
-    this.reporteService.guardarRangoFechas('','');
-    this.reporteService.GuardarFormCriteriosBusqueda(FORM_BOOLEAN)
+    this.respuesta = [];
+    this.sucursales = [];
+    this.departamentos = [];
+    this.empleados = [];
+    this.tabulado = [];
+    this.incompletos = [];
   }
 
   /**
@@ -188,7 +177,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       break;
       default:
         this.toastr.error('Algo a pasado', 'Seleccione criterio de busqueda')
-        this.reporteService.GuardarFormCriteriosBusqueda(FORM_BOOLEAN)
+        this.reporteService.DefaultFormCriterios()
         break;
     }
   }
@@ -1114,12 +1103,6 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
       this.numero_pagina_inc = e.pageIndex + 1;
     }
   }
-
-  // limpiarCamposRango() {
-  //   this.fechasForm.reset();
-  //   this.habilitar = false;
-  //   this.estilo = { 'visibility': 'hidden' };
-  // }
 
   /**
    * METODOS PARA CONTROLAR INGRESO DE LETRAS

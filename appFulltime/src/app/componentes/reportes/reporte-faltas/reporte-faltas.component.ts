@@ -1,9 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ToastrService } from 'ngx-toastr';
-import { FormCriteriosBusqueda, IReporteFaltas, ITableEmpleados } from 'src/app/model/reportes.model';
+import { IReporteFaltas, ITableEmpleados } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -18,19 +17,13 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
   templateUrl: './reporte-faltas.component.html',
   styleUrls: ['./reporte-faltas.component.css']
 })
-export class ReporteFaltasComponent implements OnInit {
+export class ReporteFaltasComponent implements OnInit, OnDestroy {
 
-  get rangoFechas () {
-    return this.reporteService.rangoFechas;
-  }
+  get rangoFechas () { return this.reporteService.rangoFechas; }
 
-  get opcion () {
-    return this.reporteService.opcion;
-  }
+  get opcion () { return this.reporteService.opcion; }
 
-  get bool() {
-    return this.reporteService.criteriosBusqueda;
-  }
+  get bool() { return this.reporteService.criteriosBusqueda; }
   
   respuesta: any [];
   sucursales: any = [];
@@ -50,13 +43,17 @@ export class ReporteFaltasComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  get filtroNombreSuc() { return this.reporteService.filtroNombreSuc }
+  
+  get filtroNombreDep() { return this.reporteService.filtroNombreDep }
 
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombreEmp: '';
-  filtroNombreDep: '';
-  filtroNombreSuc: '';
-  filtroNombreTab: '';
+  get filtroCodigo() { return this.reporteService.filtroCodigo };
+  get filtroCedula() { return this.reporteService.filtroCedula };
+  get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
+
+  get filtroCodigo_tab() { return this.reporteService.filtroCodigo_tab };
+  get filtroCedula_tab() { return this.reporteService.filtroCedula_tab };
+  get filtroNombreTab() { return this.reporteService.filtroNombreTab };
   
   constructor(
     private toastr: ToastrService,
@@ -118,52 +115,18 @@ export class ReporteFaltasComponent implements OnInit {
     })
   }
 
-  
+  ngOnDestroy(): void {
+    this.sucursales = [];
+    this.departamentos = [];
+    this.empleados = [];
+    this.tabular = [];
 
-  // /**
-  //  * Funciones para validar los campos y las fechas de rangos del reporte
-  //  */
-
-  // f_inicio_req: string = '';
-  // f_final_req: string = '';
-  // habilitar: boolean = false;
-  // estilo: any = { 'visibility': 'hidden' };
-  // ValidarRangofechas(form) {
-  //   var f_i = new Date(form.fec_inicio)
-  //   var f_f = new Date(form.fec_final)
-
-  //   if (f_i < f_f) {
-  //     this.toastr.success('Fechas validas','', {
-  //       timeOut: 6000,
-  //     });
-  //     this.f_inicio_req = f_i.toJSON().split('T')[0];
-  //     this.f_final_req = f_f.toJSON().split('T')[0];
-  //     this.habilitar = true;
-  //     this.estilo = { 'visibility': 'visible' };
-  //   } else if (f_i > f_f) {
-  //     this.toastr.info('Fecha final es menor a la fecha inicial','', {
-  //       timeOut: 6000,
-  //     });
-  //     this.fechasForm.reset();
-  //   } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-  //     this.toastr.info('Fecha inicial es igual a la fecha final','', {
-  //       timeOut: 6000,
-  //     });
-  //     this.fechasForm.reset();
-  //   }
-  // }
+  }
 
   /**
    * VALIDACIONES REPORT
    */
   validacionReporte(action) {
-    let formBoolean: FormCriteriosBusqueda = {
-      bool_suc: false, 
-      bool_dep: false, 
-      bool_emp: false, 
-      bool_tab: false, 
-      bool_inc: false
-    }
 
     if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda') 
     if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false && this.bool.bool_tab === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
@@ -186,7 +149,7 @@ export class ReporteFaltasComponent implements OnInit {
         this.ModelarTabulacion(action);
       break;
       default:
-        this.reporteService.GuardarFormCriteriosBusqueda(formBoolean)
+        this.reporteService.DefaultFormCriterios()
         break;
     }
   }

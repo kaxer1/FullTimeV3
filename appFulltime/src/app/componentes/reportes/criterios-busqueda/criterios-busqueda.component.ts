@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { checkOptions, FormCriteriosBusqueda } from 'src/app/model/reportes.model';
@@ -9,7 +9,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
   templateUrl: './criterios-busqueda.component.html',
   styleUrls: ['./criterios-busqueda.component.css']
 })
-export class CriteriosBusquedaComponent implements OnInit {
+export class CriteriosBusquedaComponent implements OnInit, OnDestroy {
 
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
@@ -17,19 +17,21 @@ export class CriteriosBusquedaComponent implements OnInit {
   nombre_dep = new FormControl('', [Validators.minLength(2)]);
   nombre_suc = new FormControl('', [Validators.minLength(2)]);
 
+  filtroNombreSuc: string = '';
+  
+  filtroNombreDep: string = '';
+  
   filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombreEmp: '';
-  filtroNombreDep: '';
-  filtroNombreSuc: '';
+  filtroCedula: string = '';
+  filtroNombreEmp: string = '';
 
   filtroCodigo_tab: number;
-  filtroCedula_tab: '';
-  filtroNombreTab: '';
+  filtroCedula_tab: string = '';
+  filtroNombreTab: string = '';
 
   filtroCodigo_inc: number;
-  filtroCedula_inc: '';
-  filtroNombreInc: '';
+  filtroCedula_inc: string = '';
+  filtroNombreInc: string = '';
 
   public _booleanOptions: FormCriteriosBusqueda = {
     bool_suc: false, 
@@ -53,6 +55,15 @@ export class CriteriosBusquedaComponent implements OnInit {
     this.check = this.reporteService.checkOptions(this.num_option);
     console.log('CHECK ',this.check);
     
+  }
+
+  ngOnDestroy() {
+    
+    this.reporteService.GuardarCheckOpcion(0);
+    this.reporteService.DefaultFormCriterios();
+    this.reporteService.DefaultValoresFiltros();
+    console.log('Componenete destruido');
+
   }
 
   opcion: number;
@@ -96,12 +107,34 @@ export class CriteriosBusquedaComponent implements OnInit {
         this._booleanOptions.bool_inc = true;
       break;
       default:
-        this.reporteService.GuardarFormCriteriosBusqueda(this._booleanOptions);
+        this._booleanOptions.bool_suc = false;
+        this._booleanOptions.bool_dep = false; 
+        this._booleanOptions.bool_emp = false;
+        this._booleanOptions.bool_tab = false;
+        this._booleanOptions.bool_inc = false;
         break;
     }
     this.reporteService.GuardarFormCriteriosBusqueda(this._booleanOptions);
     this.reporteService.GuardarCheckOpcion(this.opcion)
     
+  }
+
+  Filtrar(e, orden: number) {   
+    switch (orden) {
+      case 1: this.reporteService.setFiltroNombreSuc(e); break;
+      case 2: this.reporteService.setFiltroNombreDep(e); break;
+      case 3: this.reporteService.setFiltroCodigo(e); break;
+      case 4: this.reporteService.setFiltroCedula(e); break;
+      case 5: this.reporteService.setFiltroNombreEmp(e); break;
+      case 6: this.reporteService.setFiltroCodigo_tab(e); break;
+      case 7: this.reporteService.setFiltroCedula_tab(e); break;
+      case 8: this.reporteService.setFiltroNombreTab(e); break;
+      case 9: this.reporteService.setFiltroCodigo_inc(e); break;
+      case 10: this.reporteService.setFiltroCedula_inc(e); break;
+      case 11: this.reporteService.setFiltroNombreInc(e); break;    
+      default:
+        break;
+    } 
   }
 
   IngresarSoloLetras(e) {
