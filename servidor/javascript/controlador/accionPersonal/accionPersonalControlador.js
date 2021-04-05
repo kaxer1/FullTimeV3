@@ -12,8 +12,102 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ACCION_PERSONAL_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 class AccionPersonalControlador {
+    /** TABLA PROCESO_PROPUESTO */
+    ListarProcesosPropuestos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ACCION = yield database_1.default.query('SELECT * FROM proceso_propuesto');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    CrearProcesoPropuesto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { descripcion } = req.body;
+            yield database_1.default.query('INSERT INTO proceso_propuesto (descripcion) VALUES($1)', [descripcion]);
+            res.jsonp({ message: 'Registro guardado' });
+        });
+    }
+    EncontrarUltimoProceso(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM proceso_propuesto');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    /** TABLA CARGO_PROPUESTO */
+    ListarCargoPropuestos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ACCION = yield database_1.default.query('SELECT * FROM cargo_propuesto');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    CrearCargoPropuesto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { descripcion } = req.body;
+            yield database_1.default.query('INSERT INTO cargo_propuesto (descripcion) VALUES($1)', [descripcion]);
+            res.jsonp({ message: 'Registro guardado' });
+        });
+    }
+    EncontrarUltimoCargoP(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM cargo_propuesto');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    /** TABLA DECRETO_ACUERDO_RESOL */
+    ListarDecretos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const ACCION = yield database_1.default.query('SELECT * FROM decreto_acuerdo_resol');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    CrearDecreto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { descripcion } = req.body;
+            yield database_1.default.query('INSERT INTO decreto_acuerdo_resol (descripcion) VALUES($1)', [descripcion]);
+            res.jsonp({ message: 'Registro guardado' });
+        });
+    }
+    EncontrarUltimoDecreto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM decreto_acuerdo_resol');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     /** TABLA TIPO_ACCION_PERSONAL */
     ListarTipoAccionPersonal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

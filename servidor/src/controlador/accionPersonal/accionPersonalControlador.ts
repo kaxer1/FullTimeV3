@@ -3,6 +3,93 @@ import pool from '../../database';
 
 class AccionPersonalControlador {
 
+    /** TABLA PROCESO_PROPUESTO */
+    public async ListarProcesosPropuestos(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT * FROM proceso_propuesto');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async CrearProcesoPropuesto(req: Request, res: Response): Promise<void> {
+        const { descripcion } = req.body;
+        await pool.query('INSERT INTO proceso_propuesto (descripcion) VALUES($1)',
+            [descripcion]);
+        res.jsonp({ message: 'Registro guardado' });
+    }
+
+    public async EncontrarUltimoProceso(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT MAX(id) AS id FROM proceso_propuesto');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    /** TABLA CARGO_PROPUESTO */
+    public async ListarCargoPropuestos(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT * FROM cargo_propuesto');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async CrearCargoPropuesto(req: Request, res: Response): Promise<void> {
+        const { descripcion } = req.body;
+        await pool.query('INSERT INTO cargo_propuesto (descripcion) VALUES($1)',
+            [descripcion]);
+        res.jsonp({ message: 'Registro guardado' });
+    }
+
+    public async EncontrarUltimoCargoP(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT MAX(id) AS id FROM cargo_propuesto');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    /** TABLA DECRETO_ACUERDO_RESOL */
+    public async ListarDecretos(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT * FROM decreto_acuerdo_resol');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async CrearDecreto(req: Request, res: Response): Promise<void> {
+        const { descripcion } = req.body;
+        await pool.query('INSERT INTO decreto_acuerdo_resol (descripcion) VALUES($1)',
+            [descripcion]);
+        res.jsonp({ message: 'Registro guardado' });
+    }
+
+    public async EncontrarUltimoDecreto(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT MAX(id) AS id FROM decreto_acuerdo_resol');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
     /** TABLA TIPO_ACCION_PERSONAL */
     public async ListarTipoAccionPersonal(req: Request, res: Response) {
         const ACCION = await pool.query('SELECT tap.id, tap.id_proceso, tap.descripcion, tap.base_legal, ' +

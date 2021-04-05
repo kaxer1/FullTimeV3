@@ -12,11 +12,24 @@ class DepartamentoRutas {
         this.configuracion();
     }
     configuracion() {
+        /** TABLA TIPO_ACCION_PERSONAL */
         this.router.get('/', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarTipoAccionPersonal);
         this.router.post('/', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearTipoAccionPersonal);
         this.router.get('/tipo/accion/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarTipoAccionPersonalId);
         this.router.put('/', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ActualizarTipoAccionPersonal);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EliminarTipoAccionPersonal);
+        /** TABLA PROCESO_PROPUESTO */
+        this.router.get('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarProcesosPropuestos);
+        this.router.post('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearProcesoPropuesto);
+        this.router.get('/tipo/proceso/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoProceso);
+        /** TABLA CARGO_PROPUESTO */
+        this.router.get('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarCargoPropuestos);
+        this.router.post('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearCargoPropuesto);
+        this.router.get('/tipo/cargo/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoCargoP);
+        /** TABLA DECRETO_ACUERDO_RESOL */
+        this.router.get('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarDecretos);
+        this.router.post('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearDecreto);
+        this.router.get('/tipo/decreto/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
     }
 }
 const ACCION_PERSONAL_RUTAS = new DepartamentoRutas();

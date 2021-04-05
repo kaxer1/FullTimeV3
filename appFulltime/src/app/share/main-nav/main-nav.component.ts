@@ -622,6 +622,7 @@ export class MainNavComponent implements OnInit {
         children: [
           { name: 'Crear Proceso', url: '/proceso' },
           { name: 'Tipo Acción Personal', url: '/acciones-personal' },
+          { name: 'Pedido Acción Personal', url: '/pedidoAccion' },
         ]
       },
       {
