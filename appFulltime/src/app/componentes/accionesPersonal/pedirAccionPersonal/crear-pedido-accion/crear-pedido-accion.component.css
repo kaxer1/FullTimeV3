@@ -2,11 +2,19 @@
 
 mat-form-field { padding: 10px 15px 0px 15px; width: 350px;}
 
+#abrv {  padding: 10px 15px 0px 10px; width: 75px; font-size: 14px;}
+
+#nombre {  padding: 10px 15px 0px 10px; width: 260px; font-size: 14px;}
+
 #nomEmpleado { font-size: 14px; }
 
 #planComida { cursor: pointer; }
 
 #selecAlmuerzo { font-size: 14px; }
+
+#letra { font-size: 14px; }
+
+#numero { font-size: 11px; }
 
 .nota {
     font-size: 12px; 

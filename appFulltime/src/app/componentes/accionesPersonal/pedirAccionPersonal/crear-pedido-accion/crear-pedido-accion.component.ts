@@ -1,17 +1,15 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as moment from 'moment';
 import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
-import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { PlanComidasService } from 'src/app/servicios/planComidas/plan-comidas.service';
-import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 
 @Component({
   selector: 'app-crear-pedido-accion',
@@ -27,67 +25,114 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 
 export class CrearPedidoAccionComponent implements OnInit {
 
+  // FILTRO DE NOMBRES DE LOS EMPLEADOS
   filtroNombre: Observable<string[]>;
+  filtroNombreH: Observable<string[]>;
+  filtroNombreG: Observable<string[]>;
   seleccionarEmpleados: any;
+  seleccionEmpleadoH: any;
+  seleccionEmpleadoG: any;
 
-  idComidaF = new FormControl('', Validators.required);
+  // EVENTOS RELACIONADOS A SELECCIÓN E INGRESO DE ACUERDOS - DECRETOS - RESOLUCIONES
+  vistaAcuerdo: boolean = true;
+  ingresoAcuerdo: boolean = false;
+
+  // EVENTOS REALCIONADOS A SELECCIÓN E INGRESO DE CARGOS PROPUESTOS
+  vistaCargo: boolean = true;
+  ingresoCargo: boolean = false;
+
+  // EVENTOS RELACIONADOS A SELECCIÓN E INGRESO DE PROCESOS PROPUESTOS
+  vistaProceso: boolean = true;
+  ingresoProceso: boolean = false;
+
+  // INICIACIÓN DE CAMPOS DEL FORMULARIO
   idEmpleadoF = new FormControl('');
   fechaF = new FormControl('', [Validators.required]);
-  observacionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  fechaPlanificacionF = new FormControl('', Validators.required);
-  horaInicioF = new FormControl('', Validators.required);
-  horaFinF = new FormControl('', Validators.required);
-  tipoF = new FormControl('', Validators.required);;
-  platosF = new FormControl('', Validators.required);;
-  extraF = new FormControl('', [Validators.required]);
+  fechaDesdeF = new FormControl('', [Validators.required]);
+  fechaHastaF = new FormControl('');
+  identificacionF = new FormControl('', [Validators.required, Validators.minLength(3)]);
+  numPartidaF = new FormControl('', [Validators.required]);
+  tipoDecretoF = new FormControl('');
+  otroDecretoF = new FormControl('', [Validators.minLength(3)]);
+  idEmpleadoHF = new FormControl('');
+  idEmpleadoGF = new FormControl('');
+  descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
+  baseF = new FormControl('', [Validators.minLength(6)]);
+  tipoCargoF = new FormControl('');
+  otroCargoF = new FormControl('', [Validators.minLength(3)]);
+  tipoProcesoF = new FormControl('');
+  otroProcesoF = new FormControl('', [Validators.minLength(3)]);
+  numPropuestaF = new FormControl('', [Validators.required]);
+  sueldoF = new FormControl('');
 
-  // asignar los campos en un formulario en grupo
+  // ASIGNAR LOS CAMPOS DEL FORMULARIO EN UN GRUPO
   public PlanificacionComidasForm = new FormGroup({
-    idComidaForm: this.idComidaF,
     idEmpleadoForm: this.idEmpleadoF,
     fechaForm: this.fechaF,
-    observacionForm: this.observacionF,
-    fechaPlanificacionForm: this.fechaPlanificacionF,
-    horaInicioForm: this.horaInicioF,
-    horaFinForm: this.horaFinF,
-    tipoForm: this.tipoF,
-    platosForm: this.platosF,
-    extraForm: this.extraF
+    fechaDesdeForm: this.fechaDesdeF,
+    fechaHastaForm: this.fechaHastaF,
+    identificacionForm: this.identificacionF,
+    numPartidaForm: this.numPartidaF,
+    tipoDecretoForm: this.tipoDecretoF,
+    otroDecretoForm: this.otroDecretoF,
+    idEmpleadoHForm: this.idEmpleadoHF,
+    idEmpleadoGForm: this.idEmpleadoGF,
+    descripcionForm: this.descripcionF,
+    baseForm: this.baseF,
+    tipoCargoForm: this.tipoCargoF,
+    otroCargoForm: this.otroCargoF,
+    tipoProcesoForm: this.tipoProcesoF,
+    otroProcesoForm: this.otroProcesoF,
+    numPropuestaForm: this.numPropuestaF,
+    sueldoForm: this.sueldoF,
   });
 
-  tipoComidas: any = [];
+  // INICIACIÓN DE VARIABLES 
   empleados: any = [];
   FechaActual: any;
   idEmpleadoLogueado: any;
   departamento: any;
-  data: any;
+
   constructor(
     private toastr: ToastrService,
-    private rest: TipoComidasService,
     public restE: EmpleadoService,
-    public restPlan: PlanComidasService,
-    public restUsuario: UsuarioService,
+    public restEmpresa: EmpresaService,
+    public restAccion: AccionPersonalService,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     this.departamento = parseInt(localStorage.getItem("departamento"));
   }
 
   ngOnInit(): void {
-
     var f = moment();
     this.FechaActual = f.format('DD-MM-YYYY');
     this.PlanificacionComidasForm.patchValue({
       fechaForm: this.FechaActual
     });
     this.MostrarDatos();
-    this.ObtenerServicios();
+    this.ObtenerDecretos();
+    this.decretos[this.decretos.length] = { descripcion: "OTRO" };
     this.ObtenerEmpleados();
     this.filtroNombre = this.idEmpleadoF.valueChanges
       .pipe(
         startWith(''),
         map(value => this._filtrarEmpleado(value))
       );
-
+    this.filtroNombreH = this.idEmpleadoHF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filtrarEmpleado(value))
+      );
+    this.filtroNombreG = this.idEmpleadoGF.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filtrarEmpleado(value))
+      );
+    this.ObtenerTiposAccion();
+    this.ObtenerCargos();
+    this.cargos[this.cargos.length] = { descripcion: "OTRO" };
+    this.ObtenerProcesos();
+    this.procesos[this.procesos.length] = { descripcion: "OTRO" };
   }
 
   private _filtrarEmpleado(value: string): string[] {
@@ -97,50 +142,116 @@ export class CrearPedidoAccionComponent implements OnInit {
     }
   }
 
-  descripcion: string;
-  empleado_recibe: number;
-  empleado_envia: number;
-  tipo: string;
+  empresa: any = [];
   MostrarDatos() {
-    this.restUsuario.BuscarDatosUser(parseInt(this.idEmpleadoLogueado)).subscribe(data => {
-      this.empleado_envia = 2;
-      this.empleado_recibe = this.idEmpleadoLogueado;
+    this.empresa = [];
+    this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(data => {
+      this.empresa = data;
+      this.PlanificacionComidasForm.patchValue({
+        numPartidaForm: this.empresa[0].num_partida
+      });
     });
   }
 
-  servicios: any = [];
-  ObtenerServicios() {
-    this.servicios = [];
-    this.restPlan.ObtenerTipoComidas().subscribe(datos => {
-      this.servicios = datos;
+  decretos: any = [];
+  ObtenerDecretos() {
+    this.decretos = [];
+    this.restAccion.ConsultarDecreto().subscribe(datos => {
+      this.decretos = datos;
+      this.decretos[this.decretos.length] = { descripcion: "OTRO" };
     })
   }
 
-  // Al seleccionar un tipo de servicio se muestra la lista de menús registrados
-  ObtenerPlatosComidas(form) {
-    this.idComidaF.reset();
-    this.platosF.reset();
-    this.tipoComidas = [];
-    this.rest.ConsultarMenu(form.tipoForm).subscribe(datos => {
-      this.tipoComidas = datos;
-    }, error => {
-      this.toastr.info('Verificar la información.', 'No existen registrados Menús para esta tipo de servicio.', {
+  estilo: any;
+  IngresarOtro(form) {
+    if (form.tipoDecretoForm === undefined) {
+      this.PlanificacionComidasForm.patchValue({
+        otroDecretoForm: '',
+      });
+      this.estilo = { 'visibility': 'visible' }; this.ingresoAcuerdo = true;
+      this.toastr.info('Ingresar nombre de un nuevo tipo de proceso', '', {
         timeOut: 6000,
       })
+      this.vistaAcuerdo = false;
+    }
+  }
+
+  VerDecretos() {
+    this.PlanificacionComidasForm.patchValue({
+      otroDrecretoForm: '',
+    });
+    this.estilo = { 'visibility': 'hidden' }; this.ingresoAcuerdo = false;
+    this.vistaAcuerdo = true;
+  }
+
+  tipos_accion: any = [];
+  ObtenerTiposAccion() {
+    this.tipos_accion = [];
+    this.restAccion.ConsultarTipoAccionPersonal().subscribe(datos => {
+      this.tipos_accion = datos;
     })
   }
 
-  detalle: any = [];
-  ObtenerDetalleMenu(form) {
-    this.platosF.reset();
-    this.detalle = [];
-    this.rest.ConsultarUnDetalleMenu(form.idComidaForm).subscribe(datos => {
-      this.detalle = datos;
-    }, error => {
-      this.toastr.info('Verificar la información.', 'No existen registros de Alimentación para este Menú.', {
+  cargos: any = [];
+  ObtenerCargos() {
+    this.cargos = [];
+    this.restAccion.ConsultarCargoPropuesto().subscribe(datos => {
+      this.cargos = datos;
+      this.cargos[this.cargos.length] = { descripcion: "OTRO" };
+    })
+  }
+
+  estiloC: any;
+  IngresarCargo(form) {
+    if (form.tipoCargoForm === undefined) {
+      this.PlanificacionComidasForm.patchValue({
+        otroCargoForm: '',
+      });
+      this.estiloC = { 'visibility': 'visible' }; this.ingresoCargo = true;
+      this.toastr.info('Ingresar nombre de un nuevo tipo de cargo o puesto propuesto.', '', {
         timeOut: 6000,
       })
+      this.vistaCargo = false;
+    }
+  }
+
+  VerCargos() {
+    this.PlanificacionComidasForm.patchValue({
+      otroCargoForm: '',
+    });
+    this.estiloC = { 'visibility': 'hidden' }; this.ingresoCargo = false;
+    this.vistaCargo = true;
+  }
+
+  procesos: any = [];
+  ObtenerProcesos() {
+    this.procesos = [];
+    this.restAccion.ConsultarProcesoPropuesto().subscribe(datos => {
+      this.procesos = datos;
+      this.procesos[this.procesos.length] = { descripcion: "OTRO" };
     })
+  }
+
+  estiloP: any;
+  IngresarProceso(form) {
+    if (form.tipoProcesoForm === undefined) {
+      this.PlanificacionComidasForm.patchValue({
+        otroProcesoForm: '',
+      });
+      this.estiloC = { 'visibility': 'visible' }; this.ingresoProceso = true;
+      this.toastr.info('Ingresar nombre de un nuevo tipo de proceso propuesto.', '', {
+        timeOut: 6000,
+      })
+      this.vistaProceso = false;
+    }
+  }
+
+  VerProcesos() {
+    this.PlanificacionComidasForm.patchValue({
+      otroProcesosForm: '',
+    });
+    this.estiloP = { 'visibility': 'hidden' }; this.ingresoProceso = false;
+    this.vistaProceso = true;
   }
 
   // MÉTODO PARA OBTENER LISTA DE EMPLEADOS
@@ -149,36 +260,41 @@ export class CrearPedidoAccionComponent implements OnInit {
     this.restE.getBuscadorEmpledosRest().subscribe(data => {
       this.empleados = data;
       this.seleccionarEmpleados = '';
+      this.seleccionEmpleadoH = '';
+      this.seleccionEmpleadoG = '';
       console.log('empleados', this.empleados)
     })
   }
 
-  contador: number = 0;
-  InsertarPlanificacion(form) {
-    let datosPlanComida = {
-      id_empleado: this.data.idEmpleado,
-      fecha: form.fechaForm,
-      id_comida: form.platosForm,
-      observacion: form.observacionForm,
-      fec_comida: form.fechaPlanificacionForm,
-      hora_inicio: form.horaInicioForm,
-      hora_fin: form.horaFinForm,
-      extra: form.extraForm
-    };
-    this.restPlan.CrearSolicitudComida(datosPlanComida).subscribe(response => {
-      this.EnviarNotificaciones(form.fechaPlanificacionForm);
-      this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
-        timeOut: 6000,
-      })
-      this.CerrarRegistroPlanificacion();
-    });
+  InsertarAccionPersonal(form) {
+
   }
 
-  ObtenerMensajeErrorObservacion() {
-    if (this.observacionF.hasError('pattern')) {
+  /* contador: number = 0;
+   InsertarPlanificacion(form) {
+     let datosPlanComida = {
+       id_empleado: this.data.idEmpleado,
+       fecha: form.fechaForm,
+       id_comida: form.platosForm,
+       observacion: form.observacionForm,
+       fec_comida: form.fechaPlanificacionForm,
+       hora_inicio: form.horaInicioForm,
+       hora_fin: form.horaFinForm,
+       extra: form.extraForm
+     };
+     this.restPlan.CrearSolicitudComida(datosPlanComida).subscribe(response => {
+       this.EnviarNotificaciones(form.fechaPlanificacionForm);
+       this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
+         timeOut: 6000,
+       })
+       this.CerrarRegistroPlanificacion();
+     });
+   }*/
+
+  ObtenerMensajeErrorDescripcion() {
+    if (this.descripcionF.hasError('pattern')) {
       return 'Ingrese información válida';
     }
-    return this.observacionF.hasError('required') ? 'Campo Obligatorio' : '';
   }
 
   CerrarRegistroPlanificacion() {
@@ -187,46 +303,46 @@ export class CrearPedidoAccionComponent implements OnInit {
 
   LimpiarCampos() {
     this.PlanificacionComidasForm.reset();
-    this.ObtenerServicios();
+    this.ObtenerDecretos();
   }
 
 
-  jefes: any = [];
-  envios: any = [];
-  EnviarNotificaciones(fecha) {
-    this.restPlan.obtenerJefes(this.departamento).subscribe(data => {
-      this.jefes = [];
-      this.jefes = data;
-      this.jefes.map(obj => {
-        let datosCorreo = {
-          id_usua_solicita: this.data.idEmpleado,
-          correo: obj.correo,
-          comida_mail: obj.comida_mail,
-          comida_noti: obj.comida_noti
-        }
-        this.restPlan.EnviarCorreo(datosCorreo).subscribe(envio => {
-          this.envios = [];
-          this.envios = envio;
-          console.log('datos envio', this.envios.notificacion);
-          if (this.envios.notificacion === true) {
-            this.NotificarPlanificacion(this.data.idEmpleado, obj.empleado, fecha);
+  /*  jefes: any = [];
+    envios: any = [];
+    EnviarNotificaciones(fecha) {
+      this.restPlan.obtenerJefes(this.departamento).subscribe(data => {
+        this.jefes = [];
+        this.jefes = data;
+        this.jefes.map(obj => {
+          let datosCorreo = {
+            id_usua_solicita: this.data.idEmpleado,
+            correo: obj.correo,
+            comida_mail: obj.comida_mail,
+            comida_noti: obj.comida_noti
           }
-        });
-      })
-    });
-  }
-
-  NotificarPlanificacion(empleado_envia: any, empleado_recive: any, fecha) {
-    let mensaje = {
-      id_empl_envia: empleado_envia,
-      id_empl_recive: empleado_recive,
-      mensaje: 'Solicitó Alimentación ' + ' para ' + moment(fecha).format('YYYY-MM-DD')
+          this.restPlan.EnviarCorreo(datosCorreo).subscribe(envio => {
+            this.envios = [];
+            this.envios = envio;
+            console.log('datos envio', this.envios.notificacion);
+            if (this.envios.notificacion === true) {
+              this.NotificarPlanificacion(this.data.idEmpleado, obj.empleado, fecha);
+            }
+          });
+        })
+      });
     }
-    console.log(mensaje);
-    this.restPlan.EnviarMensajePlanComida(mensaje).subscribe(res => {
-      console.log(res.message);
-    })
-  }
+  
+    NotificarPlanificacion(empleado_envia: any, empleado_recive: any, fecha) {
+      let mensaje = {
+        id_empl_envia: empleado_envia,
+        id_empl_recive: empleado_recive,
+        mensaje: 'Solicitó Alimentación ' + ' para ' + moment(fecha).format('YYYY-MM-DD')
+      }
+      console.log(mensaje);
+      this.restPlan.EnviarMensajePlanComida(mensaje).subscribe(res => {
+        console.log(res.message);
+      })
+    }*/
 
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
@@ -244,6 +360,25 @@ export class CrearPedidoAccionComponent implements OnInit {
     }
     if (letras.indexOf(tecla) == -1 && !tecla_especial) {
       this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
+      return false;
+    }
+  }
+
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
         timeOut: 6000,
       })
       return false;
