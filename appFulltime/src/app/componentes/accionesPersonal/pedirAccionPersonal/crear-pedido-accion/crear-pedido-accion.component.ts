@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-pedido-accion',
@@ -70,7 +71,7 @@ export class CrearPedidoAccionComponent implements OnInit {
   abrevGF = new FormControl('');
 
   // ASIGNAR LOS CAMPOS DEL FORMULARIO EN UN GRUPO
-  public PlanificacionComidasForm = new FormGroup({
+  public AccionPersonalForm = new FormGroup({
     identificacionForm: this.identificacionF,
     numPropuestaForm: this.numPropuestaF,
     tipoDecretoForm: this.tipoDecretoF,
@@ -106,6 +107,7 @@ export class CrearPedidoAccionComponent implements OnInit {
     public restEmpresa: EmpresaService,
     private toastr: ToastrService,
     public restE: EmpleadoService,
+    public router: Router,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     this.departamento = parseInt(localStorage.getItem("departamento"));
@@ -116,7 +118,7 @@ export class CrearPedidoAccionComponent implements OnInit {
     // INICIALIZACÓN DE FECHA Y MOSTRAR EN FORMULARIO
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
-    this.PlanificacionComidasForm.patchValue({
+    this.AccionPersonalForm.patchValue({
       fechaForm: this.FechaActual
     });
 
@@ -165,7 +167,7 @@ export class CrearPedidoAccionComponent implements OnInit {
     this.empresa = [];
     this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(data => {
       this.empresa = data;
-      this.PlanificacionComidasForm.patchValue({
+      this.AccionPersonalForm.patchValue({
         numPartidaForm: this.empresa[0].num_partida
       });
     });
@@ -185,7 +187,7 @@ export class CrearPedidoAccionComponent implements OnInit {
   estilo: any;
   IngresarOtro(form) {
     if (form.tipoDecretoForm === undefined) {
-      this.PlanificacionComidasForm.patchValue({
+      this.AccionPersonalForm.patchValue({
         otroDecretoForm: '',
       });
       this.estilo = { 'visibility': 'visible' }; this.ingresoAcuerdo = true;
@@ -198,7 +200,7 @@ export class CrearPedidoAccionComponent implements OnInit {
 
   // MÉTODO PARA VER LISTA DE DECRETOS
   VerDecretos() {
-    this.PlanificacionComidasForm.patchValue({
+    this.AccionPersonalForm.patchValue({
       otroDrecretoForm: '',
     });
     this.estilo = { 'visibility': 'hidden' }; this.ingresoAcuerdo = false;
@@ -228,7 +230,7 @@ export class CrearPedidoAccionComponent implements OnInit {
   estiloC: any;
   IngresarCargo(form) {
     if (form.tipoCargoForm === undefined) {
-      this.PlanificacionComidasForm.patchValue({
+      this.AccionPersonalForm.patchValue({
         otroCargoForm: '',
       });
       this.estiloC = { 'visibility': 'visible' }; this.ingresoCargo = true;
@@ -241,7 +243,7 @@ export class CrearPedidoAccionComponent implements OnInit {
 
   // MÉTODO PARA VER LISTA DE CARGOS PROPUESTO
   VerCargos() {
-    this.PlanificacionComidasForm.patchValue({
+    this.AccionPersonalForm.patchValue({
       otroCargoForm: '',
     });
     this.estiloC = { 'visibility': 'hidden' }; this.ingresoCargo = false;
@@ -262,7 +264,7 @@ export class CrearPedidoAccionComponent implements OnInit {
   estiloP: any;
   IngresarProceso(form) {
     if (form.tipoProcesoForm === undefined) {
-      this.PlanificacionComidasForm.patchValue({
+      this.AccionPersonalForm.patchValue({
         otroProcesoForm: '',
       });
       this.estiloC = { 'visibility': 'visible' }; this.ingresoProceso = true;
@@ -275,7 +277,7 @@ export class CrearPedidoAccionComponent implements OnInit {
 
   // MÉTODO PARA VER LA LISTA DE PROCESOS PROPUESTOS
   VerProcesos() {
-    this.PlanificacionComidasForm.patchValue({
+    this.AccionPersonalForm.patchValue({
       otroProcesosForm: '',
     });
     this.estiloP = { 'visibility': 'hidden' }; this.ingresoProceso = false;
@@ -336,6 +338,7 @@ export class CrearPedidoAccionComponent implements OnInit {
             num_partida_propuesta: form.numPropuestaForm,
             salario_propuesto: form.sueldoForm
           }
+          // VALIDAR QUE FECHAS SE ENCUENTREN BIEN INGRESADA
           if (form.fechaHastaForm === '' || form.fechaHastaForm === null) {
             datosAccion.fec_rige_hasta = null;
             console.log('informacion', datosAccion)
@@ -345,7 +348,7 @@ export class CrearPedidoAccionComponent implements OnInit {
               this.ValidacionesIngresos(form, datosAccion);
             }
             else {
-              this.toastr.info('Las fechas ingresadas no son las correctas', '', {
+              this.toastr.info('Las fechas ingresadas no son las correctas.', 'Revisar los datos ingresados.', {
                 timeOut: 6000,
               })
             }
@@ -355,49 +358,76 @@ export class CrearPedidoAccionComponent implements OnInit {
     })
   }
 
+  // MÉTODO PARA VERIFICAR LAS POSIBLES OPCIONES DE INGRESOS EN EL FORMULARIO
   ValidacionesIngresos(form, datosAccion) {
     // INGRESO DE DATOS DE ACUERDO A LO INGRESADO POR EL USUARIO
     if (form.tipoDecretoForm != undefined && form.tipoProcesoForm != undefined &&
       form.tipoCargoForm != undefined) {
+      console.log('INGRESA 1', datosAccion)
       this.GuardarDatos(datosAccion);
     }
+    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
+      form.tipoCargoForm != undefined) {
+      console.log('INGRESA 2', datosAccion)
+      this.IngresarNuevoDecreto(form, datosAccion, '1');
+    }
+    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm != undefined &&
+      form.tipoCargoForm === undefined) {
+      console.log('INGRESA 3', datosAccion)
+      this.IngresarNuevoCargo(form, datosAccion, '1');
+    }
+    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
+      form.tipoCargoForm != undefined) {
+      console.log('INGRESA 4', datosAccion)
+      this.IngresarNuevoProceso(form, datosAccion, '1');
+    }
+    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
+      form.tipoCargoForm === undefined) {
+      console.log('INGRESA 5', datosAccion)
+      this.IngresarNuevoDecreto(form, datosAccion, '2');
+    }
+    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
+      form.tipoCargoForm === undefined) {
+      console.log('INGRESA 6', datosAccion)
+      this.IngresarNuevoDecreto(form, datosAccion, '3');
+    }
+    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
+      form.tipoCargoForm === undefined) {
+      console.log('INGRESA 7', datosAccion)
+      this.IngresarNuevoCargo(form, datosAccion, '2');
+    }
+    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
+      form.tipoCargoForm != undefined) {
+      console.log('INGRESA 8', datosAccion)
+      this.IngresarNuevoDecreto(form, datosAccion, '4');
+    }
     else {
-      if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
-        form.tipoCargoForm != undefined) {
-        this.IngresarNuevoDecreto(form, datosAccion, '1');
-      }
-      else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm != undefined &&
-        form.tipoCargoForm === undefined) {
-        this.IngresarNuevoCargo(form, datosAccion, '1');
-      }
-      else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
-        form.tipoCargoForm != undefined) {
-        this.IngresarNuevoProceso(form, datosAccion, '1');
-      }
-      else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
-        form.tipoCargoForm === undefined) {
-        this.IngresarNuevoDecreto(form, datosAccion, '2');
-      }
-      else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
-        form.tipoCargoForm === undefined) {
-        this.IngresarNuevoDecreto(form, datosAccion, '3');
-      }
-      else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
-        form.tipoCargoForm === undefined) {
-        this.IngresarNuevoCargo(form, datosAccion, '2');
-      }
-      else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
-        form.tipoCargoForm != undefined) {
-        this.IngresarNuevoDecreto(form, datosAccion, '4');
-      }
+      console.log('INGRESA 9', datosAccion)
+      this.GuardarDatos(datosAccion);
     }
   }
 
-  GuardarDatos(datos: any) {
-    this.restAccion.IngresarPedidoAccion(datos).subscribe(res => {
+  // MÉTODO PARA GUARDAR LOS DATOS DEL PEDIDO DE ACCIONES DE PERSONAL
+  GuardarDatos(datosAccion: any) {
+    // CAMBIAR VALOR A NULL LOS CAMPOS CON FORMATO INTEGER QUE NO SON INGRESADOS
+    if (datosAccion.decre_acue_resol === '' || datosAccion.decre_acue_resol === null) {
+      datosAccion.decre_acue_resol = null;
+    }
+    if (datosAccion.cargo_propuesto === '' || datosAccion.cargo_propuesto === null) {
+      datosAccion.cargo_propuesto = null;
+    }
+    if (datosAccion.proceso_propuesto === '' || datosAccion.proceso_propuesto === null) {
+      datosAccion.proceso_propuesto = null;
+    }
+    if (datosAccion.salario_propuesto === '' || datosAccion.salario_propuesto === null) {
+      datosAccion.salario_propuesto = null;
+    }
+    console.log('DATOS FINALES', datosAccion)
+    this.restAccion.IngresarPedidoAccion(datosAccion).subscribe(res => {
       this.toastr.success('Operación Exitosa', 'Acción de Personal Registrada', {
         timeOut: 6000,
       });
+      this.router.navigate(['/listaPedidos/',]);
     });
   }
 
@@ -442,8 +472,8 @@ export class CrearPedidoAccionComponent implements OnInit {
       }
       this.restAccion.IngresarCargoPropuesto(cargo).subscribe(resol => {
         // BUSCAR ID DE ÚLTIMO REGISTRO DE CARGOS PROPUESTOS
-        this.restAccion.BuscarIdProcesoPropuesto().subscribe(max => {
-          datos.proceso_propuesto = max[0].id;
+        this.restAccion.BuscarIdCargoPropuesto().subscribe(max => {
+          datos.cargo_propuesto = max[0].id;
           // INGRESAR PEDIDO DE ACCION DE PERSONAL
           if (opcion === '1') {
             this.GuardarDatos(datos);
@@ -467,7 +497,7 @@ export class CrearPedidoAccionComponent implements OnInit {
       let proceso = {
         descripcion: form.otroProcesoForm
       }
-      this.restAccion.IngresarCargoPropuesto(proceso).subscribe(resol => {
+      this.restAccion.IngresarProcesoPropuesto(proceso).subscribe(resol => {
         // BUSCAR ID DE ÚLTIMO REGISTRO DE PROCESOS PROPUESTO
         this.restAccion.BuscarIdProcesoPropuesto().subscribe(max => {
           datos.proceso_propuesto = max[0].id;
@@ -514,18 +544,6 @@ export class CrearPedidoAccionComponent implements OnInit {
       return 'Ingrese información válida';
     }
   }
-
-  // MÉTODO PARA CANCELAR REGISTRO DE ACCIÓN DE PERSONAL
-  CerrarRegistroPlanificacion() {
-    this.LimpiarCampos();
-  }
-
-  // MÉTODO PARA LIMPIAR TODOS LOS CAMPOS DEL FORMULARIO
-  LimpiarCampos() {
-    this.PlanificacionComidasForm.reset();
-    this.ObtenerDecretos();
-  }
-
 
   /*  jefes: any = [];
     envios: any = [];

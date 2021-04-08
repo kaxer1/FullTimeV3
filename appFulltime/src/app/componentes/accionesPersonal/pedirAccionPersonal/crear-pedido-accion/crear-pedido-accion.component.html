@@ -8,7 +8,7 @@
             <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
                 Guardar.</span>
         </div>
-        <form [formGroup]="PlanificacionComidasForm">
+        <form [formGroup]="AccionPersonalForm">
             <div class="row">
                 <div class="col-md">
                     <div class="d-flex flex-wrap justify-content-around">
@@ -24,8 +24,8 @@
                             <mat-label>Fecha Realización</mat-label>
                             <input matInput [matDatepicker]="pickerF" placeholder="dd/mm/aaaa" [formControl]="fechaF"
                                 min="1950-01-31" max="2050-01-31" required [disabled]="true">
-                            <mat-datepicker-toggle matSuffix [for]="pickerF" id="planComida" matTooltipClass="permiso-tooltip"
-                                matTooltipPosition="right"
+                            <mat-datepicker-toggle matSuffix [for]="pickerF" id="planComida"
+                                matTooltipClass="permiso-tooltip" matTooltipPosition="right"
                                 matTooltip="Fecha en la que se realiza el registro de ingreso de acción de personal">
                             </mat-datepicker-toggle>
                             <mat-datepicker touchUi #pickerF></mat-datepicker>
@@ -93,8 +93,8 @@
                             </mat-icon>
                             <mat-select [formControl]="tipoDecretoF">
                                 <mat-option *ngFor="let d of decretos" [value]="d.id"
-                                    (click)="IngresarOtro(PlanificacionComidasForm.value)">
-                                    {{d.descripcion}}
+                                    (click)="IngresarOtro(AccionPersonalForm.value)">
+                                    {{d.descripcion.toUpperCase()}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -140,7 +140,7 @@
                             </mat-icon>
                             <mat-select [formControl]="tipoCargoF">
                                 <mat-option *ngFor="let c of cargos" [value]="c.id"
-                                    (click)="IngresarCargo(PlanificacionComidasForm.value)">
+                                    (click)="IngresarCargo(AccionPersonalForm.value)">
                                     {{c.descripcion}}
                                 </mat-option>
                             </mat-select>
@@ -164,7 +164,7 @@
                             </mat-icon>
                             <mat-select [formControl]="tipoProcesoF">
                                 <mat-option *ngFor="let p of procesos" [value]="p.id"
-                                    (click)="IngresarProceso(PlanificacionComidasForm.value)">
+                                    (click)="IngresarProceso(AccionPersonalForm.value)">
                                     {{p.descripcion}}
                                 </mat-option>
                             </mat-select>
@@ -243,9 +243,9 @@
             </div>
         </form>
         <div style="text-align: center;">
-            <input type="submit" class="btn btn-sm" (click)="InsertarAccionPersonal(PlanificacionComidasForm.value)"
-                [disabled]="!PlanificacionComidasForm.valid" value="Guardar">
-            <input type="submit" class="btn btn-sm" (click)="CerrarRegistroPlanificacion()" value="Cancelar">
+            <input type="submit" class="btn btn-sm" (click)="InsertarAccionPersonal(AccionPersonalForm.value)"
+                [disabled]="!AccionPersonalForm.valid" value="Guardar">
+            <input type="submit" class="btn btn-sm" [routerLink]="['/listaPedidos/']" value="Cancelar">
         </div>
     </mat-card>
 </div>

@@ -155,7 +155,7 @@ export class VistaRolesComponent implements OnInit {
   /** Función para eliminar registro seleccionado */
   Eliminar(id_rol: number) {
     this.rest.EliminarRoles(id_rol).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.obtenerRoles();
