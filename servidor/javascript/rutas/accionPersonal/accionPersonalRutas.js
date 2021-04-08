@@ -21,15 +21,17 @@ class DepartamentoRutas {
         /** TABLA PROCESO_PROPUESTO */
         this.router.get('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarProcesosPropuestos);
         this.router.post('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearProcesoPropuesto);
-        this.router.get('/tipo/proceso/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoProceso);
+        this.router.get('/tipo/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoProceso);
         /** TABLA CARGO_PROPUESTO */
         this.router.get('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarCargoPropuestos);
         this.router.post('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearCargoPropuesto);
-        this.router.get('/tipo/cargo/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoCargoP);
+        this.router.get('/tipo/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoCargoP);
         /** TABLA DECRETO_ACUERDO_RESOL */
         this.router.get('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarDecretos);
         this.router.post('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearDecreto);
-        this.router.get('/tipo/decreto/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
+        this.router.get('/tipo/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
+        /** TABLA PEDIDO_ACCION_EMPLEADO */
+        this.router.post('/pedido/accion', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearPedidoAccionPersonal);
     }
 }
 const ACCION_PERSONAL_RUTAS = new DepartamentoRutas();

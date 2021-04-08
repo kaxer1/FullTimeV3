@@ -22,11 +22,13 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Fecha Realización</mat-label>
-                            <input matInput formControlName="fechaForm" required readonly="readonly">
-                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                            <input matInput [matDatepicker]="pickerF" placeholder="dd/mm/aaaa" [formControl]="fechaF"
+                                min="1950-01-31" max="2050-01-31" required [disabled]="true">
+                            <mat-datepicker-toggle matSuffix [for]="pickerF" id="planComida" matTooltipClass="permiso-tooltip"
                                 matTooltipPosition="right"
-                                matTooltip="Fecha en la que se realiza el registro de ingreso de acción de personal.">
-                                event</mat-icon>
+                                matTooltip="Fecha en la que se realiza el registro de ingreso de acción de personal">
+                            </mat-datepicker-toggle>
+                            <mat-datepicker touchUi #pickerF></mat-datepicker>
                         </mat-form-field>
                         <mat-form-field>
                             <input type="text" placeholder="Empleado" aria-label="Number" matInput
@@ -67,7 +69,7 @@
                                 matTooltipPosition="right"
                                 matTooltip="Lista de tipos de acción de personal registrados en el sistema.">
                                 help_outline</mat-icon>
-                            <mat-select formControlName="tipoForm" required>
+                            <mat-select formControlName="accionForm" required>
                                 <mat-option *ngFor="let ta of tipos_accion" [value]="ta.id">
                                     {{ta.nombre}}
                                 </mat-option>
@@ -197,7 +199,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <mat-form-field id="abrv">
-                                    <input type="text" placeholder="ING." matInput>
+                                    <input type="text" placeholder="ING." matInput [formControl]="abrevHF">
                                 </mat-form-field>
                                 <mat-form-field id="nombre">
                                     <input type="text" placeholder="Firma Talento Humano" aria-label="Number" matInput
@@ -218,7 +220,7 @@
                         <div class="row">
                             <div class="col-md">
                                 <mat-form-field id="abrv">
-                                    <input type="text" placeholder="ING." matInput>
+                                    <input type="text" placeholder="ING." matInput [formControl]="abrevGF">
                                 </mat-form-field>
                                 <mat-form-field id="nombre">
                                     <input type="text" placeholder="Firma Gerente" aria-label="Number" matInput

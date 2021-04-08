@@ -41,8 +41,8 @@ export class AccionPersonalService {
     return this.http.post(`${environment.url}/accionPersonal/proceso`, datos);
   }
 
-  BuscarIdProcesoPropuesto(id: any) {
-    return this.http.get(`${environment.url}/accionPersonal/tipo/proceso/${id}`);
+  BuscarIdProcesoPropuesto() {
+    return this.http.get(`${environment.url}/accionPersonal/tipo/proceso`);
   }
 
   /** SERVICIOS PARA TABLA CARGO_PROPUESTO*/
@@ -54,8 +54,8 @@ export class AccionPersonalService {
     return this.http.post(`${environment.url}/accionPersonal/cargo`, datos);
   }
 
-  BuscarIdCargoPropuesto(id: any) {
-    return this.http.get(`${environment.url}/accionPersonal/tipo/cargo/${id}`);
+  BuscarIdCargoPropuesto() {
+    return this.http.get(`${environment.url}/accionPersonal/tipo/cargo`);
   }
 
   /** SERVICIOS PARA TABLA DECRETO_ACUERDO_RESOLUCION*/
@@ -63,12 +63,18 @@ export class AccionPersonalService {
     return this.http.get(`${environment.url}/accionPersonal/decreto`);
   }
 
-  IngresarDecretoo(datos: any) {
+  IngresarDecreto(datos: any) {
     return this.http.post(`${environment.url}/accionPersonal/decreto`, datos);
   }
 
-  BuscarIdDecreto(id: any) {
-    return this.http.get(`${environment.url}/accionPersonal/tipo/decreto/${id}`);
+  BuscarIdDecreto() {
+    return this.http.get(`${environment.url}/accionPersonal/tipo/decreto`);
   }
+
+  /** SERVICIOS PARA TABLA PEDIDO_ACCION_EMPLEADO */
+  IngresarPedidoAccion(datos: any) {
+    return this.http.post(`${environment.url}/accionPersonal/pedido/accion`, datos);
+  }
+
 
 }

@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ACCION_PERSONAL_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 class AccionPersonalControlador {
     /** TABLA PROCESO_PROPUESTO */
@@ -36,7 +35,6 @@ class AccionPersonalControlador {
     }
     EncontrarUltimoProceso(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
             const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM proceso_propuesto');
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
@@ -67,7 +65,6 @@ class AccionPersonalControlador {
     }
     EncontrarUltimoCargoP(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
             const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM cargo_propuesto');
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
@@ -98,7 +95,6 @@ class AccionPersonalControlador {
     }
     EncontrarUltimoDecreto(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id } = req.params;
             const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM decreto_acuerdo_resol');
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
@@ -157,6 +153,21 @@ class AccionPersonalControlador {
             const id = req.params.id;
             yield database_1.default.query('DELETE FROM tipo_accion_personal WHERE id = $1', [id]);
             res.jsonp({ message: 'Registro eliminado' });
+        });
+    }
+    /** TABLA ACCION_PERSONAL_EMPLEADO */
+    CrearPedidoAccionPersonal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida, decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal, tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta, salario_propuesto } = req.body;
+            yield database_1.default.query('INSERT INTO accion_personal_empleado (id_empleado, fec_creacion, fec_rige_desde, ' +
+                'fec_rige_hasta, identi_accion_p, num_partida, decre_acue_resol, abrev_empl_uno, firma_empl_uno, ' +
+                'abrev_empl_dos, firma_empl_dos, adicion_legal, tipo_accion, descrip_partida, cargo_propuesto, ' +
+                'proceso_propuesto, num_partida_propuesta, salario_propuesto) ' +
+                'VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)', [id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida,
+                decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal,
+                tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta,
+                salario_propuesto]);
+            res.jsonp({ message: 'Registro realizado con éxito' });
         });
     }
 }

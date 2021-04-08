@@ -22,7 +22,6 @@ class AccionPersonalControlador {
     }
 
     public async EncontrarUltimoProceso(req: Request, res: Response) {
-        const { id } = req.params;
         const ACCION = await pool.query('SELECT MAX(id) AS id FROM proceso_propuesto');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -51,7 +50,6 @@ class AccionPersonalControlador {
     }
 
     public async EncontrarUltimoCargoP(req: Request, res: Response) {
-        const { id } = req.params;
         const ACCION = await pool.query('SELECT MAX(id) AS id FROM cargo_propuesto');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -80,7 +78,6 @@ class AccionPersonalControlador {
     }
 
     public async EncontrarUltimoDecreto(req: Request, res: Response) {
-        const { id } = req.params;
         const ACCION = await pool.query('SELECT MAX(id) AS id FROM decreto_acuerdo_resol');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -138,6 +135,25 @@ class AccionPersonalControlador {
         const id = req.params.id;
         await pool.query('DELETE FROM tipo_accion_personal WHERE id = $1', [id]);
         res.jsonp({ message: 'Registro eliminado' });
+    }
+
+    /** TABLA ACCION_PERSONAL_EMPLEADO */
+
+    public async CrearPedidoAccionPersonal(req: Request, res: Response): Promise<void> {
+        const { id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida,
+            decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal,
+            tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta,
+            salario_propuesto } = req.body;
+        await pool.query('INSERT INTO accion_personal_empleado (id_empleado, fec_creacion, fec_rige_desde, ' +
+            'fec_rige_hasta, identi_accion_p, num_partida, decre_acue_resol, abrev_empl_uno, firma_empl_uno, ' +
+            'abrev_empl_dos, firma_empl_dos, adicion_legal, tipo_accion, descrip_partida, cargo_propuesto, ' +
+            'proceso_propuesto, num_partida_propuesta, salario_propuesto) ' +
+            'VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)',
+            [id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida,
+                decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal,
+                tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta,
+                salario_propuesto]);
+        res.jsonp({ message: 'Registro realizado con éxito' });
     }
 
 }

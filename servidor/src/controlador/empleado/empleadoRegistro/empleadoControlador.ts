@@ -13,13 +13,29 @@ class EmpleadoControlador {
     res.jsonp(empleado.rows);
   }
 
+  // BÚSQUEDA DE DATOS DE EMPLEADO INGRESANDO EL NOMBRE
+  public async BuscarEmpleadoNombre(req: Request, res: Response): Promise<any> {
+    const { informacion } = req.body;
+    const EMPLEADO = await pool.query('SELECT * FROM empleados WHERE ' +
+      '(UPPER (apellido) || \' \' || UPPER (nombre)) = $1', [informacion]);
+    if (EMPLEADO.rowCount > 0) {
+      return res.jsonp(EMPLEADO.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+    }
+
+  }
   public async getOne(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
-    const unEmpleado = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
-    if (unEmpleado.rowCount > 0) {
-      return res.jsonp(unEmpleado.rows)
+    const EMPLEADO = await pool.query('SELECT * FROM empleados WHERE id = $1', [id]);
+    if (EMPLEADO.rowCount > 0) {
+      return res.jsonp(EMPLEADO.rows)
     }
-    res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+    else {
+      return res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+    }
+
   }
 
   public async getImagen(req: Request, res: Response): Promise<any> {
@@ -665,19 +681,20 @@ class EmpleadoControlador {
   }
   public async GeolocalizacionCrokis(req: Request, res: Response): Promise<any> {
     let id = req.params.id
-    let {lat, lng} = req.body
+    let { lat, lng } = req.body
     console.log(lat, lng, id);
-    
+
     try {
       await pool.query('UPDATE empleados SET latitud = $1, longitud = $2 WHERE id = $3', [lat, lng, id])
-      .then(result => {console.log(result.command);
-       })
-      res.status(200).jsonp({message: 'Geolocalizacion actulizada'});
+        .then(result => {
+          console.log(result.command);
+        })
+      res.status(200).jsonp({ message: 'Geolocalizacion actulizada' });
     } catch (error) {
-      res.status(400).jsonp({message: error});
+      res.status(400).jsonp({ message: error });
     }
   }
-  
+
 }
 
 export const EMPLEADO_CONTROLADOR = new EmpleadoControlador();
