@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NotificacionSinTimbres = void 0;
 const database_1 = __importDefault(require("../database"));
 const MINUTO_TIMER = 15;
 // const MINUTO_TIMER = 5; // de prueba
-const NotificacionSinTimbres = function () {
+exports.NotificacionSinTimbres = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         // console.log(f.getMinutes());
@@ -43,7 +42,6 @@ const NotificacionSinTimbres = function () {
         }
     }), 60000);
 };
-exports.NotificacionSinTimbres = NotificacionSinTimbres;
 function LlamarDetalleHorario(fecha, hora, num_dia, fechaDate) {
     return __awaiter(this, void 0, void 0, function* () {
         let datoConsulta = fecha + ' ' + hora;
