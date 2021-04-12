@@ -13,6 +13,7 @@ class VacacionesRutas {
         this.router.get('/', TokenValidation, VACACIONES_CONTROLADOR.ListarVacaciones);
         this.router.get('/estado-solicitud', TokenValidation, VACACIONES_CONTROLADOR.ListarVacacionesAutorizadas);
         this.router.get('/:id', TokenValidation, VACACIONES_CONTROLADOR.VacacionesIdPeriodo);
+        this.router.get('/listar/vacacion/:id', TokenValidation, VACACIONES_CONTROLADOR.ListarVacacionId);
         this.router.get('/one/:id', TokenValidation, VACACIONES_CONTROLADOR.ListarUnaVacacion);
         this.router.post('/', TokenValidation, VACACIONES_CONTROLADOR.CrearVacaciones);
         this.router.post('/fechasFeriado', TokenValidation, VACACIONES_CONTROLADOR.ObtenerFechasFeriado);

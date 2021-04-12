@@ -349,6 +349,10 @@ import { CrearPedidoAccionComponent } from './componentes/accionesPersonal/pedir
 import { EditarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/editar-pedido-accion/editar-pedido-accion.component';
 import { VerPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/ver-pedido-accion/ver-pedido-accion.component';
 import { AccionesTimbresComponent } from './componentes/settings/acciones-timbres/acciones-timbres.component';
+import { PermisosMultiplesComponent } from './componentes/empleadoPermisos/permisos-multiples/permisos-multiples.component';
+import { PermisosMultiplesEmpleadosComponent } from './componentes/empleadoPermisos/permisos-multiples-empleados/permisos-multiples-empleados.component';
+import { HorariosMultiplesComponent } from './componentes/empleadoHorario/horarios-multiples/horarios-multiples.component';
+import { HorarioMultipleEmpleadoComponent } from './componentes/empleadoHorario/horario-multiple-empleado/horario-multiple-empleado.component';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
@@ -625,6 +629,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarPedidoAccionComponent,
     VerPedidoAccionComponent,
     AccionesTimbresComponent,
+    PermisosMultiplesComponent,
+    PermisosMultiplesEmpleadosComponent,
+    HorariosMultiplesComponent,
+    HorarioMultipleEmpleadoComponent,
   ],
 
   imports: [

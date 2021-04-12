@@ -20,6 +20,7 @@ class PermisosRutas {
         this.router.get('/lista/', verificarToken_1.TokenValidation, permisosControlador_1.default.ListarEstadosPermisos);
         this.router.get('/lista-autorizados/', verificarToken_1.TokenValidation, permisosControlador_1.default.ListarPermisosAutorizados);
         this.router.get('/:id', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerUnPermiso);
+        this.router.get('/permiso/editar/:id', verificarToken_1.TokenValidation, permisosControlador_1.default.ObtenerPermisoEditar);
         this.router.get('/un-permiso/:id_permiso', verificarToken_1.TokenValidation, permisosControlador_1.default.ListarUnPermisoInfo);
         this.router.post('/', verificarToken_1.TokenValidation, permisosControlador_1.default.CrearPermisos);
         this.router.post('/mail-noti/', verificarToken_1.TokenValidation, permisosControlador_1.default.SendMailNotifiPermiso);

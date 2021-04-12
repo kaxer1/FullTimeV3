@@ -1,7 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormControl } from '@angular/forms';
+import { PageEvent } from '@angular/material/paginator';
+import { ToastrService } from 'ngx-toastr';
+// Librería para manejar formatos de fechas
+import * as moment from 'moment';
+moment.locale('es');
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
+import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-listar-pedido-accion',
@@ -10,10 +20,97 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class ListarPedidoAccionComponent implements OnInit {
 
-  constructor() { }
+  // Items de paginación de la tabla
+  tamanio_pagina: number = 5;
+  numero_pagina: number = 1;
+  pageSizeOptions = [5, 10, 20, 50];
+
+  // Datos de filtros de búsqueda
+  filtroCodigo: number;
+  filtroCedula: '';
+  filtroNombre: '';
+  filtroApellido: '';
+
+  // Datos del Formulario de búsqueda
+  codigo = new FormControl('');
+  cedula = new FormControl('', [Validators.minLength(2)]);
+  nombre = new FormControl('', [Validators.minLength(2)]);
+  apellido = new FormControl('', [Validators.minLength(2)]);
+
+  constructor(
+    public restAccion: AccionPersonalService,
+    public restEmpre: EmpresaService,
+    private toastr: ToastrService,
+  ) { }
 
   ngOnInit(): void {
+    this.ObtenerLogo();
+    this.VerDatosAcciones();
+    this.ObtenerEmpresa();
   }
+
+
+  // Evento para manejar la páginación
+  ManejarPagina(e: PageEvent) {
+    this.tamanio_pagina = e.pageSize;
+    this.numero_pagina = e.pageIndex + 1;
+  }
+
+  // OBTENER LOGO DEL MINISTERIO DE TRABAJO
+  logo: any = String;
+  ObtenerLogo() {
+    this.restAccion.LogoImagenBase64().subscribe(res => {
+      this.logo = 'data:image/jpeg;base64,' + res.imagen;
+    });
+  }
+
+  //DATOS ACCIONES
+  listaPedidos: any = [];
+  VerDatosAcciones() {
+    this.listaPedidos = [];
+    this.restAccion.BuscarDatosPedido().subscribe(data => {
+      this.listaPedidos = data;
+      console.log('datos_actuales', this.listaPedidos)
+    });
+  }
+
+  // Método para obtener colores de empresa
+  empresa: any = [];
+  ObtenerEmpresa() {
+    this.empresa = [];
+    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
+      this.empresa = res;
+    });
+  }
+
+  datosPedido: any = [];
+  empleado_1: any = [];
+  empleado_2: any = [];
+  empleado_3: any = [];
+  MostrarInformacion(id: number) {
+    this.datosPedido = [];
+    this.empleado_1 = [];
+    this.empleado_2 = [];
+    this.empleado_3 = [];
+    this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
+      this.datosPedido = data;
+      console.log('1', this.datosPedido);
+      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
+        this.empleado_1 = data1;
+        console.log('2', this.empleado_1);
+        this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+          this.empleado_2 = data2;
+          console.log('3', this.empleado_2);
+          this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+            this.empleado_3 = data3;
+            console.log('4', this.empleado_3)
+            this.generarPdf('download');
+          });
+        });
+      });
+    });
+  }
+
 
   /* ****************************************************************************************************
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
@@ -35,71 +132,1932 @@ export class ListarPedidoAccionComponent implements OnInit {
 
   getDocumentDefinicion() {
     // sessionStorage.setItem('Roles', this.roles);
-
     return {
-
       // Encabezado de la página
-      // pageOrientation: 'portrait',
-      pageSize: 'A4',
-      background: function (currentPage, pageSize) {
-        return {
-          table: {
-            widths: [pageSize.width - 30],
-            heights: [pageSize.height - 30],
-            body: [['']]
-          },
-          margin: 10,
-        };
-      },
-      pageBreak: 'before',
+      pageMargins: [10, 40, 10, 40],
       content: [
-       // { text: 'Column/row spans', pageBreak: 'before', style: 'subheader' },
 
-        this.prueba(),
+        this.PresentarHoja1_Parte_1(),
+        this.PresentarHoja1_Parte_2(),
+        this.PresentarHoja1_Parte_3(),
+        this.PresentarHoja1_Parte_4(),
+        this.PresentarHoja1_Parte_5(),
+        this.PresentarHoja1_Parte_6(),
+        this.PresentarHoja1_Parte_7(),
+        this.PresentarHoja1_Parte_8(),
+        this.PresentarHoja1_Parte_8_1(),
+        this.PresentarHoja1_Parte_9(),
+        this.PresentarHoja1_Parte_10(),
+        this.PresentarHoja1_Parte_11_1(),
+        this.PresentarHoja1_Parte_11_2(),
+        this.PresentarHoja1_Parte_12(),
+        this.PresentarHoja1_Parte_13_1(),
+        this.PresentarHoja1_Parte_13_2(),
+        { text: '', pageBreak: 'before', style: 'subheader' },
+        this.PresentarHoja2_Parte_1(),
+        this.PresentarHoja2_Parte_2(),
+        this.PresentarHoja2_Parte_3_1(),
+        this.PresentarHoja2_Parte_3_2(),
+        this.PresentarHoja2_Parte_3_3(),
+        this.PresentarHoja2_Parte_3_4(),
+        this.PresentarHoja2_Parte_3_5(),
+        this.PresentarHoja2_Parte_4_1(),
+        this.PresentarHoja2_Parte_4_2(),
+        this.PresentarHoja2_Parte_4_3(),
+        this.PresentarHoja2_Parte_4_4(),
+        this.PresentarHoja2_Parte_4_5(),
+        this.PresentarHoja2_Parte_4_6(),
       ],
-
+      styles: {
+        itemsTable: { fontSize: 8 },
+        itemsTable_c: { fontSize: 9 },
+        itemsTable_d: { fontSize: 9, alignment: 'right' }
+      }
     };
   }
 
   presentarDataPDFRoles() {
     return {
-      columns: [
-        { width: '*', text: '' },
-        {
-          width: 'auto',
-          table: {
-            widths: [50, 150],
-            body: [
-              [
-                { text: 'Id', style: 'tableHeader' },
-                { text: 'Nombre', style: 'tableHeader' },
-              ],
-              /* ...this.roles.map(obj => {
-                 return [
-                   { text: obj.id, style: 'itemsTable' },
-                   { text: obj.nombre, style: 'itemsTable' },
-                 ];
-               })*/
-            ],
-          },
-        },
-        { width: '*', text: '' },
-      ]
+      table: {
+        widths: [565.28],
+        heights: [755],
+        body: [
+          [
+            [
+              ''
+            ]/*  */
+          ],
+
+        ],
+      },
+
     };
   }
 
-  prueba() {
-    var dd = {
-      background: function (currentPage, pageSize) {
-        return {
-          table: {
-            widths: [pageSize.width - 30],
-            heights: [pageSize.height - 30],
-            body: [['']]
-          },
-          margin: 10
-        };
+  PresentarHoja1_Parte_1() {
+    var mes = moment(this.datosPedido[0].fec_rige_desde).month()
+    return {
+      table: {
+        widths: [280, 'auto', '*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, true, true, false],
+              margin: [70, 10, 0, 0],
+              image: this.logo,
+              width: 100,
+            },
+            {
+              border: [false, true, true, false],
+              text: [
+                { text: '---------------', style: 'itemsTable', color: 'white' },
+              ]
+            },
+            {
+              border: [false, true, true, false],
+              table: {
+                body: [
+                  [{ text: 'ACCIÓN DE PERSONAL', style: 'itemsTable_c', margin: [65, 0, 0, 0] }],
+                  [{
+                    text: [{ text: 'N° ', style: 'itemsTable_c' },
+                    { text: '------------', color: 'white', style: 'itemsTable' },
+                    { text: this.datosPedido[0].identi_accion_p, style: 'itemsTable_c' }], margin: [40, 5, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'Fecha: ', style: 'itemsTable_c' },
+                    { text: '---------', color: 'white', style: 'itemsTable' },
+                    { text: moment(this.datosPedido[0].fec_rige_desde).format('DD MMMM YYYY'), style: 'itemsTable_c' }], margin: [32, 0, 0, 0]
+                  }],
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
       },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_2() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [20],
+
+        body: [
+          [
+            {
+              border: [true, true, true, false],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'DECRETO: ', style: 'itemsTable_c' },
+                    { text: '----------------------------------------------------', color: 'white', style: 'itemsTable' },
+                    { text: 'ACUERDO:', style: 'itemsTable_c' },
+                    { text: '----------------------------------------------------', color: 'white', style: 'itemsTable' },
+                    { text: 'RESOLUCIÓN:', style: 'itemsTable_c' }], margin: [85, 6, 0, 0]
+                  }],
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_3() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [20],
+        body: [
+          [
+            {
+              border: [true, false, false, true],
+              margin: [90, 4, 0, 0],
+              text: [
+                { text: 'No.', style: 'itemsTable_c' },
+              ]
+            },
+            {
+              border: [false, false, false, true],
+              margin: [0, 0, 0, 0],
+              table: {
+                body: [
+                  [{ text: '-------------------------------', color: 'white' }],
+                  [{ text: '-------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+            {
+              border: [false, false, false, true],
+              margin: [0, 4, 0, 0],
+              text: [
+                { text: 'FECHA:', style: 'itemsTable_c' },
+              ]
+            },
+            {
+              border: [false, false, true, true],
+              margin: [0, 0, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------', color: 'white' }],
+                  [{ text: '------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja1_Parte_4() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [30],
+
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{ text: this.empleado_1[0].apellido.toUpperCase(), style: 'itemsTable_c', margin: [0, 6, 0, 0] }],
+                  [{ text: 'APELLIDO', style: 'itemsTable_c', margin: [110, 0, 0, 0] }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{ text: this.empleado_1[0].nombre.toUpperCase(), style: 'itemsTable_c', margin: [0, 6, 0, 0] }],
+                  [{ text: 'NOMBRE', style: 'itemsTable_c', margin: [110, 0, 0, 0] }]
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_5() {
+    return {
+      table: {
+        widths: ['*', '*', '*'],
+        heights: [15],
+
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'No. de Cédula de Ciudadanía', style: 'itemsTable_c' },
+                    { text: '-----', color: 'white', style: 'itemsTable' }], margin: [40, 0, 0, 0]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'No. de Afilicación IESS', style: 'itemsTable_c' },
+                    { text: '--------', color: 'white', style: 'itemsTable' }], margin: [40, 0, 0, 0]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{ text: 'Rige a partir de:', style: 'itemsTable_c', margin: [40, 0, 0, 0] }],
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_6() {
+    return {
+      table: {
+        widths: ['*', '*', '*'],
+        heights: [15],
+
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: this.empleado_1[0].cedula, style: 'itemsTable_c' }], margin: [130, 0, 0, 0],
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: '', style: 'itemsTable_c' }]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{ text: moment(this.datosPedido[0].fec_rige_desde).format('dddd DD MMMM YYYY'), style: 'itemsTable_c' }],
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_7() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [15],
+
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'EXPLICACIÓN: (Opcional: adjuntar Anexo)', style: 'itemsTable_c' }]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_8() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, false, true, false],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'BASE LEGAL: ', style: 'itemsTable_c' },
+                    { text: this.datosPedido[0].base_legal, style: 'itemsTable' }]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_8_1() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [20],
+
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: this.datosPedido[0].adicion_legal, style: 'itemsTable' }]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_9() {
+    return {
+      table: {
+        widths: ['*', '*', '*', '*'],
+        heights: [10],
+
+        body: [
+          [
+            {
+              border: [true, false, false, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'INGRESO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'NOMBRAMIENTO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'ASCENSO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'SUBROGACIÓN:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'ENCARGO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'VACACIONES:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, false, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'TRASLADO:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'TRASPASO:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'CAMBIO ADMINISTRATIVO:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'INTERCAMBIO:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'COMISIÓN DE SERVICIOS:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'LICENCIA:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, false, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'REVALORIZACIÓN:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'RECLASIFICACIÓN:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'UBICACIÓN:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'REINTEGRO:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'REINSTITUCIONAL:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'RENUNCIA:', style: 'itemsTable' }], margin: [10, 0, 0, 0]
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [false, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'SUPRESIÓN:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'DESTITUCIÓN:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'REMOCIÓN:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    text: [{ text: 'JUBILACIÓN:', style: 'itemsTable' }], margin: [5, 0, 0, 0]
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'OTRO:', style: 'itemsTable' }]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              margin: [10, -20, 0, 0],
+                              body: [
+                                [{ text: '---------------------', color: 'white', style: 'itemsTable' }],
+                                [{ text: '---------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                ]
+              },
+              layout: 'noBorders'
+            }
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_10() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [10],
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'SITUACIÓN ACTUAL', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'PROCESO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [15, 0, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: '-----------', color: 'white', style: 'itemsTable' }]
+                                }],
+                                [{
+                                  text: [{ text: 'SUBPROCESO:', style: 'itemsTable' }], margin: [15, -25, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+
+                            table: {
+                              body: [
+                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'PUESTO:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [19, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.empleado_1[0].cargo.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'LUGAR DE TRABAJO:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [0, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: '--------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'REMUNERACIÓN MENSUAL:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [0, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.empleado_1[0].sueldo, style: 'itemsTable', }],
+                                [{ text: '---------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].descrip_partida.toUpperCase() + '\n' + this.datosPedido[0].num_partida, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                  }],
+
+                ]
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'SITUACIÓN ACTUAL', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'PROCESO:', style: 'itemsTable' }], margin: [15, 0, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [15, 0, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: '-----------', color: 'white', style: 'itemsTable' }]
+                                }],
+                                [{
+                                  text: [{ text: 'SUBPROCESO:', style: 'itemsTable' }], margin: [15, -25, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+
+                            table: {
+                              body: [
+                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'PUESTO:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [19, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.datosPedido[0].cargo_propuesto.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'LUGAR DE TRABAJO:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [0, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: '--------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    table: {
+                      widths: ['auto', '*'],
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              body: [
+                                [{
+                                  text: [{ text: 'REMUNERACIÓN MENSUAL:', style: 'itemsTable' }], margin: [15, -18, 0, 0]
+                                }]
+                              ]
+                            },
+                            layout: 'noBorders'
+                          },
+                          {
+                            border: [false, false, false, false],
+                            margin: [0, -18, 0, 0],
+                            table: {
+                              body: [
+                                [{ text: this.datosPedido[0].salario_propuesto, style: 'itemsTable', }],
+                                [{ text: '---------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                              ]
+                            },
+                            layout: 'lightHorizontalLines'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }],
+                  [{
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].proceso_propuesto.toUpperCase() + '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                  }],
+
+                ]
+              },
+              layout: 'noBorders'
+            },
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_11_1() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [10],
+        body: [
+          [
+            {
+              border: [true, false, true, false],
+              margin: [90, 0, 0, 0],
+              text: [
+                { text: 'ACTA FINAL DEL CONCURSO', style: 'itemsTable_c' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [90, 0, 0, 0],
+              text: [
+                { text: 'PROCESO DE RECURSOS HUMANOS', style: 'itemsTable_c' },
+              ]
+            }
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja1_Parte_11_2() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [15],
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                widths: ['auto', '*', 'auto', '*'],
+                heights: [20],
+                body: [
+                  [
+                    {
+                      border: [true, false, false, true],
+                      margin: [15, 0, 0, 0],
+                      text: [
+                        { text: 'No.', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, -5, 0, 0],
+                      table: {
+                        body: [
+                          [{ text: '-------------------------------', color: 'white', style: 'itemsTable' }],
+                          [{ text: '-------------------------------', color: 'white', style: 'itemsTable' }],
+
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, 0, 0, 0],
+                      text: [
+                        { text: 'FECHA:', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, true, true],
+                      margin: [0, -5, 0, 0],
+                      table: {
+
+                        body: [
+                          [{ text: '------------------------------', color: 'white', style: 'itemsTable' }],
+                          [{ text: '------------------------------', color: 'white', style: 'itemsTable' }],
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+                    },
+                  ],
+                ],
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [true, false, true, true],
+              table: {
+                widths: ['auto', '*'],
+                body: [
+                  [
+                    {
+                      border: [true, false, false, true],
+                      margin: [15, 0, 0, 0],
+                      text: [
+                        { text: 'f.', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, -8, 0, 0],
+                      table: {
+                        body: [
+                          [{ text: '------------------------------------------------------------------------', color: 'white' }],
+                          [{ text: this.datosPedido[0].abrev_empl_uno.toUpperCase() + ' ' + this.empleado_2[0].nombre.toUpperCase() + ' ' + this.empleado_2[0].apellido.toUpperCase() + '\n' + this.empleado_2[0].cargo.toUpperCase() + '\n' + this.empleado_2[0].departamento.toUpperCase(), style: 'itemsTable', alignment: 'center' }],
+
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+
+                    },
+                  ],
+                ],
+              },
+              layout: 'noBorders'
+            },
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja1_Parte_12() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [10],
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                body: [
+                  [{
+                    text: [{ text: 'DIOS, PATRIA Y LIBERTAD', style: 'itemsTable_c' }], margin: [235, 0, 0, 0]
+                  }],
+                  [{
+                    table: {
+                      body: [
+                        [
+                          {
+                            border: [false, false, false, false],
+                            table: {
+                              widths: ['auto', '*'],
+                              body: [
+                                [
+                                  {
+                                    border: [false, false, false, false],
+                                    margin: [150, -5, 0, 0],
+                                    text: [
+                                      { text: 'f.', style: 'itemsTable' },
+                                    ]
+                                  },
+                                  {
+                                    border: [false, false, false, false],
+                                    margin: [0, -10, 0, 0],
+                                    table: {
+                                      body: [
+                                        [{ text: '------------------------------------------------------------------------', color: 'white' }],
+                                        [{ text: this.datosPedido[0].abrev_empl_dos.toUpperCase() + ' ' + this.empleado_3[0].nombre.toUpperCase() + ' ' + this.empleado_3[0].apellido.toUpperCase() + '\n' + this.empleado_3[0].cargo.toUpperCase() + '\n' + this.empleado_3[0].departamento.toUpperCase(), style: 'itemsTable', alignment: 'center' }],
+
+                                      ]
+                                    },
+                                    layout: 'lightHorizontalLines'
+
+                                  },
+                                ],
+                              ],
+                            },
+                            layout: 'noBorders'
+                          },
+                        ],
+                      ],
+
+                    },
+                    layout: {
+                      defaultBorder: false,
+                    }
+                  }]
+                ]
+              },
+              layout: 'noBorders'
+            },
+
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+
+  PresentarHoja1_Parte_13_1() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [10],
+        body: [
+          [
+            {
+              border: [true, false, true, false],
+              margin: [90, 0, 0, 0],
+              text: [
+                { text: 'RECURSOS HUMANOS', style: 'itemsTable_c' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [90, 0, 0, 0],
+              text: [
+                { text: 'REGISTRO Y CONTROL', style: 'itemsTable_c' },
+              ]
+            }
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja1_Parte_13_2() {
+    return {
+      table: {
+        widths: ['*', '*'],
+        heights: [15],
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              table: {
+                widths: ['auto', '*', 'auto', '*'],
+                heights: [20],
+                body: [
+                  [
+                    {
+                      border: [true, false, false, true],
+                      margin: [15, 0, 0, 0],
+                      text: [
+                        { text: 'No.', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, -5, 0, 0],
+                      table: {
+                        body: [
+                          [{ text: this.datosPedido[0].identi_accion_p, style: 'itemsTable' }],
+                          [{ text: '-------------------------------', color: 'white', style: 'itemsTable' }],
+
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, 0, 0, 0],
+                      text: [
+                        { text: 'FECHA:', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, true, true],
+                      margin: [0, -5, 0, 0],
+                      table: {
+
+                        body: [
+                          [{ text: moment(this.datosPedido[0].fec_rige_desde).format('DD MMMM YYYY'), style: 'itemsTable' }],
+                          [{ text: '------------------------------', color: 'white', style: 'itemsTable' }],
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+                    },
+                  ],
+                ],
+              },
+              layout: 'noBorders'
+            },
+            {
+              border: [true, false, true, true],
+              table: {
+                widths: ['auto', '*'],
+                body: [
+                  [
+                    {
+                      border: [true, false, false, true],
+                      margin: [15, -5, 0, 0],
+                      text: [
+                        { text: 'f.', style: 'itemsTable' },
+                      ]
+                    },
+                    {
+                      border: [false, false, false, true],
+                      margin: [0, -8, 0, 0],
+                      table: {
+                        body: [
+                          [{ text: '---------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
+                          [{ text: 'Nombre:', style: 'itemsTable' }],
+                        ]
+                      },
+                      layout: 'lightHorizontalLines'
+
+                    },
+                  ],
+                ],
+              },
+              layout: 'noBorders'
+            },
+          ],
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+
+  PresentarHoja2_Parte_1() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [75.5],
+        body: [
+          [
+            {
+              border: [true, true, false, true],
+              margin: [19, 20, 0, 0],
+              text: [
+                { text: 'CAUCIÓN REGISTRADA CON No.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, true, false, true],
+              margin: [12, 15, 0, 0],
+              table: {
+                body: [
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                  [{ text: '--------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+            {
+              border: [false, true, false, true],
+              margin: [19, 20, 0, 0],
+              text: [
+                { text: 'FECHA:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, true, true, true],
+              margin: [12, 15, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja2_Parte_2() {
+    return {
+      table: {
+        widths: [565.28],
+        heights: [45.3],
+        body: [
+          [
+            {
+              border: [true, false, true, true],
+              text: ''
+            }
+          ]
+        ],
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  //241.6
+  PresentarHoja2_Parte_3_1() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, 30, 0, 0],
+              text: [
+                { text: 'LA PERSONA REEMPLAZA A:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, false],
+              margin: [8, 25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                  [{ text: '--------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, false],
+              margin: [0, 30, 0, 0],
+              text: [
+                { text: 'EN EL PUESTO DE:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [8, 25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                  [{ text: '--------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja2_Parte_3_2() {
+    return {
+      table: {
+        widths: ['auto', '*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, -15, 0, 0],
+              text: [
+                { text: 'QUIEN CESO EN FUNCIONES POR:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [0, -21, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-----------------------------------------------------------------------------------------------------------------------', color: 'white' }],
+                  [{ text: '-----------------------------------------------------------------------------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja2_Parte_3_3() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, -35, 0, 0],
+              text: [
+                { text: 'ACCIÓN DE PERSONAL REGISTRADA CON No.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, false],
+              margin: [0, -40, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '----------------------------------------------', color: 'white' }],
+                  [{ text: '----------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, false],
+              margin: [0, -35, 0, 0],
+              text: [
+                { text: 'FECHA:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [0, -40, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-------------------------------------------', color: 'white' }],
+                  [{ text: '-------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja2_Parte_3_4() {
+    return {
+      table: {
+        widths: ['auto', '*'],
+        heights: [60.8],
+
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, -15, 0, 0],
+              text: [
+                { text: 'AFILIACIÓN AL COLEGIO DE PROFESIONALES DE:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [0, -21, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-------------------------------------------------------------------------------------------------------', color: 'white' }],
+                  [{ text: '-------------------------------------------------------------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            }
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja2_Parte_3_5() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [50.8],
+        body: [
+          [
+            {
+              border: [true, false, false, true],
+              margin: [19, -5, 0, 0],
+              text: [
+                { text: 'No.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, true],
+              margin: [12, -12, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, true],
+              margin: [19, -5, 0, 0],
+              text: [
+                { text: 'FECHA:', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, true],
+              margin: [12, -12, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+
+  //392.6
+  PresentarHoja2_Parte_4_1() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [40],
+        body: [
+          [
+            {
+              border: [true, false, true, false],
+              margin: [19, 30, 0, 0],
+              text: [
+                { text: 'POSESIÓN DEL CARGO', style: 'itemsTable' },
+              ]
+            },
+          ]
+        ],
+      },
+
+    };
+  }
+
+  PresentarHoja2_Parte_4_2() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [40],
+
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, 30, 0, 0],
+              text: [
+                { text: 'YO', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, false],
+              margin: [8, 25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------', color: 'white' }],
+                  [{ text: '------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, false],
+              margin: [0, 30, 0, 0],
+              text: [
+                { text: 'CON CÉDULA DE CIUDADANÍA No.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [8, 25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------', color: 'white' }],
+                  [{ text: '------------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  PresentarHoja2_Parte_4_3() {
+    return {
+      table: {
+        widths: ['*'],
+        heights: [40],
+        body: [
+          [
+            {
+              border: [true, false, true, false],
+              margin: [19, -12, 0, 0],
+              text: [
+                { text: 'JURO LEALTAD AL ESTADO ECUATORIANO.', style: 'itemsTable' },
+              ]
+            },
+          ]
+        ],
+      },
+
+    };
+  }
+
+  PresentarHoja2_Parte_4_4() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [40],
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, -20, 0, 0],
+              text: [
+                { text: 'LUGAR.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, false],
+              margin: [12, -25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, false],
+              margin: [19, -20, 0, 0],
+              text: [
+                { text: '-----', style: 'itemsTable', color: 'white' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [12, -25, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'noBorders'
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja2_Parte_4_5() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [40],
+        body: [
+          [
+            {
+              border: [true, false, false, false],
+              margin: [19, -30, 0, 0],
+              text: [
+                { text: 'FECHA.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, false],
+              margin: [12, -36, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+                  [{ text: '-----------------------------------------------------------', color: 'white' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, false],
+              margin: [19, -30, 0, 0],
+              text: [
+                { text: '-----', style: 'itemsTable', color: 'white' },
+              ]
+            },
+            {
+              border: [false, false, true, false],
+              margin: [12, -36, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                  [{ text: '------------------------------------------------------------', color: 'white' }],
+                ]
+              },
+              layout: 'noBorders'
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  PresentarHoja2_Parte_4_6() {
+    return {
+      table: {
+        widths: ['auto', '*', 'auto', '*'],
+        heights: [86.3],
+
+        body: [
+          [
+            {
+              border: [true, false, false, true],
+              margin: [35, 30, 0, 0],
+              text: [
+                { text: 'f.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, false, true],
+              margin: [0, 18, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------', color: 'white' }],
+                  [{ text: 'Funcionario', style: 'itemsTable', alignment: 'center' }],
+
+                ]
+              },
+              layout: 'lightHorizontalLines'
+
+            },
+            {
+              border: [false, false, false, true],
+              margin: [0, 30, 0, 0],
+              text: [
+                { text: 'f.', style: 'itemsTable' },
+              ]
+            },
+            {
+              border: [false, false, true, true],
+              margin: [0, 18, 0, 0],
+              table: {
+
+                body: [
+                  [{ text: '------------------------------------------------', color: 'white' }],
+                  [{ text: 'Responsable de Recursos Humanos', style: 'itemsTable', alignment: 'center' }],
+                ]
+              },
+              layout: 'lightHorizontalLines'
+            },
+          ],
+        ],
+
+      },
+      layout: {
+        defaultBorder: false,
+      }
+    };
+  }
+
+  LimpiarCampos() {
+    this.codigo.reset();
+    this.cedula.reset();
+    this.nombre.reset();
+    this.apellido.reset();
+  }
+
+
+  IngresarSoloLetras(e) {
+    let key = e.keyCode || e.which;
+    let tecla = String.fromCharCode(key).toString();
+    //Se define todo el abecedario que se va a usar.
+    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    let especiales = [8, 37, 39, 46, 6, 13];
+    let tecla_especial = false
+    for (var i in especiales) {
+      if (key == especiales[i]) {
+        tecla_especial = true;
+        break;
+      }
+    }
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
+        timeOut: 6000,
+      })
+      return false;
+    }
+  }
+
+  IngresarSoloNumeros(evt) {
+    if (window.event) {
+      var keynum = evt.keyCode;
+    }
+    else {
+      keynum = evt.which;
+    }
+    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
+    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
+      return true;
+    }
+    else {
+      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
+        timeOut: 6000,
+      })
+      return false;
     }
   }
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import { ImagenBase64LogosEmpresas } from '../../libs/ImagenCodificacion';
 
 class AccionPersonalControlador {
 
@@ -156,6 +157,74 @@ class AccionPersonalControlador {
         res.jsonp({ message: 'Registro realizado con éxito' });
     }
 
+    public async verLogoMinisterio(req: Request, res: Response): Promise<any> {
+
+        const file_name = 'ministerio_trabajo.png';
+        const codificado = await ImagenBase64LogosEmpresas(file_name);
+        if (codificado === 0) {
+            res.send({ imagen: 0 })
+        } else {
+            res.send({ imagen: codificado })
+        }
+    }
+
+    /** CONSULTAS GENERACIÓN DE PDF */
+
+    public async EncontrarDatosEmpleados(req: Request, res: Response) {
+        const { id } = req.params;
+        const EMPLEADO = await pool.query(' SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
+            'ec.sueldo, tc.cargo, cd.nombre AS departamento ' +
+            'FROM datos_actuales_empleado AS d, empl_cargos AS ec, tipo_cargo AS tc, cg_departamentos AS cd ' +
+            'WHERE d.id_cargo = ec.id AND ec.cargo = tc.id AND ec.id_departamento = cd.id AND d.id = $1',
+            [id]);
+        if (EMPLEADO.rowCount > 0) {
+            return res.jsonp(EMPLEADO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async EncontrarPedidoAccion(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT ap.id, ap.id_empleado, ap.fec_creacion, ap.fec_rige_desde, ' +
+            'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
+            'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
+            'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
+            'ap.salario_propuesto, d.descripcion AS decreto, tap.base_legal, tap.id_proceso, ' +
+            'cp.descripcion AS cargo_propuesto, pp.descripcion AS proceso_propuesto ' +
+            'FROM accion_personal_empleado AS ap, decreto_acuerdo_resol AS d, tipo_accion_personal AS tap, ' +
+            'cargo_propuesto AS cp, proceso_propuesto AS pp ' +
+            'WHERE ap.decre_acue_resol = d.id AND ap.tipo_accion = tap.id AND ap.cargo_propuesto = cp.id ' +
+            'AND ap.proceso_propuesto = pp.id AND ap.id = $1',
+            [id]);
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async ListarPedidoAccion(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT ap.id, ap.id_empleado, ap.fec_creacion, ap.fec_rige_desde, ' +
+            'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
+            'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
+            'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
+            'ap.salario_propuesto, d.descripcion AS decreto, tap.base_legal, tap.id_proceso, ' +
+            'cp.descripcion AS cargo_propuesto, pp.descripcion AS proceso_propuesto, e.codigo, e.cedula, ' +
+            'e.nombre, e.apellido ' +
+            'FROM accion_personal_empleado AS ap, decreto_acuerdo_resol AS d, tipo_accion_personal AS tap, ' +
+            'cargo_propuesto AS cp, proceso_propuesto AS pp, empleados AS e ' +
+            'WHERE ap.decre_acue_resol = d.id AND ap.tipo_accion = tap.id AND ap.cargo_propuesto = cp.id ' +
+            'AND ap.proceso_propuesto = pp.id AND e.id = ap.id_empleado');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
 }
 
 export const ACCION_PERSONAL_CONTROLADOR = new AccionPersonalControlador();

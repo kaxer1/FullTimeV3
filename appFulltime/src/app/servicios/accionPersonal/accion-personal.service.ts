@@ -76,5 +76,20 @@ export class AccionPersonalService {
     return this.http.post(`${environment.url}/accionPersonal/pedido/accion`, datos);
   }
 
+  LogoImagenBase64() {
+    return this.http.get<any>(`${environment.url}/accionPersonal/logo/ministerio/codificado`);
+  }
 
+  /** CONSULTA DE DATOS DE PEDIDOS DE ACCION DE PERSONAL */
+  BuscarDatosPedido() {
+    return this.http.get(`${environment.url}/accionPersonal/pedidos/accion`);
+  }
+
+  BuscarDatosPedidoEmpleados(id: any) {
+    return this.http.get(`${environment.url}/accionPersonal/pedidos/datos/${id}`);
+  }
+
+  BuscarDatosPedidoId(id: any) {
+    return this.http.get(`${environment.url}/accionPersonal/pedido/informacion/${id}`);
+  }
 }

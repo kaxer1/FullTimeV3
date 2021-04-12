@@ -32,6 +32,12 @@ class DepartamentoRutas {
         this.router.get('/tipo/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
         /** TABLA PEDIDO_ACCION_EMPLEADO */
         this.router.post('/pedido/accion', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearPedidoAccionPersonal);
+        // VER LOGO DE MINISTERIO TRABAJO
+        this.router.get('/logo/ministerio/codificado', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.verLogoMinisterio);
+        // CONSULTAS PEDIDOS ACCIONES DE PERSONAL
+        this.router.get('/pedidos/accion', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarPedidoAccion);
+        this.router.get('/pedidos/datos/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarDatosEmpleados);
+        this.router.get('/pedido/informacion/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarPedidoAccion);
     }
 }
 const ACCION_PERSONAL_RUTAS = new DepartamentoRutas();

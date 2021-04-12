@@ -1,25 +1,35 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
-import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { LoginService } from 'src/app/servicios/login/login.service';
 import * as moment from 'moment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+
+// Invocación a los servicios
+import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
+import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
+import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
+import { LoginService } from 'src/app/servicios/login/login.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 
 interface opcionesDiasHoras {
   valor: string;
   nombre: string
 }
 
+interface Estado {
+  id: number,
+  nombre: string
+}
+
+
 @Component({
-  selector: 'app-editar-permiso-empleado',
-  templateUrl: './editar-permiso-empleado.component.html',
-  styleUrls: ['./editar-permiso-empleado.component.css'],
+  selector: 'app-permisos-multiples',
+  templateUrl: './permisos-multiples.component.html',
+  styleUrls: ['./permisos-multiples.component.css'],
   providers: [
     { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
@@ -27,25 +37,44 @@ interface opcionesDiasHoras {
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ]
 })
-export class EditarPermisoEmpleadoComponent implements OnInit {
+export class PermisosMultiplesComponent implements OnInit {
+
+  estados: Estado[] = [
+    { id: 1, nombre: 'Pendiente' },
+    { id: 2, nombre: 'Pre-autorizado' },
+    { id: 3, nombre: 'Autorizado' },
+    { id: 4, nombre: 'Negado' },
+  ];
 
   permiso: any = [];
+
   // Usado para imprimir datos
   datosPermiso: any = [];
   datoNumPermiso: any = [];
   tipoPermisos: any = [];
+
   diasHoras: opcionesDiasHoras[] = [
     { valor: 'Días', nombre: 'Días' },
     { valor: 'Horas', nombre: 'Horas' },
     { valor: 'Días y Horas', nombre: 'Días y Horas' },
   ];
+
+  selec1 = false;
+  selec2 = false;
+
+  // Total de días según el tipo de permiso
   Tdias = 0;
+  // Total de horas según el tipo de permiso
   Thoras;
+
+  // Número del permiso
   num: number;
   tipoPermisoSelec: string;
+  // Variable para guardar fecha actual tomada del sistema
+  FechaActual: any;
   horasTrabajo: any = [];
-  isChecked: boolean = false;
 
+  // Variables para ocultar o visibilizar ingreso de datos días, horas, días libres
   HabilitarDias: boolean = true;
   estiloDias: any;
   HabilitarHoras: boolean = true;
@@ -53,10 +82,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   HabilitarDiasL: boolean = true;
   estiloDiasL: any;
 
-  FechaActual: any;
-
   // Control de campos y validaciones del formulario
   idPermisoF = new FormControl('', [Validators.required]);
+  fecCreacionF = new FormControl('', [Validators.required]);
   descripcionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{3,48}")]);
   solicitarF = new FormControl('', [Validators.required]);
   diasF = new FormControl('');
@@ -64,7 +92,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   fechaInicioF = new FormControl('', [Validators.required]);
   fechaFinalF = new FormControl('', [Validators.required]);
   diaLibreF = new FormControl('');
-  nombreCertificadoF = new FormControl('');
+  estadoF = new FormControl('');
+  legalizarF = new FormControl('', [Validators.required]);
+  nombreCertificadoF = new FormControl('', Validators.required);
   archivoForm = new FormControl('');
   horaSalidaF = new FormControl('', Validators.required);
   horaIngresoF = new FormControl('', Validators.required);
@@ -72,6 +102,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   // Asignación de validaciones a inputs del formulario
   public PermisoForm = new FormGroup({
     idPermisoForm: this.idPermisoF,
+    fecCreacionForm: this.fecCreacionF,
     descripcionForm: this.descripcionF,
     solicitarForm: this.solicitarF,
     diasForm: this.diasF,
@@ -79,6 +110,8 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     fechaInicioForm: this.fechaInicioF,
     fechaFinalForm: this.fechaFinalF,
     diaLibreForm: this.diaLibreF,
+    estadoForm: this.estadoF,
+    legalizarForm: this.legalizarF,
     nombreCertificadoForm: this.nombreCertificadoF,
     horaSalidaForm: this.horaSalidaF,
     horasIngresoForm: this.horaIngresoF
@@ -88,23 +121,26 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     private restTipoP: TipoPermisosService,
     private restP: PermisosService,
     private restH: EmpleadoHorariosService,
+    public restE: EmpleadoService,
     private toastr: ToastrService,
     private loginServise: LoginService,
-    private restE: EmpleadoService,
-    public dialogRef: MatDialogRef<EditarPermisoEmpleadoComponent>,
-    @Inject(MAT_DIALOG_DATA) public info: any
+    private realTime: RealTimeService,
+    public restPerV: PeriodoVacacionesService,
+    public dialogRef: MatDialogRef<PermisosMultiplesComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   ngOnInit(): void {
-    this.CargarInformacion(this.info.dataPermiso.id_tipo_permiso);
     var f = moment();
     this.FechaActual = f.format('YYYY-MM-DD');
-    console.log(this.info.dataPermiso);
-    this.num = this.info.dataPermiso.num_permiso
+    // Asignación de estado Pendiente en la solicitud de permiso
+    this.PermisoForm.patchValue({
+      fecCreacionForm: this.FechaActual,
+      estadoForm: 1
+    });
     this.ObtenerTiposPermiso();
-    this.SettingData();
-    this.comparacionSolicitud();
-    this.ObtenerEmpleado(this.info.id_empleado);
+  //this.ImprimirNumeroPermiso();
+    this.ObtenerEmpleado(this.data.idEmpleado);
   }
 
   empleado: any = [];
@@ -114,68 +150,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
     })
-  }
-
-  comparacionSolicitud() {
-    if (this.info.dataPermiso.dia > 0 && this.info.dataPermiso.hora_numero === '00:00:00') {
-      this.PermisoForm.patchValue({ solicitarForm: 'Días' });
-    } else if (this.info.dataPermiso.dia > 0 && this.info.dataPermiso.hora_numero != '00:00:00') {
-      this.PermisoForm.patchValue({ solicitarForm: 'Días y Horas' });
-    } else if (this.info.dataPermiso.dia === 0 && this.info.dataPermiso.hora_numero != '00:00:00') {
-      this.PermisoForm.patchValue({ solicitarForm: 'Horas' });
-    }
-  }
-
-  SettingData() {
-    this.PermisoForm.patchValue({
-      idPermisoForm: this.info.dataPermiso.id_tipo_permiso,
-      descripcionForm: this.info.dataPermiso.descripcion,
-      diasForm: this.info.dataPermiso.dia,
-      horasForm: this.info.dataPermiso.hora_numero,
-      fechaInicioForm: this.info.dataPermiso.fec_inicio,
-      fechaFinalForm: this.info.dataPermiso.fec_final,
-      diaLibreForm: this.info.dataPermiso.dia_libre,
-      nombreCertificadoForm: this.info.dataPermiso.docu_nombre,
-      horaSalidaForm: this.info.dataPermiso.hora_salida,
-      horasIngresoForm: this.info.dataPermiso.hora_ingreso
-    });
-    if (this.info.dataPermiso.dia === 0) {
-      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
-      this.estiloDiasL = { 'visibility': 'hidden' }; this.HabilitarDiasL = true;
-      this.tipoPermisoSelec = 'Horas';
-      this.PermisoForm.patchValue({
-        solicitarForm: 'Horas',
-      });
-    }
-    else if (this.info.dataPermiso.hora_numero === '00:00:00') {
-      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
-      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
-      this.estiloHoras = { 'visibility': 'hidden' }; this.HabilitarHoras = true;
-      this.tipoPermisoSelec = 'Días';
-      this.PermisoForm.patchValue({
-        solicitarForm: 'Días',
-      });
-      this.readonly = true;
-    }
-    else {
-      this.estiloDias = { 'visibility': 'visible' }; this.HabilitarDias = false;
-      this.estiloDiasL = { 'visibility': 'visible' }; this.HabilitarDiasL = false;
-      this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
-      this.tipoPermisoSelec = 'Días y Horas';
-      this.PermisoForm.patchValue({
-        solicitarForm: 'Días y Horas',
-      });
-    }
-    // if (this.datos.legalizado === true) {
-    //   this.selec1 = true;
-    // }
-    // else if (this.datos.legalizado === false) {
-    //   this.selec2 = true;
-    // }
-    this.dSalida = String(moment(this.info.dataPermiso.fec_inicio).format('YYYY-MM-DD'));
-    this.dIngreso = String(moment(this.info.dataPermiso.fec_final).format('YYYY-MM-DD'));
-    console.log('cargar datos', this.dSalida, this.dIngreso)
   }
 
   ObtenerTiposPermiso() {
@@ -192,15 +166,26 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     }
   }
 
-  ContarDiasLibres(dateFrom, dateTo) {
+  ImprimirNumeroPermiso() {
+    this.datoNumPermiso = [];
+    this.restP.BuscarNumPermiso(this.data.idEmpleado).subscribe(datos => {
+      this.datoNumPermiso = datos;
+      if (this.datoNumPermiso[0].max === null) {
+        this.num = 1;
+      }
+      else {
+        this.num = this.datoNumPermiso[0].max + 1;
+      }
+    })
+  }
 
+  ContarDiasLibres(dateFrom, dateTo) {
     var from = moment(dateFrom, 'DD/MM/YYY'),
       to = moment(dateTo, 'DD/MM/YYY'),
       days = 0,
       libres = 0;
-    console.log('datos de contar', from, to)
     while (!from.isAfter(to)) {
-      /** Si no es sábado ni domingo */
+      // Si no es sábado ni domingo
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
         days++;
       }
@@ -214,7 +199,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   ImprimirDiaLibre(form, ingreso) {
     if (form.solicitarForm === 'Días' || form.solicitarForm === 'Días y Horas') {
-      console.log('entra mmlkfkv')
       var libre = this.ContarDiasLibres(form.fechaInicioForm, ingreso);
       this.PermisoForm.patchValue({
         diaLibreForm: libre,
@@ -264,6 +248,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
           });
         }
       }
+
     }
     else {
       this.toastr.error('Aún no selecciona un Tipo de Permiso', 'VERIFICAR', {
@@ -279,21 +264,44 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   fechas_horario: any = [];
   readonly: boolean = false;
   validarFechaIngreso(event, form) {
+    this.readonly = false;
+    this.fechas_horario = [];
     if (form.fechaInicioForm != '' && form.idPermisoForm != '') {
       this.horasTrabajo = [];
       let datosFechas = {
-        id_emple: this.info.id_empleado,
-        fecha: moment(form.fechaInicioForm, "YYYY/MM/DD").format("YYYY-MM-DD")
+        id_emple: this.data.idEmpleado,
+        fecha: form.fechaInicioForm
       }
-      console.log('fechas', datosFechas)
+      console.log('datos', datosFechas)
       this.dIngreso = event.value;
       this.restH.BuscarNumeroHoras(datosFechas).subscribe(datos => {
         this.horasTrabajo = datos;
-        console.log("horas", this.horasTrabajo[0].horas, datos);
         this.VerificarDiasHoras(form, this.horasTrabajo[0].horas);
-
+        if (form.solicitarForm === 'Días') {
+          let datos = {
+            fec_inicio: form.fechaInicioForm,
+            fec_final: form.fechaFinalForm
+          }
+          this.restP.BuscarFechasPermiso(datos, parseInt(this.empleado[0].codigo)).subscribe(response => {
+            console.log('fechas_permiso', response);
+            this.fechas_horario = response;
+            this.fechas_horario.map(obj => {
+              if (obj.fecha.split('T')[0] === moment(this.dSalida).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horaSalidaForm: obj.hora
+                })
+              }
+              if (obj.fecha.split('T')[0] === moment(this.dIngreso).format('YYYY-MM-DD') && obj.tipo_entr_salida === 'E') {
+                this.PermisoForm.patchValue({
+                  horasIngresoForm: obj.hora
+                })
+              }
+            })
+            this.readonly = true;
+          })
+        }
       }, error => {
-        this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral.', 'VERIFICAR', {
+        this.toastr.info('Las fechas indicadas no se encuentran dentro de su horario laboral', 'VERIFICAR', {
           timeOut: 6000,
         });
         this.LimpiarCamposFecha();
@@ -309,11 +317,13 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   ImprimirDatos(form) {
     this.LimpiarCamposFecha();
+    this.selec1 = false;
+    this.selec2 = false;
     this.readonly = false;
     this.datosPermiso = [];
     this.restTipoP.getOneTipoPermisoRest(form.idPermisoForm).subscribe(datos => {
       this.datosPermiso = datos;
-      console.log(this.datosPermiso);
+      console.log('datos permiso', this.datosPermiso)
       if (this.datosPermiso[0].num_dia_maximo === 0) {
         this.estiloHoras = { 'visibility': 'visible' }; this.HabilitarHoras = false;
         this.estiloDias = { 'visibility': 'hidden' }; this.HabilitarDias = true;
@@ -324,7 +334,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
           diasForm: '',
         });
         this.Thoras = this.datosPermiso[0].num_hora_maximo;
-        console.log('horas_thoras', this.Thoras)
         this.tipoPermisoSelec = 'Horas';
       }
       else if (this.datosPermiso[0].num_hora_maximo === '00:00:00') {
@@ -354,8 +363,15 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.Thoras = this.datosPermiso[0].num_hora_maximo;
         this.tipoPermisoSelec = 'Días y Horas';
       }
+      if (this.datosPermiso[0].legalizar === true) {
+        this.selec1 = true;
+      }
+      else if (this.datosPermiso[0].legalizar === false) {
+        this.selec2 = true;
+      }
       this.PermisoForm.patchValue({
-        fechaInicioForm: '',
+        legalizarForm: this.datosPermiso[0].legalizar,
+        fechaInicioForm: ''
       });
     })
   }
@@ -451,52 +467,101 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       return false;
     }
   }
-
+  contador: number = 0;
   InsertarPermiso(form) {
-    let datosPermiso = {
-      descripcion: form.descripcionForm,
-      fec_inicio: form.fechaInicioForm,
-      fec_final: form.fechaFinalForm,
-      dia: parseInt(form.diasForm),
-      dia_libre: form.diaLibreForm,
-      id_tipo_permiso: form.idPermisoForm,
-      hora_numero: form.horasForm,
-      num_permiso: this.num,
-      anterior_doc: this.info.dataPermiso.documento,
-      docu_nombre: form.nombreCertificadoForm,
-      hora_salida: form.horaSalidaForm,
-      hora_ingreso: form.horasIngresoForm,
-    }
-    if (this.isChecked === false) {
-      datosPermiso.anterior_doc = null,
-        datosPermiso.docu_nombre = null
-    }
-    console.log(datosPermiso);
-    this.CambiarValoresDiasHoras(form, datosPermiso);
-    console.log(datosPermiso);
-    this.CambiarValorDiaLibre(datosPermiso);
+    this.contador = 0;
+    this.data.datos.map(obj => {
+      this.restPerV.BuscarIDPerVacaciones(parseInt(obj.id)).subscribe(res => {
+        this.restP.BuscarNumPermiso(obj.id).subscribe(datosn => {
+          this.datoNumPermiso = datosn;
+          if (this.datoNumPermiso[0].max === null) {
+            this.num = 1;
+          }
+          else {
+            this.num = this.datoNumPermiso[0].max + 1;
+          }
+
+          console.log('numro', this.num)
+
+          let datosPermiso = {
+            fec_creacion: form.fecCreacionForm,
+            descripcion: form.descripcionForm,
+            fec_inicio: form.fechaInicioForm,
+            fec_final: form.fechaFinalForm,
+            dia: parseInt(form.diasForm),
+            legalizado: form.legalizarForm,
+            estado: form.estadoForm,
+            dia_libre: form.diaLibreForm,
+            id_tipo_permiso: form.idPermisoForm,
+            id_empl_contrato: obj.id_contrato,
+            id_peri_vacacion: res[0].id,
+            hora_numero: form.horasForm,
+            num_permiso: this.num,
+            docu_nombre: form.nombreCertificadoForm,
+            depa_user_loggin: parseInt(localStorage.getItem('departamento')),
+            id_empl_cargo: obj.id_cargo,
+            hora_salida: form.horaSalidaForm,
+            hora_ingreso: form.horasIngresoForm,
+            codigo: obj.codigo
+          }
+          console.log(datosPermiso);
+          this.CambiarValoresDiasHoras(form, datosPermiso);
+          console.log(datosPermiso);
+          this.CambiarValorDiaLibre(datosPermiso);
+
+          if (this.archivoSubido[0].size <= 2e+6) {
+            this.restP.IngresarEmpleadoPermisos(datosPermiso).subscribe(response => {
+              this.contador = this.contador + 1;
+              if (this.contador === this.data.datos.length) {
+                this.dialogRef.close();
+                window.location.reload();
+                this.toastr.success('Operación Exitosa', 'Se registra un total de  ' + this.data.datos.length + ' Registros de horarios.', {
+                  timeOut: 6000,
+                })
+              }
+            });
+          }
+          else {
+            this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+              timeOut: 6000,
+            });
+          }
+        })
+      })
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }
 
   CambiarValorDiaLibre(datos) {
     if (datos.dia_libre === '') {
       datos.dia_libre = 0;
-      this.ActualizarDatos(datos);
+      this.GuardarDatos(datos);
     }
     else {
-      this.ActualizarDatos(datos);
+      this.GuardarDatos(datos);
     }
-  }
-
-  RegistrarPermiso(form) {
-    this.InsertarPermiso(form);
   }
 
   RevisarIngresoDias(form) {
     if (parseInt(form.diasForm) <= this.Tdias) {
+      console.log('revisar', this.dIngreso, this.dSalida)
       const resta = this.dIngreso.diff(this.dSalida, 'days');
-      console.log('datos_resta', resta);
+      console.log('datos', resta, ' ');
       if (resta != form.diasForm) {
-        console.log('entra lllll')
         this.toastr.error('Recuerde el día de ingreso no puede superar o ser menor a los días de permiso solicitados.',
           'Día de ingreso incorrecto.', {
           timeOut: 6000,
@@ -504,8 +569,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
         this.LimpiarCamposFecha();
       }
       else {
-        console.log('entra lllll', this.dIngreso)
-        this.ImprimirDiaLibre(form, moment(this.dIngreso));
+        this.ImprimirDiaLibre(form, this.dIngreso);
       }
     }
     else {
@@ -574,7 +638,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       }
     }
     else if (this.tipoPermisoSelec === 'Horas') {
-      console.log('horas_nnn', form.horasForm, this.Thoras)
       if (form.horasForm <= this.Thoras) {
         this.RevisarIngresoHoras();
       }
@@ -583,7 +646,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       }
     }
     else if (this.tipoPermisoSelec === 'Días y Horas') {
-      //console.log("comparar horas", parseInt(datoHora));
       if (parseInt(form.horasForm.split(":")) < datoHora) {
         this.RevisarIngresoHoras();
       }
@@ -612,7 +674,6 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     if (this.tipoPermisoSelec === 'Días') {
       var contarDias = parseInt(form.diasForm) + 1;
       if (contarDias <= this.Tdias && parseInt(form.horasForm.split(":")) < parseInt(datoHora)) {
-        console.log('verificar dias y horas', contarDias);
         this.RevisarIngresoDiasHoras(contarDias, form);
       }
       else {
@@ -698,47 +759,83 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
     }
   }
 
-  NotifiRes: any;
-  ActualizarDatos(datos) {
-    if (this.isChecked === true) {
-      this.LimpiarNombreArchivo();
-      if (this.archivoSubido != undefined) {
-        if (this.archivoSubido[0].size <= 2e+6) {
-          this.restP.EditarPermiso(this.info.dataPermiso.id, datos).subscribe(response => {
-            this.toastr.success('Operación Exitosa', 'Permiso Editado', {
-              timeOut: 6000,
-            });
-            this.LimpiarCampos();
-            console.log(response);
-            this.SubirRespaldo(this.info.dataPermiso.id)
-          });
-        }
-        else {
-          this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
-            timeOut: 6000,
-          });
-        }
-      } else {
-        this.toastr.info('Falta que suba un archivo', 'Seleccione un archivo', {
-          timeOut: 6000,
-        });
-      }
 
-    } else {
-      console.log(datos);
-      this.restP.EditarPermiso(this.info.dataPermiso.id, datos).subscribe(response => {
-        this.toastr.success('Operación Exitosa', 'Permiso Editado', {
+  idPermisoRes: any;
+  NotifiRes: any;
+  arrayNivelesDepa: any = [];
+  GuardarDatos(datos) {
+    if (this.archivoSubido[0].size <= 2e+6) {
+      this.restP.IngresarEmpleadoPermisos(datos).subscribe(response => {
+        this.toastr.success('Operación Exitosa', 'Permiso registrado', {
           timeOut: 6000,
         });
+        this.arrayNivelesDepa = response;
         this.LimpiarCampos();
-        this.dialogRef.close(true)
-        console.log(response);
+        this.arrayNivelesDepa.forEach(obj => {
+          let datosPermisoCreado = {
+            fec_creacion: datos.fec_creacion,
+            id_tipo_permiso: datos.id_tipo_permiso,
+            id_empl_contrato: datos.id_empl_contrato,
+            id: obj.id,
+            estado: obj.estado,
+            id_dep: obj.id_dep,
+            depa_padre: obj.depa_padre,
+            nivel: obj.nivel,
+            id_suc: obj.id_suc,
+            departamento: obj.departamento,
+            sucursal: obj.sucursal,
+            cargo: obj.cargo,
+            contrato: obj.contrato,
+            empleado: obj.empleado,
+            nombre: obj.nombre,
+            apellido: obj.apellido,
+            cedula: obj.cedula,
+            correo: obj.correo,
+            permiso_mail: obj.permiso_mail,
+            permiso_noti: obj.permiso_noti
+          }
+          this.restP.SendMailNoti(datosPermisoCreado).subscribe(res => {
+            this.idPermisoRes = res;
+            console.log(this.idPermisoRes);
+            this.SubirRespaldo(this.idPermisoRes.id)
+            this.ImprimirNumeroPermiso();
+            var f = new Date();
+            let notificacion = {
+              id: null,
+              id_send_empl: this.data.idEmpleado,
+              id_receives_empl: this.idPermisoRes.id_empleado_autoriza,
+              id_receives_depa: this.idPermisoRes.id_departamento_autoriza,
+              estado: this.idPermisoRes.estado,
+              create_at: `${this.FechaActual}T${f.toLocaleTimeString()}.000Z`,
+              id_permiso: this.idPermisoRes.id,
+              id_vacaciones: null,
+              id_hora_extra: null
+            }
+            this.realTime.IngresarNotificacionEmpleado(notificacion).subscribe(resN => {
+              console.log(resN);
+              this.NotifiRes = resN;
+              notificacion.id = this.NotifiRes._id;
+              if (this.NotifiRes._id > 0 && this.idPermisoRes.notificacion === true) {
+                this.restP.sendNotiRealTime(notificacion);
+              }
+            });
+          });
+        });
+      });
+    }
+    else {
+      this.toastr.info('El archivo ha excedido el tamaño permitido', 'Tamaño de archivos permitido máximo 2MB', {
+        timeOut: 6000,
       });
     }
   }
 
   LimpiarCampos() {
     this.PermisoForm.reset();
+    this.PermisoForm.patchValue({
+      fecCreacionForm: this.FechaActual,
+      estadoForm: 1
+    });
   }
 
   LimpiarCamposFecha() {
@@ -758,14 +855,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
 
   CerrarVentanaPermiso() {
     this.LimpiarCampos();
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
 
-
-  /** *******************************************************************
-   *  SUBIR ARCHIVO
-   *  *******************************************************************
-   */
+  /* ***************************************
+   * SUBIR ARCHIVO DE SOLICITUD DE PERMISO
+   * ****************************************/
 
   nameFile: string;
   archivoSubido: Array<File>;
@@ -791,14 +886,14 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       });
       this.archivoForm.reset();
       this.nameFile = '';
-      this.dialogRef.close(true);
     });
   }
 
-  /** ********************************************************************************
+
+  /* *********************************************************************************
    *  MENSAJES QUE INDICAN ERRORES AL INGRESAR DATOS
-   *  ********************************************************************************
-   */
+   *  ********************************************************************************/
+
   ObtenerMensajeErrorDescripcion() {
     if (this.descripcionF.hasError('pattern')) {
       return 'Ingresar una descripción válida';
@@ -835,10 +930,7 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       }
       console.log('horas', tiempoTotal, total)
       if (tiempoTotal === total) {
-        this.RegistrarPermiso(form);
-      }
-      else if (tiempoTotal + ':00' === total) {
-        this.RegistrarPermiso(form);
+        this.InsertarPermiso(form);
       }
       else {
         this.toastr.error('El total de horas solicitadas no corresponda con el total de horas de salida e ingreso.', 'Verificar la horas de salida e ingreso de permiso.', {
@@ -847,32 +939,8 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
       }
     }
     else {
-      this.RegistrarPermiso(form);
+      this.InsertarPermiso(form);
     }
   }
-
-  CargarInformacion(id) {
-    this.LimpiarCamposFecha();
-    this.datosPermiso = [];
-    this.restTipoP.getOneTipoPermisoRest(id).subscribe(datos => {
-      this.datosPermiso = datos;
-      console.log(this.datosPermiso);
-      if (this.datosPermiso[0].num_dia_maximo === 0) {
-        this.Thoras = this.datosPermiso[0].num_hora_maximo;
-        console.log('horas_thoras', this.Thoras)
-        this.tipoPermisoSelec = 'Horas';
-      }
-      else if (this.datosPermiso[0].num_hora_maximo === '00:00:00') {
-        this.Tdias = this.datosPermiso[0].num_dia_maximo;
-        this.tipoPermisoSelec = 'Días';
-      }
-      else {
-        this.Tdias = this.datosPermiso[0].num_dia_maximo;
-        this.Thoras = this.datosPermiso[0].num_hora_maximo;
-        this.tipoPermisoSelec = 'Días y Horas';
-      }
-    })
-  }
-
 
 }

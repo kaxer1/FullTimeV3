@@ -2,7 +2,7 @@
     <div class="d-flex bd-highlight permisoEmpleado">
         <mat-icon class="flex-shrink-1 bd-highlight" id="movilidad">open_with</mat-icon>
         <h5 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane" ngDefaultControl
-            [(ngModel)]="num" [ngModelOptions]="{standalone: true}"> Editar Solicitud de Permiso N°
+            [(ngModel)]="num" [ngModelOptions]="{standalone: true}"> Solicitud de Permiso N°
             {{num}}</h5>
     </div>
     <!-- Formulario Completo -->
@@ -14,6 +14,16 @@
                         Guardar.</span>
                 </div>
                 <div class="d-flex flex-wrap justify-content-around">
+                    <mat-form-field>
+                        <mat-label>Fecha de Creación</mat-label>
+                        <input matInput [matDatepicker]="picker1" placeholder="dd/mm/aaaa" [formControl]="fecCreacionF"
+                            min="1950-01-31" max="2050-01-31" required [disabled]="true">
+                        <mat-datepicker-toggle matSuffix [for]="picker1" id="permiso" matTooltipClass="permiso-tooltip"
+                            matTooltipPosition="right"
+                            matTooltip="Indicar la fecha de creación del permiso. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker touchUi #picker1></mat-datepicker>
+                    </mat-form-field>
                     <mat-form-field>
                         <mat-label>Seleccionar Permiso</mat-label>
                         <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
@@ -67,7 +77,7 @@
                     <mat-form-field>
                         <mat-label>Fecha de Salida</mat-label>
                         <input matInput [matDatepicker]="picker2"
-                            (dateInput)="validarFechaSalida($event, PermisoForm.value)" readonly
+                             readonly
                             placeholder="dd/mm/aaaa" [formControl]="fechaInicioF" min="1950-01-31" max="2050-01-31"
                             required>
                         <mat-datepicker-toggle matSuffix [for]="picker2" id="permiso" matTooltipClass="permiso-tooltip"
@@ -79,7 +89,7 @@
                     <mat-form-field>
                         <mat-label>Fecha de Ingreso</mat-label>
                         <input matInput [matDatepicker]="picker3"
-                            (dateInput)="validarFechaIngreso($event, PermisoForm.value)" placeholder="dd/mm/aaaa"
+                             placeholder="dd/mm/aaaa"
                             [formControl]="fechaFinalF" required readonly>
                         <mat-datepicker-toggle matSuffix [for]="picker3" id="permiso" matTooltipClass="permiso-tooltip"
                             matTooltipPosition="right"
@@ -91,12 +101,12 @@
                     <mat-form-field>
                         <mat-label>Hora Salida</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)" [formControl]="horaSalidaF"
-                            required >
+                            required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Hora Ingreso</mat-label>
                         <input matInput type="time" (keypress)="IngresarSoloNumeros($event)"
-                            [formControl]="horaIngresoF" required >
+                            [formControl]="horaIngresoF" required [readonly]='readonly'>
                     </mat-form-field>
                     <mat-form-field *ngIf="!HabilitarDiasL">
                         <mat-label id="letras">Fin de semana: días libres</mat-label>
@@ -106,7 +116,35 @@
                             matTooltip="Indicar cuantos días de fin de semana se encuentran dentro del permiso">
                             help_outline</mat-icon>
                     </mat-form-field>
-                    <section class="d-flex flex-column bd-highlight" *ngIf="isChecked">
+                    <mat-form-field>
+                        <mat-label>Estado</mat-label>
+                        <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip" matTooltipPosition="right"
+                            matTooltip="Indicar cual es el estado del permiso">
+                            help_outline
+                        </mat-icon>
+                        <mat-select [formControl]="estadoF" disabled required>
+                            <mat-option *ngFor="let e of estados" [value]="e.id">
+                                {{e.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-radio-group aria-label="Select an option" [formControl]="legalizarF" required
+                        [disabled]="true">
+                        <label class="d-flex justify-content-between">
+                            <span>Permiso Legalizado *</span>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="permiso-tooltip"
+                                matTooltipPosition="right" matTooltip="Indicar si el permiso debe ser legalizado">
+                                help_outline
+                            </mat-icon>
+                        </label>
+                        <div class="d-flex justify-content-around">
+                            <mat-radio-button ngDefaultControl [(ngModel)]="selec1" [checked]="selec1"
+                                [ngModelOptions]="{standalone: true}" value="true">Si</mat-radio-button>
+                            <mat-radio-button ngDefaultControl [(ngModel)]="selec2" [checked]="selec2"
+                                [ngModelOptions]="{standalone: true}" value="false">No</mat-radio-button>
+                        </div>
+                    </mat-radio-group>
+                    <section class="d-flex flex-column bd-highlight">
                         <div class="bd-highlight">
                             <form method="post" enctype="multipart/form-data">
                                 <input (change)="fileChange($event)" type="file" [formControl]="archivoForm" id="file">
@@ -123,13 +161,9 @@
             </div>
         </mat-card-content>
     </form>
-    <br>
-    <span class="nota">Desea editar el archivo anteriormente subido (opcional) </span>
-    <mat-slide-toggle [(ngModel)]="isChecked"></mat-slide-toggle>
     <div style="text-align: center;">
-        <br>
-        <button type="submit" class="btn btn-sm" (click)="ValidarHora_Salida_Entrada(PermisoForm.value)"
+        <button type="submit" class="btn btn-sm" (click)="InsertarPermiso(PermisoForm.value)"
             [disabled]="!PermisoForm.valid"> Guardar </button>
-        <button type="submit" class="btn btn-sm" (click)="dialogRef.close(false)"> Salir </button>
+        <button type="submit" class="btn btn-sm" (click)="CerrarVentanaPermiso()"> Salir </button>
     </div>
 </div>

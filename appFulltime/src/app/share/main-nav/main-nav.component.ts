@@ -559,6 +559,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Configurar Permisos', url: '/verTipoPermiso' },
           { name: 'Permisos Solicitados', url: '/permisos-solicitados' },
           { name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados' },
+          { name: 'Permisos Múltiples', url: '/permisosMultiples' },
         ]
       },
       {
@@ -592,6 +593,7 @@ export class MainNavComponent implements OnInit {
         icono: 'assignment',
         children: [
           { name: 'Registrar Horario', url: '/horario' },
+          { name: 'Horarios Múltiples', url: '/horariosMultiples' },
           { name: 'Planificación Múltiple', url: '/planificacion' },
         ]
       },
@@ -623,6 +625,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Crear Proceso', url: '/proceso' },
           { name: 'Tipo Acción Personal', url: '/acciones-personal' },
           { name: 'Pedido Acción Personal', url: '/pedidoAccion' },
+          { name: 'Acción Personal', url: '/listaPedidos' },
         ]
       },
       {
