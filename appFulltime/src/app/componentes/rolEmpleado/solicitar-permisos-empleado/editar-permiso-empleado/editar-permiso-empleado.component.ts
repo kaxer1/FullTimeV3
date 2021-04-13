@@ -193,14 +193,12 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   }
 
   ContarDiasLibres(dateFrom, dateTo) {
-
     var from = moment(dateFrom, 'DD/MM/YYY'),
       to = moment(dateTo, 'DD/MM/YYY'),
       days = 0,
       libres = 0;
-    console.log('datos de contar', from, to)
     while (!from.isAfter(to)) {
-      /** Si no es sábado ni domingo */
+      // Si no es sábado ni domingo
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {
         days++;
       }
@@ -215,9 +213,9 @@ export class EditarPermisoEmpleadoComponent implements OnInit {
   ImprimirDiaLibre(form, ingreso) {
     if (form.solicitarForm === 'Días' || form.solicitarForm === 'Días y Horas') {
       console.log('entra mmlkfkv')
-      var libre = this.ContarDiasLibres(form.fechaInicioForm, ingreso);
+      //var libre = this.ContarDiasLibres(form.fechaInicioForm, ingreso);
       this.PermisoForm.patchValue({
-        diaLibreForm: libre,
+        diaLibreForm: 0,
       });
     }
   }
