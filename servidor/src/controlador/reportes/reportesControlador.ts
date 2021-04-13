@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import pool from '../../database';
+import { HHMMtoSegundos } from '../../libs/SubMetodosGraficas';
 
 class ReportesControlador {
 
@@ -197,7 +198,150 @@ class ReportesControlador {
     public async ListarAtrasosHorarioEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params;
         const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+        let DATOS = [];
+        
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones
+            DATOS = await AtrasosTimbresConAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Atrasos Horario Con Acciones: ',DATOS);
+
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }
+                        
+        } else {
+            // Resultados de timbres sin acciones
+            DATOS = await AtrasosTimbresSinAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Atrasos Horario Sin Acciones: ',DATOS);
+            
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }            
+
+        }
+        
+    }
+
+    public async ListarAtrasosPlanificaEmpleado(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        console.log(req.acciones_timbres);
+
+        let DATOS;
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones
+            DATOS = await AtrasosTimbresPlanificadosConAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Atrasos Planificacion Con Acciones: ',DATOS);
+
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }
+                        
+        } else {
+            // Resultados de timbres sin acciones
+            DATOS = await AtrasosTimbresPlanificadosSinAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Atrasos Planificacion Sin Acciones: ',DATOS);
+
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }            
+
+        }
+
+    }
+
+    public async ListarEntradaSalidaHorarioEmpleado(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+        let DATOS;
+
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones
+            DATOS = await EntradaSalidaHorarioConAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Entrada Salidas Horario Con Acciones: ',DATOS);
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }
+                        
+        } else {
+            // Resultados de timbres sin acciones
+            DATOS = await EntradaSalidaHorarioSinAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Entrada Salidas Horario Sin Acciones: ',DATOS);
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }            
+
+        }
+    }
+
+    public async ListarEntradaSalidaPlanificaEmpleado(req: Request, res: Response) {
+        const { id_empleado } = req.params;
+        const { fechaInicio, fechaFinal } = req.body;
+
+        let DATOS;
+
+        //false sin acciones || true con acciones
+        if (req.acciones_timbres === true) {
+            // Resultados de timbres con 6 y 3 acciones
+            DATOS = await EntradaSalidaPlanificacionConAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Entrada Salidas Planificacion Con Acciones: ',DATOS);
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }
+                        
+        } else {
+            // Resultados de timbres sin acciones
+            DATOS = await EntradaSalidaPlanificacionSinAcciones(id_empleado, fechaInicio, fechaFinal);
+
+            console.log('Entrada Salidas Planificacion Sin Acciones: ',DATOS);
+            if (DATOS.length > 0) {
+                return res.status(200).jsonp(DATOS)
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Sin registros' });
+            }            
+
+        }
+    }
+}
+
+export const REPORTES_CONTROLADOR = new ReportesControlador();
+
+export default REPORTES_CONTROLADOR;
+
+async function AtrasosTimbresConAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string) {
+    return await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
             'h.fec_inicio, h.fec_final, ch.hora_trabajo ' +
@@ -206,48 +350,106 @@ class ReportesControlador {
             'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
             'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
             'AND dh.tipo_accion = \'E\') AS h ON e.codigo = $1::varchar(15) AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
-            'ON t.id_empleado::varchar(15) = h.codigo AND t.accion LIKE \'E\' AND ' +
+            'ON t.id_empleado::varchar(15) = h.codigo AND t.accion IN (\'EoS\',\'E\') AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
             't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
-            't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
-        if (DATOS.rowCount > 0) {
-            return res.jsonp(DATOS.rows)
-        }
-        else {
-            return res.status(404).jsonp({ text: 'Sin registros' });
-        }
-    }
+            't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            })
+}
 
-    public async ListarAtrasosPlanificaEmpleado(req: Request, res: Response) {
-        const { id_empleado } = req.params;
-        const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+async function AtrasosTimbresSinAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string) {
+    let arrayModelado = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
-            '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios, ' +
-            'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
-            'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, dp.fecha, ' +
+            '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
+            'h.fec_inicio, h.fec_final, ch.hora_trabajo ' +
+            'AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, h.id_empl_cargo AS id_cargo, ' +
             '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
-            'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
-            'deta_horarios AS dh ' +
-            'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = \'E\' AND ' +
-            'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
-            'ON e.codigo = $1::varchar(15) AND cargo_id = ph.id_cargo) AS ph ' +
-            'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
-            'AND t.accion LIKE \'E\' AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
-            'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
-            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
-        if (DATOS.rowCount > 0) {
-            return res.jsonp(DATOS.rows)
-        }
-        else {
-            return res.status(404).jsonp({ text: 'error' });
-        }
-    }
+            'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
+            'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ' +
+            'AND dh.tipo_accion = \'E\') AS h ON e.codigo = $1::varchar(15) AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado::varchar(15) = h.codigo AND ' +
+            't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final AND ' +
+            't.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
+            't.fec_hora_timbre::time > hora_total ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            })
+        
+    if (arrayModelado.length === 0) return []
+    
+    return arrayModelado.filter(obj => {
+        let h = obj.fec_hora_timbre.toJSON().split('T')[1].split('.')[0]
+        // console.log(obj); console.log(h);
+        let hora_timbre = HHMMtoSegundos(h) - HHMMtoSegundos('05:00:00');
+        let hora_inicio = HHMMtoSegundos(obj.hora_total);
+        let hora_final =  hora_inicio + HHMMtoSegundos('02:00:00');
+        return hora_timbre >= hora_inicio && hora_timbre <= hora_final
+    })
+}
 
-    public async ListarEntradaSalidaHorarioEmpleado(req: Request, res: Response) {
-        const { id_empleado } = req.params;
-        const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+async function AtrasosTimbresPlanificadosConAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string) {
+    return await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+                '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+                '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios, ' +
+                'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
+                'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, dp.fecha, ' +
+                '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+                'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
+                'deta_horarios AS dh ' +
+                'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = \'E\' AND ' +
+                'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
+                'ON e.codigo = $1::varchar(15) AND cargo_id = ph.id_cargo) AS ph ' +
+                'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+                'AND t.accion IN (\'EoS\',\'E\') AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
+                'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
+                'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows.map(obj => {
+                    obj.accion = obj.tipo_accion
+                    return obj
+                })
+            })
+}
+
+async function AtrasosTimbresPlanificadosSinAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string) {
+    let arrayModelado = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+                '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+                '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios, ' +
+                'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
+                'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, dp.fecha, ' +
+                '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+                'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
+                'deta_horarios AS dh ' +
+                'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND dh.tipo_accion = \'E\' AND ' +
+                'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
+                'ON e.codigo = $1::varchar(15) AND cargo_id = ph.id_cargo) AS ph ' +
+                'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+                'AND t.accion IN (\'EoS\',\'E\') AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
+                'AND t.fec_hora_timbre::date = fecha AND t.fec_hora_timbre::time > hora_total ' +
+                'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            })
+
+    if (arrayModelado.length === 0) return []
+
+    return arrayModelado.filter(obj => {
+        let h = obj.fec_hora_timbre.toJSON().split('T')[1].split('.')[0]
+        // console.log(obj); console.log(h);
+        let hora_timbre = HHMMtoSegundos(h) - HHMMtoSegundos('05:00:00');
+        let hora_inicio = HHMMtoSegundos(obj.hora_total);
+        let hora_final =  hora_inicio + HHMMtoSegundos('02:00:00');
+        return hora_timbre >= hora_inicio && hora_timbre <= hora_final
+    }).map(obj => {
+        obj.accion = obj.tipo_accion
+        return obj
+    })
+}
+
+async function EntradaSalidaHorarioConAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string): Promise<any[]> {
+    return await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
             'h.fec_inicio, h.fec_final, ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, ' +
@@ -259,19 +461,48 @@ class ReportesControlador {
             'ON t.id_empleado::varchar(15) = h.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
             't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
             'AND t.accion = h.tipo_accion ' +
-            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
-        if (DATOS.rowCount > 0) {
-            return res.jsonp(DATOS.rows)
-        }
-        else {
-            return res.status(404).jsonp({ text: 'error' });
-        }
-    }
+            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows.map(obj => {
+                    obj.accion = obj.tipo_accion
+                    return obj
+                })
+            })
+}
 
-    public async ListarEntradaSalidaPlanificaEmpleado(req: Request, res: Response) {
-        const { id_empleado } = req.params;
-        const { fechaInicio, fechaFinal } = req.body;
-        const DATOS = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+async function EntradaSalidaHorarioSinAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string): Promise<any[]> {
+    const arrayModelado = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+            '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+            '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
+            'h.fec_inicio, h.fec_final, ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, ' +
+            'cargo.cargo, h.id_empl_cargo AS id_cargo, ' +
+            '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+            'FROM empl_horarios AS h, empl_cargos AS cargo, cg_horarios AS ch, deta_horarios AS dh ' +
+            'WHERE h.id_empl_cargo = cargo.id AND ch.id = h.id_horarios AND dh.id_horario = h.id_horarios ) AS h ' +
+            'ON e.codigo::int = $1 AND e.estado_empl = 1 AND cargo_id = h.id_cargo) AS h ' +
+            'ON t.id_empleado::varchar(15) = h.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 AND ' +
+            't.fec_hora_timbre::date BETWEEN h.fec_inicio AND h.fec_final ' +
+            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            });
+    if (arrayModelado.length === 0) return []
+
+    return arrayModelado.filter(obj => {
+        let h = obj.fec_hora_timbre.toJSON().split('T')[1].split('.')[0]
+        // console.log(obj); console.log(h);
+        let hora_timbre = HHMMtoSegundos(h) - HHMMtoSegundos('05:00:00');
+        let hora_inicio = HHMMtoSegundos(obj.hora_total);
+        let hora_final =  hora_inicio + HHMMtoSegundos('02:00:00');
+        return hora_timbre >= hora_inicio && hora_timbre <= hora_final
+    }).map(obj => {
+        obj.accion = obj.tipo_accion
+        return obj
+    })
+}
+
+async function EntradaSalidaPlanificacionConAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string): Promise<any[]> {
+    return await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
             '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios,' +
             'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
@@ -285,16 +516,43 @@ class ReportesControlador {
             'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
             'AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
             'AND t.fec_hora_timbre::date = fecha AND ph.tipo_accion = t.accion ' +
-            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal]);
-        if (DATOS.rowCount > 0) {
-            return res.jsonp(DATOS.rows)
-        }
-        else {
-            return res.status(404).jsonp({ text: 'error' });
-        }
-    }
+            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            })
 }
 
-export const REPORTES_CONTROLADOR = new ReportesControlador();
+async function EntradaSalidaPlanificacionSinAcciones(id_empleado: string, fechaInicio: string, fechaFinal: string): Promise<any[]> {
+    const arrayModelado = await pool.query('SELECT * FROM timbres AS t INNER JOIN ' +
+            '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
+            '(SELECT ph.id AS id_plan, ph.id_cargo, ph.fec_inicio, ph.fec_final, dp.id_cg_horarios,' +
+            'ch.nombre AS nom_horario, dh.hora, dh.minu_espera, dh.id AS id_deta_horario, dh.tipo_accion, ' +
+            'ch.hora_trabajo AS horario_horas, cargo.hora_trabaja AS cargo_horas, cargo.cargo, dp.fecha, ' +
+            '(dh.hora + rpad((dh.minu_espera)::varchar(2),6,\' min\')::INTERVAL) AS hora_total ' +
+            'FROM plan_horarios AS ph, empl_cargos AS cargo, plan_hora_detalles AS dp, cg_horarios AS ch, ' +
+            'deta_horarios AS dh ' +
+            'WHERE cargo.id = ph.id_cargo AND dh.id_horario = dp.id_cg_horarios AND ' +
+            'ch.id = dp.id_cg_horarios AND ph.id = dp.id_plan_horario) AS ph ' +
+            'ON e.codigo::int = $1 AND cargo_id = ph.id_cargo) AS ph ' +
+            'ON t.id_empleado::varchar(15) = ph.codigo AND t.fec_hora_timbre::date BETWEEN $2 AND $3 ' +
+            'AND t.fec_hora_timbre::date BETWEEN ph.fec_inicio AND ph.fec_final ' +
+            'AND t.fec_hora_timbre::date = fecha ' +
+            'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
+            .then(result => {
+                return result.rows
+            });
 
-export default REPORTES_CONTROLADOR;
+    if (arrayModelado.length === 0) return []
+
+    return arrayModelado.filter(obj => {
+        let h = obj.fec_hora_timbre.toJSON().split('T')[1].split('.')[0]
+        // console.log(obj); console.log(h);
+        let hora_timbre = HHMMtoSegundos(h) - HHMMtoSegundos('05:00:00');
+        let hora_inicio = HHMMtoSegundos(obj.hora_total);
+        let hora_final =  hora_inicio + HHMMtoSegundos('02:00:00');
+        return hora_timbre >= hora_inicio && hora_timbre <= hora_final
+    }).map(obj => {
+        obj.accion = obj.tipo_accion
+        return obj
+    })
+}

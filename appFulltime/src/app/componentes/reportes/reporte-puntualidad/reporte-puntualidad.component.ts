@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService} from 'ngx-toastr';
-import { ITableEmpleados, IReportePuntualidad, emp_puntualidad, model_pdf_puntualidad } from 'src/app/model/reportes.model';
+import { ITableEmpleados, IReportePuntualidad, model_pdf_puntualidad } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -11,30 +10,21 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SelectionModel } from '@angular/cdk/collections';
+import { ReportesService } from '../../../servicios/reportes/reportes.service';
 
 @Component({
   selector: 'app-reporte-puntualidad',
   templateUrl: './reporte-puntualidad.component.html',
-  styleUrls: ['./reporte-puntualidad.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  styleUrls: ['./reporte-puntualidad.component.css']
 })
-export class ReportePuntualidadComponent implements OnInit {
+export class ReportePuntualidadComponent implements OnInit, OnDestroy {
 
-  fec_inicio_mes = new FormControl('', Validators.required);
-  fec_final_mes = new FormControl('', Validators.required);
-  
-  public fechasForm = new FormGroup({
-    fec_inicio: this.fec_inicio_mes,
-    fec_final: this.fec_final_mes
-  })
+  get rangoFechas () { return this.reporteService.rangoFechas; }
+
+  get opcion () { return this.reporteService.opcion; }
+
+  get bool() { return this.reporteService.criteriosBusqueda; }
   
   public ParametrosForm = new FormGroup({
     menor: new FormControl('', Validators.required),
@@ -46,9 +36,7 @@ export class ReportePuntualidadComponent implements OnInit {
   sucursales: any = [];
   departamentos: any = [];
   empleados: any = [];
-  bool_suc: boolean = false;
-  bool_dep: boolean = false;
-  bool_emp: boolean = false;
+  
   data_pdf: any = [];
 
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
@@ -60,20 +48,17 @@ export class ReportePuntualidadComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
-  codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre_emp = new FormControl('', [Validators.minLength(2)]);
-  nombre_dep = new FormControl('', [Validators.minLength(2)]);
-  nombre_suc = new FormControl('', [Validators.minLength(2)]);
+  get filtroNombreSuc() { return this.reporteService.filtroNombreSuc }
+  
+  get filtroNombreDep() { return this.reporteService.filtroNombreDep }
 
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombreEmp: '';
-  filtroNombreDep: '';
-  filtroNombreSuc: '';
+  get filtroCodigo() { return this.reporteService.filtroCodigo };
+  get filtroCedula() { return this.reporteService.filtroCedula };
+  get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
   
   constructor(
     private toastr: ToastrService,
+    private reporteService: ReportesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -122,6 +107,13 @@ export class ReportePuntualidadComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    this.respuesta = [];
+    this.sucursales = [];
+    this.departamentos = [];
+    this.empleados = [];
+  }
+
   parametrizacion: any = '';
   onSubmitParametros(){
     this.parametrizacion = this.ParametrosForm.value; 
@@ -129,65 +121,17 @@ export class ReportePuntualidadComponent implements OnInit {
     this.toastr.success('Parametros Guardados')
   }
 
-  opcion: number;
-  BuscarPorTipo(e: MatRadioChange) {
-    this.opcion = parseInt(e.value);
-    switch (e.value) {
-      case '1':
-        this.bool_suc = true; this.bool_dep = false; this.bool_emp = false;
-      break;
-      case '2':
-        this.bool_suc = false; this.bool_dep = true; this.bool_emp = false;
-      break;
-      case '3':
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = true;
-      break;
-      default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
-        break;
-    }
-  }
-
   /**
    * Funciones para validar los campos y las fechas de rangos del reporte
    */
-
-  f_inicio_req: string = '';
-  f_final_req: string = '';
-  habilitar: boolean = false;
-  estilo: any = { 'visibility': 'hidden' };
-  ValidarRangofechas(form) {
-    var f_i = new Date(form.fec_inicio)
-    var f_f = new Date(form.fec_final)
-
-    if (f_i < f_f) {
-      this.toastr.success('Fechas validas','', {
-        timeOut: 6000,
-      });
-      this.f_inicio_req = f_i.toJSON().split('T')[0];
-      this.f_final_req = f_f.toJSON().split('T')[0];
-      this.habilitar = true;
-      this.estilo = { 'visibility': 'visible' };
-    } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    }
-  }
 
   /**
    * VALIDACIONES REPORT
    */
   validacionReporte(action) {
 
-    if (this.f_inicio_req === '' || this.f_final_req === '') return this.toastr.error('Primero valide fechas de busqueda') 
-    if (this.bool_suc === false && this.bool_dep === false && this.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
+    if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda') 
+    if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
     if (this.parametrizacion === '') return this.toastr.error('Ingrese rango de semaforización para generar Reporte','Falta Semaforización') 
     
     switch (this.opcion) {
@@ -204,7 +148,7 @@ export class ReportePuntualidadComponent implements OnInit {
         this.ModelarEmpleados(action);
       break;
       default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
+        this.bool.bool_suc = false; this.bool.bool_dep = false; this.bool.bool_emp = false;
         break;
     }
   }
@@ -222,7 +166,7 @@ export class ReportePuntualidadComponent implements OnInit {
 
     console.log('SUCURSAL', suc);
     this.data_pdf = [];
-    this.R_asistencias.ReportePuntualidadMultiple(suc, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
+    this.R_asistencias.ReportePuntualidadMultiple(suc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -252,7 +196,7 @@ export class ReportePuntualidadComponent implements OnInit {
     console.log('DEPARTAMENTOS', dep);
     this.data_pdf = [];
 
-    this.R_asistencias.ReportePuntualidadMultiple(dep, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
+    this.R_asistencias.ReportePuntualidadMultiple(dep, this.rangoFechas.fec_inico, this.rangoFechas.fec_final, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -290,7 +234,7 @@ export class ReportePuntualidadComponent implements OnInit {
     
     console.log('EMPLEADOS', emp);
     this.data_pdf = [];
-    this.R_asistencias.ReportePuntualidadMultiple(emp, this.f_inicio_req, this.f_final_req, this.parametrizacion).subscribe(res => {
+    this.R_asistencias.ReportePuntualidadMultiple(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final, this.parametrizacion).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -379,7 +323,7 @@ export class ReportePuntualidadComponent implements OnInit {
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -40, 0, 10] },
         { text: 'Reporte de Empleados Puntuales', bold: true, fontSize: 13, alignment: 'center', margin: [0, 0, 0, 10] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 13, alignment: 'center' },
+        { text: 'Periodo del: ' + this.rangoFechas.fec_inico  + " al " + this.rangoFechas.fec_final , bold: true, fontSize: 13, alignment: 'center' },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -642,12 +586,6 @@ export class ReportePuntualidadComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  limpiarCamposRango() {
-    this.fechasForm.reset();
-    this.habilitar = false;
-    this.estilo = { 'visibility': 'hidden' };
-  }
-
   /**
    * METODOS PARA CONTROLAR INGRESO DE LETRAS
    */
@@ -692,20 +630,5 @@ export class ReportePuntualidadComponent implements OnInit {
       return false;
     }
   }
-
-  limpiarCampos() {
-    if (this.bool_emp) {
-      this.codigo.reset();
-      this.cedula.reset();
-      this.nombre_emp.reset();
-    }
-    if (this.bool_dep) {
-      this.nombre_dep.reset();
-    }
-    if (this.bool_suc) {
-      this.nombre_suc.reset();
-    }
-  }
-
 
 }

@@ -1,30 +1,14 @@
 mat-form-field { padding: 10px 15px 0px 15px;}
 
-.tituloEmpleados { 
-    font-size: 20px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
+#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
+
+#botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px;}
+
+#ayuda_fec {color: black}
+
+.mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
 }
-
-#resulEmpleados { 
-    font-size: 17px; 
-    text-align: center; 
-    background: rgb(52,65,84); 
-    color: white; 
-    padding-top: 10px; 
-    padding-bottom: 6px; 
-}
-
-table { width: 100%; font-size: 14px;}
-
-tr { text-align: center; }
-
-td { padding-top: 10px; text-align: center; }
-
-#estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
 .mat-expansion-panel-header-description {
     flex-basis: 0;
@@ -49,4 +33,3 @@ mat-icon { cursor: pointer; }
 .mat-expansion-panel-header.mat-expanded:hover {
     background: rgb(52,65,84);
 }
-

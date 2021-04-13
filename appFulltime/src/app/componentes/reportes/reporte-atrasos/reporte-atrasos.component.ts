@@ -24,6 +24,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 // Importación de componentes
 import { ConfigurarAtrasosComponent } from 'src/app/componentes/configurar-atrasos/configurar-atrasos.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { HorarioTimbre } from 'src/app/model/timbres.model';
 
 @Component({
   selector: 'app-reporte-atrasos',
@@ -182,14 +183,14 @@ export class ReporteAtrasosComponent implements OnInit {
   }
 
   // Método para obtener los atrasos del empleado de acuerdo al horario del empleado
-  atrasosHorario: any = [];
-  atrasosPlanificacion: any = [];
-  totalAtrasos: any = [];
+  atrasosHorario: Array<HorarioTimbre> = [];
+  atrasosPlanificacion: Array<HorarioTimbre> = [];
+  totalAtrasos: Array<HorarioTimbre> = [];
   VerAtrasosHorario(id_seleccionado, datosFecha, archivo, form, confirmado) {
     this.atrasosHorario = [];
     this.atrasosPlanificacion = [];
     this.totalAtrasos = [];
-    this.restR.ObtenerTimbresAtrasosHorario(id_seleccionado, datosFecha).subscribe(dataH => {
+    this.restR.ObtenerTimbresAtrasosHorario(id_seleccionado, datosFecha).subscribe((dataH: Array<HorarioTimbre>) => {
       this.atrasosHorario = dataH;
       this.VerAtrasosPlanificacion(this.atrasosHorario, id_seleccionado, archivo, datosFecha, form, confirmado);
     }, error => {
@@ -198,8 +199,8 @@ export class ReporteAtrasosComponent implements OnInit {
   }
 
   // Método para obtener los atrasos del empleado de acuerdo a la planificación de horario del empleado
-  VerAtrasosPlanificacion(atrasos_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form, confirmado) {
-    this.restR.ObtenerTimbresAtrasosPlanificacion(id_seleccionado, datos_fechas).subscribe(dataP => {
+  VerAtrasosPlanificacion(atrasos_horario: Array<HorarioTimbre>, id_seleccionado: number, archivo: string, datos_fechas, form, confirmado) {
+    this.restR.ObtenerTimbresAtrasosPlanificacion(id_seleccionado, datos_fechas).subscribe((dataP: Array<HorarioTimbre>) => {
       this.atrasosPlanificacion = dataP;
       if (atrasos_horario.length != 0) {
         atrasos_horario = atrasos_horario.concat(this.atrasosPlanificacion);

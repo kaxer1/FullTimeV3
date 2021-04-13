@@ -117,10 +117,6 @@ import { VerDocumentosComponent } from './componentes/documentos/ver-documentos/
 import { SettingsComponent } from './componentes/settings/settings.component';
 import { VacacionAutorizacionesComponent } from './componentes/autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
 import { SucListaNotiComponent } from './componentes/catalogos/catNotificaciones/suc-lista-noti/suc-lista-noti.component';
-import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
-import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
-import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
-import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';
 import { PlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/plan-hora-extra/plan-hora-extra.component';
 import { ListaEmplePlanHoraEComponent } from './componentes/horasExtras/planificacionHoraExtra/empleados-planificar/lista-emple-plan-hora-e.component';
 import { ConfigurarAtrasosComponent } from './componentes/configurar-atrasos/configurar-atrasos.component';
@@ -149,7 +145,6 @@ import { VerEmpresaComponent } from './componentes/catalogos/catEmpresa/ver-empr
 import { RegistrarBirthdayComponent } from './componentes/birthday/registrar-birthday/registrar-birthday.component';
 import { EditarBirthdayComponent } from './componentes/birthday/editar-birthday/editar-birthday.component';
 import { VerBirthdayComponent } from './componentes/birthday/ver-birthday/ver-birthday.component';
-import { AsistenciaConsolidadoComponent } from './componentes/reportes/reporte-asistencia-consolidado/asistencia-consolidado.component';
 import { LogosComponent } from './componentes/catalogos/catEmpresa/logos/logos.component';
 import { HoraExtraRealComponent } from './componentes/calculos/hora-extra-real/hora-extra-real.component';
 
@@ -202,101 +197,19 @@ import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 import { GraficasService } from './servicios/graficas/graficas.service';
 
-// FILTROS DE BÚSQUEDA
-import { FiltroDepartamentoPipe } from './filtros/catDepartamentos/nombreDepartamento/filtro-departamento.pipe';
-import { DepartamentoPadrePipe } from './filtros/catDepartamentos/departamentoPadre/departamento-padre.pipe';
-import { ProvinciaPipe } from './filtros/catProvincias/filtroProvincia/provincia.pipe';
-import { BPaisesPipe } from './filtros/catProvincias/filtroPaises/b-paises.pipe';
-import { FiltroRegionPipe } from './filtros/catRegimen/filtro-region.pipe';
-import { FiltroNombrePipe } from './filtros/catFeriados/filtroNombre/filtro-nombre.pipe';
-import { FiltroFechaPipe } from './filtros/catFeriados/filtroFecha/filtro-fecha.pipe';
-import { RolesPipe } from './filtros/catRolesPermiso/roles.pipe';
-import { PadrePipe } from './filtros/catProcesos/filtroProcesoPadre/padre.pipe';
-import { NivelPipe } from './filtros/catProcesos/filtroNivel/nivel.pipe';
-import { NombrePipe } from './filtros/catProcesos/filtroNombre/nombre.pipe';
-import { IduserPipe } from './filtros/catEnrolados/filtroUsuario/iduser.pipe';
-import { ActivoPipe } from './filtros/catEnrolados/filtroActivo/activo.pipe';
-import { FingerPipe } from './filtros/catEnrolados/filtroFinger/finger.pipe';
-import { EnrNombrePipe } from './filtros/catEnrolados/filtroEnrNombre/enr-nombre.pipe';
-import { FiltrosNombresPipe } from './filtros/filtrosNombre/filtros-nombres.pipe';
-import { FiltroModeloPipe } from './filtros/catRelojes/filtroModelo/filtro-modelo.pipe';
-import { FiltroIpPipe } from './filtros/catRelojes/filtroIp/filtro-ip.pipe';
-import { EmplCodigoPipe } from './filtros/empleado/filtroEmpCod/empl-codigo.pipe';
-import { EmplCedulaPipe } from './filtros/empleado/filtroEmpCed/empl-cedula.pipe';
-import { EmplNombrePipe } from './filtros/empleado/filtroEmpNom/empl-nombre.pipe';
-import { EmplApellidoPipe } from './filtros/empleado/filtroEmpApe/empl-apellido.pipe';
-import { FitroNivelPipe } from './filtros/catTitulos/filtroNivel/fitro-nivel.pipe';
-import { FiltrarRucPipe } from './filtros/catEmpresa/filtrarRuc/filtrar-ruc.pipe';
-import { SucEmpresaPipe } from './filtros/sucursales/filtroSucEmpresa/suc-empresa.pipe';
-import { FiltroEmpresaRPipe } from './filtros/catRelojes/filtroEmpresa/filtro-empresa-r.pipe';
-import { FiltroSucursalRPipe } from './filtros/catRelojes/filtroSucursal/filtro-sucursal-r.pipe';
-import { FiltroDepartamentoRPipe } from './filtros/catRelojes/filtroDepartamento/filtro-departamento-r.pipe';
-import { SucNombrePipe } from './filtros/sucursales/filtroSucNom/suc-nombre.pipe';
-import { SucCiudadPipe } from './filtros/sucursales/filtroSucCiu/suc-ciudad.pipe';
-import { FiltrarNombreDocuPipe } from './filtros/documentos/filtrar-nombre-docu.pipe';
-import { DepartamentoPipe } from './filtros/catDepartamentos/departamento/departamento.pipe';
-import { RegimenPipe } from './filtros/catRegimen/regimen/regimen.pipe';
-import { EmplCargoPipe } from './filtros/empleado/filtroEmpCargo/empl-cargo.pipe';
-import { PaginatePipe } from './pipes/paginate.pipe';
-import { CustomMatPaginatorIntl } from './pipes/paginator-es';
-
 // SEGURIDAD
 import { AuthGuard } from "./guards/auth.guard";
-
-// MATERIAL
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LayoutModule } from '@angular/cdk/layout';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { ImageUploadModule } from 'angular2-image-upload';
-import { MatTableModule } from '@angular/material/table';
-import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatNativeDateModule } from '@angular/material/core';
-import { MatInputModule } from "@angular/material/input";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatSelectModule } from '@angular/material/select';
-import { MatCardModule } from '@angular/material/card';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatDialogModule } from '@angular/material/dialog';
-import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatStepperModule } from '@angular/material/stepper';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { TiempoAutorizadoComponent } from './componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { ConfirmarDesactivadosComponent } from './componentes/empleado/lista-empleados/confirmar-desactivados/confirmar-desactivados.component';
 import { RealtimeAvisosComponent } from './componentes/notificaciones/realtime-avisos/realtime-avisos.component';
-import { AvisoEmplPipe } from './filtros/lista-realtime/avisos/aviso-empl.pipe';
-import { AvisoDescPipe } from './filtros/lista-realtime/avisos/aviso-desc.pipe';
-import { AvisoFechPipe } from './filtros/lista-realtime/avisos/aviso-fech.pipe';
 import { EliminarRealtimeComponent } from './componentes/notificaciones/eliminar-realtime/eliminar-realtime.component';
-import { AvisoEstadoPipe } from './filtros/lista-realtime/avisos/aviso-estado.pipe';
 import { ListaPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-plan-hora-extra/lista-plan-hora-extra.component';
 import { PlanHoraExtraAutorizaComponent } from './componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
 import { ColoresEmpresaComponent } from './componentes/catalogos/catEmpresa/colores-empresa/colores-empresa.component';
-import { ListaReportesComponent } from './componentes/reportes/lista-reportes/lista-reportes.component';
-import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
-import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
 import { AyudaComponent } from './share/ayuda/ayuda.component';
-import { ReporteEmpleadosComponent } from './componentes/reportes/reporte-empleados/reporte-empleados.component';
-import { ReporteKardexComponent } from './componentes/reportes/reporte-kardex/reporte-kardex.component';
-import { ReporteHorasPedidasComponent } from './componentes/reportes/reporte-horas-pedidas/reporte-horas-pedidas.component';
+
 import { CorreoEmpresaComponent } from './componentes/catalogos/catEmpresa/correo-empresa/correo-empresa.component';
 import { ListaPlanificacionesComponent } from './componentes/horasExtras/planificacionHoraExtra/lista-planificaciones/lista-planificaciones.component';
 import { EditarPlanHoraExtraComponent } from './componentes/horasExtras/planificacionHoraExtra/editar-plan-hora-extra/editar-plan-hora-extra.component';
@@ -305,8 +218,6 @@ import { EmplLeafletComponent } from './componentes/settings/leaflet/empl-leafle
 import { TimbreWebComponent } from './componentes/timbre-web/timbre-empleado/timbre-web.component';
 import { TimbreAdminComponent } from './componentes/timbre-web/timbre-admin/timbre-admin.component';
 import { CrearTimbreComponent } from './componentes/timbre-web/crear-timbre/crear-timbre.component';
-import { TimbreEmpleadoPipe } from './filtros/empleado/timbre-empleado.pipe';
-import { ReporteHorasExtrasComponent } from './componentes/reportes/reporte-horas-extras/reporte-horas-extras.component';
 import { InasistenciaMacroComponent } from './componentes/graficas-macro/inasistencia-macro/inasistencia-macro.component';
 import { AsistenciaMacroComponent } from './componentes/graficas-macro/asistencia-macro/asistencia-macro.component';
 import { HoraExtraMacroComponent } from './componentes/graficas-macro/hora-extra-macro/hora-extra-macro.component';
@@ -319,25 +230,16 @@ import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-
 import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
 import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
-import { AlimentosGeneralComponent } from './componentes/reportes/alimentacion/alimentos-general/alimentos-general.component';
-import { DetallePlanificadosComponent } from './componentes/reportes/alimentacion/detalle-planificados/detalle-planificados.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
 import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
 import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
 import { MetricaAtrasosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-atrasos/metrica-atrasos.component';
 import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-permisos/metrica-permisos.component';
-import { ReporteAtrasosMultiplesComponent } from './componentes/reportes/reporte-atrasos-multiples/reporte-atrasos-multiples.component';
-import { ReporteEmpleadosInactivosComponent } from './componentes/reportes/reporte-empleados-inactivos/reporte-empleados-inactivos.component';
-import { ReporteFaltasComponent } from './componentes/reportes/reporte-faltas/reporte-faltas.component';
-import { ReporteHorasTrabajadasComponent } from './componentes/reportes/reporte-horas-trabajadas/reporte-horas-trabajadas.component';
-import { ReportePuntualidadComponent } from './componentes/reportes/reporte-puntualidad/reporte-puntualidad.component';
-import { ReporteTimbresMultiplesComponent } from './componentes/reportes/reporte-timbres-multiples/reporte-timbres-multiples.component';
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
-import { FecTimbrePipe } from './filtros/timbres/fec-timbre.pipe';
 import { SolicitaComidaComponent } from './componentes/planificacionComidas/solicita-comida/solicita-comida.component';
 import { AdministraComidaComponent } from './componentes/administra-comida/administra-comida.component';
 import { CrearTipoaccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/crear-tipoaccion/crear-tipoaccion.component';
@@ -354,8 +256,22 @@ import { PermisosMultiplesEmpleadosComponent } from './componentes/empleadoPermi
 import { HorariosMultiplesComponent } from './componentes/empleadoHorario/horarios-multiples/horarios-multiples.component';
 import { HorarioMultipleEmpleadoComponent } from './componentes/empleadoHorario/horario-multiple-empleado/horario-multiple-empleado.component';
 
+import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
+import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
 
-const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
+// Imagen upload
+import { ImageUploadModule } from 'angular2-image-upload';
+
+//Modulos Compartidos
+import { MaterialModule } from './material/material.module'
+import { FiltrosModule } from './filtros/filtros.module';
+
+import { ReportesModule } from './componentes/reportes/reportes.module';
+
+//enviroment
+import { environment } from 'src/environments/environment';
+
+const config: SocketIoConfig = { url: environment.url, options: {} };
 
 @NgModule({
   declarations: [
@@ -394,60 +310,29 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ListarRegimenComponent,
     ListarTipoComidasComponent,
     ListarRelojesComponent,
-    FiltroDepartamentoPipe,
-    DepartamentoPadrePipe,
-    ProvinciaPipe,
-    BPaisesPipe,
-    FiltroRegionPipe,
     TituloEmpleadoComponent,
-    FiltroNombrePipe,
-    FiltroFechaPipe,
     ListarCiudadComponent,
     RegistrarCiudadComponent,
     AsignarCiudadComponent,
-    FiltrosNombresPipe,
-    FiltroModeloPipe,
-    FiltroIpPipe,
-    RolesPipe,
-    PadrePipe,
-    NivelPipe,
-    NombrePipe,
     VistaElementosComponent,
-    IduserPipe,
-    ActivoPipe,
-    FingerPipe,
-    EnrNombrePipe,
     RegistroContratoComponent,
     EmplCargosComponent,
-    EmplCodigoPipe,
-    EmplCedulaPipe,
-    EmplNombrePipe,
-    EmplApellidoPipe,
     ListarTitulosComponent,
-    FitroNivelPipe,
     ListarCiudadFeriadosComponent,
     EnroladoRelojComponent,
     PlanificacionComidasComponent,
     ListaSucursalesComponent,
     RegistrarSucursalesComponent,
-    SucNombrePipe,
-    SucCiudadPipe,
     RegistroEmpresaComponent,
-    SucEmpresaPipe,
     RegistrarNivelTitulosComponent,
-    PaginatePipe,
     DispositivosEnroladosComponent,
     RegistrarPeriodoVComponent,
-    FiltroEmpresaRPipe,
-    FiltroSucursalRPipe,
-    FiltroDepartamentoRPipe,
     RegistrarEmpleProcesoComponent,
     RegistrarVacacionesComponent,
     RegistroPlanHorarioComponent,
     RegistroDetallePlanHorarioComponent,
     ListarNivelTitulosComponent,
     ListarEmpresasComponent,
-    FiltrarRucPipe,
     RegistroAutorizacionDepaComponent,
     RegistroEmpleadoPermisoComponent,
     RegistoEmpleadoHorarioComponent,
@@ -507,7 +392,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     EditarDocumentoComponent,
     VerDocumentosComponent,
     VerDocumentacionComponent,
-    FiltrarNombreDocuPipe,
     SettingsComponent,
     VacacionAutorizacionesComponent,
     SucListaNotiComponent,
@@ -546,37 +430,21 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     RegistrarBirthdayComponent,
     EditarBirthdayComponent,
     VerBirthdayComponent,
-    AsistenciaConsolidadoComponent,
     LogosComponent,
     HoraExtraRealComponent,
-    DepartamentoPipe,
-    RegimenPipe,
-    EmplCargoPipe,
-    ReporteTimbresComponent,
-    ReportePermisosComponent,
-    ReporteAtrasosComponent,
-    ReporteEntradaSalidaComponent,
     PlanHoraExtraComponent,
     ListaEmplePlanHoraEComponent,
     ConfigurarAtrasosComponent,
     TiempoAutorizadoComponent,
     ConfirmarDesactivadosComponent,
     RealtimeAvisosComponent,
-    AvisoEmplPipe,
-    AvisoDescPipe,
-    AvisoFechPipe,
     EliminarRealtimeComponent,
-    AvisoEstadoPipe,
     ListaPlanHoraExtraComponent,
     PlanHoraExtraAutorizaComponent,
     ColoresEmpresaComponent,
-    ListaReportesComponent,
     ConfigEmpleadosComponent,
     ConfigAsistenciaComponent,
     AyudaComponent,
-    ReporteEmpleadosComponent,
-    ReporteKardexComponent,
-    ReporteHorasPedidasComponent,
     CorreoEmpresaComponent,
     ListaPlanificacionesComponent,
     EditarPlanHoraExtraComponent,
@@ -585,8 +453,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     TimbreWebComponent,
     TimbreAdminComponent,
     CrearTimbreComponent,
-    TimbreEmpleadoPipe,
-    ReporteHorasExtrasComponent,
     InasistenciaMacroComponent,
     AsistenciaMacroComponent,
     HoraExtraMacroComponent,
@@ -599,25 +465,16 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     FraseSeguridadComponent,
     PlanComidasComponent,
     TicketsComponent,
-    AlimentosGeneralComponent,
-    DetallePlanificadosComponent,
     SalidasAntesMacroComponent,
     MetricaVacacionesComponent,
     MetricaHorasExtrasComponent,
     MetricaAtrasosComponent,
     MetricaPermisosComponent,
-    ReporteAtrasosMultiplesComponent,
-    ReporteEmpleadosInactivosComponent,
-    ReporteFaltasComponent,
-    ReporteHorasTrabajadasComponent,
-    ReportePuntualidadComponent,
-    ReporteTimbresMultiplesComponent,
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
     FuncionesComponent,
     ConfigReportFirmasHorasExtrasComponent,
-    FecTimbrePipe,
     SolicitaComidaComponent,
     AdministraComidaComponent,
     CrearTipoaccionComponent,
@@ -640,48 +497,17 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
     ToastrModule.forRoot(),
     SocketIoModule.forRoot(config),
-    LayoutModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
-    ImageUploadModule.forRoot(),
     FontAwesomeModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCardModule,
-    MatSliderModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatBadgeModule,
-    MatSlideToggleModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatGridListModule,
-    MatDialogModule,
-    NgMaterialMultilevelMenuModule,
-    MatExpansionModule,
     FormsModule,
-    MatStepperModule,
-    DragDropModule,
-    MatTooltipModule,
-    MatAutocompleteModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatTabsModule,
-    MatDatepickerModule, 
-    MatNativeDateModule,
-    MatTabsModule,
-    MatMenuModule,
+    ImageUploadModule.forRoot(),
     ScrollingModule,
     JwPaginationModule,
-    MatTreeModule,
-    MatProgressSpinnerModule
+    
+    FiltrosModule,
+    MaterialModule,
+    ReportesModule
   ],
   providers: [
     AuthGuard,
@@ -690,7 +516,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
       useClass: TokenInterceptorService,
       multi: true
     },
-    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
     LoginService,
     RolesService,
     TituloService,
@@ -699,7 +524,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     ProvinciaService,
     HorarioService,
     EnroladoService,
-    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
     HorasExtrasService,
     NotificacionesService,
     RolPermisosService,
@@ -712,12 +536,7 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     GraficasService
   ],
 
-  bootstrap: [AppComponent],
-
-  exports: [
-    MatButtonModule, MatDialogModule, DragDropModule,
-    MatDatepickerModule, MatNativeDateModule
-  ],
+  bootstrap: [AppComponent]
 
 })
 export class AppModule { }
