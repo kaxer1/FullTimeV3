@@ -9,15 +9,21 @@
                             <form [formGroup]="validarCredencialesF">
                                 <mat-form-field>
                                     <mat-label>Ingresa tu Usuario</mat-label>
-                                    <input matInput placeholder="pat@example.com" [formControl]="userMail" required>
-                                    <mat-error *ngIf="userMail.invalid">{{ObtenerMensajeCampoUsuarioError()}}</mat-error>
+                                    <input matInput 
+                                        placeholder="pat@example.com" 
+                                        [formControl]="userMail" 
+                                        required>
+                                        <mat-error *ngIf="userMail.invalid">{{ObtenerMensajeCampoUsuarioError()}}</mat-error>
                                 </mat-form-field>
                                 <br>
                                 <mat-form-field>
                                     <mat-label>Ingresa tu Contraseña</mat-label>
-                                    <input matInput [type]="hide1 ? 'password' : 'text'" [formControl]="pass" required>
-                                    <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'"
-                                        [attr.aria-pressed]="hide1">
+                                    <input matInput 
+                                        (keyup.enter)="hide1 = true; ValidarUsuario(validarCredencialesF.value)"
+                                        [formControl]="pass"
+                                        [type]="hide1 ? 'password' : 'text'" 
+                                        required>
+                                    <button mat-icon-button matSuffix (click)="hide1 = !hide1">
                                         <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
                                     </button>
                                     <mat-error *ngIf="pass.invalid">{{ObtenerMensajeCampoContraseniaError()}}</mat-error>

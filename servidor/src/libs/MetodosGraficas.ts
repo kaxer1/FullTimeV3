@@ -367,7 +367,7 @@ export const GraficaAsistencia = async function (id_empresa: number, fec_inicio:
                 data: [
                     { value: modelarPie.a_justifi.length, name: 'Ausencia justificada' },
                     { value: modelarPie.a_no_justi.length, name: 'Ausencia no justificada' },
-                    { value: modelarPie.presente.length, name: 'Presente', selected: true}
+                    { value: modelarPie.presente.length, name: 'Presencia', selected: true}
                 ],
                 emphasis: {
                     itemStyle: {

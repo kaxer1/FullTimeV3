@@ -107,6 +107,7 @@ export interface emp {
     codigo: string | number
     timbres?: Array<tim>,  
     genero?: string | number,
+    fec_final?: string,
     cargo?: string,
     contrato?: string,
     faltas?: Array<faltas>

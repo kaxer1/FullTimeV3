@@ -3,62 +3,83 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MaterialModule } from '../../material/material.module';
+import { FiltrosModule } from '../../filtros/filtros.module';
 
 import { RangoFechasComponent } from './rango-fechas/rango-fechas.component';
 import { ReporteFaltasComponent } from './reporte-faltas/reporte-faltas.component';
 import { CriteriosBusquedaComponent } from './criterios-busqueda/criterios-busqueda.component';
 import { ReporteTimbresMultiplesComponent } from './reporte-timbres-multiples/reporte-timbres-multiples.component';
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { ListaReportesComponent } from './lista-reportes/lista-reportes.component';
+import { ReporteEmpleadosComponent } from './reporte-empleados/reporte-empleados.component';
+import { ReporteKardexComponent } from './reporte-kardex/reporte-kardex.component';
+import { ReporteHorasPedidasComponent } from './reporte-horas-pedidas/reporte-horas-pedidas.component';
+import { ReporteHorasExtrasComponent } from './reporte-horas-extras/reporte-horas-extras.component';
+import { AlimentosGeneralComponent } from './alimentacion/alimentos-general/alimentos-general.component';
+import { DetallePlanificadosComponent } from './alimentacion/detalle-planificados/detalle-planificados.component';
+import { ReporteAtrasosMultiplesComponent } from './reporte-atrasos-multiples/reporte-atrasos-multiples.component';
+import { ReporteEmpleadosInactivosComponent } from './reporte-empleados-inactivos/reporte-empleados-inactivos.component';
+import { ReporteHorasTrabajadasComponent } from './reporte-horas-trabajadas/reporte-horas-trabajadas.component';
+import { ReportePuntualidadComponent } from './reporte-puntualidad/reporte-puntualidad.component';
+import { AsistenciaConsolidadoComponent } from './reporte-asistencia-consolidado/asistencia-consolidado.component';
+import { ReporteTimbresComponent } from './reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReportePermisosComponent } from './reporte-permisos/reporte-permisos.component';
+import { ReporteAtrasosComponent } from './reporte-atrasos/reporte-atrasos.component';
+import { ReporteEntradaSalidaComponent } from './reporte-entrada-salida/reporte-entrada-salida.component';
+import { AppRoutingModule } from '../../app-routing.module';
 
-import { PaginatePipe } from 'src/app/pipes/paginate.pipe';
-
-
-//Pipe
-// PaginatePipe
 @NgModule({
   declarations: [
     RangoFechasComponent,
     CriteriosBusquedaComponent,
     ReporteTimbresMultiplesComponent,
     ReporteFaltasComponent,
+    ReporteEmpleadosComponent,
+    ReporteKardexComponent,
+    ReporteHorasPedidasComponent,
+    ReporteHorasExtrasComponent,
+    AlimentosGeneralComponent,
+    DetallePlanificadosComponent,
+    ReporteAtrasosMultiplesComponent,
+    ReporteEmpleadosInactivosComponent,
+    ReporteHorasTrabajadasComponent,
+    ReportePuntualidadComponent,
+    AsistenciaConsolidadoComponent,
+    ReporteTimbresComponent,
+    ReportePermisosComponent,
+    ReporteAtrasosComponent,
+    ReporteEntradaSalidaComponent,
+    ListaReportesComponent,
   ],
   exports: [
     ReporteFaltasComponent,
-    ReporteTimbresMultiplesComponent
+    ReporteTimbresMultiplesComponent,
+    ReporteEmpleadosComponent,
+    ReporteKardexComponent,
+    ReporteHorasPedidasComponent,
+    ReporteHorasExtrasComponent,
+    AlimentosGeneralComponent,
+    DetallePlanificadosComponent,
+    ReporteAtrasosMultiplesComponent,
+    ReporteEmpleadosInactivosComponent,
+    ReporteHorasTrabajadasComponent,
+    ReportePuntualidadComponent,
+    AsistenciaConsolidadoComponent,
+    ReporteTimbresComponent,
+    ReportePermisosComponent,
+    ReporteAtrasosComponent,
+    ReporteEntradaSalidaComponent,
+    ListaReportesComponent,
   ],
   imports: [
-    CommonModule,
     BrowserAnimationsModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatExpansionModule,
+    CommonModule,
     FormsModule,
-    MatPaginatorModule,
-    MatDatepickerModule, 
-  ],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    ReactiveFormsModule,
+    AppRoutingModule,
+    MaterialModule,
+    FiltrosModule
   ]
 })
 export class ReportesModule { }

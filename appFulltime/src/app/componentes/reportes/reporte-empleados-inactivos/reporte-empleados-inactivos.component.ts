@@ -566,7 +566,7 @@ export class ReporteEmpleadosInactivosComponent implements OnInit {
             'Id Sucursal': obj1.id_suc, 'Ciudad': obj1.ciudad, 'Sucursal': obj1.name_suc, 
             'Id Departamento': obj2.id_depa, 'Departamento': obj2.name_dep,
             'Id Empleado': obj3.id, 'Nombre Empleado': obj3.name_empleado, 'Cédula': obj3.cedula, 'Código': obj3.codigo,
-            'Género': obj3.genero, 'Contrato': obj3.contrato, 'Cargo': obj3.cargo, 
+            'Género': obj3.genero, 'Fecha termino Cargo': obj3.fec_final
           }
           nuevo.push(ele)
         })
