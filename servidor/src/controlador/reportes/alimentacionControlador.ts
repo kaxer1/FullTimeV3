@@ -8,10 +8,11 @@ class AlimentacionControlador {
         const DATOS = await pool.query('SELECT tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.descripcion = \'Planificacion\' AND pc.extra = false AND pc.consumido = true AND ' +
-            'pc.fecha BETWEEN $1 AND $2 ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, ' +
+            'plan_comida_empleado AS pce ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = false AND pce.consumido = true AND pce.id_plan_comida = pc.id AND ' +
+            'pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion',
             [fec_inicio, fec_final]);
         if (DATOS.rowCount > 0) {
@@ -27,10 +28,9 @@ class AlimentacionControlador {
         const DATOS = await pool.query('SELECT tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.descripcion = \'Solicitud\' AND pc.extra = false AND pc.consumido = true AND ' +
-            'pc.fecha BETWEEN $1 AND $2 ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, solicita_comidas AS pc ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = false AND pc.consumido = true AND pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion',
             [fec_inicio, fec_final]);
         if (DATOS.rowCount > 0) {
@@ -41,14 +41,34 @@ class AlimentacionControlador {
         }
     }
 
-    public async ListarExtrasConsumidos(req: Request, res: Response) {
+    public async ListarExtrasPlanConsumidos(req: Request, res: Response) {
         const { fec_inicio, fec_final } = req.body;
         const DATOS = await pool.query('SELECT tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.extra = true AND pc.consumido = true AND pc.fecha BETWEEN $1 AND $2 ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, ' +
+            'plan_comida_empleado AS pce ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = true AND pce.consumido = true AND pce.id_plan_comida = pc.id AND ' +
+            'pc.fec_comida BETWEEN $1 AND $2 ' +
+            'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion',
+            [fec_inicio, fec_final]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'error' });
+        }
+    }
+
+    public async ListarExtrasSolConsumidos(req: Request, res: Response) {
+        const { fec_inicio, fec_final } = req.body;
+        const DATOS = await pool.query('SELECT tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
+            'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
+            '(COUNT(dm.nombre) * dm.valor) AS total ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, solicita_comidas AS pc ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = true AND pc.consumido = true AND pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion',
             [fec_inicio, fec_final]);
         if (DATOS.rowCount > 0) {
@@ -65,10 +85,11 @@ class AlimentacionControlador {
             'tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, empleados AS e ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.descripcion = \'Planificacion\' AND pc.extra = false AND pc.consumido = true AND ' +
-            'pc.fecha BETWEEN $1 AND $2 AND e.id = pc.id_empleado ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, ' +
+            'empleados AS e, plan_comida_empleado AS pce ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = false AND pce.consumido = true AND e.id = pce.id_empleado AND ' +
+            'pc.id = pce.id_plan_comida AND pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion, e.nombre, ' +
             'e.apellido, e.cedula, e.codigo ORDER BY e.apellido ASC',
             [fec_inicio, fec_final]);
@@ -86,10 +107,11 @@ class AlimentacionControlador {
             'tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, empleados AS e ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.descripcion = \'Solicitud\' AND pc.extra = false AND pc.consumido = true AND ' +
-            'pc.fecha BETWEEN $1 AND $2 AND e.id = pc.id_empleado ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, solicita_comidas AS pc, ' +
+            'empleados AS e ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = false AND pc.consumido = true AND e.id = pc.id_empleado AND ' +
+            'pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion, e.nombre, ' +
             'e.apellido, e.cedula, e.codigo ORDER BY e.apellido ASC',
             [fec_inicio, fec_final]);
@@ -101,15 +123,39 @@ class AlimentacionControlador {
         }
     }
 
-    public async DetallarExtrasConsumidos(req: Request, res: Response) {
+    public async DetallarExtrasPlanConsumidos(req: Request, res: Response) {
         const { fec_inicio, fec_final } = req.body;
         const DATOS = await pool.query('SELECT e.nombre, e.apellido, e.cedula, e.codigo, ' +
             'tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
             'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
             '(COUNT(dm.nombre) * dm.valor) AS total ' +
-            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, empleados AS e ' +
-            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id AND ' +
-            'pc.extra = true AND pc.consumido = true AND pc.fecha BETWEEN $1 AND $2 AND e.id = pc.id_empleado ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, plan_comidas AS pc, ' +
+            'empleados AS e, plan_comida_empleado AS pce ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = true AND pce.consumido = true AND e.id = pce.id_empleado AND ' +
+            'pc.id = pce.id_plan_comida AND pc.fec_comida BETWEEN $1 AND $2 ' +
+            'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion, e.nombre, ' +
+            'e.apellido, e.cedula, e.codigo ORDER BY e.apellido ASC',
+            [fec_inicio, fec_final]);
+        if (DATOS.rowCount > 0) {
+            return res.jsonp(DATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'error' });
+        }
+    }
+
+    public async DetallarExtrasSolConsumidos(req: Request, res: Response) {
+        const { fec_inicio, fec_final } = req.body;
+        const DATOS = await pool.query('SELECT e.nombre, e.apellido, e.cedula, e.codigo, ' +
+            'tc.nombre AS comida_tipo, ctc.tipo_comida AS id_comida, ' +
+            'ctc.nombre AS menu, dm.nombre AS plato, dm.valor, dm.observacion, COUNT(dm.nombre) AS cantidad, ' +
+            '(COUNT(dm.nombre) * dm.valor) AS total ' +
+            'FROM tipo_comida AS tc, cg_tipo_comidas AS ctc, detalle_menu AS dm, solicita_comidas AS pc, ' +
+            'empleados AS e ' +
+            'WHERE tc.id = ctc.tipo_comida AND dm.id_menu = ctc.id AND pc.id_comida = dm.id ' +
+            'AND pc.extra = true AND pc.consumido = true AND e.id = pc.id_empleado AND ' +
+            'pc.fec_comida BETWEEN $1 AND $2 ' +
             'GROUP BY tc.nombre, ctc.tipo_comida, ctc.nombre, dm.nombre, dm.valor, dm.observacion, e.nombre, ' +
             'e.apellido, e.cedula, e.codigo ORDER BY e.apellido ASC',
             [fec_inicio, fec_final]);

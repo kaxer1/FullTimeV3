@@ -20,8 +20,12 @@ export class AlimentacionService {
     return this.http.post(`${environment.url}/alimentacion/solicitados`, datos);
   }
 
-  ObtenerExtrasConsumidos(data: any) {
-    return this.http.post(`${environment.url}/alimentacion/extras`, data)
+  ObtenerExtrasPlanConsumidos(data: any) {
+    return this.http.post(`${environment.url}/alimentacion/extras/plan`, data)
+  }
+
+  ObtenerExtrasSolConsumidos(data: any) {
+    return this.http.post(`${environment.url}/alimentacion/extras/solicita`, data)
   }
 
   ObtenerDetallesPlanificadosConsumidos(datos: any) {
@@ -32,8 +36,12 @@ export class AlimentacionService {
     return this.http.post(`${environment.url}/alimentacion/solicitados/detalle`, datos);
   }
 
-  ObtenerDetallesExtrasConsumidos(data: any) {
-    return this.http.post(`${environment.url}/alimentacion/extras/detalle`, data)
+  ObtenerDetallesExtrasPlanConsumidos(data: any) {
+    return this.http.post(`${environment.url}/alimentacion/extras/detalle/plan`, data)
+  }
+
+  ObtenerDetallesExtrasSolConsumidos(data: any) {
+    return this.http.post(`${environment.url}/alimentacion/extras/detalle/solicita`, data)
   }
 
 }

@@ -82,7 +82,7 @@ class DepartamentoControlador {
     ObtenerDepartamentosSucursal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_sucursal } = req.params;
-            const DEPARTAMENTO = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE id_sucursal = $1', [id_sucursal]);
+            const DEPARTAMENTO = yield database_1.default.query('SELECT * FROM cg_departamentos WHERE NOT UPPER(nombre) = \'NINGUNO\' AND id_sucursal = $1', [id_sucursal]);
             if (DEPARTAMENTO.rowCount > 0) {
                 return res.jsonp(DEPARTAMENTO.rows);
             }

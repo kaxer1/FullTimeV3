@@ -18,14 +18,13 @@ export class EditarAutorizacionDepaComponent implements OnInit {
 
   departamento: any = [];
   sucursales: any = [];
-  empresas: any = [];
   empleados: any = [];
+  idEmpresa: number;
 
   selec1: boolean = false;
   selec2: boolean = false;
 
   nombreEmpleadoF = new FormControl('', [Validators.required]);
-  idEmpresaF = new FormControl('', Validators.required);
   idSucursal = new FormControl('', [Validators.required]);
   idDepartamento = new FormControl('', [Validators.required]);
   autorizarF = new FormControl('', [Validators.required]);
@@ -33,7 +32,6 @@ export class EditarAutorizacionDepaComponent implements OnInit {
   public autorizarDepaForm = new FormGroup({
     nombreEmpleadoForm: this.nombreEmpleadoF,
     idSucursalForm: this.idSucursal,
-    idEmpresaForm: this.idEmpresaF,
     idDeparForm: this.idDepartamento,
     autorizarForm: this.autorizarF,
   });
@@ -47,10 +45,12 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     private toastr: ToastrService,
     public dialogRef: MatDialogRef<EditarAutorizacionDepaComponent>,
     @Inject(MAT_DIALOG_DATA) public datoEmpleado: any,
-  ) { }
+  ) {
+    this.idEmpresa = parseInt(localStorage.getItem('empresa'));
+  }
 
   ngOnInit(): void {
-    this.BuscarEmpresas();
+    this.BuscarSucursales();
     this.ObtenerEmpleados(this.datoEmpleado.idEmpleado);
     this.CargarDatos();
   }
@@ -67,23 +67,11 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     })
   }
 
-  BuscarEmpresas() {
-    this.empresas = [];
-    this.restE.ConsultarEmpresas().subscribe(datos => {
-      this.empresas = datos;
-    })
-  }
-
-  FiltrarSucursales(form) {
-    let idEmpre = form.idEmpresaForm
+  BuscarSucursales() {
     this.sucursales = [];
-    this.restSucursales.BuscarSucEmpresa(idEmpre).subscribe(datos => {
+    this.restSucursales.BuscarSucEmpresa(this.idEmpresa).subscribe(datos => {
       this.sucursales = datos;
-    }, error => {
-      this.toastr.info('La Empresa seleccionada no tiene Sucursales registradas','', {
-        timeOut: 6000,
-      })
-    })
+    });
   }
 
   ObtenerDepartamentos(form) {
@@ -92,7 +80,7 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     this.restCatDepartamento.BuscarDepartamentoSucursal(idSucursal).subscribe(datos => {
       this.departamento = datos;
     }, error => {
-      this.toastr.info('Sucursal no cuenta con departamentos registrados','', {
+      this.toastr.info('Sucursal no cuenta con departamentos registrados', '', {
         timeOut: 6000,
       })
     });
@@ -133,7 +121,6 @@ export class EditarAutorizacionDepaComponent implements OnInit {
     });
     this.autorizarDepaForm.patchValue({
       idSucursalForm: this.datoEmpleado.datosAuto.id_sucursal,
-      idEmpresaForm: this.datoEmpleado.datosAuto.id_empresa,
       idDeparForm: this.datoEmpleado.datosAuto.id_departamento,
       autorizarForm: this.datoEmpleado.datosAuto.estado,
     })

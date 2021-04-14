@@ -1,14 +1,16 @@
 <div class="scrollbar scrollbar-primary">
     <div class="d-flex bd-highlight autorizarDepa">
         <mat-icon class="flex-shrink-1 bd-highlight" id="movilidad">open_with</mat-icon>
-        <h5 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Autoridades Departamentos</h5>
+        <h5 class="w-100 bd-highlight" mat-dialog-title cdkDrag cdkDragRootElement=".cdk-overlay-pane">Autoridades
+            Departamentos</h5>
     </div>
     <!-- Formulario Completo -->
     <form [formGroup]="autorizarDepaForm">
         <mat-card-content>
             <div class="container" style="padding-top: 15px; text-align: center;">
                 <div class="nota">
-                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón Guardar.</span>
+                    <span>NOTA: Por favor llenar todos los campos obligatorios (*) del formulario para activar el botón
+                        Guardar.</span>
                 </div>
                 <div class="d-flex flex-wrap justify-content-around">
                     <mat-form-field>
@@ -18,17 +20,6 @@
                         <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
                             matTooltipPosition="right" matTooltip="Nombre de identificación del empleado">
                             help_outline</mat-icon>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label id="selEmpre">Seleccionar Empresa</mat-label>
-                        <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
-                            matTooltipPosition="right" matTooltip="Lista de Empresas">help_outline</mat-icon>
-                        <mat-select [formControl]="idEmpresaF" required>
-                            <mat-option *ngFor="let empre of empresas" [value]="empre.id"
-                                (click)="FiltrarSucursales(autorizarDepaForm.value)">
-                                {{empre.nombre}}
-                            </mat-option>
-                        </mat-select>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label id="selEmpre">Seleccionar Sucursal</mat-label>
@@ -44,17 +35,21 @@
                     <mat-form-field>
                         <mat-label>Departamento</mat-label>
                         <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
-                            matTooltipPosition="right" matTooltip="Lista de departamentos existentes en la empresa">
+                            matTooltipPosition="right"
+                            matTooltip="Seleccionar el departamento en el que realizará autorizaciones.">
                             help_outline</mat-icon>
                         <mat-select [formControl]="idDepartamento" required>
                             <mat-option *ngFor="let d of departamento" [value]="d.id">{{d.nombre}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-radio-group aria-label="Select an option" [formControl]="autorizarF" [value]="autorizarF.value" required>
+                    <mat-radio-group aria-label="Select an option" [formControl]="autorizarF" [value]="autorizarF.value"
+                        required>
                         <label class="d-flex justify-content-between">
-                            <span>Autoriza *</span>
-                            <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip" matTooltipPosition="right"
-                                matTooltip="Indicar si el empleado será quien autorice dentro del departamento seleccionado">help_outline
+                            <span>Autoriza Departamento*</span>
+                            <mat-icon id="autorizar" matSuffix matTooltipClass="autorizar-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Indicar si el empleado será quien autorice dentro del departamento seleccionado.">
+                                help_outline
                             </mat-icon>
                         </label>
                         <div class="d-flex justify-content-around">

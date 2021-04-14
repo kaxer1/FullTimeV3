@@ -12,12 +12,14 @@ class CiudadRutas {
     configuracion(): void {
         this.router.post('/planificados', ALIMENTACION_CONTROLADOR.ListarPlanificadosConsumidos);
         this.router.post('/solicitados', ALIMENTACION_CONTROLADOR.ListarSolicitadosConsumidos);
-        this.router.post('/extras', ALIMENTACION_CONTROLADOR.ListarExtrasConsumidos);
+        this.router.post('/extras/plan', ALIMENTACION_CONTROLADOR.ListarExtrasPlanConsumidos);
+        this.router.post('/extras/solicita', ALIMENTACION_CONTROLADOR.ListarExtrasSolConsumidos);
 
         // Detalle de servicio de alimentación
         this.router.post('/planificados/detalle', ALIMENTACION_CONTROLADOR.DetallarPlanificadosConsumidos);
         this.router.post('/solicitados/detalle', ALIMENTACION_CONTROLADOR.DetallarSolicitudConsumidos);
-        this.router.post('/extras/detalle', ALIMENTACION_CONTROLADOR.DetallarExtrasConsumidos);
+        this.router.post('/extras/detalle/plan', ALIMENTACION_CONTROLADOR.DetallarExtrasPlanConsumidos);
+        this.router.post('/extras/detalle/solicita', ALIMENTACION_CONTROLADOR.DetallarExtrasSolConsumidos);
     }
 }
 

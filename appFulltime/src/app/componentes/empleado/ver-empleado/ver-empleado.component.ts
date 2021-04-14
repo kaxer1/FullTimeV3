@@ -27,6 +27,9 @@ import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizaDepartamentoService } from 'src/app/servicios/autorizaDepartamento/autoriza-departamento.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
+import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
+import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
+import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 
 import { RegistroContratoComponent } from 'src/app/componentes/empleadoContrato/registro-contrato/registro-contrato.component'
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component'
@@ -57,10 +60,9 @@ import { EditarVacacionesEmpleadoComponent } from 'src/app/componentes/rolEmplea
 import { EmplLeafletComponent } from '../../settings/leaflet/empl-leaflet/empl-leaflet.component';
 import * as L from 'leaflet';
 import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
-import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
-import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
+import { AdministraComidaComponent } from '../../administra-comida/administra-comida.component';
+
 
 @Component({
   selector: 'app-ver-empleado',
@@ -182,6 +184,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.VerAccionContrasena(this.idEmpleado);
     this.VerEmpresa();
     this.VerFuncionalidades();
+    this.VerAdminComida(this.idEmpleado);
   }
 
   // Método para ver la información del empleado 
@@ -533,8 +536,18 @@ export class VerEmpleadoComponent implements OnInit {
   planComidas: any;
   obtenerPlanComidasEmpleado(id_empleado: number) {
     this.planComidas = [];
-    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+    this.restPlanComidas.ObtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
       this.planComidas = res;
+      console.log('comidas 1', this.planComidas);
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol => {
+        this.planComidas = this.planComidas.concat(sol);
+        console.log('comidas 2', this.planComidas);
+      });
+    }, error => {
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol2 => {
+        this.planComidas = sol2;
+        console.log('comidas 3', this.planComidas);
+      });
     });
   }
 
@@ -1107,6 +1120,15 @@ export class VerEmpleadoComponent implements OnInit {
         timeOut: 6000,
       })
     });
+  }
+
+  /* Ventana para registrar administracion de MÓDULO DE ALIMENTACIÓN */
+  AbrirVentanaAdminComida(): void {
+    this.vistaRegistrarDatos.open(AdministraComidaComponent,
+      { width: '600px', data: { idEmpleado: this.idEmpleado } })
+      .afterClosed().subscribe(item => {
+        this.VerAdminComida(parseInt(this.idEmpleado));
+      });
   }
 
   /* Ventana para registrar permisos del empleado */
@@ -1685,6 +1707,15 @@ export class VerEmpleadoComponent implements OnInit {
           }
         });
       }
+    });
+  }
+
+  /** MOSTRAR DATOS DE USUARIO - ADMINISTRACIÓN DE MÓDULO DE ALIMENTACIÓN */
+  administra_comida: any = [];
+  VerAdminComida(idEmpleado) {
+    this.administra_comida = [];
+    this.restU.BuscarDatosUser(idEmpleado).subscribe(res => {
+      this.administra_comida = res;
     });
   }
 

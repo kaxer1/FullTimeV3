@@ -26,14 +26,30 @@ class EmpleadoControlador {
             res.jsonp(empleado.rows);
         });
     }
+    // BÚSQUEDA DE DATOS DE EMPLEADO INGRESANDO EL NOMBRE
+    BuscarEmpleadoNombre(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { informacion } = req.body;
+            const EMPLEADO = yield database_1.default.query('SELECT * FROM empleados WHERE ' +
+                '(UPPER (apellido) || \' \' || UPPER (nombre)) = $1', [informacion]);
+            if (EMPLEADO.rowCount > 0) {
+                return res.jsonp(EMPLEADO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+            }
+        });
+    }
     getOne(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const unEmpleado = yield database_1.default.query('SELECT * FROM empleados WHERE id = $1', [id]);
-            if (unEmpleado.rowCount > 0) {
-                return res.jsonp(unEmpleado.rows);
+            const EMPLEADO = yield database_1.default.query('SELECT * FROM empleados WHERE id = $1', [id]);
+            if (EMPLEADO.rowCount > 0) {
+                return res.jsonp(EMPLEADO.rows);
             }
-            res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+            else {
+                return res.status(404).jsonp({ text: 'El empleado no ha sido encontrado' });
+            }
         });
     }
     getImagen(req, res) {

@@ -20,6 +20,7 @@ class EmpleadoRutas {
     }
     configuracion() {
         this.router.get('/', verificarToken_1.TokenValidation, empleadoControlador_1.default.list);
+        this.router.post('/buscar/informacion', verificarToken_1.TokenValidation, empleadoControlador_1.default.BuscarEmpleadoNombre);
         this.router.get('/buscador-empl', verificarToken_1.TokenValidation, empleadoControlador_1.default.ListaBusquedaEmpleados);
         this.router.get('/:id', verificarToken_1.TokenValidation, empleadoControlador_1.default.getOne);
         this.router.get('/img/:imagen', empleadoControlador_1.default.getImagen);

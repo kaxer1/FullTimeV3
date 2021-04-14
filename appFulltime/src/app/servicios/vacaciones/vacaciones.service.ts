@@ -25,13 +25,17 @@ export class VacacionesService {
   ObtenerListaVacaciones() {
     return this.http.get(`${environment.url}/vacaciones`);
   }
-  
+
   ObtenerListaVacacionesAutorizadas() {
     return this.http.get(`${environment.url}/vacaciones/estado-solicitud`);
   }
 
   ObtenerUnaVacacion(id: number) {
     return this.http.get(`${environment.url}/vacaciones/one/${id}`);
+  }
+
+  ListarUnaVacacion(id: number) {
+    return this.http.get(`${environment.url}/vacaciones/listar/vacacion/${id}`);
   }
 
   RegistrarVacaciones(datos: any) {

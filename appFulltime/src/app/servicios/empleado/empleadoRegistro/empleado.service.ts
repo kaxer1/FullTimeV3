@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment'
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,11 @@ export class EmpleadoService {
   // Empleados  
   getEmpleadosRest() {
     return this.http.get(`${environment.url}/empleado`);
+  }
+
+  // BÚSQUEDA DE EMPLEADOS INGRESANDO NOMBRE Y APELLIDO 
+  BuscarEmpleadoNombre(data: any) {
+    return this.http.post(`${environment.url}/empleado/buscar/informacion`, data);
   }
 
   getBuscadorEmpledosRest() {
@@ -135,6 +140,18 @@ export class EmpleadoService {
     return this.http.get<any>(`${environment.url}/contratoEmpleado`);
   }
 
+  /** SERVICIOS PARA SER USADOS PARA REGISTRAR MODALIDAD DE TRABAJO O TIPO DE CONTRATOS */
+  CrearTiposContrato(datos: any) {
+    return this.http.post(`${environment.url}/contratoEmpleado/modalidad/trabajo`, datos);
+  }
+
+  BuscarTiposContratos() {
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/modalidad/trabajo`);
+  }
+
+  BuscarUltimoTiposContratos() {
+    return this.http.get<any>(`${environment.url}/contratoEmpleado/modalidad/trabajo/ultimo`);
+  }
 
   // GUARDAR CÓDIGO
 
@@ -173,7 +190,7 @@ export class EmpleadoService {
     return this.http.post(`${environment.url}/empleado/xmlDownload`, data);
   }
   // verXML(name: string){
-  //   return this.http.get<any>(`${this.API_URI}/empleado/download/${name}`)
+  //   return this.http.get<any>(`${environment.url}/empleado/download/${name}`)
   // }
 
   BuscarDepartamentoEmpleado(datos: any) {

@@ -302,9 +302,19 @@ export class DatosEmpleadoComponent implements OnInit {
   planComidas: any;
   obtenerPlanComidasEmpleado(id_empleado: number) {
     this.planComidas = [];
-    this.restPlanComidas.obtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
-      this.planComidas = res
-    }, error => { console.log("") });
+    this.restPlanComidas.ObtenerPlanComidaPorIdEmpleado(id_empleado).subscribe(res => {
+      this.planComidas = res;
+      console.log('comidas 1', this.planComidas);
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol => {
+        this.planComidas = this.planComidas.concat(sol);
+        console.log('comidas 2', this.planComidas);
+      });
+    }, error => {
+      this.restPlanComidas.ObtenerSolComidaPorIdEmpleado(id_empleado).subscribe(sol2 => {
+        this.planComidas = sol2;
+        console.log('comidas 3', this.planComidas);
+      });
+    });
   }
 
   /* Método para imprimir datos del periodo de vacaciones */
@@ -519,7 +529,7 @@ export class DatosEmpleadoComponent implements OnInit {
         }
       },
       content: [
-        { image: this.logoE, width: 150, margin: [10, -25, 0, 5]  },
+        { image: this.logoE, width: 150, margin: [10, -25, 0, 5] },
         { text: 'Perfil Empleado', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
         {
           columns: [

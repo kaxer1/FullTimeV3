@@ -1,0 +1,97 @@
+<br>
+<div class="container" style="margin-bottom: 25px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-md" style="margin-bottom: 25px; padding-bottom: 10px;">
+            <div class="barraTitulo">
+                <span>TIPO DE ACCIONES DE PERSONAL</span>
+            </div>
+            <mat-card class="example-card mat-elevation-z9">
+                <h5 style="text-align: center">Críterios de Búsqueda</h5>
+                <form [formGroup]="BuscarTipoAccionForm">
+                    <div class="d-flex flex-wrap justify-content-center">
+                        <mat-form-field>
+                            <mat-label>Tipo de acción personal</mat-label>
+                            <mat-icon id="permiso" matSuffix matTooltipClass="color-tooltip" matTooltipPosition="right"
+                                matTooltip="Búsqueda de un tipo de acción de personal">
+                                help_outline</mat-icon>
+                            <input matInput name="filtroNombre" placeholder="Ingresar nombre" minlength="2"
+                                [formControl]="nombreF" [(ngModel)]="filtroNombre">
+                            <mat-error *ngIf="nombreF.invalid">Indispensable ingresar dos letras</mat-error>
+                        </mat-form-field>
+                    </div>
+                </form>
+                <div class="d-flex flex-wrap justify-content-center">
+                    <button mat-button type="submit" class="btn btn-sm" (click)="AbrirVentanaCrearTipoAccion()">Crear
+                        nuevo Tipo de Acción
+                    </button>
+                    <button mat-button type="submit" class="btn btn-sm" (click)="LimpiarCampos()">Cancelar
+                    </button>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 50px; text-align: center;">
+    <div class="mat-elevation-z8" style="background: white;">
+        <div id="resultados">Resultado de búsqueda</div>
+        <div class="table-responsive">
+            <table class="table table-hover table-sm">
+                <thead class="thead-light">
+                    <tr style="text-align: center;">
+                        <th scope="col">Id </th>
+                        <th scope="col">Tipo de Acción</th>
+                        <th scope="col">Descripción</th>
+                        <th scope="col">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let ta of tipo_acciones | nombre:filtroNombre | paginate:tamanio_pagina:numero_pagina">
+                        <th style="padding-top: 10px; text-align: center;" scope="row">{{ta.id}}</th>
+                        <td style="padding-top: 10px;text-align: center;">{{ta.nombre}}</td>
+                        <td style="padding-top: 10px;text-align: center;">{{ta.descripcion}}</td>
+                        <td style="padding-top: 10px;text-align: center;" class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este registro" class="fas fa-eye" id="ver"
+                                [routerLink]="['/vistaTipoAccion/', ta.id]">
+                                <p>Ver</p>
+                            </i>
+                            <i id="permiso" class="fas fa-edit" style="color:green; margin-right: 15px;" matSuffix
+                                matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                                (click)="AbrirVentanaEditarTipoAccion(ta)"
+                                matTooltip="Modificar los datos generales de este registro">
+                                <p>Editar</p>
+                            </i>
+                            <i (click)="ConfirmarDelete(ta)" id="permiso" class="far fa-trash-alt"
+                                style="color:red; margin-right: 15px;" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip" matTooltip="Eliminar este registro">
+                                <p>Eliminar</p>
+                            </i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="tipo_acciones.length" [pageSize]="tamanio_pagina" [pageSizeOptions]="pageSizeOptions"
+            id="estilo" (page)="ManejarPagina($event)" showFirstLastButtons>
+        </mat-paginator>
+        <div class="d-flex justify-content-end" style="margin-right: 5%;">
+            <i (click)="generarPdf('download')" id="pdf" class="fas fa-file-pdf" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Tipo de Permisos en formato PDF">
+                <p>PDF</p>
+            </i>
+            <i (click)="exportToExcel()" id="excel" class="fas fa-file-excel" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip"
+                matTooltip="Descargar Lista de Tipo de Permisos en formato EXCEL">
+                <p>XLSL</p>
+            </i>
+            <i (click)="exportToCVS()" id="csv" class="fas fa-file-csv" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Tipo de Permisos en formato CSV">
+                <p>CSV</p>
+            </i>
+            <i (click)="exportToXML()" id="xml" class="fas fa-file-code" matSuffix matTooltipPosition="right"
+                matTooltipClass="departamento-tooltip" matTooltip="Descargar Lista de Tipo de Permisos en formato XML">
+                <p>XML</p>
+            </i>
+        </div>
+    </div>
+</div>

@@ -80,18 +80,21 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
 
       for (let i = 0; i <= this.fechasTotales.length - 1; i++) {
         let fechaF = this.fechasTotales[i].fecha.split('T')[0];
-        let diasF = this.ContarDiasHabiles(fechaF, fechaF);
+        //let diasF = this.ContarDiasHabiles(fechaF, fechaF);
+        let diasF = 5;
         console.log('total de fechas', diasF);
         if (diasF != 0) {
-         diasFeriado = diasFeriado + 1;
+          diasFeriado = diasFeriado + 1;
         }
         else {
           diasL = diasL + 1;
         }
       }
 
-      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
-      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      //var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      // var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      var habil = 5;
+      var libre = 2;
 
       var totalH = habil - diasFeriado;
       var totalL = libre - diasL;
@@ -106,8 +109,10 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
       this.habilitarCalculados = true;
 
     }, error => {
-      var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
-      var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      // var habil = this.ContarDiasHabiles(form.fecInicioForm, form.fecFinalForm);
+      // var libre = this.ContarDiasLibres(form.fecInicioForm, form.fecFinalForm);
+      var habil = 5;
+      var libre = 2;
       const totalDias = habil + libre;
       this.VacacionesForm.patchValue({
         diaLibreForm: libre,
@@ -155,7 +160,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
   ImprimirCalculos(form) {
     console.log(form.calcularForm);
     if (form.fecInicioForm === '' || form.fecFinalForm === '') {
-      this.toastr.info('Aún no ha ingresado fecha de inicio o fin de vacaciones','', {
+      this.toastr.info('Aún no ha ingresado fecha de inicio o fin de vacaciones', '', {
         timeOut: 6000,
       })
       this.LimpiarCalculo();
@@ -166,7 +171,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
           this.VerificarFeriado(form);
         }
         else {
-          this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones','', {
+          this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones', '', {
             timeOut: 6000,
           });
           (<HTMLInputElement>document.getElementById('activo')).checked = false;
@@ -198,13 +203,13 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
         this.InsertarVacaciones(form);
       }
       else {
-        this.toastr.info('La fecha de ingreso a laborar no es la adecuada','', {
+        this.toastr.info('La fecha de ingreso a laborar no es la adecuada', '', {
           timeOut: 6000,
         })
       }
     }
     else {
-      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones','', {
+      this.toastr.info('La fecha de ingreso a trabajar y de finalización de vacaciones deben ser mayores a la fecha de salida a vacaciones', '', {
         timeOut: 6000,
       });
     }
@@ -221,7 +226,7 @@ export class EditarVacacionesEmpleadoComponent implements OnInit {
     console.log(datosVacaciones);
     this.restV.EditarVacacion(this.dato.id, datosVacaciones).subscribe(response => {
       console.log(response);
-      
+
       this.toastr.success('Operación Exitosa', 'Vacaciones del Empleado registradas', {
         timeOut: 6000,
       })

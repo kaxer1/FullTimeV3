@@ -183,9 +183,9 @@ export class MainNavComponent implements OnInit {
       this.SeleccionMenu();
       this.BarraBusquedaEmpleados();
       this.ConfigurarSeguridad();
-      
-    } 
-    
+
+    }
+
   }
 
   BarraBusquedaEmpleados() {
@@ -408,7 +408,7 @@ export class MainNavComponent implements OnInit {
     const id_empleado = parseInt(localStorage.getItem('empleado'));
     this.vistaFlotante.open(SettingsComponent, { width: '350px', data: { id_empleado } });
   }
-  
+
   AbrirAccionesTimbres() {
     const id_empresa = parseInt(localStorage.getItem('empresa'));
     this.vistaFlotante.open(AccionesTimbresComponent, { width: '350px', data: { id_empresa } });
@@ -457,7 +457,7 @@ export class MainNavComponent implements OnInit {
 
       // console.log(this.loginService.getRolMenu(), this.loginService.getEstado() , this.estado);
       if (this.loginService.getRolMenu() === true) {
-        // localStorage.setItem('name_empresa',res[0].nombre)
+        localStorage.setItem('name_empresa', res[0].nombre)
         this.dataSource.data = this.MenuAdministracion(localStorage.getItem('name_empresa')) as MenuNode[];
       } else {
         this.dataSource.data = this.MenuEmpleado() as MenuNode[];
@@ -559,6 +559,7 @@ export class MainNavComponent implements OnInit {
           { name: 'Configurar Permisos', url: '/verTipoPermiso' },
           { name: 'Permisos Solicitados', url: '/permisos-solicitados' },
           { name: 'Vacaciones Solicitadas', url: '/vacaciones-solicitados' },
+          { name: 'Permisos Múltiples', url: '/permisosMultiples' },
         ]
       },
       {
@@ -592,6 +593,7 @@ export class MainNavComponent implements OnInit {
         icono: 'assignment',
         children: [
           { name: 'Registrar Horario', url: '/horario' },
+          { name: 'Horarios Múltiples', url: '/horariosMultiples' },
           { name: 'Planificación Múltiple', url: '/planificacion' },
         ]
       },
@@ -615,12 +617,15 @@ export class MainNavComponent implements OnInit {
         ]
       },
       {
-        name: 'Acción de Personal',
+        name: 'Acción Personal',
         accion: this.HabilitarAccion,
         estado: true,
         icono: 'how_to_reg',
         children: [
           { name: 'Crear Proceso', url: '/proceso' },
+          { name: 'Tipo Acción Personal', url: '/acciones-personal' },
+          { name: 'Pedido Acción Personal', url: '/pedidoAccion' },
+          { name: 'Acción Personal', url: '/listaPedidos' },
         ]
       },
       {
@@ -712,7 +717,7 @@ export class MainNavComponent implements OnInit {
         ]
       },
       {
-        name: 'Acción de Personal',
+        name: 'Acción Personal',
         accion: this.HabilitarAccion,
         estado: true,
         icono: 'how_to_reg',

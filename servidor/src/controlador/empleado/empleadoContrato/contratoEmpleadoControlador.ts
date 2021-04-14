@@ -25,8 +25,10 @@ class ContratoEmpleadoControlador {
     }
 
     public async CrearContrato(req: Request, res: Response) {
-        const { id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre } = req.body;
-        await pool.query('INSERT INTO empl_contratos (id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre]);
+        const { id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre, id_tipo_contrato } = req.body;
+        await pool.query('INSERT INTO empl_contratos (id_empleado, fec_ingreso, fec_salida, vaca_controla, ' +
+            'asis_controla, id_regimen, doc_nombre, id_tipo_contrato) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [id_empleado, fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre, id_tipo_contrato]);
         const ultimo = await pool.query('SELECT MAX(id) AS id FROM empl_contratos');
 
         res.jsonp({ message: 'El contrato ha sido registrado', id: ultimo.rows[0].id });
@@ -62,8 +64,10 @@ class ContratoEmpleadoControlador {
     public async EncontrarDatosUltimoContrato(req: Request, res: Response): Promise<any> {
         const { id } = req.params;
         const CONTRATO = await pool.query('SELECT ec.id, ec.id_empleado, ec.id_regimen, ec.fec_ingreso, ' +
-            'ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, cr.descripcion, cr.meses_periodo ' +
-            'FROM empl_contratos AS ec, cg_regimenes AS cr WHERE ec.id = $1 AND ec.id_regimen = cr.id', [id]);
+            'ec.fec_salida, ec.vaca_controla, ec.asis_controla, ec.doc_nombre, ec.documento, ec.id_tipo_contrato, ' +
+            'cr.descripcion, cr.meses_periodo, mt.descripcion AS nombre_contrato ' +
+            'FROM empl_contratos AS ec, cg_regimenes AS cr, modal_trabajo AS mt WHERE ec.id = $1 AND ' +
+            'ec.id_regimen = cr.id AND mt.id = ec.id_tipo_contrato', [id]);
         if (CONTRATO.rowCount > 0) {
             return res.jsonp(CONTRATO.rows)
         }
@@ -89,8 +93,12 @@ class ContratoEmpleadoControlador {
 
     public async EditarContrato(req: Request, res: Response): Promise<any> {
         const { id_empleado, id } = req.params;
-        const { fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre } = req.body;
-        await pool.query('UPDATE empl_contratos SET fec_ingreso = $1, fec_salida = $2, vaca_controla = $3, asis_controla = $4, id_regimen = $5, doc_nombre = $6  WHERE id_empleado = $7 AND id = $8', [fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre, id_empleado, id]);
+        const { fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre, id_tipo_contrato } = req.body;
+        await pool.query('UPDATE empl_contratos SET fec_ingreso = $1, fec_salida = $2, vaca_controla = $3, ' +
+            'asis_controla = $4, id_regimen = $5, doc_nombre = $6, id_tipo_contrato = $7 ' +
+            'WHERE id_empleado = $8 AND id = $9',
+            [fec_ingreso, fec_salida, vaca_controla, asis_controla, id_regimen, doc_nombre, id_tipo_contrato,
+                id_empleado, id]);
         res.jsonp({ message: 'Contrato del empleado actualizada exitosamente' });
     }
 
@@ -118,7 +126,10 @@ class ContratoEmpleadoControlador {
 
     public async EncontrarFechaContrato(req: Request, res: Response): Promise<any> {
         const { id_cargo, id_empleado } = req.body;
-        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato, empl_cargos AS cargo, empleados WHERE contrato.id_empleado = empleados.id AND cargo.id_empl_contrato = contrato.id AND cargo.id = $1 AND empleados.id = $2', [id_cargo, id_empleado]);
+        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato, ' +
+            'empl_cargos AS cargo, empleados WHERE contrato.id_empleado = empleados.id AND ' +
+            'cargo.id_empl_contrato = contrato.id AND cargo.id = $1 AND empleados.id = $2',
+            [id_cargo, id_empleado]);
         if (FECHA.rowCount > 0) {
             return res.jsonp(FECHA.rows)
         }
@@ -129,12 +140,42 @@ class ContratoEmpleadoControlador {
 
     public async EncontrarFechaContratoId(req: Request, res: Response): Promise<any> {
         const { id_contrato } = req.body;
-        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato WHERE contrato.id = $1', [id_contrato]);
+        const FECHA = await pool.query('SELECT contrato.fec_ingreso FROM empl_contratos AS contrato ' +
+            'WHERE contrato.id = $1', [id_contrato]);
         if (FECHA.rowCount > 0) {
             return res.jsonp(FECHA.rows)
         }
         else {
             return res.status(404).jsonp({ text: 'Registro no encontrado' });
+        }
+    }
+
+    /** MÉTODOS PARA LA TABLA MODAL_TRABAJO O TIPO DE CONTRATOS */
+    public async ListarTiposContratos(req: Request, res: Response) {
+        const CONTRATOS = await pool.query('SELECT * FROM modal_trabajo');
+        if (CONTRATOS.rowCount > 0) {
+            return res.jsonp(CONTRATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async CrearTipoContrato(req: Request, res: Response) {
+        const { descripcion } = req.body;
+        await pool.query('INSERT INTO modal_trabajo (descripcion) VALUES ($1)',
+            [descripcion]);
+        const ultimo = await pool.query('SELECT MAX(id) AS id FROM modal_trabajo');
+        res.jsonp({ message: 'El contrato ha sido registrado', id: ultimo.rows[0].id });
+    }
+
+    public async ListarUltimoTipoContrato(req: Request, res: Response) {
+        const CONTRATOS = await pool.query('SELECT MAX(id) AS id FROM modal_trabajo');
+        if (CONTRATOS.rowCount > 0) {
+            return res.jsonp(CONTRATOS.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
         }
     }
 }

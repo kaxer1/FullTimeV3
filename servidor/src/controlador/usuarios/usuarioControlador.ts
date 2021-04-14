@@ -89,6 +89,13 @@ class UsuarioControlador {
     res.jsonp({ message: 'Frase exitosa' });
   }
 
+  // ADMINISTRACIÓN DEL MÓDULO DE ALIMENTACIÓN
+  public async RegistrarAdminComida(req: Request, res: Response): Promise<void> {
+    const { admin_comida, id_empleado } = req.body;
+    await pool.query('UPDATE usuarios SET admin_comida = $1 WHERE id_empleado = $2', [admin_comida, id_empleado]);
+    res.jsonp({ message: 'Registro exitoso' });
+  }
+
   //ACCESOS AL SISTEMA
   public async AuditarAcceso(req: Request, res: Response) {
     const { modulo, user_name, fecha, hora, acceso, ip_address } = req.body;

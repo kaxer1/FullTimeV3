@@ -141,8 +141,11 @@ class NotificacionTiempoRealControlador {
     */
     CrearConfiguracion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_empleado, vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti } = req.body;
-            yield database_1.default.query('INSERT INTO config_noti ( id_empleado, vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id_empleado, vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti]);
+            const { id_empleado, vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti, comida_mail, comida_noti } = req.body;
+            yield database_1.default.query('INSERT INTO config_noti ( id_empleado, vaca_mail, vaca_noti, permiso_mail, ' +
+                'permiso_noti, hora_extra_mail, hora_extra_noti, comida_mail, comida_noti ) ' +
+                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [id_empleado, vaca_mail, vaca_noti, permiso_mail,
+                permiso_noti, hora_extra_mail, hora_extra_noti, comida_mail, comida_noti]);
             res.jsonp({ message: 'Configuracion guardada' });
         });
     }
@@ -166,9 +169,12 @@ class NotificacionTiempoRealControlador {
     }
     ActualizarConfigEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti } = req.body;
+            const { vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti, comida_mail, comida_noti } = req.body;
             const id_empleado = req.params.id;
-            yield database_1.default.query('UPDATE config_noti SET vaca_mail = $1, vaca_noti = $2, permiso_mail = $3, permiso_noti = $4, hora_extra_mail = $5, hora_extra_noti = $6 WHERE id_empleado = $7', [vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti, id_empleado]);
+            yield database_1.default.query('UPDATE config_noti SET vaca_mail = $1, vaca_noti = $2, permiso_mail = $3, ' +
+                'permiso_noti = $4, hora_extra_mail = $5, hora_extra_noti = $6, comida_mail = $7, comida_noti = $8 ' +
+                'WHERE id_empleado = $9', [vaca_mail, vaca_noti, permiso_mail, permiso_noti, hora_extra_mail, hora_extra_noti,
+                comida_mail, comida_noti, id_empleado]);
             res.jsonp({ message: 'Configuración Actualizada' });
         });
     }

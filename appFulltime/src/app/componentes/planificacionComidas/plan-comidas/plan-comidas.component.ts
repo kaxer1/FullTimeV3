@@ -18,6 +18,7 @@ export interface EmpleadoElemento {
   id: number;
   nombre: string;
   apellido: string;
+  codigo: number;
 }
 
 @Component({
@@ -166,7 +167,8 @@ export class PlanComidasComponent implements OnInit {
     EmpleadosSeleccionados = this.selectionUno.selected.map(obj => {
       return {
         id: obj.id,
-        empleado: obj.nombre + ' ' + obj.apellido
+        empleado: obj.nombre + ' ' + obj.apellido,
+        codigo: obj.codigo
       }
     })
     if (EmpleadosSeleccionados.length > 0) {
@@ -180,7 +182,7 @@ export class PlanComidasComponent implements OnInit {
         this.LimpiarCampos();
         this.LimpiarBusquedas();
       });
-    }                                         
+    }
   }
 
   IngresarSoloLetras(e) {

@@ -13,11 +13,13 @@ class CiudadRutas {
     configuracion() {
         this.router.post('/planificados', alimentacionControlador_1.default.ListarPlanificadosConsumidos);
         this.router.post('/solicitados', alimentacionControlador_1.default.ListarSolicitadosConsumidos);
-        this.router.post('/extras', alimentacionControlador_1.default.ListarExtrasConsumidos);
+        this.router.post('/extras/plan', alimentacionControlador_1.default.ListarExtrasPlanConsumidos);
+        this.router.post('/extras/solicita', alimentacionControlador_1.default.ListarExtrasSolConsumidos);
         // Detalle de servicio de alimentación
         this.router.post('/planificados/detalle', alimentacionControlador_1.default.DetallarPlanificadosConsumidos);
         this.router.post('/solicitados/detalle', alimentacionControlador_1.default.DetallarSolicitudConsumidos);
-        this.router.post('/extras/detalle', alimentacionControlador_1.default.DetallarExtrasConsumidos);
+        this.router.post('/extras/detalle/plan', alimentacionControlador_1.default.DetallarExtrasPlanConsumidos);
+        this.router.post('/extras/detalle/solicita', alimentacionControlador_1.default.DetallarExtrasSolConsumidos);
     }
 }
 const ALIMENTACION_RUTAS = new CiudadRutas();

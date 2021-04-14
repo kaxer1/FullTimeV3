@@ -232,6 +232,23 @@ class PermisosControlador {
             }
         });
     }
+    ObtenerPermisoEditar(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { id } = req.params;
+                const PERMISO = yield database_1.default.query('SELECT p.id, p.fec_creacion, p.descripcion, p.fec_inicio, ' +
+                    'p.fec_final, p.dia, p.hora_numero, p.legalizado, p.estado, p.dia_libre, p.id_tipo_permiso, ' +
+                    'p.id_empl_contrato, p.id_peri_vacacion, p.num_permiso, p.documento, p.docu_nombre, ' +
+                    'p.hora_salida, p.hora_ingreso, p.codigo, ' +
+                    't.descripcion AS nom_permiso FROM permisos AS p, cg_tipo_permisos AS t ' +
+                    'WHERE p.id_tipo_permiso = t.id AND p.id = $1 ORDER BY p.num_permiso DESC', [id]);
+                return res.jsonp(PERMISO.rows);
+            }
+            catch (error) {
+                return res.jsonp(null);
+            }
+        });
+    }
     getDoc(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const docs = req.params.docs;

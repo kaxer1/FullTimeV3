@@ -239,11 +239,25 @@ import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/det
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
 import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
+import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
+import { SolicitaComidaComponent } from './componentes/planificacionComidas/solicita-comida/solicita-comida.component';
+import { AdministraComidaComponent } from './componentes/administra-comida/administra-comida.component';
+import { CrearTipoaccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/crear-tipoaccion/crear-tipoaccion.component';
+import { EditarTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/editar-tipo-accion/editar-tipo-accion.component';
+import { ListarTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/listar-tipo-accion/listar-tipo-accion.component';
+import { VerTipoAccionComponent } from './componentes/accionesPersonal/tipoAccionesPersonal/ver-tipo-accion/ver-tipo-accion.component';
+import { ListarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/listar-pedido-accion/listar-pedido-accion.component';
+import { CrearPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/crear-pedido-accion/crear-pedido-accion.component';
+import { EditarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/editar-pedido-accion/editar-pedido-accion.component';
+import { VerPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/ver-pedido-accion/ver-pedido-accion.component';
 import { AccionesTimbresComponent } from './componentes/settings/acciones-timbres/acciones-timbres.component';
+import { PermisosMultiplesComponent } from './componentes/empleadoPermisos/permisos-multiples/permisos-multiples.component';
+import { PermisosMultiplesEmpleadosComponent } from './componentes/empleadoPermisos/permisos-multiples-empleados/permisos-multiples-empleados.component';
+import { HorariosMultiplesComponent } from './componentes/empleadoHorario/horarios-multiples/horarios-multiples.component';
+import { HorarioMultipleEmpleadoComponent } from './componentes/empleadoHorario/horario-multiple-empleado/horario-multiple-empleado.component';
+
 import { ConfigEmpleadosComponent } from './componentes/reportes-Configuracion/config-report-empleados/config-empleados.component';
 import { ConfigAsistenciaComponent } from './componentes/reportes-Configuracion/config-report-asistencia/config-asistencia.component';
-import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
-
 
 // Imagen upload
 import { ImageUploadModule } from 'angular2-image-upload';
@@ -461,7 +475,21 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     EditarDetalleMenuComponent,
     FuncionesComponent,
     ConfigReportFirmasHorasExtrasComponent,
+    SolicitaComidaComponent,
+    AdministraComidaComponent,
+    CrearTipoaccionComponent,
+    EditarTipoAccionComponent,
+    ListarTipoAccionComponent,
+    VerTipoAccionComponent,
+    ListarPedidoAccionComponent,
+    CrearPedidoAccionComponent,
+    EditarPedidoAccionComponent,
+    VerPedidoAccionComponent,
     AccionesTimbresComponent,
+    PermisosMultiplesComponent,
+    PermisosMultiplesEmpleadosComponent,
+    HorariosMultiplesComponent,
+    HorarioMultipleEmpleadoComponent,
   ],
 
   imports: [

@@ -66,7 +66,7 @@ class DepartamentoControlador {
 
   public async ObtenerDepartamentosSucursal(req: Request, res: Response): Promise<any> {
     const { id_sucursal } = req.params;
-    const DEPARTAMENTO = await pool.query('SELECT * FROM cg_departamentos WHERE id_sucursal = $1', [id_sucursal]);
+    const DEPARTAMENTO = await pool.query('SELECT * FROM cg_departamentos WHERE NOT UPPER(nombre) = \'NINGUNO\' AND id_sucursal = $1', [id_sucursal]);
     if (DEPARTAMENTO.rowCount > 0) {
       return res.jsonp(DEPARTAMENTO.rows)
     }

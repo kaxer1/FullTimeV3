@@ -42,6 +42,7 @@ import { EmplCargoPipe } from './empleado/filtroEmpCargo/empl-cargo.pipe';
 import { PaginatePipe } from './pipes/paginate.pipe';
 import { TimbreEmpleadoPipe } from './empleado/timbre-empleado.pipe';
 
+
 // Pipe Paginacion
 import { CustomMatPaginatorIntl } from './pipes/paginator-es';
 import { MatPaginatorIntl } from '@angular/material/paginator';

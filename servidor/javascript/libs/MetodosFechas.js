@@ -1,7 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 exports.restarYear = exports.ObtenerRangoMensual = exports.ObtenerRangoSemanal = exports.restaDias = exports.sumaDias = void 0;
 const sumaDias = function (fecha, dias) {
+=======
+exports.sumaDias = function (fecha, dias) {
+>>>>>>> 73c4229f2ba7b042cead49bc185d8f0c9d09b499
     fecha.setUTCHours(fecha.getHours());
     fecha.setDate(fecha.getDate() + dias);
     return fecha;

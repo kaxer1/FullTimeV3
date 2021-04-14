@@ -11,14 +11,40 @@ export class PlanComidasService {
     private http: HttpClient,
   ) { }
 
-  // Planificación Comidas
+  /** SOLICITUD DE COMIDAS */
+  CrearSolicitudComida(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/solicitud`, datos);
+  }
 
+  ActualizarSolicitudComida(datos: any) {
+    return this.http.put(`${environment.url}/planComidas/solicitud`, datos);
+  }
+
+  ObtenerSolComidaPorIdEmpleado(id_empleado: number) {
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/${id_empleado}`)
+  }
+
+  /** BUSCAR JEFES */
+  obtenerJefes(id_departamento: number) {
+    return this.http.get<any>(`${environment.url}/planComidas/enviar/notificacion/${id_departamento}`)
+  }
+
+  /** ENVIAR CORREO A CADA JEFE */
+  EnviarCorreo(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/mail-noti`, datos);
+  }
+
+  /** PLANIFICACIÓN DE COMIDAS */
   CrearPlanComidas(datos: any) {
     return this.http.post(`${environment.url}/planComidas/`, datos);
   }
 
-  obtenerPlanComidaPorIdEmpleado(id_empleado: number) {
-    return this.http.get<any>(`${environment.url}/planComidas/infoComida/${id_empleado}`)
+  ObtenerUltimaPlanificacion() {
+    return this.http.get<any>(`${environment.url}/planComidas/fin_registro`)
+  }
+
+  ObtenerPlanComidaPorIdEmpleado(id_empleado: number) {
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/plan/${id_empleado}`)
   }
 
   EliminarRegistro(id: number) {
@@ -29,8 +55,16 @@ export class PlanComidasService {
     return this.http.put(`${environment.url}/planComidas`, datos);
   }
 
-  /** Servicio para obtener datos de la tabla tipo_comida */
+  /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
+  CrearPlanComidasEmpleado(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/empleado/plan`, datos);
+  }
 
+  EnviarCorreoPlan(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/mail-plan`, datos);
+  }
+
+  /** Servicio para obtener datos de la tabla tipo_comida */
   CrearTipoComidas(datos: any) {
     return this.http.post(`${environment.url}/planComidas/tipo_comida`, datos);
   }
@@ -43,7 +77,7 @@ export class PlanComidasService {
     return this.http.get<any>(`${environment.url}/planComidas/tipo_comida/ultimo`)
   }
 
-  /** Alertas Notificación y envio de correo electrónico */
+  /** ALERTAS DE NOTIFICACIÓN DE SOLICITUD Y PLANIFICACIÓN DE SERVICIO DE ALIMENTACIÓN*/
   EnviarMensajePlanComida(data: any) {
     return this.http.post<any>(`${environment.url}/planComidas/send/planifica/`, data);
   }

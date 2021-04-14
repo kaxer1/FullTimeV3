@@ -54,4 +54,9 @@ export class UsuarioService {
     return this.http.put(`${environment.url}/usuarios/frase`, data);
   }
 
+  /** ADMINISTRACIÓN MÓDULO DE ALIMENTACIÓN */
+  RegistrarAdminComida(data: any) {
+    return this.http.put(`${environment.url}/usuarios/admin/comida`, data);
+  }
+
 }
