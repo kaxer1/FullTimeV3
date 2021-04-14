@@ -10,8 +10,7 @@ const pool = new Pool({
   // password: 'admin'
   // database: 'fulltimeV3',
   database: 'SinAcciones',
-  password: 'admin'
-  // password: 'fulltime'
+  password: 'fulltime'
 
 })
 pool.query('SELECT NOW()', (err, res) => {
