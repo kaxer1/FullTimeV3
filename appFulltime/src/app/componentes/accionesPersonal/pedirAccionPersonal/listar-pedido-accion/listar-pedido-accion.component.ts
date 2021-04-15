@@ -12,7 +12,6 @@ import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-p
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-
 @Component({
   selector: 'app-listar-pedido-accion',
   templateUrl: './listar-pedido-accion.component.html',
@@ -83,15 +82,27 @@ export class ListarPedidoAccionComponent implements OnInit {
     });
   }
 
+  texto_color_cargo: string = '';
+  texto_color_numero: string = '';
+  texto_color_proceso: string = '';
+  texto_color_salario: string = '';
+  texto_color_empresa: string = '';
   datosPedido: any = [];
+  procesos_1: any = [];
   empleado_1: any = [];
   empleado_2: any = [];
   empleado_3: any = [];
   MostrarInformacion(id: number) {
+    this.texto_color_cargo = 'white';
+    this.texto_color_numero = 'white';
+    this.texto_color_proceso = 'white';
+    this.texto_color_salario = 'white';
+    this.texto_color_empresa = 'white';
     this.datosPedido = [];
     this.empleado_1 = [];
     this.empleado_2 = [];
     this.empleado_3 = [];
+    this.procesos_1 = [];
     this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
       this.datosPedido = data;
       console.log('1', this.datosPedido);
@@ -104,11 +115,71 @@ export class ListarPedidoAccionComponent implements OnInit {
           this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
             this.empleado_3 = data3;
             console.log('4', this.empleado_3)
-            this.generarPdf('download');
+            this.restAccion.Buscarprocesos(this.datosPedido[0].id_proceso).subscribe(proc1 => {
+              this.procesos_1 = proc1;
+              console.log('5', this.procesos_1)
+              this.EscribirProcesos(this.procesos_1);
+              this.DefinirColor(this.datosPedido)
+              this.generarPdf('download');
+            });
+
+
+
+
+            //this.generarPdf('download');
           });
         });
       });
     });
+  }
+
+  cargo_propuesto: string = '';
+  proceso_propuesto: string = '';
+  salario_propuesto: string = '';
+  num_partida: string = '';
+  DefinirColor(array) {
+    this.cargo_propuesto = '';
+    this.proceso_propuesto = '';
+    this.salario_propuesto = '';
+    this.num_partida = '';
+    if (array[0].cargo_propuesto != '' && array[0].cargo_propuesto != null) {
+      this.texto_color_cargo = 'black'
+    }
+    else {
+      this.cargo_propuesto = '----------';
+
+    }
+    if (array[0].proceso_propuesto != '' && array[0].proceso_propuesto != null) {
+      this.texto_color_proceso = 'black'
+    }
+    else {
+      this.proceso_propuesto = '----------';
+      array[0].proceso_propuesto = '';
+    }
+    if (array[0].salario_propuesto != '' && array[0].salario_propuesto != null) {
+      this.texto_color_salario = 'black'
+    }
+    else {
+      this.salario_propuesto = '----------';
+    }
+    if (array[0].proceso_propuesto != '' && array[0].proceso_propuesto != null) {
+      this.texto_color_empresa = 'black'
+    }
+  }
+
+  nombre_procesos_a: string = '';
+  proceso_padre_a: string = '';
+  EscribirProcesos(array) {
+    this.nombre_procesos_a = '';
+    this.proceso_padre_a = '';
+    array.map(obj => {
+      if (this.proceso_padre_a != '') {
+        this.nombre_procesos_a = this.nombre_procesos_a + '\n' + obj.nombre;
+      }
+      else {
+        this.proceso_padre_a = obj.nombre;
+      }
+    })
   }
 
 
@@ -737,7 +808,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: this.proceso_padre_a, style: 'itemsTable', }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -776,9 +847,8 @@ export class ListarPedidoAccionComponent implements OnInit {
 
                             table: {
                               body: [
-                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '\n' + this.nombre_procesos_a, style: 'itemsTable', margin: [0, -30, 0, 0] }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
-
                               ]
                             },
                             layout: 'lightHorizontalLines'
@@ -909,7 +979,7 @@ export class ListarPedidoAccionComponent implements OnInit {
               table: {
                 body: [
                   [{
-                    text: [{ text: 'SITUACIÓN ACTUAL', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
+                    text: [{ text: 'SITUACIÓN PROPUESTA', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
                   }],
                   [{
                     table: {
@@ -932,7 +1002,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: this.proceso_propuesto, style: 'itemsTable', color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -971,7 +1041,7 @@ export class ListarPedidoAccionComponent implements OnInit {
 
                             table: {
                               body: [
-                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '\n' + this.proceso_propuesto, style: 'itemsTable', margin: [0, -30, 0, 0], color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -1007,7 +1077,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [19, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.datosPedido[0].cargo_propuesto.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: this.cargo_propuesto, style: 'itemsTable', color: this.texto_color_cargo }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1042,7 +1112,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [0, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', color: this.texto_color_empresa }],
                                 [{ text: '--------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1077,7 +1147,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [0, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.datosPedido[0].salario_propuesto, style: 'itemsTable', }],
+                                [{ text: this.salario_propuesto, style: 'itemsTable', color: this.texto_color_salario }],
                                 [{ text: '---------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1092,9 +1162,8 @@ export class ListarPedidoAccionComponent implements OnInit {
                     }
                   }],
                   [{
-                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].proceso_propuesto.toUpperCase() + '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].proceso_propuesto+ '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
                   }],
-
                 ]
               },
               layout: 'noBorders'

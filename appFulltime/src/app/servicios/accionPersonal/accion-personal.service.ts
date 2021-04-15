@@ -92,4 +92,8 @@ export class AccionPersonalService {
   BuscarDatosPedidoId(id: any) {
     return this.http.get(`${environment.url}/accionPersonal/pedido/informacion/${id}`);
   }
+
+  Buscarprocesos(id: any) {
+    return this.http.get(`${environment.url}/accionPersonal/lista/procesos/${id}`);
+  }
 }

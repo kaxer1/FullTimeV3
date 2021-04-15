@@ -158,7 +158,6 @@ class AccionPersonalControlador {
     }
 
     public async verLogoMinisterio(req: Request, res: Response): Promise<any> {
-
         const file_name = 'ministerio_trabajo.png';
         const codificado = await ImagenBase64LogosEmpresas(file_name);
         if (codificado === 0) {
@@ -169,7 +168,6 @@ class AccionPersonalControlador {
     }
 
     /** CONSULTAS GENERACIÓN DE PDF */
-
     public async EncontrarDatosEmpleados(req: Request, res: Response) {
         const { id } = req.params;
         const EMPLEADO = await pool.query(' SELECT d.id, d.nombre, d.apellido, d.cedula, d.codigo, d.id_cargo, ' +
@@ -191,12 +189,9 @@ class AccionPersonalControlador {
             'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
             'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
             'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-            'ap.salario_propuesto, d.descripcion AS decreto, tap.base_legal, tap.id_proceso, ' +
-            'cp.descripcion AS cargo_propuesto, pp.descripcion AS proceso_propuesto ' +
-            'FROM accion_personal_empleado AS ap, decreto_acuerdo_resol AS d, tipo_accion_personal AS tap, ' +
-            'cargo_propuesto AS cp, proceso_propuesto AS pp ' +
-            'WHERE ap.decre_acue_resol = d.id AND ap.tipo_accion = tap.id AND ap.cargo_propuesto = cp.id ' +
-            'AND ap.proceso_propuesto = pp.id AND ap.id = $1',
+            'ap.salario_propuesto, tap.base_legal, tap.id_proceso ' +
+            'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap ' +
+            'WHERE ap.tipo_accion = tap.id AND ap.id = $1',
             [id]);
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -211,13 +206,9 @@ class AccionPersonalControlador {
             'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
             'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
             'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-            'ap.salario_propuesto, d.descripcion AS decreto, tap.base_legal, tap.id_proceso, ' +
-            'cp.descripcion AS cargo_propuesto, pp.descripcion AS proceso_propuesto, e.codigo, e.cedula, ' +
-            'e.nombre, e.apellido ' +
-            'FROM accion_personal_empleado AS ap, decreto_acuerdo_resol AS d, tipo_accion_personal AS tap, ' +
-            'cargo_propuesto AS cp, proceso_propuesto AS pp, empleados AS e ' +
-            'WHERE ap.decre_acue_resol = d.id AND ap.tipo_accion = tap.id AND ap.cargo_propuesto = cp.id ' +
-            'AND ap.proceso_propuesto = pp.id AND e.id = ap.id_empleado');
+            'ap.salario_propuesto, tap.base_legal, tap.id_proceso, e.codigo, e.cedula, e.nombre, e.apellido ' +
+            'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap, empleados AS e ' +
+            'WHERE ap.tipo_accion = tap.id AND e.id = ap.id_empleado');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
         }
@@ -225,6 +216,25 @@ class AccionPersonalControlador {
             return res.status(404).jsonp({ text: 'No se encuentran registros' });
         }
     }
+
+    public async EncontrarProcesosRecursivos(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('WITH RECURSIVE procesos AS ( ' +
+            'SELECT id, nombre, proc_padre, 1 AS numero FROM cg_procesos WHERE id = $1 ' +
+            'UNION ALL ' +
+            'SELECT cg.id, cg.nombre, cg.proc_padre, procesos.numero + 1 AS numero FROM cg_procesos cg ' +
+            'JOIN procesos ON cg.id = procesos.proc_padre ' +
+            ') SELECT UPPER(nombre) AS nombre, numero FROM procesos ORDER BY numero DESC;',
+            [id]);
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    /** CONSULTA RECURSIVA DE EMPLEADOS */
 }
 
 export const ACCION_PERSONAL_CONTROLADOR = new AccionPersonalControlador();
