@@ -16,10 +16,10 @@ exports.ACCION_PERSONAL_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 const ImagenCodificacion_1 = require("../../libs/ImagenCodificacion");
 class AccionPersonalControlador {
-    /** TABLA PROCESO_PROPUESTO */
-    ListarProcesosPropuestos(req, res) {
+    /** TABLA TIPO_ACCION */
+    ListarTipoAccion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ACCION = yield database_1.default.query('SELECT * FROM proceso_propuesto');
+            const ACCION = yield database_1.default.query('SELECT * FROM tipo_accion');
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
             }
@@ -28,16 +28,16 @@ class AccionPersonalControlador {
             }
         });
     }
-    CrearProcesoPropuesto(req, res) {
+    CrearTipoAccion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { descripcion } = req.body;
-            yield database_1.default.query('INSERT INTO proceso_propuesto (descripcion) VALUES($1)', [descripcion]);
+            yield database_1.default.query('INSERT INTO tipo_accion (descripcion) VALUES($1)', [descripcion]);
             res.jsonp({ message: 'Registro guardado' });
         });
     }
-    EncontrarUltimoProceso(req, res) {
+    EncontrarUltimoTipoAccion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM proceso_propuesto');
+            const ACCION = yield database_1.default.query('SELECT MAX(id) AS id FROM tipo_accion');
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
             }
@@ -76,6 +76,18 @@ class AccionPersonalControlador {
             }
         });
     }
+    ListarUnCargoPropuestos(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT * FROM cargo_propuesto WHERE id = $1', [id]);
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     /** TABLA DECRETO_ACUERDO_RESOL */
     ListarDecretos(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -106,12 +118,36 @@ class AccionPersonalControlador {
             }
         });
     }
+    ListarUnDecreto(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT * FROM decreto_acuerdo_resol WHERE id = $1', [id]);
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
     /** TABLA TIPO_ACCION_PERSONAL */
     ListarTipoAccionPersonal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const ACCION = yield database_1.default.query('SELECT tap.id, tap.id_proceso, tap.descripcion, tap.base_legal, ' +
-                'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, cp.nombre ' +
-                'FROM tipo_accion_personal AS tap, cg_procesos AS cp WHERE cp.id = tap.id_proceso');
+            const ACCION = yield database_1.default.query('SELECT tap.id, tap.id_tipo, tap.descripcion, tap.base_legal, ' +
+                'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, ta.descripcion AS nombre ' +
+                'FROM tipo_accion_personal AS tap, tipo_accion AS ta WHERE ta.id = tap.id_tipo');
+            if (ACCION.rowCount > 0) {
+                return res.jsonp(ACCION.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarTipoAccionEdicion(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const ACCION = yield database_1.default.query('SELECT * FROM tipo_accion_personal WHERE NOT id_tipo = $1', [id]);
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
             }
@@ -122,18 +158,18 @@ class AccionPersonalControlador {
     }
     CrearTipoAccionPersonal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta } = req.body;
-            yield database_1.default.query('INSERT INTO tipo_accion_personal (id_proceso, descripcion, base_legal, tipo_permiso, ' +
-                'tipo_vacacion, tipo_situacion_propuesta) VALUES($1, $2, $3, $4, $5, $6)', [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta]);
+            const { id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta } = req.body;
+            yield database_1.default.query('INSERT INTO tipo_accion_personal (id_tipo, descripcion, base_legal, tipo_permiso, ' +
+                'tipo_vacacion, tipo_situacion_propuesta) VALUES($1, $2, $3, $4, $5, $6)', [id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta]);
             res.jsonp({ message: 'Autorización se registró con éxito' });
         });
     }
     EncontrarTipoAccionPersonalId(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const ACCION = yield database_1.default.query('SELECT tap.id_proceso, tap.descripcion, tap.base_legal, ' +
-                'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, cp.nombre AS proceso ' +
-                'FROM tipo_accion_personal AS tap, cg_procesos AS cp WHERE tap.id = $1 AND cp.id = tap.id_proceso', [id]);
+            const ACCION = yield database_1.default.query('SELECT tap.id, tap.id_tipo, tap.descripcion, tap.base_legal, ' +
+                'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, ta.descripcion AS nombre ' +
+                'FROM tipo_accion_personal AS tap, tipo_accion AS ta WHERE tap.id = $1 AND ta.id = tap.id_tipo', [id]);
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
             }
@@ -144,9 +180,9 @@ class AccionPersonalControlador {
     }
     ActualizarTipoAccionPersonal(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
-            yield database_1.default.query('UPDATE tipo_accion_personal SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
-                'tipo_permiso = $4, tipo_vacacion = $5, tipo_situacion_propuesta = $6 WHERE id = $7', [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
+            const { id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
+            yield database_1.default.query('UPDATE tipo_accion_personal SET id_tipo = $1, descripcion = $2, base_legal = $3, ' +
+                'tipo_permiso = $4, tipo_vacacion = $5, tipo_situacion_propuesta = $6 WHERE id = $7', [id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
             res.jsonp({ message: 'Registro exitoso' });
         });
     }
@@ -207,9 +243,9 @@ class AccionPersonalControlador {
                 'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
                 'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
                 'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-                'ap.salario_propuesto, tap.base_legal, tap.id_proceso ' +
-                'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap ' +
-                'WHERE ap.tipo_accion = tap.id AND ap.id = $1', [id]);
+                'ap.salario_propuesto, tap.base_legal, tap.id_tipo, ta.descripcion AS tipo ' +
+                'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap, tipo_accion AS ta ' +
+                'WHERE ap.tipo_accion = tap.id AND ap.id = $1 AND ta.id = tap.id_tipo', [id]);
             if (ACCION.rowCount > 0) {
                 return res.jsonp(ACCION.rows);
             }
@@ -224,7 +260,7 @@ class AccionPersonalControlador {
                 'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
                 'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
                 'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-                'ap.salario_propuesto, tap.base_legal, tap.id_proceso, e.codigo, e.cedula, e.nombre, e.apellido ' +
+                'ap.salario_propuesto, tap.base_legal, tap.id_tipo, e.codigo, e.cedula, e.nombre, e.apellido ' +
                 'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap, empleados AS e ' +
                 'WHERE ap.tipo_accion = tap.id AND e.id = ap.id_empleado');
             if (ACCION.rowCount > 0) {

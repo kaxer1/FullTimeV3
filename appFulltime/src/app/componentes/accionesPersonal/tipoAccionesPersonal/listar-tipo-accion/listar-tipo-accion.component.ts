@@ -99,6 +99,8 @@ export class ListarTipoAccionComponent implements OnInit {
   ObtenerTipoAccionesPersonal() {
     this.rest.ConsultarTipoAccionPersonal().subscribe(datos => {
       this.tipo_acciones = datos;
+
+      console.log('acciones', this.tipo_acciones)
     });
   }
 

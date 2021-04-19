@@ -32,22 +32,30 @@ export class AccionPersonalService {
     return this.http.delete(`${environment.url}/accionPersonal/eliminar/${id}`);
   }
 
-  /** SERVICIOS PARA TABLA PROCESO_PROPUESTO*/
-  ConsultarProcesoPropuesto() {
-    return this.http.get(`${environment.url}/accionPersonal/proceso`);
+  BuscarDatosTipoEdicion(id: any) {
+    return this.http.get(`${environment.url}/accionPersonal/editar/accion/tipo/${id}`);
   }
 
-  IngresarProcesoPropuesto(datos: any) {
-    return this.http.post(`${environment.url}/accionPersonal/proceso`, datos);
+  /** SERVICIOS PARA TABLA TIPO_ACCION*/
+  ConsultarTipoAccion() {
+    return this.http.get(`${environment.url}/accionPersonal/accion/tipo`);
   }
 
-  BuscarIdProcesoPropuesto() {
-    return this.http.get(`${environment.url}/accionPersonal/tipo/proceso`);
+  IngresarTipoAccion(datos: any) {
+    return this.http.post(`${environment.url}/accionPersonal/accion/tipo`, datos);
+  }
+
+  BuscarIdTipoAccion() {
+    return this.http.get(`${environment.url}/accionPersonal/ultimo/accion/tipo`);
   }
 
   /** SERVICIOS PARA TABLA CARGO_PROPUESTO*/
   ConsultarCargoPropuesto() {
     return this.http.get(`${environment.url}/accionPersonal/cargo`);
+  }
+
+  ConsultarUnCargoPropuesto(id: number) {
+    return this.http.get(`${environment.url}/accionPersonal/cargo/${id}`);
   }
 
   IngresarCargoPropuesto(datos: any) {
@@ -61,6 +69,10 @@ export class AccionPersonalService {
   /** SERVICIOS PARA TABLA DECRETO_ACUERDO_RESOLUCION*/
   ConsultarDecreto() {
     return this.http.get(`${environment.url}/accionPersonal/decreto`);
+  }
+
+  ConsultarUnDecreto(id: number) {
+    return this.http.get(`${environment.url}/accionPersonal/decreto/${id}`);
   }
 
   IngresarDecreto(datos: any) {

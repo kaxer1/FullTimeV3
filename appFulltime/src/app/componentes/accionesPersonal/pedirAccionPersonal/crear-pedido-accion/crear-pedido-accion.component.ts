@@ -12,6 +12,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 import { Router } from '@angular/router';
+import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 
 @Component({
   selector: 'app-crear-pedido-accion',
@@ -43,15 +44,10 @@ export class CrearPedidoAccionComponent implements OnInit {
   ingresoCargo: boolean = false;
   vistaCargo: boolean = true;
 
-  // EVENTOS RELACIONADOS A SELECCIÓN E INGRESO DE PROCESOS PROPUESTOS
-  ingresoProceso: boolean = false;
-  vistaProceso: boolean = true;
-
   // INICIACIÓN DE CAMPOS DEL FORMULARIO
   descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
   identificacionF = new FormControl('', [Validators.required, Validators.minLength(3)]);
   otroDecretoF = new FormControl('', [Validators.minLength(3)]);
-  otroProcesoF = new FormControl('', [Validators.minLength(3)]);
   otroCargoF = new FormControl('', [Validators.minLength(3)]);
   fechaDesdeF = new FormControl('', [Validators.required]);
   numPartidaF = new FormControl('', [Validators.required]);
@@ -80,7 +76,6 @@ export class CrearPedidoAccionComponent implements OnInit {
     idEmpleadoGForm: this.idEmpleadoGF,
     descripcionForm: this.descripcionF,
     tipoProcesoForm: this.tipoProcesoF,
-    otroProcesoForm: this.otroProcesoF,
     idEmpleadoForm: this.idEmpleadoF,
     fechaDesdeForm: this.fechaDesdeF,
     fechaHastaForm: this.fechaHastaF,
@@ -104,6 +99,7 @@ export class CrearPedidoAccionComponent implements OnInit {
 
   constructor(
     public restAccion: AccionPersonalService,
+    public restProcesos: ProcesoService,
     public restEmpresa: EmpresaService,
     private toastr: ToastrService,
     public restE: EmpleadoService,
@@ -121,17 +117,15 @@ export class CrearPedidoAccionComponent implements OnInit {
     this.AccionPersonalForm.patchValue({
       fechaForm: this.FechaActual
     });
-
     // INVOCACIÓN A LOS MÉTODOS PARA CARGAR DATOS
     this.ObtenerTiposAccion();
     this.ObtenerEmpleados();
-    this.ObtenerProcesos();
     this.ObtenerDecretos();
     this.ObtenerCargos();
     this.MostrarDatos();
+    this.ObtenerProcesos();
 
     // DATOS VACIOS INDICAR LA OPCIÓN OTRO
-    this.procesos[this.procesos.length] = { descripcion: "OTRO" };
     this.decretos[this.decretos.length] = { descripcion: "OTRO" };
     this.cargos[this.cargos.length] = { descripcion: "OTRO" };
 
@@ -171,6 +165,15 @@ export class CrearPedidoAccionComponent implements OnInit {
         numPartidaForm: this.empresa[0].num_partida
       });
     });
+  }
+
+  // BÚSQUEDA DE DATOS DE LA TABLA CG_PROCESOS
+  procesos: any = [];
+  ObtenerProcesos() {
+    this.procesos = [];
+    this.restProcesos.getProcesosRest().subscribe(datos => {
+      this.procesos = datos;
+    })
   }
 
   // BÚSQUEDA DE DATOS DE LA TABLA DECRETOS_ACUERDOS_RESOL
@@ -250,39 +253,6 @@ export class CrearPedidoAccionComponent implements OnInit {
     this.vistaCargo = true;
   }
 
-  // MÉTODO PARA BÚSQUEDA DE DATOS DE LA TABLA PROCESOS_PROPUESTOS
-  procesos: any = [];
-  ObtenerProcesos() {
-    this.procesos = [];
-    this.restAccion.ConsultarProcesoPropuesto().subscribe(datos => {
-      this.procesos = datos;
-      this.procesos[this.procesos.length] = { descripcion: "OTRO" };
-    })
-  }
-
-  // MÉTODO PARA ACTIVAR FORMULARIO DE INGRESO DE UN NUEVO TIPO DE PROCESO PROPUESTO
-  estiloP: any;
-  IngresarProceso(form) {
-    if (form.tipoProcesoForm === undefined) {
-      this.AccionPersonalForm.patchValue({
-        otroProcesoForm: '',
-      });
-      this.estiloC = { 'visibility': 'visible' }; this.ingresoProceso = true;
-      this.toastr.info('Ingresar nombre de un nuevo tipo de proceso propuesto.', '', {
-        timeOut: 6000,
-      })
-      this.vistaProceso = false;
-    }
-  }
-
-  // MÉTODO PARA VER LA LISTA DE PROCESOS PROPUESTOS
-  VerProcesos() {
-    this.AccionPersonalForm.patchValue({
-      otroProcesosForm: '',
-    });
-    this.estiloP = { 'visibility': 'hidden' }; this.ingresoProceso = false;
-    this.vistaProceso = true;
-  }
 
   // MÉTODO PARA OBTENER LISTA DE EMPLEADOS
   ObtenerEmpleados() {
@@ -361,45 +331,25 @@ export class CrearPedidoAccionComponent implements OnInit {
   // MÉTODO PARA VERIFICAR LAS POSIBLES OPCIONES DE INGRESOS EN EL FORMULARIO
   ValidacionesIngresos(form, datosAccion) {
     // INGRESO DE DATOS DE ACUERDO A LO INGRESADO POR EL USUARIO
-    if (form.tipoDecretoForm != undefined && form.tipoProcesoForm != undefined &&
+    if (form.tipoDecretoForm != undefined &&
       form.tipoCargoForm != undefined) {
       console.log('INGRESA 1', datosAccion)
       this.GuardarDatos(datosAccion);
     }
-    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
+    else if (form.tipoDecretoForm === undefined &&
       form.tipoCargoForm != undefined) {
       console.log('INGRESA 2', datosAccion)
       this.IngresarNuevoDecreto(form, datosAccion, '1');
     }
-    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm != undefined &&
+    else if (form.tipoDecretoForm != undefined &&
       form.tipoCargoForm === undefined) {
       console.log('INGRESA 3', datosAccion)
       this.IngresarNuevoCargo(form, datosAccion, '1');
     }
-    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
-      form.tipoCargoForm != undefined) {
-      console.log('INGRESA 4', datosAccion)
-      this.IngresarNuevoProceso(form, datosAccion, '1');
-    }
-    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
+    else if (form.tipoDecretoForm === undefined &&
       form.tipoCargoForm === undefined) {
       console.log('INGRESA 5', datosAccion)
       this.IngresarNuevoDecreto(form, datosAccion, '2');
-    }
-    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm != undefined &&
-      form.tipoCargoForm === undefined) {
-      console.log('INGRESA 6', datosAccion)
-      this.IngresarNuevoDecreto(form, datosAccion, '3');
-    }
-    else if (form.tipoDecretoForm != undefined && form.tipoProcesoForm === undefined &&
-      form.tipoCargoForm === undefined) {
-      console.log('INGRESA 7', datosAccion)
-      this.IngresarNuevoCargo(form, datosAccion, '2');
-    }
-    else if (form.tipoDecretoForm === undefined && form.tipoProcesoForm === undefined &&
-      form.tipoCargoForm != undefined) {
-      console.log('INGRESA 8', datosAccion)
-      this.IngresarNuevoDecreto(form, datosAccion, '4');
     }
     else {
       console.log('INGRESA 9', datosAccion)
@@ -452,7 +402,7 @@ export class CrearPedidoAccionComponent implements OnInit {
             this.IngresarNuevoCargo(form, datos, '1');
           }
           else if (opcion === '4') {
-            this.IngresarNuevoProceso(form, datos, '1');
+            //this.IngresarNuevoProceso(form, datos, '1');
           }
         });
       });
@@ -479,7 +429,7 @@ export class CrearPedidoAccionComponent implements OnInit {
             this.GuardarDatos(datos);
           }
           else if (opcion === '2') {
-            this.IngresarNuevoProceso(form, datos, '1');
+            //this.IngresarNuevoProceso(form, datos, '1');
           }
         });
       });
@@ -490,32 +440,6 @@ export class CrearPedidoAccionComponent implements OnInit {
       });
     }
   }
-
-  // MÉTODO PARA INGRESAR NUEVO PROCESO PROPUESTO
-  IngresarNuevoProceso(form, datos: any, opcion: string) {
-    if (form.otroProcesoForm != '') {
-      let proceso = {
-        descripcion: form.otroProcesoForm
-      }
-      this.restAccion.IngresarProcesoPropuesto(proceso).subscribe(resol => {
-        // BUSCAR ID DE ÚLTIMO REGISTRO DE PROCESOS PROPUESTO
-        this.restAccion.BuscarIdProcesoPropuesto().subscribe(max => {
-          datos.proceso_propuesto = max[0].id;
-          // INGRESAR PEDIDO DE ACCION DE PERSONAL
-          if (opcion === '1') {
-            this.GuardarDatos(datos);
-          }
-        });
-      });
-    }
-    else {
-      this.toastr.info('Ingresar una nueva opción o seleccionar una de la lista', 'Verificar datos', {
-        timeOut: 6000,
-      });
-    }
-  }
-
-
 
   /* contador: number = 0;
    InsertarPlanificacion(form) {
