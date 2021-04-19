@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ToastrService } from 'ngx-toastr';
-import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
-import { Router } from '@angular/router';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-editar-titulo',
@@ -12,9 +12,6 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
   styleUrls: ['./editar-titulo.component.css']
 })
 export class EditarTituloComponent implements OnInit {
-
-  @Input() idSelect: number;
-  @Input() idEmpleado: number;
 
   cgTitulos: any = [];
 
@@ -30,27 +27,13 @@ export class EditarTituloComponent implements OnInit {
     private rest: EmpleadoService,
     private toastr: ToastrService,
     private restTitulo: TituloService,
-    private verEmpleado: VerEmpleadoComponent,
-    private router: Router,
+    private validacionService: ValidacionesService,
+    private dialogRef: MatDialogRef<EditarTituloComponent>,
+    @Inject(MAT_DIALOG_DATA) public titulo: any
   ) { }
 
   ngOnInit(): void {
     this.obtenerTitulos();
-    this.ObtenerTituloSeleccionado();
-  }
-
-  setTitulos: any = [];
-  ObtenerTituloSeleccionado(){
-    this.setTitulos = []
-    this.rest.getEmpleadoTituloRest(this.idEmpleado).subscribe(res => {
-      this.setTitulos = res;
-      this.setTitulos.map(obj => {
-        if(obj.id == this.idSelect){
-          this.observa.setValue(obj.observaciones);
-          this.idTitulo.setValue(obj.id_titulo);
-        }
-      });
-    });
   }
 
   ActualizarTituloEmpleado(form){
@@ -58,46 +41,43 @@ export class EditarTituloComponent implements OnInit {
       observacion: form.observacionForm,
       id_titulo: form.idTituloForm,
     }
-    this.rest.putEmpleadoTituloRest(this.idSelect , dataTituloEmpleado).subscribe(data => {
-      this.verEmpleado.obtenerTituloEmpleado(this.idEmpleado);
+    this.rest.putEmpleadoTituloRest(this.titulo.id , dataTituloEmpleado).subscribe(data => {
       this.toastr.success('Actualización Exitosa', 'Titulo asignado al empleado', {
         timeOut: 6000,
       });
+      this.dialogRef.close(data)
     });
   }
 
   obtenerTitulos() {
     this.restTitulo.getTituloRest().subscribe(data => {
       this.cgTitulos = data;
+      this.llenarFormulario()
     });
   }
 
+  llenarFormulario() {
+    const { observaciones, nombre } = this.titulo;
+
+    const [ id_titulo ] = this.cgTitulos.filter(o => { return o.nombre === nombre }).map(o => { return o.id});
+
+    this.editarTituloEmpleadoForm.patchValue({
+      observacionForm: observaciones,
+      idTituloForm: id_titulo
+    })
+  }
+
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionService.IngresarSoloLetras(e);
   }
 
   VerificarTitulo() {
     window.open("https://www.senescyt.gob.ec/web/guest/consultas", "_blank");
   }
   
-  cancelar(){this.verEmpleado.verTituloEdicion(true);}
+  cancelar(){
+    console.log('cancelar edicion titulo');
+    this.dialogRef.close(false)
+  }
 
 }

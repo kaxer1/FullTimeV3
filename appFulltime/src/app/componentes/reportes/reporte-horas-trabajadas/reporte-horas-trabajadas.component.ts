@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
-import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
 import { ITableEmpleados } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
@@ -12,10 +10,9 @@ import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteHorasTrabaja } from 'src/app/model/reportes.model';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ReportesService } from '../../../servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-horas-trabajadas',
@@ -57,6 +54,7 @@ export class ReporteHorasTrabajadasComponent implements OnInit, OnDestroy {
   constructor(
     private toastr: ToastrService,
     private reporteService: ReportesService,
+    private validacionService: ValidacionesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -607,11 +605,11 @@ export class ReporteHorasTrabajadasComponent implements OnInit, OnDestroy {
    */
 
   IngresarSoloLetras(e) {
-    return this.reporteService.IngresarSoloLetras(e);
+    return this.validacionService.IngresarSoloLetras(e);
   }
 
   IngresarSoloNumeros(evt) {
-    return this.reporteService.IngresarSoloNumeros(evt)
+    return this.validacionService.IngresarSoloNumeros(evt)
   }
 
 }

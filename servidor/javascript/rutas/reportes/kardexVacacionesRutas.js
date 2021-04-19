@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.KARDEX_VACACION_RUTAS = void 0;
 const kardexVacacionesControlador_1 = require("../../controlador/reportes/kardexVacacionesControlador");
 const express_1 = require("express");
 const verificarToken_1 = require("../../libs/verificarToken");

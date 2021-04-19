@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.beforeTwoDays = exports.beforeFiveDays = exports.Peri_Vacacion_Automatico = void 0;
 const database_1 = __importDefault(require("../database"));
 const settingsMail_1 = require("./settingsMail");
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;
@@ -105,7 +106,7 @@ function PeriVacacionHoy(fechaHoy) {
     });
 }
 // METODO PARA VERIFICAR SI FINALIZO SU PERIODO DE VACACIONES Y CREAR UN NUEVO PERIODO AUTOMATICAMENTE.
-const Peri_Vacacion_Automatico = function () {
+exports.Peri_Vacacion_Automatico = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         console.log(f.getHours());
@@ -127,9 +128,8 @@ const Peri_Vacacion_Automatico = function () {
         }
     }), 3600000);
 };
-exports.Peri_Vacacion_Automatico = Peri_Vacacion_Automatico;
 // Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.  Tiempo de aviso 5 dias antes. 
-const beforeFiveDays = function () {
+exports.beforeFiveDays = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const date = new Date();
         console.log(date.toLocaleDateString());
@@ -162,9 +162,8 @@ const beforeFiveDays = function () {
         }
     }), 3600000);
 };
-exports.beforeFiveDays = beforeFiveDays;
 // Metodo para verificar si debe tomar vacaciones. y enviar un aviso al correo electrónico.  Tiempo de aviso 2 dias antes. 
-const beforeTwoDays = function () {
+exports.beforeTwoDays = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const date = new Date();
         const hora = date.getHours();
@@ -193,4 +192,3 @@ const beforeTwoDays = function () {
         }
     }), 3600000);
 };
-exports.beforeTwoDays = beforeTwoDays;

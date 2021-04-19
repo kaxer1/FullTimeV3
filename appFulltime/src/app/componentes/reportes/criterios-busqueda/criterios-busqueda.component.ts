@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatRadioChange } from '@angular/material/radio';
 import { checkOptions, FormCriteriosBusqueda } from 'src/app/model/reportes.model';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-criterios-busqueda',
@@ -46,7 +47,8 @@ export class CriteriosBusquedaComponent implements OnInit, OnDestroy {
   @Input('num_option') num_option: number = 0;
 
   constructor(
-    private reporteService: ReportesService
+    private reporteService: ReportesService,
+    private validacionService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -138,11 +140,11 @@ export class CriteriosBusquedaComponent implements OnInit, OnDestroy {
   }
 
   IngresarSoloLetras(e) {
-    return this.reporteService.IngresarSoloLetras(e);
+    return this.validacionService.IngresarSoloLetras(e);
   }
   
   IngresarSoloNumeros(evt) {
-    return this.reporteService.IngresarSoloNumeros(evt);
+    return this.validacionService.IngresarSoloNumeros(evt);
   }
 
   limpiarCampos() {

@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModificarTimbresEntrada = exports.EliminarTimbres = exports.generarTimbres = void 0;
 const database_1 = __importDefault(require("../database"));
 const moment_1 = __importDefault(require("moment"));
 const FECHA_FERIADOS = [];
-const generarTimbres = function (id_empleado) {
+exports.generarTimbres = function (id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         // pool.query('SELECT co.id_empleado AS empleado, co.id AS contrato, ca.id AS cargo, ho.fec_inicio, ho.fec_final,' + 
         //     'ho.lunes, ho.martes, ho.miercoles, ho.jueves, ho.viernes, ho.sabado, ho.domingo, ho.id_horarios' +
@@ -95,7 +96,6 @@ const generarTimbres = function (id_empleado) {
         });
     });
 };
-exports.generarTimbres = generarTimbres;
 /**
  * Metodo que devuelve el arreglo de las fechas con su estado.
  * @param horario Ultimo horario del empleado con los estados de los dias libres y normales
@@ -148,7 +148,7 @@ function fechaIterada(fechaIterada, horario) {
         id_horario: horario.id_horarios
     };
 }
-const EliminarTimbres = function (id_empleado) {
+exports.EliminarTimbres = function (id_empleado) {
     return __awaiter(this, void 0, void 0, function* () {
         yield database_1.default.query('DELETE FROM timbres WHERE id_empleado = $1', [id_empleado])
             .then(result => {
@@ -156,8 +156,7 @@ const EliminarTimbres = function (id_empleado) {
         });
     });
 };
-exports.EliminarTimbres = EliminarTimbres;
-const ModificarTimbresEntrada = function () {
+exports.ModificarTimbresEntrada = function () {
     return __awaiter(this, void 0, void 0, function* () {
         let arrayRespuesta = yield database_1.default.query('select id, CAST(fec_hora_timbre as VARCHAR) from timbres where accion like \'E\' order by fec_hora_timbre, id_empleado ASC')
             .then(result => {
@@ -180,4 +179,3 @@ const ModificarTimbresEntrada = function () {
         }));
     });
 };
-exports.ModificarTimbresEntrada = ModificarTimbresEntrada;

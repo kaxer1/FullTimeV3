@@ -1,23 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
 exports.restarYear = exports.ObtenerRangoMensual = exports.ObtenerRangoSemanal = exports.restaDias = exports.sumaDias = void 0;
-const sumaDias = function (fecha, dias) {
-=======
 exports.sumaDias = function (fecha, dias) {
->>>>>>> 73c4229f2ba7b042cead49bc185d8f0c9d09b499
     fecha.setUTCHours(fecha.getHours());
     fecha.setDate(fecha.getDate() + dias);
     return fecha;
 };
-exports.sumaDias = sumaDias;
-const restaDias = function (fecha, dias) {
+exports.restaDias = function (fecha, dias) {
     fecha.setUTCHours(fecha.getHours());
     fecha.setDate(fecha.getDate() - dias);
     return fecha;
 };
-exports.restaDias = restaDias;
-const ObtenerRangoSemanal = function (fHoy) {
+exports.ObtenerRangoSemanal = function (fHoy) {
     fHoy.setUTCHours(0);
     fHoy.setUTCMinutes(0);
     var fechaInicio = new Date(fHoy);
@@ -29,8 +23,7 @@ const ObtenerRangoSemanal = function (fHoy) {
         final: dia_suma
     };
 };
-exports.ObtenerRangoSemanal = ObtenerRangoSemanal;
-const ObtenerRangoMensual = function (fHoy) {
+exports.ObtenerRangoMensual = function (fHoy) {
     fHoy.setUTCHours(0);
     fHoy.setUTCMinutes(0);
     var fechaInicio = new Date(fHoy);
@@ -51,9 +44,7 @@ const ObtenerRangoMensual = function (fHoy) {
         final: dia_suma
     };
 };
-exports.ObtenerRangoMensual = ObtenerRangoMensual;
-const restarYear = function (fecha, anio) {
+exports.restarYear = function (fecha, anio) {
     fecha.setFullYear(fecha.getFullYear() - anio);
     return fecha;
 };
-exports.restarYear = restarYear;

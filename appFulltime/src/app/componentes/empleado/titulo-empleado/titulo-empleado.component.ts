@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-titulo-empleado',
@@ -12,9 +13,10 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 })
 export class TituloEmpleadoComponent implements OnInit {
 
-  @Input() idEmploy: string;
+  // @Input() idEmploy: string;
 
   cgTitulos: any = [];
+  selectTitle: string = '';
 
   observa = new FormControl('', [Validators.required, Validators.maxLength(255)]);
   idTitulo = new FormControl('', [Validators.required])
@@ -28,12 +30,13 @@ export class TituloEmpleadoComponent implements OnInit {
     public restTitulo: TituloService,
     public restEmpleado: EmpleadoService,
     private toastr: ToastrService,
-    private metodo: VerEmpleadoComponent //se usa para poder refrescar los datos ingresados
+    private validacionService: ValidacionesService,
+    private dialogRef: MatDialogRef<TituloEmpleadoComponent>,
+    @Inject(MAT_DIALOG_DATA) public empleado: any
   ) { }
 
   ngOnInit(): void {
     this.obtenerTitulos();
-    this.limpiarCampos();
   }
 
   obtenerTitulos() {
@@ -45,7 +48,7 @@ export class TituloEmpleadoComponent implements OnInit {
   insertarTituloEmpleado(form) {
     let dataTituloEmpleado = {
       observacion: form.observacionForm,
-      id_empleado: parseInt(this.idEmploy),
+      id_empleado: this.empleado,
       id_titulo: form.idTituloForm,
     }
     this.restEmpleado.postEmpleadoTitulos(dataTituloEmpleado).subscribe(data => {
@@ -53,30 +56,12 @@ export class TituloEmpleadoComponent implements OnInit {
         timeOut: 6000,
       });
       this.limpiarCampos();
-      this.metodo.obtenerTituloEmpleado(parseInt(this.idEmploy));
+      this.dialogRef.close(true)
     });
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionService.IngresarSoloLetras(e);
   }
 
   limpiarCampos() {
@@ -84,8 +69,7 @@ export class TituloEmpleadoComponent implements OnInit {
   }
 
   cerrarRegistro() {
-    this.metodo.mostrarTit();
-    //window.location.reload();
+    this.dialogRef.close(false)
   }
 
   VerificarTitulo() {

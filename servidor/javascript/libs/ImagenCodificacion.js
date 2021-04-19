@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ImagenBase64LogosEmpresas = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const ImagenBase64LogosEmpresas = function (path_file) {
+exports.ImagenBase64LogosEmpresas = function (path_file) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             path_file = path_1.default.resolve('logos') + '/' + path_file;
@@ -26,4 +27,3 @@ const ImagenBase64LogosEmpresas = function (path_file) {
         }
     });
 };
-exports.ImagenBase64LogosEmpresas = ImagenBase64LogosEmpresas;
