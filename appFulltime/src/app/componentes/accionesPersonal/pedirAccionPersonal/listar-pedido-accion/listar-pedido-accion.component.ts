@@ -121,7 +121,6 @@ export class ListarPedidoAccionComponent implements OnInit {
       this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
         this.empleado_1 = data1;
         console.log('2', this.empleado_1);
-
         this.restCargo.BuscarIDCargo(this.datosPedido[0].id_empleado).subscribe(datos => {
           this.idCargo = datos;
           console.log("idCargo Procesos", this.idCargo[0].id);
@@ -133,61 +132,97 @@ export class ListarPedidoAccionComponent implements OnInit {
                 if (this.contador === 0) {
                   this.empleadoProcesos = datos
                   this.contador++;
+                  console.log("Datos procesos1" + i + '', this.empleadoProcesos);
                 }
                 else {
                   this.empleadoProcesos = this.empleadoProcesos.concat(datos);
-                  console.log("Datos procesos" + i + '', this.empleadoProcesos);
-                  if(this.contar === this.idCargo.length){
-
-                    this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length-1].id_p).subscribe(proc_a => {
-                      this.procesoActual = proc_a;
-                      console.log('5', this.procesoActual);
-                      this.EscribirProcesosActuales(this.procesoActual);
-
-                      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
-                        this.empleado_2 = data2;
-                        console.log('3', this.empleado_2);
-                        this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-                          this.empleado_3 = data3;
-                          console.log('4', this.empleado_3)
-                          if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
-                            this.DefinirColor(this.datosPedido, '');
-                            this.generarPdf('download');
-                          } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
-                            this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-                              this.procesoPropuesto = proc1;
-                              console.log('5', this.procesoPropuesto);
-                              this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                              this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                                this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                                this.generarPdf('download');
-                              })
-                            });
-                          }
-                          else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
-                            this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
-                              this.procesoPropuesto = proc;
-                              console.log('5', this.procesoPropuesto);
-                              this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                              this.DefinirColor(this.datosPedido, '')
-                              this.generarPdf('download');
-                            });
-                          }
-                          else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
-                            this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                              this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                              this.generarPdf('download');
-                            })
-                          }
-                        });
-                      });
-                    });
-
-                   
-                  }
+                  console.log("Datos procesos2" + i + '', this.empleadoProcesos);
                 }
               }
-            })
+              if (this.contar === this.idCargo.length) {
+                this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length - 1].id).subscribe(proc_a => {
+                  this.procesoActual = proc_a;
+                  console.log('5', this.procesoActual);
+                  this.EscribirProcesosActuales(this.procesoActual);
+                  this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+                    this.empleado_2 = data2;
+                    console.log('3', this.empleado_2);
+                    this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+                      this.empleado_3 = data3;
+                      console.log('4', this.empleado_3)
+                      if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+                        this.DefinirColor(this.datosPedido, '');
+                        this.generarPdf('download');
+                      } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+                        this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+                          this.procesoPropuesto = proc1;
+                          console.log('5', this.procesoPropuesto);
+                          this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                          this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                            this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                            this.generarPdf('download');
+                          })
+                        });
+                      }
+                      else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+                        this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+                          this.procesoPropuesto = proc;
+                          console.log('5', this.procesoPropuesto);
+                          this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                          this.DefinirColor(this.datosPedido, '')
+                          this.generarPdf('download');
+                        });
+                      }
+                      else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+                        this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                          this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                          this.generarPdf('download');
+                        })
+                      }
+                    });
+                  });
+                });
+              }
+            },
+            error => {
+              this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+                this.empleado_2 = data2;
+                console.log('3', this.empleado_2);
+                this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+                  this.empleado_3 = data3;
+                  console.log('4', this.empleado_3)
+                  if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+                    this.DefinirColor(this.datosPedido, '');
+                    this.generarPdf('download');
+                  } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+                    this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+                      this.procesoPropuesto = proc1;
+                      console.log('5', this.procesoPropuesto);
+                      this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                      this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                        this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                        this.generarPdf('download');
+                      })
+                    });
+                  }
+                  else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+                    this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+                      this.procesoPropuesto = proc;
+                      console.log('5', this.procesoPropuesto);
+                      this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                      this.DefinirColor(this.datosPedido, '')
+                      this.generarPdf('download');
+                    });
+                  }
+                  else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+                    this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                      this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                      this.generarPdf('download');
+                    })
+                  }
+                });
+              });
+            });
           }
         });
       });

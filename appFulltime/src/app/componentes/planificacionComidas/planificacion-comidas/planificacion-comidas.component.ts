@@ -29,7 +29,8 @@ export class PlanificacionComidasComponent implements OnInit {
   idEmpleadoF = new FormControl('');
   fechaF = new FormControl('', [Validators.required]);
   observacionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  fechaPlanificacionF = new FormControl('', Validators.required);
+  fechaInicioF = new FormControl('', Validators.required);
+  fechaFinF = new FormControl('', Validators.required);
   horaInicioF = new FormControl('', Validators.required);
   horaFinF = new FormControl('', Validators.required);
   tipoF = new FormControl('', Validators.required);;
@@ -42,7 +43,8 @@ export class PlanificacionComidasComponent implements OnInit {
     idEmpleadoForm: this.idEmpleadoF,
     fechaForm: this.fechaF,
     observacionForm: this.observacionF,
-    fechaPlanificacionForm: this.fechaPlanificacionF,
+    fechaInicioForm: this.fechaInicioF,
+    fechaFinForm: this.fechaFinF,
     horaInicioForm: this.horaInicioF,
     horaFinForm: this.horaFinF,
     tipoForm: this.tipoF,
@@ -154,10 +156,12 @@ export class PlanificacionComidasComponent implements OnInit {
       fecha: form.fechaForm,
       id_comida: form.platosForm,
       observacion: form.observacionForm,
-      fec_comida: form.fechaPlanificacionForm,
+      fec_comida: form.fechaInicioForm,
       hora_inicio: form.horaInicioForm,
       hora_fin: form.horaFinForm,
-      extra: form.extraForm
+      extra: form.extraForm,
+      fec_inicio: form.fechaInicioForm,
+      fec_final: form.fechaFinForm,
     };
     if (this.data.modo === "multiple") {
       // CREACIÓN DE LA PLANIFICACIÓN PARA VARIOS EMPLEADOS

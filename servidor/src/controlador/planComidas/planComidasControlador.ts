@@ -127,10 +127,11 @@ class PlanComidasControlador {
   }
 
   public async CrearPlanComidas(req: Request, res: Response): Promise<void> {
-    const { fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra } = req.body;
+    const { fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra, fec_inicio,
+      fec_final } = req.body;
     await pool.query('INSERT INTO plan_comidas (fecha, id_comida, observacion, fec_comida, ' +
-      'hora_inicio, hora_fin, extra) VALUES ($1, $2, $3, $4, $5, $6, $7)',
-      [fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra]);
+      'hora_inicio, hora_fin, extra, fec_inicio, fec_final) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)',
+      [fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra, fec_inicio, fec_final]);
     res.jsonp({ message: 'Planificación del almuerzo ha sido guardada con éxito' });
   }
 
