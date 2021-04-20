@@ -10,6 +10,8 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -39,6 +41,8 @@ export class ListarPedidoAccionComponent implements OnInit {
   constructor(
     public restAccion: AccionPersonalService,
     public restEmpre: EmpresaService,
+    public restCargo: EmplCargosService,
+    public restEmpleadoProcesos: EmpleadoProcesosService,
     private toastr: ToastrService,
   ) { }
 
@@ -88,10 +92,12 @@ export class ListarPedidoAccionComponent implements OnInit {
   texto_color_salario: string = '';
   texto_color_empresa: string = '';
   datosPedido: any = [];
-  procesos_1: any = [];
+  procesoPropuesto: any = [];
+  procesoActual: any = [];
   empleado_1: any = [];
   empleado_2: any = [];
   empleado_3: any = [];
+  contar: number = 0;
   MostrarInformacion(id: number) {
     this.texto_color_cargo = 'white';
     this.texto_color_numero = 'white';
@@ -102,51 +108,87 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.empleado_1 = [];
     this.empleado_2 = [];
     this.empleado_3 = [];
-    this.procesos_1 = [];
+    this.procesoPropuesto = [];
+    this.procesoActual = [];
+    this.buscarProcesos = [];
+    this.empleadoProcesos = [];
+    this.idCargo = [];
+    this.contador = 0;
+    this.contar = 0;
     this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
       this.datosPedido = data;
       console.log('1', this.datosPedido);
       this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
         this.empleado_1 = data1;
         console.log('2', this.empleado_1);
-        this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
-          this.empleado_2 = data2;
-          console.log('3', this.empleado_2);
-          this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-            this.empleado_3 = data3;
-            console.log('4', this.empleado_3)
-            if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
-              this.DefinirColor(this.datosPedido, '');
-              this.generarPdf('download');
-            } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
-              this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-                this.procesos_1 = proc1;
-                console.log('5', this.procesos_1);
-                this.EscribirProcesosActuales(this.procesos_1);
-                this.EscribirProcesosPropuestos(this.procesos_1);
-                this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                  this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                  this.generarPdf('download');
-                })
-              });
-            }
-            else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
-              this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-                this.procesos_1 = proc1;
-                console.log('5', this.procesos_1);
-                this.EscribirProcesosActuales(this.procesos_1);
-                this.EscribirProcesosPropuestos(this.procesos_1);
-                this.DefinirColor(this.datosPedido, '')
-                this.generarPdf('download');
-              });
-            }
-            else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
-              this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                this.generarPdf('download');
-              })
-            }
-          });
+
+        this.restCargo.BuscarIDCargo(this.datosPedido[0].id_empleado).subscribe(datos => {
+          this.idCargo = datos;
+          console.log("idCargo Procesos", this.idCargo[0].id);
+          for (let i = 0; i <= this.idCargo.length - 1; i++) {
+            this.contar++;
+            this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(this.idCargo[i]['id']).subscribe(datos => {
+              this.buscarProcesos = datos;
+              if (this.buscarProcesos.length != 0) {
+                if (this.contador === 0) {
+                  this.empleadoProcesos = datos
+                  this.contador++;
+                }
+                else {
+                  this.empleadoProcesos = this.empleadoProcesos.concat(datos);
+                  console.log("Datos procesos" + i + '', this.empleadoProcesos);
+                  if(this.contar === this.idCargo.length){
+
+                    this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length-1].id_p).subscribe(proc_a => {
+                      this.procesoActual = proc_a;
+                      console.log('5', this.procesoActual);
+                      this.EscribirProcesosActuales(this.procesoActual);
+
+                      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+                        this.empleado_2 = data2;
+                        console.log('3', this.empleado_2);
+                        this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+                          this.empleado_3 = data3;
+                          console.log('4', this.empleado_3)
+                          if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+                            this.DefinirColor(this.datosPedido, '');
+                            this.generarPdf('download');
+                          } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+                            this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+                              this.procesoPropuesto = proc1;
+                              console.log('5', this.procesoPropuesto);
+                              this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                              this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                                this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                                this.generarPdf('download');
+                              })
+                            });
+                          }
+                          else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+                            this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+                              this.procesoPropuesto = proc;
+                              console.log('5', this.procesoPropuesto);
+                              this.EscribirProcesosPropuestos(this.procesoPropuesto);
+                              this.DefinirColor(this.datosPedido, '')
+                              this.generarPdf('download');
+                            });
+                          }
+                          else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+                            this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                              this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                              this.generarPdf('download');
+                            })
+                          }
+                        });
+                      });
+                    });
+
+                   
+                  }
+                }
+              }
+            })
+          }
         });
       });
     });
@@ -182,6 +224,17 @@ export class ListarPedidoAccionComponent implements OnInit {
     else {
       this.salario_propuesto = '----------';
     }
+  }
+
+
+  /** Método para mostrar datos de los procesos del empleado */
+  buscarProcesos: any = [];
+  empleadoProcesos: any = [];
+  idCargo: any = [];
+  contador: number = 0;
+  obtenerEmpleadoProcesos(id_empleado: number) {
+
+
   }
 
   nombre_procesos_a: string = '';

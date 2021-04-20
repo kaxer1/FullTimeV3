@@ -3,9 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TokenValidation = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const TokenValidation = (req, res, next) => {
+exports.TokenValidation = (req, res, next) => {
     // verifica si en la peticion existe la cabecera autorizacion 
     if (!req.headers.authorization) {
         return res.status(401).send('No puede solicitar, permiso denegado');
@@ -31,4 +30,3 @@ const TokenValidation = (req, res, next) => {
     // console.log(payload);
     next();
 };
-exports.TokenValidation = TokenValidation;
