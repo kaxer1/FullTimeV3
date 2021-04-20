@@ -80,7 +80,7 @@ class Servidor {
         this.app.use(cors_1.default());
     }
     configuracion() {
-        this.app.set('puerto', process.env.PORT || 3000);
+        this.app.set('puerto', process.env.PORT || 3001);
         this.app.use(morgan_1.default('dev'));
         this.app.use(cors_1.default());
         this.app.use(express_1.default.json());
