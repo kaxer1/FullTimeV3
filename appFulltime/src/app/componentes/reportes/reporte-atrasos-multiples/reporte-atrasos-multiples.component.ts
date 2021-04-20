@@ -12,6 +12,7 @@ import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteAtrasos } from 'src/app/model/reportes.model';
 import { ReportesService } from '../../../servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-atrasos-multiples',
@@ -54,6 +55,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit, OnDestroy {
   constructor(
     private toastr: ToastrService,
     private reporteService: ReportesService,
+    private validacionService: ValidacionesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -747,11 +749,11 @@ export class ReporteAtrasosMultiplesComponent implements OnInit, OnDestroy {
    */
 
   IngresarSoloLetras(e) {
-    return this.reporteService.IngresarSoloLetras(e)
+    return this.validacionService.IngresarSoloLetras(e)
   }
 
   IngresarSoloNumeros(evt) {
-    return this.reporteService.IngresarSoloNumeros(evt)
+    return this.validacionService.IngresarSoloNumeros(evt)
   }
 
 }

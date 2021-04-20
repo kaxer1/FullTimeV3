@@ -17,7 +17,7 @@ const database_1 = __importDefault(require("../database"));
 const settingsMail_1 = require("./settingsMail");
 const path_1 = __importDefault(require("path"));
 // metodo para enviar los cumpleaños a una hora determinada, verificando a cada hora hasta que sean las 12 pm y se envie el correo
-const cumpleanios = function () {
+exports.cumpleanios = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         const path_folder = path_1.default.resolve('cumpleanios');
         // console.log(path_folder);
@@ -64,4 +64,3 @@ const cumpleanios = function () {
     }), 3600000);
     // }, 10000);
 };
-exports.cumpleanios = cumpleanios;

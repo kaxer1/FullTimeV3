@@ -16,7 +16,7 @@ exports.NotificacionTimbreAutomatica = void 0;
 const database_1 = __importDefault(require("../database"));
 const MINUTO_TIMER = 59;
 // const MINUTO_TIMER = 4; // de prueba
-const NotificacionTimbreAutomatica = function () {
+exports.NotificacionTimbreAutomatica = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         // console.log(f.getMinutes());
@@ -41,7 +41,6 @@ const NotificacionTimbreAutomatica = function () {
         }
     }), 60000);
 };
-exports.NotificacionTimbreAutomatica = NotificacionTimbreAutomatica;
 function CalcularHoras(fecha, hora) {
     return __awaiter(this, void 0, void 0, function* () {
         let datoConsulta = fecha + ' ' + hora;

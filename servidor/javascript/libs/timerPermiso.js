@@ -19,7 +19,7 @@ function sumaDias(fecha, dias) {
     return fecha;
 }
 // funcion para contabilizar el tiempo utilizado de los permisos 
-const conteoPermisos = function () {
+exports.conteoPermisos = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         console.log(f.toLocaleDateString() + ' ' + f.toLocaleTimeString());
@@ -41,7 +41,6 @@ const conteoPermisos = function () {
         }
     }), 100000);
 };
-exports.conteoPermisos = conteoPermisos;
 /*
     console.log(date.toJSON()); // 2020-08-17T22:18:30.359Z
     console.log(date.toLocaleDateString()); // 2020-8-17

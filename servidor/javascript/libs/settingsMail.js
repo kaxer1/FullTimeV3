@@ -19,7 +19,7 @@ exports.email = process.env.EMAIL || '';
 let pass = process.env.PASSWORD || '';
 // export let email: string;
 // let pass: string;
-const Credenciales = function (id_empresa) {
+exports.Credenciales = function (id_empresa) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             let credenciales = yield database_1.default.query('SELECT correo, password_correo FROM cg_empresa WHERE id = $1', [id_empresa]).then(result => {
@@ -34,8 +34,7 @@ const Credenciales = function (id_empresa) {
         }
     });
 };
-exports.Credenciales = Credenciales;
-const enviarMail = function (data) {
+exports.enviarMail = function (data) {
     console.log(exports.email, '>>>>>>', pass);
     const smtpTransport = nodemailer_1.default.createTransport({
         service: 'Gmail',
@@ -56,4 +55,3 @@ const enviarMail = function (data) {
         }
     }));
 };
-exports.enviarMail = enviarMail;

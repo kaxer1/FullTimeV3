@@ -532,7 +532,7 @@ function DetalleHorario(id_horarios) {
         };
     });
 }
-const ContarHorasByCargo = function (id_empleado, desde, hasta) {
+exports.ContarHorasByCargo = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let ids = yield UltimoCargoContrato(id_empleado, desde); //devuelve los IDs de contrato y cargo, ademas del horarios o los horarios que el usuario ingreso.
         console.log(ids);
@@ -563,7 +563,6 @@ const ContarHorasByCargo = function (id_empleado, desde, hasta) {
         return ReporteConsolidadoJsop;
     });
 };
-exports.ContarHorasByCargo = ContarHorasByCargo;
 function CalcularTotal(arr) {
     return __awaiter(this, void 0, void 0, function* () {
         let dataDecimal = {
@@ -635,7 +634,7 @@ function ObtenerInformacionEmpleado(id_empleado) {
  *      METODO PARA REGISTRAR ASISTENCIA.
  *
  ***********************************************/
-const RegistrarAsistenciaByTimbres = function () {
+exports.RegistrarAsistenciaByTimbres = function () {
     return __awaiter(this, void 0, void 0, function* () {
         setInterval(() => __awaiter(this, void 0, void 0, function* () {
             var f = new Date();
@@ -655,13 +654,12 @@ const RegistrarAsistenciaByTimbres = function () {
         }), 1000000);
     });
 };
-exports.RegistrarAsistenciaByTimbres = RegistrarAsistenciaByTimbres;
 /**********************************************************************
  *
  *      METODOS PARA MODELAR REPORTES DE TIMBRES SIN ACCIONES
  *
  **********************************************************************/
-const ContarHorasByCargoSinAcciones = function (id_empleado, desde, hasta) {
+exports.ContarHorasByCargoSinAcciones = function (id_empleado, desde, hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         let ids = yield UltimoCargoContrato(id_empleado, desde); //devuelve los IDs de contrato y cargo, ademas del horarios o los horarios que el usuario ingreso.
         console.log(ids);
@@ -701,7 +699,6 @@ const ContarHorasByCargoSinAcciones = function (id_empleado, desde, hasta) {
         return ReporteConsolidadoJsop;
     });
 };
-exports.ContarHorasByCargoSinAcciones = ContarHorasByCargoSinAcciones;
 function MetodoModelarDetalleAsistenciaSinAccion(codigo, desde, hasta, IhorarioLaboral, id_cargo) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(codigo, desde, hasta, IhorarioLaboral, id_cargo);

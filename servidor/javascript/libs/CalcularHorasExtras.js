@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GenerarHoraExtraCalulo = exports.CalcularHoraExtra = void 0;
 const database_1 = __importDefault(require("../database"));
 const DIAS_MES = 30;
-const CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
+exports.CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log(id_empleado, fec_desde, fec_hasta);
         let codigo;
@@ -68,7 +68,6 @@ const CalcularHoraExtra = function (id_empleado, fec_desde, fec_hasta) {
         }
     });
 };
-exports.CalcularHoraExtra = CalcularHoraExtra;
 function FeriadosPorIdCargo(id_cargo, fec_desde, fec_hasta) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT f.fecha, f.fec_recuperacion, f.descripcion FROM empl_cargos AS ec, sucursales AS s, ciudades AS c, ' +
@@ -312,9 +311,8 @@ function HHMMtoHorasDecimal(dato) {
  *  /            \  |          |        |        |         |
  * /              \ |__________|        |        |_________|
  ***************************************************************************/
-const GenerarHoraExtraCalulo = function (id_hora_extr_pedido) {
+exports.GenerarHoraExtraCalulo = function (id_hora_extr_pedido) {
     return __awaiter(this, void 0, void 0, function* () {
         // let hora_extra_pedida = await pool.query('SELECT fec_inicio, fec_final')
     });
 };
-exports.GenerarHoraExtraCalulo = GenerarHoraExtraCalulo;

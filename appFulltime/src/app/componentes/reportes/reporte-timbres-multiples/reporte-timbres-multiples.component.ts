@@ -11,6 +11,7 @@ import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-timbres-multiples',
@@ -80,6 +81,7 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
   constructor(
     private toastr: ToastrService,
     private reporteService: ReportesService,
+    private validacionService: ValidacionesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -1109,11 +1111,11 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
    */
 
   IngresarSoloLetras(e) {
-    return this.reporteService.IngresarSoloLetras(e)
+    return this.validacionService.IngresarSoloLetras(e)
   }
 
   IngresarSoloNumeros(evt) {
-    return this.reporteService.IngresarSoloNumeros(evt)
+    return this.validacionService.IngresarSoloNumeros(evt)
   }
 
   
