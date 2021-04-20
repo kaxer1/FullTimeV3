@@ -1,1 +1,40 @@
-<p>ver-pedido-accion works!</p>
+<div class="container" *ngFor="let d of datosPedido" style="padding-top: 15px;">
+    <mat-card class="example-card mat-elevation-z8">
+        <div class="barraTituloD">
+            <span>ACCIÓN DE PERSONAL</span>
+        </div>
+        <mat-card-content>
+            <div class="d-flex justify-content-around">
+                <div class="container" style="padding-top: 15px;">
+                    <br>
+                    <label class="col-sm col-form-label"><b>Número Partida:</b>
+                        {{d.num_partida}}
+                    </label>
+                    <br>
+                    <label class="col-sm col-form-label"><b>Empleado:</b>
+                        {{datoEmpleado.toUpperCase()}}
+                    </label>
+                    <br>
+                    <label class="col-sm col-form-label"><b>Tipo de acción personal:</b>
+                        {{d.tipo.toUpperCase()}}
+                    </label>
+                    <br>
+                    <label class="col-sm col-form-label"><b>Identificación:</b>
+                        {{d.identi_accion_p.toUpperCase()}}</label>
+                    <br>
+                    <label class="col-sm col-form-label"><b>Departamento:</b> {{d.nomdepar}}</label>
+
+                    <div style="text-align: right;">
+                        <i id="editarF" [routerLink]="['/editarPedido/',d.id]" matSuffix matTooltipClass="color-tooltip"
+                            matTooltipPosition="right" matTooltip="Modificar datos de este registro"
+                            class="fas fa-edit">
+                            <p>Editar</p>
+                        </i>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" class="btn btn-sm" [routerLink]="['/listaPedidos/']"
+                value="Ir a la Lista de Acciones de Personal">
+        </mat-card-content>
+    </mat-card>
+</div>

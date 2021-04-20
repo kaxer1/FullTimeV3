@@ -98,12 +98,18 @@ export class ListarPedidoAccionComponent implements OnInit {
   empleado_2: any = [];
   empleado_3: any = [];
   contar: number = 0;
+  /** Método para mostrar datos de los procesos del empleado */
+  buscarProcesos: any = [];
+  empleadoProcesos: any = [];
+  idCargo: any = [];
+  contador: number = 0;
   MostrarInformacion(id: number) {
     this.texto_color_cargo = 'white';
     this.texto_color_numero = 'white';
     this.texto_color_proceso = 'white';
     this.texto_color_salario = 'white';
     this.texto_color_empresa = 'white';
+    this.texto_color_proceso_actual = 'black';
     this.datosPedido = [];
     this.empleado_1 = [];
     this.empleado_2 = [];
@@ -144,87 +150,59 @@ export class ListarPedidoAccionComponent implements OnInit {
                   this.procesoActual = proc_a;
                   console.log('5', this.procesoActual);
                   this.EscribirProcesosActuales(this.procesoActual);
-                  this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
-                    this.empleado_2 = data2;
-                    console.log('3', this.empleado_2);
-                    this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-                      this.empleado_3 = data3;
-                      console.log('4', this.empleado_3)
-                      if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
-                        this.DefinirColor(this.datosPedido, '');
-                        this.generarPdf('download');
-                      } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
-                        this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-                          this.procesoPropuesto = proc1;
-                          console.log('5', this.procesoPropuesto);
-                          this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                          this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                            this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                            this.generarPdf('download');
-                          })
-                        });
-                      }
-                      else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
-                        this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
-                          this.procesoPropuesto = proc;
-                          console.log('5', this.procesoPropuesto);
-                          this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                          this.DefinirColor(this.datosPedido, '')
-                          this.generarPdf('download');
-                        });
-                      }
-                      else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
-                        this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                          this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                          this.generarPdf('download');
-                        })
-                      }
-                    });
-                  });
+                  this.BusquedaInformacion();
                 });
               }
             },
-            error => {
-              this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
-                this.empleado_2 = data2;
-                console.log('3', this.empleado_2);
-                this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-                  this.empleado_3 = data3;
-                  console.log('4', this.empleado_3)
-                  if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
-                    this.DefinirColor(this.datosPedido, '');
-                    this.generarPdf('download');
-                  } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
-                    this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
-                      this.procesoPropuesto = proc1;
-                      console.log('5', this.procesoPropuesto);
-                      this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                      this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                        this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                        this.generarPdf('download');
-                      })
-                    });
-                  }
-                  else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
-                    this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
-                      this.procesoPropuesto = proc;
-                      console.log('5', this.procesoPropuesto);
-                      this.EscribirProcesosPropuestos(this.procesoPropuesto);
-                      this.DefinirColor(this.datosPedido, '')
-                      this.generarPdf('download');
-                    });
-                  }
-                  else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
-                    this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
-                      this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
-                      this.generarPdf('download');
-                    })
-                  }
-                });
+              error => {
+                this.EscribirProcesosActuales_Vacios();
+                this.BusquedaInformacion();
+                this.toastr.info('El reporte no refleja informácion de procesos actuales del colaborador seleccionado.', 'Cargar la información respectiva.', {
+                  timeOut: 6000,
+                })
               });
-            });
           }
         });
+      });
+    });
+  }
+
+  BusquedaInformacion() {
+    this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+      this.empleado_2 = data2;
+      console.log('3', this.empleado_2);
+      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+        this.empleado_3 = data3;
+        console.log('4', this.empleado_3)
+        if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+          this.DefinirColor(this.datosPedido, '');
+          this.generarPdf('download');
+        } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+          this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+            this.procesoPropuesto = proc1;
+            console.log('5', this.procesoPropuesto);
+            this.EscribirProcesosPropuestos(this.procesoPropuesto);
+            this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+              this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+              this.generarPdf('download');
+            })
+          });
+        }
+        else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+          this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+            this.procesoPropuesto = proc;
+            console.log('5', this.procesoPropuesto);
+            this.EscribirProcesosPropuestos(this.procesoPropuesto);
+            this.DefinirColor(this.datosPedido, '')
+            this.generarPdf('download');
+          });
+        }
+        else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+          this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+            this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+            this.generarPdf('download');
+          })
+        }
       });
     });
   }
@@ -261,17 +239,6 @@ export class ListarPedidoAccionComponent implements OnInit {
     }
   }
 
-
-  /** Método para mostrar datos de los procesos del empleado */
-  buscarProcesos: any = [];
-  empleadoProcesos: any = [];
-  idCargo: any = [];
-  contador: number = 0;
-  obtenerEmpleadoProcesos(id_empleado: number) {
-
-
-  }
-
   nombre_procesos_a: string = '';
   proceso_padre_a: string = '';
   EscribirProcesosActuales(array) {
@@ -285,6 +252,13 @@ export class ListarPedidoAccionComponent implements OnInit {
         this.proceso_padre_a = obj.nombre;
       }
     })
+  }
+
+  texto_color_proceso_actual: string = '';
+  EscribirProcesosActuales_Vacios() {
+    this.proceso_padre_a = '';
+    this.proceso_padre_a = '-------------';
+    this.texto_color_proceso_actual = 'white';
   }
 
   nombre_procesos_p: string = '';
@@ -928,7 +902,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.proceso_padre_a, style: 'itemsTable', }],
+                                [{ text: this.proceso_padre_a, style: 'itemsTable', color: this.texto_color_proceso_actual }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]

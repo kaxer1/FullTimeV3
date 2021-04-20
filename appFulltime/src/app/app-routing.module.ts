@@ -130,6 +130,8 @@ import { CrearPedidoAccionComponent } from './componentes/accionesPersonal/pedir
 import { ListarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/listar-pedido-accion/listar-pedido-accion.component';
 import { HorarioMultipleEmpleadoComponent } from './componentes/empleadoHorario/horario-multiple-empleado/horario-multiple-empleado.component';
 import { PermisosMultiplesEmpleadosComponent } from './componentes/empleadoPermisos/permisos-multiples-empleados/permisos-multiples-empleados.component';
+import { EditarPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/editar-pedido-accion/editar-pedido-accion.component';
+import { VerPedidoAccionComponent } from './componentes/accionesPersonal/pedirAccionPersonal/ver-pedido-accion/ver-pedido-accion.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -277,11 +279,13 @@ const routes: Routes = [
   { path: 'vistaTipoAccion/:id', component: VerTipoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'pedidoAccion', component: CrearPedidoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
   { path: 'listaPedidos', component: ListarPedidoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'editarPedido/:id', component: EditarPedidoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'verAccion/:id', component: VerPedidoAccionComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 
-//MULTIPLES HORARIOS - PERMISOS
-// Acciones de Personal
-{ path: 'permisosMultiples', component: PermisosMultiplesEmpleadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
-{ path: 'horariosMultiples', component: HorarioMultipleEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  //MULTIPLES HORARIOS - PERMISOS
+  // Acciones de Personal
+  { path: 'permisosMultiples', component: PermisosMultiplesEmpleadosComponent, canActivate: [AuthGuard], data: { roles: 1 } },
+  { path: 'horariosMultiples', component: HorarioMultipleEmpleadoComponent, canActivate: [AuthGuard], data: { roles: 1 } },
 ];
 
 @NgModule({

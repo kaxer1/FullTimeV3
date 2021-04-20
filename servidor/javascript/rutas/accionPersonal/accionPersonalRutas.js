@@ -35,6 +35,7 @@ class DepartamentoRutas {
         this.router.get('/tipo/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
         /** TABLA PEDIDO_ACCION_EMPLEADO */
         this.router.post('/pedido/accion', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearPedidoAccionPersonal);
+        this.router.put('/pedido/accion/editar', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ActualizarPedidoAccionPersonal);
         // VER LOGO DE MINISTERIO TRABAJO
         this.router.get('/logo/ministerio/codificado', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.verLogoMinisterio);
         // CONSULTAS PEDIDOS ACCIONES DE PERSONAL

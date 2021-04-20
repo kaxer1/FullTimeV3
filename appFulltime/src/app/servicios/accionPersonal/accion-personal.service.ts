@@ -88,6 +88,10 @@ export class AccionPersonalService {
     return this.http.post(`${environment.url}/accionPersonal/pedido/accion`, datos);
   }
 
+  ActualizarPedidoAccion(datos: any) {
+    return this.http.put(`${environment.url}/accionPersonal/pedido/accion/editar`, datos);
+  }
+
   LogoImagenBase64() {
     return this.http.get<any>(`${environment.url}/accionPersonal/logo/ministerio/codificado`);
   }

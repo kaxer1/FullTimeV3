@@ -86,12 +86,14 @@
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label>Adición a base legal</mat-label>
-                            <input matInput placeholder="" formControlName="baseForm"
-                                (keypress)="IngresarSoloLetras($event)">
+                            <textarea matInput #base maxlength="200" placeholder="Ingresar base legal"
+                                formControlName="baseForm"></textarea>
                             <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
                                 matTooltipPosition="right"
                                 matTooltip="Ingresar una descripción adicional a la base legal">
                                 help_outline</mat-icon>
+                            <mat-hint align="start"><strong>Ingresar hasta 200 caracteres</strong></mat-hint>
+                            <mat-hint align="end">{{base.value.length}} / 200</mat-hint>
                             <mat-error *ngIf="baseF.invalid">Ingrese una información válida</mat-error>
                         </mat-form-field>
                     </div>
