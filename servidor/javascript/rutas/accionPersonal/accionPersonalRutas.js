@@ -18,16 +18,19 @@ class DepartamentoRutas {
         this.router.get('/tipo/accion/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarTipoAccionPersonalId);
         this.router.put('/', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ActualizarTipoAccionPersonal);
         this.router.delete('/eliminar/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EliminarTipoAccionPersonal);
-        /** TABLA PROCESO_PROPUESTO */
-        this.router.get('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarProcesosPropuestos);
-        this.router.post('/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearProcesoPropuesto);
-        this.router.get('/tipo/proceso', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoProceso);
+        this.router.get('/editar/accion/tipo/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarTipoAccionEdicion);
+        /** TABLA TIPO_ACCION */
+        this.router.get('/accion/tipo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarTipoAccion);
+        this.router.post('/accion/tipo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearTipoAccion);
+        this.router.get('/ultimo/accion/tipo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoTipoAccion);
         /** TABLA CARGO_PROPUESTO */
         this.router.get('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarCargoPropuestos);
         this.router.post('/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearCargoPropuesto);
         this.router.get('/tipo/cargo', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoCargoP);
+        this.router.get('/cargo/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarUnCargoPropuestos);
         /** TABLA DECRETO_ACUERDO_RESOL */
         this.router.get('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarDecretos);
+        this.router.get('/decreto/:id', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.ListarUnDecreto);
         this.router.post('/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.CrearDecreto);
         this.router.get('/tipo/decreto', verificarToken_1.TokenValidation, accionPersonalControlador_1.default.EncontrarUltimoDecreto);
         /** TABLA PEDIDO_ACCION_EMPLEADO */

@@ -115,18 +115,37 @@ export class ListarPedidoAccionComponent implements OnInit {
           this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
             this.empleado_3 = data3;
             console.log('4', this.empleado_3)
-            this.restAccion.Buscarprocesos(this.datosPedido[0].id_proceso).subscribe(proc1 => {
-              this.procesos_1 = proc1;
-              console.log('5', this.procesos_1)
-              this.EscribirProcesos(this.procesos_1);
-              this.DefinirColor(this.datosPedido)
+            if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+              this.DefinirColor(this.datosPedido, '');
               this.generarPdf('download');
-            });
-
-
-
-
-            //this.generarPdf('download');
+            } else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+              this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+                this.procesos_1 = proc1;
+                console.log('5', this.procesos_1);
+                this.EscribirProcesosActuales(this.procesos_1);
+                this.EscribirProcesosPropuestos(this.procesos_1);
+                this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                  this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                  this.generarPdf('download');
+                })
+              });
+            }
+            else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+              this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+                this.procesos_1 = proc1;
+                console.log('5', this.procesos_1);
+                this.EscribirProcesosActuales(this.procesos_1);
+                this.EscribirProcesosPropuestos(this.procesos_1);
+                this.DefinirColor(this.datosPedido, '')
+                this.generarPdf('download');
+              });
+            }
+            else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+              this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+                this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+                this.generarPdf('download');
+              })
+            }
           });
         });
       });
@@ -137,39 +156,37 @@ export class ListarPedidoAccionComponent implements OnInit {
   proceso_propuesto: string = '';
   salario_propuesto: string = '';
   num_partida: string = '';
-  DefinirColor(array) {
+  DefinirColor(array, nombre_cargo) {
     this.cargo_propuesto = '';
     this.proceso_propuesto = '';
     this.salario_propuesto = '';
     this.num_partida = '';
     if (array[0].cargo_propuesto != '' && array[0].cargo_propuesto != null) {
-      this.texto_color_cargo = 'black'
+      this.texto_color_cargo = 'black';
+      this.cargo_propuesto = nombre_cargo;
     }
     else {
       this.cargo_propuesto = '----------';
-
     }
     if (array[0].proceso_propuesto != '' && array[0].proceso_propuesto != null) {
-      this.texto_color_proceso = 'black'
+      this.texto_color_empresa = 'black';
+      this.texto_color_proceso = 'black';
     }
     else {
-      this.proceso_propuesto = '----------';
-      array[0].proceso_propuesto = '';
+      this.proceso_padre_p = '----------';
+      this.nombre_procesos_p = '----------';
     }
     if (array[0].salario_propuesto != '' && array[0].salario_propuesto != null) {
-      this.texto_color_salario = 'black'
+      this.texto_color_salario = 'black';
     }
     else {
       this.salario_propuesto = '----------';
-    }
-    if (array[0].proceso_propuesto != '' && array[0].proceso_propuesto != null) {
-      this.texto_color_empresa = 'black'
     }
   }
 
   nombre_procesos_a: string = '';
   proceso_padre_a: string = '';
-  EscribirProcesos(array) {
+  EscribirProcesosActuales(array) {
     this.nombre_procesos_a = '';
     this.proceso_padre_a = '';
     array.map(obj => {
@@ -178,6 +195,21 @@ export class ListarPedidoAccionComponent implements OnInit {
       }
       else {
         this.proceso_padre_a = obj.nombre;
+      }
+    })
+  }
+
+  nombre_procesos_p: string = '';
+  proceso_padre_p: string = '';
+  EscribirProcesosPropuestos(array) {
+    this.nombre_procesos_p = '';
+    this.proceso_padre_p = '';
+    array.map(obj => {
+      if (this.proceso_padre_p != '') {
+        this.nombre_procesos_p = this.nombre_procesos_p + '\n' + obj.nombre;
+      }
+      else {
+        this.proceso_padre_p = obj.nombre;
       }
     })
   }
@@ -967,7 +999,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                     }
                   }],
                   [{
-                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].descrip_partida.toUpperCase() + '\n' + this.datosPedido[0].num_partida, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].tipo.toUpperCase() + '\n' + this.datosPedido[0].num_partida, style: 'itemsTable' }], margin: [20, -12, 0, 0]
                   }],
 
                 ]
@@ -1002,7 +1034,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.proceso_propuesto, style: 'itemsTable', color: this.texto_color_proceso }],
+                                [{ text: this.proceso_padre_p, style: 'itemsTable', color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -1041,7 +1073,7 @@ export class ListarPedidoAccionComponent implements OnInit {
 
                             table: {
                               body: [
-                                [{ text: '\n' + this.proceso_propuesto, style: 'itemsTable', margin: [0, -30, 0, 0], color: this.texto_color_proceso }],
+                                [{ text: '\n' + this.nombre_procesos_p, style: 'itemsTable', margin: [0, -30, 0, 0], color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -1162,7 +1194,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                     }
                   }],
                   [{
-                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].proceso_propuesto+ '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
                   }],
                 ]
               },

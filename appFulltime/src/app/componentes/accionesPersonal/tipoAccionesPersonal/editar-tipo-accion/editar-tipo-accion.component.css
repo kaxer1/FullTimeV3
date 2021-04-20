@@ -10,6 +10,8 @@ mat-form-field {width: 250px; padding: 10px 10px 0px 10px;}
     margin-left: 10px;
 }
 
+#letra { font-size: 14px; }
+
 #idFabrica { font-size: x-small; }
 
 .mat-radio-button ~ .mat-radio-button { margin-left: 18px; }

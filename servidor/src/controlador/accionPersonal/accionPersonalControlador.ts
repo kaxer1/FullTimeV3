@@ -4,9 +4,9 @@ import { ImagenBase64LogosEmpresas } from '../../libs/ImagenCodificacion';
 
 class AccionPersonalControlador {
 
-    /** TABLA PROCESO_PROPUESTO */
-    public async ListarProcesosPropuestos(req: Request, res: Response) {
-        const ACCION = await pool.query('SELECT * FROM proceso_propuesto');
+    /** TABLA TIPO_ACCION */
+    public async ListarTipoAccion(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT * FROM tipo_accion');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
         }
@@ -15,15 +15,15 @@ class AccionPersonalControlador {
         }
     }
 
-    public async CrearProcesoPropuesto(req: Request, res: Response): Promise<void> {
+    public async CrearTipoAccion(req: Request, res: Response): Promise<void> {
         const { descripcion } = req.body;
-        await pool.query('INSERT INTO proceso_propuesto (descripcion) VALUES($1)',
+        await pool.query('INSERT INTO tipo_accion (descripcion) VALUES($1)',
             [descripcion]);
         res.jsonp({ message: 'Registro guardado' });
     }
 
-    public async EncontrarUltimoProceso(req: Request, res: Response) {
-        const ACCION = await pool.query('SELECT MAX(id) AS id FROM proceso_propuesto');
+    public async EncontrarUltimoTipoAccion(req: Request, res: Response) {
+        const ACCION = await pool.query('SELECT MAX(id) AS id FROM tipo_accion');
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
         }
@@ -60,6 +60,17 @@ class AccionPersonalControlador {
         }
     }
 
+    public async ListarUnCargoPropuestos(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT * FROM cargo_propuesto WHERE id = $1', [id]);
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
     /** TABLA DECRETO_ACUERDO_RESOL */
     public async ListarDecretos(req: Request, res: Response) {
         const ACCION = await pool.query('SELECT * FROM decreto_acuerdo_resol');
@@ -88,11 +99,33 @@ class AccionPersonalControlador {
         }
     }
 
+    public async ListarUnDecreto(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT * FROM decreto_acuerdo_resol WHERE id = $1', [id]);
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
     /** TABLA TIPO_ACCION_PERSONAL */
     public async ListarTipoAccionPersonal(req: Request, res: Response) {
-        const ACCION = await pool.query('SELECT tap.id, tap.id_proceso, tap.descripcion, tap.base_legal, ' +
-            'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, cp.nombre ' +
-            'FROM tipo_accion_personal AS tap, cg_procesos AS cp WHERE cp.id = tap.id_proceso');
+        const ACCION = await pool.query('SELECT tap.id, tap.id_tipo, tap.descripcion, tap.base_legal, ' +
+            'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, ta.descripcion AS nombre ' +
+            'FROM tipo_accion_personal AS tap, tipo_accion AS ta WHERE ta.id = tap.id_tipo');
+        if (ACCION.rowCount > 0) {
+            return res.jsonp(ACCION.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'No se encuentran registros' });
+        }
+    }
+
+    public async ListarTipoAccionEdicion(req: Request, res: Response) {
+        const { id } = req.params;
+        const ACCION = await pool.query('SELECT * FROM tipo_accion_personal WHERE NOT id_tipo = $1', [id]);
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
         }
@@ -102,19 +135,19 @@ class AccionPersonalControlador {
     }
 
     public async CrearTipoAccionPersonal(req: Request, res: Response): Promise<void> {
-        const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion,
+        const { id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion,
             tipo_situacion_propuesta } = req.body;
-        await pool.query('INSERT INTO tipo_accion_personal (id_proceso, descripcion, base_legal, tipo_permiso, ' +
+        await pool.query('INSERT INTO tipo_accion_personal (id_tipo, descripcion, base_legal, tipo_permiso, ' +
             'tipo_vacacion, tipo_situacion_propuesta) VALUES($1, $2, $3, $4, $5, $6)',
-            [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta]);
+            [id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta]);
         res.jsonp({ message: 'Autorización se registró con éxito' });
     }
 
     public async EncontrarTipoAccionPersonalId(req: Request, res: Response) {
         const { id } = req.params;
-        const ACCION = await pool.query('SELECT tap.id_proceso, tap.descripcion, tap.base_legal, ' +
-            'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, cp.nombre AS proceso ' +
-            'FROM tipo_accion_personal AS tap, cg_procesos AS cp WHERE tap.id = $1 AND cp.id = tap.id_proceso',
+        const ACCION = await pool.query('SELECT tap.id, tap.id_tipo, tap.descripcion, tap.base_legal, ' +
+            'tap.tipo_permiso, tap.tipo_vacacion, tap.tipo_situacion_propuesta, ta.descripcion AS nombre ' +
+            'FROM tipo_accion_personal AS tap, tipo_accion AS ta WHERE tap.id = $1 AND ta.id = tap.id_tipo',
             [id]);
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -125,10 +158,10 @@ class AccionPersonalControlador {
     }
 
     public async ActualizarTipoAccionPersonal(req: Request, res: Response): Promise<void> {
-        const { id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
-        await pool.query('UPDATE tipo_accion_personal SET id_proceso = $1, descripcion = $2, base_legal = $3, ' +
+        const { id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id } = req.body;
+        await pool.query('UPDATE tipo_accion_personal SET id_tipo = $1, descripcion = $2, base_legal = $3, ' +
             'tipo_permiso = $4, tipo_vacacion = $5, tipo_situacion_propuesta = $6 WHERE id = $7',
-            [id_proceso, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
+            [id_tipo, descripcion, base_legal, tipo_permiso, tipo_vacacion, tipo_situacion_propuesta, id]);
         res.jsonp({ message: 'Registro exitoso' });
     }
 
@@ -189,9 +222,9 @@ class AccionPersonalControlador {
             'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
             'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
             'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-            'ap.salario_propuesto, tap.base_legal, tap.id_proceso ' +
-            'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap ' +
-            'WHERE ap.tipo_accion = tap.id AND ap.id = $1',
+            'ap.salario_propuesto, tap.base_legal, tap.id_tipo, ta.descripcion AS tipo ' +
+            'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap, tipo_accion AS ta ' +
+            'WHERE ap.tipo_accion = tap.id AND ap.id = $1 AND ta.id = tap.id_tipo',
             [id]);
         if (ACCION.rowCount > 0) {
             return res.jsonp(ACCION.rows)
@@ -206,7 +239,7 @@ class AccionPersonalControlador {
             'ap.fec_rige_hasta, ap.identi_accion_p, ap.num_partida, ap.decre_acue_resol, ap.abrev_empl_uno, ' +
             'ap.firma_empl_uno, ap.abrev_empl_dos, ap.firma_empl_dos, ap.adicion_legal, ap.tipo_accion, ' +
             'ap.descrip_partida, ap.cargo_propuesto, ap.proceso_propuesto, ap.num_partida_propuesta, ' +
-            'ap.salario_propuesto, tap.base_legal, tap.id_proceso, e.codigo, e.cedula, e.nombre, e.apellido ' +
+            'ap.salario_propuesto, tap.base_legal, tap.id_tipo, e.codigo, e.cedula, e.nombre, e.apellido ' +
             'FROM accion_personal_empleado AS ap, tipo_accion_personal AS tap, empleados AS e ' +
             'WHERE ap.tipo_accion = tap.id AND e.id = ap.id_empleado');
         if (ACCION.rowCount > 0) {
