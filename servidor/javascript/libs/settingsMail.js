@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.enviarMail = exports.Credenciales = exports.email = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const database_1 = __importDefault(require("../database"));
 exports.email = process.env.EMAIL || '';
 let pass = process.env.PASSWORD || '';
 // export let email: string;
 // let pass: string;
-exports.Credenciales = function (id_empresa) {
+const Credenciales = function (id_empresa) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             let credenciales = yield database_1.default.query('SELECT correo, password_correo FROM cg_empresa WHERE id = $1', [id_empresa]).then(result => {
@@ -33,7 +34,8 @@ exports.Credenciales = function (id_empresa) {
         }
     });
 };
-exports.enviarMail = function (data) {
+exports.Credenciales = Credenciales;
+const enviarMail = function (data) {
     console.log(exports.email, '>>>>>>', pass);
     const smtpTransport = nodemailer_1.default.createTransport({
         service: 'Gmail',
@@ -54,3 +56,4 @@ exports.enviarMail = function (data) {
         }
     }));
 };
+exports.enviarMail = enviarMail;
