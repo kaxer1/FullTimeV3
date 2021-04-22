@@ -532,6 +532,7 @@ export class MainNavComponent implements OnInit {
         icono: 'local_dining',
         children: [
           { name: 'Almuerzos', url: '/listarTipoComidas' },
+          { name: 'Solicitudes', url: '/listaSolicitaComida' },
           { name: 'Planificación', url: '/alimentacion' },
           { name: 'Tickets', url: '/tickets' },
         ]

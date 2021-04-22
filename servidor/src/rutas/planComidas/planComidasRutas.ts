@@ -13,7 +13,10 @@ class DepartamentoRutas {
         /** SOLICITUD DE ALIMENTACIÓN */
         this.router.post('/solicitud', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearSolicitaComida);
         this.router.put('/solicitud', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ActualizarSolicitaComida);
+        this.router.put('/solicitud/estado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ActualizarEstadoSolicitaComida);
         this.router.get('/infoComida/:id_empleado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaIdEmpleado);
+        this.router.get('/infoComida/estado/aprobado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaAprobada);
+        this.router.get('/infoComida/estado/negado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaNull);
 
         /** CONOCER JEFES DE UN DEPARTAMENTO */
         this.router.get('/enviar/notificacion/:id_departamento', TokenValidation, PLAN_COMIDAS_CONTROLADOR.BuscarJefes);

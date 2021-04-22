@@ -149,7 +149,8 @@ export class SolicitaComidaComponent implements OnInit {
       fec_comida: form.fechaPlanificacionForm,
       hora_inicio: form.horaInicioForm,
       hora_fin: form.horaFinForm,
-      extra: form.extraForm
+      extra: form.extraForm,
+      verificar: 'NO'
     };
     this.restPlan.CrearSolicitudComida(datosPlanComida).subscribe(response => {
       this.EnviarNotificaciones(form.fechaPlanificacionForm);

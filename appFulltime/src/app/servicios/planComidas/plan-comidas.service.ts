@@ -20,8 +20,20 @@ export class PlanComidasService {
     return this.http.put(`${environment.url}/planComidas/solicitud`, datos);
   }
 
+  ActualizarEstadoSolicitudComida(datos: any) {
+    return this.http.put(`${environment.url}/planComidas/solicitud/estado`, datos);
+  }
+
   ObtenerSolComidaPorIdEmpleado(id_empleado: number) {
     return this.http.get<any>(`${environment.url}/planComidas/infoComida/${id_empleado}`)
+  }
+
+  ObtenerSolComidaAprobado() {
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/estado/aprobado`)
+  }
+
+  ObtenerSolComidaNegado() {
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/estado/negado`)
   }
 
   /** BUSCAR JEFES */
