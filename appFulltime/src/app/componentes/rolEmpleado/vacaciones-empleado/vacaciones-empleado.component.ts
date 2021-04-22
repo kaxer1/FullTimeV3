@@ -62,6 +62,7 @@ export class VacacionesEmpleadoComponent implements OnInit {
       this.idPerVacacion = datos;
       this.restVacaciones.ObtenerVacacionesPorIdPeriodo(this.idPerVacacion[0].id).subscribe(res => {
         this.vacaciones = res;
+        console.log('datos', this.vacaciones)
       });
     });
   }

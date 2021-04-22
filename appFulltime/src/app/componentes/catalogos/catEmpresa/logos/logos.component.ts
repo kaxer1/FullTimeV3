@@ -21,7 +21,6 @@ export class LogosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data);
     this.restK.LogoEmpresaImagenBase64(this.data).subscribe(res => {
       if (res.imagen === 0) { this.textoBoton = 'Añadir'};
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
@@ -39,9 +38,9 @@ export class LogosComponent implements OnInit {
   ActualizarLogo() {
     let formData = new FormData();
     for (var i = 0; i < this.archivoSubido.length; i++) {
-      console.log(this.archivoSubido[i], this.archivoSubido[i].name)
+      // console.log(this.archivoSubido[i], this.archivoSubido[i].name)
       formData.append("image[]", this.archivoSubido[i], this.archivoSubido[i].name);
-      console.log("image", formData);
+      // console.log("image", formData);
     }
     this.restK.EditarLogoEmpresa(this.data, formData).subscribe(res => {
       this.logo = 'data:image/jpeg;base64,' + res.imagen;

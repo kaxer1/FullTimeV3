@@ -1,34 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import { MomentDateAdapter, MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { VerEmpleadoComponent } from '../../ver-empleado/ver-empleado.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-editar-empleado',
   templateUrl: './editar-empleado.component.html',
-  styleUrls: ['./editar-empleado.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  styleUrls: ['./editar-empleado.component.css']
 })
 
 export class EditarEmpleadoComponent implements OnInit {
 
   nacionalidades: any = [];
   private idNacionalidad: number;
-  private nacionalidadNombre: string;
 
   roles: any = [];
   usuario: any = [];
@@ -41,7 +33,7 @@ export class EditarEmpleadoComponent implements OnInit {
 
   NacionalidadControl = new FormControl('', Validators.required);
   filteredOptions: Observable<string[]>;
-  idEmpleado: string;
+  idEmpleado: number;
 
   constructor(
     private rest: EmpleadoService,
@@ -49,18 +41,17 @@ export class EditarEmpleadoComponent implements OnInit {
     private rol: RolesService,
     private toastr: ToastrService,
     private _formBuilder: FormBuilder,
-    private verEmpleado: VerEmpleadoComponent,
+    private validacionService: ValidacionesService,
     public router: Router,
+    public dialogRef: MatDialogRef<EditarEmpleadoComponent>,
+    @Inject(MAT_DIALOG_DATA) public empleado: any
   ) {
-    var cadena = this.router.url.split('#')[0];
-    this.idEmpleado = cadena.split("/")[2];
+    this.idEmpleado = this.empleado.id;
   }
 
   ngOnInit(): void {
-    this.cargarRoles();
+    console.log(this.empleado);
     this.obtenerNacionalidades();
-    this.obtenerEmpleado();
-    this.VerificarCodigo();
     this.primeroFormGroup = this._formBuilder.group({
       codigoForm: [''],
       nombreForm: ['', Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")],
@@ -82,10 +73,9 @@ export class EditarEmpleadoComponent implements OnInit {
       rolForm: ['', Validators.required],
       userForm: ['', Validators.required],
     });
-    this.filteredOptions = this.NacionalidadControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    
+    this.cargarRoles();
+    this.VerificarCodigo();
   }
 
   datosCodigo: any = [];
@@ -122,45 +112,13 @@ export class EditarEmpleadoComponent implements OnInit {
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionService.IngresarSoloLetras(e);
+  }
+  
+  IngresarSoloNumeros(evt) {
+    return this.validacionService.IngresarSoloNumeros(evt);
   }
 
-  IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
-  }
 
   actualizarEmpleado(form1, form2, form3) {
     // Busca el id de la nacionalidad elegida en el autocompletado
@@ -212,7 +170,7 @@ export class EditarEmpleadoComponent implements OnInit {
     };
 
     if (this.contador === 0) {
-      this.rest.putEmpleadoRest(dataEmpleado, parseInt(this.idEmpleado)).subscribe(response => {
+      this.rest.putEmpleadoRest(dataEmpleado, this.idEmpleado).subscribe(response => {
         if (response.message === 'error') {
           this.toastr.error('El código y cédula del empleado son datos únicos y no deben ser igual al resto de registros.', 'Uno de los datos ingresados es Incorrecto', {
             timeOut: 6000,
@@ -236,7 +194,7 @@ export class EditarEmpleadoComponent implements OnInit {
       usuario: form3.userForm,
       contrasena: this.usuario[0].contrasena,
       id_rol: form3.rolForm,
-      id_empleado: parseInt(this.idEmpleado),
+      id_empleado: this.idEmpleado
     }
     this.user.ActualizarDatos(dataUser).subscribe(data => {
       if (data.message === 'error') {
@@ -251,8 +209,7 @@ export class EditarEmpleadoComponent implements OnInit {
         });
         this.ActualizarCodigo(form1.codigoForm);
         this.limpliarCampos();
-        this.guardar();
-        this.cancelar();
+        this.dialogRef.close(true)
         this.contador = 0;
       }
     });
@@ -278,38 +235,39 @@ export class EditarEmpleadoComponent implements OnInit {
   obtenerNacionalidades() {
     this.rest.getListaNacionalidades().subscribe(res => {
       this.nacionalidades = res;
+      this.obtenerEmpleado();
+      this.filteredOptions = this.NacionalidadControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
     });
   }
 
   obtenerEmpleado() {
-    this.rest.getOneEmpleadoRest(parseInt(this.idEmpleado)).subscribe(res => {
-      // busca el nombre de la nacionalidad de acuerdo al id de la nacionalidad
-      this.nacionalidades.forEach(obj => {
-        if (res[0].id_nacionalidad == obj.id) {
-          console.log(obj);
-          this.nacionalidadNombre = obj.nombre;
-        }
-      });
 
-      this.primeroFormGroup.setValue({
-        codigoForm: res[0].codigo,
-        nombreForm: res[0].nombre,
-        apellidoForm: res[0].apellido,
-        cedulaForm: res[0].cedula,
-        emailForm: res[0].correo,
-        correoAlternativoForm: res[0].mail_alternativo,
-        fechaForm: res[0].fec_nacimiento,
-      });
-      this.segundoFormGroup.setValue({
-        telefonoForm: res[0].telefono,
-        domicilioForm: res[0].domicilio,
-        estadoCivilForm: res[0].esta_civil,
-        generoForm: res[0].genero,
-        estadoForm: res[0].estado,
-        nacionalidadForm: this.nacionalidadNombre,
-      });
+    const { apellido, cedula, codigo, correo, domicilio, esta_civil, estado, fec_nacimiento, genero, 
+      id, id_nacionalidad, mail_alternativo, nombre, telefono } = this.empleado;
+
+    this.primeroFormGroup.setValue({
+      codigoForm: codigo,
+      nombreForm: nombre,
+      apellidoForm: apellido,
+      cedulaForm: cedula,
+      emailForm: correo,
+      correoAlternativoForm: mail_alternativo,
+      fechaForm: fec_nacimiento,
     });
-    this.user.BuscarDatosUser(parseInt(this.idEmpleado)).subscribe(res => {
+
+    this.segundoFormGroup.setValue({
+      telefonoForm: telefono,
+      domicilioForm: domicilio,
+      estadoCivilForm: esta_civil,
+      generoForm: genero,
+      estadoForm: estado,
+      nacionalidadForm: this.nacionalidades.filter(o => { return id_nacionalidad === o.id}).map(o => { return o.nombre })
+    });
+
+    this.user.BuscarDatosUser(id).subscribe(res => {
       this.usuario = [];
       this.usuario = res;
       this.terceroFormGroup.patchValue({
@@ -319,8 +277,8 @@ export class EditarEmpleadoComponent implements OnInit {
     });
   }
 
-  guardar() { this.verEmpleado.verEmpleado(this.idEmpleado); }
-
-  cancelar() { this.verEmpleado.verRegistroEdicion(true); }
+  cancelar() { 
+    this.dialogRef.close(false)
+  }
 
 }

@@ -22,6 +22,7 @@ import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHora
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { EntradasSalidas } from 'src/app/model/timbres.model';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
@@ -234,14 +235,14 @@ export class ReporteEntradaSalidaComponent implements OnInit {
   }
 
   // Método para obtener timbres de entradas y salidas del empleado de acuerdo al horario
-  entradaSalidaHorario: any = [];
-  entradaSalidaPlanificacion: any = [];
-  totalEntradasSalidas: any = [];
+  entradaSalidaHorario: Array<EntradasSalidas> = [];
+  entradaSalidaPlanificacion: Array<EntradasSalidas> = [];
+  totalEntradasSalidas: Array<EntradasSalidas> = [];
   VerEntradasSalidasHorario(id_seleccionado, datosFecha, archivo, form, fechasTotales) {
     this.entradaSalidaHorario = [];
     this.entradaSalidaPlanificacion = [];
     this.totalEntradasSalidas = [];
-    this.restR.ObtenerEntradaSalidaHorario(id_seleccionado, datosFecha).subscribe(dataH => {
+    this.restR.ObtenerEntradaSalidaHorario(id_seleccionado, datosFecha).subscribe((dataH: Array<EntradasSalidas>) => {
       this.entradaSalidaHorario = dataH;
       this.VerEntradasSalidasPlanificacion(this.entradaSalidaHorario, id_seleccionado, archivo, datosFecha, form, fechasTotales);
     }, error => {
@@ -251,7 +252,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Método para obtener timbres de entradas y salidas del empleado de acuerdo a la planificación
   VerEntradasSalidasPlanificacion(entradas_salida_horario: any, id_seleccionado: number, archivo: string, datos_fechas, form, fechasTotales: any) {
-    this.restR.ObtenerEntradaSalidaPlanificacion(id_seleccionado, datos_fechas).subscribe(dataP => {
+    this.restR.ObtenerEntradaSalidaPlanificacion(id_seleccionado, datos_fechas).subscribe((dataP: Array<EntradasSalidas>) => {
       this.entradaSalidaPlanificacion = dataP;
       if (entradas_salida_horario.length != 0) {
         entradas_salida_horario = entradas_salida_horario.concat(this.entradaSalidaPlanificacion);
@@ -822,7 +823,8 @@ export class ReporteEntradaSalidaComponent implements OnInit {
           return (i % 2 === 0) ? '#CCD1D1' : null;
         }
       },
-    };
+    }; 
+
   }
 
   /** GENERACIÓN DE PDF AL NO CONTAR CON REGISTROS */

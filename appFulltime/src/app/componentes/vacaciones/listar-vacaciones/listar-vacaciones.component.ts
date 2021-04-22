@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { VacacionesService } from 'src/app/servicios/vacaciones/vacaciones.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VacacionAutorizacionesComponent } from '../../autorizaciones/vacacion-autorizaciones/vacacion-autorizaciones.component';
+import { EditarVacacionesEmpleadoComponent } from '../../rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
 export interface VacacionesElemento {
   apellido: string;
@@ -178,6 +179,18 @@ export class ListarVacacionesComponent implements OnInit {
   ManejarPaginaAutorizadas(e: PageEvent) {
     this.tamanio_pagina_auto = e.pageSize;
     this.numero_pagina_auto = e.pageIndex + 1;
+  }
+
+  vacaciones_lista: any = [];
+  EditarVacaciones(id) {
+    this.restV.ListarUnaVacacion(id).subscribe(res => {
+      this.vacaciones_lista = res;
+      this.vistaFlotante.open(EditarVacacionesEmpleadoComponent,
+        { width: '900px', data: this.vacaciones_lista[0] }).afterClosed().subscribe(items => {
+          this.ObtenerListaVacaciones();
+          this.ObtenerListaVacacionesAutorizadas();
+        });
+    });
   }
 
 }

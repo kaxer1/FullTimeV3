@@ -1,5 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.restarYear = exports.ObtenerRangoMensual = exports.ObtenerRangoSemanal = exports.restaDias = exports.sumaDias = void 0;
+
 exports.sumaDias = function (fecha, dias) {
     fecha.setUTCHours(fecha.getHours());
     fecha.setDate(fecha.getDate() + dias);

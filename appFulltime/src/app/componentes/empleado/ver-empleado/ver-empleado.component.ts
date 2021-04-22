@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
@@ -62,7 +62,11 @@ import * as L from 'leaflet';
 import { CambiarContrasenaComponent } from '../../rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
 import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.component';
 import { AdministraComidaComponent } from '../../administra-comida/administra-comida.component';
-
+import { EditarEmpleadoComponent } from '../EditarEmpleado/editar-empleado/editar-empleado.component';
+import { environment } from 'src/environments/environment';
+import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
+import { EditarTituloComponent } from '../EditarTituloEmpleado/editar-titulo/editar-titulo.component';
+import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -102,11 +106,6 @@ export class VerEmpleadoComponent implements OnInit {
   idPerVacacion: any = [];
   idPlanHorario: any = [];
 
-  ruta: string;
-  rutaTitulo: string;
-  rutaContrato: string;
-  rutaCargo: string;
-
   /* Items de paginación de la tabla */
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
@@ -123,6 +122,8 @@ export class VerEmpleadoComponent implements OnInit {
 
   HabilitarAccion: boolean = true;
   HabilitarHorasE: boolean = true;
+
+  hipervinculo: string = environment.url;
 
   constructor(
     public restU: UsuarioService,
@@ -142,20 +143,16 @@ export class VerEmpleadoComponent implements OnInit {
     public restAutoridad: AutorizaDepartamentoService,
     public restEmpresa: EmpresaService,
     private restHE: PedHoraExtraService,
-    private restDetallesP: DetallePlanHorarioService,
     private restPlanGeneral: PlanGeneralService,
     private restF: FuncionesService,
     public Main: MainNavComponent,
     public router: Router,
     private toastr: ToastrService,
-    private scriptService: ScriptService
+    private scriptService: ScriptService,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
-    var cadena = this.router.url.split('#')[0];
-    this.ruta = 'http://localhost:4200' + cadena + '#editar';
-    this.rutaTitulo = 'http://localhost:4200' + cadena + '#editarTitulo';
-    this.rutaContrato = 'http://localhost:4200' + cadena + '#editarContrato';
-    this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
+    var cadena = this.router.url.split('#')[0];    
+    // this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
     this.obtenerDiscapacidadEmpleado(this.idEmpleado);
@@ -236,34 +233,52 @@ export class VerEmpleadoComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  btnActualizar: boolean = true;
-  verRegistroEdicion(value: boolean) {
-    this.btnActualizar = value;
+  AbirVentanaEditarEmpleado(dataEmpley) {
+    this.vistaRegistrarDatos.open(EditarEmpleadoComponent, { data: dataEmpley, width: '800px' }).afterClosed().subscribe(result => {
+      if (result) {
+        this.verEmpleado(this.idEmpleado)
+      }
+    })
   }
 
-  btnActualizarTitulo: boolean = true;
-  verTituloEdicion(value: boolean) {
-    this.btnActualizarTitulo = value;
+  AbrirVentanaRegistarTituloEmpleado() {
+    this.vistaRegistrarDatos.open(TituloEmpleadoComponent, { data: this.idEmpleado, width: '360px' }).afterClosed().subscribe(result => {
+      if (result) {
+        this.obtenerTituloEmpleado(parseInt(this.idEmpleado))
+      }
+    })
+  }
+
+  AbrirVentanaEditarTitulo(dataTitulo) {
+    this.vistaRegistrarDatos.open(EditarTituloComponent, { data: dataTitulo, width: '360px' }).afterClosed().subscribe(result => {
+      if (result) {
+        this.obtenerTituloEmpleado(parseInt(this.idEmpleado))
+      }
+    })
+  }
+
+  AbrirVentanaEditarContrato(dataContrato) {
+    this.vistaRegistrarDatos.open(EditarContratoComponent, { data: dataContrato, width: '600px' }).afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+        this.obtenerContratoEmpleadoRegimen()
+      }
+    })
   }
 
   btnActualizarContrato: boolean = true;
   verContratoEdicion(value: boolean) {
     this.btnActualizarContrato = value;
   }
+  
+  idSelectContrato: number;
+  ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
+    this.idSelectContrato = idContratoEmpleado;
+  }
 
   btnActualizarCargo: boolean = true;
   verCargoEdicion(value: boolean) {
     this.btnActualizarCargo = value;
-  }
-
-  idSelect: number;
-  ObtenerIdTituloSeleccionado(idTituloEmpleado: number) {
-    this.idSelect = idTituloEmpleado;
-  }
-
-  idSelectContrato: number;
-  ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
-    this.idSelectContrato = idContratoEmpleado;
   }
 
   idSelectCargo: number;
@@ -280,28 +295,24 @@ export class VerEmpleadoComponent implements OnInit {
   urlImagen: any;
   iniciales: any;
   mostrarImagen: boolean = false;
-  mostrarIniciales: boolean = false;
   textoBoton: string = 'Subir Foto';
-  verEmpleado(idemploy: any) {
+  verEmpleado(idemploy: string) {
     this.empleadoUno = [];
     let idEmpleadoActivo = localStorage.getItem('empleado');
-    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+    this.restEmpleado.getOneEmpleadoRest(parseInt(idemploy)).subscribe(data => {
       console.log(data);
 
       this.empleadoUno = data;
-      this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       var empleado = data[0]['nombre'] + data[0]['apellido'];
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
           this.Main.urlImagen = this.urlImagen;
         }
         this.mostrarImagen = true;
-        this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
       } else {
         this.iniciales = data[0].nombre.split(" ")[0].slice(0, 1) + data[0].apellido.split(" ")[0].slice(0, 1);
-        this.mostrarIniciales = true
         this.mostrarImagen = false;
         this.textoBoton = 'Subir Foto';
       }
@@ -789,7 +800,7 @@ export class VerEmpleadoComponent implements OnInit {
   detallesPlanificacion: any = [];
   BuscarDatosPlanHorario(id_planificacion: any, codigo) {
     this.detallesPlanificacion = [];
-    this.restDetallesP.ObtenerPlanHoraDetallePorIdPlanHorario(id_planificacion).subscribe(datos => {
+    this.restPlanHoraDetalle.ObtenerPlanHoraDetallePorIdPlanHorario(id_planificacion).subscribe(datos => {
       this.detallesPlanificacion = datos;
       console.log('detalles', this.detallesPlanificacion);
       this.detallesPlanificacion.map(obj => {
@@ -943,17 +954,6 @@ export class VerEmpleadoComponent implements OnInit {
         this.mostrarDiscapacidad = false;
         this.editar = 'editar';
       }
-    }
-  }
-
-  /* Lógica de botón para mostrar componente del registro y asignación de título al usuario. */
-  mostrarTit() {
-    if (this.mostrarTitulo == true) {
-      this.mostrarTitulo = false;
-      this.btnTitulo = 'Cerrar'
-    } else {
-      this.mostrarTitulo = true;
-      this.btnTitulo = 'Añadir'
     }
   }
 
@@ -1637,7 +1637,7 @@ export class VerEmpleadoComponent implements OnInit {
 
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

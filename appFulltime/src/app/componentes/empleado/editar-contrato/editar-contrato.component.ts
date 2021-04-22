@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-editar-contrato',
@@ -14,12 +14,11 @@ import { VerEmpleadoComponent } from '../ver-empleado/ver-empleado.component';
 })
 export class EditarContratoComponent implements OnInit {
 
-  @Input() idSelectContrato: number;
-  @Input() idEmpleado: number;
+  idSelectContrato: number;
+  idEmpleado: number;
 
   // Datos Régimen
   regimenLaboral: any = [];
-  UnContrato: any = [];
   seleccionarRegimen;
 
   contador: number = 0;
@@ -55,47 +54,51 @@ export class EditarContratoComponent implements OnInit {
   constructor(
     private restRegimen: RegimenService,
     private rest: EmpleadoService,
-    private verEmpleado: VerEmpleadoComponent,
     private toastr: ToastrService,
+    private dialogRef: MatDialogRef<EditarContratoComponent>,
+    @Inject(MAT_DIALOG_DATA) public contrato: any
   ) { }
 
   ngOnInit(): void {
-    this.regimenLaboral = this.ObtenerRegimen();
-    this.ObtenerContratoSeleccionado(this.idSelectContrato);
+    console.log(this.contrato);
+    this.idSelectContrato = this.contrato.id;
+    this.idEmpleado = this.contrato.id_empleado;
+    this.ObtenerRegimen();
     this.ObtenerTipoContratos();
     this.tipoContrato[this.tipoContrato.length] = { descripcion: "OTRO" };
   }
 
-  ObtenerContratoSeleccionado(id: number) {
-    this.rest.ObtenerUnContrato(id).subscribe(res => {
-      this.UnContrato = res;
-
-      this.ContratoForm.patchValue({
-        idRegimenForm: this.UnContrato.id_regimen,
-        fechaIngresoForm: this.UnContrato.fec_ingreso,
-        fechaSalidaForm: this.UnContrato.fec_salida,
-        controlVacacionesForm: this.UnContrato.vaca_controla,
-        controlAsistenciaForm: this.UnContrato.asis_controla,
-        nombreContratoForm: this.UnContrato.doc_nombre,
-        tipoForm: this.UnContrato.id_tipo_contrato
-      })
-      if (this.UnContrato.doc_nombre != '' && this.UnContrato.doc_nombre != null) {
-        this.HabilitarBtn = true;
-        this.isChecked = true;
-      }
-      else {
-        this.HabilitarBtn = false;
-        this.isChecked = false;
-      }
+  llenarContratoSeleccionado() {
+    const { id_regimen, fec_ingreso, fec_salida, vaca_controla, asis_controla, doc_nombre, id_tipo_contrato } = this.contrato;
+    
+    this.ContratoForm.patchValue({
+      idRegimenForm: id_regimen,
+      fechaIngresoForm: fec_ingreso,
+      fechaSalidaForm: fec_salida,
+      controlVacacionesForm: vaca_controla,
+      controlAsistenciaForm: asis_controla,
+      nombreContratoForm: doc_nombre,
+      tipoForm: id_tipo_contrato
     });
+
+    if (this.contrato.doc_nombre != '' && this.contrato.doc_nombre != null) {
+      this.HabilitarBtn = true;
+      this.isChecked = true;
+    }
+    else {
+      this.HabilitarBtn = false;
+      this.isChecked = false;
+    }
+
   }
 
   ObtenerRegimen() {
     this.regimenLaboral = [];
     this.restRegimen.ConsultarRegimen().subscribe(datos => {
       this.regimenLaboral = datos;
-      this.regimenLaboral[this.regimenLaboral.length] = { nombre: "Seleccionar Régimen" };
-      this.seleccionarRegimen = this.regimenLaboral[this.regimenLaboral.length - 1].nombre;
+      this.llenarContratoSeleccionado();
+      // this.regimenLaboral[this.regimenLaboral.length] = { nombre: "Seleccionar Régimen" };
+      // this.seleccionarRegimen = this.regimenLaboral[this.regimenLaboral.length - 1].nombre;
     })
   }
 
@@ -143,7 +146,7 @@ export class EditarContratoComponent implements OnInit {
           this.rest.BuscarUltimoTiposContratos().subscribe(data => {
             // Buscar id de último cargo ingresado
             datosContrato.id_tipo_contrato = data[0].id;
-            if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
+            if (datosContrato.fec_ingreso === this.contrato.fec_ingreso) {
               this.RegistrarContrato(datosContrato);
             }
             else {
@@ -159,7 +162,7 @@ export class EditarContratoComponent implements OnInit {
       }
     }
     else {
-      if (datosContrato.fec_ingreso === this.UnContrato.fec_ingreso) {
+      if (datosContrato.fec_ingreso === this.contrato.fec_ingreso) {
         this.RegistrarContrato(datosContrato);
       }
       else {
@@ -167,17 +170,13 @@ export class EditarContratoComponent implements OnInit {
       }
     }
 
-
-
-
-
   }
 
   revisarFecha: any = [];
   duplicado: number = 0;
   ValidarDuplicidad(datos, form): any {
     this.revisarFecha = [];
-    this.rest.BuscarContratoEmpleadoRegimen(this.UnContrato.id_empleado).subscribe(data => {
+    this.rest.BuscarContratoEmpleadoRegimen(this.contrato.id_empleado).subscribe(data => {
       this.revisarFecha = data;
       var ingreso = String(moment(datos.fec_ingreso, "YYYY/MM/DD").format("YYYY-MM-DD"));
       console.log('fechas', ingreso, ' ', this.revisarFecha);
@@ -201,8 +200,7 @@ export class EditarContratoComponent implements OnInit {
               timeOut: 6000,
             });
             this.ModificarDocumento();
-            this.verEmpleado.obtenerContratoEmpleadoRegimen();
-            this.cancelar();
+            this.dialogRef.close(datos);
           }, error => {
             this.toastr.error('Operación Fallida', 'Datos de Contrato no fueron actualizados', {
               timeOut: 6000,
@@ -258,8 +256,7 @@ export class EditarContratoComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Datos de Contrato actualizado', {
         timeOut: 6000,
       });
-      this.verEmpleado.obtenerContratoEmpleadoRegimen();
-      this.cancelar();
+      this.dialogRef.close(datos)
     }, error => {
       this.toastr.error('Operación Fallida', 'Datos de Contrato no pudieron ser actualizados', {
         timeOut: 6000,
@@ -283,8 +280,7 @@ export class EditarContratoComponent implements OnInit {
           timeOut: 6000,
         });
         this.CargarContrato(this.idSelectContrato);
-        this.verEmpleado.obtenerContratoEmpleadoRegimen();
-        this.cancelar();
+        this.dialogRef.close(datos)
       }, error => {
         this.toastr.error('Operación Fallida', 'Datos de Contrato no pudieron ser actualizados', {
           timeOut: 6000,
@@ -304,7 +300,10 @@ export class EditarContratoComponent implements OnInit {
     });
   }
 
-  cancelar() { this.verEmpleado.verContratoEdicion(true); }
+  cancelar() {
+    console.log("cancelado");
+    this.dialogRef.close(false)
+  }
 
   VerTiposContratos() {
     this.ContratoForm.patchValue({

@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.beforeTwoDays = exports.beforeFiveDays = exports.Peri_Vacacion_Automatico = void 0;
 const database_1 = __importDefault(require("../database"));
 const settingsMail_1 = require("./settingsMail");
 const HORA_ENVIO_VACACION_AUTOMATICO = 23;

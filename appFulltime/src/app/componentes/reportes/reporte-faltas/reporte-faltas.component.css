@@ -50,12 +50,3 @@ mat-icon { cursor: pointer; }
     background: rgb(52,65,84);
 }
 
-#boton { background-color: rgb(80,87,97); color: white; margin-top: 10px;}
-
-#botones { background-color: rgb(80,87,97); color: white; margin: 10px 10px 10px 10px;}
-
-#ayuda_fec {color: black}
-
-.mat-radio-button ~ .mat-radio-button {
-    margin-left: 16px;
-}

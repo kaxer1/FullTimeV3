@@ -128,6 +128,20 @@ class VacacionesControlador {
     }
   }
 
+  public async ListarVacacionId(req: Request, res: Response) {
+    const { id } = req.params;
+    const VACACIONES = await pool.query('SELECT v.fec_inicio, v.fec_final, fec_ingreso, v.estado, ' +
+      'v.dia_libre, v.dia_laborable, v.legalizado, v.id, v.id_peri_vacacion ' +
+      'FROM vacaciones AS v, peri_vacaciones AS p WHERE v.id_peri_vacacion = p.id AND p.estado = 1 AND ' +
+      'v.id = $1 ORDER BY p.fec_final ASC', [id]);
+    if (VACACIONES.rowCount > 0) {
+      return res.jsonp(VACACIONES.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
   public async ObtenerFechasFeriado(req: Request, res: Response): Promise<any> {
     const { fechaSalida, fechaIngreso } = req.body;
     const FECHAS = await pool.query('SELECT fecha FROM cg_feriados WHERE fecha BETWEEN $1 AND $2 ORDER BY fecha ASC', [fechaSalida, fechaIngreso]);

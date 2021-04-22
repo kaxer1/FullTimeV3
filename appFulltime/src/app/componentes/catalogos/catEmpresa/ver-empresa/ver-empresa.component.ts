@@ -34,7 +34,7 @@ export class VerEmpresaComponent implements OnInit {
 
   //imagen
   logo: string;
-  imagen_default: boolean = false;
+  imagen_default: boolean = true;
   sinCambios: boolean = true;
   conCambios: boolean = true;
   cambiosTodos: boolean = true;
@@ -98,9 +98,9 @@ export class VerEmpresaComponent implements OnInit {
 
   ObtenerLogotipo() {
     this.restK.LogoEmpresaImagenBase64(this.idEmpresa).subscribe(res => {
-      if (res.imagen === 0) { this.imagen_default = false };
+      if (res.imagen === 0) { this.imagen_default = true };
       this.logo = 'data:image/jpeg;base64,' + res.imagen;
-      this.imagen_default = true;
+      this.imagen_default = false;
     })
   }
 

@@ -107,6 +107,7 @@ export interface emp {
     codigo: string | number
     timbres?: Array<tim>,  
     genero?: string | number,
+    fec_final?: string,
     cargo?: string,
     contrato?: string,
     faltas?: Array<faltas>
@@ -293,3 +294,25 @@ interface tipo_hora {
     hora: string
 }
  
+
+/**
+ * INTERFACES DE AYUDA
+ */
+
+export interface rango {
+    fec_inico: string,
+    fec_final: string
+}
+  
+export interface checkOptions {
+    opcion: number, 
+    valor: string
+}
+
+export interface FormCriteriosBusqueda {
+    bool_suc: boolean;
+    bool_dep: boolean;
+    bool_emp: boolean;
+    bool_tab?: boolean;
+    bool_inc?: boolean;
+}

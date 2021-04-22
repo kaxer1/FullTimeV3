@@ -52,6 +52,10 @@ export class PermisosService {
     return this.http.get(`${environment.url}/empleadoPermiso/${id}`)
   }
 
+  ObtenerUnPermisoEditar(id: number) {
+    return this.http.get(`${environment.url}/empleadoPermiso/permiso/editar/${id}`)
+  }
+
   SubirArchivoRespaldo(formData, id: number) {
     return this.http.put(`${environment.url}/empleadoPermiso/${id}/documento`, formData)
   }

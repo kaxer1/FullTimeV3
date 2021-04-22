@@ -1,10 +1,6 @@
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { MatRadioChange } from '@angular/material/radio';
 import { ToastrService } from 'ngx-toastr';
 import { ITableEmpleados, tim } from 'src/app/model/reportes.model';
 import { ReportesAsistenciasService } from 'src/app/servicios/reportes/reportes-asistencias.service';
@@ -15,35 +11,27 @@ import * as moment from 'moment';
 import * as xlsx from 'xlsx';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { IReporteAtrasos } from 'src/app/model/reportes.model';
+import { ReportesService } from '../../../servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-atrasos-multiples',
   templateUrl: './reporte-atrasos-multiples.component.html',
-  styleUrls: ['./reporte-atrasos-multiples.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  styleUrls: ['./reporte-atrasos-multiples.component.css']
 })
-export class ReporteAtrasosMultiplesComponent implements OnInit {
+export class ReporteAtrasosMultiplesComponent implements OnInit, OnDestroy {
 
-  fec_inicio_mes = new FormControl('', Validators.required);
-  fec_final_mes = new FormControl('', Validators.required);
-  
-  public fechasForm = new FormGroup({
-    fec_inicio: this.fec_inicio_mes,
-    fec_final: this.fec_final_mes
-  })
+  get rangoFechas () { return this.reporteService.rangoFechas; }
+
+  get opcion () { return this.reporteService.opcion; }
+
+  get bool() { return this.reporteService.criteriosBusqueda; }
   
   respuesta: any [];
   sucursales: any = [];
   departamentos: any = [];
   empleados: any = [];
-  bool_suc: boolean = false;
-  bool_dep: boolean = false;
-  bool_emp: boolean = false;
+ 
   data_pdf: any = [];
 
   selectionSuc = new SelectionModel<ITableEmpleados>(true, []);
@@ -54,21 +42,20 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+  
+  get filtroNombreSuc() { return this.reporteService.filtroNombreSuc }
+  
+  get filtroNombreDep() { return this.reporteService.filtroNombreDep }
 
-  codigo = new FormControl('');
-  cedula = new FormControl('', [Validators.minLength(2)]);
-  nombre_emp = new FormControl('', [Validators.minLength(2)]);
-  nombre_dep = new FormControl('', [Validators.minLength(2)]);
-  nombre_suc = new FormControl('', [Validators.minLength(2)]);
+  get filtroCodigo() { return this.reporteService.filtroCodigo };
+  get filtroCedula() { return this.reporteService.filtroCedula };
+  get filtroNombreEmp() { return this.reporteService.filtroNombreEmp };
 
-  filtroCodigo: number;
-  filtroCedula: '';
-  filtroNombreEmp: '';
-  filtroNombreDep: '';
-  filtroNombreSuc: '';
   
   constructor(
     private toastr: ToastrService,
+    private reporteService: ReportesService,
+    private validacionService: ValidacionesService,
     private R_asistencias: ReportesAsistenciasService,
     private restEmpre: EmpresaService
   ) { 
@@ -117,58 +104,11 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     })
   }
 
-  opcion: number;
-  BuscarPorTipo(e: MatRadioChange) {
-    this.opcion = parseInt(e.value);
-    switch (e.value) {
-      case '1':
-        this.bool_suc = true; this.bool_dep = false; this.bool_emp = false;
-      break;
-      case '2':
-        this.bool_suc = false; this.bool_dep = true; this.bool_emp = false;
-      break;
-      case '3':
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = true;
-      break;
-      default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
-        break;
-    }
-  }
-
-  /**
-   * Funciones para validar los campos y las fechas de rangos del reporte
-   */
-
-  f_inicio_req: string = '';
-  f_final_req: string = '';
-  habilitar: boolean = false;
-  estilo: any = { 'visibility': 'hidden' };
-  ValidarRangofechas(form) {
-    var f_i = new Date(form.fec_inicio)
-    var f_f = new Date(form.fec_final)
-
-    if (f_i < f_f) {
-      this.toastr.success('Fechas validas','', {
-        timeOut: 6000,
-      });
-      this.f_inicio_req = f_i.toJSON().split('T')[0];
-      this.f_final_req = f_f.toJSON().split('T')[0];
-      this.habilitar = true;
-      this.estilo = { 'visibility': 'visible' };
-    } else if (f_i > f_f) {
-      this.toastr.info('Fecha final es menor a la fecha inicial','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    } else if (f_i.toLocaleDateString() === f_f.toLocaleDateString()) {
-      this.toastr.info('Fecha inicial es igual a la fecha final','', {
-        timeOut: 6000,
-      });
-      this.fechasForm.reset();
-    }
-    // console.log(f_i.toJSON());
-    // console.log(f_f.toJSON());
+  ngOnDestroy(): void {
+    this.respuesta = [];
+    this.sucursales = [];
+    this.departamentos = [];
+    this.empleados = [];
   }
 
   /**
@@ -176,8 +116,8 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
    */
   validacionReporte(action) {
 
-    if (this.f_inicio_req === '' || this.f_final_req === '') return this.toastr.error('Primero valide fechas de busqueda') 
-    if (this.bool_suc === false && this.bool_dep === false && this.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
+    if (this.rangoFechas.fec_inico === '' || this.rangoFechas.fec_final === '') return this.toastr.error('Primero valide fechas de busqueda') 
+    if (this.bool.bool_suc === false && this.bool.bool_dep === false && this.bool.bool_emp === false) return this.toastr.error('Seleccione un criterio de búsqueda') 
 
     switch (this.opcion) {
       case 1:
@@ -193,7 +133,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         this.ModelarEmpleados(action);
       break;
       default:
-        this.bool_suc = false; this.bool_dep = false; this.bool_emp = false;
+        this.reporteService.DefaultFormCriterios()
         break;
     }
   }
@@ -211,7 +151,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
 
     console.log('SUCURSAL', suc);
     this.data_pdf = []
-    this.R_asistencias.ReporteAtrasosMultiples(suc, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteAtrasosMultiples(suc, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -240,7 +180,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     });
     console.log('DEPARTAMENTOS', dep);
     this.data_pdf = []
-    this.R_asistencias.ReporteAtrasosMultiples(dep, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteAtrasosMultiples(dep, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -278,7 +218,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     
     console.log('EMPLEADOS', emp);
     this.data_pdf = []
-    this.R_asistencias.ReporteAtrasosMultiples(emp, this.f_inicio_req, this.f_final_req).subscribe(res => {
+    this.R_asistencias.ReporteAtrasosMultiples(emp, this.rangoFechas.fec_inico, this.rangoFechas.fec_final).subscribe(res => {
       this.data_pdf = res
       console.log(this.data_pdf);
       switch (accion) {
@@ -383,7 +323,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         { image: this.logo, width: 100, margin: [10, -25, 0, 5] },
         { text: localStorage.getItem('name_empresa'), bold: true, fontSize: 21, alignment: 'center', margin: [0, -30, 0, 10] },
         { text: 'Reporte - Atrasos Justificados y No Justificados', bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5] },
-        { text: 'Periodo del: ' + this.f_inicio_req + " al " + this.f_final_req, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5]  },
+        { text: 'Periodo del: ' + this.rangoFechas.fec_inico + " al " +  this.rangoFechas.fec_final, bold: true, fontSize: 12, alignment: 'center', margin: [0, 5, 0, 5]  },
         ...this.impresionDatosPDF(this.data_pdf).map(obj => {
           return obj
         })
@@ -433,7 +373,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
 
     data.forEach((obj: IReporteAtrasos) => {
       arr_total_suc = []
-      if (this.bool_suc === true || this.bool_dep === true) {
+      if (this.bool.bool_suc === true || this.bool.bool_dep === true) {
         n.push({
           table: {
             widths: ['*', '*'],
@@ -460,7 +400,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         arr_total_dep = [];
 
         // LA CABECERA CUANDO SE GENERA EL PDF POR DEPARTAMENTOS
-        if (this.bool_dep === true) {
+        if (this.bool.bool_dep === true) {
           let arr_reg = obj1.empleado.map(o => { return o.timbres.length})
           let reg = this.SumarRegistros(arr_reg);
           n.push({
@@ -585,7 +525,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
         });
 
         // SI GENERA PFD POR DEPARTAMENTO SE IMPRIME ESTE TOTAL AL FINAL DE CADA DEPARTAMENTO
-        if (this.bool_dep === true) {
+        if (this.bool.bool_dep === true) {
           let suma_dep = this.SumarValoresArray(arr_total_dep)
           let suma_dep_HHMM = this.HorasDecimalToHHMM(parseFloat(suma_dep))
           n.push({
@@ -622,7 +562,7 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
       })
 
       // SI GENERA PFD POR SUCURSAL SE IMPRIME ESTE TOTAL AL FINAL DE CADA SUCURSAL
-      if (this.bool_suc === true) {
+      if (this.bool.bool_suc === true) {
         let suma_suc = this.SumarValoresArray(arr_total_suc)
         let suma_suc_HHMM = this.HorasDecimalToHHMM(parseFloat(suma_suc))
         n.push({
@@ -804,69 +744,16 @@ export class ReporteAtrasosMultiplesComponent implements OnInit {
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  limpiarCamposRango() {
-    this.fechasForm.reset();
-    this.habilitar = false;
-    this.estilo = { 'visibility': 'hidden' };
-  }
-
   /**
    * METODOS PARA CONTROLAR INGRESO DE LETRAS
    */
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionService.IngresarSoloLetras(e)
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
-  }
-
-  limpiarCampos() {
-    if (this.bool_emp) {
-      this.codigo.reset();
-      this.cedula.reset();
-      this.nombre_emp.reset();
-    }
-    if (this.bool_dep) {
-      this.nombre_dep.reset();
-    }
-    if (this.bool_suc) {
-      this.nombre_suc.reset();
-    }
+    return this.validacionService.IngresarSoloNumeros(evt)
   }
 
 }

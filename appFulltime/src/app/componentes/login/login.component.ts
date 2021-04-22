@@ -106,6 +106,10 @@ export class LoginComponent implements OnInit {
   }
 
   ValidarUsuario(form) {
+
+    if (form.usuarioF.trim().length === 0) return ;
+    if (form.passwordF.trim().length === 0) return ;
+    
     var local: boolean;
     this.intentos = this.intentos + 1;
     var f = moment();

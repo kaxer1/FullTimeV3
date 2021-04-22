@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizacionesComponent } from 'src/app/componentes/autorizaciones/autorizaciones/autorizaciones.component';
+import { EditarPermisoEmpleadoComponent } from '../../rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 export interface PermisosElemento {
   apellido: string;
@@ -55,6 +57,8 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
 
   constructor(
     private restP: PermisosService,
+    public restEmpleado: EmpleadoService,
+    public restPermiso: PermisosService,
     private vistaFlotante: MatDialog,
   ) { }
 
@@ -71,6 +75,7 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
   obtenerPermisos() {
     this.restP.obtenerAllPermisos().subscribe(res => {
       this.permisos = res;
+      console.log('permisos', this.permisos)
       for (var i = 0; i <= this.permisos.length - 1; i++) {
         if (this.permisos[i].estado === 1) {
           this.permisos[i].estado = 'Pendiente';
@@ -83,6 +88,22 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
         this.lista_permisos = true;
       }
     });
+  }
+  permisosTotales: any;
+  EditarPermiso(id, id_empl) {
+    /* Método para imprimir datos del permiso */
+    this.permisosTotales = [];
+    this.restPermiso.ObtenerUnPermisoEditar(id).subscribe(datos => {
+      this.permisosTotales = datos;
+      this.vistaFlotante.open(EditarPermisoEmpleadoComponent, {
+        width: '1200px',
+        data: { dataPermiso: this.permisosTotales[0], id_empleado: parseInt(id_empl) }
+      }).afterClosed().subscribe(items => {
+        this.obtenerPermisos();
+        this.ObtenerPermisosAutorizados();
+      });
+    })
+
   }
 
   /** Si el número de elementos seleccionados coincide con el número total de filas. */

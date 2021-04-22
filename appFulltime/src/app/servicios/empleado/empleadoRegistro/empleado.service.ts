@@ -21,6 +21,11 @@ export class EmpleadoService {
     return this.http.get(`${environment.url}/empleado`);
   }
 
+  // BÚSQUEDA DE EMPLEADOS INGRESANDO NOMBRE Y APELLIDO 
+  BuscarEmpleadoNombre(data: any) {
+    return this.http.post(`${environment.url}/empleado/buscar/informacion`, data);
+  }
+
   getBuscadorEmpledosRest() {
     return this.http.get<any>(`${environment.url}/empleado/buscador-empl`);
   }

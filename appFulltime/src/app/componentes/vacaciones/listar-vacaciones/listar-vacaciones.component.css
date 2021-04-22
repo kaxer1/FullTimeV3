@@ -23,9 +23,9 @@ p { font-size: x-small; }
 
 td { padding-top: 10px; text-align: center; }
 
-.fas { color:green; margin-right: 20px; cursor: pointer; }
+.fas { color:green; margin-right: 15px; cursor: pointer; }
 
-.far { color:red; margin-right: 20px; cursor: pointer; }
+.far { color:red; margin-right: 15px; cursor: pointer; }
 
 table { width: 100%; font-size: 14px; }
 
