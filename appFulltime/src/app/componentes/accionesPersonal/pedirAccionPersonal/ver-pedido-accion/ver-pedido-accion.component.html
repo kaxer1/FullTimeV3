@@ -40,8 +40,8 @@
                         {{d.adicion_legal}}</label>
                     <br>
                     <label class="col-sm col-form-label"><b>Firman:</b>
-                        <br>{{cargoH.toUpperCase()}} {{d.abrev_empl_uno}} {{datoEmpleadoH.toUpperCase()}}
-                        <br>{{cargoG.toUpperCase()}} {{d.abrev_empl_dos}} {{datoEmpleadoG.toUpperCase()}}</label>
+                        <br><b>{{cargoH.toUpperCase()}} {{d.abrev_empl_uno}}</b> {{datoEmpleadoH.toUpperCase()}}
+                        <br><b>{{cargoG.toUpperCase()}} {{d.abrev_empl_dos}}</b> {{datoEmpleadoG.toUpperCase()}}</label>
                     <br>
                     <div style="text-align: right;">
                         <i id="editarF" [routerLink]="['/editarPedido/',d.id]" matSuffix matTooltipClass="color-tooltip"
