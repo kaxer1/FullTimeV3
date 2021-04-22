@@ -207,6 +207,21 @@ class AccionPersonalControlador {
             res.jsonp({ message: 'Registro realizado con éxito' });
         });
     }
+    ActualizarPedidoAccionPersonal(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida, decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal, tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta, salario_propuesto, id } = req.body;
+            yield database_1.default.query('UPDATE accion_personal_empleado SET id_empleado = $1, fec_creacion = $2, ' +
+                'fec_rige_desde = $3, fec_rige_hasta = $4, identi_accion_p = $5, num_partida = $6, ' +
+                'decre_acue_resol = $7, abrev_empl_uno = $8, firma_empl_uno = $9, abrev_empl_dos = $10, ' +
+                'firma_empl_dos = $11, adicion_legal = $12, tipo_accion = $13, descrip_partida = $14, ' +
+                'cargo_propuesto = $15, proceso_propuesto = $16, num_partida_propuesta = $17, ' +
+                'salario_propuesto = $18 WHERE id = $19', [id_empleado, fec_creacion, fec_rige_desde, fec_rige_hasta, identi_accion_p, num_partida,
+                decre_acue_resol, abrev_empl_uno, firma_empl_uno, abrev_empl_dos, firma_empl_dos, adicion_legal,
+                tipo_accion, descrip_partida, cargo_propuesto, proceso_propuesto, num_partida_propuesta,
+                salario_propuesto, id]);
+            res.jsonp({ message: 'Registro realizado con éxito' });
+        });
+    }
     verLogoMinisterio(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const file_name = 'ministerio_trabajo.png';

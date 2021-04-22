@@ -62,7 +62,10 @@ class EmpleadoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo } = req.body;
-                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
+                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, ' +
+                    'fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ' +
+                    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellido, nombre, esta_civil,
+                    genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
                 const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
                 const idEmployGuardado = oneEmpley.rows[0].id;
                 res.jsonp({ message: 'Empleado guardado', id: idEmployGuardado });
@@ -77,7 +80,11 @@ class EmpleadoControlador {
             try {
                 const id = req.params.id;
                 const { cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo } = req.body;
-                yield database_1.default.query('UPDATE empleados SET cedula = $2, apellido = $3, nombre = $4, esta_civil = $5, genero = $6, correo = $7, fec_nacimiento = $8, estado = $9, mail_alternativo = $10, domicilio = $11, telefono = $12, id_nacionalidad = $13, codigo = $14 WHERE id = $1 ', [id, cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo]);
+                yield database_1.default.query('UPDATE empleados SET cedula = $2, apellido = $3, nombre = $4, esta_civil = $5, ' +
+                    'genero = $6, correo = $7, fec_nacimiento = $8, estado = $9, mail_alternativo = $10, domicilio = $11, ' +
+                    'telefono = $12, id_nacionalidad = $13, codigo = $14 WHERE id = $1 ', [id, cedula, apellido, nombre,
+                    esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono,
+                    id_nacionalidad, codigo]);
                 res.jsonp({ message: 'Empleado Actualizado' });
             }
             catch (error) {
@@ -128,6 +135,10 @@ class EmpleadoControlador {
             var contarCedula = 0;
             var contarUsuario = 0;
             var contarRol = 0;
+            var contarECivil = 0;
+            var contarGenero = 0;
+            var contarEstado = 0;
+            var contarNacionalidad = 0;
             var contarLlenos = 0;
             var contador = 1;
             const VALOR = yield database_1.default.query('SELECT * FROM codigo');
@@ -149,6 +160,25 @@ class EmpleadoControlador {
                 const VERIFICAR_ROL = yield database_1.default.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
                 if (VERIFICAR_ROL.rowCount > 0) {
                     contarRol = contarRol + 1;
+                }
+                //Verificar que el estado civil exista dentro del sistema
+                if (estado_civil.toUpperCase() === 'SOLTERA/A' || estado_civil.toUpperCase() === 'UNION DE HECHO' ||
+                    estado_civil.toUpperCase() === 'CASADO/A' || estado_civil.toUpperCase() === 'DIVORCIADO/A' ||
+                    estado_civil.toUpperCase() === 'VIUDO/A') {
+                    contarECivil = contarECivil + 1;
+                }
+                //Verificar que el genero exista dentro del sistema
+                if (genero.toUpperCase() === 'MASCULINO' || genero.toUpperCase() === 'FEMENINO') {
+                    contarGenero = contarGenero + 1;
+                }
+                //Verificar que el estado exista dentro del sistema
+                if (estado.toUpperCase() === 'ACTIVO' || estado.toUpperCase() === 'INACTIVO') {
+                    contarEstado = contarEstado + 1;
+                }
+                //Verificar que la nacionalidad exista dentro del sistema
+                const VERIFICAR_NACIONALIDAD = yield database_1.default.query('SELECT * FROM nacionalidades WHERE UPPER(nombre) = $1', [nacionalidad.toUpperCase()]);
+                if (VERIFICAR_NACIONALIDAD.rowCount > 0) {
+                    contarNacionalidad = contarNacionalidad + 1;
                 }
                 // Verificar que el código no se duplique en los registros
                 codigo = codigo + 1;
@@ -173,7 +203,9 @@ class EmpleadoControlador {
                 if (contador === plantilla.length) {
                     if (contarCodigo === plantilla.length && contarCedula === plantilla.length &&
                         contarUsuario === plantilla.length && contarLlenos === plantilla.length &&
-                        contarRol === plantilla.length) {
+                        contarRol === plantilla.length && contarECivil === plantilla.length &&
+                        contarGenero === plantilla.length && contarEstado === plantilla.length &&
+                        contarNacionalidad === plantilla.length) {
                         return res.jsonp({ message: 'correcto' });
                     }
                     else {
@@ -275,17 +307,58 @@ class EmpleadoControlador {
                 const contrasena = md5.appendStr(data.contrasena).end();
                 // Datos que se leen de la plantilla ingresada
                 const { cedula, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+                //Obtener id del estado_civil
+                var id_estado_civil = 0;
+                if (estado_civil.toUpperCase() === 'SOLTERA/A') {
+                    id_estado_civil = 1;
+                }
+                else if (estado_civil.toUpperCase() === 'UNION DE HECHO') {
+                    id_estado_civil = 2;
+                }
+                else if (estado_civil.toUpperCase() === 'CASADO/A') {
+                    id_estado_civil = 3;
+                }
+                else if (estado_civil.toUpperCase() === 'DIVORCIADO/A') {
+                    id_estado_civil = 4;
+                }
+                else if (estado_civil.toUpperCase() === 'VIUDO/A') {
+                    id_estado_civil = 5;
+                }
+                //Obtener id del genero
+                var id_genero = 0;
+                if (genero.toUpperCase() === 'MASCULINO') {
+                    id_genero = 1;
+                }
+                else if (genero.toUpperCase() === 'FEMENINO') {
+                    id_genero = 2;
+                }
+                //OBTENER ID DEL ESTADO
+                var id_estado = 0;
+                if (estado.toUpperCase() === 'ACTIVO') {
+                    id_estado = 1;
+                }
+                else if (estado.toUpperCase() === 'INACTIVO') {
+                    id_estado = 2;
+                }
+                //Obtener id de la nacionalidad
+                const id_nacionalidad = yield database_1.default.query('SELECT * FROM nacionalidades WHERE UPPER(nombre) = $1', [nacionalidad.toUpperCase()]);
                 //Obtener id del rol
                 const id_rol = yield database_1.default.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
                 // Incrementar el valor del código
                 codigo = codigo + 1;
                 // Registro de nuevo empleado
-                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+                yield database_1.default.query('INSERT INTO empleados (cedula, apellido, nombre, esta_civil, genero, correo, ' +
+                    'fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ' +
+                    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE,
+                    id_estado_civil, id_genero, correo, fec_nacimiento, id_estado,
+                    mail_alternativo, domicilio, telefono, id_nacionalidad.rows[0]['id'], codigo]);
                 // Obtener el id del empleado ingresado
                 const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
                 const id_empleado = oneEmpley.rows[0].id;
                 // Registro de los datos de usuario
-                yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+                yield database_1.default.query('INSERT INTO usuarios (usuario, contrasena, estado, id_rol, id_empleado, app_habilita) ' +
+                    'VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'],
+                    id_empleado, app_habilita]);
                 if (contador === plantilla.length) {
                     console.log('codigo_ver', codigo, VALOR.rows[0].id);
                     // Actualización del código
@@ -311,6 +384,10 @@ class EmpleadoControlador {
             var contarCedula = 0;
             var contarUsuario = 0;
             var contarRol = 0;
+            var contarECivil = 0;
+            var contarGenero = 0;
+            var contarEstado = 0;
+            var contarNacionalidad = 0;
             var contarLlenos = 0;
             var contador = 1;
             plantilla.forEach((data) => __awaiter(this, void 0, void 0, function* () {
@@ -336,6 +413,25 @@ class EmpleadoControlador {
                 if (VERIFICAR_ROL.rowCount > 0) {
                     contarRol = contarRol + 1;
                 }
+                //Verificar que el estado civil exista dentro del sistema
+                if (estado_civil.toUpperCase() === 'SOLTERA/A' || estado_civil.toUpperCase() === 'UNION DE HECHO' ||
+                    estado_civil.toUpperCase() === 'CASADO/A' || estado_civil.toUpperCase() === 'DIVORCIADO/A' ||
+                    estado_civil.toUpperCase() === 'VIUDO/A') {
+                    contarECivil = contarECivil + 1;
+                }
+                //Verificar que el genero exista dentro del sistema
+                if (genero.toUpperCase() === 'MASCULINO' || genero.toUpperCase() === 'FEMENINO') {
+                    contarGenero = contarGenero + 1;
+                }
+                //Verificar que el estado exista dentro del sistema
+                if (estado.toUpperCase() === 'ACTIVO' || estado.toUpperCase() === 'INACTIVO') {
+                    contarEstado = contarEstado + 1;
+                }
+                //Verificar que la nacionalidad exista dentro del sistema
+                const VERIFICAR_NACIONALIDAD = yield database_1.default.query('SELECT * FROM nacionalidades WHERE UPPER(nombre) = $1', [nacionalidad.toUpperCase()]);
+                if (VERIFICAR_NACIONALIDAD.rowCount > 0) {
+                    contarNacionalidad = contarNacionalidad + 1;
+                }
                 //Verificar que los datos no esten vacios a excepción del dato mail_alternativo
                 if (cedula != undefined && estado_civil != undefined && genero != undefined && correo != undefined &&
                     fec_nacimiento != undefined && estado != undefined && domicilio != undefined && telefono != undefined &&
@@ -352,7 +448,9 @@ class EmpleadoControlador {
                 if (contador === plantilla.length) {
                     if (contarCodigo === plantilla.length && contarCedula === plantilla.length &&
                         contarUsuario === plantilla.length && contarLlenos === plantilla.length &&
-                        contarRol === plantilla.length) {
+                        contarRol === plantilla.length && contarECivil === plantilla.length &&
+                        contarGenero === plantilla.length && contarEstado === plantilla.length &&
+                        contarNacionalidad === plantilla.length) {
                         return res.jsonp({ message: 'correcto' });
                     }
                     else {
@@ -409,7 +507,8 @@ class EmpleadoControlador {
             console.log('usuario_data', contarUsuarioData, plantilla.length, contador_arreglo);
             console.log('codigo_data', contarCodigoData, plantilla.length, contador_arreglo);
             if ((contador_arreglo - 1) === plantilla.length) {
-                if (contarCedulaData === plantilla.length && contarUsuarioData === plantilla.length && contarCodigoData === plantilla.length) {
+                if (contarCedulaData === plantilla.length && contarUsuarioData === plantilla.length &&
+                    contarCodigoData === plantilla.length) {
                     return res.jsonp({ message: 'correcto' });
                 }
                 else {
@@ -458,15 +557,56 @@ class EmpleadoControlador {
                 const contrasena = md5.appendStr(data.contrasena).end();
                 // Datos que se leen de la plantilla ingresada
                 const { cedula, codigo, estado_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, nacionalidad, usuario, estado_user, rol, app_habilita } = data;
+                //Obtener id del estado_civil
+                var id_estado_civil = 0;
+                if (estado_civil.toUpperCase() === 'SOLTERA/A') {
+                    id_estado_civil = 1;
+                }
+                else if (estado_civil.toUpperCase() === 'UNION DE HECHO') {
+                    id_estado_civil = 2;
+                }
+                else if (estado_civil.toUpperCase() === 'CASADO/A') {
+                    id_estado_civil = 3;
+                }
+                else if (estado_civil.toUpperCase() === 'DIVORCIADO/A') {
+                    id_estado_civil = 4;
+                }
+                else if (estado_civil.toUpperCase() === 'VIUDO/A') {
+                    id_estado_civil = 5;
+                }
+                //Obtener id del genero
+                var id_genero = 0;
+                if (genero.toUpperCase() === 'MASCULINO') {
+                    id_genero = 1;
+                }
+                else if (genero.toUpperCase() === 'FEMENINO') {
+                    id_genero = 2;
+                }
+                //OBTENER ID DEL ESTADO
+                var id_estado = 0;
+                if (estado.toUpperCase() === 'ACTIVO') {
+                    id_estado = 1;
+                }
+                else if (estado.toUpperCase() === 'INACTIVO') {
+                    id_estado = 2;
+                }
+                //Obtener id de la nacionalidad
+                const id_nacionalidad = yield database_1.default.query('SELECT * FROM nacionalidades WHERE UPPER(nombre) = $1', [nacionalidad.toUpperCase()]);
                 //Obtener id del rol
                 const id_rol = yield database_1.default.query('SELECT * FROM cg_roles WHERE UPPER(nombre) = $1', [rol.toUpperCase()]);
                 // Registro de nuevo empleado
-                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE, estado_civil.split(' ')[0], genero.split(' ')[0], correo, fec_nacimiento, estado.split(' ')[0], mail_alternativo, domicilio, telefono, nacionalidad.split(' ')[0], codigo]);
+                yield database_1.default.query('INSERT INTO empleados ( cedula, apellido, nombre, esta_civil, genero, correo, ' +
+                    'fec_nacimiento, estado, mail_alternativo, domicilio, telefono, id_nacionalidad, codigo) VALUES ' +
+                    '($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [cedula, apellidoE, nombreE,
+                    id_estado_civil, id_genero, correo, fec_nacimiento, id_estado,
+                    mail_alternativo, domicilio, telefono, id_nacionalidad.rows[0]['id'], codigo]);
                 // Obtener el id del empleado ingresado
                 const oneEmpley = yield database_1.default.query('SELECT id FROM empleados WHERE cedula = $1', [cedula]);
                 const id_empleado = oneEmpley.rows[0].id;
                 // Registro de los datos de usuario
-                yield database_1.default.query('INSERT INTO usuarios ( usuario, contrasena, estado, id_rol, id_empleado, app_habilita ) VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado, app_habilita]);
+                yield database_1.default.query('INSERT INTO usuarios (usuario, contrasena, estado, id_rol, id_empleado, app_habilita) ' +
+                    'VALUES ($1, $2, $3, $4, $5, $6)', [usuario, contrasena, estado_user, id_rol.rows[0]['id'], id_empleado,
+                    app_habilita]);
                 if (contador === plantilla.length) {
                     // Actualización del código
                     yield database_1.default.query('UPDATE codigo SET valor = null WHERE id = 1');
@@ -488,7 +628,8 @@ class EmpleadoControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id_empleado_titulo;
             const { observacion, id_titulo } = req.body;
-            yield database_1.default.query('UPDATE empl_titulos SET observacion = $1, id_titulo = $2 WHERE id = $3 ', [observacion, id_titulo, id]);
+            yield database_1.default.query('UPDATE empl_titulos SET observacion = $1, id_titulo = $2 WHERE id = $3 ', [observacion,
+                id_titulo, id]);
             res.jsonp({ message: 'Titulo del empleado Actualizado' });
         });
     }
@@ -502,7 +643,9 @@ class EmpleadoControlador {
     getTitulosDelEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
-            const unEmpleadoTitulo = yield database_1.default.query('SELECT et.id, et.observacion As observaciones, et.id_titulo, et.id_empleado, ct.nombre, nt.nombre as nivel FROM empl_titulos AS et, cg_titulos AS ct, nivel_titulo AS nt WHERE et.id_empleado = $1 and et.id_titulo = ct.id and ct.id_nivel = nt.id ORDER BY id', [id_empleado]);
+            const unEmpleadoTitulo = yield database_1.default.query('SELECT et.id, et.observacion As observaciones, et.id_titulo, ' +
+                'et.id_empleado, ct.nombre, nt.nombre as nivel FROM empl_titulos AS et, cg_titulos AS ct, ' +
+                'nivel_titulo AS nt WHERE et.id_empleado = $1 and et.id_titulo = ct.id and ct.id_nivel = nt.id ORDER BY id', [id_empleado]);
             if (unEmpleadoTitulo.rowCount > 0) {
                 return res.jsonp(unEmpleadoTitulo.rows);
             }
@@ -535,7 +678,8 @@ class EmpleadoControlador {
     ObtenerDepartamentoEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_emple, id_cargo } = req.body;
-            const DEPARTAMENTO = yield database_1.default.query('SELECT *FROM VistaDepartamentoEmpleado WHERE id_emple = $1 AND id_cargo = $2', [id_emple, id_cargo]);
+            const DEPARTAMENTO = yield database_1.default.query('SELECT *FROM VistaDepartamentoEmpleado WHERE id_emple = $1 AND ' +
+                'id_cargo = $2', [id_emple, id_cargo]);
             if (DEPARTAMENTO.rowCount > 0) {
                 return res.jsonp(DEPARTAMENTO.rows);
             }

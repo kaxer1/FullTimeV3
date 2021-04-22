@@ -112,7 +112,8 @@ export class TipoPermisosComponent implements OnInit {
       tipoDescuentoForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
-      fechaForm: ['']
+      fechaForm: [''],
+      documentoForm: ['']
     });
   }
 
@@ -133,7 +134,8 @@ export class TipoPermisosComponent implements OnInit {
       almu_incluir: form1.almuIncluirForm,
       num_dia_justifica: form2.numDiaJustificaForm,
       num_hora_maximo: form1.numHoraMaximoForm,
-      fecha: form2.fechaForm
+      fecha: form2.fechaForm,
+      documento: form2.documentoForm
     }
     if (nombrePermiso === 'OTRO') {
       if (nuevoPermiso === '') {
@@ -143,7 +145,7 @@ export class TipoPermisosComponent implements OnInit {
       }
       else {
         dataTipoPermiso.descripcion = nuevoPermiso;
-        this.VerificarJustificacion(form1, dataTipoPermiso);
+        this.VerificarJustificacion(form1, dataTipoPermiso, form2);
       }
     }
     else if (nombrePermiso === 'Seleccionar') {
@@ -152,13 +154,14 @@ export class TipoPermisosComponent implements OnInit {
       });
     }
     else {
-      this.VerificarJustificacion(form1, dataTipoPermiso);
+      this.VerificarJustificacion(form1, dataTipoPermiso, form2);
     }
   }
 
   IngresarDatos(datos) {
     this.validarGuardar = true;
     this.rest.postTipoPermisoRest(datos).subscribe(res => {
+      console.log('permisos', res.message)
       if (res.message === 'error') {
         this.toastr.error('Revisarlo en la lista de Tipo de Permisos y actualizar los datos si desea realizar cambios en la configuración del permiso', 'Tipo de Permiso ya esta configurado', {
           timeOut: 6000,
@@ -213,20 +216,18 @@ export class TipoPermisosComponent implements OnInit {
     }
   }
 
-  VerificarJustificacion(form1, datos) {
+  VerificarJustificacion(form1, datos, form2) {
     if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'true') {
       this.toastr.info('Ingresar número de días para presentar justificación', '', {
         timeOut: 6000,
       })
     }
     else if (datos.num_dia_justifica != '' && datos.gene_justificacion === 'true') {
-      this.CambiarValoresDiasHoras(form1, datos);
-      this.IngresarDatos(datos);
+      this.VerificarIngresoFecha(form2, datos, form1);
     }
     else if (datos.num_dia_justifica === '' && datos.gene_justificacion === 'false') {
       datos.num_dia_justifica = 0;
-      this.CambiarValoresDiasHoras(form1, datos);
-      this.IngresarDatos(datos);
+      this.VerificarIngresoFecha(form2, datos, form1);
     }
   }
 
@@ -273,6 +274,7 @@ export class TipoPermisosComponent implements OnInit {
       }
       else {
         datos.num_hora_maximo = '00:00';
+        this.IngresarDatos(datos);
       }
     }
     else if (form.diasHorasForm === 'Horas') {
@@ -283,6 +285,7 @@ export class TipoPermisosComponent implements OnInit {
       }
       else {
         datos.num_dia_maximo = 0;
+        this.IngresarDatos(datos);
       }
     }
     else if (form.diasHorasForm === 'Días y Horas') {
@@ -290,6 +293,9 @@ export class TipoPermisosComponent implements OnInit {
         this.toastr.info('Ingresar número de días, horas y minutos máximos de permiso', '', {
           timeOut: 6000,
         });
+      }
+      else {
+        this.IngresarDatos(datos);
       }
     }
   }
@@ -369,6 +375,30 @@ export class TipoPermisosComponent implements OnInit {
         fechaForm: ''
       })
     }
+  }
+
+  VerificarIngresoFecha(form2, datos, form1) {
+    console.log('entra0', form2.fecValidarForm, form2.fechaForm)
+    if (form2.fecValidarForm === 'true') {
+      console.log('entra1', form2.fecValidarForm, form2.fechaForm)
+      if (form2.fechaForm === '') {
+        console.log('entra2')
+        this.toastr.info('Ingresar fecha en la que no podrá solicitar permisos.', 'Verificar Fecha', {
+          timeOut: 6000,
+        });
+      }
+      else {
+        this.CambiarValoresDiasHoras(form1, datos);
+      }
+    }
+    else {
+      console.log('entra2')
+      if (form2.fechaForm === '') {
+        datos.fecha = null;
+      }
+      this.CambiarValoresDiasHoras(form1, datos);
+    }
+
   }
 
 }

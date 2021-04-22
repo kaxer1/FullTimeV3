@@ -37,6 +37,7 @@ class DepartamentoRutas {
 
         /** TABLA PEDIDO_ACCION_EMPLEADO */
         this.router.post('/pedido/accion', TokenValidation, ACCION_PERSONAL_CONTROLADOR.CrearPedidoAccionPersonal);
+        this.router.put('/pedido/accion/editar', TokenValidation, ACCION_PERSONAL_CONTROLADOR.ActualizarPedidoAccionPersonal);
 
         // VER LOGO DE MINISTERIO TRABAJO
         this.router.get('/logo/ministerio/codificado', TokenValidation, ACCION_PERSONAL_CONTROLADOR.verLogoMinisterio);
