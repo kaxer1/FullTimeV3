@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestarPeriodoVacacionAutorizada = void 0;
 const database_1 = __importDefault(require("../database"));
-exports.RestarPeriodoVacacionAutorizada = function (id_vacacion) {
+const RestarPeriodoVacacionAutorizada = function (id_vacacion) {
     return __awaiter(this, void 0, void 0, function* () {
         let vacacion = yield ConsultarVacacion(id_vacacion);
         let num_dias = ContabilizarDiasVacacion(vacacion.fec_inicio, vacacion.fec_final) || 0;
@@ -38,6 +38,7 @@ exports.RestarPeriodoVacacionAutorizada = function (id_vacacion) {
         yield database_1.default.query('UPDATE peri_vacaciones SET dia_vacacion = $1, horas_vacaciones = $2, min_vacaciones = $3 WHERE id = $4', [total_DHM.dias, total_DHM.horas, total_DHM.min, vacacion.id_peri_vacacion]);
     });
 };
+exports.RestarPeriodoVacacionAutorizada = RestarPeriodoVacacionAutorizada;
 function ConsultarVacacion(id_vacacion) {
     return __awaiter(this, void 0, void 0, function* () {
         return yield database_1.default.query('SELECT fec_inicio, fec_final, id_peri_vacacion FROM vacaciones WHERE id = $1', [id_vacacion])
