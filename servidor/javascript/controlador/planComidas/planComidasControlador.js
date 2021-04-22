@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PLAN_COMIDAS_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../database"));
 const settingsMail_1 = require("../../libs/settingsMail");
 class PlanComidasControlador {
@@ -197,8 +196,9 @@ class PlanComidasControlador {
     /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
     CrearPlanEmpleado(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { codigo, id_empleado, id_plan_comida } = req.body;
-            yield database_1.default.query('INSERT INTO plan_comida_empleado (codigo, id_empleado, id_plan_comida) VALUES ($1, $2, $3)', [codigo, id_empleado, id_plan_comida]);
+            const { codigo, id_empleado, id_plan_comida, fecha, hora_inicio, hora_fin, consumido } = req.body;
+            yield database_1.default.query('INSERT INTO plan_comida_empleado (codigo, id_empleado, id_plan_comida, fecha, ' +
+                'hora_inicio, hora_fin, consumido ) VALUES ($1, $2, $3, $4, $5, $6, $7)', [codigo, id_empleado, id_plan_comida, fecha, hora_inicio, hora_fin, consumido]);
             res.jsonp({ message: 'Planificación del almuerzo ha sido guardada con éxito' });
         });
     }

@@ -179,9 +179,10 @@ class PlanComidasControlador {
 
   /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
   public async CrearPlanEmpleado(req: Request, res: Response): Promise<void> {
-    const { codigo, id_empleado, id_plan_comida } = req.body;
-    await pool.query('INSERT INTO plan_comida_empleado (codigo, id_empleado, id_plan_comida) VALUES ($1, $2, $3)',
-      [codigo, id_empleado, id_plan_comida]);
+    const { codigo, id_empleado, id_plan_comida, fecha, hora_inicio, hora_fin, consumido } = req.body;
+    await pool.query('INSERT INTO plan_comida_empleado (codigo, id_empleado, id_plan_comida, fecha, ' +
+      'hora_inicio, hora_fin, consumido ) VALUES ($1, $2, $3, $4, $5, $6, $7)',
+      [codigo, id_empleado, id_plan_comida, fecha, hora_inicio, hora_fin, consumido]);
     res.jsonp({ message: 'Planificación del almuerzo ha sido guardada con éxito' });
   }
 

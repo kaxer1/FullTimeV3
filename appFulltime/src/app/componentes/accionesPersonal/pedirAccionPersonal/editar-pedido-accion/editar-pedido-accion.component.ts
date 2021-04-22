@@ -416,7 +416,7 @@ export class EditarPedidoAccionComponent implements OnInit {
       this.toastr.success('Operación Exitosa', 'Acción de Personal Registrada', {
         timeOut: 6000,
       });
-      this.router.navigate(['/listaPedidos/',]);
+      this.router.navigate(['/verAccion/', parseInt(this.idPedido)]);
     });
   }
 

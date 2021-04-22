@@ -41,15 +41,31 @@ export class VerPedidoAccionComponent implements OnInit {
 
   datosPedido: any = [];
   datoEmpleado: string = '';
+  datoEmpleadoH: string = '';
+  datoEmpleadoG: string = '';
+  sueldo: string = '';
+  cargo: string = '';
+  cargoH: string = '';
+  cargoG: string = '';
+  departamentoE: string = '';
+  cedula: string = '';
   CargarInformacion() {
     this.restAccion.BuscarDatosPedidoId(parseInt(this.idPedido)).subscribe(data => {
       this.datosPedido = data;
       console.log('datos', this.datosPedido);
       this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
-        this.datoEmpleado = data1[0].apellido + ' ' + data1[0].nombre
+        console.log('empleado', data1)
+        this.datoEmpleado = data1[0].apellido + ' ' + data1[0].nombre;
+        this.sueldo = data1[0].sueldo;
+        this.cargo = data1[0].cargo;
+        this.departamentoE = data1[0].departamento;
+        this.cedula = data1[0].cedula;
         this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+          this.datoEmpleadoH = data2[0].apellido + ' ' + data2[0].nombre;
+          this.cargoH = data2[0].cargo;
           this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-
+            this.datoEmpleadoG = data3[0].apellido + ' ' + data3[0].nombre;
+            this.cargoG = data3[0].cargo;
           });
         })
       })
