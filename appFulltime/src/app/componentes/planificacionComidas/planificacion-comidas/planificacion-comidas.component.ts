@@ -150,7 +150,11 @@ export class PlanificacionComidasComponent implements OnInit {
     })
   }
 
+  fechasHorario: any = [];
+  inicioDate: any;
+  finDate: any;
   contador: number = 0;
+  contadorFechas: number = 0;
   InsertarPlanificacion(form) {
     let datosPlanComida = {
       fecha: form.fechaForm,
@@ -163,23 +167,70 @@ export class PlanificacionComidasComponent implements OnInit {
       fec_inicio: form.fechaInicioForm,
       fec_final: form.fechaFinForm,
     };
+
+
+    this.inicioDate = moment(form.fechaInicioForm).format('MM-DD-YYYY');
+    this.finDate = moment(form.fechaFinForm).format('MM-DD-YYYY');
+
     if (this.data.modo === "multiple") {
       // CREACIÓN DE LA PLANIFICACIÓN PARA VARIOS EMPLEADOS
-      this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(res => {
-      });
-      // CONSULTAMOS EL ID DE LA ÚLTIMA PLANIFICACIÓN CREADA
-      this.restPlan.ObtenerUltimaPlanificacion().subscribe(res => {
-        console.log('ultima planificacion', res[0].ultimo);
-        // INDICAMOS A QUE EMPLEADO SE LE REALIZA UNA PLANIFICACIÓN
-        this.contador = 0;
-        this.data.servicios.map(obj => {
-          let datosPlanEmpleado = {
-            codigo: obj.codigo,
-            id_empleado: obj.id,
-            id_plan_comida: res[0].ultimo
-          }
-          this.restPlan.CrearPlanComidasEmpleado(datosPlanEmpleado).subscribe(res => {
-            this.EnviarNotificaciones(form.fechaPlanificacionForm, form.horaInicioForm, form.horaFinForm, this.empleado_envia, obj.id);
+      this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(plan => {
+        // CONSULTAMOS EL ID DE LA ÚLTIMA PLANIFICACIÓN CREADA
+        this.restPlan.ObtenerUltimaPlanificacion().subscribe(res => {
+          console.log('ultima planificacion', res[0].ultimo);
+          // INDICAMOS A QUE EMPLEADO SE LE REALIZA UNA PLANIFICACIÓN
+          this.contador = 0;
+          this.data.servicios.map(obj => {
+            this.fechasHorario = []; // Array que contiene todas las fechas del mes indicado
+            // Inicializar datos de fecha
+            var start = new Date(this.inicioDate);
+            var end = new Date(this.finDate);
+            // Lógica para obtener el nombre de cada uno de los día del periodo indicado
+            while (start <= end) {
+              /* console.log(moment(start).format('dddd DD/MM/YYYY'), form.lunesForm)
+               if (moment(start).format('dddd') === 'lunes' && form.lunesForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'martes' && form.martesForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'miércoles' && form.miercolesForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'jueves' && form.juevesForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'viernes' && form.viernesForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'sábado' && form.sabadoForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }
+               if (moment(start).format('dddd') === 'domingo' && form.domingoForm === false) {
+                 this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+               }*/
+              this.fechasHorario.push(moment(start).format('YYYY-MM-DD'));
+              var newDate = start.setDate(start.getDate() + 1);
+              start = new Date(newDate);
+            }
+            this.contadorFechas = 0;
+            this.fechasHorario.map(fec => {
+              let datosPlanEmpleado = {
+                codigo: obj.codigo,
+                id_empleado: obj.id,
+                id_plan_comida: res[0].ultimo,
+                fecha: fec,
+                hora_inicio: form.horaInicioForm,
+                hora_fin: form.horaFinForm,
+                consumido: false
+              }
+              this.restPlan.CrearPlanComidasEmpleado(datosPlanEmpleado).subscribe(res => {
+                this.contadorFechas = this.contadorFechas + 1;
+                if (this.contadorFechas === this.fechasHorario.length) {
+                  this.EnviarNotificaciones(form.fechaPlanificacionForm, form.horaInicioForm, form.horaFinForm, this.empleado_envia, obj.id);
+                }
+              });
+            })
             this.contador = this.contador + 1;
             if (this.contador === this.data.servicios.length) {
               this.dialogRef.close();
@@ -188,29 +239,40 @@ export class PlanificacionComidasComponent implements OnInit {
                 timeOut: 6000,
               })
             }
-          });
-        })
+          })
+        });
       });
+
     }
     else {
       // CREACIÓN DE LA PLANIFICACIÓN PARA UN EMPLEADO
-      this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(res => {
-      });
-      // CONSULTAMOS EL ID DE LA ÚLTIMA PLANIFICACIÓN CREADA
-      this.restPlan.ObtenerUltimaPlanificacion().subscribe(res => {
-        console.log('ultima planificacion', res[0].ultimo);
-        // INDICAMOS A QUE EMPLEADO SE LE REALIZA UNA PLANIFICACIÓN
-        let datosPlanEmpleado = {
-          codigo: this.empleados[0].codigo,
-          id_empleado: this.data.idEmpleado,
-          id_plan_comida: res[0].ultimo
-        }
-        this.restPlan.CrearPlanComidasEmpleado(datosPlanEmpleado).subscribe(response => {
-          this.EnviarNotificaciones(form.fechaPlanificacionForm, form.horaInicioForm, form.horaFinForm, this.empleado_envia, this.empleado_recibe);
-          this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
-            timeOut: 6000,
+      this.restPlan.CrearPlanComidas(datosPlanComida).subscribe(plan => {
+        // CONSULTAMOS EL ID DE LA ÚLTIMA PLANIFICACIÓN CREADA
+        this.restPlan.ObtenerUltimaPlanificacion().subscribe(res => {
+          console.log('ultima planificacion', res[0].ultimo);
+          // INDICAMOS A QUE EMPLEADO SE LE REALIZA UNA PLANIFICACIÓN
+          this.contadorFechas = 0;
+          this.fechasHorario.map(obj => {
+            let datosPlanEmpleado = {
+              codigo: this.empleados[0].codigo,
+              id_empleado: this.data.idEmpleado,
+              id_plan_comida: res[0].ultimo,
+              fecha: obj,
+              hora_inicio: form.horaInicioForm,
+              hora_fin: form.horaFinForm,
+              consumido: false
+            }
+            this.restPlan.CrearPlanComidasEmpleado(datosPlanEmpleado).subscribe(res => {
+              this.contadorFechas = this.contadorFechas + 1;
+              if (this.contadorFechas === this.fechasHorario.length) {
+                this.EnviarNotificaciones(form.fechaPlanificacionForm, form.horaInicioForm, form.horaFinForm, this.empleado_envia, this.empleado_recibe);
+                this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Registrado.', {
+                  timeOut: 6000,
+                })
+                this.CerrarRegistroPlanificacion();
+              }
+            });
           })
-          this.CerrarRegistroPlanificacion();
         });
       });
     }

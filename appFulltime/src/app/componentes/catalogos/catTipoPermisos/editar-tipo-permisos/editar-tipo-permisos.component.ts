@@ -110,7 +110,8 @@ export class EditarTipoPermisosComponent implements OnInit {
       fecValidarForm: ['', Validators.required],
       geneJustificacionForm: ['', Validators.required],
       numDiaJustificaForm: [''],
-      fechaForm: ['']
+      fechaForm: [''],
+      documentoForm: ['']
     });
     this.SetDatos();
   }
@@ -149,6 +150,7 @@ export class EditarTipoPermisosComponent implements OnInit {
       fecValidarForm: this.tipoPermiso.fec_validar,
       geneJustificacionForm: this.tipoPermiso.gene_justificacion,
       numDiaJustificaForm: this.tipoPermiso.num_dia_justifica,
+      documentoForm: this.tipoPermiso.documento
     });
 
     let j = 0;
@@ -324,7 +326,8 @@ export class EditarTipoPermisosComponent implements OnInit {
       almu_incluir: form1.almuIncluirForm,
       num_dia_justifica: form2.numDiaJustificaForm,
       num_hora_maximo: form1.numHoraMaximoForm,
-      fecha: form2.fechaForm
+      fecha: form2.fechaForm,
+      documento: form2.documentoForm
     }
     console.log(dataTipoPermiso);
 
@@ -335,10 +338,10 @@ export class EditarTipoPermisosComponent implements OnInit {
         });
       } else {
         dataTipoPermiso.descripcion = form1.nombreForm;
-        this.Actualizar(this.tipoPermiso.id, dataTipoPermiso);
+        this.VerificarIngresoFecha(form2, dataTipoPermiso);
       }
     } else {
-      this.Actualizar(this.tipoPermiso.id, dataTipoPermiso);
+      this.VerificarIngresoFecha(form2, dataTipoPermiso);
     }
   }
 
@@ -403,5 +406,29 @@ export class EditarTipoPermisosComponent implements OnInit {
         fechaForm: ''
       })
     }
+  }
+
+  VerificarIngresoFecha(form2, datos) {
+    console.log('entra0', form2.fecValidarForm, form2.fechaForm)
+    if (form2.fecValidarForm === 'true') {
+      console.log('entra1', form2.fecValidarForm, form2.fechaForm)
+      if (form2.fechaForm === '') {
+        console.log('entra2')
+        this.toastr.info('Ingresar fecha en la que no podrá solicitar permisos.', 'Verificar Fecha', {
+          timeOut: 6000,
+        });
+      }
+      else {
+        this.Actualizar(this.tipoPermiso.id, datos);
+      }
+    }
+    else {
+      console.log('entra2')
+      if (form2.fechaForm === '') {
+        datos.fecha = null;
+      }
+      this.Actualizar(this.tipoPermiso.id, datos);
+    }
+
   }
 }

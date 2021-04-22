@@ -63,19 +63,9 @@
                 </mat-select>
             </mat-form-field>
             <mat-form-field>
-                <mat-label>Observación</mat-label>
-                <input matInput placeholder="Ejm: 1" formControlName="observacionForm"
-                    (keypress)="IngresarSoloLetras($event)" required>
-                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
-                    matTooltip="Ingresar una indicación de la planificación de almuerzo">
-                    help_outline</mat-icon>
-                <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
-            </mat-form-field>
-
-            <mat-form-field>
                 <mat-label>Fecha Inicio</mat-label>
-                <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa"
-                    formControlName="fechaInicioForm" required>
+                <input matInput [matDatepicker]="picker2" placeholder="dd/mm/aaaa" formControlName="fechaInicioForm"
+                    required>
                 <mat-datepicker-toggle matSuffix [for]="picker2" id="planComida" matTooltipClass="planComida-tooltip"
                     matTooltipPosition="right"
                     matTooltip="Ingresar fecha en la que se va a asistir al almuerzo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -85,8 +75,8 @@
 
             <mat-form-field>
                 <mat-label>Fecha Fin</mat-label>
-                <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa"
-                    formControlName="fechaFinForm" required>
+                <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" formControlName="fechaFinForm"
+                    required>
                 <mat-datepicker-toggle matSuffix [for]="picker3" id="planComida" matTooltipClass="planComida-tooltip"
                     matTooltipPosition="right"
                     matTooltip="Ingresar fecha en la que se va a asistir al almuerzo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -107,6 +97,15 @@
                 <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
                     matTooltip="Ingresar la hora de finalización del almuerzo">
                     help_outline</mat-icon>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Ejm: 1" formControlName="observacionForm"
+                    (keypress)="IngresarSoloLetras($event)" required>
+                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                    matTooltip="Ingresar una indicación de la planificación de almuerzo">
+                    help_outline</mat-icon>
+                <mat-error *ngIf="observacionF.invalid">{{ObtenerMensajeErrorObservacion()}}</mat-error>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Servicio Extra</mat-label>

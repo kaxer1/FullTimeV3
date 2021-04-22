@@ -258,10 +258,10 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
     },
       erro => {
-        this.EmpleadoHorarioForm.patchValue({
+      /*  this.EmpleadoHorarioForm.patchValue({
           horarioForm: ''
-        });
-        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', 'Primero registrar detalle de horario.', {
+        });*/
+        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', '', {
           timeOut: 6000,
         });
       })
