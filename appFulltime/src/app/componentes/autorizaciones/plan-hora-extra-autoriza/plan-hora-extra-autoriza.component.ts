@@ -80,6 +80,12 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
               this.departamentos = res;
               this.ActualizarDatos(form, documento, obj.id_plan_extra, this.departamentos[0].id_departamento, obj.id_usua_solicita);
             })
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
         }
         else {
@@ -169,6 +175,12 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
     }
     this.restPlanH.EditarEstado(id_hora, datosHorasExtras).subscribe(res => {
       this.resEstado = [res];
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 
@@ -184,6 +196,12 @@ export class PlanHoraExtraAutorizaComponent implements OnInit {
       this.toastr.success(res.message,'', {
         timeOut: 6000,
       });
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 

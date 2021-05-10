@@ -10,6 +10,7 @@ import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 // Interface que permite definir los datos de estado de la solicitu de horas extras
 interface Estado {
@@ -74,6 +75,7 @@ export class PedidoHoraExtraComponent implements OnInit {
     private restHE: PedHoraExtraService,
     private toastr: ToastrService,
     private realTime: RealTimeService,
+    private validacionesService: ValidacionesService,
     public dialogRef: MatDialogRef<PedidoHoraExtraComponent>,
   ) { }
 
@@ -108,6 +110,12 @@ export class PedidoHoraExtraComponent implements OnInit {
   HorarioEmpleadoSemanal(id_cargo: number) {
     this.restHE.HorarioEmpleadoSemanal(id_cargo).subscribe(res => {
       this.Horario = res;
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 
@@ -242,53 +250,32 @@ export class PedidoHoraExtraComponent implements OnInit {
                 this.restHE.sendNotiRealTime(notificacion);
               }
             });
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
         });
+      }
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
       }
     });
   }
 
   /** Método para validar el ingreso de letras */
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloLetras(e)
   }
 
   /** Método para validar el ingreso de números */
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt)
   }
 
   /** Método para calcular el número de horas solicitadas  */

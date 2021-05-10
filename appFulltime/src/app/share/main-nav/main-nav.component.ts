@@ -26,6 +26,7 @@ import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
 import { FraseSeguridadComponent } from 'src/app/componentes/frase-seguridad/frase-seguridad.component';
 import { FuncionesService } from 'src/app/servicios/funciones/funciones.service';
 import { AccionesTimbresComponent } from 'src/app/componentes/settings/acciones-timbres/acciones-timbres.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-main-nav',
@@ -153,39 +154,41 @@ export class MainNavComponent implements OnInit {
       this.idEmpresa = parseInt(localStorage.getItem('empresa'))
       this.LlamarDatos();
       this.infoUser();
-      this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
-      this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
-      this.LlamarNotificaciones(this.id_empleado_logueado);
-      this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
-
-      this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
-
-        this.barraInicial = result.matches;
-        this.barraUno = result.matches;
-        this.barraDos = result.matches;
-        // console.log('Result breakpoints: ', result.matches);
-
-        this.recargar = result.matches;
-        if (result.matches === true) {
-          let cont = 0;
-          do {
-            cont = cont + 1;
-          } while (cont === 3);
-          // console.log('Recarga antes: ', this.recargar);
-          this.recargar = false;
-          // console.log('Recarga despues: ', this.recargar);
-        }
-      });
-
-      this.SeleccionMenu();
-      this.BarraBusquedaEmpleados();
-      this.ConfigurarSeguridad();
-
     }
 
+  }
+
+  FuncionLlamadaAsync() {
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value))
+    );
+    this.id_empleado_logueado = parseInt(localStorage.getItem('empleado'));
+    this.LlamarNotificaciones(this.id_empleado_logueado);
+    this.LlamarNotificacionesTimbres(this.id_empleado_logueado);
+
+    this.breakpointObserver.observe('(max-width: 800px)').subscribe((result: BreakpointState) => {
+
+      this.barraInicial = result.matches;
+      this.barraUno = result.matches;
+      this.barraDos = result.matches;
+      // console.log('Result breakpoints: ', result.matches);
+
+      this.recargar = result.matches;
+      if (result.matches === true) {
+        let cont = 0;
+        do {
+          cont = cont + 1;
+        } while (cont === 3);
+        // console.log('Recarga antes: ', this.recargar);
+        this.recargar = false;
+        // console.log('Recarga despues: ', this.recargar);
+      }
+    });
+
+    this.SeleccionMenu();
+    this.BarraBusquedaEmpleados();
+    this.ConfigurarSeguridad();
   }
 
   BarraBusquedaEmpleados() {
@@ -213,7 +216,10 @@ export class MainNavComponent implements OnInit {
   LlamarDatos() {
     this.rest.ConsultarDatosEmpresa(this.idEmpresa).subscribe(datos => {
       this.datosEmpresa = datos;
-      if (this.datosEmpresa[0].logo === null || this.datosEmpresa[0].color_p === null || this.datosEmpresa[0].color_s === null) {
+      const { logo, color_p, color_s } = this.datosEmpresa[0];
+      this.FuncionLlamadaAsync()
+
+      if (logo === null || color_p === null || color_s === null) {
         this.toaster.error('Falta agregar estilo o logotipo de la empresa para imprimir PDFs', 'Error configuración', { timeOut: 10000 })
           .onTap.subscribe(obj => {
             this.IrInfoEmpresa()
@@ -222,6 +228,9 @@ export class MainNavComponent implements OnInit {
       } else {
         this.habilitarReportes = 'visible';
       }
+    }, err => {
+      console.log(err);
+      this.loginService.logout()
     });
   }
 
@@ -376,7 +385,7 @@ export class MainNavComponent implements OnInit {
         this.UserEmail = localStorage.getItem('correo');
         this.UserName = localStorage.getItem('fullname');
         if (res[0]['imagen'] != null) {
-          localStorage.setItem('view_imagen', 'http://localhost:3000/empleado/img/' + res[0]['imagen'])
+          localStorage.setItem('view_imagen', `${environment.url}/empleado/img/` + res[0]['imagen'])
           this.urlImagen = localStorage.getItem('view_imagen');
           this.mostrarImagen = true;
           this.mostrarIniciales = false;

@@ -673,6 +673,9 @@ export class VerEmpleadoComponent implements OnInit {
         }
       }
 
+    }, err => {
+      const { access, message } = err.error;
+      if (access === false) return this.toastr.error(message)
     });
   }
 

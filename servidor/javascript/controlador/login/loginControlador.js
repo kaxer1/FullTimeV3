@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const settingsMail_1 = require("../../libs/settingsMail");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const fs_1 = __importDefault(require("fs"));
 class LoginControlador {
     ValidarCredenciales(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -24,37 +25,75 @@ class LoginControlador {
                 const { nombre_usuario, pass, latitud, longitud } = req.body;
                 console.log(nombre_usuario, pass, latitud, longitud);
                 const USUARIO = yield database_1.default.query('SELECT id, usuario, id_rol, id_empleado FROM accesoUsuarios($1, $2)', [nombre_usuario, pass]);
-                const SUC_DEP = yield database_1.default.query('SELECT c.id_departamento, c.id_sucursal, s.id_empresa, c.id AS id_cargo, cg_e.acciones_timbres ' +
+                const SUC_DEP = yield database_1.default.query('SELECT c.id_departamento, c.id_sucursal, s.id_empresa, c.id AS id_cargo, cg_e.acciones_timbres, cg_e.public_key ' +
                     'FROM empl_contratos AS e, empl_cargos AS c, sucursales AS s, cg_empresa AS cg_e WHERE e.id_empleado = $1 AND c.id_empl_contrato = e.id AND c.id_sucursal = s.id AND s.id_empresa = cg_e.id ORDER BY c.fec_inicio DESC LIMIT 1', [USUARIO.rows[0].id_empleado]);
-                if (USUARIO.rowCount === 0) {
-                    return res.jsonp({ message: 'No existe Usuario' });
+                if (SUC_DEP.rowCount > 0) {
+                    const { public_key } = SUC_DEP.rows[0];
+                    if (!public_key)
+                        return res.status(404).jsonp({ message: 'No tiene asignada una licencia de uso de la aplicacion.' });
+                    try {
+                        const data = fs_1.default.readFileSync('licencia.conf.json', 'utf8');
+                        const FileLicencias = JSON.parse(data);
+                        console.log(public_key);
+                        const ok_licencias = FileLicencias.filter((o) => {
+                            return o.public_key === public_key;
+                        }).map((o) => {
+                            o.fec_activacion = new Date(o.fec_activacion),
+                                o.fec_desactivacion = new Date(o.fec_desactivacion);
+                            return o;
+                        });
+                        console.log(ok_licencias);
+                        if (ok_licencias.length === 0)
+                            return res.status(404).jsonp({ message: 'La licencia no existe, consulte a soporte tecnico' });
+                        const hoy = new Date();
+                        const { fec_activacion, fec_desactivacion } = ok_licencias[0];
+                        if (hoy > fec_desactivacion)
+                            return res.status(404).jsonp({ message: 'La licencia a expirado' });
+                        if (hoy < fec_activacion)
+                            return res.status(404).jsonp({ message: 'La licencia a expirado' });
+                    }
+                    catch (error) {
+                        return res.status(404).jsonp({ message: 'No existe registro de licencias' });
+                    }
                 }
-                let ACTIVO = yield database_1.default.query('SELECT e.estado AS empleado, u.estado AS usuario, u.app_habilita, e.codigo FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND u.id = $1', [USUARIO.rows[0].id])
+                if (USUARIO.rowCount === 0)
+                    return res.jsonp({ message: 'No existe Usuario' });
+                let ACTIVO = yield database_1.default.query('SELECT e.estado AS empleado, u.estado AS usuario, u.app_habilita, e.codigo, e.web_access FROM empleados AS e, usuarios AS u WHERE e.id = u.id_empleado AND u.id = $1', [USUARIO.rows[0].id])
                     .then(result => {
                     return result.rows;
                 });
-                console.log(ACTIVO);
-                if (ACTIVO.length === 0) {
+                console.log('Activo====', ACTIVO);
+                if (ACTIVO.length === 0)
                     return res.jsonp({ message: 'No existe Usuario' });
-                }
-                if (ACTIVO[0].empleado === 2 && ACTIVO[0].usuario === false && ACTIVO[0].app_habilita === false) {
+                const { id, id_empleado, id_rol, usuario: user } = USUARIO.rows[0];
+                const { empleado, usuario, app_habilita, codigo, web_access } = ACTIVO[0];
+                if (empleado === 2 && usuario === false && app_habilita === false) {
                     return res.jsonp({ message: 'EL usuario esta inactivo.' });
                 }
-                yield database_1.default.query('UPDATE usuarios SET longitud = $2, latitud = $3 WHERE id = $1', [USUARIO.rows[0].id, longitud, latitud]);
+                if (!web_access)
+                    return res.status(404).jsonp({ message: "Sistema deshabilitado para usuarios." });
+                yield database_1.default.query('UPDATE usuarios SET longitud = $2, latitud = $3 WHERE id = $1', [id, longitud, latitud]);
+                const [modulos] = yield database_1.default.query('SELECT * FROM funciones LIMIT 1').then(result => { return result.rows; });
                 if (SUC_DEP.rowCount > 0) {
-                    const AUTORIZA = yield database_1.default.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2', [SUC_DEP.rows[0].id_cargo, SUC_DEP.rows[0].id_departamento]);
+                    const { id_cargo, id_departamento, acciones_timbres, id_sucursal, id_empresa, public_key: licencia } = SUC_DEP.rows[0];
+                    const AUTORIZA = yield database_1.default.query('SELECT estado FROM depa_autorizaciones WHERE id_empl_cargo = $1 AND id_departamento = $2', [id_cargo, id_departamento]);
                     if (AUTORIZA.rowCount > 0) {
-                        const token = jsonwebtoken_1.default.sign({ codigo: ACTIVO[0].codigo, _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _acc_tim: SUC_DEP.rows[0].acciones_timbres, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: AUTORIZA.rows[0].estado, cargo: SUC_DEP.rows[0].id_cargo, ip_adress: ip.address() }, process.env.TOKEN_SECRET || 'llaveSecreta', { algorithm: 'HS512' });
-                        return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, acciones_timbres: SUC_DEP.rows[0].acciones_timbres, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: AUTORIZA.rows[0].estado, ip_adress: ip.address() });
+                        const { estado: autoriza_est } = AUTORIZA.rows[0];
+                        const token = jsonwebtoken_1.default.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
+                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: autoriza_est, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
+                        return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
+                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: autoriza_est, ip_adress: ip.address(), modulos: modulos });
                     }
                     else {
-                        const token = jsonwebtoken_1.default.sign({ codigo: ACTIVO[0].codigo, _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, _dep: SUC_DEP.rows[0].id_departamento, _acc_tim: SUC_DEP.rows[0].acciones_timbres, _suc: SUC_DEP.rows[0].id_sucursal, _empresa: SUC_DEP.rows[0].id_empresa, estado: false, cargo: SUC_DEP.rows[0].id_cargo, ip_adress: ip.address() }, process.env.TOKEN_SECRET || 'llaveSecreta', { algorithm: 'HS512' });
-                        return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, departamento: SUC_DEP.rows[0].id_departamento, acciones_timbres: SUC_DEP.rows[0].acciones_timbres, sucursal: SUC_DEP.rows[0].id_sucursal, empresa: SUC_DEP.rows[0].id_empresa, cargo: SUC_DEP.rows[0].id_cargo, estado: false, ip_adress: ip.address() });
+                        const token = jsonwebtoken_1.default.sign({ _licencia: licencia, codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _dep: id_departamento, _web_access: web_access,
+                            _acc_tim: acciones_timbres, _suc: id_sucursal, _empresa: id_empresa, estado: false, cargo: id_cargo, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
+                        return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, departamento: id_departamento, acciones_timbres: acciones_timbres,
+                            sucursal: id_sucursal, empresa: id_empresa, cargo: id_cargo, estado: false, ip_adress: ip.address(), modulos: modulos });
                     }
                 }
                 else {
-                    const token = jsonwebtoken_1.default.sign({ codigo: ACTIVO[0].codigo, _id: USUARIO.rows[0].id, _id_empleado: USUARIO.rows[0].id_empleado, rol: USUARIO.rows[0].id_rol, ip_adress: ip.address() }, process.env.TOKEN_SECRET || 'llaveSecreta');
-                    return res.status(200).jsonp({ token, usuario: USUARIO.rows[0].usuario, rol: USUARIO.rows[0].id_rol, empleado: USUARIO.rows[0].id_empleado, ip_adress: ip.address() });
+                    const token = jsonwebtoken_1.default.sign({ codigo: codigo, _id: id, _id_empleado: id_empleado, rol: id_rol, _web_access: web_access, ip_adress: ip.address(), modulos: modulos }, process.env.TOKEN_SECRET || 'llaveSecreta', { expiresIn: 60 * 60 * 23, algorithm: 'HS512' });
+                    return res.status(200).jsonp({ token, usuario: user, rol: id_rol, empleado: id_empleado, ip_adress: ip.address(), modulos: modulos });
                 }
             }
             catch (error) {

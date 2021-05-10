@@ -7,7 +7,6 @@ import * as moment from 'moment';
 moment.locale('es');
 import { LoginService } from '../../servicios/login/login.service';
 import { UsuarioService } from 'src/app/servicios/usuarios/usuario.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -35,7 +34,6 @@ export class LoginComponent implements OnInit {
   });
 
   constructor(
-    private http: HttpClient,
     public rest: LoginService,
     public restU: UsuarioService,
     private router: Router,
@@ -207,7 +205,9 @@ export class LoginComponent implements OnInit {
         }
         this.IngresoSistema(form.usuarioF, 'Exitoso', datos.ip_adress);
       }
-    }, error => {
+    }, err => {
+      console.log(err.error.message);
+      this.toastr.error(err.error.message)
     })
   }
 

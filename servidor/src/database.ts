@@ -7,6 +7,7 @@ const pool = new Pool({
   host: 'localhost',
   port: 5432,
   database: 'Fulltime1504',
+  // database: 'FulltimeModulos',
   password: 'fulltime'
 })
 pool.query('SELECT NOW()', (err, res) => {

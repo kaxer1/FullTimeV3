@@ -82,6 +82,12 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
         this.restH.BuscarDatosAutorizacion(this.data.pedido_hora.id).subscribe(data => {
           var documento = data[0].empleado_estado;
           this.ActualizarDatos(form, documento, this.data.pedido_hora.id, form.idDepartamentoF, this.data.pedido_hora.id_usua_solicita);
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+            this.dialogRef.close();
+          }
         })
       }
       else {
@@ -97,6 +103,12 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
               this.departamentos = res;
               this.ActualizarDatos(form, documento, obj.id, this.departamentos[0].id_departamento, obj.id_usua_solicita);
             })
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
         }
         else {
@@ -112,6 +124,12 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
         this.restH.BuscarDatosAutorizacion(this.data.id).subscribe(data => {
           var documento = data[0].empleado_estado;
           this.ActualizarDatos(form, documento, this.data.id, form.idDepartamentoF, this.data.id_usua_solicita);
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+            this.dialogRef.close();
+          }
         })
       }
       else {
@@ -235,6 +253,12 @@ export class HoraExtraAutorizacionesComponent implements OnInit {
           this.restH.sendNotiRealTime(notificacion);
         }
       });
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
     console.log('contador', this.contador);
     this.contador = this.contador + 1;
