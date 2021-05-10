@@ -68,4 +68,8 @@ export class EmpleadoHorariosService {
   SubirArchivoExcel(formData: any, id: number, codigo: number) {
     return this.http.post<any>(`${environment.url}/empleadoHorario/upload/${id}/${codigo}`, formData)
   }
+
+  BuscarHorarioFechas(codigo: any, datos: any) {
+    return this.http.post(`${environment.url}/empleadoHorario/busqueda-horarios/${codigo}`, datos);
+  }
 }

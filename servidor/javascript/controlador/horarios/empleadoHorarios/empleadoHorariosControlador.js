@@ -416,6 +416,20 @@ class EmpleadoHorariosControlador {
             }
         });
     }
+    BuscarHorariosFechas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.params.codigo;
+            const { fechaInicio, fechaFinal } = req.body;
+            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND ' +
+                'fec_inicio BETWEEN $2 AND $3 AND fec_final BETWEEN $2 AND $3', [codigo, fechaInicio, fechaFinal]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
 }
 exports.EMPLEADO_HORARIOS_CONTROLADOR = new EmpleadoHorariosControlador();
 exports.default = exports.EMPLEADO_HORARIOS_CONTROLADOR;

@@ -65,10 +65,52 @@ export class RegistroDetallePlanHorarioComponent implements OnInit {
     this.BuscarHorarios();
   }
 
+  detalles_horarios: any = [];
+  vista_horarios: any = [];
+  hora_entrada: any;
+  hora_salida: any;
   BuscarHorarios() {
     this.horarios = [];
+    this.vista_horarios = [];
     this.restH.getHorariosRest().subscribe(datos => {
       this.horarios = datos;
+
+      this.horarios.map(hor => {
+
+        this.restD.ConsultarUnDetalleHorario(hor.id).subscribe(res => {
+          this.detalles_horarios = res;
+
+          this.detalles_horarios.map(det => {
+            if (det.tipo_accion === 'E') {
+              this.hora_entrada = det.hora
+            }
+            if (det.tipo_accion === 'S') {
+              this.hora_salida = det.hora
+            }
+          })
+          let datos_horario = [{
+            id: hor.id,
+            nombre: hor.nombre + ' (' + this.hora_entrada + '-' + this.hora_salida + ')'
+          }]
+          if (this.vista_horarios.length === 0) {
+            this.vista_horarios = datos_horario;
+          } else {
+            this.vista_horarios = this.vista_horarios.concat(datos_horario);
+            console.log('datos horario', this.vista_horarios)
+          }
+        }, error => {
+          let datos_horario = [{
+            id: hor.id,
+            nombre: hor.nombre
+          }]
+          if (this.vista_horarios.length === 0) {
+            this.vista_horarios = datos_horario;
+          } else {
+            this.vista_horarios = this.vista_horarios.concat(datos_horario);
+            console.log('datos horario', this.vista_horarios)
+          }
+        })
+      })
     })
   }
 

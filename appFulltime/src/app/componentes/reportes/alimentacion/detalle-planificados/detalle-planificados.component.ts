@@ -492,9 +492,10 @@ export class DetallePlanificadosComponent implements OnInit {
         widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
-            { colSpan: 9, text: 'SUMATORIA TOTAL DE ALIMENTOS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
-            '', '', '', '', '', '', '', '',
-            { text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 11 }
+            { colSpan: 8, text: 'SUMATORIA TOTAL DE ALIMENTOS CONSUMIDOS: ', style: 'itemsTableT', fillColor: this.s_color, fontSize: 12 },
+            '', '', '', '', '', '', '',
+            { colSpan: 2, text: '$ ' + suma_total.toFixed(2), style: 'itemsTableT', fillColor: this.s_color, fontSize: 11 },
+            '',
           ]
         ]
       },

@@ -248,7 +248,7 @@ class TimbresControlador {
                 return res.status(200).jsonp({
                     timbres: timbres,
                     cuenta: estado_cuenta,
-                    info: yield database_1.default.query('SELECT tc.cargo, ca.sueldo, ca.hora_trabaja, eh.fec_inicio, eh.fec_final FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS eh, tipo_cargo AS tc' +
+                    info: yield database_1.default.query('SELECT tc.cargo, ca.sueldo, ca.hora_trabaja, eh.fec_inicio, eh.fec_final FROM empl_contratos AS co, empl_cargos AS ca, empl_horarios AS eh, tipo_cargo AS tc ' +
                         'WHERE co.id_empleado = $1 AND ca.id_empl_contrato = co.id AND eh.id_empl_cargo = ca.id AND tc.id = ca.cargo ORDER BY eh.fec_inicio DESC LIMIT 1', [id]).then(result => {
                         console.log(result.rows);
                         return result.rows;

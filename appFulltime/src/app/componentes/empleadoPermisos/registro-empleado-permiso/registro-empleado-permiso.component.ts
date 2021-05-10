@@ -183,6 +183,7 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       to = moment(dateTo, 'DD/MM/YYY'),
       days = 0,
       libres = 0;
+      console.log('revisar ------', '1 ' + dateFrom, '2 ' +dateTo, '3' +from, '4 ' +to)
     while (!from.isAfter(to)) {
       // Si no es sábado ni domingo
       if (from.isoWeekday() !== 6 && from.isoWeekday() !== 7) {

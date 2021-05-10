@@ -15,7 +15,10 @@ class DepartamentoRutas {
         /** SOLICITUD DE ALIMENTACIÓN */
         this.router.post('/solicitud', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearSolicitaComida);
         this.router.put('/solicitud', verificarToken_1.TokenValidation, planComidasControlador_1.default.ActualizarSolicitaComida);
+        this.router.put('/solicitud/estado', verificarToken_1.TokenValidation, planComidasControlador_1.default.ActualizarEstadoSolicitaComida);
         this.router.get('/infoComida/:id_empleado', verificarToken_1.TokenValidation, planComidasControlador_1.default.EncontrarSolicitaComidaIdEmpleado);
+        this.router.get('/infoComida/estado/aprobado', verificarToken_1.TokenValidation, planComidasControlador_1.default.EncontrarSolicitaComidaAprobada);
+        this.router.get('/infoComida/estado/negado', verificarToken_1.TokenValidation, planComidasControlador_1.default.EncontrarSolicitaComidaNull);
         /** CONOCER JEFES DE UN DEPARTAMENTO */
         this.router.get('/enviar/notificacion/:id_departamento', verificarToken_1.TokenValidation, planComidasControlador_1.default.BuscarJefes);
         this.router.post('/mail-noti/', verificarToken_1.TokenValidation, planComidasControlador_1.default.EnviarCorreoComidas);
@@ -28,7 +31,11 @@ class DepartamentoRutas {
         this.router.put('/', verificarToken_1.TokenValidation, planComidasControlador_1.default.ActualizarPlanComidas);
         /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
         this.router.post('/empleado/plan', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearPlanEmpleado);
+        this.router.post('/empleado/solicitud', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearSolEmpleado);
+        this.router.post('/duplicidad/plan', verificarToken_1.TokenValidation, planComidasControlador_1.default.BuscarPlanComidaEmpleadoFechas);
         this.router.post('/mail-plan/', verificarToken_1.TokenValidation, planComidasControlador_1.default.EnviarCorreoPlanComidas);
+        this.router.post('/mail-solicita/', verificarToken_1.TokenValidation, planComidasControlador_1.default.EnviarCorreoEstadoSolComidas);
+        this.router.delete('/eliminar/plan-solicitud/:id/:fecha/:id_empleado', verificarToken_1.TokenValidation, planComidasControlador_1.default.EliminarSolComidaEmpleado);
         // Registrar en tabla tipo_comida
         this.router.post('/tipo_comida', verificarToken_1.TokenValidation, planComidasControlador_1.default.CrearTipoComidas);
         this.router.get('/tipo_comida', verificarToken_1.TokenValidation, planComidasControlador_1.default.ListarTipoComidas);

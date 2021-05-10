@@ -10,17 +10,18 @@
     </div>
     <form [formGroup]="PlanificacionComidasForm">
         <div class="d-flex flex-wrap justify-content-start">
-            <mat-form-field *ngIf="verNombre">
+            <!--  <mat-form-field *ngIf="verNombre">
                 <mat-label>Empleado</mat-label>
                 <input id="nomEmpleado" matInput placeholder="Ejm: 1" formControlName="idEmpleadoForm"
                     (keypress)="IngresarSoloLetras($event)" readonly="readonly">
                 <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
                     matTooltip="Nombre del empleado que planifica almuerzo">
                     help_outline</mat-icon>
-            </mat-form-field>
+            </mat-form-field>-->
             <mat-form-field>
                 <mat-label>Fecha Actual</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" formControlName="fechaForm" required>
+                <input matInput [matDatepicker]="picker" placeholder="dd/mm/aaaa" formControlName="fechaForm" required
+                    disabled>
                 <mat-datepicker-toggle matSuffix [for]="picker" id="planComida" matTooltipClass="planComida-tooltip"
                     matTooltipPosition="right"
                     matTooltip="Ingresar fecha en la que se registra la planificación. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
@@ -57,10 +58,25 @@
                     matTooltip="Lista de platos de comida existentes">
                     help_outline</mat-icon>
                 <mat-select formControlName="platosForm" required>
-                    <mat-option *ngFor="let d of detalle" [value]="d.id">
-                        {{d.nombre}}
+                    <mat-option *ngFor="let d of detalle" [value]="d.id_detalle">
+                        {{d.plato}}
                     </mat-option>
                 </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Hora de inicio</mat-label>
+                <input matInput type="time" formControlName="horaInicioForm" required readonly>
+                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                    matTooltip="Ingresar la hora en la que inicia el almuerzo">
+                    help_outline</mat-icon>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Hora de fin</mat-label>
+                <input matInput type="time" placeholder="Ejm: 1" formControlName="horaFinForm" required readonly>
+                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
+                    matTooltip="Ingresar la hora de finalización del almuerzo">
+                    help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Fecha Inicio</mat-label>
@@ -72,7 +88,6 @@
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker2></mat-datepicker>
             </mat-form-field>
-
             <mat-form-field>
                 <mat-label>Fecha Fin</mat-label>
                 <input matInput [matDatepicker]="picker3" placeholder="dd/mm/aaaa" formControlName="fechaFinForm"
@@ -82,21 +97,6 @@
                     matTooltip="Ingresar fecha en la que se va a asistir al almuerzo. Seleccione la fecha dando click en el icono de calendario o puede escribir la fecha con el formato  día/mes/año. Ejemplo: 12/04/1993">
                 </mat-datepicker-toggle>
                 <mat-datepicker touchUi #picker3></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field>
-                <mat-label>Hora de inicio</mat-label>
-                <input matInput type="time" formControlName="horaInicioForm" required>
-                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
-                    matTooltip="Ingresar la hora en la que inicia el almuerzo">
-                    help_outline</mat-icon>
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Hora de fin</mat-label>
-                <input matInput type="time" placeholder="Ejm: 1" formControlName="horaFinForm" required>
-                <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip" matTooltipPosition="right"
-                    matTooltip="Ingresar la hora de finalización del almuerzo">
-                    help_outline</mat-icon>
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Observación</mat-label>
