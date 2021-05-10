@@ -5,6 +5,7 @@ import * as moment from 'moment';
 
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Estados {
   valor: number;
@@ -37,6 +38,7 @@ export class EstadoHoraExtraComponent implements OnInit {
   constructor(
     private realTime: RealTimeService,
     private restH: PedHoraExtraService,
+    private toastr: ToastrService,
     public dialogRef: MatDialogRef<EstadoHoraExtraComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -101,6 +103,12 @@ export class EstadoHoraExtraComponent implements OnInit {
         }
       });
       this.dialogRef.close();
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 

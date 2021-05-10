@@ -37,9 +37,13 @@ export class AutorizaSolicitudComponent implements OnInit {
         this.boton_autorizar = false;
         this.boton_negar = true;
       }
-      else {
+      else if (this.data.datosMultiple.aprobada === 'NEGADO') {
         this.boton_autorizar = true;
         this.boton_negar = false;
+      }
+      else {
+        this.boton_autorizar = true;
+        this.boton_negar = true;
       }
     }
   }
@@ -72,13 +76,22 @@ export class AutorizaSolicitudComponent implements OnInit {
         });
       } else {
         nombre_estado = 'NEGADO';
-        this.restPlan.EliminarSolComida(this.data.datosMultiple.id, this.data.datosMultiple.fec_comida.split('T')[0], this.data.datosMultiple.id_empleado).subscribe(res => {
+        if (this.data.datosMultiple.aprobada === null) {
           this.EnviarNotificaciones(this.data.datosMultiple.fec_comida, this.data.datosMultiple.hora_inicio, this.data.datosMultiple.hora_fin, this.idEmpleadoLogueado, this.data.datosMultiple.id_empleado, nombre_estado);
           this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Negado.', {
             timeOut: 6000,
           })
           this.Cerrar();
-        })
+        }
+        else {
+          this.restPlan.EliminarSolComida(this.data.datosMultiple.id, this.data.datosMultiple.fec_comida.split('T')[0], this.data.datosMultiple.id_empleado).subscribe(res => {
+            this.EnviarNotificaciones(this.data.datosMultiple.fec_comida, this.data.datosMultiple.hora_inicio, this.data.datosMultiple.hora_fin, this.idEmpleadoLogueado, this.data.datosMultiple.id_empleado, nombre_estado);
+            this.toastr.success('Operación Exitosa', 'Servicio de Alimentación Negado.', {
+              timeOut: 6000,
+            })
+            this.Cerrar();
+          })
+        }
       }
     })
   }

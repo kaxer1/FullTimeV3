@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
@@ -7,14 +8,64 @@ import { ToastrService } from 'ngx-toastr';
 export class ValidacionesService {
 
   constructor(
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
+
+
+  /**
+   * REDIRECCION POR ACCESO A MODULOS NO AUTORIZADOS
+   */
+
+  RedireccionarEstadisticas(error) {
+    const { access, message, text } = error;
+    console.log(error);
+    console.log(access, message);
+    if (access === false) {
+      this.toastr.error(message);
+      this.router.navigate(['/estadisticas']);
+    }
+    if (text) {
+      this.toastr.error(text)
+    }
+    // this.router.navigate(['/estadisticas', { relativeTo: this.route, skipLocationChange: false }]);
+  }
+
+  RedireccionarHomeAdmin(error) {
+    const { access, message, text } = error;
+    console.log(error);
+    console.log(access, message);
+
+    if (access === false) {
+      this.toastr.error(message)
+      this.router.navigate(['/home']);
+      // this.router.navigate(['/home', { relativeTo: this.route, skipLocationChange: false }]);
+    }
+    if (text) {
+      this.toastr.error(text)
+    }
+  }
+
+  RedireccionarMixto(error) {
+    const { access, message, text} = error;
+    console.log(error);
+    console.log(access, message);
+    if (access === false) {
+      this.toastr.error(message)
+      this.router.navigate(['/']);
+      // this.router.navigate(['/', { relativeTo: this.route, skipLocationChange: false }]);
+    }
+    if (text) {
+      this.toastr.error(text)
+    }
+  }
 
   /**
    * METODOS PARA CONTROLAR INGRESO DE LETRAS
    */
 
-   IngresarSoloLetras(e) {
+  IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
     //Se define todo el abecedario que se va a usar.

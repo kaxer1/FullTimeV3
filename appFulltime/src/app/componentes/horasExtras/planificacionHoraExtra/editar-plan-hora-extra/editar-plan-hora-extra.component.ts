@@ -113,6 +113,12 @@ export class EditarPlanHoraExtraComponent implements OnInit {
         this.NotificarPlanificacion(moment(form1.fechaInicioForm).format('DD/MM'), moment(form1.FechaFinForm).format('DD/MM'), obj.id_empl_realiza)
       })
       console.log('response', response)
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
     this.dialogRef.close();
   }
@@ -198,6 +204,12 @@ export class EditarPlanHoraExtraComponent implements OnInit {
     }
     this.restPE.EnviarMensajePlanificacion(mensaje).subscribe(res => {
       console.log(res.message);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 

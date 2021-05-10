@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-extra.service';
 import { TiempoAutorizadoComponent } from 'src/app/componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { PlanHoraExtraAutorizaComponent } from 'src/app/componentes/autorizaciones/plan-hora-extra-autoriza/plan-hora-extra-autoriza.component';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 export interface HoraExtraPlanElemento {
   apellido: string;
@@ -74,7 +75,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
   constructor(
     private restHEP: PlanHoraExtraService,
     public toastr: ToastrService,
-    private vistaFlotante: MatDialog
+    private vistaFlotante: MatDialog,
+    private validacionesService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +127,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         this.totalHorasExtras = (moment(tt).format('HH:mm:ss'));
       }
       console.log('planes', this.horas_extras_plan)
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -151,6 +155,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
           break;
         }
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -248,6 +254,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         horaT = (moment(tt).format('HH:mm:ss')).split(':');
         this.totalHorasExtrasO = (moment(tt).format('HH:mm:ss'));
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -275,6 +283,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         }
       }
       console.log(res);
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -395,6 +405,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         hora: EmpleadosSeleccionados[i].hora_total_timbre
       }
       this.restHEP.AutorizarTiempoHoraExtra(EmpleadosSeleccionados[i].id_plan_extra, h).subscribe(res => {
+      }, err => {
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
       })
     }
     this.AbrirAutorizaciones(EmpleadosSeleccionados, 'multiple');
@@ -407,22 +419,7 @@ export class ListaPlanHoraExtraComponent implements OnInit {
 
   // Método para ingresar solo números
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt)
   }
 
   /** ********************************************************************************************
@@ -464,6 +461,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
         horaT = (moment(tt).format('HH:mm:ss')).split(':');
         this.totalAutorizadas = (moment(tt).format('HH:mm:ss'));
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -490,6 +489,8 @@ export class ListaPlanHoraExtraComponent implements OnInit {
           break;
         }
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 

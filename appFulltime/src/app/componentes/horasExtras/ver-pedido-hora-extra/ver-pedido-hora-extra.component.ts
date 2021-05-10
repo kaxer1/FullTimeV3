@@ -17,6 +17,7 @@ import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 interface Estado {
   id: number,
@@ -66,7 +67,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
     private router: Router,
     private restA: AutorizacionService,
     private restD: DepartamentosService,
-    private vistaFolante: MatDialog
+    private vistaFolante: MatDialog,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.dataParams = this.router.routerState.snapshot.root.children[0].params;
@@ -113,8 +115,11 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         console.log(error);
         this.HabilitarAutorizacion = false;
       });
-    });
 
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
+    });
+    
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerSolicitud(this.dataParams.id);
     this.ObtenerAutorizacion(this.dataParams.id);
@@ -174,6 +179,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
           this.habilitarActualizar = true;
         }
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 
@@ -225,6 +232,8 @@ export class VerPedidoHoraExtraComponent implements OnInit {
         }
       })
       console.log('autorizacion', this.datosAutorizacion);
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error)
     })
   }
 

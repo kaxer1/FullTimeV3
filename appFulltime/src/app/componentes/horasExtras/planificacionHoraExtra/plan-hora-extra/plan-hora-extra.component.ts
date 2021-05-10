@@ -115,17 +115,32 @@ export class PlanHoraExtraComponent implements OnInit {
 
       if (this.datosSeleccionados.length != undefined) {
         this.restPE.ConsultarUltimoPlanHora().subscribe(data => {
-        this.data.planifica.map(obj => {
-          dataPlanHoraExtraEmpleado.id_empl_realiza = obj.id;
-          dataPlanHoraExtraEmpleado.id_empl_cargo = obj.id_cargo;
-          dataPlanHoraExtraEmpleado.id_empl_contrato = obj.id_contrato;
-          dataPlanHoraExtraEmpleado.codigo = obj.codigo;
-          console.log('codigo', obj.codigo)
+          this.data.planifica.map(obj => {
+            dataPlanHoraExtraEmpleado.id_empl_realiza = obj.id;
+            dataPlanHoraExtraEmpleado.id_empl_cargo = obj.id_cargo;
+            dataPlanHoraExtraEmpleado.id_empl_contrato = obj.id_contrato;
+            dataPlanHoraExtraEmpleado.codigo = obj.codigo;
+            console.log('codigo', obj.codigo)
             dataPlanHoraExtraEmpleado.id_plan_hora = data[0].id_plan_hora;
-            this.restPE.CrearPlanHoraExtraEmpleado(dataPlanHoraExtraEmpleado).subscribe(response => {
-              this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), obj.id)
-            })
+
+              this.restPE.CrearPlanHoraExtraEmpleado(dataPlanHoraExtraEmpleado).subscribe(response => {
+                this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), obj.id)
+              }, err => {
+                const { access, message } = err.error.message;
+                if (access === false) {
+                  this.toastr.error(message)
+                  this.dialogRef.close();
+                }
+              })
+
           })
+
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+            this.dialogRef.close();
+          }
         })
       }
       else {
@@ -133,10 +148,29 @@ export class PlanHoraExtraComponent implements OnInit {
           dataPlanHoraExtraEmpleado.id_plan_hora = data[0].id_plan_hora;
           this.restPE.CrearPlanHoraExtraEmpleado(dataPlanHoraExtraEmpleado).subscribe(response => {
             this.NotificarPlanificacion(form1.fechaInicioForm.format('DD/MM'), form1.FechaFinForm.format('DD/MM'), this.data.planifica.id)
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+            this.dialogRef.close();
+          }
         })
       }
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
+
     if (this.datosSeleccionados.length != undefined) {
       this.toastr.success('Operación Exitosa', 'Se registra un total de ' + this.datosSeleccionados.length + ' planificaciones de horas extras.', {
         timeOut: 6000,
@@ -232,6 +266,12 @@ export class PlanHoraExtraComponent implements OnInit {
     }
     this.restPE.EnviarMensajePlanificacion(mensaje).subscribe(res => {
       console.log(res.message);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 

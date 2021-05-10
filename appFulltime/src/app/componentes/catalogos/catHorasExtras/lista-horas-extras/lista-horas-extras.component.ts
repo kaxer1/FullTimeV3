@@ -18,6 +18,8 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-horas-extras',
@@ -53,6 +55,7 @@ export class ListaHorasExtrasComponent implements OnInit {
     public vistaRegistrarDatos: MatDialog,
     private toastr: ToastrService,
     private router: Router,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -121,7 +124,9 @@ export class ListaHorasExtrasComponent implements OnInit {
           this.horasExtras[i].tipo_dia = 'Normal';
         }
       }
-    }, error => { });
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+    });
   }
 
   LimpiarCampos() {
@@ -148,6 +153,8 @@ export class ListaHorasExtrasComponent implements OnInit {
         timeOut: 6000,
       });
       this.ObtenerHorasExtras();
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -322,8 +329,11 @@ export class ListaHorasExtrasComponent implements OnInit {
     this.rest.DownloadXMLRest(arreglohorasExtras).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/horasExtras/download/' + this.data.name;
+      // this.urlxml = 'http://localhost:3000/horasExtras/download/' + this.data.name;
+      this.urlxml = `${environment.url}/horasExtras/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
