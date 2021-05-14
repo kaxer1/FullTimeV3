@@ -20,9 +20,10 @@ export class TipoComidasService {
     return this.http.get(`${environment.url}/tipoComidas`);
   }
 
-  ConsultarMenu(id: number) {
+  ConsultarUnServicio(id: number) {
     return this.http.get(`${environment.url}/tipoComidas/${id}`);
   }
+
 
   ConsultarUnMenu(id: number) {
     return this.http.get(`${environment.url}/tipoComidas/buscar/menu/${id}`);

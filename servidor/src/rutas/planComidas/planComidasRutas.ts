@@ -13,7 +13,10 @@ class DepartamentoRutas {
         /** SOLICITUD DE ALIMENTACIÓN */
         this.router.post('/solicitud', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearSolicitaComida);
         this.router.put('/solicitud', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ActualizarSolicitaComida);
+        this.router.put('/solicitud/estado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.ActualizarEstadoSolicitaComida);
         this.router.get('/infoComida/:id_empleado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaIdEmpleado);
+        this.router.get('/infoComida/estado/aprobado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaAprobada);
+        this.router.get('/infoComida/estado/negado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EncontrarSolicitaComidaNull);
 
         /** CONOCER JEFES DE UN DEPARTAMENTO */
         this.router.get('/enviar/notificacion/:id_departamento', TokenValidation, PLAN_COMIDAS_CONTROLADOR.BuscarJefes);
@@ -29,7 +32,11 @@ class DepartamentoRutas {
 
         /** REGISTRO DE LA PLANIFICACIÓN DE ALIMENTACIÓN AL EMPLEADO */
         this.router.post('/empleado/plan', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearPlanEmpleado);
+        this.router.post('/empleado/solicitud', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearSolEmpleado);
+        this.router.post('/duplicidad/plan', TokenValidation, PLAN_COMIDAS_CONTROLADOR.BuscarPlanComidaEmpleadoFechas);
         this.router.post('/mail-plan/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EnviarCorreoPlanComidas);
+        this.router.post('/mail-solicita/', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EnviarCorreoEstadoSolComidas);
+        this.router.delete('/eliminar/plan-solicitud/:id/:fecha/:id_empleado', TokenValidation, PLAN_COMIDAS_CONTROLADOR.EliminarSolComidaEmpleado);
 
         // Registrar en tabla tipo_comida
         this.router.post('/tipo_comida', TokenValidation, PLAN_COMIDAS_CONTROLADOR.CrearTipoComidas);

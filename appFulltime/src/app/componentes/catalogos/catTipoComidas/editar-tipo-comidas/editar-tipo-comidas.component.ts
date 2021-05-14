@@ -18,12 +18,16 @@ export class EditarTipoComidasComponent implements OnInit {
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
   tipoF = new FormControl('');
   servicioF = new FormControl('', [Validators.minLength(3)]);
+  horaInicioF = new FormControl('', [Validators.required]);
+  horaFinF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public TipoComidaForm = new FormGroup({
     nombreForm: this.nombreF,
     servicioForm: this.servicioF,
     tipoForm: this.tipoF,
+    horaInicioForm: this.horaInicioF,
+    horaFinForm: this.horaFinF
   });
 
   constructor(
@@ -59,7 +63,9 @@ export class EditarTipoComidasComponent implements OnInit {
     let datosTipoComida = {
       id: this.data.id,
       nombre: form.nombreForm,
-      tipo_comida: form.tipoForm
+      tipo_comida: form.tipoForm,
+      hora_inicio: form.horaInicioForm,
+      hora_fin: form.horaFinForm
     };
     if (form.tipoForm === undefined) {
       this.RegistrarServicio(form, datosTipoComida);
@@ -73,26 +79,9 @@ export class EditarTipoComidasComponent implements OnInit {
     this.TipoComidaForm.patchValue({
       nombreForm: this.data.nombre,
       tipoForm: this.data.tipo_comida,
+      horaInicioForm: this.data.hora_inicio,
+      horaFinForm: this.data.hora_fin
     })
-  }
-
-  IngresarNumeroDecimal(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
   }
 
   ObtenerMensajeErrorNombreRequerido() {

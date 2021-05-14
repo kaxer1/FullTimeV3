@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMPLEADO_HORARIOS_CONTROLADOR = void 0;
 const database_1 = __importDefault(require("../../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
@@ -409,6 +408,20 @@ class EmpleadoHorariosControlador {
                 '($1 BETWEEN fec_inicio AND fec_final OR $2 BETWEEN fec_inicio AND fec_final ' +
                 'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) AND id_horarios = $5 ' +
                 'AND codigo = $4', [fechaInicio, fechaFinal, id, codigo, id_horario]);
+            if (HORARIO.rowCount > 0) {
+                return res.jsonp(HORARIO.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'Registros no encontrados' });
+            }
+        });
+    }
+    BuscarHorariosFechas(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const codigo = req.params.codigo;
+            const { fechaInicio, fechaFinal } = req.body;
+            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND ' +
+                'fec_inicio BETWEEN $2 AND $3 AND fec_final BETWEEN $2 AND $3', [codigo, fechaInicio, fechaFinal]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }

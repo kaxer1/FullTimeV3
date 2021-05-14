@@ -6,6 +6,7 @@ import { PedidoHoraExtraComponent } from '../../horasExtras/pedido-hora-extra/pe
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { CancelarHoraExtraComponent } from './cancelar-hora-extra/cancelar-hora-extra.component';
 import { EditarHoraExtraEmpleadoComponent } from './editar-hora-extra-empleado/editar-hora-extra-empleado.component';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-hora-extra-empleado',
@@ -23,6 +24,7 @@ export class HoraExtraEmpleadoComponent implements OnInit {
   constructor(
     private restHE: PedHoraExtraService,
     private vistaRegistrarDatos: MatDialog,
+    private validacionesService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -56,6 +58,9 @@ export class HoraExtraEmpleadoComponent implements OnInit {
         }
       }
 
+    }, err => {
+      console.log(err.error);
+      return this.validacionesService.RedireccionarEstadisticas(err.error);
     });
   }
 

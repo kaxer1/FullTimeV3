@@ -270,6 +270,8 @@ import { ReportesModule } from './componentes/reportes/reportes.module';
 
 //enviroment
 import { environment } from 'src/environments/environment';
+import { AutorizaSolicitudComponent } from './componentes/planificacionComidas/autoriza-solicitud/autoriza-solicitud.component';
+import { ListarSolicitudComponent } from './componentes/planificacionComidas/listar-solicitud/listar-solicitud.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -490,6 +492,8 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     PermisosMultiplesEmpleadosComponent,
     HorariosMultiplesComponent,
     HorarioMultipleEmpleadoComponent,
+    AutorizaSolicitudComponent,
+    ListarSolicitudComponent,
   ],
 
   imports: [

@@ -60,6 +60,8 @@
                     <tr style="text-align: center;">
                         <th scope="col">Tipo de Servicio</th>
                         <th scope="col">Menú</th>
+                        <th scope="col">Hora Inicio</th>
+                        <th scope="col">Hora Fin</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -68,6 +70,8 @@
                         *ngFor="let comida of tipoComidas | filtrosNombres: filtroNombre | paginate:tamanio_pagina:numero_pagina">
                         <td id="centrar">{{comida.tipo}}</td>
                         <td id="centrar">{{comida.nombre}}</td>
+                        <td id="centrar">{{comida.hora_inicio}}</td>
+                        <td id="centrar">{{comida.hora_fin}}</td>
                         <td class="d-flex justify-content-center align-self-center">
                             <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
                                 matTooltip="Agregar Detalles de Menú" class="far fa-list-alt" id="detalleH"

@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { PlanHoraExtraService } from 'src/app/servicios/planHoraExtra/plan-hora-extra.service';
 
 import { EditarPlanHoraExtraComponent } from 'src/app/componentes/horasExtras/planificacionHoraExtra/editar-plan-hora-extra/editar-plan-hora-extra.component';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-lista-planificaciones',
@@ -27,7 +28,8 @@ export class ListaPlanificacionesComponent implements OnInit {
   constructor(
     public restP: PlanHoraExtraService,
     private toastr: ToastrService,
-    public vistaRegistrarDatos: MatDialog
+    public vistaRegistrarDatos: MatDialog,
+    private validacionesService: ValidacionesService
   ) { }
 
   fecha: any;
@@ -46,10 +48,11 @@ export class ListaPlanificacionesComponent implements OnInit {
     this.listaPlan = [];
     this.restP.ConsultarPlanificaciones().subscribe(response => {
       this.listaPlan = response;
-    }, error => {
+    }, err => {
       this.toastr.info('No se ha encontrado registro de Planificación de Hora Extra', '', {
         timeOut: 10000,
       })
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 

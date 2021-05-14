@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { PedHoraExtraService } from 'src/app/servicios/horaExtra/ped-hora-extra.service';
 import { TiempoAutorizadoComponent } from 'src/app/componentes/horasExtras/tiempo-autorizado/tiempo-autorizado.component';
 import { HoraExtraAutorizacionesComponent } from 'src/app/componentes/autorizaciones/hora-extra-autorizaciones/hora-extra-autorizaciones.component';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 export interface HoraExtraElemento {
   apellido: string;
@@ -53,6 +54,7 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
   constructor(
     private restHE: PedHoraExtraService,
     private vistaFlotante: MatDialog,
+    private validacionesService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -103,6 +105,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
         }
       }
       console.log(res);
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -142,6 +146,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
         horaT = (moment(tt).format('HH:mm:ss')).split(':');
         this.totalHorasExtras = (moment(tt).format('HH:mm:ss'));
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -220,6 +226,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
         horaT = (moment(tt).format('HH:mm:ss')).split(':');
         this.total_horas_observacion = (moment(tt).format('HH:mm:ss'));
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -267,6 +275,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
           break;
         }
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -347,6 +357,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
           this.total_horas_autorizadas = (moment(tt).format('HH:mm:ss'));
         }
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -385,6 +397,8 @@ export class ListaPedidoHoraExtraComponent implements OnInit {
       }
       this.restHE.AutorizarTiempoHoraExtra(EmpleadosSeleccionados[i].id, h).subscribe(res => {
         console.log(res);
+      }, err => {
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
       })
     }
     this.AbrirAutorizaciones(EmpleadosSeleccionados, 'multiple');

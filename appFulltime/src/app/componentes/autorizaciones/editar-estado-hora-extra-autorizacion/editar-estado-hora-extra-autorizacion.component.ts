@@ -84,6 +84,12 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
         timeOut: 6000,
       });
       this.EditarEstadoHoraExtra(form);
+    }, err => {
+      const { access, message } = err.error.message;
+      if (!access) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 
@@ -116,6 +122,12 @@ export class EditarEstadoHoraExtraAutorizacionComponent implements OnInit {
         }
       });
       this.dialogRef.close();
+    }, err => {
+      const { access, message } = err.error.message;
+      if (!access) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 

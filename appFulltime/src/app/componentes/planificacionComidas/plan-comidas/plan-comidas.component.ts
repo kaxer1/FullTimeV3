@@ -181,6 +181,9 @@ export class PlanComidasComponent implements OnInit {
         this.ObtenerEmpleados();
         this.LimpiarCampos();
         this.LimpiarBusquedas();
+        this.btnCheckHabilitar = false;
+        this.auto_individual = true;
+        this.selectionUno.clear();
       });
     }
   }

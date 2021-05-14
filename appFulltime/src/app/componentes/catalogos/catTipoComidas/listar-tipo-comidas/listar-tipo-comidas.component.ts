@@ -104,6 +104,7 @@ export class ListarTipoComidasComponent implements OnInit {
     this.tipoComidas = [];
     this.rest.ConsultarTipoComida().subscribe(datos => {
       this.tipoComidas = datos;
+      console.log('tipo_comidas', this.tipoComidas)
     })
   }
 

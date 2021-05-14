@@ -26,7 +26,8 @@ export class EditarPlanComidasComponent implements OnInit {
   idEmpleadoF = new FormControl('', [Validators.required]);
   fechaF = new FormControl('', [Validators.required]);
   observacionF = new FormControl('', [Validators.required, Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{4,48}")]);
-  fechaPlanificacionF = new FormControl('', Validators.required);
+  fechaInicioF = new FormControl('', Validators.required);
+  fechaFinF = new FormControl('', Validators.required);
   horaInicioF = new FormControl('', Validators.required);
   horaFinF = new FormControl('', Validators.required);
   tipoF = new FormControl('', Validators.required);;
@@ -39,7 +40,8 @@ export class EditarPlanComidasComponent implements OnInit {
     idEmpleadoForm: this.idEmpleadoF,
     fechaForm: this.fechaF,
     observacionForm: this.observacionF,
-    fechaPlanificacionForm: this.fechaPlanificacionF,
+    fechaInicioForm: this.fechaInicioF,
+    fechaFinForm: this.fechaFinF,
     horaInicioForm: this.horaInicioF,
     horaFinForm: this.horaFinF,
     tipoForm: this.tipoF,
@@ -69,6 +71,12 @@ export class EditarPlanComidasComponent implements OnInit {
   ngOnInit(): void {
     console.log('datos', this.data)
     this.ObtenerServicios();
+    this.rest.ConsultarUnServicio(this.data.id_servicio).subscribe(datos => {
+      this.tipoComidas = datos;
+    })
+    this.rest.ConsultarUnDetalleMenu(this.data.id_menu).subscribe(datos => {
+      this.detalle = datos;
+    })
     this.ObtenerEmpleados(this.data.id_empleado);
     this.CargarDatos();
   }
@@ -85,8 +93,10 @@ export class EditarPlanComidasComponent implements OnInit {
   ObtenerPlatosComidas(form) {
     this.idComidaF.reset();
     this.platosF.reset();
+    this.horaInicioF.reset();
+    this.horaFinF.reset();
     this.tipoComidas = [];
-    this.rest.ConsultarMenu(form.tipoForm).subscribe(datos => {
+    this.rest.ConsultarUnServicio(form.tipoForm).subscribe(datos => {
       this.tipoComidas = datos;
     }, error => {
       this.toastr.info('Verificar la información.', 'No existen registrados Menús para esta tipo de servicio.', {
@@ -98,9 +108,15 @@ export class EditarPlanComidasComponent implements OnInit {
   detalle: any = [];
   ObtenerDetalleMenu(form) {
     this.platosF.reset();
+    this.horaInicioF.reset();
+    this.horaFinF.reset();
     this.detalle = [];
     this.rest.ConsultarUnDetalleMenu(form.idComidaForm).subscribe(datos => {
       this.detalle = datos;
+      this.PlanificacionComidasForm.patchValue({
+        horaInicioForm: this.detalle[0].hora_inicio,
+        horaFinForm: this.detalle[0].hora_fin
+      })
     }, error => {
       this.toastr.info('Verificar la información.', 'No existen registros de Alimentación para este Menú.', {
         timeOut: 6000,
@@ -160,12 +176,13 @@ export class EditarPlanComidasComponent implements OnInit {
 
   CargarDatos() {
     this.PlanificacionComidasForm.patchValue({
-      idComidaForm: this.data.id_tipo_comida,
+      idComidaForm: this.data.id_menu,
       observacionForm: this.data.observacion,
-      fechaPlanificacionForm: this.data.fec_solicita,
+      fechaPlanificacionForm: this.data.fec_comida,
       horaInicioForm: this.data.hora_inicio,
       horaFinForm: this.data.hora_fin,
-      tipoForm: this.data.id_servicio
+      tipoForm: this.data.id_servicio,
+      platosForm: this.data.id_detalle
     })
     if (this.data.extra === true) {
       this.PlanificacionComidasForm.patchValue({

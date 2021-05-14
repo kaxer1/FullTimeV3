@@ -4,6 +4,7 @@ import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { ToastrService } from 'ngx-toastr';
 import { HorasExtrasService } from 'src/app/servicios/catalogos/catHorasExtras/horas-extras.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 interface TipoDescuentos{
   value: number;
@@ -80,7 +81,8 @@ export class HorasExtrasComponent implements OnInit {
   constructor(
     private toastr: ToastrService,
     private rest: HorasExtrasService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private validacionesService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -129,9 +131,9 @@ export class HorasExtrasComponent implements OnInit {
         this.toastr.success('Operación Exitosa', 'Hora extra guardada', {
           timeOut: 6000,
         });
-      }, error => {
-        console.log(error);
-      });;
+      }, err => {
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
+      });
   }
 
 }
