@@ -183,10 +183,11 @@
                         <td>{{e.cargo}}</td>
                         <td>{{e.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
-                            <mat-icon *ngIf="auto_individual" (click)="AbrirVentanaPlanificacion(e.id)" matSuffix
-                                matTooltipPosition="right"
-                                matTooltip="Registrar planificación servicio de alimentación"> restaurant_menu
-                            </mat-icon>
+                            <i class="fas fa-utensils" *ngIf="auto_individual" (click)="AbrirVentanaPlanificacion(e.id)"
+                                matSuffix matTooltipPosition="right"
+                                matTooltip="Registrar planificación servicio de alimentación" id='menu'>
+                                <p>Planificar</p>
+                            </i>
                         </td>
                     </tr>
                 </tbody>

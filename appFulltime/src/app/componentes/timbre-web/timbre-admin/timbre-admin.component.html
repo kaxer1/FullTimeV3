@@ -182,9 +182,11 @@
                         <td>{{e.cargo}}</td>
                         <td>{{e.regimen | titlecase}}</td>
                         <td class="d-flex justify-content-center">
-                            <mat-icon *ngIf="auto_individual" (click)="ConfirmarTimbre(e)" matSuffix
-                                matTooltipPosition="right" matTooltip="Puede registrar timbre de cualquier fecha"> alarm
-                            </mat-icon>
+                            <i class="far fa-clock" *ngIf="auto_individual" (click)="ConfirmarTimbre(e)" matSuffix
+                                id="reloj" matTooltipPosition="right"
+                                matTooltip="Puede registrar timbre de cualquier fecha">
+                                <p>Timbrar</p>
+                            </i>
                         </td>
                     </tr>
                 </tbody>

@@ -547,10 +547,10 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'local_dining',
         children: [
-          { name: 'Almuerzos', url: '/listarTipoComidas' },
+          { name: 'Comidas', url: '/listarTipoComidas' },
+          { name: 'Planificar', url: '/alimentacion' },
           { name: 'Solicitudes', url: '/listaSolicitaComida' },
-          { name: 'Planificación', url: '/alimentacion' },
-          { name: 'Tickets', url: '/tickets' },
+          { name: 'Planificaciones', url: '/listaPlanComida' },
         ]
       },
       {

@@ -41,6 +41,14 @@ mat-form-field {width: 100%; padding: 10px 10px 0px 10px;}
     width: 175px;
 }
 
+#botonTimbreAbierto{
+    margin: 2px 10px 2px 10px;
+    border-radius: 10px;
+    background: rgb(41, 187, 41);
+    color: white;
+    width: 175px;
+}
+
 .scrollbar {
     float: left;
     height: 460px;
