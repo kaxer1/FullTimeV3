@@ -470,6 +470,11 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.getOneEmpleadoRest(id_empleado).subscribe(datos => {
       this.restPermiso.BuscarPermisoCodigo(datos[0].codigo).subscribe(datos => {
         this.permisosTotales = datos;
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+        }
       })
     });
   }

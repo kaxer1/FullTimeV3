@@ -7,6 +7,7 @@ import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { AutorizacionesComponent } from 'src/app/componentes/autorizaciones/autorizaciones/autorizaciones.component';
 import { EditarPermisoEmpleadoComponent } from '../../rolEmpleado/solicitar-permisos-empleado/editar-permiso-empleado/editar-permiso-empleado.component';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 export interface PermisosElemento {
   apellido: string;
@@ -58,8 +59,8 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
   constructor(
     private restP: PermisosService,
     public restEmpleado: EmpleadoService,
-    public restPermiso: PermisosService,
     private vistaFlotante: MatDialog,
+    private validacionesService: ValidacionesService
   ) { }
 
   ngOnInit(): void {
@@ -87,13 +88,15 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
       if (this.permisos.length != 0) {
         this.lista_permisos = true;
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
   permisosTotales: any;
   EditarPermiso(id, id_empl) {
     /* Método para imprimir datos del permiso */
     this.permisosTotales = [];
-    this.restPermiso.ObtenerUnPermisoEditar(id).subscribe(datos => {
+    this.restP.ObtenerUnPermisoEditar(id).subscribe(datos => {
       this.permisosTotales = datos;
       this.vistaFlotante.open(EditarPermisoEmpleadoComponent, {
         width: '1200px',
@@ -102,6 +105,8 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
         this.obtenerPermisos();
         this.ObtenerPermisosAutorizados();
       });
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     })
 
   }
@@ -186,6 +191,8 @@ export class ListarEmpleadoPermisoComponent implements OnInit {
       if (this.permisosAutorizados.length != 0) {
         this.lista_autorizados = true;
       }
+    }, err => {
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 

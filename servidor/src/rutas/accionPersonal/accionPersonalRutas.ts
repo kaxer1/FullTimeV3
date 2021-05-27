@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import ACCION_PERSONAL_CONTROLADOR from '../../controlador/accionPersonal/accionPersonalControlador';
 import { TokenValidation } from '../../libs/verificarToken'
+import { ModuloAccionesPersonalValidation } from '../../libs/Modulos/verificarAccionesPersonal';
 
 class DepartamentoRutas {
     public router: Router = Router();

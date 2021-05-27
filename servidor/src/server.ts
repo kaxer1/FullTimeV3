@@ -106,14 +106,14 @@ class Servidor {
         this.app.use('/empleadoCargos', EMPLEADO_CARGO_RUTAS);
         this.app.use('/perVacacion', PERIODO_VACACION__RUTAS);
         this.app.use('/vacaciones', VACACIONES__RUTAS);
-        this.app.use('/horas-extras-pedidas', HORA_EXTRA_PEDIDA_RUTAS); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/horas-extras-pedidas', HORA_EXTRA_PEDIDA_RUTAS); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/empleadoProcesos', EMPLEADO_PROCESO_RUTAS);
 
         // Autorizaciones
         this.app.use('/autorizaDepartamento', AUTORIZA_DEPARTAMENTO_RUTAS);
 
         // Permisos
-        this.app.use('/empleadoPermiso', PERMISOS_RUTAS);
+        this.app.use('/empleadoPermiso', PERMISOS_RUTAS); // acceso controlado por ModuloPermisosValidation
 
         // Almuerzo
         this.app.use('/planComidas', PLAN_COMIDAS_RUTAS);
@@ -141,7 +141,7 @@ class Servidor {
         this.app.use('/proceso', PROCESO_RUTA);
         this.app.use('/horario', HORARIO_RUTA);
         this.app.use('/usuarios', USUARIO_RUTA);
-        this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/horasExtras', HORAS_EXTRAS_RUTAS); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/rolPermisos', ROL_PERMISOS_RUTAS);
         this.app.use('/tipoPermisos', TIPO_PERMISOS_RUTAS);
         this.app.use('/ciudades', CIUDAD_RUTAS);
@@ -172,15 +172,15 @@ class Servidor {
 
         // Reportes
         this.app.use('/reportes/vacacion', KARDEX_VACACION_RUTAS);
-        this.app.use('/reportes/hora-extra', REPORTE_HORA_EXTRA_RUTAS); // listo controlado 
+        this.app.use('/reportes/hora-extra', REPORTE_HORA_EXTRA_RUTAS); //acceso controlado por
         this.app.use('/reporte', REPORTES_RUTAS);
         this.app.use('/reportes-asistencias/', REPORTES_A_RUTAS);
 
         // Modulo Alimentación
-        this.app.use('/alimentacion', ALIMENTACION_RUTAS);
+        this.app.use('/alimentacion', ALIMENTACION_RUTAS); // acceso controlado por ModuloAlimentacionValidation
 
         // HORAS EXTRAS
-        this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/planificacionHoraExtra', PLAN_HORAS_EXTRAS_RUTAS); // acceso controlado por ModuloHoraExtraValidation
 
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', CARGA_MULTIPLE_RUTAS);
@@ -195,7 +195,7 @@ class Servidor {
         this.app.use('/administracion', FUNCIONES_RUTAS);
 
         // ACCIONES DE PERSONAL
-        this.app.use('/accionPersonal', ACCION_PERSONAL_RUTAS);
+        this.app.use('/accionPersonal', ACCION_PERSONAL_RUTAS); // Falta ========== acceso controlado por ModuloAccionesPersonalValidation
 
         // LICENCIAS
         this.app.use('/licencias', LICENCIAS_RUTAS);
