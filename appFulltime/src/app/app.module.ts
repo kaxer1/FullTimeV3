@@ -237,7 +237,7 @@ import { MetricaPermisosComponent } from './componentes/rolEmpleado/grafica-empl
 import { DetalleMenuComponent } from './componentes/catalogos/catTipoComidas/detalle-menu/detalle-menu.component';
 import { VistaMenuComponent } from './componentes/catalogos/catTipoComidas/vista-menu/vista-menu.component';
 import { EditarDetalleMenuComponent } from './componentes/catalogos/catTipoComidas/editar-detalle-menu/editar-detalle-menu.component';
-import { FuncionesComponent } from './componentes/funciones/funciones/funciones.component';
+
 import { ConfigReportFirmasHorasExtrasComponent } from './componentes/reportes-Configuracion/config-report-firmas-horas-extras/config-report-firmas-horas-extras.component';
 import { SolicitaComidaComponent } from './componentes/planificacionComidas/solicita-comida/solicita-comida.component';
 import { AdministraComidaComponent } from './componentes/administra-comida/administra-comida.component';
@@ -475,7 +475,7 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     DetalleMenuComponent,
     VistaMenuComponent,
     EditarDetalleMenuComponent,
-    FuncionesComponent,
+
     ConfigReportFirmasHorasExtrasComponent,
     SolicitaComidaComponent,
     AdministraComidaComponent,

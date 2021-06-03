@@ -63,7 +63,7 @@
                 <div class="caja1 d-flex justify-content-start">
                 </div>
             </div>
-            <div style="text-align: right;" *ngIf="pc.fec_final === undefined && pc.aprobada === false && pc.fec_comida > FechaActual">
+            <div style="text-align: right;" *ngIf="pc.fec_final === undefined && pc.aprobada === false && pc.fec_comidas.plit('T')[0] > FechaActual">
                 <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
                     matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                     matTooltip="Modificar los datos generales de este registro">

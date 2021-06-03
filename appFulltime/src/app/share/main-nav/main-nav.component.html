@@ -114,8 +114,8 @@
             <div *ngFor="let n of timbres_noti">
 
               <!-- Avisos ya vistos -->
-              <div *ngIf="n.visto == true && n.descripcion.split(' ')[0] === 'Alimentación'"
-                style="background: rgb(226, 226, 226)">
+              <div *ngIf="loginService.getEstado() && n.visto == true && n.descripcion.split(' ')[0] === 'Alimentación'"
+                style="background: rgb(226, 226, 226)" [routerLink]="['/listaPlanComida']">
                 <a mat-menu-item type="submit" class="noti_menu">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -236,8 +236,9 @@
                 </a>
               </div>
               <!-- Mensaje de la planificacion -->
-              <div *ngIf="n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] === 'Alimentación'"
-                style="background: rgba(17, 199, 151, 0.7)">
+              <div
+                *ngIf="loginService.getEstado() && n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] === 'Alimentación'"
+                style="background: rgba(17, 199, 151, 0.7)" [routerLink]="['/listaPlanComida']">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -253,7 +254,7 @@
               </div>
 
               <div
-                *ngIf="loginService.getEstado() && n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] != 'Alimentación'"
+                *ngIf="n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] != 'Alimentación'"
                 style="background: rgba(17, 199, 151, 0.7)" [routerLink]="['/listaSolicitaComida']">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
