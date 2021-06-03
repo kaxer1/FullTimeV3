@@ -317,7 +317,7 @@ class EmpleadoHorariosControlador {
             })
             return res.jsonp({ message: 'correcto' });
         });
-       
+
         fs.unlinkSync(filePath);
     }
 
@@ -412,6 +412,20 @@ class EmpleadoHorariosControlador {
             'OR fec_inicio BETWEEN $1 AND $2 OR fec_final BETWEEN $1 AND $2) AND id_horarios = $5 ' +
             'AND codigo = $4',
             [fechaInicio, fechaFinal, id, codigo, id_horario]);
+        if (HORARIO.rowCount > 0) {
+            return res.jsonp(HORARIO.rows)
+        }
+        else {
+            return res.status(404).jsonp({ text: 'Registros no encontrados' });
+        }
+    }
+
+    public async BuscarHorariosFechas(req: Request, res: Response): Promise<any> {
+        const codigo = req.params.codigo;
+        const { fechaInicio, fechaFinal } = req.body;
+        const HORARIO = await pool.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND $2 ' +
+            'BETWEEN fec_inicio AND fec_final AND $3 BETWEEN fec_inicio AND fec_final',
+            [codigo, fechaInicio, fechaFinal]);
         if (HORARIO.rowCount > 0) {
             return res.jsonp(HORARIO.rows)
         }

@@ -330,16 +330,23 @@ export class MainNavComponent implements OnInit {
     }
   }
 
+  mensaje_inicio: string = '';
+  mensaje_fin: string = '';
   LlamarNotificacionesTimbres(id: number) {
     this.timbresNoti.NotiTimbresRealTime(id).subscribe(res => {
       this.timbres_noti = res;
-      // console.log(this.timbres_noti);
+      console.log(this.timbres_noti, ' verificando vista de timbres ' + this.timbres_noti.message);
       if (!this.timbres_noti.message) {
         if (this.timbres_noti.length > 0) {
           this.timbres_noti.forEach(obj => {
             if (obj.visto === false) {
               this.num_timbre_false = this.num_timbre_false + 1;
               this.estadoTimbres = false;
+            }
+            if (obj.descripcion.split(' ')[0] === 'Alimentación') {
+              console.log('verificando espacios', obj.descripcion.split(' '))
+              this.mensaje_inicio = obj.descripcion.split(' ')[0] + ' ' + obj.descripcion.split(' ')[1] + ' ' + obj.descripcion.split(' ')[2] + ' ' + obj.descripcion.split(' ')[3];
+              this.mensaje_fin = obj.descripcion.split(' ')[4] + ' ' + obj.descripcion.split(' ')[5] + ' ' + obj.descripcion.split(' ')[6];
             }
           });
         }
@@ -540,9 +547,10 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'local_dining',
         children: [
-          { name: 'Almuerzos', url: '/listarTipoComidas' },
-          { name: 'Planificación', url: '/alimentacion' },
-          { name: 'Tickets', url: '/tickets' },
+          { name: 'Comidas', url: '/listarTipoComidas' },
+          { name: 'Planificar', url: '/alimentacion' },
+          { name: 'Solicitudes', url: '/listaSolicitaComida' },
+          { name: 'Planificaciones', url: '/listaPlanComida' },
         ]
       },
       {

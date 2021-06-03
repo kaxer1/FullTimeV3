@@ -18,6 +18,8 @@ p { font-size: x-small; }
 
 .fa-file-code {font-size: 20px;}
 
+.fas { color:green; margin-left: 20px; cursor: pointer; }
+
 mat-form-field { padding: 10px 15px 0px 15px;}
 
 .tituloEmpleados { 

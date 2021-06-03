@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -22,6 +21,7 @@ import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.c
 import { CrearTimbreComponent } from '../crear-timbre/crear-timbre.component';
 import { SeguridadComponent } from 'src/app/componentes/seguridad/seguridad.component';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 
 export interface EmpleadoElemento {
   id: number;
@@ -89,7 +89,7 @@ export class TimbreAdminComponent implements OnInit {
     public restCargo: EmplCargosService,
     public restRegimen: RegimenService,
     public restD: DatosGeneralesService,
-
+    public restEmpleado: EmpleadoService,
     private restTimbres: TimbresService,
     private restEmpresa: EmpresaService,
     private restUsuario: UsuarioService,

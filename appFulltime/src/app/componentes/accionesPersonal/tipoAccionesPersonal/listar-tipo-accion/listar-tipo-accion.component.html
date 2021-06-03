@@ -38,18 +38,16 @@
             <table class="table table-hover table-sm">
                 <thead class="thead-light">
                     <tr style="text-align: center;">
-                        <th scope="col">Id </th>
-                        <th scope="col">Tipo de Acción</th>
-                        <th scope="col">Descripción</th>
+                        <th scope="col">Código </th>
+                        <th scope="col">Tipo de Acción Personal</th>
                         <th scope="col">Acción</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let ta of tipo_acciones | nombre:filtroNombre | paginate:tamanio_pagina:numero_pagina">
-                        <th style="padding-top: 10px; text-align: center;" scope="row">{{ta.id}}</th>
-                        <td style="padding-top: 10px;text-align: center;">{{ta.nombre}}</td>
-                        <td style="padding-top: 10px;text-align: center;">{{ta.descripcion}}</td>
-                        <td style="padding-top: 10px;text-align: center;" class="d-flex justify-content-center">
+                        <th id="centrar" scope="row">{{ta.id}}</th>
+                        <td id="centrar">{{ta.nombre}}</td>
+                        <td id="centrar" class="d-flex justify-content-center">
                             <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
                                 matTooltip="Ver datos generales de este registro" class="fas fa-eye" id="ver"
                                 [routerLink]="['/vistaTipoAccion/', ta.id]">

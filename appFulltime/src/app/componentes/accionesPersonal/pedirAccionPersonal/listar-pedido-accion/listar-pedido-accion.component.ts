@@ -1,44 +1,46 @@
-import { Component, OnInit } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
+import { Component, OnInit } from '@angular/core';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import pdfMake from 'pdfmake/build/pdfmake';
 import { ToastrService } from 'ngx-toastr';
-// Librería para manejar formatos de fechas
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// LIBRERÍA PARA FORMATO DE FECHAS
 import * as moment from 'moment';
 moment.locale('es');
-
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
+// LLAMADO DE SERVICIOS
+import { EmpleadoProcesosService } from 'src/app/servicios/empleado/empleadoProcesos/empleado-procesos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
+import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
+import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 
 @Component({
   selector: 'app-listar-pedido-accion',
   templateUrl: './listar-pedido-accion.component.html',
   styleUrls: ['./listar-pedido-accion.component.css']
 })
+
 export class ListarPedidoAccionComponent implements OnInit {
 
-  // Items de paginación de la tabla
+  // ITEMS DE PAGINACIÓN DE LA TABLA
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
-
-  // Datos de filtros de búsqueda
+  // DATOS FILTROS DE BÚSQUEDA
   filtroCodigo: number;
   filtroCedula: '';
   filtroNombre: '';
   filtroApellido: '';
-
-  // Datos del Formulario de búsqueda
+  // DATOS DEL FORMULARIO DE BÚSQUEDA
   codigo = new FormControl('');
   cedula = new FormControl('', [Validators.minLength(2)]);
   nombre = new FormControl('', [Validators.minLength(2)]);
   apellido = new FormControl('', [Validators.minLength(2)]);
 
   constructor(
+    public restEmpleadoProcesos: EmpleadoProcesosService,
     public restAccion: AccionPersonalService,
+    public restCargo: EmplCargosService,
     public restEmpre: EmpresaService,
     private toastr: ToastrService,
   ) { }
@@ -70,11 +72,10 @@ export class ListarPedidoAccionComponent implements OnInit {
     this.listaPedidos = [];
     this.restAccion.BuscarDatosPedido().subscribe(data => {
       this.listaPedidos = data;
-      console.log('datos_actuales', this.listaPedidos)
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER DATOS DE COLORES DE LA EMPRESA
   empresa: any = [];
   ObtenerEmpresa() {
     this.empresa = [];
@@ -83,32 +84,212 @@ export class ListarPedidoAccionComponent implements OnInit {
     });
   }
 
+  texto_color_cargo: string = '';
+  texto_color_numero: string = '';
+  texto_color_proceso: string = '';
+  texto_color_salario: string = '';
+  texto_color_empresa: string = '';
   datosPedido: any = [];
+  procesoPropuesto: any = [];
+  procesoActual: any = [];
   empleado_1: any = [];
   empleado_2: any = [];
   empleado_3: any = [];
+
+  buscarProcesos: any = [];
+  empleadoProcesos: any = [];
+  idCargo: any = [];
+  contador: number = 0;
   MostrarInformacion(id: number) {
+    this.texto_color_cargo = 'white';
+    this.texto_color_numero = 'white';
+    this.texto_color_proceso = 'white';
+    this.texto_color_salario = 'white';
+    this.texto_color_empresa = 'white';
+    this.texto_color_proceso_actual = 'black';
     this.datosPedido = [];
     this.empleado_1 = [];
     this.empleado_2 = [];
     this.empleado_3 = [];
+    this.procesoPropuesto = [];
+    this.procesoActual = [];
+    this.buscarProcesos = [];
+    this.empleadoProcesos = [];
+    this.idCargo = [];
+    this.contador = 0;
     this.restAccion.BuscarDatosPedidoId(id).subscribe(data => {
       this.datosPedido = data;
-      console.log('1', this.datosPedido);
-      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].id_empleado).subscribe(data1 => {
-        this.empleado_1 = data1;
-        console.log('2', this.empleado_1);
-        this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
-          this.empleado_2 = data2;
-          console.log('3', this.empleado_2);
-          this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
-            this.empleado_3 = data3;
-            console.log('4', this.empleado_3)
-            this.generarPdf('download');
-          });
+      this.BuscarPedidoEmpleado(this.datosPedido);
+    });
+  }
+
+  /** MÉTODO PARA MOSTRAR DATOS DE LOS EMPLEADOS SELECCIONADOS EN EL PEDIDO */
+  BuscarPedidoEmpleado(pedido: any) {
+    this.restAccion.BuscarDatosPedidoEmpleados(pedido[0].id_empleado).subscribe(datos1 => {
+      this.empleado_1 = datos1;
+      this.ListarProcesosEmpleado(pedido);
+    })
+  }
+
+  /** MÉTODO PARA MOSTRAR LA INFORMACIÓN DE LOS PROCESOS DEL EMPLEADO */
+  ListarProcesosEmpleado(pedido: any) {
+    this.restCargo.BuscarIDCargo(pedido[0].id_empleado).subscribe(datos => {
+      this.idCargo = datos;
+      var contar = 0;
+      for (let i = 0; i <= this.idCargo.length - 1; i++) {
+        contar = contar + 1;
+        this.BuscarProcesosCargo(this.idCargo, i, contar);
+      }
+    });
+  }
+
+  /** MÉTODO PARA BUSCAR PROCESOS QUE TIENE EL EMPLEADO DE ACUERDO AL CARGO */
+  BuscarProcesosCargo(id_cargo: any, valor: any, contar: any) {
+    this.restEmpleadoProcesos.ObtenerProcesoPorIdCargo(id_cargo[valor]['id']).subscribe(datos => {
+      this.buscarProcesos = datos;
+      if (this.buscarProcesos.length != 0) {
+        if (this.contador === 0) {
+          this.empleadoProcesos = datos
+          this.contador++;
+        }
+        else {
+          this.empleadoProcesos = this.empleadoProcesos.concat(datos);
+        }
+      }
+      if (contar === this.idCargo.length) {
+        this.restAccion.Buscarprocesos(this.empleadoProcesos[this.empleadoProcesos.length - 1].id).subscribe(proc_a => {
+          this.procesoActual = proc_a;
+          this.EscribirProcesosActuales(this.procesoActual);
+          this.BusquedaInformacion();
         });
+      }
+    }, error => {
+      if (contar === this.idCargo.length) {
+        if (this.empleadoProcesos.length === 0) {
+          this.EscribirProcesosActuales_Vacios();
+          this.BusquedaInformacion();
+          this.toastr.info('El reporte no refleja informácion de procesos actuales del colaborador seleccionado.', 'Cargar la información respectiva.', {
+            timeOut: 6000,
+          })
+        }
+      }
+    });
+  }
+
+  /** MÉTODO PARA BUSCAR INFORMACIÓN DE LOS EMPLEADOS RESPONSABLES / FIRMAS */
+  BusquedaInformacion() {
+    this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_uno).subscribe(data2 => {
+      this.empleado_2 = data2;
+      this.restAccion.BuscarDatosPedidoEmpleados(this.datosPedido[0].firma_empl_dos).subscribe(data3 => {
+        this.empleado_3 = data3;
+        this.VerificarDatos();
       });
     });
+  }
+
+  /** MÉTODO PARA VERIFICAR DATOS INGRESADO Y NO INGRESADO */
+  VerificarDatos() {
+    if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto === null) {
+      this.DefinirColor(this.datosPedido, '');
+      this.generarPdf('download');
+    }
+    else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto != null) {
+      this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc1 => {
+        this.procesoPropuesto = proc1;
+        this.EscribirProcesosPropuestos(this.procesoPropuesto);
+        this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+          this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+          this.generarPdf('download');
+        })
+      });
+    }
+    else if (this.datosPedido[0].proceso_propuesto != null && this.datosPedido[0].cargo_propuesto === null) {
+      this.restAccion.Buscarprocesos(this.datosPedido[0].proceso_propuesto).subscribe(proc => {
+        this.procesoPropuesto = proc;
+        this.EscribirProcesosPropuestos(this.procesoPropuesto);
+        this.DefinirColor(this.datosPedido, '')
+        this.generarPdf('download');
+      });
+    }
+    else if (this.datosPedido[0].proceso_propuesto === null && this.datosPedido[0].cargo_propuesto != null) {
+      this.restAccion.ConsultarUnCargoPropuesto(this.datosPedido[0].cargo_propuesto).subscribe(carg => {
+        this.DefinirColor(this.datosPedido, carg[0].descripcion.toUpperCase())
+        this.generarPdf('download');
+      })
+    }
+  }
+
+  /** MÉTODO PARA DEFINIR COLORES DE TEXTO / IMPRIMIR ESPACIOS */
+  cargo_propuesto: string = '';
+  proceso_propuesto: string = '';
+  salario_propuesto: string = '';
+  num_partida: string = '';
+  DefinirColor(array: any, nombre_cargo: any) {
+    this.cargo_propuesto = '';
+    this.proceso_propuesto = '';
+    this.salario_propuesto = '';
+    this.num_partida = '';
+    if (array[0].cargo_propuesto != '' && array[0].cargo_propuesto != null) {
+      this.texto_color_cargo = 'black';
+      this.cargo_propuesto = nombre_cargo;
+    }
+    else {
+      this.cargo_propuesto = '----------';
+    }
+    if (array[0].proceso_propuesto != '' && array[0].proceso_propuesto != null) {
+      this.texto_color_empresa = 'black';
+      this.texto_color_proceso = 'black';
+    }
+    else {
+      this.proceso_padre_p = '----------';
+      this.nombre_procesos_p = '----------';
+    }
+    if (array[0].salario_propuesto != '' && array[0].salario_propuesto != null) {
+      this.texto_color_salario = 'black';
+    }
+    else {
+      this.salario_propuesto = '----------';
+    }
+  }
+
+  /** MÉTODO PARA REALIZAR BÚSQUEDA DE PROCESOS QUE TIENEN REGISTRADOS EL EMPLEADO */
+  nombre_procesos_a: string = '';
+  proceso_padre_a: string = '';
+  EscribirProcesosActuales(array) {
+    this.nombre_procesos_a = '';
+    this.proceso_padre_a = '';
+    array.map(obj => {
+      if (this.proceso_padre_a != '') {
+        this.nombre_procesos_a = this.nombre_procesos_a + '\n' + obj.nombre;
+      }
+      else {
+        this.proceso_padre_a = obj.nombre;
+      }
+    })
+  }
+
+  /** M+ETODO PARA IMPRIMIR ESPACIOS CUANDO EL EMPLEADO NO REGISTRA PROCESOS */
+  texto_color_proceso_actual: string = '';
+  EscribirProcesosActuales_Vacios() {
+    this.proceso_padre_a = '';
+    this.proceso_padre_a = '-------------';
+    this.texto_color_proceso_actual = 'white';
+  }
+
+  /** MÉTODO PARA IMPRIMIR PROCESOS PROPUESTOS */
+  nombre_procesos_p: string = '';
+  proceso_padre_p: string = '';
+  EscribirProcesosPropuestos(array) {
+    this.nombre_procesos_p = '';
+    this.proceso_padre_p = '';
+    array.map(obj => {
+      if (this.proceso_padre_p != '') {
+        this.nombre_procesos_p = this.nombre_procesos_p + '\n' + obj.nombre;
+      }
+      else {
+        this.proceso_padre_p = obj.nombre;
+      }
+    })
   }
 
 
@@ -737,7 +918,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: this.proceso_padre_a, style: 'itemsTable', color: this.texto_color_proceso_actual }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -776,9 +957,8 @@ export class ListarPedidoAccionComponent implements OnInit {
 
                             table: {
                               body: [
-                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '\n' + this.nombre_procesos_a, style: 'itemsTable', margin: [0, -30, 0, 0] }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
-
                               ]
                             },
                             layout: 'lightHorizontalLines'
@@ -897,7 +1077,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                     }
                   }],
                   [{
-                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].descrip_partida.toUpperCase() + '\n' + this.datosPedido[0].num_partida, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].tipo.toUpperCase() + '\n' + this.datosPedido[0].num_partida, style: 'itemsTable' }], margin: [20, -12, 0, 0]
                   }],
 
                 ]
@@ -909,7 +1089,7 @@ export class ListarPedidoAccionComponent implements OnInit {
               table: {
                 body: [
                   [{
-                    text: [{ text: 'SITUACIÓN ACTUAL', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
+                    text: [{ text: 'SITUACIÓN PROPUESTA', style: 'itemsTable_c' }], margin: [110, 0, 0, 0]
                   }],
                   [{
                     table: {
@@ -932,7 +1112,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [15, 0, 0, 0],
                             table: {
                               body: [
-                                [{ text: 'AGREGADORES DE VALOR', style: 'itemsTable', }],
+                                [{ text: this.proceso_padre_p, style: 'itemsTable', color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -971,7 +1151,7 @@ export class ListarPedidoAccionComponent implements OnInit {
 
                             table: {
                               body: [
-                                [{ text: '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR' + '\nAGREGADORES DE VALOR', style: 'itemsTable', margin: [0, -30, 0, 0] }],
+                                [{ text: '\n' + this.nombre_procesos_p, style: 'itemsTable', margin: [0, -30, 0, 0], color: this.texto_color_proceso }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
 
                               ]
@@ -1007,7 +1187,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [19, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.datosPedido[0].cargo_propuesto.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: this.cargo_propuesto, style: 'itemsTable', color: this.texto_color_cargo }],
                                 [{ text: '-------------------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1042,7 +1222,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [0, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', }],
+                                [{ text: this.empresa[0].nombre.toUpperCase(), style: 'itemsTable', color: this.texto_color_empresa }],
                                 [{ text: '--------------------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1077,7 +1257,7 @@ export class ListarPedidoAccionComponent implements OnInit {
                             margin: [0, -18, 0, 0],
                             table: {
                               body: [
-                                [{ text: this.datosPedido[0].salario_propuesto, style: 'itemsTable', }],
+                                [{ text: this.salario_propuesto, style: 'itemsTable', color: this.texto_color_salario }],
                                 [{ text: '---------------------------------------------------------------', color: 'white', style: 'itemsTable' }],
                               ]
                             },
@@ -1092,9 +1272,8 @@ export class ListarPedidoAccionComponent implements OnInit {
                     }
                   }],
                   [{
-                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '  ' + this.datosPedido[0].proceso_propuesto.toUpperCase() + '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
+                    text: [{ text: 'PARTIDA PRESUPUESTARIA: ' + '\n' + this.datosPedido[0].num_partida_propuesta, style: 'itemsTable' }], margin: [20, -12, 0, 0]
                   }],
-
                 ]
               },
               layout: 'noBorders'

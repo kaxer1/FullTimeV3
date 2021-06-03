@@ -197,7 +197,7 @@
                         <th scope="col">Cédula</th>
                         <th scope="col">Apellido</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Reporte</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -208,6 +208,17 @@
                         <td>{{a.apellido}}</td>
                         <td>{{a.nombre}}</td>
                         <td class="d-flex justify-content-center">
+                            <i matSuffix matTooltipClass="emple-tooltip" matTooltipPosition="right"
+                                matTooltip="Ver datos generales de este empleado" class="fas fa-eye" id="ver"
+                                [routerLink]="['/verAccion/',a.id]">
+                                <p>Ver</p>
+                            </i>
+                            <i class="fas fa-edit" matSuffix matTooltipPosition="right"
+                                matTooltipClass="departamento-tooltip"
+                                matTooltip="Modificar los datos generales de este registro"
+                                [routerLink]="['/editarPedido/',a.id]">
+                                <p>Editar</p>
+                            </i>
                             <i (click)="MostrarInformacion(a.id)" id="pdf" class="fas fa-file-pdf" matSuffix
                                 matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                                 matTooltip="Ver reporte de timbres del empleado en formato PDF">

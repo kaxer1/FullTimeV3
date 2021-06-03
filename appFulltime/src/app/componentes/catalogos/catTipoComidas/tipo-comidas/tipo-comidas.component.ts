@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { number } from 'echarts/core';
 import { ToastrService } from 'ngx-toastr';
 
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
@@ -19,12 +20,16 @@ export class TipoComidasComponent implements OnInit {
   nombreF = new FormControl('', [Validators.required, Validators.minLength(4)]);
   tipoF = new FormControl('');
   servicioF = new FormControl('', [Validators.minLength(3)]);
+  horaInicioF = new FormControl('', [Validators.required]);
+  horaFinF = new FormControl('', [Validators.required]);
 
   // Asignación de validaciones a inputs del formulario
   public TipoComidaForm = new FormGroup({
     nombreForm: this.nombreF,
     servicioForm: this.servicioF,
     tipoForm: this.tipoF,
+    horaInicioForm: this.horaInicioF,
+    horaFinForm: this.horaFinF
   });
 
   constructor(
@@ -56,35 +61,45 @@ export class TipoComidasComponent implements OnInit {
     });
   }
 
+  /** MÉTODO PARA BUSCAR LOS MENÚS REGISTRADOS EN EL SERVICIO SELECCIONADO */
+  tipoComidas: any = [];
+  duplicidad: number = 0;
   InsertarTipoComida(form) {
     let datosTipoComida = {
       nombre: form.nombreForm,
-      tipo_comida: form.tipoForm
+      tipo_comida: form.tipoForm,
+      hora_inicio: form.horaInicioForm,
+      hora_fin: form.horaFinForm
     };
-    if (form.tipoForm === undefined) {
+    console.log('prueba', form.tipoForm)
+    if (form.tipoForm === '') {
+      this.toastr.info('Por favor seleccionar un tipo de servicio.', '', {
+        timeOut: 6000,
+      })
+    }
+    else if (form.tipoForm === undefined) {
       this.RegistrarServicio(form, datosTipoComida);
     }
     else {
-      this.GuardarDatos(datosTipoComida);
-    }
-  }
-
-  IngresarNumeroDecimal(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
+      this.duplicidad = 0;
+      this.tipoComidas = [];
+      this.rest.ConsultarUnServicio(form.tipoForm).subscribe(datos => {
+        this.tipoComidas = datos;
+        console.log('tipo_comidas', this.tipoComidas)
+        this.tipoComidas.map(obj => {
+          if (obj.nombre.toUpperCase() === form.nombreForm.toUpperCase()) {
+            this.duplicidad = this.duplicidad + 1;
+          }
+        });
+        if (this.duplicidad === 0) {
+          this.GuardarDatos(datosTipoComida);
+        }
+        else {
+          this.toastr.info('Nombre de Menú ingresado ya se encuentra registrado en este tipo de servicio.', 'Ingresar un nombre de Menú válido.', {
+            timeOut: 6000,
+          })
+        }
       })
-      return false;
     }
   }
 
@@ -139,7 +154,7 @@ export class TipoComidasComponent implements OnInit {
   RegistrarServicio(form, datos: any) {
     if (form.servicioForm != '') {
       let tipo_servicio = {
-        nombre: form.servicioForm
+        nombre: form.servicioForm,
       }
       this.restPlan.CrearTipoComidas(tipo_servicio).subscribe(res => {
         // Buscar id de último tipo de servicio ingresado

@@ -82,7 +82,8 @@
                                         <label class="col-sm col-form-label">Fecha de Nacimiento:</label>
                                     </div>
                                     <div class="col">
-                                        <label class="col col-form-label"> {{ e.fec_nacimiento | date: 'dd/MM/yyyy' }} </label>
+                                        <label class="col col-form-label"> {{ e.fec_nacimiento | date: 'dd/MM/yyyy' }}
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -185,8 +186,8 @@
                                 <h5>Títulos</h5>
                             </div>
                             <div class="flex-shrink-1 bd-highlight" style="margin-right: 10px;">
-                                <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;" 
-                                (click)="AbrirVentanaRegistarTituloEmpleado()">Añadir</button>
+                                <button type="submit" class="btn btn-outline-light btn-sm" style="margin-top: -3px;"
+                                    (click)="AbrirVentanaRegistarTituloEmpleado()">Añadir</button>
                             </div>
                         </div>
                         <mat-card-content>
@@ -218,8 +219,7 @@
                                 </div>
                                 <div class="row" style="margin-top: 5px;">
                                     <div class="col" style="text-align: right;">
-                                        <a mat-button type="submit" class="btn" matSuffix
-                                            matTooltipPosition="right"
+                                        <a mat-button type="submit" class="btn" matSuffix matTooltipPosition="right"
                                             matTooltip="Editar los datos generales de este registro"
                                             (click)="AbrirVentanaEditarTitulo(rte)">
                                             <i class="fas fa-edit" id="edit">
@@ -345,15 +345,16 @@
                                     </div>
                                     <div class="caja3 d-flex justify-content-start">
                                         <label id="datosF">Control de Asistencia:</label>
-                                        <label > {{ce.asis_controla === true ? 'Si' : 'No'}} </label>
+                                        <label> {{ce.asis_controla === true ? 'Si' : 'No'}} </label>
                                     </div>
                                     <div class="caja3 d-flex justify-content-start">
                                         <label id="datosF">Control de Vacaciones:</label>
-                                        <label > {{ce.vaca_controla === true ? 'Si' : 'No'}} </label>
+                                        <label> {{ce.vaca_controla === true ? 'Si' : 'No'}} </label>
                                     </div>
                                     <div class="caja2 d-flex justify-content-start">
                                         <label id="datosF">Contrato:</label>
-                                        <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''; else ContratoCargar" class="fas fa-file-alt"
+                                        <a *ngIf="ce.doc_nombre != null && ce.doc_nombre != ''; else ContratoCargar"
+                                            class="fas fa-file-alt"
                                             style="color:rgb(11, 70, 197); text-align: center; margin-left: 20px;"
                                             matSuffix matTooltipPosition="right"
                                             matTooltip="Dar click para descargar contrato de trabajo"
@@ -362,16 +363,14 @@
                                             <p>{{ce.doc_nombre}}</p>
                                         </a>
                                         <ng-template #ContratoCargar>
-                                            <a mat-button type="submit"
-                                                (click)="AbrirVentanaEditarContrato(ce)">
+                                            <a mat-button type="submit" (click)="AbrirVentanaEditarContrato(ce)">
                                                 Cargar Contrato de Trabajo
                                             </a>
                                         </ng-template>
                                     </div>
                                 </div>
                                 <div style="text-align: right;">
-                                    <a mat-button type="submit"
-                                        (click)="AbrirVentanaEditarContrato(ce)">
+                                    <a mat-button type="submit" (click)="AbrirVentanaEditarContrato(ce)">
                                         <i class="fas fa-edit" matTooltipPosition="right" id="edit"
                                             matTooltip="Modificar los datos generales de este registro">
                                             <p>Editar</p>
@@ -449,8 +448,8 @@
                                             <p>{{ce.doc_nombre}}</p>
                                         </a>
                                         <!-- href="{{rutaContrato}}"  -->
-                                        <a *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''"
-                                            mat-button type="submit"
+                                        <a *ngIf="ce.doc_nombre === null || ce.doc_nombre === ''" mat-button
+                                            type="submit"
                                             (click)="verContratoEdicion(false); ObtenerIdContratoSeleccionado(ce.id)"
                                             [disabled]="!btnActualizarContrato">
                                             Cargar Contrato de Trabajo
@@ -966,8 +965,12 @@
                             <label>{{pc.fecha.split("T")[0]}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Hora Inicio:</label>
-                            <label>{{pc.hora_inicio}}</label>
+                            <label id="datosF">Servicio:</label>
+                            <label>{{pc.nombre_servicio}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Menú:</label>
+                            <label>{{pc.nombre_menu}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Nombre Plato:</label>
@@ -978,32 +981,49 @@
                             <label>$ {{pc.valor}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Fecha Planificación:</label>
-                            <label>{{pc.fec_comida.split("T")[0]}}</label>
+                            <label id="datosF">Observación:</label>
+                            <label>{{pc.observacion}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Fecha Inicia:</label>
+                            <label *ngIf="pc.fec_inicio != undefined">{{pc.fec_inicio.split("T")[0]}}</label>
+                            <label *ngIf="pc.fec_inicio === undefined">{{pc.fec_comida.split("T")[0]}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Fecha Finaliza:</label>
+                            <label *ngIf="pc.fec_final != undefined">{{pc.fec_final.split("T")[0]}}</label>
+                            <label *ngIf="pc.fec_final === undefined">{{pc.fec_comida.split("T")[0]}}</label>
+                        </div>
+                        <div class="caja1 d-flex justify-content-start">
+                            <label id="datosF">Hora Inicio:</label>
+                            <label>{{pc.hora_inicio}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Hora Fin:</label>
                             <label>{{pc.hora_fin}}</label>
                         </div>
                         <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Observación:</label>
-                            <label>{{pc.observacion}}</label>
-                        </div>
-                        <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Servicio:</label>
-                            <label>{{pc.nombre_servicio}}</label>
-                        </div>
-                        <div class="caja1 d-flex justify-content-start">
-                            <label id="datosF">Menú:</label>
-                            <label>{{pc.nombre_menu}}</label>
-                        </div>
-                        <div class="caja1 d-flex justify-content-start">
                             <label id="datosF">Tipo:</label>
                             <label *ngIf="pc.extra === false">Normal</label>
                             <label *ngIf="pc.extra === true">Extra</label>
                         </div>
+                        <div class="caja1 d-flex justify-content-start">
+                        </div>
                     </div>
-                    <div style="text-align: right;">
+                    <div style="text-align: right;"
+                        *ngIf="pc.fec_final === undefined && pc.aprobada === false && pc.fec_comida > FechaActual">
+                        <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
+                            matTooltipPosition="right" matTooltipClass="departamento-tooltip"
+                            matTooltip="Modificar los datos generales de este registro">
+                            <p>Editar</p>
+                        </i>
+                        <!-- <i style="color:red; margin-left: 15px;" (click)="ConfirmarDeletePlanComidas(pc)"
+                            class=" far fa-trash-alt" matTooltipPosition="right" id="delete"
+                            matTooltip="Eliminar registro">
+                            <p>Eliminar</p>
+                        </i>-->
+                    </div>
+                    <div style="text-align: right;" *ngIf="pc.fec_final != undefined && pc.fec_final > FechaActual">
                         <i class="fas fa-edit" id="edit" (click)="AbrirEditarPlanComidas(pc)" matSuffix
                             matTooltipPosition="right" matTooltipClass="departamento-tooltip"
                             matTooltip="Modificar los datos generales de este registro">

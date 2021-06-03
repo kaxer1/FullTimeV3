@@ -4,6 +4,7 @@ import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MAT_MOMENT_DATE_FORMATS, MomentDateAda
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
+import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { TimbresService } from 'src/app/servicios/timbres/timbres.service';
 
 @Component({
@@ -24,6 +25,11 @@ export class CrearTimbreComponent implements OnInit {
   HoraF = new FormControl('', [Validators.required]);
   accionF = new FormControl('', [Validators.required]);
   teclaFuncionF = new FormControl('',);
+  idEmpleadoLogueado: any;
+
+  // VARIABLES DE ALMACENMAIENTO DE COORDENADAS
+  latitud: number;
+  longitud: number;
 
   accion: any = [
     { value: 'E', name: 'Entrada' },
@@ -41,22 +47,69 @@ export class CrearTimbreComponent implements OnInit {
     teclaFuncionForm: this.teclaFuncionF,
   });
 
+  // MÉTODO DE CONTROL DE MEMORIA
+  private options = {
+    enableHighAccuracy: false,
+    maximumAge: 30000,
+    timeout: 15000
+  };
+
   nombre: string;
 
   constructor(
     private toastr: ToastrService,
     private restTimbres: TimbresService,
+    private restEmpleado: EmpleadoService,
     public dialogRef: MatDialogRef<CrearTimbreComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+  ) {
+    this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
+  }
 
   ngOnInit(): void {
     if (this.data.length === undefined) {
       this.nombre = this.data.empleado;
     }
-
+    this.VerDatosEmpleado(this.idEmpleadoLogueado);
     console.log(this.data);
+    this.Geolocalizar();
+  }
 
+  empleadoUno: any = [];
+  VerDatosEmpleado(idemploy: number) {
+    this.empleadoUno = [];
+    this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
+      this.empleadoUno = data;
+    })
+  }
+
+  // MÉTODO PARA TOMAR CORDENAS DE UBICACIÓN
+  Geolocalizar() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (objPosition) => {
+          this.latitud = objPosition.coords.latitude;
+          this.longitud = objPosition.coords.longitude;
+          console.log(this.longitud, this.latitud);
+        }, (objPositionError) => {
+          switch (objPositionError.code) {
+            case objPositionError.PERMISSION_DENIED:
+              console.log('No se ha permitido el acceso a la posición del usuario.');
+              break;
+            case objPositionError.POSITION_UNAVAILABLE:
+              console.log('No se ha podido acceder a la información de su posición.');
+              break;
+            case objPositionError.TIMEOUT:
+              console.log('El servicio ha tardado demasiado tiempo en responder.');
+              break;
+            default:
+              console.log('Error desconocido.');
+          }
+        }, this.options);
+    }
+    else {
+      console.log('Su navegador no soporta la API de geolocalización.');
+    }
   }
 
   TeclaFuncion(opcion: string) {
@@ -84,11 +137,11 @@ export class CrearTimbreComponent implements OnInit {
         fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
         accion: form1.accionForm,
         tecl_funcion: this.TeclaFuncion(form1.accionForm),
-        observacion: 'Timbre creado por un Administrador',
-        latitud: null,
-        longitud: null,
+        observacion: 'Timbre creado por Administrador ' + this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido,
+        latitud: this.latitud,
+        longitud: this.longitud,
         id_empleado: this.data.id,
-        id_reloj: null,
+        id_reloj: 333,
       }
       this.dialogRef.close(dataTimbre)
     }
@@ -100,11 +153,11 @@ export class CrearTimbreComponent implements OnInit {
           fec_hora_timbre: form1.fechaForm.toJSON().split('T')[0] + 'T' + form1.horaForm + ':00',
           accion: form1.accionForm,
           tecl_funcion: this.TeclaFuncion(form1.accionForm),
-          observacion: 'Timbre creado por un Administrador',
-          latitud: null,
-          longitud: null,
+          observacion: 'Timbre creado por Administrador ' + this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido,
+          latitud: this.latitud,
+          longitud: this.longitud,
           id_empleado: obj.id,
-          id_reloj: null,
+          id_reloj: 333,
         }
         this.restTimbres.PostTimbreWebAdmin(dataTimbre).subscribe(res => {
           this.contador = this.contador + 1;

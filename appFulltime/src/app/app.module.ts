@@ -229,7 +229,6 @@ import { SeguridadComponent } from './componentes/seguridad/seguridad.component'
 import { TipoSeguridadComponent } from './componentes/catalogos/catEmpresa/tipo-seguridad/tipo-seguridad.component';
 import { FraseSeguridadComponent } from './componentes/frase-seguridad/frase-seguridad.component';
 import { PlanComidasComponent } from './componentes/planificacionComidas/plan-comidas/plan-comidas.component';
-import { TicketsComponent } from './componentes/planificacionComidas/tickets/tickets.component';
 import { SalidasAntesMacroComponent } from './componentes/graficas-macro/salidas-antes-macro/salidas-antes-macro.component';
 import { MetricaVacacionesComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-vacaciones/metrica-vacaciones.component';
 import { MetricaHorasExtrasComponent } from './componentes/rolEmpleado/grafica-empl-macro/metrica-horas-extras/metrica-horas-extras.component';
@@ -270,6 +269,10 @@ import { ReportesModule } from './componentes/reportes/reportes.module';
 
 //enviroment
 import { environment } from 'src/environments/environment';
+import { AutorizaSolicitudComponent } from './componentes/planificacionComidas/autoriza-solicitud/autoriza-solicitud.component';
+import { ListarSolicitudComponent } from './componentes/planificacionComidas/listar-solicitud/listar-solicitud.component';
+import { EditarSolicitudComidaComponent } from './componentes/planificacionComidas/editar-solicitud-comida/editar-solicitud-comida.component';
+import { ListarPlanificacionComponent } from './componentes/planificacionComidas/listar-planificacion/listar-planificacion.component';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -464,7 +467,6 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     TipoSeguridadComponent,
     FraseSeguridadComponent,
     PlanComidasComponent,
-    TicketsComponent,
     SalidasAntesMacroComponent,
     MetricaVacacionesComponent,
     MetricaHorasExtrasComponent,
@@ -490,6 +492,10 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     PermisosMultiplesEmpleadosComponent,
     HorariosMultiplesComponent,
     HorarioMultipleEmpleadoComponent,
+    AutorizaSolicitudComponent,
+    ListarSolicitudComponent,
+    EditarSolicitudComidaComponent,
+    ListarPlanificacionComponent,
   ],
 
   imports: [

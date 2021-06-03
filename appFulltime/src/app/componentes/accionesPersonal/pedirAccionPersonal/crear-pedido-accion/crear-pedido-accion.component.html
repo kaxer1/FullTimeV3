@@ -84,6 +84,32 @@
                                 help_outline</mat-icon>
                             <mat-error *ngIf="identificacionF.invalid">Ingresar un identificador válido</mat-error>
                         </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Adición a base legal</mat-label>
+                            <textarea matInput #base maxlength="200" placeholder="Ingresar base legal"
+                                formControlName="baseForm"></textarea>
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar una descripción adicional a la base legal">
+                                help_outline</mat-icon>
+                            <mat-hint align="start"><strong>Ingresar hasta 200 caracteres</strong></mat-hint>
+                            <mat-hint align="end">{{base.value.length}} / 200</mat-hint>
+                            <mat-error *ngIf="baseF.invalid">Ingrese una información válida</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="d-flex flex-wrap justify-content-around">
+                        <mat-form-field>
+                            <mat-label id="letra">Descripción de la partida propuesta</mat-label>
+                            <input matInput placeholder="" formControlName="descripcionForm"
+                                (keypress)="IngresarSoloLetras($event)">
+                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
+                                matTooltipPosition="right"
+                                matTooltip="Ingresar una descripción de la partida propuesta">
+                                help_outline</mat-icon>
+                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorDescripcion()}}</mat-error>
+                        </mat-form-field>
                         <mat-form-field *ngIf="vistaAcuerdo">
                             <mat-label id="letra">Seleccionar decreto, acuerdo o resolución</mat-label>
                             <mat-icon id="planComida" matSuffix matTooltipPosition="right"
@@ -106,30 +132,6 @@
                                 (click)="VerDecretos()">
                                 help_outline</mat-icon>
                             <mat-error *ngIf="otroDecretoF.invalid">Ingresar un nombre válido</mat-error>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="d-flex flex-wrap justify-content-around">
-                        <mat-form-field>
-                            <mat-label id="letra">Descripción de la partida propuesta</mat-label>
-                            <input matInput placeholder="" formControlName="descripcionForm"
-                                (keypress)="IngresarSoloLetras($event)">
-                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Ingresar una descripción de la partida propuesta">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="descripcionF.invalid">{{ObtenerMensajeErrorDescripcion()}}</mat-error>
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>Adición a base legal</mat-label>
-                            <input matInput placeholder="" formControlName="baseForm"
-                                (keypress)="IngresarSoloLetras($event)">
-                            <mat-icon id="planComida" matSuffix matTooltipClass="planComida-tooltip"
-                                matTooltipPosition="right"
-                                matTooltip="Ingresar una descripción adicional a la base legal">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="baseF.invalid">Ingrese una información válida</mat-error>
                         </mat-form-field>
                         <mat-form-field *ngIf="vistaCargo">
                             <mat-label id="letra">Cargo/Puesto propuesto</mat-label>
@@ -155,7 +157,7 @@
                                 help_outline</mat-icon>
                             <mat-error *ngIf="otroCargoF.invalid">Ingresar un nombre válido</mat-error>
                         </mat-form-field>
-                        <mat-form-field *ngIf="vistaProceso">
+                        <mat-form-field>
                             <mat-label id="letra">Proceso propuesto</mat-label>
                             <mat-icon id="planComida" matSuffix matTooltipPosition="right"
                                 matTooltipClass="departamento-tooltip"
@@ -163,20 +165,10 @@
                                 help_outline
                             </mat-icon>
                             <mat-select [formControl]="tipoProcesoF">
-                                <mat-option *ngFor="let p of procesos" [value]="p.id"
-                                    (click)="IngresarProceso(AccionPersonalForm.value)">
-                                    {{p.descripcion}}
+                                <mat-option *ngFor="let p of procesos" [value]="p.id">
+                                    {{p.nombre}}
                                 </mat-option>
                             </mat-select>
-                        </mat-form-field>
-                        <mat-form-field *ngIf="ingresoProceso">
-                            <mat-label id="letra">Ingresar proceso propuesto</mat-label>
-                            <input matInput placeholder="Ej: Traspaso" [formControl]="otroProcesoF" [ngStyle]="estiloP">
-                            <mat-icon id="planComida" matSuffix matTooltipClass="cargoE-tooltip"
-                                matTooltipPosition="right" matTooltip="Regresar a la lista de procesos propuestos."
-                                (click)="VerProcesos()">
-                                help_outline</mat-icon>
-                            <mat-error *ngIf="otroProcesoF.invalid">Ingresar un nombre válido</mat-error>
                         </mat-form-field>
                         <mat-form-field>
                             <mat-label id="letra">Número Partida Propuesta</mat-label>

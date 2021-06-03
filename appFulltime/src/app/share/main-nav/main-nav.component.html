@@ -10,13 +10,13 @@
 
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree" *ngIf="!mensaje">
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-        <li class="material-tree-node" >
-          <ul *ngIf="!barraInicial"> 
+        <li class="material-tree-node">
+          <ul *ngIf="!barraInicial">
             <a class="btn btn-sm btn-block" [ngClass]="{active: node.name == nombreSelect}"
               (click)="manejarEstadoActivo(node.name);" [routerLink]="[node.url]"
               style="text-align: left; color: rgb(17, 167, 236)">{{node.name}}</a>
           </ul>
-          <ul *ngIf="barraUno"> 
+          <ul *ngIf="barraUno">
             <a class="btn btn-sm btn-block" [ngClass]="{active: node.name == nombreSelect}"
               (click)="manejarEstadoActivo(node.name); drawer.toggle()" [routerLink]="[node.url]"
               style="text-align: left; color: rgb(17, 167, 236)">{{node.name}}</a>
@@ -26,7 +26,7 @@
 
       <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
         <li *ngIf="node.accion === true && node.estado">
-          <button mat-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name" 
+          <button mat-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name"
             style="width: 100%; background: rgb(255, 255, 255)">
             <div class="tree-titulos d-flex bd-highlight">
               <div class="bd-highlight">
@@ -93,11 +93,11 @@
           </mat-form-field>
         </form>
         <span class="example-spacer"></span>
-        
+
         <!-- Botón Home -->
         <button mat-mini-fab style="margin-left: 10px; margin-right: 10px;" (click)="irHome()">
           <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
-          matTooltipPosition="right" matTooltip="Ir inicio">home</mat-icon>
+            matTooltipPosition="right" matTooltip="Ir inicio">home</mat-icon>
         </button>
 
         <!-- Botón Timbres -->
@@ -114,7 +114,24 @@
             <div *ngFor="let n of timbres_noti">
 
               <!-- Avisos ya vistos -->
-              <div *ngIf="n.visto == true " style="background: rgb(226, 226, 226)">
+              <div *ngIf="n.visto == true && n.descripcion.split(' ')[0] === 'Alimentación'"
+                style="background: rgb(226, 226, 226)">
+                <a mat-menu-item type="submit" class="noti_menu">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{mensaje_inicio}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{mensaje_fin}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <div *ngIf="loginService.getEstado() && n.visto == true && n.descripcion.split(' ')[0] != 'Alimentación'"
+                style="background: rgb(226, 226, 226)" [routerLink]="['/listaSolicitaComida']">
                 <a mat-menu-item type="submit" class="noti_menu">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -219,7 +236,25 @@
                 </a>
               </div>
               <!-- Mensaje de la planificacion -->
-              <div *ngIf="n.visto == false && n.tipo === 1" style="background: rgba(17, 199, 151, 0.7)">
+              <div *ngIf="n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] === 'Alimentación'"
+                style="background: rgba(17, 199, 151, 0.7)">
+                <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
+                  <ul style="list-style: none; margin-left: -15%;">
+                    <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{mensaje_inicio}}</b></li>
+                    <li style="font-size: 13px; margin-top: -13%;"><b>{{mensaje_fin}}</b></li>
+                    <li style="font-size: 11px; margin-top: -13%;">
+                      <b>Fecha:</b> {{n.create_at.split('T')[0]}}
+                      <b>Hora:</b> {{n.create_at.slice(11,16)}}
+                    </li>
+                  </ul>
+                  <mat-divider class="divider"></mat-divider>
+                </a>
+              </div>
+
+              <div
+                *ngIf="loginService.getEstado() && n.visto == false && n.tipo === 1 && n.descripcion.split(' ')[0] != 'Alimentación'"
+                style="background: rgba(17, 199, 151, 0.7)" [routerLink]="['/listaSolicitaComida']">
                 <a mat-menu-item type="submit" class="noti_menu" (click)="CambiarVistaTimbres(n.id)">
                   <ul style="list-style: none; margin-left: -15%;">
                     <li style="font-size: 13px;"><b>{{n.empleado}}</b></li>
@@ -232,7 +267,6 @@
                   <mat-divider class="divider"></mat-divider>
                 </a>
               </div>
-
             </div>
           </div>
           <div class="d-flex justify-content-center">
@@ -265,7 +299,8 @@
                       solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -277,7 +312,8 @@
                       solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -289,7 +325,8 @@
                       solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -303,7 +340,8 @@
                       solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -315,7 +353,8 @@
                       solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -327,7 +366,8 @@
                       solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -344,7 +384,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -357,7 +398,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -370,7 +412,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -385,7 +428,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -398,7 +442,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -411,7 +456,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -428,7 +474,7 @@
         <!-- Botón Configuraciones -->
         <button mat-mini-fab mat-icon-button [matMenuTriggerFor]="settings">
           <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
-          matTooltipPosition="right" matTooltip="Configuración correo y notificaciones">settings</mat-icon>
+            matTooltipPosition="right" matTooltip="Configuración correo y notificaciones">settings</mat-icon>
         </button>
         <mat-menu #settings="matMenu">
           <div>
@@ -446,12 +492,12 @@
         <!-- Botón Ayuda -->
         <button mat-mini-fab style="margin-left: 10px;" (click)="AbrirVentanaAyuda()">
           <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
-          matTooltipPosition="right" matTooltip="Contactos Soporte Técnico">contact_support</mat-icon>
+            matTooltipPosition="right" matTooltip="Contactos Soporte Técnico">contact_support</mat-icon>
         </button>
         <!-- Botón Logout  -->
         <button mat-mini-fab style="margin-left: 10px;" (click)="loginService.logout()">
-          <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipClass="permiso-tooltip"
-          matTooltipPosition="right" matTooltip="Cerrar Sesión"></mat-icon>
+          <mat-icon class="fas fa-sign-out-alt" id="iconos-navegador" style="margin-left: 8px;" matSuffix
+            matTooltipClass="permiso-tooltip" matTooltipPosition="right" matTooltip="Cerrar Sesión"></mat-icon>
         </button>
 
       </mat-toolbar-row>
@@ -478,8 +524,8 @@
         <span class="example-spacer"></span>
         <!-- Botón Home -->
         <button mat-mini-fab style="margin-left: 10px" (click)="irHome()">
-          <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix
-          matTooltipPosition="right" matTooltip="Ir inicio">home</mat-icon>
+          <mat-icon id="iconos-navegador" style="margin-left: 8px;" matSuffix matTooltipPosition="right"
+            matTooltip="Ir inicio">home</mat-icon>
         </button>
 
         <div>
@@ -671,7 +717,8 @@
                       solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -683,7 +730,8 @@
                       solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -695,7 +743,8 @@
                       solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -709,7 +758,8 @@
                       solicitado un permiso</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -721,7 +771,8 @@
                       solicitado vacaciones</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -733,7 +784,8 @@
                       solicitado hora extra</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -750,7 +802,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -763,7 +816,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -776,7 +830,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -791,7 +846,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud permiso: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -804,7 +860,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de vacaciones: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -817,7 +874,8 @@
                     <li style="font-size: 13px; margin-top: -13%;">Solicitud de hora extra: {{n.estado}}</li>
                     <li style="font-size: 11px; margin-top: -13%;"><b>Fecha:</b> {{n.create_at.split('T')[0]}}
                       <b>Hora:</b>
-                      {{n.create_at.slice(11,16)}}</li>
+                      {{n.create_at.slice(11,16)}}
+                    </li>
                   </ul>
                   <mat-divider class="divider"></mat-divider>
                 </a>
@@ -850,18 +908,15 @@
     <div class="container">
       <div class="row" *ngIf="mensaje">
         <div class="col mensaje-alerta">
-            <span style="color: white; font-size: 20px;">Primero debe agregar un logotipo y los colores del reporte para descargar en PDFs</span>
-            <a type="buttom" class="btn btn-sm" id="botones" (click)="IrInfoEmpresa()">Configuración</a>
+          <span style="color: white; font-size: 20px;">Primero debe agregar un logotipo y los colores del reporte para
+            descargar en PDFs</span>
+          <a type="buttom" class="btn btn-sm" id="botones" (click)="IrInfoEmpresa()">Configuración</a>
         </div>
       </div>
       <router-outlet></router-outlet>
 
       <div class="pantalla-progress" *ngIf="recargar">
-        <mat-progress-spinner
-            class="progress"
-            [color]="color"
-            [mode]="mode"
-            [value]="value">
+        <mat-progress-spinner class="progress" [color]="color" [mode]="mode" [value]="value">
         </mat-progress-spinner>
       </div>
 
