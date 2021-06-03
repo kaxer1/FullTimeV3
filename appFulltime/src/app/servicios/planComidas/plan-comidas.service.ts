@@ -36,6 +36,10 @@ export class PlanComidasService {
     return this.http.get<any>(`${environment.url}/planComidas/infoComida/estado/negado`)
   }
 
+  ObtenerSolComidaExpirada() {
+    return this.http.get<any>(`${environment.url}/planComidas/infoComida/estado/expirada`)
+  }
+
   /** BUSCAR JEFES */
   obtenerJefes(id_departamento: number) {
     return this.http.get<any>(`${environment.url}/planComidas/enviar/notificacion/${id_departamento}`)
@@ -44,6 +48,10 @@ export class PlanComidasService {
   /** ENVIAR CORREO A CADA JEFE */
   EnviarCorreo(datos: any) {
     return this.http.post(`${environment.url}/planComidas/mail-noti`, datos);
+  }
+
+  EnviarCorreoEliminarSol(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/mail-noti/eliminar-sol`, datos);
   }
 
   /** PLANIFICACIÓN DE COMIDAS */
@@ -57,6 +65,10 @@ export class PlanComidasService {
 
   ObtenerPlanComidaPorIdEmpleado(id_empleado: number) {
     return this.http.get<any>(`${environment.url}/planComidas/infoComida/plan/${id_empleado}`)
+  }
+
+  ObtenerPlanComidaPorIdPlan(id: number) {
+    return this.http.get<any>(`${environment.url}/planComidas/comida-empleado/plan/${id}`)
   }
 
   EliminarRegistro(id: number) {
@@ -76,12 +88,36 @@ export class PlanComidasService {
     return this.http.post(`${environment.url}/planComidas/empleado/solicitud`, datos);
   }
 
+  EncontrarPlanComidaEmpleadoConsumido(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/empleado/plan/consumido`, datos);
+  }
+
   BuscarDuplicadosFechas(datos: any) {
     return this.http.post(`${environment.url}/planComidas/duplicidad/plan`, datos);
   }
 
+  BuscarDuplicadosSolicitudFechas(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/duplicidad/solicitud`, datos);
+  }
+
+  BuscarDuplicadosFechasActualizar(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/duplicidad/actualizar/plan`, datos);
+  }
+
+  BuscarDuplicadosSolFechasActualizar(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/duplicidad/actualizar/sol`, datos);
+  }
+
   EnviarCorreoPlan(datos: any) {
     return this.http.post(`${environment.url}/planComidas/mail-plan`, datos);
+  }
+
+  EnviarCorreoEliminaPlan(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/mail-plan/eliminar-plan`, datos);
+  }
+
+  EnviarCorreoSolicitudActualizada(datos: any) {
+    return this.http.post(`${environment.url}/planComidas/mail-solicitud/actualizacion`, datos);
   }
 
   EnviarCorreoEstadoSolicitud(datos: any) {
@@ -90,6 +126,14 @@ export class PlanComidasService {
 
   EliminarSolComida(id: number, fecha: any, id_empleado: number) {
     return this.http.delete(`${environment.url}/planComidas/eliminar/plan-solicitud/${id}/${fecha}/${id_empleado}`);
+  }
+
+  EliminarSolicitud(id: number) {
+    return this.http.delete(`${environment.url}/planComidas/eliminar/sol-comida/${id}`);
+  }
+
+  EliminarPlanComida(id: number, id_empleado: number) {
+    return this.http.delete(`${environment.url}/planComidas/eliminar/plan-comida/${id}/${id_empleado}`);
   }
 
   /** Servicio para obtener datos de la tabla tipo_comida */
@@ -108,6 +152,10 @@ export class PlanComidasService {
   /** ALERTAS DE NOTIFICACIÓN DE SOLICITUD Y PLANIFICACIÓN DE SERVICIO DE ALIMENTACIÓN*/
   EnviarMensajePlanComida(data: any) {
     return this.http.post<any>(`${environment.url}/planComidas/send/planifica/`, data);
+  }
+
+  ObtenerPlanComidas() {
+    return this.http.get<any>(`${environment.url}/planComidas`)
   }
 
 }

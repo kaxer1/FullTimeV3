@@ -67,6 +67,7 @@ import { environment } from 'src/environments/environment';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarTituloComponent } from '../EditarTituloEmpleado/editar-titulo/editar-titulo.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
+import { EditarSolicitudComidaComponent } from '../../planificacionComidas/editar-solicitud-comida/editar-solicitud-comida.component';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -124,6 +125,7 @@ export class VerEmpleadoComponent implements OnInit {
   HabilitarHorasE: boolean = true;
 
   hipervinculo: string = environment.url;
+  FechaActual: any; // VARIBLE PARA ALMACENAR LA FECHA DEL DÍA DE HOY
 
   constructor(
     public restU: UsuarioService,
@@ -151,7 +153,7 @@ export class VerEmpleadoComponent implements OnInit {
     private scriptService: ScriptService,
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
-    var cadena = this.router.url.split('#')[0];    
+    var cadena = this.router.url.split('#')[0];
     // this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
     this.idEmpleado = cadena.split("/")[2];
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
@@ -160,6 +162,8 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    var a = moment();
+    this.FechaActual = a.format('YYYY-MM-DD');
     this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
     this.verEmpleado(this.idEmpleado);
     this.obtenerContratoEmpleadoRegimen();
@@ -270,7 +274,7 @@ export class VerEmpleadoComponent implements OnInit {
   verContratoEdicion(value: boolean) {
     this.btnActualizarContrato = value;
   }
-  
+
   idSelectContrato: number;
   ObtenerIdContratoSeleccionado(idContratoEmpleado: number) {
     this.idSelectContrato = idContratoEmpleado;
@@ -470,6 +474,11 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.getOneEmpleadoRest(id_empleado).subscribe(datos => {
       this.restPermiso.BuscarPermisoCodigo(datos[0].codigo).subscribe(datos => {
         this.permisosTotales = datos;
+      }, err => {
+        const { access, message } = err.error.message;
+        if (access === false) {
+          this.toastr.error(message)
+        }
       })
     });
   }
@@ -830,8 +839,9 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
-  EliminarPlanComidas(id_plan: number) {
-    this.restPlanComidas.EliminarRegistro(id_plan).subscribe(res => {
+  EliminarPlanComidas(id_plan: number, id_empleado: number, datos: any) {
+    this.restPlanComidas.EliminarPlanComida(id_plan, id_empleado).subscribe(res => {
+      this.EnviarNotificaciones(datos.fec_inicio, datos.fec_final, datos.hora_inicio, datos.hora_fin, this.idEmpleadoLogueado, datos.id_empleado)
       this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
@@ -841,15 +851,54 @@ export class VerEmpleadoComponent implements OnInit {
 
   /** Función para confirmar si se elimina o no un registro */
   ConfirmarDeletePlanComidas(datos: any) {
-    console.log(datos);
-    this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          this.EliminarPlanComidas(datos.id);
-        } else {
-          this.router.navigate(['/verEmpleado/', this.idEmpleado]);
-        }
-      });
+    // VERIFICAR SI HAY UN REGISTRO CON ESTADO CONSUMIDO DENTRO DE LA PLANIFICACION
+    let datosConsumido = {
+      id_plan_comida: datos.id,
+      id_empleado: datos.id_empleado
+    }
+    this.restPlanComidas.EncontrarPlanComidaEmpleadoConsumido(datosConsumido).subscribe(consu => {
+      this.toastr.info('No es posible eliminar la planificación de alimentación de ' + this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido + ' ya que presenta registros de servicio de alimentación consumidos.', '', {
+        timeOut: 6000,
+      })
+    }, error => {
+      this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
+        .subscribe((confirmado: Boolean) => {
+          if (confirmado) {
+            this.EliminarPlanComidas(datos.id, datos.id_empleado, datos);
+          } else {
+            this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+          }
+        });
+    });
+  }
+
+  envios: any = [];
+  EnviarNotificaciones(fecha_plan_inicio: any, fecha_plan_fin: any, h_inicio: any, h_fin: any, empleado_envia: any, empleado_recibe: any) {
+    let datosCorreo = {
+      id_usua_plan: empleado_recibe,
+      id_usu_admin: empleado_envia,
+      fecha_inicio: moment(fecha_plan_inicio).format('DD-MM-YYYY'),
+      fecha_fin: moment(fecha_plan_fin).format('DD-MM-YYYY'),
+      hora_inicio: h_inicio,
+      hora_fin: h_fin
+    }
+    this.restPlanComidas.EnviarCorreoEliminaPlan(datosCorreo).subscribe(envio => {
+      this.envios = [];
+      this.envios = envio;
+      if (this.envios.notificacion === true) {
+        this.NotificarPlanificacion(empleado_envia, empleado_recibe);
+      }
+    });
+  }
+
+  NotificarPlanificacion(empleado_envia: any, empleado_recive: any) {
+    let mensaje = {
+      id_empl_envia: empleado_envia,
+      id_empl_recive: empleado_recive,
+      mensaje: 'Planificación de Alimentación Eliminada.'
+    }
+    this.restPlanComidas.EnviarMensajePlanComida(mensaje).subscribe(res => {
+    })
   }
 
   /** Función para eliminar registro seleccionado Planificación*/
@@ -1224,7 +1273,30 @@ export class VerEmpleadoComponent implements OnInit {
   /* Ventana para editar planificación de comidas */
   AbrirEditarPlanComidas(datoSeleccionado): void {
     console.log(datoSeleccionado);
-    this.vistaRegistrarDatos.open(EditarPlanComidasComponent, { width: '600px', data: datoSeleccionado })
+    if (datoSeleccionado.fec_inicio != undefined) {
+      // VERIFICAR SI HAY UN REGISTRO CON ESTADO CONSUMIDO DENTRO DE LA PLANIFICACION
+      let datosConsumido = {
+        id_plan_comida: datoSeleccionado.id,
+        id_empleado: datoSeleccionado.id_empleado
+      }
+      this.restPlanComidas.EncontrarPlanComidaEmpleadoConsumido(datosConsumido).subscribe(consu => {
+        this.toastr.info('No es posible actualizar la planificación de alimentación de ' + this.empleadoUno[0].nombre + ' ' + this.empleadoUno[0].apellido + ' ya que presenta registros de servicio de alimentación consumidos.', '', {
+          timeOut: 6000,
+        })
+      }, error => {
+        this.VentanaEditarPlanComida(datoSeleccionado, EditarPlanComidasComponent, 'individual');
+      });
+    }
+    else {
+      this.VentanaEditarPlanComida(datoSeleccionado, EditarSolicitudComidaComponent, 'administrador')
+    }
+  }
+
+  VentanaEditarPlanComida(datoSeleccionado: any, componente: any, forma: any) {
+    this.vistaRegistrarDatos.open(componente, {
+      width: '600px',
+      data: { solicitud: datoSeleccionado, modo: forma }
+    })
       .afterClosed().subscribe(item => {
         this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
       });

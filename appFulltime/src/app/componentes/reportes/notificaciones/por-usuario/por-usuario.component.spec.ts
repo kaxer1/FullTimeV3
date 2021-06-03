@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FuncionesComponent } from './funciones.component';
+import { PorUsuarioComponent } from './por-usuario.component';
 
-describe('FuncionesComponent', () => {
-  let component: FuncionesComponent;
-  let fixture: ComponentFixture<FuncionesComponent>;
+describe('PorUsuarioComponent', () => {
+  let component: PorUsuarioComponent;
+  let fixture: ComponentFixture<PorUsuarioComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FuncionesComponent ]
+      declarations: [ PorUsuarioComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FuncionesComponent);
+    fixture = TestBed.createComponent(PorUsuarioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

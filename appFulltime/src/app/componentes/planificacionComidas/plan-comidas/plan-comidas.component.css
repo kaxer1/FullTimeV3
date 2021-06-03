@@ -37,3 +37,7 @@ mat-panel-title { color: white; }
 .mat-expansion-panel-header.mat-expanded:hover {
     background: rgb(52,65,84);
 }
+
+#menu { color: green; font-size: 20px; text-align: center; margin-left: 20px; cursor: pointer; }
+
+p { font-size: x-small; }

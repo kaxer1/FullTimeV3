@@ -420,8 +420,8 @@ class EmpleadoHorariosControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const codigo = req.params.codigo;
             const { fechaInicio, fechaFinal } = req.body;
-            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND ' +
-                'fec_inicio BETWEEN $2 AND $3 AND fec_final BETWEEN $2 AND $3', [codigo, fechaInicio, fechaFinal]);
+            const HORARIO = yield database_1.default.query('SELECT * FROM empl_horarios WHERE codigo = $1 AND $2 ' +
+                'BETWEEN fec_inicio AND fec_final AND $3 BETWEEN fec_inicio AND fec_final', [codigo, fechaInicio, fechaFinal]);
             if (HORARIO.rowCount > 0) {
                 return res.jsonp(HORARIO.rows);
             }

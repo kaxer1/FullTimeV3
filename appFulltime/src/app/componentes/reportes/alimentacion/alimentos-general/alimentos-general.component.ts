@@ -22,6 +22,7 @@ import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-ge
 // Servicios Módulo de Alimentación
 import { AlimentacionService } from 'src/app/servicios/reportes/alimentacion/alimentacion.service';
 import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-alimentos-general',
@@ -89,6 +90,7 @@ export class AlimentosGeneralComponent implements OnInit {
     public restA: AlimentacionService,
     public router: Router,
     private toastr: ToastrService,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -172,20 +174,24 @@ export class AlimentosGeneralComponent implements OnInit {
           this.solicitados = sol;
           // 3. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 4. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error) 
         });
-      }, error => {
+      }, err => {
         // 5. Buscamos registros de servicios solicitados
         this.restA.ObtenerSolicitadosConsumidos(fechas).subscribe(sol => {
           this.solicitados = sol;
           // 6. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 7. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error) 
         });
+        
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
       });
     }
     else {
@@ -207,18 +213,19 @@ export class AlimentosGeneralComponent implements OnInit {
         console.log('comidas 2', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
       });
-    }, error => {
+    }, err => {
       // 3. Búsqueda de servicios extras solicitados
       this.restA.ObtenerExtrasSolConsumidos(fecha).subscribe(sol2 => {
         this.extras = sol2;
         console.log('comidas 3', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Revisamos si todos los datos son vacios
         if (this.planificados.length === 0 && this.solicitados.length === 0 && this.extras.length === 0) {
           // Mensaje indicando que no existen registros
@@ -234,7 +241,11 @@ export class AlimentosGeneralComponent implements OnInit {
           // Llamado a método de impresión de archivos
           this.ImprimirArchivo(archivo, form);
         }
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error) 
       });
+
+      return this.validacionesService.RedireccionarHomeAdmin(err.error) 
     });
   }
 
@@ -250,44 +261,11 @@ export class AlimentosGeneralComponent implements OnInit {
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloLetras(e) 
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt)
   }
 
   LimpiarCampos() {

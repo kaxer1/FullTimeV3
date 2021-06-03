@@ -105,18 +105,26 @@ class TimbresControlador {
     CrearTimbreWeb(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_reloj } = req.body;
+                const { fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud } = req.body;
                 const id_empleado = req.userIdEmpleado;
                 let code = yield database_1.default.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows; });
                 if (code.length === 0)
                     return { mensaje: 'El empleado no tiene un codigo asignado.' };
                 var codigo = parseInt(code[0].codigo);
-                yield database_1.default.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, id_reloj) VALUES($1, $2, $3, $4, $5, $6, $7, $8)', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo, id_reloj])
+                console.log(req.body, codigo);
+                const [timbre] = yield database_1.default.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id', [fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo])
                     .then(result => {
-                    res.status(200).jsonp({ message: 'Timbre enviado' });
+                    console.log(result.rows);
+                    return result.rows;
                 }).catch(err => {
-                    res.status(400).jsonp({ message: err });
+                    console.log(err);
+                    // res.status(400).jsonp({message: err.toString});
+                    return err;
                 });
+                if (timbre) {
+                    return res.status(200).jsonp({ message: 'Timbre enviado' });
+                }
+                return res.status(400).jsonp({ message: 'El timbre no se ha insertado' });
             }
             catch (error) {
                 res.status(400).jsonp({ message: error });
@@ -179,6 +187,9 @@ class TimbresControlador {
                             case 'S/P':
                                 obj.accion = 'Entrada o Salida Permiso';
                                 break;
+                            case 'HA':
+                                obj.accion = 'Horario Abierto';
+                                break;
                             default:
                                 obj.accion = 'codigo 99';
                                 break;
@@ -201,7 +212,8 @@ class TimbresControlador {
                 const id = req.userIdEmpleado;
                 let timbres = yield database_1.default.query('SELECT CAST(t.fec_hora_timbre AS VARCHAR), t.accion, t.tecl_funcion, t.observacion, t.latitud, t.longitud, t.id_empleado, t.id_reloj ' +
                     'FROM empleados AS e, timbres AS t WHERE e.id = $1 AND CAST(e.codigo AS integer) = t.id_empleado ORDER BY t.fec_hora_timbre DESC LIMIT 100', [id]).then(result => {
-                    return result.rows.map(obj => {
+                    return result.rows
+                        .map(obj => {
                         switch (obj.accion) {
                             case 'EoS':
                                 obj.accion = 'Entrada o Salida';
@@ -229,6 +241,9 @@ class TimbresControlador {
                                 break;
                             case 'S/P':
                                 obj.accion = 'Entrada o Salida Permiso';
+                                break;
+                            case 'HA':
+                                obj.accion = 'Horario Abierto';
                                 break;
                             default:
                                 obj.accion = 'codigo 99';

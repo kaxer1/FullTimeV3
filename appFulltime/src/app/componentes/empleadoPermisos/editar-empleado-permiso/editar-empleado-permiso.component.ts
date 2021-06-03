@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { PermisosService } from 'src/app/servicios/permisos/permisos.service';
 import { RealTimeService } from 'src/app/servicios/notificaciones/real-time.service';
+import { ToastrService } from 'ngx-toastr';
 
 interface Estados {
   valor: string;
@@ -43,6 +44,7 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
   constructor(
     private restP: PermisosService,
     private realTime: RealTimeService,
+    private toastr: ToastrService,
     public dialogRef: MatDialogRef<EditarEmpleadoPermisoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
@@ -108,6 +110,12 @@ export class EditarEmpleadoPermisoComponent implements OnInit {
       });
       this.dialogRef.close();
       //window.location.reload();
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 

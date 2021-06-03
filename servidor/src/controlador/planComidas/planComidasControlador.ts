@@ -4,36 +4,55 @@ import { enviarMail, email, Credenciales } from '../../libs/settingsMail'
 
 class PlanComidasControlador {
 
-  /** SOLICITUD DE COMIDAS */
+  // CONSULTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN CON ESTADO PENDIENTE
   public async EncontrarSolicitaComidaNull(req: Request, res: Response): Promise<any> {
-    const PLAN_COMIDAS = await pool.query('SELECT e.apellido, e.nombre, e.cedula, e.codigo, sc.aprobada, sc.id, sc.id_empleado, sc.fecha, sc.observacion, ' +
-      'sc.fec_comida, sc.hora_inicio, sc.hora_fin, sc.aprobada, sc.verificar, ' +
-      'ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, tc.nombre AS nombre_servicio, ' +
-      'dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, dm.observacion AS observa_menu, sc.extra ' +
+    const PLAN_COMIDAS = await pool.query('SELECT e.apellido, e.nombre, e.cedula, e.codigo, sc.aprobada, sc.id, ' +
+      'sc.id_empleado, sc.fecha, sc.observacion, sc.fec_comida, sc.hora_inicio, sc.hora_fin, sc.aprobada, ' +
+      'sc.verificar, ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, ' +
+      'tc.nombre AS nombre_servicio, dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, ' +
+      'dm.observacion AS observa_menu, sc.extra ' +
       'FROM solicita_comidas AS sc, cg_tipo_comidas AS ctc, tipo_comida AS tc, detalle_menu AS dm, empleados AS e ' +
       'WHERE ctc.tipo_comida = tc.id AND sc.verificar = \'NO\' AND e.id = sc.id_empleado AND ' +
-      'ctc.id = dm.id_menu AND sc.id_comida = dm.id ORDER BY sc.fec_comida DESC');
+      'ctc.id = dm.id_menu AND sc.id_comida = dm.id AND sc.fec_comida >= current_date ORDER BY sc.fec_comida DESC');
     if (PLAN_COMIDAS.rowCount > 0) {
       return res.jsonp(PLAN_COMIDAS.rows)
     }
     res.status(404).jsonp({ text: 'Registro no encontrado' });
   }
 
+  // CONSULTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN CON ESTADO AUTORIZADO O NEGADO
   public async EncontrarSolicitaComidaAprobada(req: Request, res: Response): Promise<any> {
-    const PLAN_COMIDAS = await pool.query('SELECT e.apellido, e.nombre, e.cedula, e.codigo, sc.aprobada, sc.id, sc.id_empleado, sc.fecha, sc.observacion, ' +
-      'sc.fec_comida, sc.hora_inicio, sc.hora_fin, sc.aprobada, sc.verificar, ' +
-      'ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, tc.nombre AS nombre_servicio, ' +
-      'dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, dm.observacion AS observa_menu, sc.extra ' +
+    const PLAN_COMIDAS = await pool.query('SELECT e.apellido, e.nombre, e.cedula, e.codigo, sc.aprobada, sc.id, ' +
+      'sc.id_empleado, sc.fecha, sc.observacion, sc.fec_comida, sc.hora_inicio, sc.hora_fin, sc.aprobada, ' +
+      'sc.verificar, ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, ' +
+      'tc.nombre AS nombre_servicio, dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, ' +
+      'dm.observacion AS observa_menu, sc.extra ' +
       'FROM solicita_comidas AS sc, cg_tipo_comidas AS ctc, tipo_comida AS tc, detalle_menu AS dm, empleados AS e ' +
       'WHERE ctc.tipo_comida = tc.id AND (sc.aprobada = true OR sc.aprobada = false) AND e.id = sc.id_empleado AND ' +
-      'ctc.id = dm.id_menu AND sc.id_comida = dm.id ORDER BY sc.fec_comida DESC');
+      'ctc.id = dm.id_menu AND sc.id_comida = dm.id AND sc.fec_comida >= current_date ORDER BY sc.fec_comida DESC');
     if (PLAN_COMIDAS.rowCount > 0) {
       return res.jsonp(PLAN_COMIDAS.rows)
     }
     res.status(404).jsonp({ text: 'Registro no encontrado' });
   }
 
+  // CONSULTA DE SOLICITUDES DE SERVICIO DE ALIMENTACIÓN CON ESTADO EXPIRADO
+  public async EncontrarSolicitaComidaExpirada(req: Request, res: Response): Promise<any> {
+    const PLAN_COMIDAS = await pool.query('SELECT e.apellido, e.nombre, e.cedula, e.codigo, sc.aprobada, sc.id, ' +
+      'sc.id_empleado, sc.fecha, sc.observacion, sc.fec_comida, sc.hora_inicio, sc.hora_fin, sc.aprobada, ' +
+      'sc.verificar, ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, ' +
+      'tc.nombre AS nombre_servicio, dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, ' +
+      'dm.observacion AS observa_menu, sc.extra FROM solicita_comidas AS sc, cg_tipo_comidas AS ctc, ' +
+      'tipo_comida AS tc, detalle_menu AS dm, empleados AS e ' +
+      'WHERE ctc.tipo_comida = tc.id AND e.id = sc.id_empleado AND ctc.id = dm.id_menu AND sc.id_comida = dm.id ' +
+      'AND sc.fec_comida < current_date ORDER BY sc.fec_comida DESC');
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    res.status(404).jsonp({ text: 'Registro no encontrado' });
+  }
 
+  // CONSULTA PARA REGISTRAR DATOS DE SOLICITUD DE COMIDA
   public async CrearSolicitaComida(req: Request, res: Response): Promise<void> {
     const { id_empleado, fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra, verificar } = req.body;
     await pool.query('INSERT INTO solicita_comidas (id_empleado, fecha, id_comida, observacion, fec_comida, ' +
@@ -42,6 +61,20 @@ class PlanComidasControlador {
     res.jsonp({ message: 'Solicitud de alimentación ha sido guardada con éxito' });
   }
 
+  public async BuscarSolEmpleadoFechasActualizar(req: Request, res: Response) {
+    const { id, id_empleado, fecha, hora_inicio, hora_fin } = req.body;
+    const PLAN_COMIDAS = await pool.query('SELECT * FROM solicita_comidas WHERE NOT id = $1 AND id_empleado = $2 ' +
+      'AND fec_comida = $3 AND ($4 BETWEEN hora_inicio AND hora_fin OR $5 BETWEEN hora_inicio AND hora_fin)',
+      [id, id_empleado, fecha, hora_inicio, hora_fin]);
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  // CONSULTA PARA ACTUALIZAR DATOS DE UNA SOLICITUD DE COMIDA
   public async ActualizarSolicitaComida(req: Request, res: Response): Promise<void> {
     const { id_empleado, fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin,
       extra, id } = req.body;
@@ -52,12 +85,19 @@ class PlanComidasControlador {
     res.jsonp({ message: 'Solicitud de alimentación ha sido guardada con éxito' });
   }
 
+  // CONSULTA PARA ACTUALIZAR ESTADO DE UNA SOLIICTUD DE COMIDA
   public async ActualizarEstadoSolicitaComida(req: Request, res: Response): Promise<void> {
     const { aprobada, verificar, id } = req.body;
-    await pool.query('UPDATE solicita_comidas SET aprobada = $1, verificar = $2 ' +
-      'WHERE id = $3',
+    await pool.query('UPDATE solicita_comidas SET aprobada = $1, verificar = $2 WHERE id = $3',
       [aprobada, verificar, id]);
     res.jsonp({ message: 'Solicitud de alimentación ha sido guardada con éxito' });
+  }
+
+  // CONSULTA PARA ELIMINAR UN REGISTRO DE SOLICITUD DE COMIDA
+  public async EliminarRegistroSolicitudComida(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    await pool.query('DELETE FROM solicita_comidas WHERE id = $1', [id]);
+    res.jsonp({ message: 'Registro eliminado' });
   }
 
   public async EncontrarSolicitaComidaIdEmpleado(req: Request, res: Response): Promise<any> {
@@ -75,10 +115,10 @@ class PlanComidasControlador {
     res.status(404).jsonp({ text: 'Registro no encontrado' });
   }
 
-  /** ENVIAR CORRE ELECTRÓNICO INDICANDO QUE SE HA REALIZADO UNA SOLICITUD DE COMIDA */
+  // ENVIAR CORRE ELECTRÓNICO INDICANDO QUE SE HA REALIZADO UNA SOLICITUD DE COMIDA 
   public async EnviarCorreoComidas(req: Request, res: Response): Promise<void> {
     Credenciales(req.id_empresa);
-    const { id_usua_solicita, correo, comida_mail, comida_noti } = req.body;
+    const { id_usua_solicita, correo, comida_mail, comida_noti, fecha, hora_inicio, hora_fin } = req.body;
     const EMPLEADO_SOLICITA = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula ' +
       'FROM empleados AS e WHERE e.id = $1', [id_usua_solicita]);
     console.log(EMPLEADO_SOLICITA.rows);
@@ -89,7 +129,8 @@ class PlanComidasControlador {
       from: email,
       subject: 'Solicitud de Servicio de Alimentación',
       html: `<p><b>${EMPLEADO_SOLICITA.rows[0].nombre} ${EMPLEADO_SOLICITA.rows[0].apellido}</b> con número de
-          cédula ${EMPLEADO_SOLICITA.rows[0].cedula} realizó una solicitud de Servicio de Alimentación. </p>
+          cédula ${EMPLEADO_SOLICITA.rows[0].cedula} realizó o actualizó una solicitud de Servicio de Alimentación
+          para el <b>${fecha}<b> a partir de las <b>${hora_inicio}<b> hasta las <b>${hora_fin}<b>. </p>
           <a href="${url}/${id_usua_solicita}">Ir a ver solicitud</a>`
     };
     if (comida_mail === true && comida_noti === true) {
@@ -105,7 +146,38 @@ class PlanComidasControlador {
     }
   }
 
-  /** BUSCAR JEFES DE DEPARTAMENTOS */
+  // ENVIAR CORRE ELECTRÓNICO INDICANDO QUE SE HA ELIMINADO UNA SOLICITUD DE COMIDA 
+  public async EnviarCorreoEliminarSolComidas(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
+    const { id_usua_solicita, correo, comida_mail, comida_noti, fecha, hora_inicio, hora_fin } = req.body;
+    const EMPLEADO_SOLICITA = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula ' +
+      'FROM empleados AS e WHERE e.id = $1', [id_usua_solicita]);
+    console.log(EMPLEADO_SOLICITA.rows);
+
+    var url = `${process.env.URL_DOMAIN}/verEmpleado`;
+    let data = {
+      to: correo,
+      from: email,
+      subject: 'Eliminar Solicitud de Servicio de Alimentación',
+      html: `<p><b>${EMPLEADO_SOLICITA.rows[0].nombre} ${EMPLEADO_SOLICITA.rows[0].apellido}</b> con número de
+          cédula ${EMPLEADO_SOLICITA.rows[0].cedula} eliminó su solicitud de Servicio de Alimentación
+          para el <b>${fecha}<b> a partir de las <b>${hora_inicio}<b> hasta las <b>${hora_fin}<b>. </p>
+          <a href="${url}/${id_usua_solicita}">Ir a ver solicitud</a>`
+    };
+    if (comida_mail === true && comida_noti === true) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (comida_mail === true && comida_noti === false) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    } else if (comida_mail === false && comida_noti === true) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (comida_mail === false && comida_noti === false) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    }
+  }
+
+  // CONSULTA PARA BUSCAR JEFES DE DEPARTAMENTOS 
   public async BuscarJefes(req: Request, res: Response): Promise<any> {
     const { id_departamento } = req.params;
 
@@ -152,9 +224,14 @@ class PlanComidasControlador {
     }
   }
 
-  /** PLANIFICACIÓN DE COMIDAS */
+  // CONSULTA PARA BUSCAR TODAS LAS PLANIFICACIONES DE COMIDAS
   public async ListarPlanComidas(req: Request, res: Response) {
-    const PLAN_COMIDAS = await pool.query('SELECT * FROM plan_comidas');
+    const PLAN_COMIDAS = await pool.query('SELECT pc.id, pc.fecha, pc.observacion, pc.fec_inicio, ' +
+      'pc.fec_final, pc.hora_inicio, pc.hora_fin, ctc.id AS id_menu, ctc.nombre AS nombre_menu, ' +
+      'tc.id AS id_servicio, tc.nombre AS nombre_servicio, dm.id AS id_detalle, dm.valor, ' +
+      'dm.nombre AS nombre_plato, dm.observacion AS observa_menu, pc.extra ' +
+      'FROM plan_comidas AS pc, cg_tipo_comidas AS ctc, tipo_comida AS tc, detalle_menu AS dm ' +
+      'WHERE ctc.tipo_comida = tc.id AND ctc.id = dm.id_menu AND pc.id_comida = dm.id ORDER BY pc.fec_inicio DESC');
     if (PLAN_COMIDAS.rowCount > 0) {
       return res.jsonp(PLAN_COMIDAS.rows)
     }
@@ -163,6 +240,7 @@ class PlanComidasControlador {
     }
   }
 
+  // CONSULTA PARA CREAR UNA PLANIFICACIÓN
   public async CrearPlanComidas(req: Request, res: Response): Promise<void> {
     const { fecha, id_comida, observacion, fec_comida, hora_inicio, hora_fin, extra, fec_inicio,
       fec_final } = req.body;
@@ -182,16 +260,33 @@ class PlanComidasControlador {
     }
   }
 
+
   public async EncontrarPlanComidaIdEmpleado(req: Request, res: Response): Promise<any> {
     const { id_empleado } = req.params;
-    const PLAN_COMIDAS = await pool.query('SELECT pc.id, pce.id_empleado, pc.fecha, pc.observacion, ' +
-      'pc.fec_comida, pc.hora_inicio, pc.hora_fin, ' +
+    const PLAN_COMIDAS = await pool.query('SELECT DISTINCT pc.id, pce.id_empleado, pc.fecha, pc.observacion, ' +
+      'pc.fec_inicio, pc.fec_final, pc.hora_inicio, pc.hora_fin, ' +
       'ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, tc.nombre AS nombre_servicio, ' +
       'dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, dm.observacion AS observa_menu, pc.extra ' +
       'FROM plan_comidas AS pc, plan_comida_empleado AS pce, cg_tipo_comidas AS ctc, tipo_comida AS tc, ' +
       'detalle_menu AS dm WHERE pce.id_empleado = $1 AND ctc.tipo_comida = tc.id AND ' +
       'ctc.id = dm.id_menu AND pc.id_comida = dm.id AND pc.id = pce.id_plan_comida ' +
-      'ORDER BY pc.fec_comida DESC', [id_empleado]);
+      'ORDER BY pc.fec_inicio DESC', [id_empleado]);
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    res.status(404).jsonp({ text: 'Registro no encontrado' });
+  }
+
+  public async EncontrarPlanComidaIdPlan(req: Request, res: Response): Promise<any> {
+    const { id } = req.params;
+    const PLAN_COMIDAS = await pool.query('SELECT DISTINCT pc.id, pce.id_empleado, pc.fecha, pc.observacion, ' +
+      'pc.fec_inicio, pc.fec_final, pc.hora_inicio, pc.hora_fin, e.nombre, e.apellido, e.codigo,' +
+      'ctc.id AS id_menu, ctc.nombre AS nombre_menu, tc.id AS id_servicio, tc.nombre AS nombre_servicio, ' +
+      'dm.id AS id_detalle, dm.valor, dm.nombre AS nombre_plato, dm.observacion AS observa_menu, pc.extra ' +
+      'FROM plan_comidas AS pc, plan_comida_empleado AS pce, cg_tipo_comidas AS ctc, tipo_comida AS tc, ' +
+      'detalle_menu AS dm, empleados AS e WHERE pc.id = $1 AND ctc.tipo_comida = tc.id AND ' +
+      'ctc.id = dm.id_menu AND pc.id_comida = dm.id AND pc.id = pce.id_plan_comida AND e.id = pce.id_empleado ' +
+      'ORDER BY pc.fec_inicio DESC', [id]);
     if (PLAN_COMIDAS.rowCount > 0) {
       return res.jsonp(PLAN_COMIDAS.rows)
     }
@@ -223,6 +318,24 @@ class PlanComidasControlador {
     res.jsonp({ message: 'Planificación del almuerzo ha sido guardada con éxito' });
   }
 
+  public async EncontrarPlanComidaEmpleadoConsumido(req: Request, res: Response): Promise<any> {
+    const { id_plan_comida, id_empleado } = req.body;
+    const PLAN_COMIDAS = await pool.query('SELECT * FROM plan_comida_empleado WHERE id_plan_comida = $1 AND ' +
+      'consumido = true AND id_empleado = $2', [id_plan_comida, id_empleado]);
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    res.status(404).jsonp({ text: 'Registro no encontrado' });
+  }
+
+  public async EliminarPlanComidaEmpleado(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    const id_empleado = req.params.id_empleado;
+    await pool.query('DELETE FROM plan_comida_empleado WHERE id_plan_comida = $1 AND id_empleado = $2',
+      [id, id_empleado]);
+    res.jsonp({ message: 'Registro eliminado' });
+  }
+
   public async CrearSolEmpleado(req: Request, res: Response): Promise<void> {
     const { codigo, id_empleado, id_sol_comida, fecha, hora_inicio, hora_fin, consumido } = req.body;
     await pool.query('INSERT INTO plan_comida_empleado (codigo, id_empleado, id_sol_comida, fecha, ' +
@@ -230,6 +343,7 @@ class PlanComidasControlador {
       [codigo, id_empleado, id_sol_comida, fecha, hora_inicio, hora_fin, consumido]);
     res.jsonp({ message: 'Planificación del almuerzo ha sido guardada con éxito' });
   }
+
 
   public async EliminarSolComidaEmpleado(req: Request, res: Response): Promise<void> {
     const id = req.params.id;
@@ -240,11 +354,37 @@ class PlanComidasControlador {
     res.jsonp({ message: 'Registro eliminado' });
   }
 
-  /** BÚSQUEDA DE PLANIFICACIONES POR EMPLEADO Y FECHA */
+  // BÚSQUEDA DE PLANIFICACIONES POR EMPLEADO Y FECHA 
   public async BuscarPlanComidaEmpleadoFechas(req: Request, res: Response) {
     const { id, fecha_inicio, fecha_fin } = req.body;
     const PLAN_COMIDAS = await pool.query('SELECT * FROM plan_comida_empleado WHERE id_empleado = $1 AND ' +
       'fecha BETWEEN $2 AND $3', [id, fecha_inicio, fecha_fin]);
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  // CONSULTA PARA BUSCAR DATOS DE EMPLEADO Y FECHAS DE PLANIFICACIÓN SIN INCLUIR LA QUE SERA ACTUALIZADA
+  public async ActualizarPlanComidaEmpleadoFechas(req: Request, res: Response) {
+    const { id, fecha_inicio, fecha_fin, id_plan_comida } = req.body;
+    const PLAN_COMIDAS = await pool.query('SELECT * FROM plan_comida_empleado WHERE NOT id_plan_comida = $4 AND ' +
+      'id_empleado = $1 AND fecha BETWEEN $2 AND $3', [id, fecha_inicio, fecha_fin, id_plan_comida]);
+    if (PLAN_COMIDAS.rowCount > 0) {
+      return res.jsonp(PLAN_COMIDAS.rows)
+    }
+    else {
+      return res.status(404).jsonp({ text: 'No se encuentran registros' });
+    }
+  }
+
+  // CONSULTA PARA BUSCAR DATOS DE EMPLEADO Y FECHAS DE PLANIFICACIÓN-SOLICITUD SIN INCLUIR LA QUE SERA ACTUALIZADA
+  public async ActualizarSolComidaEmpleadoFechas(req: Request, res: Response) {
+    const { id, fecha_inicio, fecha_fin, id_sol_comida } = req.body;
+    const PLAN_COMIDAS = await pool.query('SELECT * FROM plan_comida_empleado WHERE NOT id_sol_comida = $4 AND ' +
+      'id_empleado = $1 AND fecha BETWEEN $2 AND $3', [id, fecha_inicio, fecha_fin, id_sol_comida]);
     if (PLAN_COMIDAS.rowCount > 0) {
       return res.jsonp(PLAN_COMIDAS.rows)
     }
@@ -307,11 +447,74 @@ class PlanComidasControlador {
       to: EMPLEADO_PLAN.rows[0].correo,
       from: email,
       subject: 'Planificación de Servicio de Alimentación',
-      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha realizado una
-      Planificación de Servicio de Alimentación desde el <b>${fecha_inicio}</b> hasta el <b>${fecha_fin}</b> a partir de las <b>${hora_inicio}</b> hasta <b>${hora_fin}</b>, 
+      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha realizado o actualizado una
+      Planificación de Servicio de Alimentación desde el <b>${fecha_inicio}</b> hasta el <b>${fecha_fin}</b> a partir de las <b>${hora_inicio}</b> hasta las <b>${hora_fin}</b>, 
       a usted <b>${EMPLEADO_PLAN.rows[0].nombre} ${EMPLEADO_PLAN.rows[0].apellido}</b> con cédula de 
       identidad <b>${EMPLEADO_PLAN.rows[0].cedula}</b>. </p>
           <a href="${url}">Ir a ver Planificación</a>`
+    };
+    if (EMPLEADO_PLAN.rows[0].comida_mail === true && EMPLEADO_PLAN.rows[0].comida_noti === true) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === true && EMPLEADO_PLAN.rows[0].comida_noti === false) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === false && EMPLEADO_PLAN.rows[0].comida_noti === true) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === false && EMPLEADO_PLAN.rows[0].comida_noti === false) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    }
+  }
+
+  /** ENVIAR CORRE ELECTRÓNICO INDICANDO QUE SE HA REALIZADO UNA PLANIFICACIÓN DE COMIDA */
+  public async EnviarCorreoActualizaSolComidas(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
+    const { id_usua_plan, id_usu_admin, fecha_inicio, hora_inicio, hora_fin } = req.body;
+    const EMPLEADO_PLAN = await pool.query('SELECT e.nombre, e.apellido, e.cedula, e.correo, c.comida_mail, ' +
+      'c.comida_noti FROM empleados AS e, config_noti AS c ' +
+      'WHERE e.id = $1 AND e.id = c.id_empleado', [id_usua_plan]);
+    const EMPLEADO_ADMIN = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula ' +
+      'FROM empleados AS e WHERE e.id = $1', [id_usu_admin]);
+    var url = `${process.env.URL_DOMAIN}/almuerzosEmpleado`;
+    let data = {
+      to: EMPLEADO_PLAN.rows[0].correo,
+      from: email,
+      subject: 'Actualización de Servicio de Alimentación',
+      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha actualizado los
+        datos de su Solicitud de Servicio de Alimentación para el <b>${fecha_inicio}</b> a partir de las <b>${hora_inicio}</b> hasta las <b>${hora_fin}</b>, 
+        a usted <b>${EMPLEADO_PLAN.rows[0].nombre} ${EMPLEADO_PLAN.rows[0].apellido}</b> con cédula de 
+        identidad <b>${EMPLEADO_PLAN.rows[0].cedula}</b>. </p>
+            <a href="${url}">Ir a ver Planificación</a>`
+    };
+    if (EMPLEADO_PLAN.rows[0].comida_mail === true && EMPLEADO_PLAN.rows[0].comida_noti === true) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === true && EMPLEADO_PLAN.rows[0].comida_noti === false) {
+      enviarMail(data);
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === false && EMPLEADO_PLAN.rows[0].comida_noti === true) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: true });
+    } else if (EMPLEADO_PLAN.rows[0].comida_mail === false && EMPLEADO_PLAN.rows[0].comida_noti === false) {
+      res.jsonp({ message: 'Solicitud se notificó con éxito', notificacion: false });
+    }
+  }
+
+  public async EnviarCorreoEliminaPlanComidas(req: Request, res: Response): Promise<void> {
+    Credenciales(req.id_empresa);
+    const { id_usua_plan, id_usu_admin, fecha_inicio, fecha_fin, hora_inicio, hora_fin } = req.body;
+    const EMPLEADO_PLAN = await pool.query('SELECT e.nombre, e.apellido, e.cedula, e.correo, c.comida_mail, ' +
+      'c.comida_noti FROM empleados AS e, config_noti AS c ' +
+      'WHERE e.id = $1 AND e.id = c.id_empleado', [id_usua_plan]);
+    const EMPLEADO_ADMIN = await pool.query('SELECT e.id, e.correo, e.nombre, e.apellido, e.cedula ' +
+      'FROM empleados AS e WHERE e.id = $1', [id_usu_admin]);
+    let data = {
+      to: EMPLEADO_PLAN.rows[0].correo,
+      from: email,
+      subject: 'Eliminar Planificación de Servicio de Alimentación',
+      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha eliminado la
+      Planificación de Servicio de Alimentación del <b>${fecha_inicio}</b> hasta el <b>${fecha_fin}</b> a partir de las <b>${hora_inicio}</b> hasta las <b>${hora_fin}</b>, 
+      a usted <b>${EMPLEADO_PLAN.rows[0].nombre} ${EMPLEADO_PLAN.rows[0].apellido}</b> con cédula de 
+      identidad <b>${EMPLEADO_PLAN.rows[0].cedula}</b>. </p>`
     };
     if (EMPLEADO_PLAN.rows[0].comida_mail === true && EMPLEADO_PLAN.rows[0].comida_noti === true) {
       enviarMail(data);
@@ -339,7 +542,7 @@ class PlanComidasControlador {
       to: EMPLEADO_PLAN.rows[0].correo,
       from: email,
       subject: 'Aprobación Solicitud de Servicio de Alimentación',
-      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha ${{ estado }}
+      html: `<p><b>${EMPLEADO_ADMIN.rows[0].nombre} ${EMPLEADO_ADMIN.rows[0].apellido}</b> ha ${estado}
       su Solicitud de Servicio de Alimentación para el <b>${fecha_inicio}</b> en horario de las <b>${hora_inicio}</b> hasta <b>${hora_fin}</b>, 
       a usted <b>${EMPLEADO_PLAN.rows[0].nombre} ${EMPLEADO_PLAN.rows[0].apellido}</b> con cédula de 
       identidad <b>${EMPLEADO_PLAN.rows[0].cedula}</b>. </p>`

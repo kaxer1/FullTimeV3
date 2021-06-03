@@ -175,6 +175,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       else {
         this.num = this.datoNumPermiso[0].max + 1;
       }
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     })
   }
 
@@ -298,6 +304,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
               }
             })
             this.readonly = true;
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           })
         }
       }, error => {
@@ -787,7 +799,19 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
                 }
               });
             });
+          }, err => {
+            const { access, message } = err.error.message;
+            if (access === false) {
+              this.toastr.error(message)
+              this.dialogRef.close();
+            }
           });
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+            this.dialogRef.close();
+          }
         });
       }
     });
@@ -909,6 +933,12 @@ export class RegistroEmpleadoPermisoComponent implements OnInit {
       });
       this.archivoForm.reset();
       this.nameFile = '';
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 

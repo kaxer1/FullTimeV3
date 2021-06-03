@@ -28,6 +28,8 @@ import { ReportePermisosComponent } from './reporte-permisos/reporte-permisos.co
 import { ReporteAtrasosComponent } from './reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './reporte-entrada-salida/reporte-entrada-salida.component';
 import { AppRoutingModule } from '../../app-routing.module';
+import { AdministradorTodasComponent } from './notificaciones/administrador-todas/administrador-todas.component';
+import { PorUsuarioComponent } from './notificaciones/por-usuario/por-usuario.component';
 
 @NgModule({
   declarations: [
@@ -51,6 +53,8 @@ import { AppRoutingModule } from '../../app-routing.module';
     ReporteAtrasosComponent,
     ReporteEntradaSalidaComponent,
     ListaReportesComponent,
+    AdministradorTodasComponent,
+    PorUsuarioComponent,
   ],
   exports: [
     ReporteFaltasComponent,

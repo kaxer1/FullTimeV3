@@ -17,6 +17,10 @@ table { width: 100%; font-size: 14px;}
 
 #estilo { color: rgb(0, 0, 0); font-size: 13px; }
 
+#reloj { color: rgb(28, 43, 241); cursor: pointer; }
+
+p { font-size: x-small; }
+
 mat-icon { cursor: pointer;}
 
 #SelectCheck {

@@ -528,7 +528,6 @@ export class MainNavComponent implements OnInit {
           { name: 'Crear Régimen Laboral', url: '/listarRegimen' },
           { name: 'Crear Título Profesional', url: '/titulos' },
           { name: 'Crear Nivel de Educación', url: '/nivelTitulos' },
-          { name: 'Funciones Sistema', url: '/funcionalidades' },
         ]
       },
       {
@@ -547,10 +546,10 @@ export class MainNavComponent implements OnInit {
         estado: true,
         icono: 'local_dining',
         children: [
-          { name: 'Almuerzos', url: '/listarTipoComidas' },
+          { name: 'Comidas', url: '/listarTipoComidas' },
+          { name: 'Planificar', url: '/alimentacion' },
           { name: 'Solicitudes', url: '/listaSolicitaComida' },
-          { name: 'Planificación', url: '/alimentacion' },
-          { name: 'Tickets', url: '/tickets' },
+          { name: 'Planificaciones', url: '/listaPlanComida' },
         ]
       },
       {

@@ -209,7 +209,7 @@ export class PlanificacionComidasComponent implements OnInit {
       fechaInicio: form.fechaInicioForm,
       fechaFinal: form.fechaFinForm
     }
-    this.restH.BuscarHorarioFechas(this.empleados[0].codigo, datosHorario).subscribe(plan => {
+    this.restH.BuscarHorarioFechas(parseInt(this.empleados[0].codigo), datosHorario).subscribe(plan => {
       console.log('datos fechas', plan)
       this.PlanificacionIndividual(form, datosPlanComida);
     }, error => {

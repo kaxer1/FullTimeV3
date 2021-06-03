@@ -5,3 +5,6 @@
 
 #database no debe ser modificada
 /src/database.ts
+
+#Archivo licencias
+/licencia.conf.json

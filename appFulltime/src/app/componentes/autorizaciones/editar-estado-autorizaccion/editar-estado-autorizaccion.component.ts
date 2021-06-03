@@ -124,6 +124,12 @@ export class EditarEstadoAutorizaccionComponent implements OnInit {
       });
       this.dialogRef.close();
       //window.location.reload();
+    }, err => {
+      const { access, message } = err.error.message;
+      if (access === false) {
+        this.toastr.error(message)
+        this.dialogRef.close();
+      }
     });
   }
 
