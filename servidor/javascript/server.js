@@ -68,6 +68,7 @@ const alimentacionRutas_1 = __importDefault(require("./rutas/reportes/alimentaci
 const reportesAsistenciaRutas_1 = __importDefault(require("./rutas/reportes/reportesAsistenciaRutas"));
 const funcionRutas_1 = __importDefault(require("./rutas/funciones/funcionRutas"));
 const accionPersonalRutas_1 = __importDefault(require("./rutas/accionPersonal/accionPersonalRutas"));
+const reportesNotificacionRutas_1 = __importDefault(require("./rutas/reportes/reportesNotificacionRutas"));
 const licencias_1 = __importDefault(require("./utils/licencias"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
@@ -172,6 +173,8 @@ class Servidor {
         this.app.use('/accionPersonal', accionPersonalRutas_1.default); // Falta ========== acceso controlado por ModuloAccionesPersonalValidation
         // LICENCIAS
         this.app.use('/licencias', licencias_1.default);
+        // NOTIFICACIONES
+        this.app.use('/notificacionSistema', reportesNotificacionRutas_1.default);
     }
     start() {
         this.server.listen(this.app.get('puerto'), () => {

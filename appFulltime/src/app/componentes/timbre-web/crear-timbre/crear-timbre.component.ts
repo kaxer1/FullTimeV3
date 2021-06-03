@@ -141,7 +141,7 @@ export class CrearTimbreComponent implements OnInit {
         latitud: this.latitud,
         longitud: this.longitud,
         id_empleado: this.data.id,
-        id_reloj: 333,
+        id_reloj: null,
       }
       this.dialogRef.close(dataTimbre)
     }
@@ -157,7 +157,7 @@ export class CrearTimbreComponent implements OnInit {
           latitud: this.latitud,
           longitud: this.longitud,
           id_empleado: obj.id,
-          id_reloj: 333,
+          id_reloj: null,
         }
         this.restTimbres.PostTimbreWebAdmin(dataTimbre).subscribe(res => {
           this.contador = this.contador + 1;

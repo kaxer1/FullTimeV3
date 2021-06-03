@@ -9,8 +9,8 @@ const pool = new pg_pool_1.default({
     user: 'postgres',
     host: 'localhost',
     port: 5432,
-    database: 'Fulltime1504',
-    // database: 'FulltimeModulos',
+    // database: 'Fulltime1504',
+    database: 'FulltimeModulos',
     // database: 'FulltimePresentaion',
     // database: 'FulltimePruebaMigracion',
     password: 'fulltime'

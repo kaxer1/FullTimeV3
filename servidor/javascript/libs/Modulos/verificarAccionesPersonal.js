@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ModuloAccionesPersonalValidation = void 0;
 exports.ModuloAccionesPersonalValidation = (req, res, next) => {
     const { accion_personal } = req.modulos;
     console.log('******************** validacion de modulo de accion_personal', accion_personal);

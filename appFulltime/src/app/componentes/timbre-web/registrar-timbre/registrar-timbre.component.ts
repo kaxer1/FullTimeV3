@@ -166,7 +166,8 @@ export class RegistrarTimbreComponent implements OnInit {
       tecl_funcion: form1.teclaFuncionForm,
       observacion: form1.observacionForm,
       latitud: this.latitud,
-      longitud: this.longitud
+      longitud: this.longitud,
+      id_reloj: null,
     }
     this.dialogRef.close(dataTimbre)
   }

@@ -64,6 +64,7 @@ import ALIMENTACION_RUTAS from './rutas/reportes/alimentacionRutas';
 import REPORTES_A_RUTAS from './rutas/reportes/reportesAsistenciaRutas';
 import FUNCIONES_RUTAS from './rutas/funciones/funcionRutas';
 import ACCION_PERSONAL_RUTAS from './rutas/accionPersonal/accionPersonalRutas';
+import NOTIFICACION_RUTAS from './rutas/reportes/reportesNotificacionRutas';
 import LICENCIAS_RUTAS from './utils/licencias';
 
 import { createServer, Server } from 'http';
@@ -199,6 +200,9 @@ class Servidor {
 
         // LICENCIAS
         this.app.use('/licencias', LICENCIAS_RUTAS);
+
+        // NOTIFICACIONES
+        this.app.use('/notificacionSistema', NOTIFICACION_RUTAS);
 
     }
 

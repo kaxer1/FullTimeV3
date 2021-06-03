@@ -528,7 +528,6 @@ export class MainNavComponent implements OnInit {
           { name: 'Crear Régimen Laboral', url: '/listarRegimen' },
           { name: 'Crear Título Profesional', url: '/titulos' },
           { name: 'Crear Nivel de Educación', url: '/nivelTitulos' },
-          { name: 'Funciones Sistema', url: '/funcionalidades' },
         ]
       },
       {
