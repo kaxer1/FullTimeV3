@@ -21,6 +21,7 @@ import { ReportesService } from 'src/app/servicios/reportes/reportes.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { AlimentacionService } from 'src/app/servicios/reportes/alimentacion/alimentacion.service';
+import { ValidacionesService } from '../../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-detalle-planificados',
@@ -88,6 +89,7 @@ export class DetallePlanificadosComponent implements OnInit {
     public restA: AlimentacionService,
     public router: Router,
     private toastr: ToastrService,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -171,20 +173,24 @@ export class DetallePlanificadosComponent implements OnInit {
           this.solicitados = sol;
           // 3. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 4. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error)
         });
-      }, error => {
+      }, err => {
         // 5. Buscamos registros de servicios solicitados
         this.restA.ObtenerDetallesSolicitadosConsumidos(fechas).subscribe(sol => {
           this.solicitados = sol;
           // 6. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
-        }, error => {
+        }, err => {
           // 7. Método de búsqueda de registros de servicios extras 
           this.ObtenerExtrasConsumidos(fechas, archivo, form);
+          return this.validacionesService.RedireccionarHomeAdmin(err.error)
         });
+
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
     }
     else {
@@ -206,18 +212,19 @@ export class DetallePlanificadosComponent implements OnInit {
         console.log('comidas 2', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
-    }, error => {
+    }, err => {
       // 3. Búsqueda de servicios extras solicitados
       this.restA.ObtenerDetallesExtrasSolConsumidos(fecha).subscribe(sol2 => {
         this.extras = sol2;
         console.log('comidas 3', this.extras);
         // Llamado a método de impresión de archivos
         this.ImprimirArchivo(archivo, form);
-      }, error => {
+      }, err => {
         // Revisamos si todos los datos son vacios
         if (this.planificados.length === 0 && this.solicitados.length === 0 && this.extras.length === 0) {
           // Mensaje indicando que no existen registros
@@ -233,7 +240,11 @@ export class DetallePlanificadosComponent implements OnInit {
           // Llamado a método de impresión de archivos
           this.ImprimirArchivo(archivo, form);
         }
+        
+        return this.validacionesService.RedireccionarHomeAdmin(err.error)
       });
+
+      return this.validacionesService.RedireccionarHomeAdmin(err.error)
     });
   }
 

@@ -33,12 +33,17 @@ export class ValidacionesService {
   }
 
   RedireccionarHomeAdmin(error) {
-    const { access, message, text } = error;
+    const { access, message, text, url } = error;
     console.log(error);
     console.log(access, message);
 
     if (access === false) {
       this.toastr.error(message)
+        .onTap.subscribe(items => {
+          if (url) {
+            window.open(`https://${url}`, "_blank");
+          }
+        });
       this.router.navigate(['/home']);
       // this.router.navigate(['/home', { relativeTo: this.route, skipLocationChange: false }]);
     }
@@ -48,11 +53,16 @@ export class ValidacionesService {
   }
 
   RedireccionarMixto(error) {
-    const { access, message, text} = error;
+    const { access, message, text, url} = error;
     console.log(error);
     console.log(access, message);
     if (access === false) {
-      this.toastr.error(message)
+      this.toastr.error(message )
+        .onTap.subscribe(items => {
+          if (url) {
+            window.open(`https://${url}`, "_blank");
+          }
+        });
       this.router.navigate(['/']);
       // this.router.navigate(['/', { relativeTo: this.route, skipLocationChange: false }]);
     }

@@ -16,6 +16,7 @@ import { AutorizacionService } from 'src/app/servicios/autorizacion/autorizacion
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 interface Estado {
   id: number,
@@ -63,7 +64,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
     public restGeneral: DatosGeneralesService,
     private router: Router,
     private restD: DepartamentosService,
-    public vistaFlotante: MatDialog
+    public vistaFlotante: MatDialog,
+    private validacionesService: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.id_permiso = this.router.url.split('/')[2];
@@ -97,6 +99,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
       }, error => {
         this.HabilitarAutorizacion = false;
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     });
 
     this.ObtenerEmpleados(this.idEmpleado);
@@ -158,6 +162,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
           this.habilitarActualizar = true;
         }
       });
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     })
   }
 
@@ -208,6 +214,8 @@ export class VerEmpleadoPermisoComponent implements OnInit {
         }
       })
       console.log('autorizacion', this.datosAutorizacion);
+    }, err => {
+      return this.validacionesService.RedireccionarMixto(err.error) 
     })
   }
 

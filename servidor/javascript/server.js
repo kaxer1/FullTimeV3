@@ -100,12 +100,12 @@ class Servidor {
         this.app.use('/empleadoCargos', emplCargosRutas_1.default);
         this.app.use('/perVacacion', periodoVacacionRutas_1.default);
         this.app.use('/vacaciones', vacacionesRutas_1.default);
-        this.app.use('/horas-extras-pedidas', horaExtraRutas_1.default); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/horas-extras-pedidas', horaExtraRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/empleadoProcesos', empleProcesosRutas_1.default);
         // Autorizaciones
         this.app.use('/autorizaDepartamento', autorizaDepartamentoRutas_1.default);
         // Permisos
-        this.app.use('/empleadoPermiso', permisosRutas_1.default);
+        this.app.use('/empleadoPermiso', permisosRutas_1.default); // acceso controlado por ModuloPermisosValidation
         // Almuerzo
         this.app.use('/planComidas', planComidasRutas_1.default);
         // Horarios
@@ -129,7 +129,7 @@ class Servidor {
         this.app.use('/proceso', catProcesoRutas_1.default);
         this.app.use('/horario', catHorarioRutas_1.default);
         this.app.use('/usuarios', usuarioRutas_1.default);
-        this.app.use('/horasExtras', catHorasExtrasRutas_1.default); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/horasExtras', catHorasExtrasRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         this.app.use('/rolPermisos', catRolPermisosRutas_1.default);
         this.app.use('/tipoPermisos', catTipoPermisosRutas_1.default);
         this.app.use('/ciudades', ciudadesRutas_1.default);
@@ -154,13 +154,13 @@ class Servidor {
         this.app.use('/asistencia', asistenciaRutas_1.default);
         // Reportes
         this.app.use('/reportes/vacacion', kardexVacacionesRutas_1.default);
-        this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default); // listo controlado 
+        this.app.use('/reportes/hora-extra', reporteHoraExtraRutas_1.default); //acceso controlado por
         this.app.use('/reporte', reportesRutas_1.default);
         this.app.use('/reportes-asistencias/', reportesAsistenciaRutas_1.default);
         // Modulo Alimentación
-        this.app.use('/alimentacion', alimentacionRutas_1.default);
+        this.app.use('/alimentacion', alimentacionRutas_1.default); // acceso controlado por ModuloAlimentacionValidation
         // HORAS EXTRAS
-        this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default); // listo controlado ModuloHoraExtraValidation
+        this.app.use('/planificacionHoraExtra', planHoraExtraRutas_1.default); // acceso controlado por ModuloHoraExtraValidation
         // CARGA MULTIPLE
         this.app.use('/cargaMultiple', cargaMultipleRutas_1.default);
         // DATOS GENERALES QUE COMPARTEN VARIOS ARCHIVOS
@@ -170,7 +170,7 @@ class Servidor {
         // FUNCIONES
         this.app.use('/administracion', funcionRutas_1.default);
         // ACCIONES DE PERSONAL
-        this.app.use('/accionPersonal', accionPersonalRutas_1.default);
+        this.app.use('/accionPersonal', accionPersonalRutas_1.default); // Falta ========== acceso controlado por ModuloAccionesPersonalValidation
         // LICENCIAS
         this.app.use('/licencias', licencias_1.default);
         // NOTIFICACIONES

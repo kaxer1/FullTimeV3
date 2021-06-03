@@ -63,7 +63,7 @@ export class TimbreWebComponent implements OnInit {
           this.toastr.success(res.message)
         }, err => {
           console.log('error', err);
-          this.toastr.error(err)
+          this.toastr.error(err.message)
         })
       }
     })

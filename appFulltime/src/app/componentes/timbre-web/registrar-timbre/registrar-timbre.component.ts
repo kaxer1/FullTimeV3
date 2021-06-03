@@ -167,7 +167,7 @@ export class RegistrarTimbreComponent implements OnInit {
       observacion: form1.observacionForm,
       latitud: this.latitud,
       longitud: this.longitud,
-      id_reloj: 333,
+      id_reloj: null,
     }
     this.dialogRef.close(dataTimbre)
   }

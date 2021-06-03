@@ -235,6 +235,11 @@ export class DatosEmpleadoComponent implements OnInit {
               console.log("Datos Permisos" + i + '', this.permisosTotales)
             }
           }
+        }, err => {
+          const { access, message } = err.error.message;
+          if (access === false) {
+            this.toastr.error(message)
+          }
         })
       }
     });
