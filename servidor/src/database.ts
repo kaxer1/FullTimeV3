@@ -3,12 +3,13 @@
 import Pool from 'pg-pool';
 
 const pool = new Pool({
-  user: 'postgres',
-  host: 'fulltime',
+  user: 'fulltime',
+  host: '192.168.0.156',
   port: 5432,
   database: 'fulltime_prueba',
   password: 'fulltime'
 })
+
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
     console.log("Error durante la conexión", err)
