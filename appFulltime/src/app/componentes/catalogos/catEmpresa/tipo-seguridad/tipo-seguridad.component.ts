@@ -96,18 +96,20 @@ export class TipoSeguridadComponent implements OnInit {
     }
     else {
       this.selec1 = true;
+     this.seguridadForm.patchValue({ tipoForm: 'contrasena'});
     }
     if (this.data.seg_frase === null || this.data.seg_frase === '' || this.data.seg_frase === false) {
       this.selec2 = false;
     }
     else {
       this.selec2 = true;
+      this.seguridadForm.patchValue({ tipoForm: 'frase'});
     }
     if (this.data.seg_ninguna === null || this.data.seg_ninguna === '' || this.data.seg_ninguna === false) {
       this.selec3 = false;
     }
     else {
-      this.selec3 = true;
+      this.seguridadForm.patchValue({ tipoForm: 'ninguna'});
     }
   }
 

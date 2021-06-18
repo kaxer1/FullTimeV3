@@ -1,21 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+// IMPORTACIÓN DE LIBRERIAS
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { environment } from 'src/environments/environment';
 import { PageEvent } from '@angular/material/paginator';
-import * as moment from 'moment';
-
-import pdfMake from 'pdfmake/build/pdfmake';
+import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-import * as xlsx from 'xlsx';
+import pdfMake from 'pdfmake/build/pdfmake';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import * as moment from 'moment';
+import * as xlsx from 'xlsx';
 
-import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
+// IMPORTAR COMPONENTES
 import { EditarRegimenComponent } from 'src/app/componentes/catalogos/catRegimen/editar-regimen/editar-regimen.component';
+import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regimen/regimen.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
+// IMPORTAR SERVICIOS
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
@@ -28,45 +31,45 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 
 export class ListarRegimenComponent implements OnInit {
 
-  // Control de campos y validaciones del formulario
+  // CONTROL DE CAMPOS Y VALIDACIONES DEL FORMULARIO
   descripcionF = new FormControl('', [Validators.pattern("[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]{2,48}")]);
 
-  // Asignación de validaciones a inputs del formulario
+  // ASIGNACIÓN DE VALIDACIONES A INPUTS DEL FORMULARIO
   public BuscarRegimenForm = new FormGroup({
     descripcionForm: this.descripcionF,
   });
 
-  // Almacenamiento de datos consultados  
+  // ALMACENAMIENTO DE DATOS CONSULTADOS  
+  empleado: any = [];
   regimen: any = [];
-  filtroRegimenLaboral = '';
 
-  // items de paginacion de la tabla
+  filtroRegimenLaboral = ''; // VARIABLE DE FILTRO DE BÚSQUEDA
+  idEmpleado: number; // VARIABLE QUE ALMACENA EL ID DEL EMPELADO QUE INICIA SESIÓN
+
+  // ITEMS DE PAGINACION DE LA TABLA
+  pageSizeOptions = [5, 10, 20, 50];
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
-  pageSizeOptions = [5, 10, 20, 50];
-
-  empleado: any = [];
-  idEmpleado: number;
 
   constructor(
-    private rest: RegimenService,
-    private restE: EmpleadoService,
-    public restEmpre: EmpresaService,
-    public router: Router,
-    public vistaRegistrarDatos: MatDialog,
-    private toastr: ToastrService,
+    public vistaRegistrarDatos: MatDialog, // VARIABLE MANEJO DE VENTANAS
+    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
+    private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private toastr: ToastrService, // VARIABLE DE USO DE MENSAJES DE NOTIFICACIONES
+    private rest: RegimenService, // SERVICIO DE DATOS DE REGIMEN
+    public router: Router, // VARIABLE DE NAVEGACIÓN DE PÁGINAS CON URL
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit(): void {
-    this.ObtenerRegimen();
     this.ObtenerEmpleados(this.idEmpleado);
+    this.ObtenerColores();
+    this.ObtenerRegimen();
     this.ObtenerLogo();
-    this.ObtnerColores();
   }
 
-  // Método para ver la información del empleado 
+  // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
   ObtenerEmpleados(idemploy: any) {
     this.empleado = [];
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
@@ -74,7 +77,7 @@ export class ListarRegimenComponent implements OnInit {
     })
   }
 
-  // Método para obtener el logo de la empresa
+  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
   logo: any = String;
   ObtenerLogo() {
     this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
@@ -82,27 +85,44 @@ export class ListarRegimenComponent implements OnInit {
     });
   }
 
-  // Método para obtener colores de empresa
+  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
   p_color: any;
   s_color: any;
-  ObtnerColores() {
+  frase: any;
+  ObtenerColores() {
     this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
       this.p_color = res[0].color_p;
       this.s_color = res[0].color_s;
+      this.frase = res[0].marca_agua;
     });
   }
 
+  // EVENTO PARA MANEJAR VISTA DE FILAS DETERMINADAS DE TABLA
   ManejarPagina(e: PageEvent) {
     this.tamanio_pagina = e.pageSize;
     this.numero_pagina = e.pageIndex + 1;
   }
 
-  // Lectura de datos
+  // LECTURA DE DATOS
   ObtenerRegimen() {
     this.regimen = [];
     this.rest.ConsultarRegimen().subscribe(datos => {
       this.regimen = datos;
     })
+  }
+
+  // ORDENAR LOS DATOS SEGÚN EL ID 
+  OrdenarDatos(array: any) {
+    function compare(a: any, b: any) {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    }
+    array.sort(compare);
   }
 
   LimpiarCampos() {
@@ -115,9 +135,9 @@ export class ListarRegimenComponent implements OnInit {
   IngresarSoloLetras(e) {
     let key = e.keyCode || e.which;
     let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
+    // SE DEFINE TODO EL ABECEDARIO QUE SE VA A USAR.
     let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
+    // ES LA VALIDACIÓN DEL KEYCODES, QUE TECLAS RECIBE EL CAMPO DE TEXTO.
     let especiales = [8, 37, 39, 46, 6, 13];
     let tecla_especial = false
     for (var i in especiales) {
@@ -141,32 +161,31 @@ export class ListarRegimenComponent implements OnInit {
   }
 
   /*************************************************************************************
-   * VENTANAS PARA REGISTRAR Y EDITAR DATOS DE UN RÉGIMEN LABORAL
+   *           VENTANAS PARA REGISTRAR Y EDITAR DATOS DE UN RÉGIMEN LABORAL
    ***********************************************************************************/
 
-  /* Ventana para editar datos del régimen laboral seleccionado */
+  // VENTANA PARA EDITAR DATOS DEL RÉGIMEN LABORAL SELECCIONADO 
   AbrirVentanaEditar(datosSeleccionados: any): void {
     console.log(datosSeleccionados);
     this.vistaRegistrarDatos.open(EditarRegimenComponent, { width: '900px', data: { datosRegimen: datosSeleccionados, actualizar: true } }).disableClose = true;
   }
 
-  /** Ventana para registrar datos de un nuevo régimen laboral */
+  // VENTANA PARA REGISTRAR DATOS DE UN NUEVO RÉGIMEN LABORAL
   AbrirVentanaRegistrarRegimen(): void {
     this.vistaRegistrarDatos.open(RegimenComponent, { width: '900px' }).disableClose = true;
   }
 
-  /** Función para eliminar registro seleccionado */
+  // FUNCIÓN PARA ELIMINAR REGISTRO SELECCIONADO 
   Eliminar(id_regimen: number) {
-    //console.log("probando id", id_prov)
     this.rest.EliminarRegistro(id_regimen).subscribe(res => {
-      this.toastr.error('Registro eliminado','', {
+      this.toastr.error('Registro eliminado', '', {
         timeOut: 6000,
       });
       this.ObtenerRegimen();
     });
   }
 
-  /** Función para confirmar si se elimina o no un registro */
+  // FUNCIÓN PARA CONFIRMAR SI SE ELIMINA O NO UN REGISTRO 
   ConfirmarDelete(datos: any) {
     this.vistaRegistrarDatos.open(MetodosComponent, { width: '450px' }).afterClosed()
       .subscribe((confirmado: Boolean) => {
@@ -182,44 +201,34 @@ export class ListarRegimenComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS PDF
    * ****************************************************************************************************/
 
-  generarPdf(action = 'open') {
-    const documentDefinition = this.getDocumentDefinicion();
-
+  GenerarPdf(action = 'open') {
+    this.OrdenarDatos(this.regimen);
+    const documentDefinition = this.GetDocumentDefinicion();
     switch (action) {
       case 'open': pdfMake.createPdf(documentDefinition).open(); break;
       case 'print': pdfMake.createPdf(documentDefinition).print(); break;
       case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-
       default: pdfMake.createPdf(documentDefinition).open(); break;
     }
-
+    this.ObtenerRegimen();
   }
 
-  getDocumentDefinicion() {
+  GetDocumentDefinicion() {
     sessionStorage.setItem('Regimen', this.regimen);
     return {
-
-      // Encabezado de la página
+      // ENCABEZADO DE LA PÁGINA
       pageOrientation: 'landscape',
-      watermark: { text: 'Confidencial', color: 'blue', opacity: 0.1, bold: true, italics: false },
+      watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
-
-      // Pie de página
-      footer: function (currentPage, pageCount, fecha) {
-        var h = new Date();
+      // PIE DE PÁGINA
+      footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
         var f = moment();
         fecha = f.format('YYYY-MM-DD');
-        // Formato de hora actual
-        if (h.getMinutes() < 10) {
-          var time = h.getHours() + ':0' + h.getMinutes();
-        }
-        else {
-          var time = h.getHours() + ':' + h.getMinutes();
-        }
+        hora = f.format('HH:mm:ss');
         return {
           margin: 10,
           columns: [
-            { text: 'Fecha: ' + fecha + ' Hora: ' + time, opacity: 0.3 },
+            { text: 'Fecha: ' + fecha + ' Hora: ' + hora, opacity: 0.3 },
             {
               text: [
                 {
@@ -233,8 +242,8 @@ export class ListarRegimenComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Regímenes Laborales', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
-        this.presentarDataPDFFeriados(),
+        { text: 'Regímenes Laborales', bold: true, fontSize: 20, alignment: 'center', margin: [0, -20, 0, 10] },
+        this.PresentarDataPDF(),
       ],
       styles: {
         tableHeader: { fontSize: 10, bold: true, alignment: 'center', fillColor: this.p_color },
@@ -243,18 +252,19 @@ export class ListarRegimenComponent implements OnInit {
     };
   }
 
-  presentarDataPDFFeriados() {
+  PresentarDataPDF() {
     return {
       columns: [
         { width: '*', text: '' },
         {
           width: 'auto',
           table: {
-            widths: [30, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
-                { text: 'Id', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
                 { text: 'Descripción', style: 'tableHeader' },
+                { text: 'Meses Periodo', style: 'tableHeader' },
                 { text: 'Vacaciones por año', style: 'tableHeader' },
                 { text: 'Vacaciones por mes', style: 'tableHeader' },
                 { text: 'Años para antiguedad', style: 'tableHeader' },
@@ -266,6 +276,7 @@ export class ListarRegimenComponent implements OnInit {
                 return [
                   { text: obj.id, style: 'itemsTable' },
                   { text: obj.descripcion, style: 'itemsTable' },
+                  { text: obj.meses_periodo, style: 'itemsTable' },
                   { text: obj.dia_anio_vacacion, style: 'itemsTable' },
                   { text: obj.dia_mes_vacacion, style: 'itemsTable' },
                   { text: obj.anio_antiguedad, style: 'itemsTable' },
@@ -275,6 +286,12 @@ export class ListarRegimenComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -286,11 +303,32 @@ export class ListarRegimenComponent implements OnInit {
    *                               PARA LA EXPORTACIÓN DE ARCHIVOS EXCEL
    * ****************************************************************************************************/
 
-  exportToExcel() {
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.regimen);
+  ExportToExcel() {
+    this.OrdenarDatos(this.regimen);
+    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.regimen.map(obj => {
+      return {
+        CODIGO: obj.id,
+        DESCRIPCION: obj.descripcion,
+        MESES_PERIODO: obj.meses_periodo,
+        DIA_ANIO_VACACION: obj.dia_anio_vacacion,
+        DIA_MES_VACACION: obj.dia_mes_vacacion,
+        ANIO_ANTIGUEDAD: obj.anio_antiguedad,
+        DIA_INCR_ANTIGUEDAD: obj.dia_incr_antiguedad,
+        MAX_DIA_ACUMULACION: obj.max_dia_acumulacion,
+        DIA_LIBR_ANIO_VACACION: obj.dia_libr_anio_vacacion
+      }
+    }));
+    // MÉTODO PARA DEFINIR TAMAÑO DE LAS COLUMNAS DEL REPORTE
+    const header = Object.keys(this.regimen[0]); // NOMBRE DE CABECERAS DE COLUMNAS
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // CABECERAS AÑADIDAS CON ESPACIOS
+      wscols.push({ wpx: 100 })
+    }
+    wsr["!cols"] = wscols;
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'regimen');
+    xlsx.utils.book_append_sheet(wb, wsr, 'LISTAR REGIMEN');
     xlsx.writeFile(wb, "RegimenEXCEL" + new Date().getTime() + '.xlsx');
+    this.ObtenerRegimen();
   }
 
   /* ****************************************************************************************************
@@ -299,41 +337,44 @@ export class ListarRegimenComponent implements OnInit {
 
   urlxml: string;
   data: any = [];
-  exportToXML() {
-    var objeto;
+  ExportToXML() {
+    this.OrdenarDatos(this.regimen);
+    var objeto: any;
     var arregloRegimen = [];
     this.regimen.forEach(obj => {
       objeto = {
         "regimen_laboral": {
           '@id': obj.id,
           "descripcion": obj.descripcion,
+          "meses_periodo": obj.meses_periodo,
           "dia_anio_vacacion": obj.dia_anio_vacacion,
           "dia_mes_vacacion": obj.dia_mes_vacacion,
           "anio_antiguedad": obj.anio_antiguedad,
           "dia_incr_antiguedad": obj.dia_incr_antiguedad,
           "max_dia_acumulacion": obj.max_dia_acumulacion,
-          "dia_libr_anio_vacacion": obj.dia_libr_anio_vacacion,
+          "dia_libr_anio_vacacion": obj.dia_libr_anio_vacacion
         }
       }
       arregloRegimen.push(objeto)
     });
-
     this.rest.DownloadXMLRest(arregloRegimen).subscribe(res => {
       this.data = res;
-      console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/regimenLaboral/download/' + this.data.name;
+      this.urlxml = `${environment.url}/regimenLaboral/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
+    this.ObtenerRegimen();
   }
 
-  /****************************************************************************************************** 
-   * MÉTODO PARA EXPORTAR A CSV 
-   ******************************************************************************************************/
+  /* ***************************************************************************************************** 
+   *                                    MÉTODO PARA EXPORTAR A CSV 
+   * *****************************************************************************************************/
 
-  exportToCVS() {
+  ExportToCVS() {
+    this.OrdenarDatos(this.regimen);
     const wse: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.regimen);
     const csvDataC = xlsx.utils.sheet_to_csv(wse);
     const data: Blob = new Blob([csvDataC], { type: 'text/csv;charset=utf-8;' });
     FileSaver.saveAs(data, "RegimenCSV" + new Date().getTime() + '.csv');
+    this.ObtenerRegimen();
   }
 }

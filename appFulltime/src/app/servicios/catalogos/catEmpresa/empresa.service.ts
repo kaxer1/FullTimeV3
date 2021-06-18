@@ -49,6 +49,10 @@ export class EmpresaService {
   ActualizarSeguridad(formData) {
     return this.http.put<any>(`${environment.url}/empresas/doble/seguridad`, formData);
   }
+
+  ActualizarMarcaAgua(formData) {
+    return this.http.put<any>(`${environment.url}/empresas/reporte/marca`, formData);
+  }
   
   ActualizarAccionesTimbres(formData) {
     return this.http.put<any>(`${environment.url}/empresas/acciones-timbre`, formData);

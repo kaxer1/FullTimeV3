@@ -8,7 +8,7 @@ import pool from '../../database';
 class EmpresaControlador {
 
     public async ListarEmpresa(req: Request, res: Response) {
-        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa ORDER BY nombre ASC');
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida, marca_agua FROM cg_empresa ORDER BY nombre ASC');
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -19,7 +19,7 @@ class EmpresaControlador {
 
     public async ListarUnaEmpresa(req: Request, res: Response) {
         const { nombre } = req.params;
-        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida FROM cg_empresa WHERE nombre = $1', [nombre]);
+        const EMPRESA = await pool.query('SELECT id, nombre, ruc, direccion, telefono, correo, representante, tipo_empresa, establecimiento, logo, color_p, color_s, num_partida, marca_agua FROM cg_empresa WHERE nombre = $1', [nombre]);
         if (EMPRESA.rowCount > 0) {
             return res.jsonp(EMPRESA.rows)
         }
@@ -137,6 +137,12 @@ class EmpresaControlador {
         const { seg_contrasena, seg_frase, seg_ninguna, id } = req.body;
         await pool.query('UPDATE cg_empresa SET seg_contrasena = $1, seg_frase = $2, seg_ninguna = $3 WHERE id = $4', [seg_contrasena, seg_frase, seg_ninguna, id]);
         res.jsonp({ message: 'Seguridad exitosamente' });
+    }
+
+    public async ActualizarMarcaAgua(req: Request, res: Response): Promise<void> {
+        const { marca_agua, id } = req.body;
+        await pool.query('UPDATE cg_empresa SET marca_agua = $1 WHERE id = $2', [marca_agua, id]);
+        res.jsonp({ message: 'Registro guardado' });
     }
 
     public async EditarPassword(req: Request, res: Response): Promise<void> {
