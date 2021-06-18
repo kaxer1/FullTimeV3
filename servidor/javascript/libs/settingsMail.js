@@ -30,7 +30,8 @@ exports.Credenciales = function (id_empresa) {
             pass = credenciales.password_correo;
         }
         catch (error) {
-            console.log(error);
+            // console.log(error);
+            console.info(error.toString());
         }
     });
 };
@@ -43,15 +44,21 @@ exports.enviarMail = function (data) {
             pass: pass
         }
     });
-    smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
-        console.log('****************************************************');
-        console.log(data);
-        console.log('****************************************************');
-        if (error) {
-            console.log(error);
-        }
-        else {
-            console.log('Email sent: ' + info.response);
-        }
-    }));
+    try {
+        smtpTransport.sendMail(data, (error, info) => __awaiter(this, void 0, void 0, function* () {
+            console.log('****************************************************');
+            console.log(data);
+            console.log('****************************************************');
+            if (error) {
+                console.warn(error);
+            }
+            else {
+                console.log('Email sent: ' + info.response);
+            }
+        }));
+    }
+    catch (error) {
+        console.log(error.toString());
+        return { err: error.toString() };
+    }
 };

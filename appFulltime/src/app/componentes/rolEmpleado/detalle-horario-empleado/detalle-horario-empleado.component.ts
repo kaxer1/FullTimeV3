@@ -10,6 +10,7 @@ import { RegistroDetallePlanHorarioComponent } from 'src/app/componentes/detalle
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { EditarDetallePlanComponent } from 'src/app/componentes/detallePlanHorarios/editar-detalle-plan/editar-detalle-plan.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { environment } from '../../../../environments/environment';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class DetalleHorarioEmpleadoComponent implements OnInit {
   archivoSubido: Array<File>;
 
   archivo1Form = new FormControl('');
+  hipervinculo: string = environment.url
 
   constructor(
     public router: Router,

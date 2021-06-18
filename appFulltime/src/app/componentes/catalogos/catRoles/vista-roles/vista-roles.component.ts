@@ -21,6 +21,7 @@ import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ScriptService } from 'src/app/servicios/empleado/script.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-vista-roles',
@@ -300,7 +301,7 @@ export class VistaRolesComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloRoles).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/rol/download/' + this.data.name;
+      this.urlxml = `${environment.url}/rol/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

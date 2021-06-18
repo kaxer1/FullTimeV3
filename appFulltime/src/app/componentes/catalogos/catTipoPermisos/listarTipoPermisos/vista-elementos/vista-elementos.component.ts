@@ -18,6 +18,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { TipoPermisosService } from 'src/app/servicios/catalogos/catTipoPermisos/tipo-permisos.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-vista-elementos',
@@ -326,7 +327,7 @@ export class VistaElementosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      this.urlxml = `${environment.url}/departamento/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

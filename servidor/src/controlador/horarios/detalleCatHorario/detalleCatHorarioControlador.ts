@@ -23,9 +23,34 @@ class DetalleCatalogoHorarioControlador {
 
     public async ListarUnDetalleHorario(req: Request, res: Response): Promise<any> {
         const { id_horario } = req.params;
-        const HORARIO = await pool.query('SELECT * FROM deta_horarios WHERE id_horario = $1', [id_horario]);
-        if (HORARIO.rowCount > 0) {
-            return res.jsonp(HORARIO.rows)
+        const HORARIO = await pool.query('SELECT * FROM deta_horarios WHERE id_horario = $1 ORDER BY orden ASC', [id_horario])
+        .then(result => {
+            if(result.rowCount === 0 ) return [];
+
+            return result.rows.map(o => {
+                switch (o.tipo_accion) {
+                    case 'E':
+                        o.tipo_accion = 'Entrada';
+                        break;
+                    case 'S/A':
+                        o.tipo_accion = 'S.Almuerzo';
+                        break;
+                    case 'E/A':
+                        o.tipo_accion = 'E.Almuerzo';
+                        break;
+                    case 'S':
+                        o.tipo_accion = 'Salida';
+                        break;
+                    default:
+                        o.tipo_accion = 'codigo 99';
+                        break;
+                }
+                return o
+            })
+        });
+
+        if (HORARIO.length > 0) {
+            return res.jsonp(HORARIO)
         }
         else {
             return res.status(404).jsonp({ text: 'No se encuentran registros' });

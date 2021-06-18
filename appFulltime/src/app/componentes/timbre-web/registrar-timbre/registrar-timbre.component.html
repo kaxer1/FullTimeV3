@@ -4,7 +4,7 @@
     </div>
     <br>
     <div>
-        <span><b>Fecha:</b> {{timbre}} <b>Hora:</b> {{Hora}}</span>
+        <span><b>Fecha:</b> {{f | date: 'fullDate' : undefined : 'es-EC'}} <b>Hora:</b> {{f | date: 'h:mm:ss a'}}</span>
     </div>
     <form [formGroup]="TimbreForm">
         <div class="container">

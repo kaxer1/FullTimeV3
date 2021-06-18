@@ -19,6 +19,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { ProcesoService } from 'src/app/servicios/catalogos/catProcesos/proceso.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-principal-proceso',
@@ -346,7 +347,7 @@ export class PrincipalProcesoComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloProcesos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/proceso/download/' + this.data.name;
+      this.urlxml = `${environment.url}/proceso/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

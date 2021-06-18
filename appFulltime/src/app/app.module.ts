@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -171,6 +171,11 @@ import { EditarHoraExtraEmpleadoComponent } from './componentes/rolEmpleado/hora
 import { CancelarVacacionesComponent } from './componentes/rolEmpleado/vacaciones-empleado/cancelar-vacaciones/cancelar-vacaciones.component';
 import { EditarVacacionesEmpleadoComponent } from './componentes/rolEmpleado/vacaciones-empleado/editar-vacaciones-empleado/editar-vacaciones-empleado.component';
 
+// Cambiar el local de la APP
+import localEsEC from '@angular/common/locales/es-EC'
+import { registerLocaleData } from '@angular/common'
+registerLocaleData( localEsEC )
+
 // PIE DE PÁGINA Y NAVEGABILIDAD
 import { FooterComponent } from './share/footer/footer.component';
 import { MainNavComponent } from './share/main-nav/main-nav.component';
@@ -196,6 +201,8 @@ import { EmplCargosService } from './servicios/empleado/empleadoCargo/empl-cargo
 import { CiudadService } from './servicios/ciudad/ciudad.service';
 import { TokenInterceptorService } from './servicios/login/token-interceptor.service';
 import { GraficasService } from './servicios/graficas/graficas.service';
+import { ProgressService } from './share/progress/progress.service';
+import { MainNavService } from './share/main-nav/main-nav.service';
 
 // SEGURIDAD
 import { AuthGuard } from "./guards/auth.guard";
@@ -273,6 +280,13 @@ import { AutorizaSolicitudComponent } from './componentes/planificacionComidas/a
 import { ListarSolicitudComponent } from './componentes/planificacionComidas/listar-solicitud/listar-solicitud.component';
 import { EditarSolicitudComidaComponent } from './componentes/planificacionComidas/editar-solicitud-comida/editar-solicitud-comida.component';
 import { ListarPlanificacionComponent } from './componentes/planificacionComidas/listar-planificacion/listar-planificacion.component';
+import { NavbarComponent } from './share/main-nav/navbar/navbar.component';
+import { SearchComponent } from './share/main-nav/search/search.component';
+import { ButtonNotificacionComponent } from './share/main-nav/button-notificacion/button-notificacion.component';
+import { ButtonAvisosComponent } from './share/main-nav/button-avisos/button-avisos.component';
+import { ProgressComponent } from './share/progress/progress.component';
+import { ButtonOpcionesComponent } from './share/main-nav/button-opciones/button-opciones.component';
+import { PlantillaReportesService } from './componentes/reportes/plantilla-reportes.service';
 
 const config: SocketIoConfig = { url: environment.url, options: {} };
 
@@ -496,6 +510,12 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     ListarSolicitudComponent,
     EditarSolicitudComidaComponent,
     ListarPlanificacionComponent,
+    NavbarComponent,
+    SearchComponent,
+    ButtonNotificacionComponent,
+    ButtonAvisosComponent,
+    ProgressComponent,
+    ButtonOpcionesComponent,
   ],
 
   imports: [
@@ -522,6 +542,9 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
       useClass: TokenInterceptorService,
       multi: true
     },
+    {
+      provide: LOCALE_ID, useValue: 'es-EC'
+    },
     LoginService,
     RolesService,
     TituloService,
@@ -539,7 +562,10 @@ const config: SocketIoConfig = { url: environment.url, options: {} };
     CiudadService,
     EmpleadoHorariosService,
     EmplCargosService,
-    GraficasService
+    GraficasService,
+    ProgressService,
+    MainNavService,
+    PlantillaReportesService,
   ],
 
   bootstrap: [AppComponent]

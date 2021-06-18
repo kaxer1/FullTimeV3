@@ -13,6 +13,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-horario.service';
 import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-ver-detalle-plan-horarios',
@@ -35,6 +36,7 @@ export class VerDetallePlanHorariosComponent implements OnInit {
   archivoSubido: Array<File>;
 
   archivo1Form = new FormControl('');
+  hipervinculo: string = environment.url
 
   constructor(
     public router: Router,

@@ -20,6 +20,7 @@ import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.s
 import { AccionPersonalService } from 'src/app/servicios/accionPersonal/accion-personal.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { CrearTipoaccionComponent } from '../crear-tipoaccion/crear-tipoaccion.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-listar-tipo-accion',
@@ -331,11 +332,11 @@ export class ListarTipoAccionComponent implements OnInit {
       arregloTipoPermisos.push(objeto)
     });
 
-    /*this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
-      this.data = res;
-      console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
-      window.open(this.urlxml, "_blank");
-    });*/
+    // this.rest.DownloadXMLRest(arregloTipoPermisos).subscribe(res => {
+    //   this.data = res;
+    //   console.log("prueba data", res)
+    //   this.urlxml = `${environment.url}/departamento/download/` + this.data.name;
+    //   window.open(this.urlxml, "_blank");
+    // });
   }
 }

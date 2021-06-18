@@ -17,6 +17,7 @@ import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartament
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
+import { environment } from '../../../../environments/environment';
 
 interface Estado {
   id: number,
@@ -55,6 +56,7 @@ export class VerEmpleadoPermisoComponent implements OnInit {
 
   fechaActual: any;
   habilitarActualizar: boolean = true;
+  hipervinculo: string = environment.url
 
   constructor(
     private restP: PermisosService,

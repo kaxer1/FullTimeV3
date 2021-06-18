@@ -20,6 +20,7 @@ import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/emp
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { DetalleMenuComponent } from '../detalle-menu/detalle-menu.component';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -49,6 +50,8 @@ export class ListarTipoComidasComponent implements OnInit {
 
   empleado: any = [];
   idEmpleado: number;
+
+  hipervinculo: string = environment.url
 
   constructor(
     private rest: TipoComidasService,
@@ -297,7 +300,7 @@ export class ListarTipoComidasComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloComidas).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/tipoComidas/download/' + this.data.name;
+      this.urlxml = `${environment.url}/tipoComidas/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

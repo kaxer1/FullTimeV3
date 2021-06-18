@@ -165,8 +165,33 @@ class HorarioControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const id = req.params.id;
             const { nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno } = req.body;
-            yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, doc_nombre = $4, nocturno = $5 WHERE id = $6', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, id]);
-            res.jsonp({ message: 'Tipo Permiso Actualizado' });
+            try {
+                const respuesta = yield database_1.default.query('UPDATE cg_horarios SET nombre = $1, min_almuerzo = $2, hora_trabajo = $3, doc_nombre = $4, nocturno = $5 WHERE id = $6 RETURNING *', [nombre, min_almuerzo, hora_trabajo, doc_nombre, nocturno, id])
+                    .then(result => { return result.rows; });
+                console.log(respuesta);
+                if (respuesta.length === 0)
+                    return res.status(400).jsonp({ message: 'Horario no Actualizado' });
+                return res.status(200).jsonp(respuesta);
+            }
+            catch (error) {
+                return res.status(400).jsonp({ message: error });
+            }
+        });
+    }
+    EditarHoraTrabajaByHorarioDetalle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const id = req.params.id;
+            const { hora_trabajo } = req.body;
+            try {
+                const respuesta = yield database_1.default.query('UPDATE cg_horarios SET hora_trabajo = $1 WHERE id = $2 RETURNING *', [hora_trabajo, id])
+                    .then(result => { return result.rows; });
+                if (respuesta.length === 0)
+                    return res.status(400).jsonp({ message: 'No Actualizado' });
+                return res.status(200).jsonp(respuesta);
+            }
+            catch (error) {
+                return res.status(400).jsonp({ message: error });
+            }
         });
     }
     FileXML(req, res) {
@@ -223,26 +248,32 @@ class HorarioControlador {
     }
     VerificarDuplicados(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.params;
-            const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
-            if (HORARIOS.rowCount > 0) {
-                return res.jsonp(HORARIOS.rows);
+            const { nombre } = req.query;
+            try {
+                const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE UPPER(nombre) = $1', [nombre.toUpperCase()]);
+                if (HORARIOS.rowCount > 0)
+                    return res.status(200).jsonp({ message: 'No se encuentran registros' });
+                return res.status(400).jsonp({ message: 'No existe horario. Continua.' });
             }
-            else {
-                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            catch (error) {
+                return res.status(400).jsonp({ message: error });
             }
         });
     }
     VerificarDuplicadosEdicion(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { nombre } = req.params;
-            const id = req.params.id;
-            const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2', [id, nombre.toUpperCase()]);
-            if (HORARIOS.rowCount > 0) {
-                return res.jsonp(HORARIOS.rows);
+            const { id, nombre } = req.query;
+            console.log('+++++++++++++++++++++++++++++++++++++ llego aqui');
+            console.log(req.query);
+            try {
+                const HORARIOS = yield database_1.default.query('SELECT * FROM cg_horarios WHERE NOT id = $1 AND UPPER(nombre) = $2', [parseInt(id), nombre.toUpperCase()]);
+                console.log(HORARIOS.rows);
+                if (HORARIOS.rowCount > 0)
+                    return res.status(200).jsonp({ message: 'El nombre de horario ya existe, ingresar un nuevo nombre.' });
+                return res.status(400).jsonp({ message: 'No existe horario. Continua.' });
             }
-            else {
-                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            catch (error) {
+                return res.status(400).jsonp({ message: error });
             }
         });
     }

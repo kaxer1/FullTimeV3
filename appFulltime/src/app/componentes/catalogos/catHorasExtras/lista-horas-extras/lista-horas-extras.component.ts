@@ -329,7 +329,6 @@ export class ListaHorasExtrasComponent implements OnInit {
     this.rest.DownloadXMLRest(arreglohorasExtras).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      // this.urlxml = 'http://localhost:3000/horasExtras/download/' + this.data.name;
       this.urlxml = `${environment.url}/horasExtras/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     }, err => {

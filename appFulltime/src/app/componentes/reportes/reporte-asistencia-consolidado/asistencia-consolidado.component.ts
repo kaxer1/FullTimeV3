@@ -18,17 +18,18 @@ import { IReporteAsistenciaConsolidada, IRestAsisteConsoli, IRestTotalAsisteCons
 import { ConfigAsistenciaComponent } from '../../reportes-Configuracion/config-report-asistencia/config-asistencia.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmpleadoElemento } from 'src/app/model/empleado.model';
+import { PlantillaReportesService } from '../plantilla-reportes.service';
 
 @Component({
   selector: 'app-asistencia-consolidado',
   templateUrl: './asistencia-consolidado.component.html',
   styleUrls: ['./asistencia-consolidado.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  // providers: [
+  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
+  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  // ]
 })
 
 export class AsistenciaConsolidadoComponent implements OnInit {
@@ -72,20 +73,24 @@ export class AsistenciaConsolidadoComponent implements OnInit {
 
   selection = new SelectionModel<EmpleadoElemento>(true, []);
 
+  // Getters de colores, nombre empresa y logo para colocar en reporte 
+  get p_color(): string { return this.plantillaPDF.color_Primary}
+  get s_color(): string { return this.plantillaPDF.color_Secundary}  
+  get urlImagen() : string { return this.plantillaPDF.logoBase64 }
+  get nombreEmpresa(): string { return this.plantillaPDF.nameEmpresa}
+
   constructor(
     private restEmpleado: EmpleadoService,
     private restKardex: KardexService,
-    private restEmpre: EmpresaService,
+    private plantillaPDF: PlantillaReportesService,
     private toastr: ToastrService,
     private openVentana: MatDialog
-  ) {
-  }
+  ) { }
 
   ngOnInit(): void {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.ObtenerEmpleados();
     this.ObtenerEmpleadoSolicitaKardex(this.idEmpleado);
-    this.ObtnerColores();
     this.MensajeInicio();
   }
 
@@ -147,26 +152,10 @@ export class AsistenciaConsolidadoComponent implements OnInit {
   }
 
   // Método para ver la informacion del empleado 
-  urlImagen: string;
-  nombreEmpresa: string;
   ObtenerEmpleadoSolicitaKardex(idemploy: any) {
     this.empleadoD = [];
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoD = data;
-    });
-    this.restKardex.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.urlImagen = 'data:image/jpeg;base64,' + res.imagen;
-      this.nombreEmpresa = res.nom_empresa;
-    });
-  }
-
-  // Método para obtener colores de empresa
-  p_color: any;
-  s_color: any;
-  ObtnerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
     });
   }
 

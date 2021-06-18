@@ -21,6 +21,7 @@ import { RegistroHorarioComponent } from 'src/app/componentes/catalogos/catHorar
 import { DetalleCatHorarioComponent } from 'src/app/componentes/catalogos/catHorario/detalle-cat-horario/detalle-cat-horario.component';
 import { EditarHorarioComponent } from '../editar-horario/editar-horario.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-principal-horario',
@@ -57,6 +58,8 @@ export class PrincipalHorarioComponent implements OnInit {
 
   empleado: any = [];
   idEmpleado: number;
+
+  hipervinculo: string = environment.url;
 
   constructor(
     private rest: HorarioService,
@@ -441,7 +444,7 @@ export class PrincipalHorarioComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloHorarios).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/horario/download/' + this.data.name;
+      this.urlxml = `${environment.url}/horario/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

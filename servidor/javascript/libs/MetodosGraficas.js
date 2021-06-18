@@ -142,9 +142,9 @@ exports.GraficaInasistencia = function (id_empresa, fec_inicio, fec_final) {
 };
 exports.GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let array = yield M_graficas.BuscarTimbresEntradasSinAcciones(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
-        console.log(array);
+        // console.log(array);
         let modelarAnio = {
             enero: [],
             febrero: [],
@@ -160,7 +160,7 @@ exports.GraficaAtrasosSinAcciones = function (id_empresa, fec_inicio, fec_final)
             diciembre: []
         };
         array.forEach((ele) => {
-            console.log('ATRASOS: ', ele.fecha);
+            // console.log('ATRASOS: ', ele.fecha);
             if (ele !== 0) {
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 switch (fecha) {
@@ -253,7 +253,7 @@ exports.GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.BuscarTimbresEntradas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
-        // console.log(timbres);
+        console.log(timbres);
         let modelarAnio = {
             enero: [],
             febrero: [],
@@ -363,7 +363,7 @@ exports.GraficaAtrasos = function (id_empresa, fec_inicio, fec_final) {
 };
 exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let horarios = yield M_graficas.BuscarHorariosActivos(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         let array = yield Promise.all(horarios.map((obj) => __awaiter(this, void 0, void 0, function* () {
             obj.horario = yield M_graficas.BuscarTimbresByCodigo_Fecha(obj.codigo, obj.horario);
@@ -380,7 +380,7 @@ exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
         };
         array.forEach(obj => {
             obj.horario.forEach((ele) => {
-                console.log(ele);
+                // console.log(ele);
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 if (ele.timbresTotal === 0 && ele.justificado === 0) {
                     modelarPie.a_no_justi.push(fecha);
@@ -425,7 +425,7 @@ exports.GraficaAsistencia = function (id_empresa, fec_inicio, fec_final) {
 };
 exports.GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let horas_extras = yield M_graficas.HoraExtra_ModelarDatos(fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -527,7 +527,7 @@ exports.GraficaHorasExtras = function (id_empresa, fec_inicio, fec_final) {
 };
 exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('ingreso a jornada ', id_empresa, fec_inicio, fec_final);
+        // console.log('ingreso a jornada ',id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -741,7 +741,7 @@ exports.GraficaJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_fi
 };
 exports.GraficaJ_VS_H_E_SinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('ingreso a jornada ', id_empresa, fec_inicio, fec_final);
+        // console.log('ingreso a jornada ',id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -932,7 +932,7 @@ exports.GraficaJ_VS_H_E_SinAcciones = function (id_empresa, fec_inicio, fec_fina
 };
 exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -1036,7 +1036,7 @@ exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_ini
         timbres = [];
         nuevo.forEach(obj => {
             let fecha = parseInt(obj.fecha.split('-')[1]);
-            console.log(obj);
+            // console.log(obj);
             switch (fecha) {
                 case 1:
                     modelarAnioTiempoJornada.enero.push(obj.total);
@@ -1126,7 +1126,7 @@ exports.GraficaT_Jor_VS_HorExtTimbresSinAcciones = function (id_empresa, fec_ini
 };
 exports.GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         /**
          * Para Horas Extras
          */
@@ -1338,7 +1338,7 @@ exports.GraficaTiempoJornada_VS_HorasExtras = function (id_empresa, fec_inicio, 
 };
 exports.GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.BuscarTimbresByFecha(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log('==========================================');
         // console.log(timbres);
@@ -1441,7 +1441,7 @@ exports.GraficaMarcaciones = function (id_empresa, fec_inicio, fec_final) {
 };
 exports.GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.ModelarSalidasAnticipadas(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log(timbres);    
         let modelarAnio = {
@@ -1542,7 +1542,7 @@ exports.GraficaSalidasAnticipadas = function (id_empresa, fec_inicio, fec_final)
 };
 exports.GraficaSalidasAnticipadasSinAcciones = function (id_empresa, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empresa, fec_inicio, fec_final);
+        // console.log(id_empresa, fec_inicio, fec_final);
         let timbres = yield M_graficas.ModelarSalidasAnticipadasSinAcciones(fec_inicio.toJSON().split('T')[0], fec_final.toJSON().split('T')[0]);
         // console.log(timbres);    
         let modelarAnio = {
@@ -1650,7 +1650,7 @@ exports.GraficaSalidasAnticipadasSinAcciones = function (id_empresa, fec_inicio,
  */
 exports.MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let horas_extras = yield M_graficas.Empleado_HoraExtra_ModelarDatos(codigo, fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -1756,7 +1756,7 @@ exports.MetricaHorasExtraEmpleado = function (codigo, id_empleado, fec_inicio, f
 };
 exports.MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let vacaciones = yield M_graficas.Empleado_Vacaciones_ModelarDatos(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -1863,7 +1863,7 @@ exports.MetricaVacacionesEmpleado = function (codigo, id_empleado, fec_inicio, f
 };
 exports.MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let permisos = yield M_graficas.Empleado_Permisos_ModelarDatos(codigo, fec_inicio, fec_final);
         let modelarAnio = {
             enero: [],
@@ -1970,8 +1970,8 @@ exports.MetricaPermisosEmpleado = function (codigo, id_empleado, fec_inicio, fec
 };
 exports.MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empleado, fec_inicio, fec_final);
-        console.log(codigo, id_empleado, fec_inicio, fec_final);
+        // console.log(id_empleado, fec_inicio, fec_final);
+        // console.log(codigo, id_empleado, fec_inicio, fec_final);
         let atrasos = yield M_graficas.Empleado_Atrasos_ModelarDatos(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -2079,7 +2079,7 @@ exports.MetricaAtrasosEmpleado = function (codigo, id_empleado, fec_inicio, fec_
 };
 exports.MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log(id_empleado, fec_inicio, fec_final);
+        // console.log(id_empleado, fec_inicio, fec_final);
         let atrasos = yield M_graficas.Empleado_Atrasos_ModelarDatos_SinAcciones(codigo, fec_inicio, fec_final);
         // let ids = await IdsEmpleados(id_empresa);
         let modelarAnio = {
@@ -2097,7 +2097,7 @@ exports.MetricaAtrasosEmpleadoSinAcciones = function (codigo, id_empleado, fec_i
             diciembre: []
         };
         atrasos.forEach((ele) => {
-            console.log(ele);
+            // console.log(ele);
             if (ele !== 0) {
                 let fecha = parseInt(ele.fecha.split('-')[1]);
                 switch (fecha) {

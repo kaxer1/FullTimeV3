@@ -26,6 +26,7 @@ import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { DepartamentosService } from 'src/app/servicios/catalogos/catDepartamentos/departamentos.service';
 import { EmplCargosService } from 'src/app/servicios/empleado/empleadoCargo/empl-cargos.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-timbres',
@@ -113,6 +114,7 @@ export class ReporteTimbresComponent implements OnInit {
     public restD: DatosGeneralesService,
     public router: Router,
     private toastr: ToastrService,
+    private validaciones: ValidacionesService
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
@@ -189,7 +191,7 @@ export class ReporteTimbresComponent implements OnInit {
         this.timbres = [];
         this.restR.ObtenerTimbres(id_seleccionado, fechas).subscribe(data => {
           this.timbres = data;
-          console.log('datos timbres', this.timbres);
+          console.log('Datos timbres: ', this.timbres);
           if (archivo === 'pdf') {
             this.generarPdf('open', id_seleccionado, form);
             this.LimpiarFechas();
@@ -220,44 +222,11 @@ export class ReporteTimbresComponent implements OnInit {
   }
 
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validaciones.IngresarSoloLetras(e)
   }
 
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validaciones.IngresarSoloNumeros(evt)
   }
 
   LimpiarCampos() {
@@ -335,6 +304,8 @@ export class ReporteTimbresComponent implements OnInit {
       content: [
         { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
         ...this.datosEmpleado.map(obj => {
+          console.log(obj);
+          
           if (obj.codigo === id_seleccionado) {
             return [
               { text: obj.empresa.toUpperCase(), bold: true, fontSize: 25, alignment: 'center', margin: [0, -30, 0, 5] },
@@ -444,23 +415,18 @@ export class ReporteTimbresComponent implements OnInit {
             '', '', ''
           ],
           ...this.timbres.map(obj => {
-            if (obj.accion === 'E' || obj.accion === '0') {
-              this.accionT = 'Entrada';
-            }
-            else if (obj.accion === 'S' || obj.accion === '1') {
-              this.accionT = 'Salida';
-            }
-            else if (obj.accion === 'EA' || obj.accion === '2') {
-              this.accionT = 'Entrada Almuerzo';
-            }
-            else if (obj.accion === 'SA' || obj.accion === '3') {
-              this.accionT = 'Salida Almuerzo';
-            }
-            else if (obj.accion === 'EP' || obj.accion === '4') {
-              this.accionT = 'Entrada Permiso';
-            }
-            else if (obj.accion === 'SP' || obj.accion === '5') {
-              this.accionT = 'Salida Permiso';
+            switch (obj.accion) {
+              case 'EoS': this.accionT = 'Entrada o Salida'; break;
+              case 'AES': this.accionT = 'Entrada o Salida Almuerzo'; break;
+              case 'PES': this.accionT = 'Entrada o Salida Permiso'; break;
+              case 'E': this.accionT = 'Entrada'; break;
+              case 'S': this.accionT = 'Salida'; break;
+              case 'E/A': this.accionT = 'Entrada Almuerzo'; break;
+              case 'S/A': this.accionT = 'Salida Almuerzo'; break;
+              case 'E/P': this.accionT = 'Entrada Permiso'; break;
+              case 'S/P': this.accionT = 'Salida Permiso'; break;
+              case 'HA': this.accionT = 'Horario Abierto'; break;
+              default: this.accionT = 'codigo 99'; break;
             }
             var day = moment(obj.fec_hora_timbre).day()
 

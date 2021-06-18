@@ -6,7 +6,7 @@ class TimbresControlador {
 
     public async ObtenerRealTimeTimbresEmpleado(req: Request, res: Response) {
         const { id_empleado } = req.params
-        console.log(id_empleado);        
+        console.log('OBTENER REAL TIME TIMBRES EMPLEADO: Id empleado = ', id_empleado);        
         const TIMBRES_NOTIFICACION = await pool.query('SELECT * FROM realtime_timbres WHERE id_receives_empl = $1 ORDER BY create_at DESC LIMIT 5', [id_empleado])
         .then(async(result) => {
 
@@ -42,31 +42,32 @@ class TimbresControlador {
         const { id_empleado } = req.params
         console.log(id_empleado);        
         const TIMBRES_NOTIFICACION = await pool.query('SELECT * FROM realtime_timbres WHERE id_receives_empl = $1 ORDER BY create_at DESC', [id_empleado])
-        .then(async(result) => {
+        .then(result => { return result.rows});
 
-            if (result.rowCount > 0) {
-                return await Promise.all( result.rows.map(async (obj): Promise<any> => {    
-                    let nombre = await pool.query('SELECT nombre, apellido FROM empleados WHERE id = $1',[obj.id_send_empl]).then(ele => {
-                        return ele.rows[0].nombre + ' ' + ele.rows[0].apellido
+        if (TIMBRES_NOTIFICACION.length === 0) return res.status(404).jsonp({ message: 'No se encuentran registros'});
+        console.log(TIMBRES_NOTIFICACION);
+        
+        const tim = await Promise.all( TIMBRES_NOTIFICACION.map(async (obj): Promise<any> => {    
+                    let [ empleado ] = await pool.query('SELECT  (nombre || \' \' || apellido) AS fullname FROM empleados WHERE id = $1',[obj.id_send_empl]).then(ele => {
+                        console.log('¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨',ele.rows);
+                        return ele.rows
                     })
+                    const fullname = (empleado === undefined) ? '' : empleado.fullname;
                     return {
                         create_at: obj.create_at,
                         descripcion: obj.descripcion,
                         visto: obj.visto,
                         id_timbre: obj.id_timbre,
-                        empleado: nombre,
+                        empleado: fullname,
                         id: obj.id
                     }
                 }));
-            }
-            return []
-        });
-                
-        if (TIMBRES_NOTIFICACION.length > 0) {
-            return res.jsonp(TIMBRES_NOTIFICACION)
+        console.log(tim);
+        
+        if (tim.length > 0) {
+            return res.jsonp(tim)
         }
         
-        return res.status(404).jsonp({ message: 'No se encuentran registros'});
     }
 
     public async ActualizarVista(req: Request, res: Response): Promise<void> {
@@ -97,14 +98,15 @@ class TimbresControlador {
 
     public async CrearTimbreWeb(req: Request, res: Response): Promise<any> {
         try {
-            const {fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud} = req.body
+            const {fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud} = req.body;
+            let f = new Date();
             const id_empleado = req.userIdEmpleado;
             let code = await pool.query('SELECT codigo FROM empleados WHERE id = $1', [id_empleado]).then(result => { return result.rows});
             if (code.length === 0) return {mensaje: 'El empleado no tiene un codigo asignado.'};
             var codigo = parseInt(code[0].codigo); 
             console.log(req.body, codigo)
             
-            const [ timbre ] = await pool.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id',[fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo])
+            const [ timbre ] = await pool.query('INSERT INTO timbres (fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, id_empleado, fec_hora_timbre_servidor) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',[fec_hora_timbre, accion, tecl_funcion, observacion, latitud, longitud, codigo, f])
             .then(result => {
                 console.log(result.rows);
                 return result.rows
@@ -114,7 +116,7 @@ class TimbresControlador {
                 return err
             })
             if (timbre) {
-                return res.status(200).jsonp({message: 'Timbre enviado'});
+                return res.status(200).jsonp({message: 'Timbre creado exitosamente'});
             }
             return res.status(400).jsonp({message: 'El timbre no se ha insertado'});
         } catch (error) {

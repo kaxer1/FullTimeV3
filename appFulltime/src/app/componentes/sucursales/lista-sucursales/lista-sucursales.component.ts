@@ -19,6 +19,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { SucursalService } from 'src/app/servicios/sucursales/sucursal.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-sucursales',
@@ -314,7 +315,7 @@ export class ListaSucursalesComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloSucursales).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/sucursales/download/' + this.data.name;
+      this.urlxml = `${environment.url}/sucursales/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -19,6 +19,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { RelojesService } from 'src/app/servicios/catalogos/catRelojes/relojes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-listar-relojes',
@@ -62,6 +63,8 @@ export class ListarRelojesComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
+
+  hipervinculo: string = environment.url;
 
   constructor(
     private rest: RelojesService,
@@ -442,7 +445,7 @@ export class ListarRelojesComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloDispositivos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/relojes/download/' + this.data.name;
+      this.urlxml = `${environment.url}/relojes/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

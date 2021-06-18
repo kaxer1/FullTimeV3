@@ -16,6 +16,7 @@ import * as FileSaver from 'file-saver';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { HorasExtrasRealesService } from 'src/app/servicios/reportes/horasExtrasReales/horas-extras-reales.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-hora-extra-real',
@@ -534,7 +535,7 @@ export class HoraExtraRealComponent implements OnInit {
       console.log(arregloEmpleado)
       this.data = res;
       console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

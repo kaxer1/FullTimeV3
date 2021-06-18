@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ModuloAlimentacionValidation = void 0;
 exports.ModuloAlimentacionValidation = (req, res, next) => {
     const { alimentacion } = req.modulos;
     console.log('******************** validacion de modulo de alimentacion', alimentacion);

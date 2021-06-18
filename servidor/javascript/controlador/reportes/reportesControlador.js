@@ -284,6 +284,7 @@ class ReportesControlador {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empleado } = req.params;
             const { fechaInicio, fechaFinal } = req.body;
+            console.log('id', id_empleado, req.body);
             let DATOS;
             //false sin acciones || true con acciones
             if (req.acciones_timbres === true) {
@@ -455,6 +456,7 @@ function AtrasosTimbresPlanificadosSinAcciones(id_empleado, fechaInicio, fechaFi
 }
 function EntradaSalidaHorarioConAcciones(id_empleado, fechaInicio, fechaFinal) {
     return __awaiter(this, void 0, void 0, function* () {
+        // const timbres = 
         return yield database_1.default.query('SELECT * FROM timbres AS t INNER JOIN ' +
             '(SELECT * FROM datos_empleado_cargo AS e INNER JOIN ' +
             '(SELECT h.id_horarios, ch.nombre AS nom_horario, dh.minu_espera, dh.tipo_accion, dh.hora, ' +
@@ -470,6 +472,7 @@ function EntradaSalidaHorarioConAcciones(id_empleado, fechaInicio, fechaFinal) {
             'ORDER BY t.fec_hora_timbre ASC', [id_empleado, fechaInicio, fechaFinal])
             .then(result => {
             return result.rows.map(obj => {
+                console.log(obj);
                 obj.accion = obj.tipo_accion;
                 return obj;
             });

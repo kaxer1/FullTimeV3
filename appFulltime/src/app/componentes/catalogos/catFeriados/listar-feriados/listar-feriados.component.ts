@@ -20,6 +20,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -54,6 +55,8 @@ export class ListarFeriadosComponent implements OnInit {
 
   nameFile: string;
   archivoSubido: Array<File>;
+
+  hipervinculo: string = environment.url
 
   constructor(
     private rest: FeriadosService,
@@ -402,7 +405,7 @@ export class ListarFeriadosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloFeriados).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/feriados/download/' + this.data.name;
+      this.urlxml = `${environment.url}/feriados/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

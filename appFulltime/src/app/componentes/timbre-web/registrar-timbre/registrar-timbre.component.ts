@@ -42,8 +42,6 @@ export class RegistrarTimbreComponent implements OnInit {
 
   // VARIABLES DE ALMACENAMIENTO DE FECHA Y HORA DEL TIMBRE
   f: Date = new Date();
-  timbre: String;
-  Hora: string;
 
   constructor(
     public dialogRef: MatDialogRef<RegistrarTimbreComponent>, // VARIABLE DE USO DE VENTANA DE DIÁLOGO
@@ -51,14 +49,6 @@ export class RegistrarTimbreComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // INSTANCIA MESES DEL AÑO
-    var meses = new Array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-    // INSTANCIA DIAS DE LA SEMANA
-    var diasSemana = new Array("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado");
-    // FECHA DEL TIMBRE
-    this.timbre = diasSemana[this.f.getDay()] + ", " + this.f.getDate() + " de " + meses[this.f.getMonth()] + " de " + this.f.getFullYear();
-    // HORA DEL TIMBRE
-    this.Hora = this.f.getHours() + ':' + this.f.getMinutes() + ':' + this.f.getSeconds();
     this.Geolocalizar();
   }
 

@@ -45,7 +45,7 @@ import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHor
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
+import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
@@ -147,7 +147,7 @@ export class VerEmpleadoComponent implements OnInit {
     private restHE: PedHoraExtraService,
     private restPlanGeneral: PlanGeneralService,
     private restF: FuncionesService,
-    public Main: MainNavComponent,
+    public Main: NavbarComponent,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService,

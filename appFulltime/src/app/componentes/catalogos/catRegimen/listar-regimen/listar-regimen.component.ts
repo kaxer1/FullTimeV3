@@ -19,6 +19,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-listar-regimen',
@@ -321,7 +322,7 @@ export class ListarRegimenComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloRegimen).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/regimenLaboral/download/' + this.data.name;
+      this.urlxml = `${environment.url}/regimenLaboral/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

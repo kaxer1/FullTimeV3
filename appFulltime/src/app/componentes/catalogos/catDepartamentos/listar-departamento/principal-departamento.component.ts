@@ -20,6 +20,7 @@ import { ScriptService } from 'src/app/servicios/empleado/script.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-principal-departamento',
@@ -347,7 +348,7 @@ export class PrincipalDepartamentoComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloDepartamentos).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/departamento/download/' + this.data.name;
+      this.urlxml = `${environment.url}/departamento/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -72,7 +72,7 @@ import { VerTipoAccionComponent } from './componentes/accionesPersonal/tipoAccio
 import { AuthGuard } from "./guards/auth.guard";
 
 //Reportes
-import { ReporteTimbresComponent } from './componentes/reportes/reporteTimbres/reporte-timbres/reporte-timbres.component';
+import { ReporteTimbresComponent } from './componentes/reportes/reporte-timbres/reporte-timbres.component';
 import { ReportePermisosComponent } from './componentes/reportes/reporte-permisos/reporte-permisos.component';
 import { ReporteAtrasosComponent } from './componentes/reportes/reporte-atrasos/reporte-atrasos.component';
 import { ReporteEntradaSalidaComponent } from './componentes/reportes/reporte-entrada-salida/reporte-entrada-salida.component';

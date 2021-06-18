@@ -20,6 +20,7 @@ import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.ser
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-listar-titulos',
@@ -318,7 +319,7 @@ export class ListarTitulosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloTitulos).subscribe(res => {
       console.log(arregloTitulos)
       this.data = res;
-      this.urlxml = 'http://localhost:3000/titulo/download/' + this.data.name;
+      this.urlxml = `${environment.url}/titulo/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

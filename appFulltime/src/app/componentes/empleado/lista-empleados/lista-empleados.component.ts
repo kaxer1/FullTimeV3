@@ -17,6 +17,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmarDesactivadosComponent } from './confirmar-desactivados/confirmar-desactivados.component';
 import { EmpleadoElemento } from '../../../model/empleado.model'
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lista-empleados',
@@ -431,9 +432,9 @@ export class ListaEmpleadosComponent implements OnInit {
     this.rest.ObtenerCodigo().subscribe(datos => {
       this.datosCodigo = datos;
       if (datos[0].automatico === true) {
-        this.link = "http://localhost:3000/plantillaD/documento/EmpleadoAutomatico.xlsx"
+        this.link = `${environment.url}/plantillaD/documento/EmpleadoAutomatico.xlsx`
       } else {
-        this.link = "http://localhost:3000/plantillaD/documento/EmpleadoManual.xlsx"
+        this.link = `${environment.url}/plantillaD/documento/EmpleadoManual.xlsx`
       }
     }, error => {
       this.toastr.info('Para el correcto funcionamiento del sistema debe realizar la configuración del código de empleado', '', {
@@ -626,7 +627,7 @@ export class ListaEmpleadosComponent implements OnInit {
       console.log(arregloEmpleado)
       this.data = res;
       console.log("prueba-empleado", res)
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

@@ -213,7 +213,7 @@ exports.BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
             .then(result => { return result.rows; });
         if (horarioEntrada.length === 0)
             return [0];
-        // console.log(horarioEntrada);
+        console.log(horarioEntrada);
         let nuevo = [];
         let aux = yield Promise.all(horarioEntrada.map((obj) => __awaiter(this, void 0, void 0, function* () {
             let fechas = exports.ModelarFechas(obj.fec_inicio, obj.fec_final, obj);
@@ -222,24 +222,32 @@ exports.BuscarTimbresEntradasSinAcciones = function (fec_inicio, fec_final) {
                 var f_inicio = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg);
                 var f_final = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg + exports.HHMMtoSegundos('02:00:00'));
                 // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + obj.codigo + ' order by fec_hora_timbre';
+                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + obj.codigo + ' order by fec_hora_timbre';
                 // console.log(query);
-                return yield database_1.default.query(query)
-                    .then(res => {
-                    if (res.rowCount === 0) {
-                        return 0;
-                    }
-                    else {
-                        const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
-                        const t_tim = exports.HHMMtoSegundos(h_timbre);
-                        // console.log(f_timbre);
-                        return {
-                            fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
-                            tiempo_atraso: (t_tim - hora_seg) / 3600
-                        };
-                    }
-                });
+                try {
+                    return yield database_1.default.query(query)
+                        .then(res => {
+                        if (res.rowCount === 0) {
+                            return 0;
+                        }
+                        else {
+                            const h_timbre = res.rows[0].fec_hora_timbre.split(' ')[1];
+                            const t_tim = exports.HHMMtoSegundos(h_timbre);
+                            // console.log(f_timbre);
+                            return {
+                                fecha: res.rows[0].fec_hora_timbre.split(' ')[0],
+                                tiempo_atraso: (t_tim - hora_seg) / 3600
+                            };
+                        }
+                    });
+                }
+                catch (error) {
+                    console.log('********************* METODO BuscarTimbresEntradasSinAcciones ********************');
+                    console.log(error);
+                    console.log('***************************************************************************');
+                    return 0;
+                }
             })));
             return timbres;
         })));
@@ -478,25 +486,34 @@ exports.BuscarTimbresEoSModelado = function (fec_inicio, fec_final) {
 exports.ModelarAtrasos = function (obj, fec_inicio, fec_final) {
     return __awaiter(this, void 0, void 0, function* () {
         // console.log(obj);
-        let array = yield database_1.default.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
-            'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
-            'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1', [obj.id_empleado, fec_inicio, fec_final])
-            .then(res => { return res.rows; });
-        // console.log('Array del resultado',array);
-        if (array.length === 0) {
+        try {
+            let array = yield database_1.default.query('SELECT dh.hora, dh.minu_espera FROM empl_horarios AS eh, cg_horarios AS h, deta_horarios AS dh ' +
+                'WHERE eh.codigo = $1 AND h.id = eh.id_horarios AND dh.id_horario = h.id AND CAST(eh.fec_inicio AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' ' +
+                'AND CAST(eh.fec_final AS VARCHAR) between $2 || \'%\' AND $3 || \'%\' AND dh.orden = 1 limit 1', [obj.id_empleado, fec_inicio, fec_final])
+                .then(res => { return res.rows; });
+            console.log('Array del resultado', array);
+            if (array.length === 0) {
+                return {
+                    fecha: obj.fec_hora_timbre,
+                    tiempo_atraso: 0,
+                };
+            }
+            return array.map(ele => {
+                var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
+                var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
+                return {
+                    fecha: obj.fec_hora_timbre,
+                    tiempo_atraso: (timbre - hora) / 3600
+                };
+            })[0];
+        }
+        catch (error) {
+            console.log(error);
             return {
                 fecha: obj.fec_hora_timbre,
                 tiempo_atraso: 0,
             };
         }
-        return array.map(ele => {
-            var timbre = exports.HHMMtoSegundos(obj.fec_hora_timbre.split(' ')[1]);
-            var hora = exports.HHMMtoSegundos(ele.hora) + ele.minu_espera * 60;
-            return {
-                fecha: obj.fec_hora_timbre,
-                tiempo_atraso: (timbre - hora) / 3600
-            };
-        })[0];
     });
 };
 exports.ModelarTiempoJornada = function (obj, fec_inicio, fec_final) {
@@ -873,8 +890,8 @@ exports.Empleado_Atrasos_ModelarDatos_SinAcciones = function (codigo, fec_desde,
                 var f_inicio = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg);
                 var f_final = o.fecha + ' ' + exports.SegundosToHHMM(hora_seg + exports.HHMMtoSegundos('02:00:00'));
                 // console.log( f_inicio, ' || ', f_final, ' || ', codigo);
-                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') ' +
-                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
+                const query = 'SELECT CAST(fec_hora_timbre AS VARCHAR) from timbres where fec_hora_timbre >= TO_TIMESTAMP(\'' + f_inicio + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') ' +
+                    'and fec_hora_timbre <= TO_TIMESTAMP(\'' + f_final + '\'' + ', \'YYYY-MM-DD HH24:MI:SS\') and id_empleado = ' + codigo + ' order by fec_hora_timbre';
                 // console.log(query);
                 return yield database_1.default.query(query)
                     .then(res => {

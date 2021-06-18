@@ -30,7 +30,8 @@ import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/reg
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { CambiarContrasenaComponent } from 'src/app/componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
+import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-datos-empleado',
@@ -91,7 +92,7 @@ export class DatosEmpleadoComponent implements OnInit {
     public restEmpre: EmpresaService,
     private toastr: ToastrService,
     private scriptService: ScriptService,
-    public Main: MainNavComponent,
+    public Main: NavbarComponent,
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
@@ -150,7 +151,7 @@ export class DatosEmpleadoComponent implements OnInit {
       this.empleadoUno = data;
       this.fechaNacimiento = data[0]['fec_nacimiento'].split("T")[0];
       if (data[0]['imagen'] != null) {
-        this.urlImagen = 'http://localhost:3000/empleado/img/' + data[0]['imagen'];
+        this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         this.mostrarImagen = true;
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
@@ -749,7 +750,7 @@ export class DatosEmpleadoComponent implements OnInit {
 
     this.restEmpleado.DownloadXMLRest(arregloEmpleado).subscribe(res => {
       this.data = res;
-      this.urlxml = 'http://localhost:3000/empleado/download/' + this.data.name;
+      this.urlxml = `${environment.url}/empleado/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }
