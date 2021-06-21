@@ -45,18 +45,23 @@ class DetalleCatalogoHorarioControlador {
                 return result.rows.map(o => {
                     switch (o.tipo_accion) {
                         case 'E':
-                            o.tipo_accion = 'Entrada';
+                            o.tipo_accion_show = 'Entrada';
+                            o.tipo_accion = 'E';
                             break;
                         case 'S/A':
-                            o.tipo_accion = 'S.Almuerzo';
+                            o.tipo_accion_show = 'S.Almuerzo';
+                            o.tipo_accion = 'S/A';
                             break;
                         case 'E/A':
-                            o.tipo_accion = 'E.Almuerzo';
+                            o.tipo_accion_show = 'E.Almuerzo';
+                            o.tipo_accion = 'E/A';
                             break;
                         case 'S':
-                            o.tipo_accion = 'Salida';
+                            o.tipo_accion_show = 'Salida';
+                            o.tipo_accion = 'S';
                             break;
                         default:
+                            o.tipo_accion_show = 'codigo 99';
                             o.tipo_accion = 'codigo 99';
                             break;
                     }

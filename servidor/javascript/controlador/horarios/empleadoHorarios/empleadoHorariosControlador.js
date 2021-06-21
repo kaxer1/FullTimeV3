@@ -355,8 +355,18 @@ class EmpleadoHorariosControlador {
     ActualizarEmpleadoHorarios(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id } = req.body;
-            yield database_1.default.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id]);
-            res.jsonp({ message: 'El horario del empleado se registró con éxito' });
+            try {
+                // console.log(req.body);
+                const [result] = yield database_1.default.query('UPDATE empl_horarios SET id_empl_cargo = $1, id_hora = $2, fec_inicio = $3, fec_final = $4, lunes = $5, martes = $6, miercoles = $7, jueves = $8, viernes = $9, sabado = $10, domingo = $11, id_horarios = $12, estado = $13 WHERE id = $14 RETURNING *', [id_empl_cargo, id_hora, fec_inicio, fec_final, lunes, martes, miercoles, jueves, viernes, sabado, domingo, id_horarios, estado, id])
+                    .then(result => { return result.rows; });
+                if (result === undefined)
+                    return res.status(404).jsonp({ message: 'Horario no actualizado' });
+                return res.status(200).jsonp({ message: 'El horario del empleado se registró con éxito' });
+            }
+            catch (error) {
+                console.log(error);
+                return res.status(500).jsonp({ message: 'Registros no encontrados' });
+            }
         });
     }
     EliminarRegistros(req, res) {
