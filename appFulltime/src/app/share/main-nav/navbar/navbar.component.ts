@@ -9,10 +9,10 @@ import { environment } from 'src/environments/environment';
 })
 export class NavbarComponent implements OnInit {
 
-  UserEmail: string;
-  UserName: string;
-  iniciales: string;
-  urlImagen: any;
+  UserEmail: string = '';
+  UserName: string = '';
+  iniciales: string = '';
+  urlImagen: any = '';
   mostrarImagen: boolean = false;
 
   constructor(
@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit {
     let correo = localStorage.getItem('correo');
     let iniciales = localStorage.getItem('iniciales');
     let view_imagen = localStorage.getItem('view_imagen');
-    // console.log(fullname, correo, iniciales, view_imagen);
+    console.log(fullname, correo, iniciales, view_imagen);
 
     if (fullname === null && correo === null && iniciales === null && view_imagen === null) {
       this.empleadoService.getOneEmpleadoRest(id_empleado).subscribe(res => {

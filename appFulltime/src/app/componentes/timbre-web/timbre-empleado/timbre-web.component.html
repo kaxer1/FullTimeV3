@@ -1,12 +1,13 @@
 <div class="container" style="margin: 25px 0px 25px 0px;">
     <div class="row">
         <div class="col-sm-4">
-            <button class="btn" (click)="AbrirRegistrarTimbre()">Timbre virtual</button>
+            <button class="btn btn-lg btn-block" (click)="AbrirRegistrarTimbre()">Timbre virtual</button>
+            <br>
         </div>
         <div class="col-sm-4" *ngFor="let c of cuenta">
             <mat-card>
                 <mat-card-header>
-                    <h4>Timbres</h4>
+                    <mat-card-title style="font-weight: bold;">Timbres</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <b>N° timbres Entrada y Salida: </b> <span>{{c.timbres_EoS}} </span> <br>
@@ -15,11 +16,12 @@
                     <b>Cantidad de timbres: </b> <span>{{c.total_timbres}} </span>
                 </mat-card-content>
             </mat-card>
+            <br>
         </div>
         <div class="col-sm-4" *ngFor="let i of info">
             <mat-card>
                 <mat-card-header>
-                    <h4>Información personal</h4>
+                    <mat-card-title style="font-weight: bold;">Información personal</mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
                     <b>Cargo: </b> <span>{{i.cargo}} </span> <br>

@@ -19,7 +19,7 @@
                             help_outline</mat-icon>
                         <mat-select [formControl]="horarioF" required>
                             <mat-option *ngFor="let h of vista_horarios" [value]="h.id" id="letra"
-                                (click)=VerificarDetalles(EmpleadoHorarioForm.value)>
+                                (click)=ValidarHorarioByHorasTrabaja(EmpleadoHorarioForm.value)>
                                 {{h.nombre}}
                             </mat-option>
                         </mat-select>

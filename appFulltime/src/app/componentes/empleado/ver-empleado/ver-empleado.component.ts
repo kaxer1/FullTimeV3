@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PageEvent } from '@angular/material/paginator';
@@ -45,7 +45,7 @@ import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHor
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
 import { EditarPeriodoVacacionesComponent } from 'src/app/componentes/periodoVacaciones/editar-periodo-vacaciones/editar-periodo-vacaciones.component';
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
-import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
+// import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanificacionComponent } from 'src/app/componentes/planHorarios/editar-planificacion/editar-planificacion.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
@@ -147,11 +147,13 @@ export class VerEmpleadoComponent implements OnInit {
     private restHE: PedHoraExtraService,
     private restPlanGeneral: PlanGeneralService,
     private restF: FuncionesService,
-    public Main: NavbarComponent,
+    // public Main: NavbarComponent,
     public router: Router,
     private toastr: ToastrService,
     private scriptService: ScriptService,
   ) {
+    console.log('Constructor');
+    
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
     // this.rutaCargo = 'http://localhost:4200' + cadena + '#editarCargo';
@@ -162,6 +164,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('ON INIT');
     var a = moment();
     this.FechaActual = a.format('YYYY-MM-DD');
     this.ObtenerEmpleadoLogueado(this.idEmpleadoLogueado);
@@ -311,7 +314,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (data[0]['imagen'] != null) {
         this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
-          this.Main.urlImagen = this.urlImagen;
+          // this.Main.urlImagen = this.urlImagen;
         }
         this.mostrarImagen = true;
         this.textoBoton = 'Editar Foto';
@@ -1045,9 +1048,9 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaEmplHorario(): void {
     this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].max)
+      console.log("idcargo: ", this.idCargo)
       this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja  } }).afterClosed().subscribe(item => {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {
@@ -1257,6 +1260,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
       { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
       .afterClosed().subscribe(item => {
+        console.log(item);
         this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       });
   }

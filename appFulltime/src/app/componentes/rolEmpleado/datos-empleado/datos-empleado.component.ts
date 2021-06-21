@@ -30,7 +30,7 @@ import { RegistrarVacacionesComponent } from 'src/app/componentes/vacaciones/reg
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
 import { RegistroEmpleadoPermisoComponent } from 'src/app/componentes/empleadoPermisos/registro-empleado-permiso/registro-empleado-permiso.component';
 import { CambiarContrasenaComponent } from 'src/app/componentes/rolEmpleado/cambiar-contrasena/cambiar-contrasena.component';
-import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
+// import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -92,7 +92,7 @@ export class DatosEmpleadoComponent implements OnInit {
     public restEmpre: EmpresaService,
     private toastr: ToastrService,
     private scriptService: ScriptService,
-    public Main: NavbarComponent,
+    // public Main: NavbarComponent,
   ) {
     this.idEmpleado = localStorage.getItem('empleado');
     this.obtenerTituloEmpleado(parseInt(this.idEmpleado));
@@ -156,7 +156,7 @@ export class DatosEmpleadoComponent implements OnInit {
         this.mostrarIniciales = false;
         this.textoBoton = 'Editar Foto';
         if (idEmpleadoActivo === idemploy) {
-          this.Main.urlImagen = this.urlImagen;
+          // this.Main.urlImagen = this.urlImagen;
         }
       } else {
         this.iniciales = data[0].nombre.split(" ")[0].slice(0, 1) + data[0].apellido.split(" ")[0].slice(0, 1);
