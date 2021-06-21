@@ -16,7 +16,7 @@ exports.NotificacionSinTimbres = void 0;
 const database_1 = __importDefault(require("../database"));
 const MINUTO_TIMER = 15;
 // const MINUTO_TIMER = 5; // de prueba
-exports.NotificacionSinTimbres = function () {
+const NotificacionSinTimbres = function () {
     setInterval(() => __awaiter(this, void 0, void 0, function* () {
         var f = new Date();
         // console.log(f.getMinutes());
@@ -43,6 +43,7 @@ exports.NotificacionSinTimbres = function () {
         }
     }), 60000);
 };
+exports.NotificacionSinTimbres = NotificacionSinTimbres;
 function LlamarDetalleHorario(fecha, hora, num_dia, fechaDate) {
     return __awaiter(this, void 0, void 0, function* () {
         let datoConsulta = fecha + ' ' + hora;
