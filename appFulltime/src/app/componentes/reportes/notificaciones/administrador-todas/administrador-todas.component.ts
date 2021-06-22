@@ -4,6 +4,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import * as moment from 'moment';
+import { FormControl, FormGroup } from '@angular/forms';
 
 import { NotificacionService } from 'src/app/servicios/reportes/notificaciones/notificacion.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
@@ -22,6 +23,18 @@ export class AdministradorTodasComponent implements OnInit {
   numero_pagina: number = 1;
 
   idEmpleadoLogueado: any;
+
+  fechas: boolean = true;
+
+  // Datos del Formulario de Periodo
+  fechaInicialF = new FormControl('');
+  fechaFinalF = new FormControl('');
+
+  // Formulario de Periodo
+  public fechasForm = new FormGroup({
+    inicioForm: this.fechaInicialF,
+    finalForm: this.fechaFinalF,
+  });
 
   constructor(
     public restN: NotificacionService,
@@ -94,6 +107,11 @@ export class AdministradorTodasComponent implements OnInit {
     });
   }
 
+  LimpiarFechas() {
+    this.fechaInicialF.reset();
+    this.fechaFinalF.reset();
+  }
+
   /** ************************************************************************************** */
   /**                 LISTA DE DATOS DE NOTIFICACIONES DE PERMISOS                           */
   /** ************************************************************************************** */
@@ -158,7 +176,7 @@ export class AdministradorTodasComponent implements OnInit {
 
       // PIE DE PÁGINA
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-   var f = moment();
+        var f = moment();
         fecha = f.format('YYYY-MM-DD');
         hora = f.format('HH:mm:ss');
         return {
@@ -273,7 +291,7 @@ export class AdministradorTodasComponent implements OnInit {
 
       // PIE DE PÁGINA
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-   var f = moment();
+        var f = moment();
         fecha = f.format('YYYY-MM-DD');
         hora = f.format('HH:mm:ss');
         return {
@@ -392,7 +410,7 @@ export class AdministradorTodasComponent implements OnInit {
 
       // PIE DE PÁGINA
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-   var f = moment();
+        var f = moment();
         fecha = f.format('YYYY-MM-DD');
         hora = f.format('HH:mm:ss');
         return {
@@ -509,7 +527,7 @@ export class AdministradorTodasComponent implements OnInit {
 
       // PIE DE PÁGINA
       footer: function (currentPage: any, pageCount: any, fecha: any, hora: any) {
-   var f = moment();
+        var f = moment();
         fecha = f.format('YYYY-MM-DD');
         hora = f.format('HH:mm:ss');
         return {

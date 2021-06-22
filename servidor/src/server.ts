@@ -66,6 +66,7 @@ import FUNCIONES_RUTAS from './rutas/funciones/funcionRutas';
 import ACCION_PERSONAL_RUTAS from './rutas/accionPersonal/accionPersonalRutas';
 import NOTIFICACION_RUTAS from './rutas/reportes/reportesNotificacionRutas';
 import LICENCIAS_RUTAS from './utils/licencias';
+import RELOJ_VIRTUAL_RUTAS from './utils/reloj_virtual';
 
 import { createServer, Server } from 'http';
 const socketIo = require('socket.io');
@@ -200,6 +201,9 @@ class Servidor {
 
         // LICENCIAS
         this.app.use('/licencias', LICENCIAS_RUTAS);
+
+        // APP RELOJ VIRTUAL
+        this.app.use('/reloj-virtual', RELOJ_VIRTUAL_RUTAS);
 
         // NOTIFICACIONES
         this.app.use('/notificacionSistema', NOTIFICACION_RUTAS);

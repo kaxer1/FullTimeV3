@@ -1,8 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-// import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { ToastrService } from 'ngx-toastr';
 import * as moment from 'moment';
 
@@ -17,12 +15,6 @@ import { PlanGeneralService } from 'src/app/servicios/planGeneral/plan-general.s
   selector: 'app-registo-empleado-horario',
   templateUrl: './registo-empleado-horario.component.html',
   styleUrls: ['./registo-empleado-horario.component.css'],
-  // providers: [
-  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
-  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  // ]
 })
 
 export class RegistoEmpleadoHorarioComponent implements OnInit {
@@ -79,6 +71,8 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.datoEmpleado);
+    
     this.BuscarHorarios();
     this.ObtenerEmpleado(this.datoEmpleado.idEmpleado);
   }
@@ -102,21 +96,21 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
 
           this.detalles_horarios.map(det => {
             if (det.tipo_accion === 'E') {
-              this.hora_entrada = det.hora
+              this.hora_entrada = det.hora.slice(0,5)
             }
             if (det.tipo_accion === 'S') {
-              this.hora_salida = det.hora
+              this.hora_salida = det.hora.slice(0,5)
             }
           })
           let datos_horario = [{
             id: hor.id,
-            nombre: hor.nombre + ' (' + this.hora_entrada + '-' + this.hora_salida + ')'
+            nombre: '(' + this.hora_entrada + '-' + this.hora_salida + ') ' + hor.nombre
           }]
           if (this.vista_horarios.length === 0) {
             this.vista_horarios = datos_horario;
           } else {
             this.vista_horarios = this.vista_horarios.concat(datos_horario);
-            console.log('datos horario', this.vista_horarios)
+            // console.log('datos horario', this.vista_horarios)
           }
         }, error => {
           let datos_horario = [{
@@ -127,7 +121,7 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
             this.vista_horarios = datos_horario;
           } else {
             this.vista_horarios = this.vista_horarios.concat(datos_horario);
-            console.log('datos horario', this.vista_horarios)
+            // console.log('datos horario', this.vista_horarios)
           }
         })
       })
@@ -298,18 +292,47 @@ export class RegistoEmpleadoHorarioComponent implements OnInit {
     this.dialogRef.close(this.dataItem);
   }
 
-  VerificarDetalles(form) {
-    this.restD.ConsultarUnDetalleHorario(form.horarioForm).subscribe(res => {
-    },
-      erro => {
-        /*  this.EmpleadoHorarioForm.patchValue({
-            horarioForm: ''
-          });*/
-        this.toastr.info('El horario seleccionado no tienen registros de detalle de horario.', '', {
-          timeOut: 6000,
-        });
-      })
+  ValidarHorarioByHorasTrabaja(form) {
+    
+    const [ obj_res ] = this.horarios.filter(o => {
+      return o.id === parseInt(form.horarioForm)
+    })
+
+    if (!obj_res) return this.toastr.warning('Seleccion de horario no valido');
+
+    const seg = this.SegundosToStringTime( this.datoEmpleado.horas_trabaja * 3600)
+
+    const { hora_trabajo } = obj_res;
+    // console.log(obj_res, hora_trabajo, ' ====== ', seg);
+    if (this.StringTimeToSegundosTime(hora_trabajo) >= this.StringTimeToSegundosTime(seg)) {
+      return this.toastr.success('Seleccion de horario correcta.')
+    } else {
+      this.EmpleadoHorarioForm.patchValue({ horarioForm: 0 });
+      return this.toastr.warning('Horas de trabajo del cargo no pueden ser mayores a las hora de trabajo total del horario.')
+    }
+
   }
+
+  SegundosToStringTime(segundos: number) {
+    let h: string | number = Math.floor(segundos / 3600);
+    h = (h < 10)? '0' + h : h;
+    let m: string | number = Math.floor((segundos / 60) % 60);
+    m = (m < 10)? '0' + m : m;
+    let s: string | number = segundos % 60;
+    s = (s < 10)? '0' + s : s;
+
+    return h + ':' + m + ':' + s;
+  }
+
+  StringTimeToSegundosTime(stringTime: string) {
+
+    const h = parseInt(stringTime.split(':')[0]) * 3600;
+    const m = parseInt(stringTime.split(':')[1]) * 60;
+    const s = parseInt(stringTime.split(':')[2]);
+
+    return h + m + s
+  }
+
 
 
 }

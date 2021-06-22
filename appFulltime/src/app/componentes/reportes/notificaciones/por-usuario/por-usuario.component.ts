@@ -12,7 +12,6 @@ import { NotificacionService } from 'src/app/servicios/reportes/notificaciones/n
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { ToastrService } from 'ngx-toastr';
-import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-por-usuario',
@@ -434,6 +433,12 @@ export class PorUsuarioComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },
@@ -577,6 +582,13 @@ export class PorUsuarioComponent implements OnInit {
               })
             ]
           }
+          ,
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
+          }
         },
         { width: '*', text: '' },
       ]
@@ -717,6 +729,13 @@ export class PorUsuarioComponent implements OnInit {
               })
             ]
           }
+          ,
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
+          }
         },
         { width: '*', text: '' },
       ]
@@ -844,6 +863,12 @@ export class PorUsuarioComponent implements OnInit {
                 ];
               })
             ]
+          },
+          // ESTILO DE COLORES FORMATO ZEBRA
+          layout: {
+            fillColor: function (i: any) {
+              return (i % 2 === 0) ? '#CCD1D1' : null;
+            }
           }
         },
         { width: '*', text: '' },

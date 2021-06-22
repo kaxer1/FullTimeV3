@@ -46,7 +46,7 @@
             </div>
         </div>
     </form>
-    <div class="d-flex flex-wrap justify-content-around">
+    <div class="d-flex flex-wrap justify-content-around" style="margin-top: 15px;">
         <button mat-button class="btn" [disabled]="!TimbreForm.valid" (click)="insertarTimbre(TimbreForm.value)">Enviar
             Timbre</button>
         <button mat-button class="btn" (click)="dialogRef.close({close: true})">Salir</button>

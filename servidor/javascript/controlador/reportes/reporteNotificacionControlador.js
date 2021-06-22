@@ -533,6 +533,143 @@ class NotificacionesControlador {
             }
         });
     }
+    // TODAS LAS NOTIFICACIONES CON FECHA
+    ListarPermisosEnviados_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { envia } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_permiso, e.nombre, e.apellido, e.cedula, ' +
+                'ctp.descripcion AS permiso, p.fec_inicio, p.fec_final ' +
+                'FROM realtime_noti AS rn, empleados AS e, permisos AS p, cg_tipo_permisos AS ctp ' +
+                'WHERE id_permiso IS NOT null AND e.id = rn.id_receives_empl AND rn.id_send_empl = $1 AND ' +
+                'p.id = rn.id_permiso AND p.id_tipo_permiso = ctp.id AND rn.create_at BETWEEN $2 AND $3 ORDER BY rn.id DESC', [envia]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPermisosRecibidos_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { recibe } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_permiso, e.nombre, e.apellido, e.cedula, ' +
+                'ctp.descripcion AS permiso, p.fec_inicio, p.fec_final ' +
+                'FROM realtime_noti AS rn, empleados AS e, permisos AS p, cg_tipo_permisos AS ctp ' +
+                'WHERE id_permiso IS NOT null AND e.id = rn.id_send_empl AND rn.id_receives_empl = $1 AND ' +
+                'p.id = rn.id_permiso AND p.id_tipo_permiso = ctp.id ORDER BY rn.id DESC', [recibe]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarSolicitudHoraExtraEnviadas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { envia } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_hora_extra, e.nombre, e.apellido, e.cedula, ' +
+                'h.fec_inicio, h.fec_final, h.descripcion, h.num_hora, h.tiempo_autorizado ' +
+                'FROM realtime_noti AS rn, empleados AS e, hora_extr_pedidos AS h ' +
+                'WHERE rn.id_hora_extra IS NOT null AND e.id = rn.id_receives_empl AND rn.id_send_empl = $1 AND ' +
+                'h.id = rn.id_hora_extra ORDER BY rn.id DESC', [envia]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarSolicitudHoraExtraRecibidas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { recibe } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_hora_extra, e.nombre, e.apellido, e.cedula, ' +
+                'h.fec_inicio, h.fec_final, h.descripcion, h.num_hora, h.tiempo_autorizado ' +
+                'FROM realtime_noti AS rn, empleados AS e, hora_extr_pedidos AS h ' +
+                'WHERE rn.id_hora_extra IS NOT null AND e.id = rn.id_send_empl AND rn.id_receives_empl = $1 AND ' +
+                'h.id = rn.id_hora_extra ORDER BY rn.id DESC', [recibe]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarVacacionesEnviadas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { envia } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_vacaciones, e.nombre, e.apellido, e.cedula, ' +
+                'v.fec_inicio, v.fec_final, v.fec_ingreso ' +
+                'FROM realtime_noti AS rn, empleados AS e, vacaciones AS v ' +
+                'WHERE rn.id_vacaciones IS NOT null AND e.id = rn.id_receives_empl AND rn.id_send_empl = $1 AND ' +
+                'v.id = rn.id_vacaciones ORDER BY rn.id DESC', [envia]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarVacacionesRecibidas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { recibe } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.id_receives_depa, rn.estado, rn.create_at, rn.id_vacaciones, e.nombre, e.apellido, e.cedula, ' +
+                'v.fec_inicio, v.fec_final, v.fec_ingreso ' +
+                'FROM realtime_noti AS rn, empleados AS e, vacaciones AS v ' +
+                'WHERE rn.id_vacaciones IS NOT null AND e.id = rn.id_send_empl AND rn.id_receives_empl = $1 AND ' +
+                'v.id = rn.id_vacaciones ORDER BY rn.id DESC', [recibe]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPlanificaComidaEnviadas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { envia } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.create_at, e.nombre, e.apellido, e.cedula, ' +
+                'rn.descripcion ' +
+                'FROM realtime_timbres AS rn, empleados AS e ' +
+                'WHERE e.id = rn.id_receives_empl AND rn.id_send_empl = $1 AND rn.descripcion like \'Alimentación Planificada%\' ' +
+                'ORDER BY rn.id DESC', [envia]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
+    ListarPlanificacionesEliminadas_Fecha(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { envia } = req.params;
+            const DATOS = yield database_1.default.query('SELECT rn.id, rn.id_send_empl, rn.id_receives_empl, ' +
+                'rn.create_at, e.nombre, e.apellido, e.cedula, ' +
+                'rn.descripcion ' +
+                'FROM realtime_timbres AS rn, empleados AS e ' +
+                'WHERE e.id = rn.id_receives_empl AND rn.id_send_empl = $1 AND rn.descripcion like \'Planificación de Alimentación Eliminada.\' ' +
+                'ORDER BY rn.id DESC', [envia]);
+            if (DATOS.rowCount > 0) {
+                return res.jsonp(DATOS.rows);
+            }
+            else {
+                return res.status(404).jsonp({ text: 'No se encuentran registros' });
+            }
+        });
+    }
 }
 exports.NOTIFICACIONES_CONTROLADOR = new NotificacionesControlador();
 exports.default = exports.NOTIFICACIONES_CONTROLADOR;

@@ -70,6 +70,7 @@ const funcionRutas_1 = __importDefault(require("./rutas/funciones/funcionRutas")
 const accionPersonalRutas_1 = __importDefault(require("./rutas/accionPersonal/accionPersonalRutas"));
 const reportesNotificacionRutas_1 = __importDefault(require("./rutas/reportes/reportesNotificacionRutas"));
 const licencias_1 = __importDefault(require("./utils/licencias"));
+const reloj_virtual_1 = __importDefault(require("./utils/reloj_virtual"));
 const http_1 = require("http");
 const socketIo = require('socket.io');
 class Servidor {
@@ -173,6 +174,8 @@ class Servidor {
         this.app.use('/accionPersonal', accionPersonalRutas_1.default); // Falta ========== acceso controlado por ModuloAccionesPersonalValidation
         // LICENCIAS
         this.app.use('/licencias', licencias_1.default);
+        // APP RELOJ VIRTUAL
+        this.app.use('/reloj-virtual', reloj_virtual_1.default);
         // NOTIFICACIONES
         this.app.use('/notificacionSistema', reportesNotificacionRutas_1.default);
     }

@@ -1,3 +1,4 @@
+
 // IMPORTAR LIBRERIAS
 import { environment } from 'src/environments/environment';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -50,7 +51,9 @@ import { CancelarPermisoComponent } from 'src/app/componentes/rolEmpleado/solici
 import { RegistoEmpleadoHorarioComponent } from 'src/app/componentes/empleadoHorario/registo-empleado-horario/registo-empleado-horario.component';
 import { RegistrarEmpleProcesoComponent } from 'src/app/componentes/empleadoProcesos/registrar-emple-proceso/registrar-emple-proceso.component';
 import { EditarEmpleadoProcesoComponent } from 'src/app/componentes/empleadoProcesos/editar-empleado-proceso/editar-empleado-proceso.component';
+
 import { PlanificacionComidasComponent } from 'src/app/componentes/planificacionComidas/planificacion-comidas/planificacion-comidas.component';
+
 import { EditarHorarioEmpleadoComponent } from 'src/app/componentes/empleadoHorario/editar-horario-empleado/editar-horario-empleado.component';
 import { EditarPlanComidasComponent } from 'src/app/componentes/planificacionComidas/editar-plan-comidas/editar-plan-comidas.component';
 import { RegistroPlanHorarioComponent } from 'src/app/componentes/planHorarios/registro-plan-horario/registro-plan-horario.component';
@@ -145,9 +148,12 @@ export class VerEmpleadoComponent implements OnInit {
     private restF: FuncionesService, // SERVICIO DATOS FUNCIONES DEL SISTEMA
     private toastr: ToastrService, // VARIABLE MANEJO DE MENSAJES DE NOTIFICACIONES
     public restU: UsuarioService, // SERVICIO DATOS USUARIO
-    public Main: NavbarComponent, // VARIABLE BARRA DE NAVEGACIÓN
+    //public Main: NavbarComponent, // VARIABLE BARRA DE NAVEGACIÓN
     public router: Router, // VARIABLE NAVEGACIÓN DE RUTAS URL
+
   ) {
+    console.log('Constructor');
+    
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
     this.idEmpleado = cadena.split("/")[2];
@@ -157,6 +163,7 @@ export class VerEmpleadoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('ON INIT');
     var a = moment();
     this.FechaActual = a.format('YYYY-MM-DD');
     this.obtenerPlanComidasEmpleado(parseInt(this.idEmpleado));
@@ -270,9 +277,12 @@ export class VerEmpleadoComponent implements OnInit {
           this.eliminarTituloEmpleado(id);
         } else {
           this.router.navigate(['/verEmpleado/', this.idEmpleado]);
+
         }
       });
   }
+
+  
 
 
   /** * ******************************************************************************************** *
@@ -451,7 +461,7 @@ export class VerEmpleadoComponent implements OnInit {
       if (data[0]['imagen'] != null) {
         this.urlImagen = `${environment.url}/empleado/img/` + data[0]['imagen'];
         if (idEmpleadoActivo === idemploy) {
-          this.Main.urlImagen = this.urlImagen;
+         // this.Main.urlImagen = this.urlImagen;
         }
         this.mostrarImagen = true;
         this.textoBoton = 'Editar Foto';
@@ -1022,9 +1032,9 @@ export class VerEmpleadoComponent implements OnInit {
   AbrirVentanaEmplHorario(): void {
     this.restCargo.BuscarIDCargoActual(parseInt(this.idEmpleado)).subscribe(datos => {
       this.idCargo = datos;
-      console.log("idcargo ", this.idCargo[0].max)
+      console.log("idcargo: ", this.idCargo)
       this.vistaRegistrarDatos.open(RegistoEmpleadoHorarioComponent,
-        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max } }).afterClosed().subscribe(item => {
+        { width: '600px', data: { idEmpleado: this.idEmpleado, idCargo: this.idCargo[0].max, horas_trabaja: this.idCargo[0].hora_trabaja  } }).afterClosed().subscribe(item => {
           this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
         });
     }, error => {
@@ -1230,6 +1240,7 @@ export class VerEmpleadoComponent implements OnInit {
     this.vistaRegistrarDatos.open(EditarHorarioEmpleadoComponent,
       { width: '600px', data: { idEmpleado: this.idEmpleado, datosHorario: datoSeleccionado } })
       .afterClosed().subscribe(item => {
+        console.log(item);
         this.ObtenerHorariosEmpleado(parseInt(this.idEmpleado));
       });
   }
