@@ -20,9 +20,9 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { DetalleMenuComponent } from '../detalle-menu/detalle-menu.component';
 
 // IMPORTAR SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { TipoComidasService } from 'src/app/servicios/catalogos/catTipoComidas/tipo-comidas.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-listar-tipo-comidas',
@@ -53,10 +53,18 @@ export class ListarTipoComidasComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
 
+  // VARIABLE DE NAVEGACION ENTRE RUTAS
+  hipervinculo: string = environment.url
+
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
 
   constructor(
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
     public vistaRegistrarDatos: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
-    public restEmpre: EmpresaService, // SERVICIO DATOS EMPRESA
     private rest: TipoComidasService, // SERVICIO DATOS DE TIPOS DE SERVICIOS DE COMIDAS
     public restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
@@ -68,8 +76,6 @@ export class ListarTipoComidasComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerTipoComidas();
-    this.ObtenerColores();
-    this.ObtenerLogo();
   }
 
   // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
@@ -78,26 +84,6 @@ export class ListarTipoComidasComponent implements OnInit {
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
     })
-  }
-
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logo: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logo = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase: any;
-  ObtenerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase = res[0].marca_agua;
-    });
   }
 
   // EVENTO QUE MUESTRA FILAS DETERMINADAS DE LA TABLA
@@ -182,7 +168,6 @@ export class ListarTipoComidasComponent implements OnInit {
     sessionStorage.setItem('Comidas', this.tipoComidas);
     return {
       // ENCABEZADO DE LA PÁGINA
-      pageOrientation: 'landscape',
       watermark: { text: this.frase, color: 'blue', opacity: 0.1, bold: true, italics: false },
       header: { text: 'Impreso por:  ' + this.empleado[0].nombre + ' ' + this.empleado[0].apellido, margin: 10, fontSize: 9, opacity: 0.3, alignment: 'right' },
       // PIE DE PÁGINA
@@ -207,7 +192,7 @@ export class ListarTipoComidasComponent implements OnInit {
       },
       content: [
         { image: this.logo, width: 150, margin: [10, -25, 0, 5] },
-        { text: 'Lista Tipos de Comidas', bold: true, fontSize: 20, alignment: 'center', margin: [0, -30, 0, 10] },
+        { text: 'Lista Servicios de Alimentación', bold: true, fontSize: 20, alignment: 'center', margin: [0, -5, 0, 10] },
         this.PresentarDataPDFAlmuerzos(),
       ],
       styles: {
@@ -225,18 +210,22 @@ export class ListarTipoComidasComponent implements OnInit {
         {
           width: 'auto',
           table: {
-            widths: [30, 'auto', 'auto'],
+            widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
             body: [
               [
-                { text: 'Id', style: 'tableHeader' },
-                { text: 'Tipo de Servicio', style: 'tableHeader' },
+                { text: 'Código', style: 'tableHeader' },
+                { text: 'Servicio', style: 'tableHeader' },
                 { text: 'Menú', style: 'tableHeader' },
+                { text: 'Hora Inicia', style: 'tableHeader' },
+                { text: 'Hora Finaliza', style: 'tableHeader' },
               ],
               ...this.tipoComidas.map(obj => {
                 return [
                   { text: obj.id, style: 'itemsTableD' },
                   { text: obj.tipo, style: 'itemsTable' },
                   { text: obj.nombre, style: 'itemsTable' },
+                  { text: obj.hora_inicio, style: 'itemsTable' },
+                  { text: obj.hora_fin, style: 'itemsTable' },
                 ];
               })
             ]
@@ -257,9 +246,24 @@ export class ListarTipoComidasComponent implements OnInit {
    *                                       MÉTODO PARA EXPORTAR A EXCEL
    ******************************************************************************************************/
   ExportToExcel() {
-    const wsr: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas);
+    const wsc: xlsx.WorkSheet = xlsx.utils.json_to_sheet(this.tipoComidas.map(obj => {
+      return {
+        CODIGO: obj.id,
+        SERVICIO: obj.tipo,
+        MENU: obj.nombre,
+        HORA_INICIA: obj.hora_inicio,
+        HORA_FINALIZA: obj.hora_fin
+      }
+    }));
+    // MÉTODO PARA DEFINIR TAMAÑO DE LAS COLUMNAS DEL REPORTE
+    const header = Object.keys(this.tipoComidas[0]); // NOMBRE DE CABECERAS DE COLUMNAS
+    var wscols = [];
+    for (var i = 0; i < header.length; i++) {  // CABECERAS AÑADIDAS CON ESPACIOS
+      wscols.push({ wpx: 100 })
+    }
+    wsc["!cols"] = wscols;
     const wb: xlsx.WorkBook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(wb, wsr, 'SERVICIOS COMIDAS');
+    xlsx.utils.book_append_sheet(wb, wsc, 'SERVICIOS COMIDAS');
     xlsx.writeFile(wb, "Comidas" + new Date().getTime() + '.xlsx');
   }
 
@@ -285,8 +289,10 @@ export class ListarTipoComidasComponent implements OnInit {
       objeto = {
         "tipo_comida": {
           '@id': obj.id,
-          "tipo_servicio": obj.tipo,
+          "servicio": obj.tipo,
           "menu": obj.nombre,
+          "hora_inicia": obj.hora_inicio,
+          "hora_finaliza": obj.hora_fin
         }
       }
       arregloComidas.push(objeto)

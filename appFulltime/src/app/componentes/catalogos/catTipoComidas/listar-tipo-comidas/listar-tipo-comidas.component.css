@@ -22,7 +22,7 @@ p { font-size: x-small; }
 
 #ver { color: indianred; margin-left: 20px;}
 
-#detalleH { color: rgb(38, 0, 255); }
+#detalleH { color: rgb(38, 0, 255); margin-left: 20px;}
 
 #iComidasL { cursor: pointer; }
 

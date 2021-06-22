@@ -40,6 +40,8 @@ class GraficasControlador {
             resultado = await GraficaAtrasos(id_empresa, fec_inicio, fec_final)
         } else {
             // Resultados de timbres sin acciones
+            console.log('entro aqui en sin acciones');
+            
             resultado = await GraficaAtrasosSinAcciones(id_empresa, fec_inicio, fec_final)
         }
 

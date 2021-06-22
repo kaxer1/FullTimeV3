@@ -105,10 +105,10 @@ class EmpresaControlador {
             });
             const codificado = yield ImagenCodificacion_1.ImagenBase64LogosEmpresas(file_name.logo);
             if (codificado === 0) {
-                res.send({ imagen: 0, nom_empresa: file_name.nombre });
+                res.status(200).jsonp({ imagen: 0, nom_empresa: file_name.nombre });
             }
             else {
-                res.send({ imagen: codificado, nom_empresa: file_name.nombre });
+                res.status(200).jsonp({ imagen: codificado, nom_empresa: file_name.nombre });
             }
         });
     }

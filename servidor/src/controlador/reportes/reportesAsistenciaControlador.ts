@@ -645,7 +645,7 @@ const BuscarTimbresSinAccionesDeEntrada = async function (fec_inicio: string, fe
 }
 
 const BuscarTimbres = async function (fec_inicio: string, fec_final: string, codigo: string | number) {
-    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
+    return await pool.query('SELECT CAST(fec_hora_timbre AS VARCHAR), id_reloj, accion, observacion, latitud, longitud, CAST(fec_hora_timbre_servidor AS VARCHAR)  FROM timbres WHERE CAST(fec_hora_timbre AS VARCHAR) between $1 || \'%\' AND $2 || \'%\' AND id_empleado = $3 ORDER BY fec_hora_timbre ASC ',[ fec_inicio, fec_final, codigo])
         .then(res => {
             return res.rows;
         })

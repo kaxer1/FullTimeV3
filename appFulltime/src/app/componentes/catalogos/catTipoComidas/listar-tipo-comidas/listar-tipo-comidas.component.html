@@ -53,14 +53,14 @@
                         <td id="centrar">{{comida.hora_fin}}</td>
                         <td class="d-flex justify-content-center align-self-center">
                             <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
-                                matTooltip="Agregar Detalles de Menú" class="far fa-list-alt" id="detalleH"
-                                (click)="AbrirVentanaDetalles(comida)">
-                                <p>Detalle</p>
-                            </i>
-                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
                                 matTooltip="Ver datos generales de este menú" class="fas fa-eye" id="ver"
                                 [routerLink]="['/verMenu/', comida.id]">
                                 <p>Ver</p>
+                            </i>
+                            <i matSuffix matTooltipClass="listaF-tooltip" matTooltipPosition="right"
+                                matTooltip="Agregar Detalles de Menú" class="far fa-list-alt" id="detalleH"
+                                (click)="AbrirVentanaDetalles(comida)">
+                                <p>Detalle</p>
                             </i>
                             <i class="fas fa-edit" (click)="AbrirVentanaEditar(comida)" matSuffix
                                 matTooltipClass="comidasL-tooltip" matTooltipPosition="right"

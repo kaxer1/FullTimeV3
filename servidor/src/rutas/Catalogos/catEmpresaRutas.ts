@@ -26,7 +26,7 @@ class DepartamentoRutas {
         this.router.get('/buscar/datos/:id', TokenValidation, EMPRESA_CONTROLADOR.ListarEmpresaId);
         this.router.get('/logo/codificado/:id_empresa',TokenValidation, EMPRESA_CONTROLADOR.getImagenBase64);
         
-        this.router.get('/logo/codificados/:id_empresa', EMPRESA_CONTROLADOR.getImagenBase64);
+        // this.router.get('/logo/codificados/:id_empresa', EMPRESA_CONTROLADOR.getImagenBase64);
 
         this.router.put('/logo/:id_empresa/uploadImage', [TokenValidation, multipartMiddleware], EMPRESA_CONTROLADOR.ActualizarLogoEmpresa);
         this.router.put('/colores', [TokenValidation], EMPRESA_CONTROLADOR.ActualizarColores);

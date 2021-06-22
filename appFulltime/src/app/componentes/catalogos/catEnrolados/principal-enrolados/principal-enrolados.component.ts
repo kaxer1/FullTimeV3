@@ -20,6 +20,7 @@ import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.com
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { EnroladoService } from 'src/app/servicios/catalogos/catEnrolados/enrolado.service';
 import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
+import { environment } from '../../../../../environments/environment';
 
 interface buscarActivo {
   value: boolean;
@@ -59,6 +60,8 @@ export class PrincipalEnroladosComponent implements OnInit {
     { value: true, viewValue: 'Activados' },
     { value: false, viewValue: 'Desactivados' }
   ];
+
+  hipervinculo: string = environment.url;
 
   constructor(
     private rest: EnroladoService,
@@ -404,7 +407,7 @@ export class PrincipalEnroladosComponent implements OnInit {
     this.rest.DownloadXMLRest(arregloEnrolados).subscribe(res => {
       this.data = res;
       console.log("prueba data", res)
-      this.urlxml = 'http://localhost:3000/enrolados/download/' + this.data.name;
+      this.urlxml = `${environment.url}/enrolados/download/` + this.data.name;
       window.open(this.urlxml, "_blank");
     });
   }

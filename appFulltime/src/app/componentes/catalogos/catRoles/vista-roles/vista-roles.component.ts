@@ -19,8 +19,8 @@ import { EditarRolComponent } from 'src/app/componentes/catalogos/catRoles/edita
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 // IMPORTACIÓN DE SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { RolesService } from 'src/app/servicios/catalogos/catRoles/roles.service';
 
 @Component({
@@ -44,43 +44,28 @@ export class VistaRolesComponent implements OnInit {
   // CAMPO DE BÚSQUEDA DE DATOS
   buscarDescripcion = new FormControl('', Validators.minLength(2));
 
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get logoE(): string { return this.plantillaPDF.logoBase64 }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+
   constructor(
-    public vistaRegistrarDatos: MatDialog,
-    public restEmpre: EmpresaService,
-    private restE: EmpleadoService,
-    private toastr: ToastrService,
-    private rest: RolesService,
-    private router: Router,
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
+    public vistaRegistrarDatos: MatDialog, // VARIABLE DE MANEJO DE VENTANAS
+    private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
+    private rest: RolesService, // SERVICIO DATOS DE ROLES
+    private router: Router, // VARAIBLE MANEJO DE RUTAS URL
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
   }
 
   ngOnInit() {
     this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerColores();
     this.ObtenerRoles();
-    this.ObtenerLogo();
   }
 
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logoE: any = String; // VARIABLE DE ALMACENAMIENTO DE IMAGEN LOGO DE LA EMPRESA
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logoE = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase: any;
-  ObtenerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase = res[0].marca_agua;
-    });
-  }
 
   // MÉTODO PARA MOSTRAR FILAS DETERMINADAS DE DATOS EN LA TABLA
   ManejarPagina(e: PageEvent) {

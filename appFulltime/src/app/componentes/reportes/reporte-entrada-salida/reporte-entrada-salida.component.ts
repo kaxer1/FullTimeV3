@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 import { Validators, FormControl, FormGroup } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// import { MAT_MOMENT_DATE_FORMATS, MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import * as moment from 'moment';
 moment.locale('es');
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -23,24 +23,24 @@ import { PlanHorarioService } from 'src/app/servicios/horarios/planHorario/plan-
 import { CiudadFeriadosService } from 'src/app/servicios/ciudadFeriados/ciudad-feriados.service';
 import { DatosGeneralesService } from 'src/app/servicios/datosGenerales/datos-generales.service';
 import { EntradasSalidas } from 'src/app/model/timbres.model';
+import { ValidacionesService } from '../../../servicios/validaciones/validaciones.service';
 
 @Component({
   selector: 'app-reporte-entrada-salida',
   templateUrl: './reporte-entrada-salida.component.html',
   styleUrls: ['./reporte-entrada-salida.component.css'],
-  providers: [
-    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
-    { provide: MAT_DATE_LOCALE, useValue: 'es' },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ]
+  // providers: [
+  //   { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+  //   { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+  //   { provide: MAT_DATE_LOCALE, useValue: 'es' },
+  //   { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+  // ]
 })
 
 export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Datos del Empleado Timbre
   empleado: any = [];
-
 
   // Arreglo datos del empleado
   datosEmpleado: any = [];
@@ -93,6 +93,7 @@ export class ReporteEntradaSalidaComponent implements OnInit {
     public restPlan: PlanHorarioService,
     public restD: DatosGeneralesService,
     public router: Router,
+    public validacionesService: ValidacionesService,
     private toastr: ToastrService,
   ) {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
@@ -343,45 +344,13 @@ export class ReporteEntradaSalidaComponent implements OnInit {
 
   // Método para ingresar solo letras
   IngresarSoloLetras(e) {
-    let key = e.keyCode || e.which;
-    let tecla = String.fromCharCode(key).toString();
-    //Se define todo el abecedario que se va a usar.
-    let letras = " áéíóúabcdefghijklmnñopqrstuvwxyzÁÉÍÓÚABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-    //Es la validación del KeyCodes, que teclas recibe el campo de texto.
-    let especiales = [8, 37, 39, 46, 6, 13];
-    let tecla_especial = false
-    for (var i in especiales) {
-      if (key == especiales[i]) {
-        tecla_especial = true;
-        break;
-      }
-    }
-    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
-      this.toastr.info('No se admite datos numéricos', 'Usar solo letras', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloLetras(e);
   }
 
   // Método para ingresar solo números
   IngresarSoloNumeros(evt) {
-    if (window.event) {
-      var keynum = evt.keyCode;
-    }
-    else {
-      keynum = evt.which;
-    }
-    // Comprobamos si se encuentra en el rango numérico y que teclas no recibirá.
-    if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6) {
-      return true;
-    }
-    else {
-      this.toastr.info('No se admite el ingreso de letras', 'Usar solo números', {
-        timeOut: 6000,
-      })
-      return false;
-    }
+    return this.validacionesService.IngresarSoloNumeros(evt) ;
+
   }
 
   // Método para limpiar campos de búsqueda

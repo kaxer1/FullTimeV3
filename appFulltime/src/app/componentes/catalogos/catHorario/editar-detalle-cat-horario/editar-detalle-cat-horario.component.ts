@@ -8,6 +8,13 @@ import { HorarioService } from 'src/app/servicios/catalogos/catHorarios/horario.
 import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
+const OPTIONS_HORARIOS = [
+  { orden: 1, accion: 'E', view_option: 'Entrada' },
+  { orden: 2, accion: 'S/A', view_option: 'Salida Almuerzo' },
+  { orden: 3, accion: 'E/A', view_option: 'Entrada Almuerzo' },
+  { orden: 4, accion: 'S', view_option: 'Salida' }
+]
+
 @Component({
   selector: 'app-editar-detalle-cat-horario',
   templateUrl: './editar-detalle-cat-horario.component.html',
@@ -35,6 +42,8 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
   mode: ProgressSpinnerMode = 'indeterminate';
   value = 10;
   habilitarprogress: boolean = false;
+
+  options = OPTIONS_HORARIOS;
   
   constructor(
     public rest: DetalleCatHorariosService,
@@ -45,7 +54,14 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
     this.CargarDatos();
+  }
+
+  AutoSelectOrden(orden: number) {
+    this.DetalleHorarioForm.patchValue({
+      ordenForm: orden
+    })
   }
 
   ValidarMinEspera(form, datos) {
@@ -106,32 +122,18 @@ export class EditarDetalleCatHorarioComponent implements OnInit {
   }
 
   CargarDatos() {
+
+    const [ obj ] = this.options.filter(o => {
+      return o.orden === this.data.orden
+    })
+    // console.log('Datos',obj);
     this.DetalleHorarioForm.patchValue({
-      ordenForm: String(this.data.orden),
-      accionForm: this.data.tipo_accion,
+      ordenForm: obj.orden,
+      accionForm: obj.accion,
       horaForm: this.data.hora,
       minEsperaForm: this.data.minu_espera,
     })
-    if (this.data.tipo_accion === 'Entrada') {
-      this.DetalleHorarioForm.patchValue({
-        accionForm: 'E',
-      })
-    }
-    else if (this.data.tipo_accion === 'Salida') {
-      this.DetalleHorarioForm.patchValue({
-        accionForm: 'S',
-      })
-    }
-    else if (this.data.tipo_accion === 'S.Almuerzo') {
-      this.DetalleHorarioForm.patchValue({
-        accionForm: 'S/A',
-      })
-    }
-    else if (this.data.tipo_accion === 'E. Almuerzo') {
-      this.DetalleHorarioForm.patchValue({
-        accionForm: 'E/A',
-      })
-    }
+
   }
 
 }

@@ -19,9 +19,9 @@ import { EditarTitulosComponent } from '../editar-titulos/editar-titulos.compone
 import { TitulosComponent } from '../titulos/titulos.component'
 
 // IMPORTAR SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { NivelTitulosService } from 'src/app/servicios/nivelTitulos/nivel-titulos.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 import { TituloService } from 'src/app/servicios/catalogos/catTitulos/titulo.service';
 
 @Component({
@@ -57,11 +57,16 @@ export class ListarTitulosComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
 
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
 
   constructor(
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
     public vistaRegistrarDatos: MatDialog, // VARIABLE QUE MANEJA EVENTOS CON VENTANAS
     public restN: NivelTitulosService, // SERVICIO DATOS NIVEL DE TÍTULO
-    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
     public restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     private toastr: ToastrService, // VARIABLE DE MANEJO DE MENSAJES DE NOTIFICACIONES
     public rest: TituloService, // SERVICIO DATOS DE TITULOS
@@ -72,8 +77,6 @@ export class ListarTitulosComponent implements OnInit {
     this.idEmpleado = parseInt(localStorage.getItem('empleado'));
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerTitulos();
-    this.ObtenerColores();
-    this.ObtenerLogo();
   }
 
   // EVENTO PARA MOSTRAR NÚMERO DE FILAS DETERMINADAS EN LA TABLA
@@ -88,26 +91,6 @@ export class ListarTitulosComponent implements OnInit {
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
     })
-  }
-
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logo: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logo = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase: any;
-  ObtenerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase = res[0].marca_agua;
-    });
   }
 
   ObtenerTitulos() {
@@ -363,6 +346,5 @@ export class ListarTitulosComponent implements OnInit {
     FileSaver.saveAs(data, "TitulosCSV" + new Date().getTime() + '.csv');
     this.ObtenerTitulos();
   }
-
 
 }

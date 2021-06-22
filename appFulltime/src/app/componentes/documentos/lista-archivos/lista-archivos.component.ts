@@ -2,6 +2,7 @@ import { Route } from '@angular/compiler/src/core';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
 import { DocumentosService } from 'src/app/servicios/documentos/documentos.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-lista-archivos',
@@ -12,6 +13,8 @@ export class ListaArchivosComponent implements OnInit {
 
   archivos: any = [];
   Dirname: string;
+  hipervinculo: string = environment.url
+
   constructor(
     private rest: DocumentosService,
     private route: ActivatedRoute

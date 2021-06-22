@@ -25,7 +25,7 @@ export class NivelTitulosService {
     return this.http.post(`${environment.url}/nivel-titulo`, data);
   }
 
-  deleteNivelTituloRest(id: number){
+  deleteNivelTituloRest(id: number) {
     return this.http.delete(`${environment.url}/nivel-titulo/eliminar/${id}`);
   }
 
@@ -33,11 +33,16 @@ export class NivelTitulosService {
     return this.http.get<any>(`${environment.url}/nivel-titulo/buscar/${nombre}`);
   }
 
-  ActualizarNivelTitulo(datos:any){
+  ActualizarNivelTitulo(datos: any) {
     return this.http.put(`${environment.url}/nivel-titulo`, datos);
   }
 
-  BuscarNivelID(){
+  BuscarNivelID() {
     return this.http.get<any>(`${environment.url}/nivel-titulo/nivel/datos/`);
   }
+
+  DownloadXMLRest(data: any) {
+    return this.http.post(`${environment.url}/nivel-titulo/xmlDownload`, data);
+  }
+
 }

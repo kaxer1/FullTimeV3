@@ -70,7 +70,8 @@ import { FraseSeguridadComponent } from '../../frase-seguridad/frase-seguridad.c
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 import { TituloEmpleadoComponent } from '../titulo-empleado/titulo-empleado.component';
 import { EditarContratoComponent } from '../editar-contrato/editar-contrato.component';
-import { MainNavComponent } from 'src/app/share/main-nav/main-nav.component';
+import { NavbarComponent } from '../../../share/main-nav/navbar/navbar.component';
+import { PlantillaReportesService } from '../../reportes/plantilla-reportes.service';
 
 @Component({
   selector: 'app-ver-empleado',
@@ -115,30 +116,37 @@ export class VerEmpleadoComponent implements OnInit {
   numero_pagina: number = 1;
   selectedIndex: number;
 
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase_m(): string { return this.plantillaPDF.marca_Agua }
+  get logoE(): string { return this.plantillaPDF.logoBase64 }
+
   constructor(
-    public restPlanHoraDetalle: DetallePlanHorarioService,
-    public restEmpleadoProcesos: EmpleadoProcesosService,
-    public restAutoridad: AutorizaDepartamentoService,
-    public restEmpleHorario: EmpleadoHorariosService,
-    public restDiscapacidad: DiscapacidadService,
-    private restPlanGeneral: PlanGeneralService,
-    public restPlanComidas: PlanComidasService,
-    public restPerV: PeriodoVacacionesService,
-    public restVacaciones: VacacionesService,
-    public vistaRegistrarDatos: MatDialog,
-    public restEmpleado: EmpleadoService,
-    public restPlanH: PlanHorarioService,
-    private scriptService: ScriptService,
-    public restPermiso: PermisosService,
-    public restCargo: EmplCargosService,
-    private restHE: PedHoraExtraService,
-    public restEmpresa: EmpresaService,
-    public restTitulo: TituloService,
-    private restF: FuncionesService,
-    private toastr: ToastrService,
-    public Main: MainNavComponent,
-    public restU: UsuarioService,
-    public router: Router,
+    public restPlanHoraDetalle: DetallePlanHorarioService, // SERVICIO DATOS EMPRESA
+    public restEmpleadoProcesos: EmpleadoProcesosService, // SERVICIO DATOS PROCESOS EMPLEADO
+    public restAutoridad: AutorizaDepartamentoService, // SERVICIO DATOS JEFES
+    public restEmpleHorario: EmpleadoHorariosService, // SERVICIO DATOS HORARIO DE EMPLEADOS
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
+    public restDiscapacidad: DiscapacidadService, // SERVICIO DATOS DISCAPACIDAD
+    private restPlanGeneral: PlanGeneralService, // SERVICIO DATOS DE PLANIFICACIÓN
+    public restPlanComidas: PlanComidasService, // SERVICIO DATOS DE PLANIFICACIÓN COMIDAS
+    public restPerV: PeriodoVacacionesService, // SERVICIO DATOS PERIODO DE VACACIONES
+    public restVacaciones: VacacionesService, // SERVICIO DATOS DE VACACIONES
+    public vistaRegistrarDatos: MatDialog, // VARIABLE MANEJO DE VENTANAS
+    public restEmpleado: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
+    public restPlanH: PlanHorarioService, // SERVICIO DATOS PLANIFICACIÓN DE HORARIO
+    private scriptService: ScriptService, // SERVICIO DATOS EMPLEADO - REPORTE
+    public restPermiso: PermisosService, // SERVICIO DATOS PERMISOS
+    public restCargo: EmplCargosService, // SERVICIO DATOS CARGO
+    private restHE: PedHoraExtraService, // SERVICIO DATOS PEDIDO HORA EXTRA
+    public restEmpresa: EmpresaService, // SERVICIO DATOS EMPRESA
+    public restTitulo: TituloService, // SERVICIO DATOS TÍTULO PROFESIONAL
+    private restF: FuncionesService, // SERVICIO DATOS FUNCIONES DEL SISTEMA
+    private toastr: ToastrService, // VARIABLE MANEJO DE MENSAJES DE NOTIFICACIONES
+    public restU: UsuarioService, // SERVICIO DATOS USUARIO
+    public Main: NavbarComponent, // VARIABLE BARRA DE NAVEGACIÓN
+    public router: Router, // VARIABLE NAVEGACIÓN DE RUTAS URL
   ) {
     this.idEmpleadoLogueado = parseInt(localStorage.getItem('empleado'));
     var cadena = this.router.url.split('#')[0];
@@ -169,8 +177,6 @@ export class VerEmpleadoComponent implements OnInit {
     this.obtenerContratosEmpleado();
     this.ObtenerNacionalidades();
     this.VerFuncionalidades();
-    this.ObtenerColores();
-    this.ObtenerLogo();
     this.VerEmpresa();
     //this.VerAccionPersonal();
     //this.VerHorasExtras();
@@ -182,14 +188,6 @@ export class VerEmpleadoComponent implements OnInit {
     this.restEmpleado.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleadoLogueado = data;
     })
-  }
-
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logoE: any = String;
-  ObtenerLogo() {
-    this.restEmpresa.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logoE = 'data:image/jpeg;base64,' + res.imagen;
-    });
   }
 
   // METODO INCLUIR EL CROKIS
@@ -206,18 +204,6 @@ export class VerEmpleadoComponent implements OnInit {
           this.toastr.error(err)
         });
       }
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase_m: any;
-  ObtenerColores() {
-    this.restEmpresa.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase_m = res[0].marca_agua;
     });
   }
 
@@ -1530,7 +1516,7 @@ export class VerEmpleadoComponent implements OnInit {
     localStorage.removeItem('iniciales');
     localStorage.removeItem('view_imagen');
   }
-  
+
   /* ****************************************************************************************************
    *                               CARGAR HORARIOS DEL EMPLEADO CON PLANTILLA
    * ****************************************************************************************************/

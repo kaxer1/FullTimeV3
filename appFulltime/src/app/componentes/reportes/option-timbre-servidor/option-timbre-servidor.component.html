@@ -1,0 +1,15 @@
+<mat-accordion>
+    <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header class="d-flex bd-highlight">
+            <mat-panel-title>
+            Timbres de Servidor
+            </mat-panel-title>
+            <mat-icon class="flex-shrink-1 bd-highlight i-barra" matTooltipPosition="right"
+            matTooltip="El timbre de servidor solo se reflejara en los reportes de Sucursal, Departamento y Empleado">help_outline</mat-icon>
+        </mat-expansion-panel-header>
+        <br>
+        <div class="d-flex flex-wrap justify-content-around" style="margin: 0px 10px 0px 10px;">
+            <mat-slide-toggle [(ngModel)]="showTimbre" (change)="ChangeValue($event)" >Imprimir en reporte</mat-slide-toggle>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>    

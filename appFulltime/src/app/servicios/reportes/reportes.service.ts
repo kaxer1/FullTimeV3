@@ -202,4 +202,19 @@ export class ReportesService {
     this._filtroCodigo_inc = null;
   }
 
+
+  /**********************************************************************
+   * 
+   * VALIDACION DE FUNCIONALIDAD DE MOSTRAR O NO EL CAMPO DE LOS TIMBRES DEL SERVIDOR.
+   * 
+   **********************************************************************/
+
+  private _valueTimbreServidor: Boolean = false;
+
+  get mostrarTimbreServidor() { return this._valueTimbreServidor }
+  setMostrarTimbreServidor(value) { this._valueTimbreServidor = value; }
+
+  DefaultTimbreServidor() { this._valueTimbreServidor = false; }
+
+
 }

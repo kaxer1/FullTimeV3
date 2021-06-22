@@ -26,6 +26,8 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
 
   get bool() { return this.reporteService.criteriosBusqueda };
 
+  get timbreServidor() { return this.reporteService.mostrarTimbreServidor };
+
   respuesta: any [];
   sucursales: any = [];
   departamentos: any = [];
@@ -544,41 +546,82 @@ export class ReporteTimbresMultiplesComponent implements OnInit, OnDestroy {
             }
           });
 
-          n.push({
-            style: 'tableMargin',
-            table: {
-              widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
-              body: [
-                [
-                  { text: 'N°', style: 'tableHeader' },
-                  { text: 'Timbre', style: 'tableHeader' },
-                  { text: 'Reloj', style: 'tableHeader' },
-                  { text: 'Accion', style: 'tableHeader' },
-                  { text: 'Observacion', style: 'tableHeader' },
-                  { text: 'Longuitud', style: 'tableHeader' },
-                  { text: 'Latitud', style: 'tableHeader' }
-                ],                  
-                ...obj2.timbres.map(obj3 => {
-                  c = c + 1
-                  return [
-                    { style: 'itemsTableCentrado', text: c },
-                    { style: 'itemsTable', text: obj3.fec_hora_timbre },
-                    { style: 'itemsTable', text: obj3.id_reloj },
-                    { style: 'itemsTable', text: obj3.accion },
-                    { style: 'itemsTable', text: obj3.observacion },
-                    { style: 'itemsTable', text: obj3.longitud },
-                    { style: 'itemsTable', text: obj3.latitud },
-                  ]
-                })
-
-              ]
-            },
-            layout: {
-              fillColor: function (rowIndex) {
-                return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+          if ( this.timbreServidor === true ) {
+            n.push({
+              style: 'tableMargin',
+              table: {
+                widths: ['auto', '*', 'auto', 'auto', 'auto', 'auto', '*', '*'],
+                body: [
+                  [
+                    { text: 'N°', style: 'tableHeader' },
+                    { text: 'Timbre', style: 'tableHeader' },
+                    { text: 'Timbre Servidor', style: 'tableHeader' },
+                    { text: 'Reloj', style: 'tableHeader' },
+                    { text: 'Accion', style: 'tableHeader' },
+                    { text: 'Observacion', style: 'tableHeader' },
+                    { text: 'Longuitud', style: 'tableHeader' },
+                    { text: 'Latitud', style: 'tableHeader' }
+                  ],                  
+                  ...obj2.timbres.map(obj3 => {
+                    c = c + 1
+                    return [
+                      { style: 'itemsTableCentrado', text: c },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre_servidor },
+                      { style: 'itemsTable', text: obj3.id_reloj },
+                      { style: 'itemsTable', text: obj3.accion },
+                      { style: 'itemsTable', text: obj3.observacion },
+                      { style: 'itemsTable', text: obj3.longitud },
+                      { style: 'itemsTable', text: obj3.latitud },
+                    ]
+                  })
+  
+                ]
+              },
+              layout: {
+                fillColor: function (rowIndex) {
+                  return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                }
               }
-            }
-          })
+            })
+          } else {
+            n.push({
+              style: 'tableMargin',
+              table: {
+                widths: ['auto', '*', 'auto', 'auto', 'auto', '*', '*'],
+                body: [
+                  [
+                    { text: 'N°', style: 'tableHeader' },
+                    { text: 'Timbre', style: 'tableHeader' },
+                    { text: 'Reloj', style: 'tableHeader' },
+                    { text: 'Accion', style: 'tableHeader' },
+                    { text: 'Observacion', style: 'tableHeader' },
+                    { text: 'Longuitud', style: 'tableHeader' },
+                    { text: 'Latitud', style: 'tableHeader' }
+                  ],                  
+                  ...obj2.timbres.map(obj3 => {
+                    c = c + 1
+                    return [
+                      { style: 'itemsTableCentrado', text: c },
+                      { style: 'itemsTable', text: obj3.fec_hora_timbre },
+                      { style: 'itemsTable', text: obj3.id_reloj },
+                      { style: 'itemsTable', text: obj3.accion },
+                      { style: 'itemsTable', text: obj3.observacion },
+                      { style: 'itemsTable', text: obj3.longitud },
+                      { style: 'itemsTable', text: obj3.latitud },
+                    ]
+                  })
+  
+                ]
+              },
+              layout: {
+                fillColor: function (rowIndex) {
+                  return (rowIndex % 2 === 0) ? '#E5E7E9' : null;
+                }
+              }
+            })
+          }
+          
         });
 
       });

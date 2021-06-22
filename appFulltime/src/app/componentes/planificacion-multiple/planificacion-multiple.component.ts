@@ -6,6 +6,7 @@ import * as xlsx from 'xlsx';
 import { EmpleadoHorariosService } from 'src/app/servicios/horarios/empleadoHorarios/empleado-horarios.service';
 import { PeriodoVacacionesService } from 'src/app/servicios/periodoVacaciones/periodo-vacaciones.service';
 import { MultiplePlanHorarioService } from 'src/app/servicios/cargaMultiple/multiple-plan-horario.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-planificacion-multiple',
@@ -14,6 +15,8 @@ import { MultiplePlanHorarioService } from 'src/app/servicios/cargaMultiple/mult
 })
 
 export class PlanificacionMultipleComponent implements OnInit {
+
+  hipervinculo: string = environment.url
 
   constructor(
     private rest: EmpleadoHorariosService,

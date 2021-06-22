@@ -60,6 +60,8 @@ export class PrincipalHorarioComponent implements OnInit {
   empleado: any = [];
   idEmpleado: number;
 
+  hipervinculo: string = environment.url;
+
   constructor(
     private rest: HorarioService,
     public restE: EmpleadoService,

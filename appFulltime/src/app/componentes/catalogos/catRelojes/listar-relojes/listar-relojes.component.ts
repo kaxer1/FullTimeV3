@@ -65,6 +65,8 @@ export class ListarRelojesComponent implements OnInit {
   numero_pagina: number = 1;
   pageSizeOptions = [5, 10, 20, 50];
 
+  hipervinculo: string = environment.url;
+
   constructor(
     private rest: RelojesService,
     public restE: EmpleadoService,

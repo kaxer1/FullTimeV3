@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../../database"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const fs_1 = __importDefault(require("fs"));
+const moment_1 = __importDefault(require("moment"));
 const builder = require('xmlbuilder');
 class FeriadosControlador {
     ListarFeriados(req, res) {
@@ -91,6 +92,7 @@ class FeriadosControlador {
             let cadena = list.uploads[0].path;
             let filename = cadena.split("\\")[1];
             var filePath = `./plantillas/${filename}`;
+            var contador = 1;
             const workbook = xlsx_1.default.readFile(filePath);
             const sheet_name_list = workbook.SheetNames;
             const plantilla = xlsx_1.default.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]]);
@@ -99,8 +101,15 @@ class FeriadosControlador {
                 if (fec_recuperacion === undefined) {
                     var recuperar = null;
                 }
+                else {
+                    recuperar = fec_recuperacion;
+                }
                 yield database_1.default.query('INSERT INTO cg_feriados (fecha, descripcion, fec_recuperacion) VALUES ($1, $2, $3)', [fecha, descripcion, recuperar]);
-                return res.jsonp({ message: 'correcto' });
+                if (contador === plantilla.length) {
+                    console.log('ejecutandose');
+                    return res.jsonp({ message: 'correcto' });
+                }
+                contador = contador + 1;
             }));
             fs_1.default.unlinkSync(filePath);
         });
@@ -123,21 +132,32 @@ class FeriadosControlador {
                 var fecha_data = fecha;
                 var fec_recuperacion_data = fec_recuperacion;
                 var descripcion_data = descripcion;
-                const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
-                if (VERIFICAR_FECHA.rowCount === 0) {
-                    contarFecha = contarFecha + 1;
-                }
-                if (fec_recuperacion != undefined) {
-                    const VERIFICAR_FECHA_RECUPERAR = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
-                    if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0 && fec_recuperacion > fecha) {
+                // var fec = new Date(fecha_data);
+                /*  console.log(' fec ',
+                      fec
+                  );*/
+                console.log('ver fecha - feriados', moment_1.default(fecha_data).format('YYYY-MM-DD'));
+                // console.log('ver fecha - feriados 1 ', fec.toString())
+                if (fecha_data === moment_1.default(fecha_data).format('YYYY-MM-DD')) {
+                    const VERIFICAR_FECHA = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fecha_data]);
+                    if (VERIFICAR_FECHA.rowCount === 0) {
+                        contarFecha = contarFecha + 1;
+                    }
+                    if (fec_recuperacion != undefined) {
+                        console.log('ver fecha - feriados', moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD'));
+                        if (fec_recuperacion_data === moment_1.default(fec_recuperacion_data).format('YYYY-MM-DD')) {
+                            const VERIFICAR_FECHA_RECUPERAR = yield database_1.default.query('SELECT * FROM cg_feriados WHERE fecha = $1 OR fec_recuperacion = $1', [fec_recuperacion_data]);
+                            if (VERIFICAR_FECHA_RECUPERAR.rowCount === 0 && fec_recuperacion > fecha) {
+                                contarFechaRecuperar = contarFechaRecuperar + 1;
+                            }
+                        }
+                    }
+                    else {
                         contarFechaRecuperar = contarFechaRecuperar + 1;
                     }
-                }
-                else {
-                    contarFechaRecuperar = contarFechaRecuperar + 1;
-                }
-                if (descripcion_data != undefined) {
-                    contarDescripcion = contarDescripcion + 1;
+                    if (descripcion_data != undefined) {
+                        contarDescripcion = contarDescripcion + 1;
+                    }
                 }
                 // Verificación cuando se ha leido todos los datos de la plantilla
                 console.log('fecha', contarFecha, plantilla.length, contador);
@@ -179,6 +199,7 @@ class FeriadosControlador {
                 };
                 array_todo.push(datos_array);
             }));
+            fs_1.default.unlinkSync(filePath);
             console.log('array', array_todo);
             console.log('array2', array_todo[0].fecha);
             for (var i = 0; i <= array_todo.length - 1; i++) {
@@ -207,7 +228,6 @@ class FeriadosControlador {
                     return res.jsonp({ message: 'error' });
                 }
             }
-            fs_1.default.unlinkSync(filePath);
         });
     }
     FileXML(req, res) {

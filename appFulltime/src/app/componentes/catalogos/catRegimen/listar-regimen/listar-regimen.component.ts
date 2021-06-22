@@ -19,9 +19,9 @@ import { RegimenComponent } from 'src/app/componentes/catalogos/catRegimen/regim
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 // IMPORTAR SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { RegimenService } from 'src/app/servicios/catalogos/catRegimen/regimen.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-listar-regimen',
@@ -51,9 +51,15 @@ export class ListarRegimenComponent implements OnInit {
   tamanio_pagina: number = 5;
   numero_pagina: number = 1;
 
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
+
   constructor(
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
     public vistaRegistrarDatos: MatDialog, // VARIABLE MANEJO DE VENTANAS
-    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
     private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     private toastr: ToastrService, // VARIABLE DE USO DE MENSAJES DE NOTIFICACIONES
     private rest: RegimenService, // SERVICIO DE DATOS DE REGIMEN
@@ -64,9 +70,7 @@ export class ListarRegimenComponent implements OnInit {
 
   ngOnInit(): void {
     this.ObtenerEmpleados(this.idEmpleado);
-    this.ObtenerColores();
     this.ObtenerRegimen();
-    this.ObtenerLogo();
   }
 
   // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
@@ -75,26 +79,6 @@ export class ListarRegimenComponent implements OnInit {
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
     })
-  }
-
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logo: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logo = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase: any;
-  ObtenerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase = res[0].marca_agua;
-    });
   }
 
   // EVENTO PARA MANEJAR VISTA DE FILAS DETERMINADAS DE TABLA

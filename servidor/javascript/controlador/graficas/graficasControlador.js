@@ -58,6 +58,7 @@ class GraficasControlador {
             }
             else {
                 // Resultados de timbres sin acciones
+                console.log('entro aqui en sin acciones');
                 resultado = yield MetodosGraficas_1.GraficaAtrasosSinAcciones(id_empresa, fec_inicio, fec_final);
             }
             res.status(200).jsonp(resultado);

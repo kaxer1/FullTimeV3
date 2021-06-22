@@ -20,9 +20,9 @@ import { AsignarCiudadComponent } from 'src/app/componentes/catalogos/catFeriado
 import { MetodosComponent } from 'src/app/componentes/metodoEliminar/metodos.component';
 
 // IMPORTACIÓN DE SERVICIOS
+import { PlantillaReportesService } from 'src/app/componentes/reportes/plantilla-reportes.service';
 import { EmpleadoService } from 'src/app/servicios/empleado/empleadoRegistro/empleado.service';
 import { FeriadosService } from 'src/app/servicios/catalogos/catFeriados/feriados.service';
-import { EmpresaService } from 'src/app/servicios/catalogos/catEmpresa/empresa.service';
 
 @Component({
   selector: 'app-listar-feriados',
@@ -62,8 +62,17 @@ export class ListarFeriadosComponent implements OnInit {
   nameFile: string;
   archivoSubido: Array<File>;
 
+  // VARIABLE PARA TOMAR RUTA DEL SISTEMA
+  hipervinculo: string = environment.url
+
+  // MÉTODO DE LLAMADO DE DATOS DE EMPRESA COLORES - LOGO - MARCA DE AGUA
+  get s_color(): string { return this.plantillaPDF.color_Secundary }
+  get p_color(): string { return this.plantillaPDF.color_Primary }
+  get frase(): string { return this.plantillaPDF.marca_Agua }
+  get logo(): string { return this.plantillaPDF.logoBase64 }
+
   constructor(
-    public restEmpre: EmpresaService, // SERVICIO DATOS DE EMPRESA
+    private plantillaPDF: PlantillaReportesService, // SERVICIO DATOS DE EMPRESA
     private restE: EmpleadoService, // SERVICIO DATOS DE EMPLEADO
     private rest: FeriadosService, // SERVICIO DATOS DE FERIADOS
     private toastr: ToastrService, // VARIABLE MANEJO DE MENSAJES DE NOTIFICACIONES
@@ -76,8 +85,6 @@ export class ListarFeriadosComponent implements OnInit {
   ngOnInit(): void {
     this.ObtenerEmpleados(this.idEmpleado);
     this.ObtenerFeriados();
-    this.ObtenerColores();
-    this.ObtenerLogo();
   }
 
   // MÉTODO PARA VER LA INFORMACIÓN DEL EMPLEADO 
@@ -86,26 +93,6 @@ export class ListarFeriadosComponent implements OnInit {
     this.restE.getOneEmpleadoRest(idemploy).subscribe(data => {
       this.empleado = data;
     })
-  }
-
-  // MÉTODO PARA OBTENER EL LOGO DE LA EMPRESA
-  logo: any = String;
-  ObtenerLogo() {
-    this.restEmpre.LogoEmpresaImagenBase64(localStorage.getItem('empresa')).subscribe(res => {
-      this.logo = 'data:image/jpeg;base64,' + res.imagen;
-    });
-  }
-
-  // MÉTODO PARA OBTENER COLORES Y MARCA DE AGUA DE EMPRESA 
-  p_color: any;
-  s_color: any;
-  frase: any;
-  ObtenerColores() {
-    this.restEmpre.ConsultarDatosEmpresa(parseInt(localStorage.getItem('empresa'))).subscribe(res => {
-      this.p_color = res[0].color_p;
-      this.s_color = res[0].color_s;
-      this.frase = res[0].marca_agua;
-    });
   }
 
   // LECTURA DE DATOS
@@ -258,8 +245,8 @@ export class ListarFeriadosComponent implements OnInit {
       console.log('probando plantilla1', res);
       if (res.message === 'error') {
         this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-          'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados y la fecha de ' +
-          'recuperación debe ser posterior a la fecha del feriado a resgistrar.',
+          'de la plantilla ingresada, recuerde que que fechas fuera de rango no son válidas, los datos no pueden estar duplicados y la fecha de ' +
+          'recuperación debe ser posterior a la fecha del feriado a registrar.',
           'Verificar los datos ingresados en la plantilla', {
           timeOut: 10000,
         });
@@ -271,8 +258,8 @@ export class ListarFeriadosComponent implements OnInit {
           console.log('probando plantilla2', respose);
           if (respose.message === 'error') {
             this.toastr.error('Para asegurar el buen funcionamiento del sistema es necesario que verifique los datos ' +
-              'de la plantilla ingresada, recuerde que los datos no pueden estar duplicados y la fecha de ' +
-              'recuperación debe ser posterior a la fecha del feriado a resgistrar.',
+              'de la plantilla ingresada, recuerde que fechas fuera de rango no son válidas, los datos no pueden estar duplicados y la fecha de ' +
+              'recuperación debe ser posterior a la fecha del feriado a registrar.',
               'Verificar los datos ingresados en la plantilla', {
               timeOut: 10000,
             });
